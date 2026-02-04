@@ -85,6 +85,9 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
             }
         }
     );
+    router.get('/pdf-preview.html', async (_, res) => {
+        res.status(200).sendFile('pdf-preview.html', { root: path.join('assets/') });
+    });
 
     router.use((_: Request, res: Response) => {
         res.status(404).sendFile(`${path.join(process.cwd(), buildPath)}/index.html`);

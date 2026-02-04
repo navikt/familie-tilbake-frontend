@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Preview</title>
+    <script>
+        onmessage = (msgEvent) => {
+            const image = `data:image/svg+xml;base64,${btoa(msgEvent.data)}`
+            document.getElementById("preview").setAttribute("src", image);
+            console.log(image);
+        }
+    </script>
+</head>
+<body>
+    <img id="preview" src="" alt="PDF preview" />
+</body>
+</html>

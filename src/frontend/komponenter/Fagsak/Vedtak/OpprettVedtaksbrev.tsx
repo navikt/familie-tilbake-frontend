@@ -1,5 +1,6 @@
 import type { Avsnitt, VedtaksbrevData } from '../../../generated-new';
 
+import { FilePdfIcon } from '@navikt/aksel-icons';
 import {
     BodyShort,
     Button,
@@ -38,6 +39,8 @@ const useDebounce = (updateFunction: () => void): (() => void) => {
 };
 
 const OpprettVedtaksbrev: React.FC = () => {
+    const popupRef = useRef<ReturnType<typeof window.open>>(null);
+    const [inlineForhåndsvisning, setInlineForhåndsvisning] = useState<boolean>(true);
     const queryClient = useQueryClient();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
@@ -55,6 +58,9 @@ const OpprettVedtaksbrev: React.FC = () => {
         onSuccess: async data => {
             const blob = data as Blob;
             const tekst = await blob.text();
+            if (popupRef.current != null) {
+                popupRef.current.postMessage(tekst);
+            }
             const respons = JSON.parse(tekst) as { page_count: number; pages: string[] };
             const siderSomBase64 = respons.pages.map(
                 svg => `data:image/svg+xml;base64,${btoa(svg)}`
@@ -81,6 +87,16 @@ const OpprettVedtaksbrev: React.FC = () => {
         sendInnSkjemaVedFørsteRendering();
     }, []);
 
+    const watchPopupClose = (): void => {
+        const timer = setInterval(() => {
+            if (popupRef.current == null || popupRef.current.closed) {
+                clearInterval(timer);
+                popupRef.current = null;
+                setInlineForhåndsvisning(true);
+            }
+        }, 500);
+    };
+
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
@@ -103,61 +119,80 @@ const OpprettVedtaksbrev: React.FC = () => {
                     </FormProvider>
                 </VStack>
 
-                <div className="col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle">
-                    {pdfSider.length > 0 && (
-                        <HStack
-                            justify="center"
-                            align="center"
-                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
-                        >
-                            <Pagination
-                                page={gjeldendeSide}
-                                count={pdfSider.length}
-                                size="small"
-                                onPageChange={settGjeldendeSide}
-                            />
-                        </HStack>
-                    )}
-                    <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
-                        {vedtaksbrevMutation.isError ? (
-                            <VStack
-                                gap="space-16"
-                                padding="space-16"
-                                className="flex justify-center items-center h-full"
+                {inlineForhåndsvisning && (
+                    <div className="col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle">
+                        {pdfSider.length > 0 && (
+                            <HStack
+                                justify="center"
+                                align="center"
+                                className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
                             >
-                                <InlineMessage size="small" status="error">
-                                    Kunne ikke laste inn forhåndsvisningen. Dette kan være et
-                                    midlertidig problem. Prøv å laste siden på nytt, eller prøv
-                                    igjen om litt.
-                                </InlineMessage>
-
-                                <Button
-                                    variant="secondary"
+                                <Pagination
+                                    page={gjeldendeSide}
+                                    count={pdfSider.length}
                                     size="small"
-                                    onClick={() => {
-                                        vedtaksbrevMutation.reset();
-                                        sendInnSkjemaData();
-                                    }}
-                                >
-                                    Last inn på nytt
-                                </Button>
-                            </VStack>
-                        ) : pdfSider.length > 0 ? (
-                            <img
-                                className="max-w-full max-h-full object-contain"
-                                alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
-                                src={pdfSider[gjeldendeSide - 1]}
-                            />
-                        ) : (
-                            /* Fikser suspense etter hvert, dette er midlertidig */
-                            <Skeleton
-                                variant="rounded"
-                                className="aspect-[1/1.414] w-full max-w-md"
-                                height={600}
-                            />
+                                    onPageChange={settGjeldendeSide}
+                                />
+                            </HStack>
                         )}
+                        <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
+                            {vedtaksbrevMutation.isError ? (
+                                <VStack
+                                    gap="space-16"
+                                    padding="space-16"
+                                    className="flex justify-center items-center h-full"
+                                >
+                                    <InlineMessage size="small" status="error">
+                                        Kunne ikke laste inn forhåndsvisningen. Dette kan være et
+                                        midlertidig problem. Prøv å laste siden på nytt, eller prøv
+                                        igjen om litt.
+                                    </InlineMessage>
+
+                                    <Button
+                                        variant="secondary"
+                                        size="small"
+                                        onClick={() => {
+                                            vedtaksbrevMutation.reset();
+                                            sendInnSkjemaData();
+                                        }}
+                                    >
+                                        Last inn på nytt
+                                    </Button>
+                                    <Button
+                                        variant="tertiary"
+                                        size="small"
+                                        icon={<FilePdfIcon />}
+                                        onClick={() => {
+                                            if (popupRef.current === null) {
+                                                popupRef.current = window.open(
+                                                    '/pdf-preview.html',
+                                                    'PDF preview',
+                                                    'popup'
+                                                );
+                                                setInlineForhåndsvisning(false);
+                                                watchPopupClose();
+                                            }
+                                        }}
+                                        aria-label="Preview"
+                                    />
+                                </VStack>
+                            ) : pdfSider.length > 0 ? (
+                                <img
+                                    className="max-w-full max-h-full object-contain"
+                                    alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
+                                    src={pdfSider[gjeldendeSide - 1]}
+                                />
+                            ) : (
+                                /* Fikser suspense etter hvert, dette er midlertidig */
+                                <Skeleton
+                                    variant="rounded"
+                                    className="aspect-[1/1.414] w-full max-w-md"
+                                    height={600}
+                                />
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
