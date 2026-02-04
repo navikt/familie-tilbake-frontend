@@ -9,7 +9,7 @@ export const zBestemmelseEllerGrunnlag = z.object({
 
 export const zBrevmottaker = z.object({
     fultNavn: z.string(),
-    fødselsnummer: z.string(),
+    personIdent: z.string(),
 });
 
 export const zError = z.object({
@@ -100,10 +100,31 @@ export const zHovedavsnitt = z.object({
     underavsnitt: z.array(zRotElement),
 });
 
+export const zVedtaksbrevVurdering = z.object({
+    tittel: z.string(),
+    beskrivelse: z.array(zElement),
+});
+
+export const zVedtaksbrevPeriode = z.object({
+    fom: z.iso.date(),
+    tom: z.iso.date(),
+    beskrivelse: z.array(zElement),
+    konklusjon: z.array(zElement),
+    vurderinger: z.array(zVedtaksbrevVurdering),
+});
+
 export const zYtelse = z.object({
     url: z.string(),
     ubestemtEntall: z.string(),
     bestemtEntall: z.string(),
+});
+
+export const zVedtaksbrev = z.object({
+    innledning: z.string(),
+    perioder: z.array(zVedtaksbrevPeriode),
+    brevGjelder: zBrevmottaker,
+    ytelse: zYtelse,
+    signatur: zSignatur,
 });
 
 export const zVedtaksbrevData = z.object({
@@ -191,6 +212,19 @@ export const zBehandlingOppdaterFaktaData = z.object({
  * The request has succeeded.
  */
 export const zBehandlingOppdaterFaktaResponse = zFaktaOmFeilutbetaling;
+
+export const zBehandlingHentVedtaksbrevData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        behandlingId: z.string(),
+    }),
+    query: z.optional(z.never()),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentVedtaksbrevResponse = zVedtaksbrev;
 
 export const zVedtaksbrevLagSvgVedtaksbrevData = z.object({
     body: zVedtaksbrevData,

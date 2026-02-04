@@ -6,6 +6,7 @@ import type { AxiosError } from 'axios';
 import { client } from '../client.gen';
 import {
     behandlingFakta,
+    behandlingHentVedtaksbrev,
     behandlingOppdaterFakta,
     type Options,
     vedtaksbrevLagSvgVedtaksbrev,
@@ -14,6 +15,9 @@ import type {
     BehandlingFaktaData,
     BehandlingFaktaError,
     BehandlingFaktaResponse,
+    BehandlingHentVedtaksbrevData,
+    BehandlingHentVedtaksbrevError,
+    BehandlingHentVedtaksbrevResponse,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
     BehandlingOppdaterFaktaResponse,
@@ -104,6 +108,29 @@ export const behandlingOppdaterFaktaMutation = (
     };
     return mutationOptions;
 };
+
+export const behandlingHentVedtaksbrevQueryKey = (
+    options: Options<BehandlingHentVedtaksbrevData>
+) => createQueryKey('behandlingHentVedtaksbrev', options);
+
+export const behandlingHentVedtaksbrevOptions = (options: Options<BehandlingHentVedtaksbrevData>) =>
+    queryOptions<
+        BehandlingHentVedtaksbrevResponse,
+        AxiosError<BehandlingHentVedtaksbrevError>,
+        BehandlingHentVedtaksbrevResponse,
+        ReturnType<typeof behandlingHentVedtaksbrevQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentVedtaksbrev({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentVedtaksbrevQueryKey(options),
+    });
 
 export const vedtaksbrevLagSvgVedtaksbrevMutation = (
     options?: Partial<Options<VedtaksbrevLagSvgVedtaksbrevData>>
