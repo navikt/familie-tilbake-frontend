@@ -78,7 +78,7 @@ export const vedtaksbrevDefaultValues: VedtaksbrevData = {
     ],
     brevGjelder: {
         fultNavn: 'Bruker Testesen',
-        fødselsnummer: '04206912345',
+        personIdent: '04206912345',
     },
     sendtDato: '27.januar 2026',
     ytelse: {
