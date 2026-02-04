@@ -47,8 +47,9 @@ const OpprettVedtaksbrev: React.FC = () => {
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, settGjeldendeSide] = useState(1);
     const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
-        baseURL: 'http://localhost:4000/pdf',
+        baseURL: window.location.origin,
     });
+
     const vedtaksbrevMutation = useMutation({
         mutationKey: ['lagPdf'],
         ...originalMutation,

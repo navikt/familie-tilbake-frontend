@@ -38,7 +38,7 @@ import setupRouter from './router';
         attachToken(texasClient, appConfig.backendApiScope),
         doProxy(proxyUrl)
     );
-    app.use('/pdf/api', doProxy('http://localhost:3000/api'));
+    app.use('/api/v1/brev', doProxy('http://localhost:3000/api/v1/brev'));
 
     app.use('/redirect', doRedirectProxy());
 
