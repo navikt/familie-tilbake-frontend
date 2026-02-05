@@ -24,6 +24,8 @@ import { VilkårsvurderingProvider } from './Vilkårsvurdering/Vilkårsvurdering
 import { useBehandling } from '../../context/BehandlingContext';
 import { useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
+import { ToggleName } from '../../context/toggles';
+import { useToggles } from '../../context/TogglesContext';
 import { Behandlingssteg, Behandlingstatus, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
@@ -168,7 +170,7 @@ type AktivBehandlingProps = {
 
 const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
-
+    const { toggles } = useToggles();
     return (
         <>
             <section
@@ -234,7 +236,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
-                                    behandling.erNyModell ? (
+                                    behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
                                         <OpprettVedtaksbrev />
                                     ) : (
                                         <VedtakProvider>
