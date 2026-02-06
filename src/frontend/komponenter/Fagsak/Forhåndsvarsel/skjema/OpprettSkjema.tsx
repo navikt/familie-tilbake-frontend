@@ -12,7 +12,6 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import React, { Fragment } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -58,9 +57,9 @@ export const OpprettSkjema: React.FC<Props> = ({
     return (
         <VStack
             as="form"
+            gap="space-24"
             onSubmit={handleSubmit(handleForhåndsvarselSubmit)}
             id="opprettForm"
-            gap="6"
         >
             <Controller
                 control={control}
@@ -74,7 +73,6 @@ export const OpprettSkjema: React.FC<Props> = ({
                         fattes, slik at de får mulighet til å uttale seg."
                         readOnly={varselErSendt || readOnly}
                         error={fieldState.error?.message}
-                        style={{ maxWidth: ATextWidthMax }}
                     >
                         <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
                         <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
@@ -83,8 +81,8 @@ export const OpprettSkjema: React.FC<Props> = ({
             />
 
             {visSkjema && (
-                <VStack gap="4">
-                    <HStack gap="4">
+                <VStack gap="space-16">
+                    <HStack gap="space-16">
                         <Box className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
                             <Heading level="2" size="small" className="mb-6">
                                 Opprett forhåndsvarsel
@@ -94,7 +92,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                                     {varselbrevtekster.overskrift}
                                 </Heading>
                             </HStack>
-                            <VStack maxWidth={ATextWidthMax}>
+                            <VStack>
                                 {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                                     <Fragment key={avsnitt.title}>
                                         <Heading size="xsmall" level="4" spacing>

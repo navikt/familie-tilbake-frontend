@@ -10,7 +10,6 @@ import {
     Textarea,
     useDatepicker,
 } from '@navikt/ds-react';
-import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { parseISO } from 'date-fns/parseISO';
 import React, { useEffect, useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
@@ -91,10 +90,9 @@ export const Uttalelse: React.FC<Props> = ({
     return (
         <VStack
             as="form"
-            maxWidth={ATextWidthMax}
-            gap="6"
-            id="uttalelseForm"
+            gap="space-24"
             onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
+            id="uttalelseForm"
         >
             <Controller
                 control={methods.control}

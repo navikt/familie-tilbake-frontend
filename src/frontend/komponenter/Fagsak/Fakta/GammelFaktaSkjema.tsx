@@ -57,8 +57,8 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
     );
 
     return (
-        <HGrid columns={2} gap="10">
-            <VStack gap="7">
+        <HGrid columns={2} gap="space-40">
+            <VStack gap="space-28">
                 <Heading level="2" size="small">
                     Feilutbetaling
                 </Heading>
@@ -71,7 +71,7 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
                         </Alert>
                     </div>
                 )}
-                <HGrid columns={3} gap="1">
+                <HGrid columns={3} gap="space-4">
                     <div>
                         <Detail weight="semibold">Periode med feilutbetaling</Detail>
                         <BodyShort size="small">
@@ -93,7 +93,7 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
                         </BodyShort>
                     </div>
                 </HGrid>
-                <VStack gap="2">
+                <VStack gap="space-8">
                     {!erLesevisning && (
                         <Checkbox
                             size="small"
@@ -136,7 +136,7 @@ const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta, erLesevisning }
                         feilmeldinger?.find(meld => meld.gjelderBegrunnelse)?.melding
                     }
                 />
-                <VStack gap="2">
+                <VStack gap="space-8">
                     <RadioGroup
                         id="brukerHarUttaltSeg"
                         readOnly={erLesevisning}

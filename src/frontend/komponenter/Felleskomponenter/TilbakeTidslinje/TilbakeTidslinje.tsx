@@ -2,7 +2,6 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { CheckmarkCircleIcon, PencilIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
 import { Timeline } from '@navikt/ds-react';
-import { ASpacing5 } from '@navikt/ds-tokens/dist/tokens';
 import classNames from 'classnames';
 import * as React from 'react';
 import { styled } from 'styled-components';
@@ -10,7 +9,7 @@ import { styled } from 'styled-components';
 import { dateTilIsoDatoStringEllerUndefined } from '../../../utils/dato';
 
 const TidslinjeContainer = styled.div`
-    margin-bottom: ${ASpacing5};
+    margin-bottom: 20px;
     padding: 12px 16px;
 
     .etiketter div:last-child {

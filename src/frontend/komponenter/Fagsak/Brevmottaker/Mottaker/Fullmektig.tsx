@@ -13,7 +13,7 @@ export const Fullmektig: React.FC = () => {
     const adresseKilde = watch('fullmektig.adresseKilde');
 
     return (
-        <VStack gap="8">
+        <VStack gap="space-32">
             <Controller
                 name="fullmektig.adresseKilde"
                 control={control}
@@ -50,7 +50,7 @@ export const Fullmektig: React.FC = () => {
             )}
 
             {adresseKilde === AdresseKilde.OppslagOrganisasjonsregister && (
-                <VStack gap="4">
+                <VStack gap="space-16">
                     <TextField
                         label="Organisasjonsnummer"
                         {...register('fullmektig.organisasjonsnummer')}

@@ -4,10 +4,24 @@ export type ClientOptions = {
     baseURL: 'https://raw.githubusercontent.com' | (string & {});
 };
 
+export type Avsnitt = {
+    tittel: string;
+    underavsnitt: Array<RotElement>;
+};
+
 export type BestemmelseEllerGrunnlag = {
     nøkkel: string;
     beskrivelse: string;
 };
+
+export type Brevmottaker = {
+    fultNavn: string;
+    fødselsnummer: string;
+};
+
+export type Element = {
+    type: 'rentekst';
+} & RentekstElement;
 
 export type Error = {
     message: string;
@@ -46,6 +60,11 @@ export type Feilutbetaling = {
 
 export type Fritekst = string;
 
+export type Hovedavsnitt = {
+    tittel: string;
+    underavsnitt: Array<RotElement>;
+};
+
 export type MuligeRettsligGrunnlag = {
     bestemmelse: BestemmelseEllerGrunnlag;
     grunnlag: Array<BestemmelseEllerGrunnlag>;
@@ -67,6 +86,10 @@ export type OppdaterFaktaPeriode = {
     rettsligGrunnlag: Array<RettsligGrunnlag>;
 };
 
+export type RentekstElement = {
+    tekst: string;
+};
+
 export type RettsligGrunnlag = {
     bestemmelse: string;
     grunnlag: string;
@@ -78,16 +101,50 @@ export type Revurdering = {
     resultat: ResultatEnum;
 };
 
+export type RotElement =
+    | ({
+          type: 'rentekst';
+      } & RentekstElement)
+    | ({
+          type: 'underavsnitt';
+      } & UnderavsnittElement);
+
+export type Signatur = {
+    enhetNavn: string;
+    ansvarligSaksbehandler: string;
+    besluttendeSaksbehandler: string | null;
+};
+
+export type UnderavsnittElement = {
+    tittel: string;
+    underavsnitt: Array<Element>;
+};
+
+export type VedtaksbrevData = {
+    hovedavsnitt: Hovedavsnitt;
+    avsnitt: Array<Avsnitt>;
+    brevGjelder: Brevmottaker;
+    sendtDato: string;
+    ytelse: Ytelse;
+    signatur: Signatur;
+};
+
 export type Vurdering = {
     årsak: Fritekst | null;
     oppdaget?: Oppdaget;
+};
+
+export type Ytelse = {
+    url: string;
+    ubestemtEntall: string;
+    bestemtEntall: string;
 };
 
 export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
 
-export type FaktaData = {
+export type BehandlingFaktaData = {
     body?: never;
     path: {
         behandlingId: string;
@@ -96,7 +153,7 @@ export type FaktaData = {
     url: '/api/v1/behandling/{behandlingId}/feilutbetaling';
 };
 
-export type FaktaErrors = {
+export type BehandlingFaktaErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -107,18 +164,18 @@ export type FaktaErrors = {
     500: Error;
 };
 
-export type FaktaError = FaktaErrors[keyof FaktaErrors];
+export type BehandlingFaktaError = BehandlingFaktaErrors[keyof BehandlingFaktaErrors];
 
-export type FaktaResponses = {
+export type BehandlingFaktaResponses = {
     /**
      * The request has succeeded.
      */
     200: FaktaOmFeilutbetaling;
 };
 
-export type FaktaResponse = FaktaResponses[keyof FaktaResponses];
+export type BehandlingFaktaResponse = BehandlingFaktaResponses[keyof BehandlingFaktaResponses];
 
-export type OppdaterFaktaData = {
+export type BehandlingOppdaterFaktaData = {
     body: OppdaterFaktaOmFeilutbetaling;
     path: {
         behandlingId: string;
@@ -127,7 +184,7 @@ export type OppdaterFaktaData = {
     url: '/api/v1/behandling/{behandlingId}/feilutbetaling';
 };
 
-export type OppdaterFaktaErrors = {
+export type BehandlingOppdaterFaktaErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -138,13 +195,29 @@ export type OppdaterFaktaErrors = {
     500: Error;
 };
 
-export type OppdaterFaktaError = OppdaterFaktaErrors[keyof OppdaterFaktaErrors];
+export type BehandlingOppdaterFaktaError =
+    BehandlingOppdaterFaktaErrors[keyof BehandlingOppdaterFaktaErrors];
 
-export type OppdaterFaktaResponses = {
+export type BehandlingOppdaterFaktaResponses = {
     /**
      * The request has succeeded.
      */
     200: FaktaOmFeilutbetaling;
 };
 
-export type OppdaterFaktaResponse = OppdaterFaktaResponses[keyof OppdaterFaktaResponses];
+export type BehandlingOppdaterFaktaResponse =
+    BehandlingOppdaterFaktaResponses[keyof BehandlingOppdaterFaktaResponses];
+
+export type VedtaksbrevLagSvgVedtaksbrevData = {
+    body: VedtaksbrevData;
+    path?: never;
+    query?: never;
+    url: '/api/v1/brev/vedtaksbrev/svg';
+};
+
+export type VedtaksbrevLagSvgVedtaksbrevResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};

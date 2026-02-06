@@ -6,8 +6,8 @@ import * as React from 'react';
 import { FaktaSkeleton } from './FaktaSkeleton';
 import { FaktaSkjema } from './FaktaSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { fakta } from '../../../generated-new';
-import { oppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
+import { behandlingFakta } from '../../../generated-new';
+import { behandlingOppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
 export const Fakta: React.FC = (): React.JSX.Element => {
@@ -17,7 +17,7 @@ export const Fakta: React.FC = (): React.JSX.Element => {
         {
             queryKey: ['hentFaktaOmFeilutbetaling'],
             queryFn: () =>
-                fakta({
+                behandlingFakta({
                     path: {
                         behandlingId: behandlingId,
                     },
@@ -28,7 +28,7 @@ export const Fakta: React.FC = (): React.JSX.Element => {
     );
 
     queryClient.setMutationDefaults(['oppdaterFakta'], {
-        ...oppdaterFaktaMutation(),
+        ...behandlingOppdaterFaktaMutation(),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['hentFaktaOmFeilutbetaling'] });
         },
@@ -92,8 +92,9 @@ export const Fakta: React.FC = (): React.JSX.Element => {
                                 </dt>
                                 <dd>
                                     <Tag
+                                        data-color="neutral"
                                         key={faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
-                                        variant="neutral-moderate"
+                                        variant="moderate"
                                         size="small"
                                         className="text-ax-medium"
                                     >

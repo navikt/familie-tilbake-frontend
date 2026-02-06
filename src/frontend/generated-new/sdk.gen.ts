@@ -3,12 +3,14 @@
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import type {
-    FaktaData,
-    FaktaErrors,
-    FaktaResponses,
-    OppdaterFaktaData,
-    OppdaterFaktaErrors,
-    OppdaterFaktaResponses,
+    BehandlingFaktaData,
+    BehandlingFaktaErrors,
+    BehandlingFaktaResponses,
+    BehandlingOppdaterFaktaData,
+    BehandlingOppdaterFaktaErrors,
+    BehandlingOppdaterFaktaResponses,
+    VedtaksbrevLagSvgVedtaksbrevData,
+    VedtaksbrevLagSvgVedtaksbrevResponses,
 } from './types.gen';
 
 export type Options<
@@ -28,21 +30,38 @@ export type Options<
     meta?: Record<string, unknown>;
 };
 
-export const fakta = <ThrowOnError extends boolean = false>(
-    options: Options<FaktaData, ThrowOnError>
+export const behandlingFakta = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingFaktaData, ThrowOnError>
 ) =>
-    (options.client ?? client).get<FaktaResponses, FaktaErrors, ThrowOnError>({
+    (options.client ?? client).get<BehandlingFaktaResponses, BehandlingFaktaErrors, ThrowOnError>({
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/feilutbetaling',
         ...options,
     });
 
-export const oppdaterFakta = <ThrowOnError extends boolean = false>(
-    options: Options<OppdaterFaktaData, ThrowOnError>
+export const behandlingOppdaterFakta = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingOppdaterFaktaData, ThrowOnError>
 ) =>
-    (options.client ?? client).patch<OppdaterFaktaResponses, OppdaterFaktaErrors, ThrowOnError>({
+    (options.client ?? client).patch<
+        BehandlingOppdaterFaktaResponses,
+        BehandlingOppdaterFaktaErrors,
+        ThrowOnError
+    >({
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/feilutbetaling',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const vedtaksbrevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(
+    options: Options<VedtaksbrevLagSvgVedtaksbrevData, ThrowOnError>
+) =>
+    (options.client ?? client).post<VedtaksbrevLagSvgVedtaksbrevResponses, unknown, ThrowOnError>({
+        responseType: 'blob',
+        url: '/api/v1/brev/vedtaksbrev/svg',
         ...options,
         headers: {
             'Content-Type': 'application/json',

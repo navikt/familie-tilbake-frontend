@@ -2,7 +2,6 @@ import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
-import { ASpacing1 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { useEffect, useMemo } from 'react';
 
@@ -73,7 +72,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                 )} - ${formatterDatostring(periode.periode.tom)}`}</BodyShort>
             </Table.DataCell>
             <Table.DataCell>
-                <VStack gap="1" className={`mt-[${ASpacing1}]`}>
+                <VStack gap="space-4" className="mt-1">
                     {erLesevisning ? (
                         <BodyShort size="small">
                             {periode.hendelsestype && hendelsetyper[periode.hendelsestype]}

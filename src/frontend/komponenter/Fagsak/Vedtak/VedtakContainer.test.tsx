@@ -527,14 +527,16 @@ describe('VedtakContainer', () => {
                 getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
-            ).getByRole('button')
+            ).getByRole('button', { name: 'Vis mer' })
         );
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-            })
-        ).toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'true');
 
         expect(
             getAllByRole('button', {
@@ -629,43 +631,51 @@ describe('VedtakContainer', () => {
         ).toBeInTheDocument();
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-            })
-        ).not.toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'false');
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-            })
-        ).not.toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'false');
 
         await user.click(
             within(
                 getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
-            ).getByRole('button')
+            ).getByRole('button', { name: 'Vis mer' })
         );
         await user.click(
             within(
                 getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
-            ).getByRole('button')
+            ).getByRole('button', { name: 'Vis mer' })
         );
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-            })
-        ).toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'true');
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-            })
-        ).toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'true');
 
         expect(getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toHaveValue(
             'Denne friteksten var påkrevet'
@@ -727,56 +737,68 @@ describe('VedtakContainer', () => {
         ).toBeInTheDocument();
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-            })
-        ).not.toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'false');
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-            })
-        ).not.toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'false');
 
         await user.click(
             within(
                 getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
-            ).getByRole('button')
+            ).getByRole('button', { name: 'Vis mer' })
         );
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-            })
-        ).toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'true');
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-            })
-        ).not.toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'false');
 
         await user.click(
             within(
                 getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
-            ).getByRole('button')
+            ).getByRole('button', { name: 'Vis mer' })
         );
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
-            })
-        ).toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'true');
 
         expect(
-            getByRole('region', {
-                name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
-            })
-        ).toHaveClass('navds-expansioncard--open');
+            within(
+                getByRole('region', {
+                    name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
+                })
+            ).getByRole('button', { name: 'Vis mer' })
+        ).toHaveAttribute('aria-expanded', 'true');
 
         expect(getByText('Denne friteksten var påkrevet')).toBeInTheDocument();
         expect(getByText('Denne friteksten var lagt til ekstra')).toBeInTheDocument();

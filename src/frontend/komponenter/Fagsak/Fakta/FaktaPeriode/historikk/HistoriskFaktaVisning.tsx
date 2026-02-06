@@ -16,9 +16,9 @@ type Props = {
 
 const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
     return (
-        <HGrid columns={2} gap="10">
-            <VStack gap="6">
-                <HStack gap="5">
+        <HGrid columns={2} gap="space-40">
+            <VStack gap="space-24">
+                <HStack gap="space-20">
                     <div>
                         <BodyShort size="small" weight="semibold">
                             Periode med feilutbetaling
@@ -46,7 +46,7 @@ const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
                         </BodyShort>
                     </div>
                 </HStack>
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <Table>
                         <Table.Header>
                             <Table.HeaderCell textSize="small">Periode</Table.HeaderCell>
@@ -68,7 +68,7 @@ const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
                         </Table.Body>
                     </Table>
                 </VStack>
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold" size="small">
                         Har bruker uttalt seg om feilutbetalingen?
                     </BodyShort>

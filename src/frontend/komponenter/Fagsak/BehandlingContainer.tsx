@@ -24,6 +24,8 @@ import { VilkårsvurderingProvider } from './Vilkårsvurdering/Vilkårsvurdering
 import { useBehandling } from '../../context/BehandlingContext';
 import { useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
+import { ToggleName } from '../../context/toggles';
+import { useToggles } from '../../context/TogglesContext';
 import { Behandlingssteg, Behandlingstatus, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
@@ -51,6 +53,10 @@ const ForeldelseContainer = lazyImportMedRetry(
 const VedtakContainer = lazyImportMedRetry(
     () => import('./Vedtak/VedtakContainer'),
     'VedtakContainer'
+);
+const OpprettVedtaksbrev = lazyImportMedRetry(
+    () => import('./Vedtak/OpprettVedtaksbrev'),
+    'OpprettVedtaksbrev'
 );
 const VergeContainer = lazyImportMedRetry(() => import('./Verge/VergeContainer'), 'VergeContainer');
 const VilkårsvurderingContainer = lazyImportMedRetry(
@@ -164,7 +170,7 @@ type AktivBehandlingProps = {
 
 const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
-
+    const { toggles } = useToggles();
     return (
         <>
             <section
@@ -230,9 +236,13 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
-                                    <VedtakProvider>
-                                        <VedtakContainer />
-                                    </VedtakProvider>
+                                    behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
+                                        <OpprettVedtaksbrev />
+                                    ) : (
+                                        <VedtakProvider>
+                                            <VedtakContainer />
+                                        </VedtakProvider>
+                                    )
                                 }
                             />
                             <Route

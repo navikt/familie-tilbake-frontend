@@ -1,7 +1,7 @@
 import type { Feil } from '../../../../api/feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
-import { Button, Heading, Link, List, Modal, VStack } from '@navikt/ds-react';
+import { Button, Heading, Link, List, Modal, VStack, Box } from '@navikt/ds-react';
 import React from 'react';
 
 import { hentFeilObjekt } from './feilObjekt';
@@ -30,39 +30,44 @@ export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Pro
             </Modal.Header>
             <Modal.Body className="flex flex-col gap-6">
                 <p className="text-[#010B18AD] pt-4">{feilObjekt.httpStatus}</p>
-                <VStack gap="4">
-                    <VStack gap="4" className="border-b border-solid border-b-[#071A3636] pb-6">
+                <VStack gap="space-16">
+                    <VStack
+                        gap="space-16"
+                        className="border-b border-solid border-b-[#071A3636] pb-6"
+                    >
                         <h2 className="font-semibold text-xl">{beskjed ?? feilObjekt.beskjed}</h2>
                         <p>{feil.message}</p>
                         <VStack>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>
-                            <List as="ul" size="small">
-                                {!innheholderCSRFTokenFeil &&
-                                    feilObjekt.hvaKanGjøres.map((handling, index) => (
-                                        <List.Item key={`${handling}${index}`}>
-                                            {handling}
+                            <Box marginBlock="space-12" asChild>
+                                <List data-aksel-migrated-v8 as="ul" size="small">
+                                    {!innheholderCSRFTokenFeil &&
+                                        feilObjekt.hvaKanGjøres.map((handling, index) => (
+                                            <List.Item key={`${handling}${index}`}>
+                                                {handling}
+                                            </List.Item>
+                                        ))}
+                                    {innheholderCSRFTokenFeil && (
+                                        <List.Item>
+                                            Lagre det du holder på med, og last siden på nytt
                                         </List.Item>
-                                    ))}
-                                {innheholderCSRFTokenFeil && (
-                                    <List.Item>
-                                        Lagre det du holder på med, og last siden på nytt
-                                    </List.Item>
-                                )}
-                                {(feil.status !== 403 || innheholderCSRFTokenFeil) && (
-                                    <List.Item>
-                                        <Link
-                                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
-                                            target="_blank"
-                                        >
-                                            Meld feil i porten
-                                        </Link>
-                                    </List.Item>
-                                )}
-                            </List>
+                                    )}
+                                    {(feil.status !== 403 || innheholderCSRFTokenFeil) && (
+                                        <List.Item>
+                                            <Link
+                                                href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                                                target="_blank"
+                                            >
+                                                Meld feil i porten
+                                            </Link>
+                                        </List.Item>
+                                    )}
+                                </List>
+                            </Box>
                         </VStack>
                     </VStack>
                     {(eksternFagsakId || behandlingId) && (
-                        <VStack gap="1" className="text-sm text-[#010B18AD]">
+                        <VStack gap="space-4" className="text-sm text-[#010B18AD]">
                             {eksternFagsakId && <span>Fagsak ID: {eksternFagsakId}</span>}
                             {behandlingId && <span>Behandling ID: {behandlingId}</span>}
                         </VStack>

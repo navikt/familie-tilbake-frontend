@@ -24,9 +24,9 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteg
     return (
         <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
             <ToggleGroup
+                data-color="neutral"
                 value={valgtSide}
                 onChange={value => setValgtSide(value as Menysider)}
-                variant="neutral"
                 size="small"
                 fill
                 className="sticky top-0"

@@ -2,6 +2,7 @@ import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
 import { FagsakContext } from '../../../../context/FagsakContext';
@@ -266,23 +267,22 @@ describe('Brukeruttalelse', () => {
             });
 
             test('skal begrense kalenderen til dagens dato (toDate)', async () => {
+                const user = userEvent.setup();
                 renderBrukeruttalelse();
 
                 const brukeruttalelseFieldset = screen.getByRole('group', {
                     name: /har brukeren uttalt seg etter forhåndsvarselet/i,
                 });
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
-                fireEvent.click(jaRadio);
+                await user.click(jaRadio);
 
                 await screen.findByLabelText('Når uttalte brukeren seg?');
 
                 const kalenderKnapp = screen.getAllByRole('button', { name: 'Åpne datovelger' });
                 const uttalelsesKalenderKnapp = kalenderKnapp[0];
-                fireEvent.click(uttalelsesKalenderKnapp);
+                await user.click(uttalelsesKalenderKnapp);
 
-                const kalender = await screen.findByRole('dialog');
-
-                const nesteMånedKnapp = within(kalender).getByRole('button', {
+                const nesteMånedKnapp = await screen.findByRole('button', {
                     name: /gå til neste måned/i,
                 });
                 expect(nesteMånedKnapp).toBeDisabled();

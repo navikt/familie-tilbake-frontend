@@ -9,7 +9,7 @@ import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { csrfBeskyttelse } from './backend/auth/middleware';
 import konfigurerSession from './backend/auth/session';
-import { appConfig, sessionConfig, texasConfig } from './config';
+import { appConfig, proxyUrl, sessionConfig, texasConfig } from './config';
 import { logInfo } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
@@ -36,8 +36,9 @@ import setupRouter from './router';
         '/familie-tilbake/api',
         ensureAuthenticated(texasClient, true),
         attachToken(texasClient, appConfig.backendApiScope),
-        doProxy()
+        doProxy(proxyUrl)
     );
+    app.use('/api/v1/brev', doProxy('http://localhost:3000/api/v1/brev'));
 
     app.use('/redirect', doRedirectProxy());
 

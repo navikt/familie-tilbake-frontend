@@ -4,11 +4,11 @@ import type {
     FaktaOmFeilutbetaling,
     FaktaPeriode,
     MuligeRettsligGrunnlag,
-    OppdaterFaktaData,
-    OppdaterFaktaError,
+    BehandlingOppdaterFaktaData,
+    BehandlingOppdaterFaktaError,
     OppdaterFaktaOmFeilutbetaling,
     OppdaterFaktaPeriode,
-    OppdaterFaktaResponse,
+    BehandlingOppdaterFaktaResponse,
     Options,
 } from '../../../generated-new';
 import type { AxiosError } from 'axios';
@@ -28,7 +28,6 @@ import {
     useDatepicker,
     VStack,
 } from '@navikt/ds-react';
-import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatISO, parseISO } from 'date-fns';
@@ -115,9 +114,9 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
             : undefined,
     });
     const oppdaterMutation = useMutation<
-        OppdaterFaktaResponse,
-        AxiosError<OppdaterFaktaError>,
-        Options<OppdaterFaktaData>
+        BehandlingOppdaterFaktaResponse,
+        AxiosError<BehandlingOppdaterFaktaError>,
+        Options<BehandlingOppdaterFaktaData>
     >({
         mutationKey: ['oppdaterFakta'],
     });
@@ -158,8 +157,13 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
 
     return (
         <FormProvider {...methods}>
-            <VStack as="form" gap="8" onSubmit={methods.handleSubmit(onSubmit)} id="fakta-skjema">
-                <VStack as="section" gap="6" aria-label="Rettslig grunnlag innhold">
+            <VStack
+                as="form"
+                gap="space-32"
+                onSubmit={methods.handleSubmit(onSubmit)}
+                id="fakta-skjema"
+            >
+                <VStack as="section" gap="space-24" aria-label="Rettslig grunnlag innhold">
                     <Heading level="2" size="small">
                         Rettslig grunnlag
                     </Heading>
@@ -196,8 +200,8 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                 </VStack>
                 <VStack
                     as="section"
-                    maxWidth={ATextWidthMax}
-                    gap="6"
+                    gap="space-24"
+                    className="max-w-xl"
                     aria-label="Rettslig grunnlag innhold"
                 >
                     <Heading level="2" size="small">

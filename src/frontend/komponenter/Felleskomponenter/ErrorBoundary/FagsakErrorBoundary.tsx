@@ -31,9 +31,9 @@ class FagsakErrorBoundary extends Component<Props, State> {
             return (
                 <div className="min-h-screen bg-surface-subtle flex items-center justify-center p-8">
                     <div className="max-w-2xl w-full">
-                        <VStack gap="6">
+                        <VStack gap="space-24">
                             <Alert variant="error">
-                                <VStack gap="4">
+                                <VStack gap="space-16">
                                     <Heading size="medium" spacing>
                                         {isFagsakError
                                             ? 'Kunne ikke laste fagsak'

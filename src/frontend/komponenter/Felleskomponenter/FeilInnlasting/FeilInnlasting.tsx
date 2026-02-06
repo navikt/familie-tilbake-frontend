@@ -10,7 +10,7 @@ type Props = {
 
 const FeilInnlasting: React.FC<Props> = ({ komponentNavn }: Props) => {
     return (
-        <VStack gap="2" align="center" justify="center">
+        <VStack gap="space-8" align="center" justify="center">
             <Heading level="2" size="small" spacing className="mt-6">
                 Feil ved innlasting av {komponentNavn}
             </Heading>

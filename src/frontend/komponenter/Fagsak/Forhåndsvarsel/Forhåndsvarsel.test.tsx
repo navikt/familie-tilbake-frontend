@@ -157,7 +157,7 @@ describe('Forhåndsvarsel', () => {
         const radioGroup = await screen.findByRole('group', {
             name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
         });
-        expect(radioGroup).toHaveClass('navds-fieldset--readonly');
+        expect(radioGroup).toHaveClass('aksel-fieldset--readonly');
     });
 
     describe('Viser "nei"-valg og default values når unntak er sendt inn', () => {

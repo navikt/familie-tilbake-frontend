@@ -1,7 +1,6 @@
 import type { RessursByte } from '../../../generated';
 
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
-import { ASpacing1, ASpacing3, ASpacing6 } from '@navikt/ds-tokens/dist/tokens';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
@@ -13,14 +12,14 @@ const StyledModal = styled(Modal)`
 
     div.aksel-modal__body {
         height: 100%;
-        margin-right: ${ASpacing6};
+        margin-right: 24px;
         overflow: hidden;
     }
 
     button.aksel-modal__button {
-        right: ${ASpacing1};
-        top: ${ASpacing3};
-        padding: ${ASpacing1};
+        right: 4px;
+        top: 12px;
+        padding: 4px;
     }
 `;
 

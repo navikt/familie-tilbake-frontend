@@ -13,7 +13,7 @@ export const Verge: React.FC = () => {
     const adresseKilde = watch('verge.adresseKilde');
 
     return (
-        <VStack gap="8">
+        <VStack gap="space-32">
             <Controller
                 name="verge.adresseKilde"
                 control={control}

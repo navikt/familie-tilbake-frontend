@@ -1,4 +1,4 @@
-import preset from '@navikt/ds-tailwind/darkside-tw3';
+import preset from '@navikt/ds-tailwind';
 
 export default {
     presets: [preset],
