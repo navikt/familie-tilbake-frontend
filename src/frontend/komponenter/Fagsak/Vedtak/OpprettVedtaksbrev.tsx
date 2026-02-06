@@ -14,32 +14,35 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { /* useEffect, useEffectEvent, useRef, */ useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
+import { mapVedtaksbrevTilVedtaksbrevData } from './mapper';
 import { vedtaksbrevDefaultValues } from './schema';
 import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-// const useDebounce = (updateFunction: () => void): (() => void) => {
-//     const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
-//     return (): void => {
-//         if (timeoutId.current) {
-//             clearTimeout(timeoutId.current);
-//         }
-//         timeoutId.current = setTimeout(() => {
-//             updateFunction();
-//             timeoutId.current = null;
-//         }, 500);
-//     };
-// };
+const useDebounce = (updateFunction: () => void): (() => void) => {
+    const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+    return (): void => {
+        if (timeoutId.current) {
+            clearTimeout(timeoutId.current);
+        }
+        timeoutId.current = setTimeout(() => {
+            updateFunction();
+            timeoutId.current = null;
+        }, 500);
+    };
+};
 
 const OpprettVedtaksbrev: React.FC = () => {
     const queryClient = useQueryClient();
+    const { ytelsestype } = useFagsak();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
     const methods = useForm<Vedtaksbrev>({
@@ -73,19 +76,22 @@ const OpprettVedtaksbrev: React.FC = () => {
         },
     });
 
-    // const sendInnSkjemaData = (): void => {
-    //     vedtaksbrevMutation.mutate({
-    //         body: methods.getValues(),
-    //     });
-    // };
+    const sendInnSkjemaData = (): void => {
+        const vedtaksbrevData = mapVedtaksbrevTilVedtaksbrevData(
+            ytelsestype.toLocaleLowerCase(),
+            methods.getValues()
+        );
+        vedtaksbrevMutation.mutate({
+            body: vedtaksbrevData,
+        });
+    };
 
-    // const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
-    // methods.watch(() => debouncedUpdate());
-
-    // const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
-    // useEffect(() => {
-    //     sendInnSkjemaVedFørsteRendering();
-    // }, []);
+    const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
+    methods.watch(() => debouncedUpdate());
+    const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
+    useEffect(() => {
+        sendInnSkjemaVedFørsteRendering();
+    }, []);
 
     return (
         <>
