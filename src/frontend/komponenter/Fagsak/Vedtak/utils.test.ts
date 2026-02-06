@@ -58,13 +58,12 @@ describe('tekstTilElementArray', () => {
         ]);
     });
 
-    test('trimmer ikke whitespace i begynnelsen eller slutten av avsnitt', () => {
-        // TODO: Vurder om vi faktisk ønsker å beholde whitespace, eller om det bør trimmes. Hvis det skal trimmes, må implementasjonen i tekstTilElementArray endres.
+    test('trimmer whitespace i begynnelsen og slutten av avsnitt', () => {
         const result = tekstTilElementArray('  Første med space  \n\n  Andre med space  ');
 
         expect(result).toEqual([
-            { type: 'rentekst', tekst: '  Første med space  ' },
-            { type: 'rentekst', tekst: '  Andre med space  ' },
+            { type: 'rentekst', tekst: 'Første med space' },
+            { type: 'rentekst', tekst: 'Andre med space' },
         ]);
     });
 });
