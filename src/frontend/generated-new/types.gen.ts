@@ -15,7 +15,7 @@ export type BestemmelseEllerGrunnlag = {
 };
 
 export type Brevmottaker = {
-    fultNavn: string;
+    navn: string;
     personIdent: string;
 };
 
@@ -121,7 +121,7 @@ export type UnderavsnittElement = {
 };
 
 export type Vedtaksbrev = {
-    innledning: string;
+    innledning: Array<Element>;
     perioder: Array<VedtaksbrevPeriode>;
     brevGjelder: Brevmottaker;
     ytelse: Ytelse;

@@ -13,13 +13,12 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { format, parseISO } from 'date-fns';
-import { nb } from 'date-fns/locale';
 import * as React from 'react';
 import { /* useEffect, useEffectEvent, useRef, */ useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { vedtaksbrevDefaultValues } from './schema';
+import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
@@ -48,6 +47,10 @@ const OpprettVedtaksbrev: React.FC = () => {
     });
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, settGjeldendeSide] = useState(1);
+
+    const [innledningTekst, setInnledningTekst] = useState(
+        elementArrayTilTekst(vedtaksbrevDefaultValues.innledning)
+    );
     const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
         baseURL: window.location.origin,
     });
@@ -95,7 +98,15 @@ const OpprettVedtaksbrev: React.FC = () => {
                             size="small"
                             maxLength={3000}
                             minRows={3}
-                            {...methods.register('innledning')}
+                            resize
+                            value={innledningTekst}
+                            onChange={e => setInnledningTekst(e.target.value)}
+                            onBlur={() =>
+                                methods.setValue(
+                                    'innledning',
+                                    tekstTilElementArray(innledningTekst)
+                                )
+                            }
                         />
                         {methods.getValues('perioder').map((periode, index) => (
                             <PeriodeAvsnittSkjema
@@ -177,30 +188,28 @@ const OpprettVedtaksbrev: React.FC = () => {
     );
 };
 
-const formaterPeriodeTittel = (fom: string, tom: string): string => {
-    const fomDato = format(parseISO(fom), 'd. MMMM yyyy', { locale: nb });
-    const tomDato = format(parseISO(tom), 'd. MMMM yyyy', { locale: nb });
-    return `${fomDato}–${tomDato}`;
-};
-
 type PeriodeAvsnittSkjemaProps = {
     periode: VedtaksbrevPeriode;
     indeks: number;
 };
 
 const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, indeks }) => {
-    const { register } = useFormContext<Vedtaksbrev>();
-    const [erÅpen, settErÅpen] = useState(false);
+    const { setValue } = useFormContext<Vedtaksbrev>();
 
     const periodeTittel = formaterPeriodeTittel(periode.fom, periode.tom);
 
+    const [beskrivelseTekst, setBeskrivelseTekst] = useState(
+        elementArrayTilTekst(periode.beskrivelse)
+    );
+    const [konklusjonTekst, setKonklusjonTekst] = useState(
+        elementArrayTilTekst(periode.konklusjon)
+    );
+    const [vurderingTekster, setVurderingTekster] = useState(
+        periode.vurderinger.map(vurdering => elementArrayTilTekst(vurdering.beskrivelse))
+    );
+
     return (
-        <ExpansionCard
-            size="small"
-            open={erÅpen}
-            onToggle={() => settErÅpen(prev => !prev)}
-            aria-label={periodeTittel}
-        >
+        <ExpansionCard size="small" aria-label={periodeTittel}>
             <ExpansionCard.Header className="flex items-center">
                 <BodyShort className="font-ax-bold">{periodeTittel}</BodyShort>
             </ExpansionCard.Header>
@@ -208,19 +217,21 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                 <VStack gap="space-24">
                     <VStack gap="space-16">
                         <Heading size="xsmall">Beskrivelse av perioden</Heading>
-                        {periode.beskrivelse.map((beskrivelse, beskrivelseIndeks) => (
-                            <Textarea
-                                key={beskrivelse.tekst}
-                                label={`Beskrivelse ${beskrivelseIndeks + 1}`}
-                                description="Beskriv kort hva som har skjedd i denne perioden"
-                                size="small"
-                                maxLength={3000}
-                                minRows={3}
-                                {...register(
-                                    `perioder.${indeks}.beskrivelse.${beskrivelseIndeks}.tekst`
-                                )}
-                            />
-                        ))}
+                        <Textarea
+                            label="Beskrivelse"
+                            description="Beskriv kort hva som har skjedd i denne perioden"
+                            size="small"
+                            maxLength={3000}
+                            minRows={3}
+                            value={beskrivelseTekst}
+                            onChange={e => setBeskrivelseTekst(e.target.value)}
+                            onBlur={() =>
+                                setValue(
+                                    `perioder.${indeks}.beskrivelse`,
+                                    tekstTilElementArray(beskrivelseTekst)
+                                )
+                            }
+                        />
                     </VStack>
 
                     {periode.konklusjon.length > 0 && (
@@ -228,35 +239,43 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                             <Heading size="xsmall">
                                 Hvordan har vi kommet fram til at du må betale tilbake?
                             </Heading>
-                            {periode.konklusjon.map((konklusjon, konklusjonIndeks) => (
-                                <Textarea
-                                    key={konklusjon.tekst}
-                                    label={`Konklusjon ${konklusjonIndeks + 1}`}
-                                    size="small"
-                                    maxLength={3000}
-                                    minRows={3}
-                                    {...register(
-                                        `perioder.${indeks}.konklusjon.${konklusjonIndeks}.tekst`
-                                    )}
-                                />
-                            ))}
+                            <Textarea
+                                label="Konklusjon"
+                                size="small"
+                                maxLength={3000}
+                                minRows={3}
+                                value={konklusjonTekst}
+                                onChange={e => setKonklusjonTekst(e.target.value)}
+                                onBlur={() =>
+                                    setValue(
+                                        `perioder.${indeks}.konklusjon`,
+                                        tekstTilElementArray(konklusjonTekst)
+                                    )
+                                }
+                            />
                         </VStack>
                     )}
 
                     {periode.vurderinger.map((vurdering, vurderingIndeks) => (
                         <VStack key={vurdering.tittel} gap="space-16">
-                            {vurdering.beskrivelse.map((beskrivelse, beskrivelseIndeks) => (
-                                <Textarea
-                                    key={beskrivelse.tekst}
-                                    label={vurdering.tittel}
-                                    size="small"
-                                    maxLength={3000}
-                                    minRows={3}
-                                    {...register(
-                                        `perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse.${beskrivelseIndeks}.tekst`
-                                    )}
-                                />
-                            ))}
+                            <Textarea
+                                label={vurdering.tittel}
+                                size="small"
+                                maxLength={3000}
+                                minRows={3}
+                                value={vurderingTekster[vurderingIndeks]}
+                                onChange={e => {
+                                    const nyeTekster = [...vurderingTekster];
+                                    nyeTekster[vurderingIndeks] = e.target.value;
+                                    setVurderingTekster(nyeTekster);
+                                }}
+                                onBlur={() =>
+                                    setValue(
+                                        `perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`,
+                                        tekstTilElementArray(vurderingTekster[vurderingIndeks])
+                                    )
+                                }
+                            />
                         </VStack>
                     ))}
                 </VStack>

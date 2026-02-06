@@ -1,8 +1,13 @@
 import type { Vedtaksbrev } from '../../../generated-new';
 
 export const vedtaksbrevDefaultValues: Vedtaksbrev = {
-    innledning:
-        'I brev 26. januar 2026 fikk du melding om at barnetrygden din er endret. Endringen førte til at du har fått utbetalt for mye. Du må betale tilbake 3 450 kroner, som er deler av det feilutbetalte beløpet. Du har ikke uttalt deg om feilutbetalingen.',
+    innledning: [
+        {
+            type: 'rentekst',
+            tekst: 'I brev 26. januar 2026 fikk du melding om at barnetrygden din er endret. Endringen førte til at du har fått utbetalt for mye. Du må betale tilbake 3 450 kroner, som er deler av det feilutbetalte beløpet.',
+        },
+        { type: 'rentekst', tekst: 'Du har ikke uttalt deg om feilutbetalingen.' },
+    ],
     perioder: [
         {
             fom: '2025-02-01',
@@ -63,7 +68,7 @@ export const vedtaksbrevDefaultValues: Vedtaksbrev = {
     ],
 
     brevGjelder: {
-        fultNavn: 'Bruker Testesen',
+        navn: 'Bruker Testesen',
         personIdent: '04206912345',
     },
     ytelse: {

@@ -1,0 +1,84 @@
+import { describe, expect, test } from 'vitest';
+
+import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
+
+describe('elementArrayTilTekst', () => {
+    test('konverterer ett element til tekst', () => {
+        const input = [{ type: 'rentekst' as const, tekst: 'Dette er en tekst' }];
+        const result = elementArrayTilTekst(input);
+
+        expect(result).toBe('Dette er en tekst');
+    });
+
+    test('konverterer flere elementer til tekst med dobbelt linjeskift', () => {
+        const input = [
+            { type: 'rentekst' as const, tekst: 'Første avsnitt' },
+            { type: 'rentekst' as const, tekst: 'Andre avsnitt' },
+            { type: 'rentekst' as const, tekst: 'Tredje avsnitt' },
+        ];
+        const result = elementArrayTilTekst(input);
+
+        expect(result).toBe('Første avsnitt\n\nAndre avsnitt\n\nTredje avsnitt');
+    });
+});
+
+describe('tekstTilElementArray', () => {
+    test('konverterer en enkel tekst til element', () => {
+        const result = tekstTilElementArray('Dette er en tekst');
+
+        expect(result).toEqual([{ type: 'rentekst', tekst: 'Dette er en tekst' }]);
+    });
+
+    test('konverterer tekst med dobbelt linjeskift til flere elementer', () => {
+        const result = tekstTilElementArray('Første avsnitt\n\nAndre avsnitt\n\nTredje avsnitt');
+
+        expect(result).toEqual([
+            { type: 'rentekst', tekst: 'Første avsnitt' },
+            { type: 'rentekst', tekst: 'Andre avsnitt' },
+            { type: 'rentekst', tekst: 'Tredje avsnitt' },
+        ]);
+    });
+
+    test('håndterer flere påfølgende linjeskift som ett skille', () => {
+        const result = tekstTilElementArray('Første\n\n\n\nAndre\n\n\n\n\nTredje');
+
+        expect(result).toEqual([
+            { type: 'rentekst', tekst: 'Første' },
+            { type: 'rentekst', tekst: 'Andre' },
+            { type: 'rentekst', tekst: 'Tredje' },
+        ]);
+    });
+
+    test('bevarer enkelt linjeskift innenfor samme element', () => {
+        const result = tekstTilElementArray('Første linje\nAndre linje\n\nNytt avsnitt');
+
+        expect(result).toEqual([
+            { type: 'rentekst', tekst: 'Første linje\nAndre linje' },
+            { type: 'rentekst', tekst: 'Nytt avsnitt' },
+        ]);
+    });
+
+    test('trimmer ikke whitespace i begynnelsen eller slutten av avsnitt', () => {
+        // TODO: Vurder om vi faktisk ønsker å beholde whitespace, eller om det bør trimmes. Hvis det skal trimmes, må implementasjonen i tekstTilElementArray endres.
+        const result = tekstTilElementArray('  Første med space  \n\n  Andre med space  ');
+
+        expect(result).toEqual([
+            { type: 'rentekst', tekst: '  Første med space  ' },
+            { type: 'rentekst', tekst: '  Andre med space  ' },
+        ]);
+    });
+});
+
+describe('formaterPeriodeTittel', () => {
+    test('formaterer periode med samme år', () => {
+        const result = formaterPeriodeTittel('2024-01-01', '2024-12-31');
+
+        expect(result).toBe('1. januar 2024–31. desember 2024');
+    });
+
+    test('formaterer periode over årsskifte', () => {
+        const result = formaterPeriodeTittel('2023-12-01', '2024-01-31');
+
+        expect(result).toBe('1. desember 2023–31. januar 2024');
+    });
+});

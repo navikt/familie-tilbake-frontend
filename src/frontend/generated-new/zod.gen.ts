@@ -8,7 +8,7 @@ export const zBestemmelseEllerGrunnlag = z.object({
 });
 
 export const zBrevmottaker = z.object({
-    fultNavn: z.string(),
+    navn: z.string(),
     personIdent: z.string(),
 });
 
@@ -120,7 +120,7 @@ export const zYtelse = z.object({
 });
 
 export const zVedtaksbrev = z.object({
-    innledning: z.string(),
+    innledning: z.array(zElement),
     perioder: z.array(zVedtaksbrevPeriode),
     brevGjelder: zBrevmottaker,
     ytelse: zYtelse,
