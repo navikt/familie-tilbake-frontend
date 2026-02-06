@@ -148,7 +148,7 @@ const OpprettVedtaksbrev: React.FC = () => {
                                     size="small"
                                     onClick={() => {
                                         vedtaksbrevMutation.reset();
-                                        // sendInnSkjemaData();
+                                        sendInnSkjemaData();
                                     }}
                                 >
                                     Last inn på nytt
