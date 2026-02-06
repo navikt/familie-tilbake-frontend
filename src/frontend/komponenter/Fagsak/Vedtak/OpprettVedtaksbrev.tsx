@@ -24,6 +24,7 @@ import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
+import { datoTilTekst } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -203,10 +204,9 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
             <ExpansionCard.Content>
                 <VStack gap="space-24">
                     <VStack gap="space-16">
-                        <Heading size="xsmall">Beskrivelse av perioden</Heading>
                         <Textarea
                             {...register(`perioder.${indeks}.beskrivelse`)}
-                            label="Beskrivelse"
+                            label={`Perioden fra og med ${datoTilTekst(periode.fom)} til og med ${datoTilTekst(periode.tom)}`}
                             description="Beskriv kort hva som har skjedd i denne perioden"
                             size="small"
                             maxLength={3000}
@@ -217,12 +217,9 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
 
                     {periode.konklusjon && (
                         <VStack gap="space-16">
-                            <Heading size="xsmall">
-                                Hvordan har vi kommet fram til at du må betale tilbake?
-                            </Heading>
                             <Textarea
                                 {...register(`perioder.${indeks}.konklusjon`)}
-                                label="Konklusjon"
+                                label="Hvordan har vi kommet fram til at du må betale tilbake?"
                                 size="small"
                                 maxLength={3000}
                                 minRows={3}

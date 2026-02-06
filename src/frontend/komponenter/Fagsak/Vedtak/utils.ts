@@ -1,7 +1,6 @@
 import type { Element } from '../../../generated-new';
 
-import { format, parseISO } from 'date-fns';
-import { nb } from 'date-fns/locale';
+import { datoTilTekst } from '../../../utils';
 
 export const elementArrayTilTekst = (elementer: Element[]): string => {
     return elementer.map(e => e.tekst).join('\n\n');
@@ -15,7 +14,7 @@ export const tekstTilElementArray = (tekst: string): Element[] => {
 };
 
 export const formaterPeriodeTittel = (fom: string, tom: string): string => {
-    const fomDato = format(parseISO(fom), 'd. MMMM yyyy', { locale: nb });
-    const tomDato = format(parseISO(tom), 'd. MMMM yyyy', { locale: nb });
+    const fomDato = datoTilTekst(fom);
+    const tomDato = datoTilTekst(tom);
     return `${fomDato}–${tomDato}`;
 };
