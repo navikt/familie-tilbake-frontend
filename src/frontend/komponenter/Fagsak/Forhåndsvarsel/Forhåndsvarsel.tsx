@@ -17,7 +17,6 @@ import {
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
     getUttalelseValues,
-    getUttalelseValuesBasertPåValg,
 } from './forhåndsvarselSchema';
 import { OpprettSkjema } from './skjema/OpprettSkjema';
 import { Uttalelse } from './skjema/UttalelseSkjema';
@@ -212,8 +211,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         useBehandlingState();
 
     const {
-        formState: { isDirty: forhåndsvarselIsDirty },
+        formState: { dirtyFields: forhåndsvarselDirtyFields },
     } = useFormContext<ForhåndsvarselFormData>();
+    const forhåndsvarselIsDirty = Object.keys(forhåndsvarselDirtyFields).length > 0;
 
     const begrunnelseForUnntak = useWatch({
         control: useFormContext<ForhåndsvarselFormData>().control,
@@ -244,32 +244,22 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
+    const initialUttalelseValues = getUttalelseValues(forhåndsvarselInfo);
+
     const uttalelseMethods = useForm<UttalelseFormData>({
         resolver: zodResolver(uttalelseSchema),
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         criteriaMode: 'all',
-        defaultValues: getUttalelseValues(forhåndsvarselInfo),
+        defaultValues: initialUttalelseValues,
     });
-
-    const uttalelseIsDirty = uttalelseMethods.formState.isDirty;
 
     const harUttaltSeg = useWatch({
         control: uttalelseMethods.control,
         name: 'harUttaltSeg',
     });
 
-    const getOppdatertUttalelseValues = useEffectEvent((harUttaltSeg: HarUttaltSeg) => {
-        if (harUttaltSeg) {
-            uttalelseMethods.reset(
-                getUttalelseValuesBasertPåValg(harUttaltSeg, forhåndsvarselInfo)
-            );
-        }
-    });
-
-    useEffect(() => {
-        getOppdatertUttalelseValues(harUttaltSeg);
-    }, [harUttaltSeg]);
+    const uttalelseIsDirty = harUttaltSeg !== initialUttalelseValues.harUttaltSeg;
 
     const getNesteKnappTekst = (): string => {
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
@@ -321,14 +311,13 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     };
 
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
-        if (!varselErSendt || skalSendeEllerOppdatereUnntak) {
-            return 'opprettForm';
-        }
-        if (varselErSendt || uttalelseIsDirty) {
+        if (uttalelseIsDirty && !forhåndsvarselIsDirty) {
             return 'uttalelseForm';
         }
-
-        return undefined;
+        if (varselErSendt) {
+            return skalSendeEllerOppdatereUnntak ? 'opprettForm' : 'uttalelseForm';
+        }
+        return 'opprettForm';
     })();
 
     return (

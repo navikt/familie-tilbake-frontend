@@ -12,7 +12,7 @@ import {
 } from '@navikt/ds-react';
 import { ATextWidthMax } from '@navikt/ds-tokens/dist/tokens';
 import { parseISO } from 'date-fns/parseISO';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { ToggleName } from '../../../../context/toggles';
@@ -71,10 +71,22 @@ export const Uttalelse: React.FC<Props> = ({
             methods.trigger('utsettUttalelseFrist.nyFrist');
         },
     });
-    const { fields } = useFieldArray({
+    const { fields, replace } = useFieldArray({
         control: methods.control,
         name: 'uttalelsesDetaljer',
     });
+
+    useEffect(() => {
+        if (harUttaltSeg === HarUttaltSeg.Ja && fields.length === 0) {
+            replace([
+                {
+                    hvorBrukerenUttalteSeg: '',
+                    uttalelsesdato: '',
+                    uttalelseBeskrivelse: '',
+                },
+            ]);
+        }
+    }, [harUttaltSeg, fields.length, replace]);
 
     return (
         <VStack
