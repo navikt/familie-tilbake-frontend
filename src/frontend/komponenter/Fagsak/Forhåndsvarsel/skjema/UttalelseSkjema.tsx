@@ -148,6 +148,7 @@ export const Uttalelse: React.FC<Props> = ({
                             readOnly={readOnly}
                             label="Hvordan uttalte brukeren seg?"
                             description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
+                            className="max-w-xl"
                             error={get(
                                 errors,
                                 `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg.message`
@@ -163,6 +164,7 @@ export const Uttalelse: React.FC<Props> = ({
                             maxLength={4000}
                             minRows={3}
                             resize
+                            className="max-w-xl"
                             error={get(
                                 errors,
                                 `uttalelsesDetaljer.${index}.uttalelseBeskrivelse.message`
@@ -179,6 +181,7 @@ export const Uttalelse: React.FC<Props> = ({
                     maxLength={4000}
                     minRows={3}
                     resize
+                    className="max-w-xl"
                     error={get(errors, 'kommentar.message')}
                 />
             )}
@@ -208,6 +211,7 @@ export const Uttalelse: React.FC<Props> = ({
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}
                         resize
+                        className="max-w-xl"
                         error={get(errors, 'utsettUttalelseFrist.begrunnelse.message')}
                     />
                 </>
