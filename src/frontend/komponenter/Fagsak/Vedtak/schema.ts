@@ -1,6 +1,30 @@
 import type { Vedtaksbrev } from '../../../generated-new';
 
-export const vedtaksbrevDefaultValues: Vedtaksbrev = {
+import { elementArrayTilTekst } from './utils';
+
+/**
+ * Skjema-type hvor Element[] er transformert til string for bruk i Textarea.
+ * Transformeres tilbake til Vedtaksbrev ved sending via mapper.
+ * Erstattes senere med zod-skjema som kan håndtere Element[] direkte i Textarea, og da kan denne typen fjernes.
+ */
+export type VedtaksbrevSkjema = {
+    innledning: string;
+    perioder: {
+        fom: string;
+        tom: string;
+        beskrivelse: string;
+        konklusjon: string;
+        vurderinger: {
+            tittel: string;
+            beskrivelse: string;
+        }[];
+    }[];
+    brevGjelder: Vedtaksbrev['brevGjelder'];
+    ytelse: Vedtaksbrev['ytelse'];
+    signatur: Vedtaksbrev['signatur'];
+};
+
+const vedtaksbrevMockData: Vedtaksbrev = {
     innledning: [
         {
             type: 'rentekst',
@@ -81,4 +105,21 @@ export const vedtaksbrevDefaultValues: Vedtaksbrev = {
         ansvarligSaksbehandler: 'Saks Behandler',
         besluttendeSaksbehandler: null,
     },
+};
+
+export const vedtaksbrevDefaultValues: VedtaksbrevSkjema = {
+    innledning: elementArrayTilTekst(vedtaksbrevMockData.innledning),
+    perioder: vedtaksbrevMockData.perioder.map(periode => ({
+        fom: periode.fom,
+        tom: periode.tom,
+        beskrivelse: elementArrayTilTekst(periode.beskrivelse),
+        konklusjon: elementArrayTilTekst(periode.konklusjon),
+        vurderinger: periode.vurderinger.map(vurdering => ({
+            tittel: vurdering.tittel,
+            beskrivelse: elementArrayTilTekst(vurdering.beskrivelse),
+        })),
+    })),
+    brevGjelder: vedtaksbrevMockData.brevGjelder,
+    ytelse: vedtaksbrevMockData.ytelse,
+    signatur: vedtaksbrevMockData.signatur,
 };

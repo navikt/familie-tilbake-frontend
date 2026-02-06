@@ -1,23 +1,17 @@
-import type {
-    Avsnitt,
-    Hovedavsnitt,
-    RotElement,
-    Vedtaksbrev,
-    VedtaksbrevData,
-    VedtaksbrevPeriode,
-} from '../../../generated-new';
+import type { VedtaksbrevSkjema } from './schema';
+import type { Avsnitt, Hovedavsnitt, RotElement, VedtaksbrevData } from '../../../generated-new';
 
 import { formatISO } from 'date-fns';
 
-import { formaterPeriodeTittel } from './utils';
+import { formaterPeriodeTittel, tekstTilElementArray } from './utils';
 
 export const mapVedtaksbrevTilVedtaksbrevData = (
     ytelsestype: string,
-    vedtaksbrev: Vedtaksbrev
+    vedtaksbrev: VedtaksbrevSkjema
 ): VedtaksbrevData => {
     const hovedavsnitt: Hovedavsnitt = {
         tittel: `Tilbakekreving av ${ytelsestype}`,
-        underavsnitt: vedtaksbrev.innledning.map(
+        underavsnitt: tekstTilElementArray(vedtaksbrev.innledning).map(
             element =>
                 ({
                     type: 'rentekst',
@@ -38,17 +32,17 @@ export const mapVedtaksbrevTilVedtaksbrevData = (
     };
 };
 
-const mapPeriodeTilAvsnitt = (periode: VedtaksbrevPeriode): Avsnitt => {
+const mapPeriodeTilAvsnitt = (periode: VedtaksbrevSkjema['perioder'][number]): Avsnitt => {
     const underavsnitt: RotElement[] = [];
 
-    periode.beskrivelse.forEach(element => {
+    tekstTilElementArray(periode.beskrivelse).forEach(element => {
         underavsnitt.push({
             type: 'rentekst',
             tekst: element.tekst,
         } as RotElement);
     });
 
-    periode.konklusjon.forEach(element => {
+    tekstTilElementArray(periode.konklusjon).forEach(element => {
         underavsnitt.push({
             type: 'rentekst',
             tekst: element.tekst,
@@ -59,7 +53,7 @@ const mapPeriodeTilAvsnitt = (periode: VedtaksbrevPeriode): Avsnitt => {
         underavsnitt.push({
             type: 'underavsnitt',
             tittel: vurdering.tittel,
-            underavsnitt: vurdering.beskrivelse,
+            underavsnitt: tekstTilElementArray(vurdering.beskrivelse),
         } as RotElement);
     });
 
