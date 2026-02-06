@@ -211,6 +211,7 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                             size="small"
                             maxLength={3000}
                             minRows={3}
+                            resize
                         />
                     </VStack>
 
@@ -225,6 +226,7 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                                 size="small"
                                 maxLength={3000}
                                 minRows={3}
+                                resize
                             />
                         </VStack>
                     )}
@@ -239,6 +241,7 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                                 size="small"
                                 maxLength={3000}
                                 minRows={3}
+                                resize
                             />
                         </VStack>
                     ))}
