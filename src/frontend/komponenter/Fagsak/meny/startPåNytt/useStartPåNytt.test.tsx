@@ -2,11 +2,16 @@ import type { Http } from '../../../../api/http/HttpProvider';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
-import { createElement } from 'react';
+import * as React from 'react';
+import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
 
 import { useStartPåNytt } from './useStartPåNytt';
 import { Feil } from '../../../../api/feil';
+import { FagsakContext } from '../../../../context/FagsakContext';
+import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
+import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
+import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 import { RessursStatus } from '../../../../typer/ressurs';
 
@@ -20,20 +25,21 @@ vi.mock('../../../../api/http/HttpProvider', () => ({
     }),
 }));
 
-const wrapper = ({ children }: { children: React.ReactNode }): React.ReactElement =>
-    createElement(QueryClientProvider, { client: createTestQueryClient() }, children);
+const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <QueryClientProvider client={createTestQueryClient()}>
+        <MemoryRouter>
+            <FagsakContext.Provider value={lagFagsak()}>
+                <TestBehandlingProvider behandling={lagBehandlingDto({ behandlingId })}>
+                    {children}
+                </TestBehandlingProvider>
+            </FagsakContext.Provider>
+        </MemoryRouter>
+    </QueryClientProvider>
+);
 
 describe('useStartPåNytt', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-    });
-
-    test('Burde kaste Feil med status 400 når tom behandlingId er gitt', async () => {
-        const { result } = renderHook(() => useStartPåNytt(), { wrapper });
-
-        await expect(result.current.mutateAsync('')).rejects.toEqual(
-            new Feil('Behandling id er påkrevd for å starte på nytt.', 400)
-        );
     });
 
     test('Burde håndtere tilbakestilling til fakta med status suksess', async () => {
@@ -44,7 +50,7 @@ describe('useStartPåNytt', () => {
 
         const { result } = renderHook(() => useStartPåNytt(), { wrapper });
 
-        const response = await result.current.mutateAsync(behandlingId);
+        const response = await result.current.mutateAsync();
 
         expect(mockRequest).toHaveBeenCalledWith({
             method: 'PUT',
@@ -68,7 +74,7 @@ describe('useStartPåNytt', () => {
 
         const { result } = renderHook(() => useStartPåNytt(), { wrapper });
 
-        await expect(result.current.mutateAsync(behandlingId)).rejects.toEqual(
+        await expect(result.current.mutateAsync()).rejects.toEqual(
             new Feil(mockFrontendFeilmelding, httpStatusCode)
         );
 
@@ -83,7 +89,7 @@ describe('useStartPåNytt', () => {
 
         const { result } = renderHook(() => useStartPåNytt(), { wrapper });
 
-        await expect(result.current.mutateAsync(behandlingId)).rejects.toEqual(
+        await expect(result.current.mutateAsync()).rejects.toEqual(
             new Feil('Ukjent feil ved å sette behandling tilbake til fakta.', 500)
         );
         expect(mockRequest).toHaveBeenCalled();
