@@ -88,6 +88,7 @@ const OpprettVedtaksbrev: React.FC = () => {
 
     const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
     methods.watch(() => debouncedUpdate());
+
     const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
     useEffect(() => {
         sendInnSkjemaVedFørsteRendering();
@@ -106,13 +107,13 @@ const OpprettVedtaksbrev: React.FC = () => {
                             minRows={3}
                             resize
                             value={innledningTekst}
-                            onChange={e => setInnledningTekst(e.target.value)}
-                            onBlur={() =>
+                            onChange={e => {
+                                setInnledningTekst(e.target.value);
                                 methods.setValue(
                                     'innledning',
-                                    tekstTilElementArray(innledningTekst)
-                                )
-                            }
+                                    tekstTilElementArray(e.target.value)
+                                );
+                            }}
                         />
                         {methods.getValues('perioder').map((periode, index) => (
                             <PeriodeAvsnittSkjema
@@ -230,13 +231,13 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                             maxLength={3000}
                             minRows={3}
                             value={beskrivelseTekst}
-                            onChange={e => setBeskrivelseTekst(e.target.value)}
-                            onBlur={() =>
+                            onChange={e => {
+                                setBeskrivelseTekst(e.target.value);
                                 setValue(
                                     `perioder.${indeks}.beskrivelse`,
-                                    tekstTilElementArray(beskrivelseTekst)
-                                )
-                            }
+                                    tekstTilElementArray(e.target.value)
+                                );
+                            }}
                         />
                     </VStack>
 
@@ -251,13 +252,13 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                                 maxLength={3000}
                                 minRows={3}
                                 value={konklusjonTekst}
-                                onChange={e => setKonklusjonTekst(e.target.value)}
-                                onBlur={() =>
+                                onChange={e => {
+                                    setKonklusjonTekst(e.target.value);
                                     setValue(
                                         `perioder.${indeks}.konklusjon`,
-                                        tekstTilElementArray(konklusjonTekst)
-                                    )
-                                }
+                                        tekstTilElementArray(e.target.value)
+                                    );
+                                }}
                             />
                         </VStack>
                     )}
@@ -274,13 +275,11 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
                                     const nyeTekster = [...vurderingTekster];
                                     nyeTekster[vurderingIndeks] = e.target.value;
                                     setVurderingTekster(nyeTekster);
-                                }}
-                                onBlur={() =>
                                     setValue(
                                         `perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`,
-                                        tekstTilElementArray(vurderingTekster[vurderingIndeks])
-                                    )
-                                }
+                                        tekstTilElementArray(e.target.value)
+                                    );
+                                }}
                             />
                         </VStack>
                     ))}
