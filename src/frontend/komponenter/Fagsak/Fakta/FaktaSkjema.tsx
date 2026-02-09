@@ -198,6 +198,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                                             faktaOmFeilutbetaling.muligeRettsligGrunnlag
                                         }
                                         behandlingILesemodus={behandlingILesemodus}
+                                        erSiste={periodeIndex === perioder.length - 1}
                                     />
                                 ))}
                             </Table.Body>
@@ -292,12 +293,14 @@ const PeriodeRad = ({
     periodeInfo,
     muligeRettsligGrunnlag,
     behandlingILesemodus,
+    erSiste,
 }: {
     periode: OppdaterFaktaPeriode;
     periodeIndex: number;
     periodeInfo: FaktaPeriode;
     muligeRettsligGrunnlag: MuligeRettsligGrunnlag[];
     behandlingILesemodus: boolean;
+    erSiste?: boolean;
 }): React.JSX.Element => {
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(
@@ -311,12 +314,10 @@ const PeriodeRad = ({
     };
     return (
         <Table.Row>
-            <Table.DataCell>
-                <span className="ml-2">
+            <Table.DataCell className={`pl-2 ${erSiste ? 'border-b-0 rounded-bl-xl' : ''}`}>
                     {formatterDatostring(periodeInfo.fom)}–{formatterDatostring(periodeInfo.tom)}
-                </span>
             </Table.DataCell>
-            <Table.DataCell>
+            <Table.DataCell className={erSiste ? 'border-b-0' : ''}>
                 <VStack>
                     {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
                         <Select
@@ -348,7 +349,7 @@ const PeriodeRad = ({
                     ))}
                 </VStack>
             </Table.DataCell>
-            <Table.DataCell>
+            <Table.DataCell className={erSiste ? 'border-b-0' : ''}>
                 <VStack>
                     {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
                         <Select
@@ -383,7 +384,9 @@ const PeriodeRad = ({
                     ))}
                 </VStack>
             </Table.DataCell>
-            <Table.DataCell className="text-end text-ax-text-brand-magenta">
+            <Table.DataCell
+                className={`text-end text-ax-text-brand-magenta ${erSiste ? 'border-b-0 rounded-br-xl' : ''}`}
+            >
                 {periodeInfo.feilutbetaltBeløp}
             </Table.DataCell>
             {/* <Table.DataCell className="text-center">
