@@ -8,6 +8,7 @@ import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { useStegNavigering } from '../../../../utils/sider';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
@@ -33,7 +34,7 @@ export const HentKorrigertKravgrunnlag: React.FC = () => {
                 });
 
                 await queryClient.invalidateQueries({
-                    queryKey: ['behandling', behandlingId],
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                 });
                 navigerTilBehandling();
             } else if (
