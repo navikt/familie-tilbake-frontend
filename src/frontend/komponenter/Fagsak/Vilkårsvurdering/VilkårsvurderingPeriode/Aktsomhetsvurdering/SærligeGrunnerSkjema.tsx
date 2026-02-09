@@ -61,6 +61,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     maxLength={3000}
                     size="small"
                     resize
+                    minRows={3}
                     aria-live="polite"
                     readOnly={erLesevisning}
                     value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
@@ -120,6 +121,7 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
                     settIkkePersistertKomponent(`vilkårsvurdering`);
                 }}
+                minRows={3}
             />
             <ReduksjonAvBeløpSkjema skjema={skjema} erLesevisning={erLesevisning} />
         </>

@@ -107,6 +107,7 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
                 }
                 size="small"
                 resize
+                minRows={3}
                 readOnly={erLesevisning}
                 value={
                     skjema.felter.aktsomhetBegrunnelse
