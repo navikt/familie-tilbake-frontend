@@ -49,6 +49,7 @@ type Props = {
 
 export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
     const { behandlingId } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const queryClient = useQueryClient();
@@ -192,6 +193,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                                         muligeRettsligGrunnlag={
                                             faktaOmFeilutbetaling.muligeRettsligGrunnlag
                                         }
+                                        behandlingILesemodus={behandlingILesemodus}
                                     />
                                 ))}
                             </Table.Body>
@@ -213,6 +215,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                         error={methods.formState.errors.vurdering?.årsak?.message}
                         size="small"
                         minRows={3}
+                        readOnly={behandlingILesemodus}
                         resize
                         maxLength={3000}
                         description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at brukeren har fått utbetalt for mye"
@@ -220,6 +223,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                     <DatePicker {...datepickerProps} dropdownCaption>
                         <DatePicker.Input
                             size="small"
+                            readOnly={behandlingILesemodus}
                             {...methods.register('vurdering.oppdaget.dato')}
                             {...datepickerInputProps}
                             onBlur={async event => {
@@ -233,6 +237,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                     <RadioGroup
                         name={avRadioGroupName}
                         size="small"
+                        readOnly={behandlingILesemodus}
                         legend="Hvem oppdaget feilutbetalingen?"
                         error={methods.formState.errors.vurdering?.oppdaget?.av?.message}
                     >
@@ -252,6 +257,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                     />
                 </VStack>
                 <ActionBar
@@ -278,11 +284,13 @@ const PeriodeRad = ({
     periodeIndex,
     periodeInfo,
     muligeRettsligGrunnlag,
+    behandlingILesemodus,
 }: {
     periode: OppdaterFaktaPeriode;
     periodeIndex: number;
     periodeInfo: FaktaPeriode;
     muligeRettsligGrunnlag: MuligeRettsligGrunnlag[];
+    behandlingILesemodus: boolean;
 }): React.JSX.Element => {
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(
@@ -308,6 +316,7 @@ const PeriodeRad = ({
                             label="Velg bestemmelse"
                             hideLabel
                             size="small"
+                            readOnly={behandlingILesemodus}
                             key={`${rettsligGrunnlag.bestemmelse}${index}`}
                             error={
                                 formState.errors.perioder
@@ -340,6 +349,7 @@ const PeriodeRad = ({
                             hideLabel
                             size="small"
                             key={`${rettsligGrunnlag.grunnlag}${index}`}
+                            readOnly={behandlingILesemodus}
                             error={
                                 formState.errors.perioder
                                     ?.at?.(periodeIndex)
