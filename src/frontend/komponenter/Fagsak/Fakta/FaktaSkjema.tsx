@@ -15,9 +15,9 @@ import type { AxiosError } from 'axios';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
+// import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import {
-    Button,
+    // Button,
     DatePicker,
     Heading,
     Radio,
@@ -179,7 +179,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                                     <Table.HeaderCell scope="col" className="text-end">
                                         Feilutbetalt beløp
                                     </Table.HeaderCell>
-                                    <Table.HeaderCell scope="col">Valg</Table.HeaderCell>
+                                    {/* <Table.HeaderCell scope="col">Valg</Table.HeaderCell> */}
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
@@ -369,14 +369,14 @@ const PeriodeRad = ({
             <Table.DataCell className="text-end text-ax-text-brand-magenta">
                 {periodeInfo.feilutbetaltBeløp}
             </Table.DataCell>
-            <Table.DataCell className="text-center">
+            {/* <Table.DataCell className="text-center">
                 <Button
                     size="small"
                     variant="tertiary"
                     className="align-middle"
                     icon={<MenuElipsisHorizontalIcon title="Legg til rettslig grunnlag" />}
                 />
-            </Table.DataCell>
+            </Table.DataCell> */}
         </Table.Row>
     );
 };
