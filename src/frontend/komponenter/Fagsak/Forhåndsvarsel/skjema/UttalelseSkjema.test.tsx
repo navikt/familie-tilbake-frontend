@@ -208,7 +208,9 @@ describe('Brukeruttalelse', () => {
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
                 fireEvent.click(jaRadio);
 
-                const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+                const nesteKnapp = await screen.findByRole('button', {
+                    name: 'Lagre og gå til neste',
+                });
                 fireEvent.click(nesteKnapp);
 
                 expect(
@@ -242,7 +244,9 @@ describe('Brukeruttalelse', () => {
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
                 fireEvent.click(jaRadio);
 
-                const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+                const nesteKnapp = await screen.findByRole('button', {
+                    name: 'Lagre og gå til neste',
+                });
                 fireEvent.click(nesteKnapp);
 
                 expect(await screen.findAllByText('Du må fylle inn en verdi')).toHaveLength(2);
