@@ -9,7 +9,7 @@ export const configureZod = (): void => {
             if (issue.code === 'invalid_type' && issue.input === null)
                 return 'Du må fylle inn en verdi';
             if (issue.code === 'invalid_format' && issue.format === 'date')
-                return 'Ugyldig datoformat';
+                return 'Du må skrive en dato på denne måten: dd.mm.åååå';
 
             return issue.message;
         },

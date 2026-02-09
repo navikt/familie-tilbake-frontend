@@ -30,8 +30,9 @@ import {
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { formatISO, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import * as React from 'react';
+import { useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
@@ -40,6 +41,7 @@ import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
+import { dateTilIsoDatoString } from '../../../utils/dato';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -53,6 +55,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
     const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const queryClient = useQueryClient();
+    const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
 
     const navigerTilNeste = useStegNavigering(Behandlingssteg.Forhåndsvarsel);
 
@@ -98,21 +101,22 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
-        onDateChange: async date => {
-            if (date) {
-                methods.setValue(
-                    'vurdering.oppdaget.dato',
-                    formatISO(date, { representation: 'date' }),
-                    { shouldDirty: true }
-                );
-            } else {
-                methods.setValue('vurdering.oppdaget.dato', '', { shouldDirty: true });
-            }
-            await methods.trigger('vurdering.oppdaget.dato');
-        },
+        toDate: new Date(),
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
             : undefined,
+        onDateChange: async date => {
+            const dateString = dateTilIsoDatoString(date);
+            methods.setValue('vurdering.oppdaget.dato', dateString);
+            await methods.trigger('vurdering.oppdaget.dato');
+        },
+        onValidate: val => {
+            if (val.isAfter) {
+                setUttalelsesdatoFeil('Datoen kan ikke være i fremtiden');
+            } else {
+                setUttalelsesdatoFeil(undefined);
+            }
+        },
     });
     const oppdaterMutation = useMutation<
         BehandlingOppdaterFaktaResponse,
@@ -231,7 +235,10 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                                 await methods.trigger('vurdering.oppdaget.dato');
                             }}
                             label="Når ble feilutbetalingen oppdaget?"
-                            error={methods.formState.errors.vurdering?.oppdaget?.dato?.message}
+                            error={
+                                uttalelsesdatoFeil ??
+                                methods.formState.errors.vurdering?.oppdaget?.dato?.message
+                            }
                         />
                     </DatePicker>
                     <RadioGroup

@@ -1,4 +1,4 @@
-import type { FaktaOmFeilutbetaling, OppdaterFaktaData } from '../../../generated-new';
+import type { FaktaOmFeilutbetaling, BehandlingOppdaterFaktaData } from '../../../generated-new';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -67,11 +67,11 @@ const faktaOmFeilutbetaling = (
 
 const renderFakta = (
     overrides?: Partial<FaktaOmFeilutbetaling>
-): { result: RenderResult; mutationBody: Promise<OppdaterFaktaData> } => {
+): { result: RenderResult; mutationBody: Promise<BehandlingOppdaterFaktaData> } => {
     const client = createTestQueryClient();
-    const mutationBody = new Promise<OppdaterFaktaData>(resolve => {
+    const mutationBody = new Promise<BehandlingOppdaterFaktaData>(resolve => {
         client.setMutationDefaults(['oppdaterFakta'], {
-            mutationFn: async (fakta: OppdaterFaktaData) => {
+            mutationFn: async (fakta: BehandlingOppdaterFaktaData) => {
                 resolve(fakta);
                 return faktaOmFeilutbetaling({
                     ferdigvurdert: true,
@@ -375,7 +375,9 @@ describe('Fakta om feilutbetaling', () => {
                 name: 'Når ble feilutbetalingen oppdaget?',
             });
             expect(oppdagetDato).toBeInvalid();
-            expect(oppdagetDato).toHaveAccessibleDescription('Ugyldig datoformat');
+            expect(oppdagetDato).toHaveAccessibleDescription(
+                'Du må skrive en dato på denne måten: dd.mm.åååå'
+            );
         });
 
         test('Viser lagreknapp dersom fakta ikke er ferdigvurdert, men uendret', async () => {
@@ -435,7 +437,9 @@ describe('Fakta om feilutbetaling', () => {
             fireEvent.click(
                 await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
             );
-            expect(await datoSelector()).toHaveAccessibleDescription('Ugyldig datoformat');
+            expect(await datoSelector()).toHaveAccessibleDescription(
+                'Du må skrive en dato på denne måten: dd.mm.åååå'
+            );
 
             fireEvent.click(await findByRole('button', { name: 'Åpne datovelger' }));
             fireEvent.change(await findByRole('combobox', { name: 'År' }), {
