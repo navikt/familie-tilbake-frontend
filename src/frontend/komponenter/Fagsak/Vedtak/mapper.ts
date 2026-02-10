@@ -16,7 +16,7 @@ export const mapVedtaksbrevTilVedtaksbrevData = (
                 ({
                     type: 'rentekst',
                     tekst: element.tekst,
-                }) as RotElement
+                }) satisfies RotElement
         ),
     };
 
