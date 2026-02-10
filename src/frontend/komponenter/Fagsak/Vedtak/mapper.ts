@@ -39,14 +39,14 @@ const mapPeriodeTilAvsnitt = (periode: VedtaksbrevSkjema['perioder'][number]): A
         underavsnitt.push({
             type: 'rentekst',
             tekst: element.tekst,
-        } as RotElement);
+        } satisfies RotElement);
     });
 
     tekstTilElementArray(periode.konklusjon).forEach(element => {
         underavsnitt.push({
             type: 'rentekst',
             tekst: element.tekst,
-        } as RotElement);
+        } satisfies RotElement);
     });
 
     periode.vurderinger.forEach(vurdering => {
@@ -54,7 +54,7 @@ const mapPeriodeTilAvsnitt = (periode: VedtaksbrevSkjema['perioder'][number]): A
             type: 'underavsnitt',
             tittel: vurdering.tittel,
             underavsnitt: tekstTilElementArray(vurdering.beskrivelse),
-        } as RotElement);
+        } satisfies RotElement);
     });
 
     return {
