@@ -1,7 +1,10 @@
+import type { SynligSteg } from '../../../utils/sider';
+
 import { Button, Heading, Link, List, LocalAlert, VStack } from '@navikt/ds-react';
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 
 type Props = {
+    steg: SynligSteg;
     children: ReactNode;
 };
 
@@ -10,7 +13,28 @@ type State = {
     error: Error | null;
 };
 
-export class FaktaErrorBoundary extends Component<Props, State> {
+const mapSynligStegTilStegNavn = (steg: SynligSteg): string => {
+    switch (steg.steg) {
+        case 'BREVMOTTAKER':
+            return 'Brevmottaker(e)';
+        case 'VERGE':
+            return 'Verge';
+        case 'FAKTA':
+            return 'Fakta om feilutbetalingen';
+        case 'FORHÅNDSVARSEL':
+            return 'Forhåndsvarsel';
+        case 'FORELDELSE':
+            return 'Foreldelse';
+        case 'VILKÅRSVURDERING':
+            return 'Vilkårsvurdering';
+        case 'FATTE_VEDTAK':
+            return 'Vedtak';
+        default:
+            return 'Steg';
+    }
+};
+
+export class StegErrorBoundary extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = { hasError: false, error: null };
@@ -21,20 +45,17 @@ export class FaktaErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        console.error('Feil ved lasting av fakta:', error, errorInfo);
+        console.error('Feil ved lasting av steg:', error, errorInfo);
     }
-
     render(): ReactNode {
-        if (this.state.hasError) {
+        if (!this.state.hasError) {
             return (
                 <VStack gap="space-24">
-                    <Heading size="medium">Fakta om feilutbetalingen</Heading>
+                    <Heading size="medium">{mapSynligStegTilStegNavn(this.props.steg)}</Heading>
 
                     <LocalAlert status="error">
                         <LocalAlert.Header>
-                            <LocalAlert.Title>
-                                Henting av fakta om feilutbetaling feilet
-                            </LocalAlert.Title>
+                            <LocalAlert.Title>Henting av data feilet</LocalAlert.Title>
                         </LocalAlert.Header>
                         <LocalAlert.Content className="flex flex-col gap-4">
                             <p className="flex flex-col">

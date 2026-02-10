@@ -11,7 +11,7 @@ import { ActionBar } from './ActionBar/ActionBar';
 import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
 import { Fakta } from './Fakta/Fakta';
 import { FaktaProvider } from './Fakta/FaktaContext';
-import { FaktaErrorBoundary } from './Fakta/FaktaErrorBoundary';
+import { StegErrorBoundary } from '../Felleskomponenter/ErrorBoundary/StegErrorBoundary';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
 import { FaktaSkeleton } from './Fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
@@ -32,6 +32,7 @@ import { formatterDatostring } from '../../utils';
 import {
     erHistoriskSide,
     erØnsketSideTilgjengelig,
+    SYNLIGE_STEG,
     useStegNavigering,
     utledBehandlingSide,
 } from '../../utils/sider';
@@ -203,11 +204,11 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
                                     behandling.erNyModell ? (
-                                        <FaktaErrorBoundary>
+                                        <StegErrorBoundary steg={SYNLIGE_STEG.FAKTA}>
                                             <Suspense fallback={<FaktaSkeleton />}>
                                                 <Fakta />
                                             </Suspense>
-                                        </FaktaErrorBoundary>
+                                        </StegErrorBoundary>
                                     ) : (
                                         <FaktaProvider>
                                             <FaktaContainer />
