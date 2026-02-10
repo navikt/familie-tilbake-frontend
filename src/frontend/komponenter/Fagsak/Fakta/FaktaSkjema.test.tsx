@@ -175,7 +175,7 @@ describe('Fakta om feilutbetaling', () => {
             );
             await waitFor(async () => {
                 fireEvent.click(
-                    await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+                    await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
                 );
             });
             await expect(mutationBody).resolves.toEqual({
@@ -212,7 +212,7 @@ describe('Fakta om feilutbetaling', () => {
             } = renderFakta({});
 
             const nesteKnapp = await findByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
+                name: 'Gå videre til forhåndsvarselsteget',
             });
             expect(nesteKnapp).toHaveAttribute('type', 'submit');
 
@@ -222,7 +222,7 @@ describe('Fakta om feilutbetaling', () => {
 
             fireEvent.change(oppdagetDato, { target: { value: '20.04.2020' } });
             const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
+                name: 'Gå videre til forhåndsvarselsteget',
             });
             expect(submitKnapp).toHaveAttribute('type', 'submit');
         });
@@ -242,7 +242,7 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             const nesteKnapp = await findByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
+                name: 'Gå videre til forhåndsvarselsteget',
             });
             expect(nesteKnapp).toHaveAttribute('type', 'submit');
 
@@ -252,7 +252,7 @@ describe('Fakta om feilutbetaling', () => {
             fireEvent.change(oppdagetDato, { target: { value: '' } });
 
             const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
+                name: 'Gå videre til forhåndsvarselsteget',
             });
             expect(submitKnapp).toHaveAttribute('type', 'submit');
         });
@@ -334,7 +334,7 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
             );
             const bestemmelseDropdown = await findByRole('combobox', {
                 name: 'Velg bestemmelse',
@@ -351,7 +351,7 @@ describe('Fakta om feilutbetaling', () => {
             );
 
             fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
             );
             const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
             expect(grunnlagDropdown).not.toHaveValue();
@@ -369,7 +369,7 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
             );
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
@@ -380,7 +380,7 @@ describe('Fakta om feilutbetaling', () => {
             );
         });
 
-        test('Viser lagreknapp dersom fakta ikke er ferdigvurdert, men uendret', async () => {
+        test('Viser fortsatt Neste dersom fakta ikke er ferdigvurdert, men uendret', async () => {
             const {
                 result: { findByRole },
             } = renderFakta({
@@ -388,10 +388,10 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
+                name: 'Gå videre til forhåndsvarselsteget',
             });
             expect(submitKnapp).toHaveAttribute('type', 'submit');
-            expect(submitKnapp).toHaveTextContent('Lagre');
+            expect(submitKnapp).toHaveTextContent('Neste');
         });
 
         test('Viser nesteknapp dersom fakta er ferdigvurdert og uendret', async () => {
@@ -410,7 +410,7 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
+                name: 'Gå videre til forhåndsvarselsteget',
             });
             expect(submitKnapp).toHaveAttribute('type', 'button');
             expect(submitKnapp).toHaveTextContent('Neste');
@@ -435,7 +435,7 @@ describe('Fakta om feilutbetaling', () => {
 
             fireEvent.change(await datoSelector(), { target: { value: 'lol' } });
             fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til foreldelsessteget' })
+                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
             );
             expect(await datoSelector()).toHaveAccessibleDescription(
                 'Du må skrive en dato på denne måten: dd.mm.åååå'

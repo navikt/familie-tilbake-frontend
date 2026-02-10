@@ -32,7 +32,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { parseISO } from 'date-fns';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
@@ -107,7 +107,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
             : undefined,
         onDateChange: async date => {
             const dateString = dateTilIsoDatoString(date);
-            methods.setValue('vurdering.oppdaget.dato', dateString);
+            methods.setValue('vurdering.oppdaget.dato', dateString, { shouldDirty: true });
             await methods.trigger('vurdering.oppdaget.dato');
         },
         onValidate: val => {
@@ -125,17 +125,19 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
     >({
         mutationKey: ['oppdaterFakta'],
     });
-
-    methods.subscribe({
-        formState: { isDirty: true },
-        callback: data => {
-            if (data.isDirty) {
-                settIkkePersistertKomponent('fakta');
-            } else {
-                nullstillIkkePersisterteKomponenter();
-            }
-        },
-    });
+    useEffect(() => {
+        const unsubscribe = methods.subscribe({
+            formState: { isDirty: true },
+            callback: data => {
+                if (data.isDirty) {
+                    settIkkePersistertKomponent('fakta');
+                } else {
+                    nullstillIkkePersisterteKomponenter();
+                }
+            },
+        });
+        return unsubscribe;
+    }, [methods, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter]);
 
     const dataForPeriode = (id: string): FaktaPeriode =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
@@ -272,13 +274,15 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
                         ? {
                               type: 'submit',
-                              nesteTekst: 'Lagre og gå til neste',
+                              nesteTekst: methods.formState.isDirty
+                                  ? 'Lagre og gå til neste'
+                                  : 'Neste',
                               formId: 'fakta-skjema',
                           }
                         : { type: 'button', onNeste: navigerTilNeste })}
                     stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
                     forrigeAriaLabel={undefined}
-                    nesteAriaLabel="Gå videre til foreldelsessteget"
+                    nesteAriaLabel="Gå videre til forhåndsvarselsteget"
                     onForrige={undefined}
                     isLoading={oppdaterMutation.isPending}
                 />
@@ -315,7 +319,7 @@ const PeriodeRad = ({
     return (
         <Table.Row>
             <Table.DataCell className={`pl-2 ${erSiste ? 'border-b-0 rounded-bl-xl' : ''}`}>
-                    {formatterDatostring(periodeInfo.fom)}–{formatterDatostring(periodeInfo.tom)}
+                {formatterDatostring(periodeInfo.fom)}–{formatterDatostring(periodeInfo.tom)}
             </Table.DataCell>
             <Table.DataCell className={erSiste ? 'border-b-0' : ''}>
                 <VStack>
