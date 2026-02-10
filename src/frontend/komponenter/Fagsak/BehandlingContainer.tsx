@@ -11,8 +11,9 @@ import { ActionBar } from './ActionBar/ActionBar';
 import { BehandlingContainerSkeleton } from './BehandlingContainerSkeleton';
 import { Fakta } from './Fakta/Fakta';
 import { FaktaProvider } from './Fakta/FaktaContext';
-import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
+import { FaktaErrorBoundary } from './Fakta/FaktaErrorBoundary';
 import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/HistoriskFaktaContext';
+import { FaktaSkeleton } from './Fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
 import { HøyremenySkeleton } from './Høyremeny/HøyremenySkeleton';
@@ -34,6 +35,7 @@ import {
     useStegNavigering,
     utledBehandlingSide,
 } from '../../utils/sider';
+import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
@@ -201,7 +203,11 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/fakta'}
                                 element={
                                     behandling.erNyModell ? (
-                                        <Fakta />
+                                        <FaktaErrorBoundary>
+                                            <Suspense fallback={<FaktaSkeleton />}>
+                                                <Fakta />
+                                            </Suspense>
+                                        </FaktaErrorBoundary>
                                     ) : (
                                         <FaktaProvider>
                                             <FaktaContainer />

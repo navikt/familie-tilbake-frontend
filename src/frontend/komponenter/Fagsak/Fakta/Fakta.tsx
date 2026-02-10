@@ -1,40 +1,32 @@
 import { Heading, Tag } from '@navikt/ds-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { FaktaSkeleton } from './FaktaSkeleton';
 import { FaktaSkjema } from './FaktaSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
-import { behandlingFakta } from '../../../generated-new';
-import { behandlingOppdaterFaktaMutation } from '../../../generated-new/@tanstack/react-query.gen';
+import {
+    behandlingFaktaOptions,
+    behandlingFaktaQueryKey,
+    behandlingOppdaterFaktaMutation,
+} from '../../../generated-new/@tanstack/react-query.gen';
 import { formatterDatostring } from '../../../utils';
 
 export const Fakta: React.FC = (): React.JSX.Element => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
-    const { data: faktaOmFeilutbetaling, isPending } = useQuery(
-        {
-            queryKey: ['hentFaktaOmFeilutbetaling'],
-            queryFn: () =>
-                behandlingFakta({
-                    path: {
-                        behandlingId: behandlingId,
-                    },
-                }),
-            select: data => data.data,
-        },
-        queryClient
+    const { data: faktaOmFeilutbetaling } = useSuspenseQuery(
+        behandlingFaktaOptions({ path: { behandlingId } })
     );
 
     queryClient.setMutationDefaults(['oppdaterFakta'], {
         ...behandlingOppdaterFaktaMutation(),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['hentFaktaOmFeilutbetaling'] });
+            await queryClient.invalidateQueries({
+                queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }),
+            });
         },
     });
-
-    if (isPending || !faktaOmFeilutbetaling) return <FaktaSkeleton />;
     return (
         <>
             <div className="flex flex-col gap-8" aria-label="Fakta om feilutbetaling">
