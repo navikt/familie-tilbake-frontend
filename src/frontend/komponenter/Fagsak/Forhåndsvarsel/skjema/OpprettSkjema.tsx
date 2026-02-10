@@ -68,6 +68,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                     <RadioGroup
                         {...field}
                         size="small"
+                        className="max-w-xl"
                         legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
                         description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                         fattes, slik at de får mulighet til å uttale seg."
@@ -92,7 +93,7 @@ export const OpprettSkjema: React.FC<Props> = ({
                                     {varselbrevtekster.overskrift}
                                 </Heading>
                             </HStack>
-                            <VStack>
+                            <VStack className="max-w-xl">
                                 {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                                     <Fragment key={avsnitt.title}>
                                         <Heading size="xsmall" level="4" spacing>

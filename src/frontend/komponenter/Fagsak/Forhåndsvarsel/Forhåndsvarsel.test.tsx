@@ -2,7 +2,7 @@ import type { BehandlingDto, ForhåndsvarselDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
@@ -138,8 +138,8 @@ describe('Forhåndsvarsel', () => {
 
         renderForhåndsvarsel();
 
-        expect(await screen.findByText(/Sendt/)).toBeInTheDocument();
-        expect(screen.getByLabelText(/sendt/i)).toBeInTheDocument();
+        const tag = await screen.findByText(/Sendt/);
+        expect(tag).toBeInTheDocument();
     });
 
     test('Låser valg når varsel er sendt', async () => {
@@ -237,6 +237,33 @@ describe('Forhåndsvarsel', () => {
             ).toBeInTheDocument();
         });
 
+        test('Viser "Lagre og gå til neste" når kun kommentarfeltet i uttalelse endres', async () => {
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Opprinnelig kommentar',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const kommentarFelt = await screen.findByLabelText('Kommentar til valget over');
+            fireEvent.change(kommentarFelt, { target: { value: 'Endret kommentar' } });
+
+            expect(
+                await screen.findByRole('button', { name: 'Lagre og gå til neste' })
+            ).toBeInTheDocument();
+        });
+
         test('Viser "Neste" når varsel er sendt og bruker skal uttale seg', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
@@ -265,7 +292,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const brukeruttalelseFieldset = await screen.findByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                name: /har brukeren uttalt seg/i,
             });
             fireEvent.click(
                 within(brukeruttalelseFieldset).getByLabelText('Utsett frist for å uttale seg')
@@ -299,7 +326,22 @@ describe('Forhåndsvarsel', () => {
             expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Bruker uttalelseForm når unntak er registrert', async () => {
+        test('Bruker opprettForm når bruker velger Nei og ÅPENBART_UNØDVENDIG', async () => {
+            renderForhåndsvarsel();
+
+            const neiRadio = screen.getByRole('radio', { name: 'Nei' });
+            fireEvent.click(neiRadio);
+
+            const åpenbartUnødvendigRadio = await screen.findByRole('radio', {
+                name: /Varsel anses som åpenbart unødvendig/,
+            });
+            fireEvent.click(åpenbartUnødvendigRadio);
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+        });
+
+        test('Bruker opprettForm når unntak er lagret og bruker endrer til ÅPENBART_UNØDVENDIG', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -314,11 +356,42 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
+            const åpenbartUnødvendigRadio = await screen.findByRole('radio', {
+                name: /Varsel anses som åpenbart unødvendig/,
+            });
+            fireEvent.click(åpenbartUnødvendigRadio);
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+        });
+
+        test('Neste-knapp har form-attributt når brukeruttalelse allerede er registrert (kan redigeres)', async () => {
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'JA',
+                            uttalelsesdetaljer: [
+                                {
+                                    uttalelsesdato: '2023-01-15',
+                                    hvorBrukerenUttalteSeg: 'Telefon',
+                                    uttalelseBeskrivelse: 'Bruker har uttalt seg',
+                                },
+                            ],
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
             expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Neste-knapp har ikke form-attributt når brukeruttalelse allerede er registrert', async () => {
+        test('Neste-knapp har form-attributt når varsel er sendt og uttalelse er registrert (kan redigeres)', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -341,24 +414,60 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).not.toHaveAttribute('form');
+            expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
+        });
+    });
+
+    describe('API-kall', () => {
+        test('Kaller ikke sendBrukeruttalelse når uttalelse ikke er endret', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'JA',
+                            uttalelsesdetaljer: [
+                                {
+                                    uttalelsesdato: '2023-01-15',
+                                    hvorBrukerenUttalteSeg: 'Telefon',
+                                    uttalelseBeskrivelse: 'Bruker har uttalt seg',
+                                },
+                            ],
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+            fireEvent.click(nesteKnapp);
+
+            await waitFor(() => {
+                expect(mockMutations.navigerTilNeste).toHaveBeenCalled();
+            });
+            expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
         });
 
-        test('Neste-knapp har ikke form-attributt når varsel er sendt og uttalelse er registrert', async () => {
+        test('Kaller kun sendUnntak når kun unntak er endret ved ÅPENBART_UNØDVENDIG', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: lagForhåndsvarselInfo({
-                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Opprinnelig beskrivelse',
+                        },
                         brukeruttalelse: {
-                            harBrukerUttaltSeg: 'JA',
-                            uttalelsesdetaljer: [
-                                {
-                                    uttalelsesdato: '2023-01-15',
-                                    hvorBrukerenUttalteSeg: 'Telefon',
-                                    uttalelseBeskrivelse: 'Bruker har uttalt seg',
-                                },
-                            ],
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Kommentar',
                         },
                     }),
                 })
@@ -366,8 +475,300 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).not.toHaveAttribute('form');
+            const beskrivelsesFelt = await screen.findByLabelText(
+                'Forklar hvorfor forhåndsvarselet ikke skal bli sendt'
+            );
+            fireEvent.change(beskrivelsesFelt, { target: { value: 'Endret beskrivelse' } });
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            await waitFor(() => {
+                expect(mockMutations.sendUnntak).toHaveBeenCalled();
+            });
+            expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
+        });
+
+        test('Kaller kun sendBrukeruttalelse når kun uttalelse er endret (unntak uendret)', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Opprinnelig kommentar',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const kommentarFelt = await screen.findByLabelText('Kommentar til valget over');
+            fireEvent.change(kommentarFelt, { target: { value: 'Endret kommentar' } });
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            await waitFor(() => {
+                expect(mockMutations.sendBrukeruttalelse).toHaveBeenCalled();
+            });
+            expect(mockMutations.sendUnntak).not.toHaveBeenCalled();
+        });
+
+        test('Validerer uttalelsesfelt når bruker endrer fra Nei til Ja ved ÅPENBART_UNØDVENDIG', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            const mockQueries = vi.mocked(useForhåndsvarselQueries);
+            mockQueries.mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Kommentar',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const brukeruttalelseFieldset = await screen.findByRole('group', {
+                name: /har brukeren uttalt seg/i,
+            });
+            fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Ja'));
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            const feilmeldinger = await screen.findAllByText('Du må fylle inn en verdi');
+            expect(feilmeldinger.length).toBeGreaterThan(0);
+            expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
+        });
+
+        test('Validerer uttalelse ved ÅPENBART_UNØDVENDIG når uttalelse ikke er lagret', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: undefined,
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const brukeruttalelseFieldset = await screen.findByRole('group', {
+                name: /har brukeren uttalt seg/i,
+            });
+            expect(brukeruttalelseFieldset).toBeInTheDocument();
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            const feilmelding = await screen.findByText('Du må velge om brukeren har uttalt seg');
+            expect(feilmelding).toBeInTheDocument();
+            expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
+            expect(mockMutations.navigerTilNeste).not.toHaveBeenCalled();
+        });
+
+        test('Validerer uttalelse når bruker bytter fra §16b til §16c uten uttalelse lagret', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: undefined,
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const begrunnelseFieldset = await screen.findByRole('group', {
+                name: /velg begrunnelse for unntak/i,
+            });
+            fireEvent.click(within(begrunnelseFieldset).getByLabelText(/forvaltningsloven §16c/i));
+            const brukeruttalelseFieldset = await screen.findByRole('group', {
+                name: /har brukeren uttalt seg/i,
+            });
+            expect(brukeruttalelseFieldset).toBeInTheDocument();
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            const feilmelding = await screen.findByText('Du må velge om brukeren har uttalt seg');
+            expect(feilmelding).toBeInTheDocument();
+            expect(mockMutations.sendUnntak).not.toHaveBeenCalled();
+            expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
+        });
+
+        test('Fjerner feilmelding når bruker fyller ut påkrevd felt etter validering', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: undefined,
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const brukeruttalelseFieldset = await screen.findByRole('group', {
+                name: /har brukeren uttalt seg/i,
+            });
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            const feilmelding = await screen.findByText('Du må velge om brukeren har uttalt seg');
+            expect(feilmelding).toBeInTheDocument();
+
+            fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Nei'));
+
+            await waitFor(() => {
+                expect(
+                    screen.queryByText('Du må velge om brukeren har uttalt seg')
+                ).not.toBeInTheDocument();
+            });
+        });
+    });
+
+    describe('Knappetekst ved endring tilbake til utgangspunkt', () => {
+        test('Viser "Neste" når bruker bytter harUttaltSeg fra Nei til Ja og tilbake til Nei', async () => {
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Kommentar',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const brukeruttalelseFieldset = await screen.findByRole('group', {
+                name: /har brukeren uttalt seg/i,
+            });
+
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+
+            fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Ja'));
+            expect(
+                screen.getByRole('button', { name: 'Lagre og gå til neste' })
+            ).toBeInTheDocument();
+
+            fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Nei'));
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+            });
+        });
+
+        test('Viser "Neste" når bruker bytter skalSendeForhåndsvarsel fra Nei til Ja og tilbake til Nei', async () => {
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Kommentar',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const skalSendeFieldset = await screen.findByRole('group', {
+                name: /skal det sendes forhåndsvarsel/i,
+            });
+
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+
+            fireEvent.click(within(skalSendeFieldset).getByLabelText('Ja'));
+            expect(screen.getByRole('button', { name: 'Send forhåndsvarsel' })).toBeInTheDocument();
+
+            fireEvent.click(within(skalSendeFieldset).getByLabelText('Nei'));
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+            });
+        });
+
+        test('Viser "Neste" når bruker bytter begrunnelseForUnntak og tilbake til opprinnelig', async () => {
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: {
+                            harBrukerUttaltSeg: 'NEI',
+                            kommentar: 'Kommentar',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const begrunnelseFieldset = await screen.findByRole('group', {
+                name: /velg begrunnelse for unntak/i,
+            });
+
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+
+            fireEvent.click(within(begrunnelseFieldset).getByLabelText(/ikke praktisk mulig/i));
+            expect(
+                screen.getByRole('button', { name: 'Lagre og gå til neste' })
+            ).toBeInTheDocument();
+
+            fireEvent.click(within(begrunnelseFieldset).getByLabelText(/forvaltningsloven §16c/i));
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+            });
         });
     });
 });

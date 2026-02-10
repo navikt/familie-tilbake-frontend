@@ -208,11 +208,13 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     parentBounds,
     ref,
 }) => {
-    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
+        useBehandlingState();
 
     const {
-        formState: { isDirty },
+        formState: { dirtyFields: forhåndsvarselDirtyFields },
     } = useFormContext<ForhåndsvarselFormData>();
+    const forhåndsvarselIsDirty = Object.keys(forhåndsvarselDirtyFields).length > 0;
 
     const begrunnelseForUnntak = useWatch({
         control: useFormContext<ForhåndsvarselFormData>().control,
@@ -243,12 +245,14 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
+    const initialUttalelseValues = getUttalelseValues(forhåndsvarselInfo);
+
     const uttalelseMethods = useForm<UttalelseFormData>({
         resolver: zodResolver(uttalelseSchema),
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         criteriaMode: 'all',
-        defaultValues: getUttalelseValues(forhåndsvarselInfo),
+        defaultValues: initialUttalelseValues,
     });
 
     const harUttaltSeg = useWatch({
@@ -257,7 +261,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     });
 
     const getOppdatertUttalelseValues = useEffectEvent((harUttaltSeg: HarUttaltSeg) => {
-        if (harUttaltSeg) {
+        if (harUttaltSeg && harUttaltSeg === initialUttalelseValues.harUttaltSeg) {
             uttalelseMethods.reset(
                 getUttalelseValuesBasertPåValg(harUttaltSeg, forhåndsvarselInfo)
             );
@@ -268,40 +272,104 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         getOppdatertUttalelseValues(harUttaltSeg);
     }, [harUttaltSeg]);
 
-    const getNesteKnappTekst = (): string => {
-        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
-            return 'Utsett frist';
-        } else if (!varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja) {
-            return 'Send forhåndsvarsel';
-        } else if (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && isDirty) {
-            return 'Lagre og gå til neste';
-        }
-        return 'Neste';
-    };
+    const uttalelseIsDirty = Object.keys(uttalelseMethods.formState.dirtyFields).length > 0;
+
+    type SubmitAction =
+        | 'NAVIGER'
+        | 'SEND_FORHÅNDSVARSEL'
+        | 'SEND_UNNTAK_OG_UTTALELSE'
+        | 'SEND_UNNTAK'
+        | 'SEND_UTTALELSE'
+        | 'UTSETT_FRIST';
 
     const skalSendeForhåndsvarsel =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
-    const skalSendeUnntak =
-        skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
-        !forhåndsvarselInfo?.forhåndsvarselUnntak;
+
+    const getSubmitAction = (): SubmitAction => {
+        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
+            return 'UTSETT_FRIST';
+        }
+        if (skalSendeForhåndsvarsel) {
+            return 'SEND_FORHÅNDSVARSEL';
+        }
+
+        const uttalelseErLagret = !!forhåndsvarselInfo?.brukeruttalelse;
+        const uttalelseMåSendes =
+            uttalelseIsDirty ||
+            (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && !uttalelseErLagret);
+
+        const erUnntakFlyt =
+            !varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei;
+        if (erUnntakFlyt) {
+            if (forhåndsvarselIsDirty && uttalelseMåSendes) {
+                return 'SEND_UNNTAK_OG_UTTALELSE';
+            }
+            if (forhåndsvarselIsDirty) {
+                return 'SEND_UNNTAK';
+            }
+            if (uttalelseMåSendes) {
+                return 'SEND_UTTALELSE';
+            }
+        }
+
+        if (varselErSendt && uttalelseIsDirty) {
+            return 'SEND_UTTALELSE';
+        }
+
+        return 'NAVIGER';
+    };
+
+    const getNesteKnappTekst = (action: SubmitAction): string => {
+        switch (action) {
+            case 'UTSETT_FRIST':
+                return 'Utsett frist';
+            case 'SEND_FORHÅNDSVARSEL':
+                return 'Send forhåndsvarsel';
+            case 'NAVIGER':
+                return 'Neste';
+            default:
+                return 'Lagre og gå til neste';
+        }
+    };
+
+    const submitAction = getSubmitAction();
+
+    const validerUttalelseSkjema = async (): Promise<boolean> => {
+        let isValid = false;
+        await uttalelseMethods.handleSubmit(
+            () => {
+                isValid = true;
+            },
+            () => {
+                isValid = false;
+            }
+        )();
+        return isValid;
+    };
 
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
     ): Promise<void> => {
-        if (skalSendeForhåndsvarsel) {
-            sendForhåndsvarsel(data);
-        } else if (skalSendeUnntak) {
-            if (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') {
-                const uttalelseValid = await uttalelseMethods.trigger();
+        switch (submitAction) {
+            case 'SEND_FORHÅNDSVARSEL':
+                sendForhåndsvarsel(data);
+                break;
+            case 'SEND_UNNTAK':
+                sendUnntak(data);
+                break;
+            case 'SEND_UNNTAK_OG_UTTALELSE':
+            case 'SEND_UTTALELSE': {
+                const uttalelseValid = await validerUttalelseSkjema();
                 if (!uttalelseValid) return;
-
-                sendUnntak(data);
+                if (submitAction === 'SEND_UNNTAK_OG_UTTALELSE') {
+                    sendUnntak(data);
+                }
                 sendBrukeruttalelse(uttalelseMethods.getValues());
-            } else {
-                sendUnntak(data);
+                break;
             }
-        } else {
-            navigerTilNeste();
+            case 'NAVIGER':
+                navigerTilNeste();
+                break;
         }
         nullstillIkkePersisterteKomponenter();
     };
@@ -309,30 +377,27 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     const handleUttalelseSubmit: SubmitHandler<UttalelseFormData> = (
         data: UttalelseFormData
     ): void => {
+        if (submitAction === 'NAVIGER') {
+            navigerTilNeste();
+            return;
+        }
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             sendUtsettUttalelseFrist(data);
         }
         sendBrukeruttalelse(data);
     };
 
-    const harRegistrertBrukeruttalelse =
-        !!forhåndsvarselInfo?.brukeruttalelse ||
-        (forhåndsvarselInfo?.utsettUttalelseFrist?.length ?? 0) > 0;
-
-    const skalSendeUttalelse =
-        (varselErSendt || !!forhåndsvarselInfo?.forhåndsvarselUnntak) &&
-        !harRegistrertBrukeruttalelse;
-
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {
-        if (!varselErSendt && !forhåndsvarselInfo?.forhåndsvarselUnntak) {
-            return 'opprettForm';
-        }
-        if (skalSendeUttalelse) {
+        if (varselErSendt) {
             return 'uttalelseForm';
         }
-
-        return undefined;
+        return 'opprettForm';
     })();
+
+    const skalViseUttalelseSkjema =
+        varselErSendt ||
+        (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
+            begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
     return (
         <VStack gap="space-24" ref={ref}>
@@ -340,28 +405,23 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                readOnly={!!forhåndsvarselInfo?.forhåndsvarselUnntak}
+                readOnly={behandlingILesemodus}
             />
 
-            {forhåndsvarselInfo &&
-                ((skalSendeUnntak && begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') ||
-                    varselErSendt ||
-                    forhåndsvarselInfo.brukeruttalelse) && (
-                    <FormProvider {...uttalelseMethods}>
-                        <Uttalelse
-                            handleUttalelseSubmit={handleUttalelseSubmit}
-                            readOnly={
-                                !!forhåndsvarselInfo.brukeruttalelse ||
-                                forhåndsvarselInfo.utsettUttalelseFrist.length > 0
-                            }
-                            kanUtsetteFrist
-                        />
-                    </FormProvider>
-                )}
+            {forhåndsvarselInfo && skalViseUttalelseSkjema && (
+                <FormProvider {...uttalelseMethods}>
+                    <Uttalelse
+                        handleUttalelseSubmit={handleUttalelseSubmit}
+                        readOnly={behandlingILesemodus}
+                        kanUtsetteFrist
+                        varselErSendt={varselErSendt}
+                    />
+                </FormProvider>
+            )}
 
             <ActionBar
                 stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
-                nesteTekst={getNesteKnappTekst()}
+                nesteTekst={getNesteKnappTekst(submitAction)}
                 isLoading={
                     sendForhåndsvarselMutation.isPending ||
                     sendBrukeruttalelseMutation.isPending ||
@@ -369,7 +429,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 }
                 forrigeAriaLabel="Gå til fakta om feilutbetaling"
                 onForrige={navigerTilForrige}
-                nesteAriaLabel={getNesteKnappTekst()}
+                nesteAriaLabel={getNesteKnappTekst(submitAction)}
                 {...(formId
                     ? {
                           type: 'submit' as const,
