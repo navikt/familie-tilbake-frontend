@@ -1,4 +1,4 @@
-import { Heading, Tag } from '@navikt/ds-react';
+import { Heading, Tag, VStack } from '@navikt/ds-react';
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -29,10 +29,8 @@ export const Fakta: React.FC = (): React.JSX.Element => {
     });
     return (
         <>
-            <div className="flex flex-col gap-8" aria-label="Fakta om feilutbetaling">
-                <Heading level="1" size="medium">
-                    Fakta om feilutbetalingen
-                </Heading>
+            <VStack gap="space-24" aria-label="Fakta om feilutbetaling">
+                <Heading size="medium">Fakta om feilutbetalingen</Heading>
                 <section
                     className={classNames('flex md:flex-row flex-col flex-col-3 w-full gap-6', {
                         'flex-col-4': faktaOmFeilutbetaling.tidligereVarsletBeløp,
@@ -73,7 +71,7 @@ export const Fakta: React.FC = (): React.JSX.Element => {
                             </dd>
                         </div>
                     </div>
-                    <div className="flex flex-col flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                    <VStack className="flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
                         <Heading level="2" size="small">
                             Revurdering
                         </Heading>
@@ -111,10 +109,10 @@ export const Fakta: React.FC = (): React.JSX.Element => {
                                 </dd>
                             </div>
                         </dl>
-                    </div>
+                    </VStack>
                 </section>
                 <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling} />
-            </div>
+            </VStack>
         </>
     );
 };
