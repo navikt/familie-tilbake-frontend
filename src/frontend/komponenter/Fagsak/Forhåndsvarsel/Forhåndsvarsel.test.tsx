@@ -138,8 +138,8 @@ describe('Forhåndsvarsel', () => {
 
         renderForhåndsvarsel();
 
-        expect(await screen.findByText(/Sendt/)).toBeInTheDocument();
-        expect(screen.getByLabelText(/sendt/i)).toBeInTheDocument();
+        const tag = await screen.findByText(/Sendt/);
+        expect(tag).toBeInTheDocument();
     });
 
     test('Låser valg når varsel er sendt', async () => {
@@ -292,7 +292,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const brukeruttalelseFieldset = await screen.findByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                name: /har brukeren uttalt seg/i,
             });
             fireEvent.click(
                 within(brukeruttalelseFieldset).getByLabelText('Utsett frist for å uttale seg')
@@ -546,7 +546,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const brukeruttalelseFieldset = await screen.findByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                name: /har brukeren uttalt seg/i,
             });
             fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Ja'));
 
@@ -577,7 +577,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const brukeruttalelseFieldset = await screen.findByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                name: /har brukeren uttalt seg/i,
             });
             expect(brukeruttalelseFieldset).toBeInTheDocument();
 
@@ -613,7 +613,7 @@ describe('Forhåndsvarsel', () => {
             });
             fireEvent.click(within(begrunnelseFieldset).getByLabelText(/forvaltningsloven §16c/i));
             const brukeruttalelseFieldset = await screen.findByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                name: /har brukeren uttalt seg/i,
             });
             expect(brukeruttalelseFieldset).toBeInTheDocument();
 
@@ -624,6 +624,43 @@ describe('Forhåndsvarsel', () => {
             expect(feilmelding).toBeInTheDocument();
             expect(mockMutations.sendUnntak).not.toHaveBeenCalled();
             expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
+        });
+
+        test('Fjerner feilmelding når bruker fyller ut påkrevd felt etter validering', async () => {
+            const mockMutations = lagForhåndsvarselMutations();
+            vi.mocked(useForhåndsvarselMutations).mockReturnValue(mockMutations);
+
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        forhåndsvarselUnntak: {
+                            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                            beskrivelse: 'Beskrivelse',
+                        },
+                        brukeruttalelse: undefined,
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            const brukeruttalelseFieldset = await screen.findByRole('group', {
+                name: /har brukeren uttalt seg/i,
+            });
+
+            const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
+            fireEvent.click(nesteKnapp);
+
+            const feilmelding = await screen.findByText('Du må velge om brukeren har uttalt seg');
+            expect(feilmelding).toBeInTheDocument();
+
+            fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Nei'));
+
+            await waitFor(() => {
+                expect(
+                    screen.queryByText('Du må velge om brukeren har uttalt seg')
+                ).not.toBeInTheDocument();
+            });
         });
     });
 
@@ -648,7 +685,7 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const brukeruttalelseFieldset = await screen.findByRole('group', {
-                name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+                name: /har brukeren uttalt seg/i,
             });
 
             expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();

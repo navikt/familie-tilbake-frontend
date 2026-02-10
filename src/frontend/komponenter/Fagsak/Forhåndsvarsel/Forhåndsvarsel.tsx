@@ -292,19 +292,30 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
         if (skalSendeForhåndsvarsel) {
             return 'SEND_FORHÅNDSVARSEL';
         }
-        if (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG') {
-            const uttalelseErLagret = !!forhåndsvarselInfo?.brukeruttalelse;
-            const uttalelseMåSendes = uttalelseIsDirty || !uttalelseErLagret;
 
-            if (forhåndsvarselIsDirty && uttalelseMåSendes) return 'SEND_UNNTAK_OG_UTTALELSE';
-            if (forhåndsvarselIsDirty) return 'SEND_UNNTAK';
-            if (uttalelseMåSendes) return 'SEND_UTTALELSE';
-        } else if (forhåndsvarselIsDirty) {
-            return 'SEND_UNNTAK';
+        const uttalelseErLagret = !!forhåndsvarselInfo?.brukeruttalelse;
+        const uttalelseMåSendes =
+            uttalelseIsDirty ||
+            (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && !uttalelseErLagret);
+
+        const erUnntakFlyt =
+            !varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei;
+        if (erUnntakFlyt) {
+            if (forhåndsvarselIsDirty && uttalelseMåSendes) {
+                return 'SEND_UNNTAK_OG_UTTALELSE';
+            }
+            if (forhåndsvarselIsDirty) {
+                return 'SEND_UNNTAK';
+            }
+            if (uttalelseMåSendes) {
+                return 'SEND_UTTALELSE';
+            }
         }
+
         if (varselErSendt && uttalelseIsDirty) {
             return 'SEND_UTTALELSE';
         }
+
         return 'NAVIGER';
     };
 
@@ -323,6 +334,19 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     const submitAction = getSubmitAction();
 
+    const validerUttalelseSkjema = async (): Promise<boolean> => {
+        let isValid = false;
+        await uttalelseMethods.handleSubmit(
+            () => {
+                isValid = true;
+            },
+            () => {
+                isValid = false;
+            }
+        )();
+        return isValid;
+    };
+
     const handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData> = async (
         data: ForhåndsvarselFormData
     ): Promise<void> => {
@@ -335,7 +359,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                 break;
             case 'SEND_UNNTAK_OG_UTTALELSE':
             case 'SEND_UTTALELSE': {
-                const uttalelseValid = await uttalelseMethods.trigger();
+                const uttalelseValid = await validerUttalelseSkjema();
                 if (!uttalelseValid) return;
                 if (submitAction === 'SEND_UNNTAK_OG_UTTALELSE') {
                     sendUnntak(data);
@@ -390,6 +414,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                         handleUttalelseSubmit={handleUttalelseSubmit}
                         readOnly={behandlingILesemodus}
                         kanUtsetteFrist
+                        varselErSendt={varselErSendt}
                     />
                 </FormProvider>
             )}

@@ -23,12 +23,14 @@ type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
     readOnly: boolean;
     kanUtsetteFrist?: boolean;
+    varselErSendt: boolean;
 };
 
 export const Uttalelse: React.FC<Props> = ({
     handleUttalelseSubmit,
     readOnly,
     kanUtsetteFrist = false,
+    varselErSendt,
 }) => {
     const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
@@ -102,7 +104,11 @@ export const Uttalelse: React.FC<Props> = ({
                         {...field}
                         size="small"
                         readOnly={readOnly}
-                        legend="Har brukeren uttalt seg etter forhåndsvarselet?"
+                        legend={
+                            varselErSendt
+                                ? 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?'
+                                : 'Har brukeren uttalt seg?'
+                        }
                         error={fieldState.error?.message}
                     >
                         <Radio value={HarUttaltSeg.Ja}>Ja</Radio>

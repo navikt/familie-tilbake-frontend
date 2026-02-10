@@ -113,7 +113,7 @@ describe('ForhåndsvarselSkjema', () => {
         renderForhåndsvarselSkjemaSendt();
 
         expect(
-            await screen.findByText('Har brukeren uttalt seg etter forhåndsvarselet?')
+            await screen.findByText('Har brukeren uttalt seg etter forhåndsvarselet ble sendt?')
         ).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Forhåndsvisning' })).not.toBeInTheDocument();
     });

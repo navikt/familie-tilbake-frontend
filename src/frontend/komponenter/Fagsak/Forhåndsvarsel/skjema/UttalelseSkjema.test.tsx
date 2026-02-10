@@ -66,7 +66,7 @@ describe('Brukeruttalelse', () => {
         renderBrukeruttalelse();
 
         expect(
-            screen.getByText('Har brukeren uttalt seg etter forhåndsvarselet?')
+            screen.getByText('Har brukeren uttalt seg etter forhåndsvarselet ble sendt?')
         ).toBeInTheDocument();
 
         const jaOptions = screen.getAllByLabelText('Ja');
