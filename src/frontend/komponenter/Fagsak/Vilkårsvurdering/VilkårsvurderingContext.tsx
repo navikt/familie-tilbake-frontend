@@ -82,12 +82,10 @@ export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingRespon
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() => {
     const { ytelsestype } = useFagsak();
     const behandling = useBehandling();
-    const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
-        useBehandlingState();
+    const { erStegAutoutført, nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const containerRef = useRef<HTMLDivElement>(null);
     const [vilkårsvurdering, setVilkårsvurdering] = useState<Ressurs<VilkårsvurderingResponse>>();
     const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
-    const [stegErBehandlet, settStegErBehandlet] = useState(false);
     const [erAutoutført, settErAutoutført] = useState<boolean>();
     const [valgtPeriode, settValgtPeriode] = useState<VilkårsvurderingPeriodeSkjemaData>();
     const [kanIlleggeRenter, settKanIlleggeRenter] = useState(true);
@@ -102,7 +100,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Foreldelse);
 
     useEffect(() => {
-        settStegErBehandlet(erStegBehandlet('VILKÅRSVURDERING'));
         settErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
         settKanIlleggeRenter(kanIleggeRenter);
@@ -305,7 +302,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     return {
         containerRef,
         vilkårsvurdering,
-        stegErBehandlet,
         erAutoutført,
         kanIlleggeRenter,
         skjemaData,

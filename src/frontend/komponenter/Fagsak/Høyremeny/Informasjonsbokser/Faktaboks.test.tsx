@@ -6,7 +6,7 @@ import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
 import { FagsakContext } from '../../../../context/FagsakContext';
-import { ytelsetype, Ytelsetype } from '../../../../kodeverk';
+import { Ytelsetype } from '../../../../kodeverk';
 import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
@@ -38,7 +38,7 @@ describe('Faktaboks', () => {
         renderFaktaboks({}, Ytelsetype.Barnetrygd);
         expect(
             screen.getByRole('heading', {
-                name: `Tilbakekreving av ${ytelsetype[Ytelsetype.Barnetrygd].toLocaleLowerCase()}`,
+                name: `Tilbakekreving av ${Ytelsetype.Barnetrygd.toLocaleLowerCase()}`,
             })
         ).toBeInTheDocument();
     });

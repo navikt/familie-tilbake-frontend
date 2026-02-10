@@ -20,16 +20,6 @@ export enum Ytelsetype {
     Arbeidsavklaringspenger = 'ARBEIDSAVKLARINGSPENGER',
 }
 
-export const ytelsetype: Record<string, string> = {
-    BARNETRYGD: 'Barnetrygd',
-    OVERGANGSSTØNAD: 'Overgangsstønad',
-    BARNETILSYN: 'Barnetilsyn',
-    SKOLEPENGER: 'Skolepenger',
-    KONTANTSTØTTE: 'Kontantstøtte',
-    TILLEGGSSTØNAD: 'Tilleggsstønad',
-    ARBEIDSAVKLARINGSPENGER: 'Arbeidsavklaringspenger',
-};
-
 const hendelseTyperForYtelse: Record<string, HendelseType[]> = {
     BARNETRYGD: [
         HendelseType.BorMedSøker,

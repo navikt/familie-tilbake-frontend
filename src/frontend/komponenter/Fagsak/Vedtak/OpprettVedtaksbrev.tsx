@@ -1,4 +1,4 @@
-import type { Avsnitt, VedtaksbrevData } from '../../../generated-new';
+import type { VedtaksbrevSkjema } from './schema';
 
 import {
     BodyShort,
@@ -17,10 +17,14 @@ import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
+import { mapVedtaksbrevTilVedtaksbrevData } from './mapper';
 import { vedtaksbrevDefaultValues } from './schema';
+import { formaterPeriodeTittel } from './utils';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
+import { useFagsak } from '../../../context/FagsakContext';
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
+import { datoTilTekst } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -39,13 +43,15 @@ const useDebounce = (updateFunction: () => void): (() => void) => {
 
 const OpprettVedtaksbrev: React.FC = () => {
     const queryClient = useQueryClient();
+    const { ytelsestype } = useFagsak();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
-    const methods = useForm<VedtaksbrevData>({
+    const methods = useForm<VedtaksbrevSkjema>({
         defaultValues: vedtaksbrevDefaultValues,
     });
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, settGjeldendeSide] = useState(1);
+
     const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
         baseURL: window.location.origin,
     });
@@ -69,8 +75,12 @@ const OpprettVedtaksbrev: React.FC = () => {
     });
 
     const sendInnSkjemaData = (): void => {
+        const vedtaksbrevData = mapVedtaksbrevTilVedtaksbrevData(
+            ytelsestype.toLocaleLowerCase(),
+            methods.getValues()
+        );
         vedtaksbrevMutation.mutate({
-            body: methods.getValues(),
+            body: vedtaksbrevData,
         });
     };
 
@@ -89,15 +99,17 @@ const OpprettVedtaksbrev: React.FC = () => {
                     <Heading size="small">Opprett vedtaksbrev</Heading>
                     <FormProvider {...methods}>
                         <Textarea
+                            {...methods.register('innledning')}
                             label="Brevets innledning"
                             size="small"
+                            maxLength={3000}
                             minRows={3}
-                            {...methods.register('hovedavsnitt.underavsnitt.0.tekst')}
+                            resize
                         />
-                        {methods.getValues('avsnitt').map((avsnitt, index) => (
+                        {methods.getValues('perioder').map((periode, index) => (
                             <PeriodeAvsnittSkjema
-                                key={`${avsnitt}-${index}`}
-                                avsnitt={avsnitt}
+                                key={`${periode.fom}-${periode.tom}`}
+                                periode={periode}
                                 indeks={index}
                             />
                         ))}
@@ -174,69 +186,62 @@ const OpprettVedtaksbrev: React.FC = () => {
     );
 };
 
-// TODO få fra periode.dato senere
-const formaterPeriodeTittel = (tittel: string): string => {
-    const match = tittel.match(/fra og med (.+) til og med (.+)/i);
-    if (match) {
-        return `${match[1]}–${match[2]}`;
-    }
-    return tittel;
-};
-
-// TODO få info fra periode senere
-const harSærligeGrunner = (avsnitt: Avsnitt): boolean => {
-    return avsnitt.underavsnitt.some(
-        underavsnitt =>
-            underavsnitt.type === 'underavsnitt' &&
-            underavsnitt.tittel === 'Er det særlige grunner til å redusere beløpet?'
-    );
-};
-
 type PeriodeAvsnittSkjemaProps = {
-    avsnitt: Avsnitt;
+    periode: VedtaksbrevSkjema['perioder'][number];
     indeks: number;
 };
 
-const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ avsnitt, indeks }) => {
-    const { register } = useFormContext<VedtaksbrevData>();
-    const [erÅpen, settErÅpen] = useState(false);
+const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, indeks }) => {
+    const { register } = useFormContext<VedtaksbrevSkjema>();
 
-    const periodeTittel = formaterPeriodeTittel(avsnitt.tittel);
-    const visSærligeGrunner = harSærligeGrunner(avsnitt);
+    const periodeTittel = formaterPeriodeTittel(periode.fom, periode.tom);
 
     return (
-        <ExpansionCard
-            size="small"
-            open={erÅpen}
-            onToggle={() => settErÅpen(prev => !prev)}
-            aria-label={periodeTittel}
-        >
+        <ExpansionCard size="small" aria-label={periodeTittel}>
             <ExpansionCard.Header className="flex items-center">
                 <BodyShort className="font-ax-bold">{periodeTittel}</BodyShort>
             </ExpansionCard.Header>
             <ExpansionCard.Content>
                 <VStack gap="space-24">
-                    <Textarea
-                        label={avsnitt.tittel}
-                        description="Beskriv kort hva som har skjedd i denne perioden"
-                        size="small"
-                        minRows={3}
-                        {...register(`avsnitt.${indeks}.underavsnitt.0.tekst`)}
-                    />
-                    <Textarea
-                        label="Hvordan har vi kommet fram til at du må betale tilbake?"
-                        size="small"
-                        minRows={3}
-                        {...register(`avsnitt.${indeks}.underavsnitt.2.underavsnitt.0.tekst`)}
-                    />
-                    {visSærligeGrunner && (
+                    <VStack gap="space-16">
                         <Textarea
-                            label="Er det særlige grunner til å redusere beløpet?"
+                            {...register(`perioder.${indeks}.beskrivelse`)}
+                            label={`Perioden fra og med ${datoTilTekst(periode.fom)} til og med ${datoTilTekst(periode.tom)}`}
+                            description="Beskriv kort hva som har skjedd i denne perioden"
                             size="small"
+                            maxLength={3000}
                             minRows={3}
-                            {...register(`avsnitt.${indeks}.underavsnitt.3.underavsnitt.0.tekst`)}
+                            resize
                         />
+                    </VStack>
+
+                    {periode.konklusjon && (
+                        <VStack gap="space-16">
+                            <Textarea
+                                {...register(`perioder.${indeks}.konklusjon`)}
+                                label="Hvordan har vi kommet fram til at du må betale tilbake?"
+                                size="small"
+                                maxLength={3000}
+                                minRows={3}
+                                resize
+                            />
+                        </VStack>
                     )}
+
+                    {periode.vurderinger.map((vurdering, vurderingIndeks) => (
+                        <VStack key={vurdering.tittel} gap="space-16">
+                            <Textarea
+                                {...register(
+                                    `perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`
+                                )}
+                                label={vurdering.tittel}
+                                size="small"
+                                maxLength={3000}
+                                minRows={3}
+                                resize
+                            />
+                        </VStack>
+                    ))}
                 </VStack>
             </ExpansionCard.Content>
         </ExpansionCard>

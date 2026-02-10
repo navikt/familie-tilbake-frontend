@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useBehandlingApi } from '../../../../../api/behandling';
 import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../../../generated/@tanstack/react-query.gen';
 import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
@@ -94,7 +95,7 @@ export const useHenleggSkjema = ({ lukkModal }: Props): HenleggBehandlingSkjemaH
                 if (response.status === RessursStatus.Suksess) {
                     lukkModal();
                     await queryClient.invalidateQueries({
-                        queryKey: ['behandling', behandlingId],
+                        queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                     });
                 }
             });

@@ -15,6 +15,7 @@ import {
     isBefore,
     parseISO,
 } from 'date-fns';
+import { nb } from 'date-fns/locale/nb';
 
 import { isEmpty } from './validering';
 import { JournalpostDatotype } from '../typer/journalføring';
@@ -23,6 +24,10 @@ const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
+};
+
+export const datoTilTekst = (dato: string): string => {
+    return format(parseISO(dato), 'd. MMMM yyyy', { locale: nb });
 };
 
 const tidformat: Intl.DateTimeFormatOptions = {

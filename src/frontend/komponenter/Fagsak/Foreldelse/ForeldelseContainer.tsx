@@ -31,9 +31,7 @@ const ForeldelseContainer: React.FC = () => {
 
     return (
         <>
-            <Heading size="small" level="1" spacing>
-                Foreldelse
-            </Heading>
+            <Heading size="medium">Foreldelse</Heading>
             {erAutoutført ? (
                 <Alert variant="success" className="min-w-80">
                     <VStack gap="space-8">
@@ -71,12 +69,8 @@ const ForeldelseContainer: React.FC = () => {
                 </Alert>
             ) : foreldelse?.status === RessursStatus.Suksess ? (
                 <>
-                    <Alert variant="info" className="min-w-80" contentMaxWidth={false}>
-                        {behandling.erNyModell ? (
-                            <Heading size="small" level="3">
-                                Vurder foreldelse
-                            </Heading>
-                        ) : (
+                    {behandling.erNyModell ? null : (
+                        <Alert variant="info" className="min-w-80" contentMaxWidth={false}>
                             <VStack gap="space-8">
                                 <Heading size="small" level="3">
                                     Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
@@ -107,8 +101,9 @@ const ForeldelseContainer: React.FC = () => {
                                     begrunn vurderingen.
                                 </BodyLong>
                             </VStack>
-                        )}
-                    </Alert>
+                        </Alert>
+                    )}
+
                     {skjemaData.length > 0 && (
                         <ForeldelsePerioder perioder={skjemaData} erLesevisning={erLesevisning} />
                     )}

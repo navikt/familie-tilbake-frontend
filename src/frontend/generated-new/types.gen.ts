@@ -15,8 +15,8 @@ export type BestemmelseEllerGrunnlag = {
 };
 
 export type Brevmottaker = {
-    fultNavn: string;
-    fødselsnummer: string;
+    navn: string;
+    personIdent: string;
 };
 
 export type Element = {
@@ -120,6 +120,14 @@ export type UnderavsnittElement = {
     underavsnitt: Array<Element>;
 };
 
+export type Vedtaksbrev = {
+    innledning: Array<Element>;
+    perioder: Array<VedtaksbrevPeriode>;
+    brevGjelder: Brevmottaker;
+    ytelse: Ytelse;
+    signatur: Signatur;
+};
+
 export type VedtaksbrevData = {
     hovedavsnitt: Hovedavsnitt;
     avsnitt: Array<Avsnitt>;
@@ -127,6 +135,19 @@ export type VedtaksbrevData = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
+};
+
+export type VedtaksbrevPeriode = {
+    fom: string;
+    tom: string;
+    beskrivelse: Array<Element>;
+    konklusjon: Array<Element>;
+    vurderinger: Array<VedtaksbrevVurdering>;
+};
+
+export type VedtaksbrevVurdering = {
+    tittel: string;
+    beskrivelse: Array<Element>;
 };
 
 export type Vurdering = {
@@ -207,6 +228,39 @@ export type BehandlingOppdaterFaktaResponses = {
 
 export type BehandlingOppdaterFaktaResponse =
     BehandlingOppdaterFaktaResponses[keyof BehandlingOppdaterFaktaResponses];
+
+export type BehandlingHentVedtaksbrevData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vedtak/brev';
+};
+
+export type BehandlingHentVedtaksbrevErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentVedtaksbrevError =
+    BehandlingHentVedtaksbrevErrors[keyof BehandlingHentVedtaksbrevErrors];
+
+export type BehandlingHentVedtaksbrevResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Vedtaksbrev;
+};
+
+export type BehandlingHentVedtaksbrevResponse =
+    BehandlingHentVedtaksbrevResponses[keyof BehandlingHentVedtaksbrevResponses];
 
 export type VedtaksbrevLagSvgVedtaksbrevData = {
     body: VedtaksbrevData;

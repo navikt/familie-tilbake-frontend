@@ -66,6 +66,7 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                     aria-live="polite"
                     readOnly={erLesevisning}
                     size="small"
+                    minRows={3}
                     resize
                     value={
                         skjema.felter.aktsomhetBegrunnelse

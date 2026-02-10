@@ -2,6 +2,7 @@
 
 export {
     behandlingFakta,
+    behandlingHentVedtaksbrev,
     behandlingOppdaterFakta,
     type Options,
     vedtaksbrevLagSvgVedtaksbrev,
@@ -14,6 +15,11 @@ export type {
     BehandlingFaktaErrors,
     BehandlingFaktaResponse,
     BehandlingFaktaResponses,
+    BehandlingHentVedtaksbrevData,
+    BehandlingHentVedtaksbrevError,
+    BehandlingHentVedtaksbrevErrors,
+    BehandlingHentVedtaksbrevResponse,
+    BehandlingHentVedtaksbrevResponses,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
     BehandlingOppdaterFaktaErrors,
@@ -40,9 +46,12 @@ export type {
     RotElement,
     Signatur,
     UnderavsnittElement,
+    Vedtaksbrev,
     VedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevResponses,
+    VedtaksbrevPeriode,
+    VedtaksbrevVurdering,
     Vurdering,
     Ytelse,
 } from './types.gen';

@@ -4,7 +4,6 @@ import type { ChangeEvent, FC } from 'react';
 
 import {
     BodyShort,
-    Box,
     Button,
     Detail,
     Heading,
@@ -290,16 +289,16 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     if (sendInnSkjemaMutation.isPending) {
         return (
-            <Box padding="space-16" className="min-w-[20rem]" aria-live="polite">
+            <div className="min-w-[20rem]" aria-live="polite">
                 Navigerer...
-            </Box>
+            </div>
         );
     }
 
     if (!periode) return null;
 
     return (
-        <Box padding="space-16" className="min-w-[20rem]">
+        <div className="min-w-[20rem]">
             <HGrid columns="1fr 4rem">
                 <Stack
                     className="max-w-120 w-full"
@@ -410,6 +409,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             label="Begrunn hvorfor du valgte vilkåret ovenfor"
                             size="small"
                             resize
+                            minRows={3}
                             description="Beskriv hvem og hva som forårsaket feilutbetalingen"
                             maxLength={3000}
                             readOnly={erLesevisning}
@@ -499,7 +499,7 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     fortsetter?
                 </ModalWrapper>
             )}
-        </Box>
+        </div>
     );
 };
 

@@ -1,46 +1,18 @@
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
-import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { useRef } from 'react';
 
 import { useStartPåNytt } from './useStartPåNytt';
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../../context/FagsakContext';
-import { RessursStatus } from '../../../../typer/ressurs';
-import { useStegNavigering } from '../../../../utils/sider';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { MODAL_BREDDE } from '../utils';
 
 export const StartPåNytt: React.FC = () => {
-    const { behandlingId } = useBehandling();
-    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
-    const queryClient = useQueryClient();
-    const dialogRef = useRef<HTMLDialogElement>(null);
-    const navigerTilBehandling = useStegNavigering();
-    const { fagsystem, eksternFagsakId } = useFagsak();
-    const mutation = useStartPåNytt();
-
-    const handleNullstill = (): void => {
-        nullstillIkkePersisterteKomponenter();
-        mutation.mutate(behandlingId, {
-            onSuccess: async ressurs => {
-                if (ressurs.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
-                    await queryClient.invalidateQueries({
-                        queryKey: ['behandling', behandlingId],
-                    });
-                    navigerTilBehandling();
-                }
-            },
-            onError: () => dialogRef.current?.close(),
-        });
-    };
+    const { mutate, isError, error, reset, dialogRef, åpneDialog, isPending } = useStartPåNytt();
 
     return (
         <>
             <ActionMenu.Item
-                onSelect={() => dialogRef.current?.showModal()}
+                onSelect={åpneDialog}
                 icon={<ArrowCirclepathReverseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
@@ -62,14 +34,16 @@ export const StartPåNytt: React.FC = () => {
                     </BodyLong>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={handleNullstill}>Start på nytt</Button>
+                    <Button onClick={() => mutate()} loading={isPending}>
+                        Start på nytt
+                    </Button>
                     <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
                         Avbryt
                     </Button>
                 </Modal.Footer>
             </Modal>
 
-            {mutation.isError && <FeilModal feil={mutation.error} lukkFeilModal={mutation.reset} />}
+            {isError && <FeilModal feil={error} lukkFeilModal={reset} />}
         </>
     );
 };

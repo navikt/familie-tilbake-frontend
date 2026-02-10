@@ -18,7 +18,6 @@ import React from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useFagsak } from '../../../../context/FagsakContext';
-import { ytelsetype as ytelsetyper } from '../../../../kodeverk';
 import {
     behandlingsresultater,
     behandlingsstatuser,
@@ -40,8 +39,7 @@ export const Faktaboks: React.FC = () => {
         >
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small" className="text-lg">
-                    Tilbakekreving{' '}
-                    {ytelsestype && ` av ${ytelsetyper[ytelsestype]?.toLocaleLowerCase()}`}
+                    {`Tilbakekreving av ${ytelsestype.toLocaleLowerCase()}`}
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
             <ExpansionCard.Content>

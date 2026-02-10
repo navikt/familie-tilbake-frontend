@@ -2,7 +2,6 @@ import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 
-import { VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
@@ -72,12 +71,12 @@ const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     };
 
     return perioder && tidslinjeRader ? (
-        <VStack gap="space-20">
+        <>
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {!!valgtPeriode && (
                 <ForeldelsePeriodeSkjema periode={valgtPeriode} erLesevisning={erLesevisning} />
             )}
-        </VStack>
+        </>
     ) : null;
 };
 

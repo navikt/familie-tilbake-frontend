@@ -6,6 +6,9 @@ import type {
     BehandlingFaktaData,
     BehandlingFaktaErrors,
     BehandlingFaktaResponses,
+    BehandlingHentVedtaksbrevData,
+    BehandlingHentVedtaksbrevErrors,
+    BehandlingHentVedtaksbrevResponses,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaErrors,
     BehandlingOppdaterFaktaResponses,
@@ -54,6 +57,19 @@ export const behandlingOppdaterFakta = <ThrowOnError extends boolean = false>(
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+export const behandlingHentVedtaksbrev = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentVedtaksbrevData, ThrowOnError>
+) =>
+    (options.client ?? client).get<
+        BehandlingHentVedtaksbrevResponses,
+        BehandlingHentVedtaksbrevErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/vedtak/brev',
+        ...options,
     });
 
 export const vedtaksbrevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(

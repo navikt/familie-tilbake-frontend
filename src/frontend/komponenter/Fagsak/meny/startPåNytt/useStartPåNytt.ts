@@ -1,12 +1,15 @@
-import type { FamilieRequest } from '../../../../api/http/HttpProvider';
-import type { Ressurs } from '../../../../typer/ressurs';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
 
 import { Feil } from '../../../../api/feil';
-import { useHttp } from '../../../../api/http/HttpProvider';
-import { RessursStatus } from '../../../../typer/ressurs';
+import { useHttp, type FamilieRequest } from '../../../../api/http/HttpProvider';
+import { useBehandling } from '../../../../context/BehandlingContext';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
+import { RessursStatus, type Ressurs } from '../../../../typer/ressurs';
+import { useStegNavigering } from '../../../../utils/sider';
 
 const startPåNytt = async (
     request: FamilieRequest,
@@ -21,15 +24,23 @@ const startPåNytt = async (
     });
 };
 
-export type StartPåNyttHook = UseMutationResult<Ressurs<string>, Feil, string, unknown>;
+export type StartPåNyttHook = UseMutationResult<Ressurs<string>, Feil, void, unknown> & {
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    åpneDialog: () => void;
+};
 
 export const useStartPåNytt = (): StartPåNyttHook => {
     const { request } = useHttp();
+    const { behandlingId } = useBehandling();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const navigerTilBehandling = useStegNavigering();
     const queryClient = useQueryClient();
+    const dialogRef = useRef<HTMLDialogElement>(null);
 
-    return useMutation<Ressurs<string>, Feil, string>({
+    const mutation = useMutation<Ressurs<string>, Feil, void>({
         mutationKey: ['startPåNytt'],
-        mutationFn: async (behandlingId: string) => {
+        mutationFn: async () => {
+            nullstillIkkePersisterteKomponenter();
             const response = await startPåNytt(request, behandlingId);
             if (response.status === RessursStatus.Suksess) {
                 return response;
@@ -46,8 +57,19 @@ export const useStartPåNytt = (): StartPåNyttHook => {
         },
         onSuccess: async response => {
             if (response.status === RessursStatus.Suksess) {
-                await queryClient.invalidateQueries({ queryKey: ['behandling'] });
+                await queryClient.refetchQueries({
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+                });
+                await queryClient.refetchQueries({ queryKey: ['hentFaktaOmFeilutbetaling'] });
+                navigerTilBehandling();
             }
         },
+        onError: () => dialogRef.current?.close(),
     });
+
+    return {
+        ...mutation,
+        dialogRef,
+        åpneDialog: () => dialogRef.current?.showModal(),
+    };
 };
