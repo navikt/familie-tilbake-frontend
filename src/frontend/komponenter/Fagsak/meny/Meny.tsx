@@ -73,9 +73,8 @@ export const Behandlingsmeny: React.FC = () => {
                                 <>
                                     <ActionMenu.Divider />
 
-                                    {behandling.støtterManuelleBrevmottakere && (
-                                        <LeggTilFjernBrevmottakere />
-                                    )}
+                                    {behandling.støtterManuelleBrevmottakere &&
+                                        !behandling.erNyModell && <LeggTilFjernBrevmottakere />}
 
                                     {kanEndreEnhet && <EndreEnhet />}
 
