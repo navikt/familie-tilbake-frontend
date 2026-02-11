@@ -15,17 +15,20 @@ import {
     type TextareaProps,
     VStack,
 } from '@navikt/ds-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { mapFormDataTilVedtaksbrevData } from './mapper';
-import { vedtaksbrevDefaultValues } from './schema';
 import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
-import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
+import {
+    behandlingHentVedtaksbrevOptions,
+    vedtaksbrevLagSvgVedtaksbrevMutation,
+} from '../../../generated-new/@tanstack/react-query.gen';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { datoTilTekst } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
@@ -71,10 +74,15 @@ const useDebounce = (updateFunction: () => void): (() => void) => {
 const OpprettVedtaksbrev: React.FC = () => {
     const queryClient = useQueryClient();
     const { ytelsestype } = useFagsak();
+    const { behandlingId } = useBehandling();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
+    const { data: vedtaksbrevData } = useSuspenseQuery(
+        behandlingHentVedtaksbrevOptions({ path: { behandlingId } })
+    );
+
     const methods = useForm<VedtaksbrevFormData>({
-        defaultValues: vedtaksbrevDefaultValues,
+        defaultValues: vedtaksbrevData,
     });
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, settGjeldendeSide] = useState(1);

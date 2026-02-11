@@ -244,7 +244,11 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
                                     behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
-                                        <OpprettVedtaksbrev />
+                                        <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
+                                            <Suspense fallback="Vedtaksbrev laster...">
+                                                <OpprettVedtaksbrev />
+                                            </Suspense>
+                                        </StegErrorBoundary>
                                     ) : (
                                         <VedtakProvider>
                                             <VedtakContainer />
