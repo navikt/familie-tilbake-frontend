@@ -48,7 +48,7 @@ export class StegErrorBoundary extends Component<Props, State> {
         console.error('Feil ved lasting av steg:', error, errorInfo);
     }
     render(): ReactNode {
-        if (!this.state.hasError) {
+        if (this.state.hasError) {
             return (
                 <VStack gap="space-24">
                     <Heading size="medium">{mapSynligStegTilStegNavn(this.props.steg)}</Heading>
