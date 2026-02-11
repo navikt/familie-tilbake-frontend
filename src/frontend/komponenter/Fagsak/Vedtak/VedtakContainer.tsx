@@ -1,5 +1,14 @@
-import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
-import React, { useEffect, useState } from 'react';
+import {
+    Alert,
+    BodyLong,
+    BodyShort,
+    Button,
+    Detail,
+    Heading,
+    HStack,
+    VStack,
+} from '@navikt/ds-react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
@@ -13,7 +22,9 @@ import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
+import { updateParentBounds } from '../../../utils/updateParentBounds';
 import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { ActionBar } from '../ActionBar/ActionBar';
 
@@ -34,6 +45,8 @@ const VedtakContainer: React.FC = () => {
         foreslåVedtakRespons,
         lagreUtkast,
         hentVedtaksbrevtekster,
+        vedtakSendtTilGodkjenning,
+        nullstillVedtakSendtTilGodkjenning,
     } = useVedtak();
     const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
@@ -43,6 +56,16 @@ const VedtakContainer: React.FC = () => {
         type === 'REVURDERING_TILBAKEKREVING' &&
         behandlingsårsakstype === 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
     const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [parentBounds, setParentBounds] = useState({ width: 0 });
+
+    useLayoutEffect(() => {
+        updateParentBounds(containerRef, setParentBounds);
+        const handleResize = (): void => updateParentBounds(containerRef, setParentBounds);
+        window.addEventListener('resize', handleResize);
+        return (): void => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const {
         sammenslåPerioder,
@@ -93,7 +116,7 @@ const VedtakContainer: React.FC = () => {
         vedtaksbrevavsnitt?.status === RessursStatus.Suksess
     ) {
         return (
-            <>
+            <VStack gap="space-24" ref={containerRef}>
                 <Heading level="1" size="small" spacing>
                     Vedtak
                 </Heading>
@@ -107,7 +130,6 @@ const VedtakContainer: React.FC = () => {
                         <Spacer20 />
                     </>
                 )}
-
                 {manuelleBrevmottakere.length > 0 && (
                     <>
                         <BrevmottakereAlert
@@ -174,7 +196,6 @@ const VedtakContainer: React.FC = () => {
                         {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                     </HStack>
                 </StyledNavigering>
-
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={erLesevisning}
@@ -186,7 +207,18 @@ const VedtakContainer: React.FC = () => {
                     onForrige={navigerTilForrige}
                     isLoading={senderInn}
                 />
-            </>
+                {vedtakSendtTilGodkjenning && (
+                    <FixedAlert
+                        title="Sendt til godkjenning"
+                        aria-live="polite"
+                        status="success"
+                        width={parentBounds.width}
+                        onClose={nullstillVedtakSendtTilGodkjenning}
+                    >
+                        Behandlingen er sendt til godkjenning hos beslutter.
+                    </FixedAlert>
+                )}
+            </VStack>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[beregningsresultat, vedtaksbrevavsnitt]} />;

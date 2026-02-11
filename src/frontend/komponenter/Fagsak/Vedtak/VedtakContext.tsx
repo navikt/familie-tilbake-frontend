@@ -92,6 +92,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [foreslåVedtakRespons, settForeslåVedtakRespons] = useState<Ressurs<string>>();
+    const [vedtakSendtTilGodkjenning, settVedtakSendtTilGodkjenning] = useState<boolean>(false);
     const queryClient = useQueryClient();
     const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
         useBehandlingApi();
@@ -242,6 +243,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
             settSenderInn(true);
             settForeslåVedtakRespons(undefined);
+            settVedtakSendtTilGodkjenning(false);
             nullstillIkkePersisterteKomponenter();
             const payload: ForeslåVedtakStegPayload = {
                 '@type': 'FORESLÅ_VEDTAK',
@@ -256,7 +258,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
-                        navigerTilBehandling();
+                        settVedtakSendtTilGodkjenning(true);
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
@@ -333,6 +335,8 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         validerAlleAvsnittOk,
         lagreUtkast,
         hentVedtaksbrevtekster,
+        vedtakSendtTilGodkjenning,
+        nullstillVedtakSendtTilGodkjenning: (): void => settVedtakSendtTilGodkjenning(false),
     };
 });
 

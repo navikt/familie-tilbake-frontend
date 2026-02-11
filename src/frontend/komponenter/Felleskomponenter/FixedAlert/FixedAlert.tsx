@@ -1,36 +1,41 @@
 import type { AlertProps } from '@navikt/ds-react';
 
-import { Alert } from '@navikt/ds-react';
+import { LocalAlert } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
 type Props = AlertProps & {
     width?: string;
+    title: string;
 };
 
-export const FixedAlert: React.FC<Props> = ({ width, children, variant, ...props }) => {
+export const FixedAlert: React.FC<Props> = ({ width, children, title, status, ...props }) => {
     const [isVisible, setIsVisible] = useState(true);
+    const avstandTilParent = 20;
 
     useEffect(() => {
-        if (variant !== 'error') {
+        if (status !== 'error') {
             const timer = setTimeout(() => setIsVisible(false), 7000);
 
             return (): void => clearTimeout(timer);
         }
-    }, [variant, children]);
+    }, [status, children]);
 
     if (!isVisible) {
         return null;
     }
     return (
-        <Alert
+        <LocalAlert
             size="small"
-            className="fixed bottom-34"
-            style={{ width }}
-            variant={variant}
-            contentMaxWidth={false}
+            className="fixed bottom-28 left-6.5"
+            style={{ width: width - avstandTilParent }}
+            status={status}
             {...props}
         >
-            {children}
-        </Alert>
+            <LocalAlert.Header>
+                <LocalAlert.Title>{title}</LocalAlert.Title>
+                <LocalAlert.CloseButton onClick={() => setIsVisible(false)} />
+            </LocalAlert.Header>
+            <LocalAlert.Content>{children}</LocalAlert.Content>
+        </LocalAlert>
     );
 };

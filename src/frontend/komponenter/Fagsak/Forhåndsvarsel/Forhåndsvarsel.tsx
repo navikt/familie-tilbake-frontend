@@ -52,7 +52,7 @@ export const Forhåndsvarsel: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const queryClient = useQueryClient();
     const containerRef = useRef<HTMLDivElement>(null);
-    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
+    const [parentBounds, setParentBounds] = useState({ width: 0 });
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
@@ -172,15 +172,12 @@ export const Forhåndsvarsel: React.FC = () => {
             </FormProvider>
             {forhåndsvisning.error && (
                 <FixedAlert
+                    title="Forhåndsvisning feilet"
                     aria-live="assertive"
-                    variant="error"
-                    closeButton
+                    status="error"
                     width={parentBounds.width}
                     onClose={forhåndsvisning.reset}
                 >
-                    <Heading spacing size="small" level="3">
-                        Forhåndsvisning feilet
-                    </Heading>
                     {forhåndsvisning.error.message}
                 </FixedAlert>
             )}
@@ -198,7 +195,7 @@ export const Forhåndsvarsel: React.FC = () => {
 type ForhåndsvarselSkjemaProps = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
-    parentBounds: { width: string | undefined };
+    parentBounds: { width: number };
     ref: React.RefObject<HTMLDivElement | null>;
 };
 
@@ -443,15 +440,12 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
             {sendForhåndsvarselMutation.isSuccess && (
                 <FixedAlert
+                    title=" Forhåndsvarsel er sendt"
                     aria-live="polite"
-                    variant="success"
-                    closeButton
+                    status="success"
                     width={parentBounds.width}
                     onClose={sendForhåndsvarselMutation.reset}
                 >
-                    <Heading spacing size="small" level="3">
-                        Forhåndsvarsel er sendt
-                    </Heading>
                     Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen
                     for å uttale seg (3 uker) har gått ut.
                 </FixedAlert>
