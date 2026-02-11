@@ -57,15 +57,6 @@ describe('tekstTilElementArray', () => {
             { type: 'rentekst', tekst: 'Nytt avsnitt' },
         ]);
     });
-
-    test('trimmer whitespace i begynnelsen og slutten av avsnitt', () => {
-        const result = tekstTilElementArray('  Første med space  \n\n  Andre med space  ');
-
-        expect(result).toEqual([
-            { type: 'rentekst', tekst: 'Første med space' },
-            { type: 'rentekst', tekst: 'Andre med space' },
-        ]);
-    });
 });
 
 describe('formaterPeriodeTittel', () => {

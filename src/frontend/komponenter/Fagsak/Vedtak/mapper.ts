@@ -1,17 +1,17 @@
-import type { VedtaksbrevSkjema } from './schema';
+import type { VedtaksbrevFormData } from './schema';
 import type { Avsnitt, Hovedavsnitt, RotElement, VedtaksbrevData } from '../../../generated-new';
 
 import { formatISO } from 'date-fns';
 
-import { formaterPeriodeTittel, tekstTilElementArray } from './utils';
+import { formaterPeriodeTittel } from './utils';
 
-export const mapVedtaksbrevTilVedtaksbrevData = (
+export const mapFormDataTilVedtaksbrevData = (
     ytelsestype: string,
-    vedtaksbrev: VedtaksbrevSkjema
+    vedtaksbrev: VedtaksbrevFormData
 ): VedtaksbrevData => {
     const hovedavsnitt: Hovedavsnitt = {
         tittel: `Tilbakekreving av ${ytelsestype}`,
-        underavsnitt: tekstTilElementArray(vedtaksbrev.innledning).map(
+        underavsnitt: vedtaksbrev.innledning.map(
             element =>
                 ({
                     type: 'rentekst',
@@ -25,24 +25,24 @@ export const mapVedtaksbrevTilVedtaksbrevData = (
     return {
         hovedavsnitt,
         avsnitt,
-        brevGjelder: vedtaksbrev.brevGjelder,
-        sendtDato: formatISO(new Date(), { representation: 'date' }),
-        ytelse: vedtaksbrev.ytelse,
-        signatur: vedtaksbrev.signatur,
+        brevGjelder: vedtaksbrev.brevGjelder, // TODO fjern ved ny oppdatering
+        sendtDato: formatISO(new Date(), { representation: 'date' }), // TODO fjern ved ny oppdatering
+        ytelse: vedtaksbrev.ytelse, // TODO fjern ved ny oppdatering
+        signatur: vedtaksbrev.signatur, // TODO fjern ved ny oppdatering
     };
 };
 
-const mapPeriodeTilAvsnitt = (periode: VedtaksbrevSkjema['perioder'][number]): Avsnitt => {
+const mapPeriodeTilAvsnitt = (periode: VedtaksbrevFormData['perioder'][number]): Avsnitt => {
     const underavsnitt: RotElement[] = [];
 
-    tekstTilElementArray(periode.beskrivelse).forEach(element => {
+    periode.beskrivelse.forEach(element => {
         underavsnitt.push({
             type: 'rentekst',
             tekst: element.tekst,
         } satisfies RotElement);
     });
 
-    tekstTilElementArray(periode.konklusjon).forEach(element => {
+    periode.konklusjon.forEach(element => {
         underavsnitt.push({
             type: 'rentekst',
             tekst: element.tekst,
@@ -53,7 +53,7 @@ const mapPeriodeTilAvsnitt = (periode: VedtaksbrevSkjema['perioder'][number]): A
         underavsnitt.push({
             type: 'underavsnitt',
             tittel: vurdering.tittel,
-            underavsnitt: tekstTilElementArray(vurdering.beskrivelse),
+            underavsnitt: vurdering.beskrivelse,
         } satisfies RotElement);
     });
 

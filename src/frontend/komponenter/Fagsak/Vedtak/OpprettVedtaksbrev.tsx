@@ -1,4 +1,6 @@
-import type { VedtaksbrevSkjema } from './schema';
+import type { VedtaksbrevFormData } from './schema';
+import type { Element } from '../../../generated-new';
+import type { FieldPath } from 'react-hook-form';
 
 import {
     BodyShort,
@@ -10,16 +12,17 @@ import {
     Pagination,
     Skeleton,
     Textarea,
+    type TextareaProps,
     VStack,
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { mapVedtaksbrevTilVedtaksbrevData } from './mapper';
+import { mapFormDataTilVedtaksbrevData } from './mapper';
 import { vedtaksbrevDefaultValues } from './schema';
-import { formaterPeriodeTittel } from './utils';
+import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '../../../generated-new/@tanstack/react-query.gen';
@@ -27,6 +30,30 @@ import { Behandlingssteg } from '../../../typer/behandling';
 import { datoTilTekst } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
+
+const ElementTextarea: React.FC<
+    Omit<TextareaProps, 'onChange' | 'value'> & {
+        name: FieldPath<VedtaksbrevFormData>;
+    }
+> = ({ name, ...props }) => {
+    return (
+        <Controller<VedtaksbrevFormData>
+            name={name}
+            render={({ field: { value, ...restField } }) => (
+                <Textarea
+                    {...props}
+                    {...restField}
+                    value={elementArrayTilTekst(value as Element[])}
+                    onChange={e => restField.onChange(tekstTilElementArray(e.target.value))}
+                    size="small"
+                    maxLength={3000}
+                    minRows={3}
+                    resize
+                />
+            )}
+        />
+    );
+};
 
 const useDebounce = (updateFunction: () => void): (() => void) => {
     const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,7 +73,7 @@ const OpprettVedtaksbrev: React.FC = () => {
     const { ytelsestype } = useFagsak();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
-    const methods = useForm<VedtaksbrevSkjema>({
+    const methods = useForm<VedtaksbrevFormData>({
         defaultValues: vedtaksbrevDefaultValues,
     });
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -75,7 +102,7 @@ const OpprettVedtaksbrev: React.FC = () => {
     });
 
     const sendInnSkjemaData = (): void => {
-        const vedtaksbrevData = mapVedtaksbrevTilVedtaksbrevData(
+        const vedtaksbrevData = mapFormDataTilVedtaksbrevData(
             ytelsestype.toLocaleLowerCase(),
             methods.getValues()
         );
@@ -98,19 +125,12 @@ const OpprettVedtaksbrev: React.FC = () => {
                 <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
                     <Heading size="small">Opprett vedtaksbrev</Heading>
                     <FormProvider {...methods}>
-                        <Textarea
-                            {...methods.register('innledning')}
-                            label="Brevets innledning"
-                            size="small"
-                            maxLength={3000}
-                            minRows={3}
-                            resize
-                        />
-                        {methods.getValues('perioder').map((periode, index) => (
+                        <ElementTextarea name="innledning" label="Brevets innledning" />
+                        {methods.getValues('perioder').map((periode, indeks) => (
                             <PeriodeAvsnittSkjema
                                 key={`${periode.fom}-${periode.tom}`}
                                 periode={periode}
-                                indeks={index}
+                                indeks={indeks}
                             />
                         ))}
                     </FormProvider>
@@ -187,13 +207,11 @@ const OpprettVedtaksbrev: React.FC = () => {
 };
 
 type PeriodeAvsnittSkjemaProps = {
-    periode: VedtaksbrevSkjema['perioder'][number];
+    periode: VedtaksbrevFormData['perioder'][number];
     indeks: number;
 };
 
 const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, indeks }) => {
-    const { register } = useFormContext<VedtaksbrevSkjema>();
-
     const periodeTittel = formaterPeriodeTittel(periode.fom, periode.tom);
 
     return (
@@ -204,41 +222,27 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, in
             <ExpansionCard.Content>
                 <VStack gap="space-24">
                     <VStack gap="space-16">
-                        <Textarea
-                            {...register(`perioder.${indeks}.beskrivelse`)}
+                        <ElementTextarea
+                            name={`perioder.${indeks}.beskrivelse`}
                             label={`Perioden fra og med ${datoTilTekst(periode.fom)} til og med ${datoTilTekst(periode.tom)}`}
                             description="Beskriv kort hva som har skjedd i denne perioden"
-                            size="small"
-                            maxLength={3000}
-                            minRows={3}
-                            resize
                         />
                     </VStack>
 
-                    {periode.konklusjon && (
+                    {periode.konklusjon.length > 0 && (
                         <VStack gap="space-16">
-                            <Textarea
-                                {...register(`perioder.${indeks}.konklusjon`)}
+                            <ElementTextarea
+                                name={`perioder.${indeks}.konklusjon`}
                                 label="Hvordan har vi kommet fram til at du må betale tilbake?"
-                                size="small"
-                                maxLength={3000}
-                                minRows={3}
-                                resize
                             />
                         </VStack>
                     )}
 
                     {periode.vurderinger.map((vurdering, vurderingIndeks) => (
                         <VStack key={vurdering.tittel} gap="space-16">
-                            <Textarea
-                                {...register(
-                                    `perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`
-                                )}
+                            <ElementTextarea
+                                name={`perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`}
                                 label={vurdering.tittel}
-                                size="small"
-                                maxLength={3000}
-                                minRows={3}
-                                resize
                             />
                         </VStack>
                     ))}
