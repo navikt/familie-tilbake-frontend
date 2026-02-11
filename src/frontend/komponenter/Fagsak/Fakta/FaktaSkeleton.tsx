@@ -1,5 +1,4 @@
-import { PlusIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, Heading, Skeleton, Table } from '@navikt/ds-react';
+import { BodyShort, Heading, Skeleton, Table } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { ActionBarSkeleton } from '../ActionBar/ActionBarSkeleton';
@@ -8,31 +7,24 @@ export const FaktaSkeleton: React.FC = () => {
     return (
         <>
             <div className="flex flex-col gap-8" aria-label="Fakta om feilutbetaling">
-                <Heading level="1" size="medium">
-                    Fakta om feilutbetalingen
-                </Heading>
+                <Heading size="medium">Fakta om feilutbetalingen</Heading>
                 <section
                     className="flex md:flex-row flex-col flex-col-3 w-full gap-6"
                     aria-label="Feilutbetaling og revurdering"
                 >
-                    <div className="flex flex-col flex-1 gap-4 p-4 bg-ax-bg-brand-blue-soft border rounded-xl border-ax-border-neutral-subtle">
-                        <Heading level="2" size="small">
-                            Feilutbetaling
-                        </Heading>
-                        <dl className="flex flex-col gap-4">
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">Periode</dt>
-                                <dd>
-                                    <Skeleton variant="rounded" width="50%" />
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
-                                <dd className="text-ax-text-danger-subtle">
-                                    <Skeleton variant="rounded" width="50%" />
-                                </dd>
-                            </div>
-                        </dl>
+                    <div className="grid grid-cols-4 md:grid-cols-2 gap-4 flex-1">
+                        <div className="flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle col-span-2">
+                            <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
+                            <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
+                                <Skeleton variant="rounded" width="30%" />
+                            </dd>
+                        </div>
+                        <div className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
+                            <dt className="font-ax-bold text-ax-medium">Periode</dt>
+                            <dd className="font-ax-bold text-ax-heading-medium">
+                                <Skeleton variant="rounded" width="100%" height={65} />
+                            </dd>
+                        </div>
                     </div>
                     <div className="flex flex-col flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
                         <Heading level="2" size="small">
@@ -61,12 +53,6 @@ export const FaktaSkeleton: React.FC = () => {
                                     <Skeleton variant="rounded" width="50%" />
                                 </dd>
                             </div>
-                            <div className="col-span-1">
-                                <dt className="font-ax-bold text-ax-medium">Tilbakekrevingsvalg</dt>
-                                <dd>
-                                    <Skeleton variant="rounded" width="50%" />
-                                </dd>
-                            </div>
                         </dl>
                     </div>
                 </section>
@@ -86,9 +72,9 @@ export const FaktaSkeleton: React.FC = () => {
                                     <Table.HeaderCell scope="col" className="text-end">
                                         Feilutbetalt beløp
                                     </Table.HeaderCell>
-                                    <Table.HeaderCell scope="col" className="text-right">
+                                    {/* <Table.HeaderCell scope="col" className="text-right">
                                         Valg
-                                    </Table.HeaderCell>
+                                    </Table.HeaderCell> */}
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
@@ -105,14 +91,14 @@ export const FaktaSkeleton: React.FC = () => {
                                     <Table.DataCell className="text-end text-ax-text-danger-subtle">
                                         <Skeleton variant="rounded" />
                                     </Table.DataCell>
-                                    <Table.DataCell className="text-right">
+                                    {/* <Table.DataCell className="text-right">
                                         <Button
                                             size="small"
                                             variant="tertiary"
                                             className="align-middle"
                                             icon={<PlusIcon title="Legg til rettslig grunnlag" />}
                                         />
-                                    </Table.DataCell>
+                                    </Table.DataCell> */}
                                 </Table.Row>
                             </Table.Body>
                         </Table>
