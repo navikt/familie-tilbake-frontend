@@ -4,7 +4,7 @@ import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
-import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { ActionBar } from './ActionBar/ActionBar';
@@ -37,6 +37,7 @@ import {
     utledBehandlingSide,
 } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
+import { FixedAlert } from '../Felleskomponenter/FixedAlert/FixedAlert';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
@@ -174,6 +175,21 @@ type AktivBehandlingProps = {
 const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
+    const { setContentBounds } = useBehandlingState();
+    const contentRef = useRef<HTMLElement>(null);
+
+    useLayoutEffect(() => {
+        const updateBounds = (): void => {
+            if (contentRef.current) {
+                const rect = contentRef.current.getBoundingClientRect();
+                setContentBounds({ width: rect.width });
+            }
+        };
+        updateBounds();
+        window.addEventListener('resize', updateBounds);
+        return (): void => window.removeEventListener('resize', updateBounds);
+    }, [setContentBounds]);
+
     return (
         <>
             <section
@@ -195,6 +211,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                     </Button>
                 </div>
                 <section
+                    ref={contentRef}
                     className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
@@ -334,7 +351,7 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const BehandlingContainer: React.FC = () => {
-    const { ventegrunn } = useBehandlingState();
+    const { ventegrunn, globalAlerts, lukkGlobalAlert, contentBounds } = useBehandlingState();
     const [visVenteModal, settVisVenteModal] = useState(false);
 
     return (
@@ -353,6 +370,20 @@ const BehandlingContainer: React.FC = () => {
             >
                 <Behandling />
             </div>
+
+            {globalAlerts.map((alert, index) => (
+                <FixedAlert
+                    key={alert.id}
+                    aria-live="polite"
+                    status={alert.status}
+                    title={alert.title}
+                    width={contentBounds.width}
+                    stackIndex={index}
+                    onClose={() => lukkGlobalAlert(alert.id)}
+                >
+                    {alert.message}
+                </FixedAlert>
+            ))}
         </>
     );
 };

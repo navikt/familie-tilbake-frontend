@@ -4,36 +4,63 @@ import { LocalAlert } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
 type Props = AlertProps & {
-    width?: string;
+    width?: number;
     title: string;
+    stackIndex?: number;
 };
 
-export const FixedAlert: React.FC<Props> = ({ width, children, title, status, ...props }) => {
+const alertHeight = 90;
+const baseBottom = 112;
+const distanceToParent = 20;
+
+export const FixedAlert: React.FC<Props> = ({
+    width,
+    children,
+    title,
+    status,
+    stackIndex = 0,
+    onClose,
+    ...props
+}) => {
     const [isVisible, setIsVisible] = useState(true);
-    const avstandTilParent = 20;
 
     useEffect(() => {
         if (status !== 'error') {
-            const timer = setTimeout(() => setIsVisible(false), 7000);
+            const timer = setTimeout(() => {
+                setIsVisible(false);
+                onClose?.({} as React.MouseEvent<HTMLButtonElement>);
+            }, 7000);
 
             return (): void => clearTimeout(timer);
         }
-    }, [status, children]);
+    }, [status, onClose]);
 
     if (!isVisible) {
         return null;
     }
+
+    const handleClose = (e: React.MouseEvent<HTMLButtonElement>): void => {
+        setIsVisible(false);
+        onClose?.(e);
+    };
+
+    const bottomPosition = baseBottom + stackIndex * alertHeight;
+    const alertWidth = width && width > distanceToParent ? width - distanceToParent : undefined;
+
     return (
         <LocalAlert
             size="small"
-            className="fixed bottom-28 left-6.5"
-            style={{ width: width - avstandTilParent }}
+            className="fixed left-6.5"
+            style={{
+                width: alertWidth,
+                bottom: `${bottomPosition}px`,
+            }}
             status={status}
             {...props}
         >
             <LocalAlert.Header>
                 <LocalAlert.Title>{title}</LocalAlert.Title>
-                <LocalAlert.CloseButton onClick={() => setIsVisible(false)} />
+                <LocalAlert.CloseButton onClick={handleClose} />
             </LocalAlert.Header>
             <LocalAlert.Content>{children}</LocalAlert.Content>
         </LocalAlert>

@@ -82,7 +82,7 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 
 const [VedtakProvider, useVedtak] = createUseContext(() => {
     const behandling = useBehandling();
-    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const { nullstillIkkePersisterteKomponenter, visGlobalAlert } = useBehandlingState();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
@@ -92,7 +92,6 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [foreslåVedtakRespons, settForeslåVedtakRespons] = useState<Ressurs<string>>();
-    const [vedtakSendtTilGodkjenning, settVedtakSendtTilGodkjenning] = useState<boolean>(false);
     const queryClient = useQueryClient();
     const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
         useBehandlingApi();
@@ -243,7 +242,6 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
             settSenderInn(true);
             settForeslåVedtakRespons(undefined);
-            settVedtakSendtTilGodkjenning(false);
             nullstillIkkePersisterteKomponenter();
             const payload: ForeslåVedtakStegPayload = {
                 '@type': 'FORESLÅ_VEDTAK',
@@ -258,7 +256,11 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
-                        settVedtakSendtTilGodkjenning(true);
+                        visGlobalAlert({
+                            title: 'Sendt til godkjenning',
+                            message: 'Behandlingen er sendt til godkjenning hos beslutter.',
+                            status: 'success',
+                        });
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
@@ -335,8 +337,6 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         validerAlleAvsnittOk,
         lagreUtkast,
         hentVedtaksbrevtekster,
-        vedtakSendtTilGodkjenning,
-        nullstillVedtakSendtTilGodkjenning: (): void => settVedtakSendtTilGodkjenning(false),
     };
 });
 

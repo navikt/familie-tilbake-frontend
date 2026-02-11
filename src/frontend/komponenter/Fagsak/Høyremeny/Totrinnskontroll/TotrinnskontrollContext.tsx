@@ -41,6 +41,7 @@ const stegRekkefølge: BehandlingsstegEnum[] = [
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const { visGlobalAlert } = useBehandlingState();
     const queryClient = useQueryClient();
     const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
     const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
@@ -183,6 +184,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                         queryKey: hentBehandlingQueryKey({
                             path: { behandlingId: behandling.behandlingId },
                         }),
+                    });
+                    visGlobalAlert({
+                        title: 'Godkjenning er avbrutt',
+                        message:
+                            'Du kan gjøre endringer før du sender behandlingen til godkjenning på nytt.',
+                        status: 'success',
                     });
                 } else {
                     settFeilmelding(
