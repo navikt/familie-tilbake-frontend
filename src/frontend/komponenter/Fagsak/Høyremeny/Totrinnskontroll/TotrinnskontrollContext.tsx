@@ -230,6 +230,20 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
+                        if (sendTilSaksbehandler) {
+                            visGlobalAlert({
+                                title: 'Sendt til saksbehandler',
+                                message:
+                                    'Behandlingen er sendt tilbake til saksbehandler for en ny vurdering.',
+                                status: 'success',
+                            });
+                        } else {
+                            visGlobalAlert({
+                                title: 'Vedtaket er godkjent',
+                                message: 'Behandlingen er godkjent og du kan lukke denne saken.',
+                                status: 'success',
+                            });
+                        }
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
