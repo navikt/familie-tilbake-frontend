@@ -11,7 +11,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import ForeldelseContainer from './ForeldelseContainer';
+import { ForeldelseContainer } from './ForeldelseContainer';
 import { ForeldelseProvider } from './ForeldelseContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Foreldelsevurdering } from '../../../kodeverk';

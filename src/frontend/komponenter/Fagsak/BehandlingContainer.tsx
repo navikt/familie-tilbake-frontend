@@ -45,7 +45,7 @@ import { PåVentModal } from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./Brevmottaker/Brevmottakere'),
-    'BrevmottakerContainer'
+    'Brevmottakere'
 );
 const FaktaContainer = lazyImportMedRetry(() => import('./Fakta/FaktaContainer'), 'FaktaContainer');
 const HistoriskFaktaContainer = lazyImportMedRetry(

@@ -24,7 +24,7 @@ const StyledVStack = styled(VStack)`
     max-width: 30rem;
 `;
 
-const VergeContainer: React.FC = () => {
+export const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
         useVerge();
     const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
@@ -149,5 +149,3 @@ const VergeContainer: React.FC = () => {
         </>
     );
 };
-
-export default VergeContainer;

@@ -11,7 +11,7 @@ import { useFagsakStore } from '../../stores/fagsakStore';
 import { Spinner } from '../Felleskomponenter/Datalast/Spinner';
 import { UlagretDataModal } from '../Felleskomponenter/Modal/UlagretDataModal';
 
-const FagsakContainer: React.FC = () => {
+export const FagsakContainer: React.FC = () => {
     const location = useLocation();
     const eksternBrukId = location.pathname.split('/')[6];
 
@@ -53,5 +53,3 @@ const FagsakContainer: React.FC = () => {
         </Suspense>
     );
 };
-
-export default FagsakContainer;

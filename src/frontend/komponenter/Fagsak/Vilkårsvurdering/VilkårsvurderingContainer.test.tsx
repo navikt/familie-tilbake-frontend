@@ -14,7 +14,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import VilkårsvurderingContainer from './VilkårsvurderingContainer';
+import { VilkårsvurderingContainer } from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';

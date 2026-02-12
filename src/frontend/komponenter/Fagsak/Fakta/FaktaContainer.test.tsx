@@ -11,7 +11,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import FaktaContainer from './FaktaContainer';
+import { FaktaContainer } from './FaktaContainer';
 import { FaktaProvider } from './FaktaContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { HendelseType, HendelseUndertype } from '../../../kodeverk';

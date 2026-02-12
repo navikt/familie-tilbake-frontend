@@ -16,7 +16,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import VedtakContainer from './VedtakContainer';
+import { VedtakContainer } from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Underavsnittstype, Vedtaksresultat, Vurdering } from '../../../kodeverk';

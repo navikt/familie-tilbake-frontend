@@ -12,7 +12,7 @@ type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;
 };
 
-const Høyremeny: React.FC<Props> = ({ dialogRef }) => {
+export const Høyremeny: React.FC<Props> = ({ dialogRef }) => {
     const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandlingState();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
@@ -66,5 +66,3 @@ const Høyremeny: React.FC<Props> = ({ dialogRef }) => {
         </>
     );
 };
-
-export default Høyremeny;

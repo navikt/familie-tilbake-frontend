@@ -11,7 +11,7 @@ import { Behandlingsmeny } from '../meny/Meny';
 const Container = styled.div`
     margin: 2rem;
 `;
-const HistoriskeVurderingermeny: React.FC = () => {
+export const HistoriskeVurderingermeny: React.FC = () => {
     const { eksternBrukId } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`;
@@ -41,5 +41,3 @@ const HistoriskeVurderingermeny: React.FC = () => {
         </Container>
     );
 };
-
-export default HistoriskeVurderingermeny;

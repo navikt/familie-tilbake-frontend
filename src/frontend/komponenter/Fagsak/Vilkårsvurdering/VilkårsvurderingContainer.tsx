@@ -7,7 +7,7 @@ import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-const VilkårsvurderingContainer: React.FC = () => {
+export const VilkårsvurderingContainer: React.FC = () => {
     const { containerRef, vilkårsvurdering, erAutoutført, skjemaData } = useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
@@ -40,5 +40,3 @@ const VilkårsvurderingContainer: React.FC = () => {
         return <DataLastIkkeSuksess ressurser={[vilkårsvurdering]} />;
     }
 };
-
-export default VilkårsvurderingContainer;

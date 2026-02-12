@@ -71,7 +71,7 @@ const useDebounce = (updateFunction: () => void): (() => void) => {
     };
 };
 
-const OpprettVedtaksbrev: React.FC = () => {
+export const OpprettVedtaksbrev: React.FC = () => {
     const queryClient = useQueryClient();
     const { ytelsestype } = useFagsak();
     const { behandlingId } = useBehandling();
@@ -271,5 +271,3 @@ const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({
         </ExpansionCard>
     );
 };
-
-export default OpprettVedtaksbrev;

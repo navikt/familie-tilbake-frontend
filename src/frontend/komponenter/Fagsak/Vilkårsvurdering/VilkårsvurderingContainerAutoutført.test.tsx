@@ -7,7 +7,7 @@ import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import VilkårsvurderingContainer from './VilkårsvurderingContainer';
+import { VilkårsvurderingContainer } from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';

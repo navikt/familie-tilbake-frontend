@@ -30,7 +30,7 @@ const StyledNavigering = styled(Navigering)`
     width: 90%;
 `;
 
-const VedtakContainer: React.FC = () => {
+export const VedtakContainer: React.FC = () => {
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,
@@ -199,5 +199,3 @@ const VedtakContainer: React.FC = () => {
         return <DataLastIkkeSuksess ressurser={[beregningsresultat, vedtaksbrevavsnitt]} />;
     }
 };
-
-export default VedtakContainer;

@@ -6,7 +6,7 @@ const StyledContainer = styled.div`
     padding: 10px;
 `;
 
-const Dashboard: React.FC = () => (
+export const Dashboard: React.FC = () => (
     <StyledContainer>
         <Heading level="1" size="xlarge" spacing>
             Nav - Tilbakekreving
@@ -18,5 +18,3 @@ const Dashboard: React.FC = () => (
         </BodyLong>
     </StyledContainer>
 );
-
-export default Dashboard;

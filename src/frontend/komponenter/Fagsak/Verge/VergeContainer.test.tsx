@@ -11,7 +11,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import VergeContainer from './VergeContainer';
+import { VergeContainer } from './VergeContainer';
 import { VergeProvider } from './VergeContext';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { Vergetype } from '../../../kodeverk/verge';

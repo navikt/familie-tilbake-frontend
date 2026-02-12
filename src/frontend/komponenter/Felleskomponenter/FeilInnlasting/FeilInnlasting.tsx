@@ -23,14 +23,23 @@ const FeilInnlasting: React.FC<Props> = ({ komponentNavn }: Props) => {
 };
 
 export const lazyImportMedRetry = <T,>(
-    importFunksjon: () => Promise<{ default: ComponentType<T> }>,
+    importFunksjon: () => Promise<Record<string, ComponentType<T>>>,
     komponentNavn: string
 ): React.LazyExoticComponent<ComponentType<T>> => {
     return lazy(() => {
         let forsøkAntall = 0;
         const maxForsøk = 2;
         const forsøkImport = async (): Promise<{ default: ComponentType<T> }> => {
-            return importFunksjon().catch(e => {
+            try {
+                const modul = await importFunksjon();
+                const komponent = modul[komponentNavn];
+                if (!komponent) {
+                    throw new Error(
+                        `Fant ikke eksport "${komponentNavn}" i modulen. Tilgjengelige eksporter: ${Object.keys(modul).join(', ')}`
+                    );
+                }
+                return { default: komponent };
+            } catch (e) {
                 console.error(e);
                 if (forsøkAntall < maxForsøk) {
                     forsøkAntall++;
@@ -40,7 +49,7 @@ export const lazyImportMedRetry = <T,>(
                 return {
                     default: () => <FeilInnlasting komponentNavn={komponentNavn} />,
                 };
-            });
+            }
         };
 
         return forsøkImport();

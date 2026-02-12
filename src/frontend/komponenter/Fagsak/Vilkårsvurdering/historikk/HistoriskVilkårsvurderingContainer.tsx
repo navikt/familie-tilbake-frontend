@@ -7,7 +7,7 @@ import { VelgHistoriskVilkårsvurdering } from './VelgHistoriskVilkårsvurdering
 import { RessursStatus } from '../../../../typer/ressurs';
 import { DataLastIkkeSuksess } from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-const HistoriskVilkårsvurderingContainer: React.FC = () => {
+export const HistoriskVilkårsvurderingContainer: React.FC = () => {
     const { inaktiveVilkårsvurderinger, skjemaData, setInaktivVilkårsvurdering } =
         useHistoriskVilkårsvurdering();
 
@@ -34,5 +34,3 @@ const HistoriskVilkårsvurderingContainer: React.FC = () => {
         return <DataLastIkkeSuksess ressurser={[inaktiveVilkårsvurderinger]} />;
     }
 };
-
-export default HistoriskVilkårsvurderingContainer;

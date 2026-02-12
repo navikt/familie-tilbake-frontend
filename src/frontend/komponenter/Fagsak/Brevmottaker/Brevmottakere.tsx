@@ -223,7 +223,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     );
 };
 
-const Brevmottakere: React.FC = () => {
+export const Brevmottakere: React.FC = () => {
     const { manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const { bruker } = useFagsak();
@@ -325,5 +325,3 @@ const Brevmottakere: React.FC = () => {
         </>
     );
 };
-
-export default Brevmottakere;

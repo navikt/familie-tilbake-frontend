@@ -5,7 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
-import Brevmottakere from './Brevmottakere';
+import { Brevmottakere } from './Brevmottakere';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';

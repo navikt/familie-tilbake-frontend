@@ -11,7 +11,7 @@ import { finnDatoRelativtTilNå } from '../../../utils';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { ActionBar } from '../ActionBar/ActionBar';
 
-const ForeldelseContainer: React.FC = () => {
+export const ForeldelseContainer: React.FC = () => {
     const {
         foreldelse,
         skjemaData,
@@ -129,5 +129,3 @@ const ForeldelseContainer: React.FC = () => {
         </>
     );
 };
-
-export default ForeldelseContainer;

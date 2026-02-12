@@ -7,7 +7,7 @@ import { VelgHistoriskFaktaVurdering } from './VelgHistoriskFaktaVurdering';
 import { RessursStatus } from '../../../../../typer/ressurs';
 import { DataLastIkkeSuksess } from '../../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-const HistoriskFaktaContainer: React.FC = () => {
+export const HistoriskFaktaContainer: React.FC = () => {
     const { inaktiveFakta, skjemaData, fakta, setInaktivFakta } = useHistoriskFakta();
 
     if (inaktiveFakta?.status === RessursStatus.Suksess) {
@@ -33,5 +33,3 @@ const HistoriskFaktaContainer: React.FC = () => {
         return <DataLastIkkeSuksess ressurser={[inaktiveFakta]} />;
     }
 };
-
-export default HistoriskFaktaContainer;

@@ -26,7 +26,7 @@ const FagsakContainer = lazyImportMedRetry(
 );
 const IkkeFunnet = lazyImportMedRetry(() => import('../pages/feilsider/IkkeFunnet'), 'IkkeFunnet');
 
-const Container: React.FC = () => {
+export const Container: React.FC = () => {
     const { autentisert, innloggetSaksbehandler } = useApp();
 
     return (
@@ -103,5 +103,3 @@ const FagsakProvidersWrapper: React.FC = () => (
         </FagsakErrorBoundary>
     </Suspense>
 );
-
-export default Container;

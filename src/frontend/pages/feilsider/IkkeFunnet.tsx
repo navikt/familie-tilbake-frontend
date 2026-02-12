@@ -1,7 +1,7 @@
 import { BodyShort, Box, Heading, Page } from '@navikt/ds-react';
 import * as React from 'react';
 
-const IkkeFunnet: React.FC = () => {
+export const IkkeFunnet: React.FC = () => {
     return (
         <Page.Block as="main" width="xl" gutters>
             <Box paddingBlock="space-80 space-64" data-aksel-template="404-v2">
@@ -15,5 +15,3 @@ const IkkeFunnet: React.FC = () => {
         </Page.Block>
     );
 };
-
-export default IkkeFunnet;

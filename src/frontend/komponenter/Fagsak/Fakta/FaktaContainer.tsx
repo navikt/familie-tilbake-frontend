@@ -9,7 +9,7 @@ import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIk
 import { Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
-const FaktaContainer: React.FC = () => {
+export const FaktaContainer: React.FC = () => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = !!behandlingILesemodus;
@@ -40,5 +40,3 @@ const FaktaContainer: React.FC = () => {
         return <DataLastIkkeSuksess ressurser={[fakta]} />;
     }
 };
-
-export default FaktaContainer;
