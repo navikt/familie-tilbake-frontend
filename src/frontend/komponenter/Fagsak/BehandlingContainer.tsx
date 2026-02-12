@@ -16,6 +16,7 @@ import { HistoriskFaktaProvider } from './Fakta/FaktaPeriode/historikk/Historisk
 import { FaktaSkeleton } from './Fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
+import { ForhåndsvarselSkeleton } from './Forhåndsvarsel/ForhåndsvarselSkeleton';
 import { HøyremenySkeleton } from './Høyremeny/HøyremenySkeleton';
 import { Stegflyt } from './Stegflyt/Stegflyt';
 import { OpprettVedtaksbrevSkeleton } from './Vedtak/OpprettVedtaksbrevSkeleton';
@@ -239,7 +240,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
                                 element={
                                     <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
-                                        <Suspense fallback="Forhåndsvarsel laster...">
+                                        <Suspense fallback={<ForhåndsvarselSkeleton />}>
                                             <Forhåndsvarsel />
                                         </Suspense>
                                     </StegErrorBoundary>
