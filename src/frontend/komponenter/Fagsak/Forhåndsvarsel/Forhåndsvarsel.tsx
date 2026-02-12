@@ -28,6 +28,7 @@ import {
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
+import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
@@ -43,8 +44,9 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 
 export const Forhåndsvarsel: React.FC = () => {
     const { behandlingId } = useBehandling();
-    const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter, visGlobalAlert } =
+    const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
@@ -184,12 +186,9 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
 }) => {
-    const {
-        actionBarStegtekst,
-        nullstillIkkePersisterteKomponenter,
-        behandlingILesemodus,
-        visGlobalAlert,
-    } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
+        useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
 
     const {
         formState: { dirtyFields: forhåndsvarselDirtyFields },

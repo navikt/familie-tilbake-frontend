@@ -36,7 +36,7 @@ export const FixedAlert: React.FC<Props> = ({
 
     return (
         <LocalAlert
-            size="small"
+            size="medium"
             className="fixed left-6.5"
             style={{
                 width: alertWidth,

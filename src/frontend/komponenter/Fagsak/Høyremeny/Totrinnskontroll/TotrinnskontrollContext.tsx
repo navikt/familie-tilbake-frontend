@@ -15,6 +15,7 @@ import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
+import { useVisGlobalAlert } from '../../../../stores/globalAlertStore';
 import { behandlingssteg } from '../../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -41,7 +42,7 @@ const stegRekkefølge: BehandlingsstegEnum[] = [
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
-    const { visGlobalAlert } = useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
     const queryClient = useQueryClient();
     const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
     const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);

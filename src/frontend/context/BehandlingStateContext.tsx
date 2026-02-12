@@ -13,13 +13,6 @@ export const erStegUtført = (status: string): boolean => {
     return status === 'UTFØRT' || status === 'AUTOUTFØRT';
 };
 
-export type GlobalAlert = {
-    id: string;
-    title: string;
-    message: string;
-    status: 'error' | 'info' | 'success' | 'warning';
-};
-
 export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     behandlingILesemodus: boolean;
     aktivtSteg: Behandlingsstegstilstand | undefined;
@@ -30,9 +23,6 @@ export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     erStegAutoutført: (steg: BehandlingsstegEnum) => boolean;
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
-    globalAlerts: GlobalAlert[];
-    visGlobalAlert: (alert: Omit<GlobalAlert, 'id'>) => void;
-    lukkGlobalAlert: (id: string) => void;
     contentBounds: { width: number };
     setContentBounds: (bounds: { width: number }) => void;
 };
@@ -48,17 +38,7 @@ type Props = {
 export const BehandlingStateProvider = ({ children }: Props): React.ReactElement => {
     const behandling = useBehandling();
     const ulagretEndringer = useUlagretEndringer();
-    const [globalAlerts, setGlobalAlerts] = useState<GlobalAlert[]>([]);
     const [contentBounds, setContentBounds] = useState<{ width: number }>({ width: 0 });
-
-    const visGlobalAlert = (alert: Omit<GlobalAlert, 'id'>): void => {
-        const id = crypto.randomUUID();
-        setGlobalAlerts(prev => [...prev, { ...alert, id }]);
-    };
-
-    const lukkGlobalAlert = (id: string): void => {
-        setGlobalAlerts(prev => prev.filter(alert => alert.id !== id));
-    };
 
     const behandlingILesemodus = useMemo((): boolean => {
         return (
@@ -153,9 +133,6 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         erStegAutoutført,
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
-        globalAlerts,
-        visGlobalAlert,
-        lukkGlobalAlert,
         contentBounds,
         setContentBounds,
         ...ulagretEndringer,

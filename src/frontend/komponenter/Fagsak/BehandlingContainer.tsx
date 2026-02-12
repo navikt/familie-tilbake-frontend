@@ -27,6 +27,7 @@ import { useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
+import { useGlobalAlerts, useLukkGlobalAlert } from '../../stores/globalAlertStore';
 import { Behandlingssteg, Behandlingstatus, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
@@ -351,7 +352,9 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const BehandlingContainer: React.FC = () => {
-    const { ventegrunn, globalAlerts, lukkGlobalAlert, contentBounds } = useBehandlingState();
+    const { ventegrunn, contentBounds } = useBehandlingState();
+    const globalAlerts = useGlobalAlerts();
+    const lukkGlobalAlert = useLukkGlobalAlert();
     const [visVenteModal, settVisVenteModal] = useState(false);
 
     return (

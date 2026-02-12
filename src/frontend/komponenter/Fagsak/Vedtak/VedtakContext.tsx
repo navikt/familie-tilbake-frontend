@@ -18,6 +18,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -82,7 +83,8 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 
 const [VedtakProvider, useVedtak] = createUseContext(() => {
     const behandling = useBehandling();
-    const { nullstillIkkePersisterteKomponenter, visGlobalAlert } = useBehandlingState();
+    const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
