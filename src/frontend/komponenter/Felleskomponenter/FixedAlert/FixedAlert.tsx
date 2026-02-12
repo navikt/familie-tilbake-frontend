@@ -1,7 +1,7 @@
 import type { AlertProps } from '@navikt/ds-react';
 
 import { LocalAlert } from '@navikt/ds-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 type Props = AlertProps & {
     width?: number;
@@ -23,22 +23,9 @@ export const FixedAlert: React.FC<Props> = ({
     ...props
 }) => {
     const [isVisible, setIsVisible] = useState(true);
-
-    useEffect(() => {
-        if (status !== 'error') {
-            const timer = setTimeout(() => {
-                setIsVisible(false);
-                onClose?.({} as React.MouseEvent<HTMLButtonElement>);
-            }, 7000);
-
-            return (): void => clearTimeout(timer);
-        }
-    }, [status, onClose]);
-
     if (!isVisible) {
         return null;
     }
-
     const handleClose = (e: React.MouseEvent<HTMLButtonElement>): void => {
         setIsVisible(false);
         onClose?.(e);
