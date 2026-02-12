@@ -10,6 +10,7 @@ type Props = AlertProps & {
 };
 
 const alertHeight = 90;
+const alertGap = 8;
 const baseBottom = 112;
 const distanceToParent = 20;
 
@@ -31,7 +32,7 @@ export const FixedAlert: React.FC<Props> = ({
         onClose?.(e);
     };
 
-    const bottomPosition = baseBottom + stackIndex * alertHeight;
+    const bottomPosition = baseBottom + stackIndex * (alertHeight + alertGap);
     const alertWidth = width && width > distanceToParent ? width - distanceToParent : undefined;
 
     return (
