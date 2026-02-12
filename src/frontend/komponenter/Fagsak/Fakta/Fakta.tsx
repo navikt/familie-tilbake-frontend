@@ -66,8 +66,12 @@ export const Fakta: React.FC = (): React.JSX.Element => {
                         <div className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
                             <dt className="font-ax-bold text-ax-medium">Periode</dt>
                             <dd className="font-ax-bold text-ax-heading-medium">
-                                {formatterDatostring(faktaOmFeilutbetaling.feilutbetaling.fom)}–
-                                {formatterDatostring(faktaOmFeilutbetaling.feilutbetaling.tom)}
+                                {formatterDatostring(faktaOmFeilutbetaling.perioder[0].fom)}–
+                                {formatterDatostring(
+                                    faktaOmFeilutbetaling.perioder[
+                                        faktaOmFeilutbetaling.perioder.length - 1
+                                    ].tom
+                                )}
                             </dd>
                         </div>
                     </div>

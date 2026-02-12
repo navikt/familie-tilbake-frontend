@@ -9,7 +9,6 @@ export const elementArrayTilTekst = (elementer: Element[]): string => {
 export const tekstTilElementArray = (tekst: string): Element[] => {
     return tekst
         .split(/\n\n+/)
-        .map(t => t.trim())
         .filter(t => t.length > 0)
         .map(t => ({ type: 'rentekst' as const, tekst: t }));
 };

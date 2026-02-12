@@ -5,8 +5,8 @@ import { Link } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import HentDokument from './HentDokument';
 import { Journalposttype } from '../../../../typer/journalføring';
+import HentDokument from '../HentDokument';
 
 const Dokument = styled.span`
     display: block;
@@ -38,11 +38,9 @@ const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
                     </Link>
                     {visDokument && (
                         <HentDokument
-                            journalpost={journalpost}
-                            dokument={dokument}
-                            onClose={() => {
-                                settVisDokument(false);
-                            }}
+                            journalpostId={journalpost.journalpostId}
+                            dokumentId={dokument.dokumentInfoId}
+                            onClose={() => settVisDokument(false)}
                         />
                     )}
                 </>

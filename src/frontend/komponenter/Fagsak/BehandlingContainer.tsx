@@ -18,6 +18,7 @@ import { ForeldelseProvider } from './Foreldelse/ForeldelseContext';
 import { Forhåndsvarsel } from './Forhåndsvarsel/Forhåndsvarsel';
 import { HøyremenySkeleton } from './Høyremeny/HøyremenySkeleton';
 import { Stegflyt } from './Stegflyt/Stegflyt';
+import { OpprettVedtaksbrevSkeleton } from './Vedtak/OpprettVedtaksbrevSkeleton';
 import { VedtakProvider } from './Vedtak/VedtakContext';
 import { VergeProvider } from './Verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './Vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
@@ -262,7 +263,11 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                                 element={
                                     behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
-                                        <OpprettVedtaksbrev />
+                                        <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
+                                            <Suspense fallback={<OpprettVedtaksbrevSkeleton />}>
+                                                <OpprettVedtaksbrev />
+                                            </Suspense>
+                                        </StegErrorBoundary>
                                     ) : (
                                         <VedtakProvider>
                                             <VedtakContainer />

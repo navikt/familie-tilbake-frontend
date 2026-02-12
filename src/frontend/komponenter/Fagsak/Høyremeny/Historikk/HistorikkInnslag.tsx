@@ -6,12 +6,12 @@ import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import HentDokument from './HentDokument';
 import { useHistorikk } from './HistorikkContext';
 import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
 import { formatterDatoOgTidstring } from '../../../../utils';
 import { finnSideForSteg } from '../../../../utils/sider';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
+import HentDokument from '../HentDokument';
 
 const Innslag = styled.div`
     display: flex;
@@ -118,10 +118,9 @@ const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
                 {typeBrev && lagBrevLink()}
                 {visDokument && (
                     <HentDokument
-                        innslag={innslag}
-                        onClose={() => {
-                            settVisDokument(false);
-                        }}
+                        journalpostId={innslag.journalpostId}
+                        dokumentId={innslag.dokumentId}
+                        onClose={() => settVisDokument(false)}
                     />
                 )}
             </div>

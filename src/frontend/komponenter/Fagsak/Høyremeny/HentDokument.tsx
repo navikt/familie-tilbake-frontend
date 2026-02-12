@@ -1,9 +1,7 @@
-import type { DokumentInfo, Journalpost } from '../../../../typer/journalføring';
-
 import * as React from 'react';
 
-import { useHttp } from '../../../../api/http/HttpProvider';
-import { useBehandling } from '../../../../context/BehandlingContext';
+import { useHttp } from '../../../api/http/HttpProvider';
+import { useBehandling } from '../../../context/BehandlingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -11,17 +9,17 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '../../../../typer/ressurs';
-import { base64ToArrayBuffer } from '../../../../utils';
-import PdfVisningModal from '../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+} from '../../../typer/ressurs';
+import { base64ToArrayBuffer } from '../../../utils';
+import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 type Props = {
-    journalpost: Journalpost;
-    dokument: DokumentInfo;
+    journalpostId: string | undefined;
+    dokumentId: string | undefined;
     onClose: () => void;
 };
 
-const HentDokument: React.FC<Props> = ({ journalpost, dokument, onClose }) => {
+const HentDokument: React.FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
     const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { behandlingId } = useBehandling();
@@ -32,7 +30,7 @@ const HentDokument: React.FC<Props> = ({ journalpost, dokument, onClose }) => {
         settHentetDokument(byggHenterRessurs());
         request<void, string>({
             method: 'GET',
-            url: `/familie-tilbake/api/behandling/${behandlingId}/journalpost/${journalpost.journalpostId}/dokument/${dokument.dokumentInfoId}`,
+            url: `/familie-tilbake/api/behandling/${behandlingId}/journalpost/${journalpostId}/dokument/${dokumentId}`,
         }).then((response: Ressurs<string>) => {
             if (response.status === RessursStatus.Suksess) {
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
@@ -52,24 +50,18 @@ const HentDokument: React.FC<Props> = ({ journalpost, dokument, onClose }) => {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandlingId, journalpost, dokument]);
-
-    const nullstillHentetDokument = (): void => {
-        settHentetDokument(byggTomRessurs);
-    };
+    }, [behandlingId, journalpostId, dokumentId]);
 
     return (
-        <>
-            <PdfVisningModal
-                åpen={visModal}
-                pdfdata={hentetDokument}
-                onRequestClose={() => {
-                    nullstillHentetDokument();
-                    settVisModal(false);
-                    onClose();
-                }}
-            />
-        </>
+        <PdfVisningModal
+            åpen={visModal}
+            pdfdata={hentetDokument}
+            onRequestClose={() => {
+                settHentetDokument(byggTomRessurs);
+                settVisModal(false);
+                onClose();
+            }}
+        />
     );
 };
 
