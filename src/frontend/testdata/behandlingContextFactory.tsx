@@ -22,6 +22,11 @@ export type BehandlingStateContextOverrides = {
     harUlagredeData?: boolean;
     settIkkePersistertKomponent?: BehandlingStateContextType['settIkkePersistertKomponent'];
     nullstillIkkePersisterteKomponenter?: BehandlingStateContextType['nullstillIkkePersisterteKomponenter'];
+    globalAlerts?: BehandlingStateContextType['globalAlerts'];
+    visGlobalAlert?: BehandlingStateContextType['visGlobalAlert'];
+    lukkGlobalAlert?: BehandlingStateContextType['lukkGlobalAlert'];
+    contentBounds?: BehandlingStateContextType['contentBounds'];
+    setContentBounds?: BehandlingStateContextType['setContentBounds'];
 };
 
 export type BehandlingContextOverrides = BehandlingStateContextOverrides & {
@@ -53,6 +58,11 @@ export const lagBehandlingStateContext = (
             overrides.nullstillIkkePersisterteKomponenter ??
             ulagretEndringer?.nullstillIkkePersisterteKomponenter ??
             ((): void => {}),
+        globalAlerts: overrides.globalAlerts ?? [],
+        visGlobalAlert: overrides.visGlobalAlert ?? ((): void => {}),
+        lukkGlobalAlert: overrides.lukkGlobalAlert ?? ((): void => {}),
+        contentBounds: overrides.contentBounds ?? { width: 800 },
+        setContentBounds: overrides.setContentBounds ?? ((): void => {}),
     };
 };
 
