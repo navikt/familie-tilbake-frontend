@@ -139,6 +139,7 @@ const OpprettVedtaksbrev: React.FC = () => {
                                 key={`${periode.fom}-${periode.tom}`}
                                 periode={periode}
                                 indeks={indeks}
+                                antallPerioder={methods.getValues('perioder').length}
                             />
                         ))}
                     </FormProvider>
@@ -217,45 +218,56 @@ const OpprettVedtaksbrev: React.FC = () => {
 type PeriodeAvsnittSkjemaProps = {
     periode: VedtaksbrevFormData['perioder'][number];
     indeks: number;
+    antallPerioder: number;
 };
 
-const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({ periode, indeks }) => {
+const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({
+    periode,
+    indeks,
+    antallPerioder,
+}) => {
     const periodeTittel = formaterPeriodeTittel(periode.fom, periode.tom);
+
+    const innhold = (
+        <VStack gap="space-24">
+            <VStack gap="space-16">
+                <ElementTextarea
+                    name={`perioder.${indeks}.beskrivelse`}
+                    label={`Perioden fra og med ${datoTilTekst(periode.fom)} til og med ${datoTilTekst(periode.tom)}`}
+                    description="Beskriv kort hva som har skjedd i denne perioden"
+                />
+            </VStack>
+
+            {periode.konklusjon.length > 0 && (
+                <VStack gap="space-16">
+                    <ElementTextarea
+                        name={`perioder.${indeks}.konklusjon`}
+                        label="Hvordan har vi kommet fram til at du må betale tilbake?"
+                    />
+                </VStack>
+            )}
+
+            {periode.vurderinger.map((vurdering, vurderingIndeks) => (
+                <VStack key={vurdering.tittel} gap="space-16">
+                    <ElementTextarea
+                        name={`perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`}
+                        label={vurdering.tittel}
+                    />
+                </VStack>
+            ))}
+        </VStack>
+    );
+
+    if (antallPerioder === 1) {
+        return innhold;
+    }
 
     return (
         <ExpansionCard size="small" aria-label={periodeTittel}>
             <ExpansionCard.Header className="flex items-center">
                 <BodyShort className="font-ax-bold">{periodeTittel}</BodyShort>
             </ExpansionCard.Header>
-            <ExpansionCard.Content>
-                <VStack gap="space-24">
-                    <VStack gap="space-16">
-                        <ElementTextarea
-                            name={`perioder.${indeks}.beskrivelse`}
-                            label={`Perioden fra og med ${datoTilTekst(periode.fom)} til og med ${datoTilTekst(periode.tom)}`}
-                            description="Beskriv kort hva som har skjedd i denne perioden"
-                        />
-                    </VStack>
-
-                    {periode.konklusjon.length > 0 && (
-                        <VStack gap="space-16">
-                            <ElementTextarea
-                                name={`perioder.${indeks}.konklusjon`}
-                                label="Hvordan har vi kommet fram til at du må betale tilbake?"
-                            />
-                        </VStack>
-                    )}
-
-                    {periode.vurderinger.map((vurdering, vurderingIndeks) => (
-                        <VStack key={vurdering.tittel} gap="space-16">
-                            <ElementTextarea
-                                name={`perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`}
-                                label={vurdering.tittel}
-                            />
-                        </VStack>
-                    ))}
-                </VStack>
-            </ExpansionCard.Content>
+            <ExpansionCard.Content>{innhold}</ExpansionCard.Content>
         </ExpansionCard>
     );
 };
