@@ -238,9 +238,11 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             <Route
                                 path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
                                 element={
-                                    <Suspense fallback="Forhåndsvarsel laster...">
-                                        <Forhåndsvarsel />
-                                    </Suspense>
+                                    <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
+                                        <Suspense fallback="Forhåndsvarsel laster...">
+                                            <Forhåndsvarsel />
+                                        </Suspense>
+                                    </StegErrorBoundary>
                                 }
                             />
                             <Route
