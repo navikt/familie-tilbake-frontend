@@ -2,10 +2,10 @@ import { Alert, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useHistoriskFakta } from './HistoriskFaktaContext';
-import HistoriskFaktaVisning from './HistoriskFaktaVisning';
-import VelgHistoriskFaktaVurdering from './VelgHistoriskFaktaVurdering';
+import { HistoriskFaktaVisning } from './HistoriskFaktaVisning';
+import { VelgHistoriskFaktaVurdering } from './VelgHistoriskFaktaVurdering';
 import { RessursStatus } from '../../../../../typer/ressurs';
-import DataLastIkkeSuksess from '../../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { DataLastIkkeSuksess } from '../../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const HistoriskFaktaContainer: React.FC = () => {
     const { inaktiveFakta, skjemaData, fakta, setInaktivFakta } = useHistoriskFakta();

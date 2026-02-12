@@ -10,7 +10,7 @@ type State = {
     error: Error | null;
 };
 
-class FagsakErrorBoundary extends Component<Props, State> {
+export class FagsakErrorBoundary extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = { hasError: false, error: null };
@@ -95,5 +95,3 @@ class FagsakErrorBoundary extends Component<Props, State> {
         return this.props.children;
     }
 }
-
-export default FagsakErrorBoundary;

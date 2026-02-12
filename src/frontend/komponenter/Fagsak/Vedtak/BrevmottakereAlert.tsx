@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { Behandlingssteg } from '../../../typer/behandling';
 import { useStegNavigering } from '../../../utils/sider';
-import BrevmottakerListe from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
+import { BrevmottakerListe } from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 
 type Props = {
     brevmottakere: Brevmottaker[];

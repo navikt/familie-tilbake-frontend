@@ -4,7 +4,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeri
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 
-import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
+import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { Aktsomhet } from '../../../../../kodeverk';
 import { formatCurrencyNoKr, isEmpty, isNumeric } from '../../../../../utils';
@@ -21,7 +21,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
@@ -157,5 +157,3 @@ const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => 
         </>
     );
 };
-
-export default ReduksjonAvBeløpSkjema;

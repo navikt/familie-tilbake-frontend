@@ -2,14 +2,14 @@ import { Button } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useForhåndsvisBrev } from './useForhåndsvisBrev';
-import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import { PdfVisningModal } from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { useSendMelding } from '../SendMeldingContext';
 
 type Props = {
     test?: boolean;
 };
 
-const ForhåndsvisBrev: React.FC<Props> = () => {
+export const ForhåndsvisBrev: React.FC<Props> = () => {
     const {
         hentetForhåndsvisning,
         hentBrev,
@@ -52,5 +52,3 @@ const ForhåndsvisBrev: React.FC<Props> = () => {
         </>
     );
 };
-
-export default ForhåndsvisBrev;

@@ -8,7 +8,7 @@ import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriodeSkjema';
+import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriodeSkjema';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
 import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';

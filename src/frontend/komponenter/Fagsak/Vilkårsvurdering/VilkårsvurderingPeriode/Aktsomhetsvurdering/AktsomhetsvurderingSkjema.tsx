@@ -3,8 +3,8 @@ import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeri
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
-import GradForsettSkjema from './GradForsettSkjema';
-import GradUaktsomhetSkjema from './GradUaktsomhetSkjema';
+import { GradForsettSkjema } from './GradForsettSkjema';
+import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet, aktsomheter, Vilkårsresultat } from '../../../../../kodeverk';
@@ -15,7 +15,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
@@ -129,5 +129,3 @@ const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) =
         </>
     );
 };
-
-export default AktsomhetsvurderingSkjema;

@@ -11,7 +11,10 @@ type Props = {
     setInaktivFakta: (valgtFakta?: FaktaResponse) => void;
 };
 
-const VelgHistoriskFaktaVurdering: React.FC<Props> = ({ inaktiveFakta, setInaktivFakta }) => {
+export const VelgHistoriskFaktaVurdering: React.FC<Props> = ({
+    inaktiveFakta,
+    setInaktivFakta,
+}) => {
     return (
         <Select
             onChange={e => {
@@ -41,5 +44,3 @@ const VelgHistoriskFaktaVurdering: React.FC<Props> = ({ inaktiveFakta, setInakti
         </Select>
     );
 };
-
-export default VelgHistoriskFaktaVurdering;

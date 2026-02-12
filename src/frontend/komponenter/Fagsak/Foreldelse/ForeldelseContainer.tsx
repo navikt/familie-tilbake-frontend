@@ -2,13 +2,13 @@ import { Alert, BodyLong, Heading, Link, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useForeldelse } from './ForeldelseContext';
-import ForeldelsePerioder from './ForeldelsePeriode/ForeldelsePerioder';
+import { ForeldelsePerioder } from './ForeldelsePeriode/ForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 const ForeldelseContainer: React.FC = () => {

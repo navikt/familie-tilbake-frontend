@@ -12,7 +12,7 @@ type Props = {
     onSelectPeriode: (periode: TimelinePeriodProps) => void;
 };
 
-const TilbakeTidslinje: React.FC<Props> = ({ rader, onSelectPeriode }) => {
+export const TilbakeTidslinje: React.FC<Props> = ({ rader, onSelectPeriode }) => {
     return (
         <Timeline>
             {rader.map(rad => (
@@ -58,5 +58,3 @@ const TilbakeTidslinje: React.FC<Props> = ({ rader, onSelectPeriode }) => {
         </Timeline>
     );
 };
-
-export default TilbakeTidslinje;

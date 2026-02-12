@@ -1,7 +1,7 @@
 import { BodyShort, Modal } from '@navikt/ds-react';
 import React from 'react';
 
-const UgyldigSesjon: React.FC = () => {
+export const UgyldigSesjon: React.FC = () => {
     return (
         <Modal
             header={{ heading: 'Ugyldig sesjon', size: 'medium', closeButton: false }}
@@ -14,5 +14,3 @@ const UgyldigSesjon: React.FC = () => {
         </Modal>
     );
 };
-
-export default UgyldigSesjon;

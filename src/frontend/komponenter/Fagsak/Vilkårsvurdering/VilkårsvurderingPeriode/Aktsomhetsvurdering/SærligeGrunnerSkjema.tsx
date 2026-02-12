@@ -9,7 +9,7 @@ import {
     type JaNeiOption,
     type VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
-import ReduksjonAvBeløpSkjema from './ReduksjonAvBeløpSkjema';
+import { ReduksjonAvBeløpSkjema } from './ReduksjonAvBeløpSkjema';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
@@ -20,7 +20,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
 
     const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {
@@ -127,5 +127,3 @@ const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         </>
     );
 };
-
-export default SærligeGrunnerSkjema;

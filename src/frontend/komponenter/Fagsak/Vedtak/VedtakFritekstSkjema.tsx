@@ -21,7 +21,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const VedtakFritekstSkjema: React.FC<Props> = ({
+export const VedtakFritekstSkjema: React.FC<Props> = ({
     avsnittIndex,
     underavsnitt,
     maximumLength,
@@ -99,5 +99,3 @@ const VedtakFritekstSkjema: React.FC<Props> = ({
         </>
     );
 };
-
-export default VedtakFritekstSkjema;

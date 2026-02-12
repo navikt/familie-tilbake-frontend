@@ -11,7 +11,7 @@ import {
     RessursStatus,
 } from '../../../typer/ressurs';
 import { base64ToArrayBuffer } from '../../../utils';
-import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import { PdfVisningModal } from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 type Props = {
     journalpostId: string | undefined;
@@ -19,7 +19,7 @@ type Props = {
     onClose: () => void;
 };
 
-const HentDokument: React.FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
+export const HentDokument: React.FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
     const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
     const [visModal, settVisModal] = React.useState<boolean>(false);
     const { behandlingId } = useBehandling();
@@ -64,5 +64,3 @@ const HentDokument: React.FC<Props> = ({ journalpostId, dokumentId, onClose }) =
         />
     );
 };
-
-export default HentDokument;

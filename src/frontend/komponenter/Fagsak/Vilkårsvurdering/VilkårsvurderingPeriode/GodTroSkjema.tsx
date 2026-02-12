@@ -16,7 +16,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
 
     const ugyldigErBeløpetIBeholdValgt =
@@ -115,5 +115,3 @@ const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         </>
     );
 };
-
-export default GodTroSkjema;

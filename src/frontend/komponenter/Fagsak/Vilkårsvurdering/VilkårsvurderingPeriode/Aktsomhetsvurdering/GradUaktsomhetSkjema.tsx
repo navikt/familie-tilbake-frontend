@@ -6,7 +6,7 @@ import type {
 import { Alert, Radio } from '@navikt/ds-react';
 import * as React from 'react';
 
-import SærligeGrunnerSkjema from './SærligeGrunnerSkjema';
+import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
@@ -18,7 +18,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
@@ -80,5 +80,3 @@ const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         </>
     );
 };
-
-export default GradUaktsomhetSkjema;

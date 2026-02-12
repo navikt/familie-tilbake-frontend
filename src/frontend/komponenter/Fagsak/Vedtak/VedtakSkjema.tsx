@@ -4,7 +4,7 @@ import { Alert, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import AvsnittSkjema, { avsnittKey } from './AvsnittSkjema';
+import { AvsnittSkjema, avsnittKey } from './AvsnittSkjema';
 
 const StyledSkjema = styled.div`
     width: 90%;
@@ -20,7 +20,7 @@ type Props = {
     harBrukerUttaltSeg: boolean;
 };
 
-const VedtakSkjema: React.FC<Props> = ({
+export const VedtakSkjema: React.FC<Props> = ({
     avsnitter,
     erLesevisning,
     erRevurderingBortfaltBeløp,
@@ -47,5 +47,3 @@ const VedtakSkjema: React.FC<Props> = ({
         </StyledSkjema>
     );
 };
-
-export default VedtakSkjema;

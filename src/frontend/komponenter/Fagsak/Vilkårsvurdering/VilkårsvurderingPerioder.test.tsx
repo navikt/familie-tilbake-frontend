@@ -14,7 +14,7 @@ import * as React from 'react';
 import { vi } from 'vitest';
 
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
+import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';
 import { FagsakContext } from '../../../context/FagsakContext';
 import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../testdata/behandlingFactory';

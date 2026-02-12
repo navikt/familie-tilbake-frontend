@@ -4,7 +4,7 @@ import { Detail } from '@navikt/ds-react';
 import * as React from 'react';
 import { styled } from 'styled-components';
 
-import Dokumentvisning from './Dokumentvisning';
+import { Dokumentvisning } from './Dokumentvisning';
 import { Journalposttype } from '../../../../typer/journalføring';
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
@@ -37,7 +37,7 @@ type Props = {
     journalpost: Journalpost;
 };
 
-const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
+export const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
     const datoRegistrertSendt = hentDatoRegistrertSendt(
         journalpost.relevanteDatoer,
         journalpost.journalposttype
@@ -63,5 +63,3 @@ const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
         </Journalpost>
     );
 };
-
-export default JournalpostVisning;

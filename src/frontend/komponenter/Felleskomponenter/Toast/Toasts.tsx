@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from 'styled-components';
 
-import Toast from './Toast';
+import { Toast } from './Toast';
 import { useApp } from '../../../context/AppContext';
 
 const Container = styled.div`
@@ -12,7 +12,7 @@ const Container = styled.div`
     z-index: 9999;
 `;
 
-const Toasts: React.FC = () => {
+export const Toasts: React.FC = () => {
     const { toasts } = useApp();
 
     return (
@@ -23,5 +23,3 @@ const Toasts: React.FC = () => {
         </Container>
     );
 };
-
-export default Toasts;

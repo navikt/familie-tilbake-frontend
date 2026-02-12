@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { Dokumentlisting } from './Dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './Dokumentlisting/DokumentlistingContext';
-import Historikk from './Historikk/Historikk';
+import { Historikk } from './Historikk/Historikk';
 import { HistorikkProvider } from './Historikk/HistorikkContext';
-import SendMelding from './SendMelding/SendMelding';
+import { SendMelding } from './SendMelding/SendMelding';
 import { SendMeldingProvider } from './SendMelding/SendMeldingContext';
-import Totrinnskontroll from './Totrinnskontroll/Totrinnskontroll';
+import { Totrinnskontroll } from './Totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './Totrinnskontroll/TotrinnskontrollContext';
 
 export enum Menysider {

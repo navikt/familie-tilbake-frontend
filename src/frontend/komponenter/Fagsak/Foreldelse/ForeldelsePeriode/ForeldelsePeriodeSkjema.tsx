@@ -20,7 +20,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
-import SplittPeriode from './SplittPeriode/SplittPeriode';
+import { SplittPeriode } from './SplittPeriode/SplittPeriode';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 import {
@@ -29,8 +29,8 @@ import {
     foreldelseVurderingTyper,
 } from '../../../../kodeverk';
 import { isoStringTilDate } from '../../../../utils/dato';
-import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
-import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
+import { Datovelger } from '../../../Felleskomponenter/Datovelger/Datovelger';
+import { PeriodeOppsummering } from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { useForeldelse } from '../ForeldelseContext';
 
 const StyledVStack = styled(VStack)`
@@ -47,7 +47,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) => {
+export const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) => {
     const { oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
@@ -238,5 +238,3 @@ const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) =>
         </div>
     );
 };
-
-export default ForeldelsePeriodeSkjema;

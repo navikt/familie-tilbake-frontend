@@ -10,7 +10,7 @@ import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-qu
 import { Valideringsstatus } from '../../../../hooks/skjema/typer';
 import { manuelleVenteÅrsaker, venteårsaker } from '../../../../typer/behandling';
 import { dagensDato } from '../../../../utils/dato';
-import Datovelger from '../../../Felleskomponenter/Datovelger/Datovelger';
+import { Datovelger } from '../../../Felleskomponenter/Datovelger/Datovelger';
 import { usePåVentBehandling } from '../../../Felleskomponenter/Modal/PåVent/PåVentContext';
 import { MODAL_BREDDE } from '../utils';
 

@@ -5,7 +5,7 @@ import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { css, styled } from 'styled-components';
 
-import VedtakFritekstSkjema from './VedtakFritekstSkjema';
+import { VedtakFritekstSkjema } from './VedtakFritekstSkjema';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
@@ -72,7 +72,11 @@ type Props = {
     erRevurderingBortfaltBeløp: boolean;
 };
 
-const AvsnittSkjema: React.FC<Props> = ({ avsnitt, erLesevisning, erRevurderingBortfaltBeløp }) => {
+export const AvsnittSkjema: React.FC<Props> = ({
+    avsnitt,
+    erLesevisning,
+    erRevurderingBortfaltBeløp,
+}) => {
     const [erEkspandert, settErEkspandert] = React.useState<boolean>(false);
 
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);
@@ -169,5 +173,3 @@ const AvsnittSkjema: React.FC<Props> = ({ avsnitt, erLesevisning, erRevurderingB
         </StyledExpansionCard>
     );
 };
-
-export default AvsnittSkjema;

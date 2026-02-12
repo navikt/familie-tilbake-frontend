@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext, get } from 'react-hook-form';
 
 import { MottakerType } from '../../../../typer/Brevmottaker';
-import Landvelger from '../../../Felleskomponenter/Landvelger/Landvelger';
+import { Landvelger } from '../../../Felleskomponenter/Landvelger/Landvelger';
 
 type Props = {
     preutfyltNavn?: string;

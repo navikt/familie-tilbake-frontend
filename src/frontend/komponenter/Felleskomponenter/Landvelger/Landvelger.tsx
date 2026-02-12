@@ -16,7 +16,7 @@ type Props = {
     error?: string;
 };
 
-const Landvelger: React.FC<Props> = ({
+export const Landvelger: React.FC<Props> = ({
     id,
     eksluderLandkoder = [],
     valgtLandkode,
@@ -54,5 +54,3 @@ const Landvelger: React.FC<Props> = ({
         />
     );
 };
-
-export default Landvelger;

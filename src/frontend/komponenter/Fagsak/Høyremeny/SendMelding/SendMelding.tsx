@@ -1,7 +1,7 @@
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
-import ForhåndsvisBrev from './ForhåndsvisBrev/ForhåndsvisBrev';
+import { ForhåndsvisBrev } from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
@@ -9,7 +9,7 @@ import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { målform } from '../../../../typer/målform';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
-import BrevmottakerListe from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
+import { BrevmottakerListe } from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 
 const tekstfeltLabel = (mal: DokumentMal): string => {
@@ -18,7 +18,7 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
         : 'Fritekst';
 };
 
-const SendMelding: React.FC = () => {
+export const SendMelding: React.FC = () => {
     const { manuelleBrevmottakere } = useBehandling();
     const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
@@ -97,5 +97,3 @@ const SendMelding: React.FC = () => {
         </>
     );
 };
-
-export default SendMelding;

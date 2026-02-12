@@ -32,7 +32,7 @@ import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
-import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import { PdfVisningModal } from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 type TagVariant = 'info-moderate' | 'success-moderate';

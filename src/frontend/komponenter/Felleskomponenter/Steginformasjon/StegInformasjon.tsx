@@ -19,7 +19,7 @@ type Props = {
     infotekst: string;
 };
 
-const Steginformasjon: React.FC<Props> = ({ behandletSteg, infotekst }) => {
+export const Steginformasjon: React.FC<Props> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <StyledAlert variant="info" size="small">
             {infotekst}
@@ -30,5 +30,3 @@ const Steginformasjon: React.FC<Props> = ({ behandletSteg, infotekst }) => {
         </StyledDiv>
     );
 };
-
-export default Steginformasjon;

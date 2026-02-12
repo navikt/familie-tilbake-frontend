@@ -7,7 +7,7 @@ import { useBeforeUnload, useBlocker } from 'react-router';
 import { ModalWrapper } from './ModalWrapper';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
-const UlagretDataModal: FC = () => {
+export const UlagretDataModal: FC = () => {
     const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandlingState();
     const skalBlokkere = useCallback<BlockerFunction>(
         ({ currentLocation, nextLocation }) =>
@@ -70,5 +70,3 @@ const UlagretDataModal: FC = () => {
         )
     );
 };
-
-export default UlagretDataModal;

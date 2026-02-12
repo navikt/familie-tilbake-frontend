@@ -5,7 +5,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import SplittPeriode from './SplittPeriode';
+import { SplittPeriode } from './SplittPeriode';
 import { HttpProvider } from '../../../../../api/http/HttpProvider';
 import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';

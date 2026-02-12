@@ -2,10 +2,10 @@ import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
-import VilkårsvurderingPerioder from './VilkårsvurderingPerioder';
+import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { RessursStatus } from '../../../typer/ressurs';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const VilkårsvurderingContainer: React.FC = () => {
     const { containerRef, vilkårsvurdering, erAutoutført, skjemaData } = useVilkårsvurdering();

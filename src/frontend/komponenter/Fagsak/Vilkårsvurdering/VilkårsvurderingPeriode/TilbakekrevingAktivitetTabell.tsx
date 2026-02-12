@@ -14,7 +14,7 @@ type Props = {
     ytelser?: YtelseInfo[];
 };
 
-const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
+export const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
     return ytelser && ytelser.length > 0 ? (
         <StyledPeriodeTable>
             <Table.Header>
@@ -36,5 +36,3 @@ const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
         </StyledPeriodeTable>
     ) : null;
 };
-
-export default TilbakekrevingAktivitetTabell;

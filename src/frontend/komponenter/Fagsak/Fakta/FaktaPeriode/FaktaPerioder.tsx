@@ -23,7 +23,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
+export const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     const { ytelsestype, institusjon } = useFagsak();
     const hendelsestyper = hentHendelseTyper(ytelsestype, !!institusjon);
 
@@ -54,5 +54,3 @@ const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
         </StyledPeriodeTable>
     );
 };
-
-export default FaktaPerioder;

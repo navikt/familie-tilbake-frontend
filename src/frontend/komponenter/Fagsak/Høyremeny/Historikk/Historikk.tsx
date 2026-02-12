@@ -3,11 +3,11 @@ import { parseISO } from 'date-fns';
 import * as React from 'react';
 
 import { useHistorikk } from './HistorikkContext';
-import HistorikkInnslag from './HistorikkInnslag';
+import { HistorikkInnslag } from './HistorikkInnslag';
 import { RessursStatus } from '../../../../typer/ressurs';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { DataLastIkkeSuksess } from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
-const Historikk: React.FC = () => {
+export const Historikk: React.FC = () => {
     const { historikkInnslag } = useHistorikk();
     if (historikkInnslag?.status !== RessursStatus.Suksess) {
         return (
@@ -34,5 +34,3 @@ const Historikk: React.FC = () => {
         </>
     );
 };
-
-export default Historikk;

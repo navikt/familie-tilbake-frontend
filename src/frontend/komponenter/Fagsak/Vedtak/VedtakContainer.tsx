@@ -12,17 +12,17 @@ import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
-import ForhåndsvisVedtaksbrev from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
+import { ForhåndsvisVedtaksbrev } from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
 import { useVedtak } from './VedtakContext';
-import VedtakPerioder from './VedtakPerioder';
-import VedtakSkjema from './VedtakSkjema';
+import { VedtakPerioder } from './VedtakPerioder';
+import { VedtakSkjema } from './VedtakSkjema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
-import DataLastIkkeSuksess from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { ActionBar } from '../ActionBar/ActionBar';
 

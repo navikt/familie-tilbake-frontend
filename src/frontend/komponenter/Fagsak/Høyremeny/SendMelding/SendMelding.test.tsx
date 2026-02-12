@@ -8,7 +8,7 @@ import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import SendMelding from './SendMelding';
+import { SendMelding } from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import { DokumentMal } from '../../../../kodeverk';

@@ -22,7 +22,7 @@ type Props = {
     hendelsetype?: HendelseType;
 };
 
-const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
+export const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
         <StyledVStack gap="space-20" className="text-ax-text-info rounded-xl">
             <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="space-16">
@@ -43,5 +43,3 @@ const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }
         </StyledVStack>
     );
 };
-
-export default PeriodeOppsummering;

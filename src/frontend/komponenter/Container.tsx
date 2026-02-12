@@ -13,11 +13,11 @@ import { FagsakProvider } from '../context/FagsakContext';
 import { TogglesProvider } from '../context/TogglesContext';
 import { StegflytSkeleton } from './Fagsak/Stegflyt/StegflytSkeleton';
 import { Spinner } from './Felleskomponenter/Datalast/Spinner';
-import FagsakErrorBoundary from './Felleskomponenter/ErrorBoundary/FagsakErrorBoundary';
+import { FagsakErrorBoundary } from './Felleskomponenter/ErrorBoundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
-import UgyldigSesjon from './Felleskomponenter/Modal/SesjonUtløpt';
-import Toasts from './Felleskomponenter/Toast/Toasts';
+import { UgyldigSesjon } from './Felleskomponenter/Modal/SesjonUtløpt';
+import { Toasts } from './Felleskomponenter/Toast/Toasts';
 
 const Dashboard = lazyImportMedRetry(() => import('../pages/Dashboard'), 'Dashboard');
 const FagsakContainer = lazyImportMedRetry(

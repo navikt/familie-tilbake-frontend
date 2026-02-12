@@ -8,11 +8,11 @@ import { hentInnloggetBruker } from '../api/saksbehandler';
 import { AppProvider } from '../context/AppContext';
 import { ThemeProvider } from '../context/ThemeContext';
 import { configureZod } from '../utils/zodConfig';
-import ErrorBoundary from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
+import { ErrorBoundary } from './Felleskomponenter/ErrorBoundary/ErrorBoundary';
 import { lazyImportMedRetry } from './Felleskomponenter/FeilInnlasting/FeilInnlasting';
 const Container = lazyImportMedRetry(() => import('./Container'), 'Container');
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = React.useState<
         Saksbehandler | undefined
     >(undefined);
@@ -46,5 +46,3 @@ const App: React.FC = () => {
         </QueryClientProvider>
     );
 };
-
-export default App;

@@ -17,13 +17,13 @@ import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
 import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
-import Steginformasjon from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { Steginformasjon } from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 const AngreSendTilBeslutterContainer = styled.div`
     margin: 1rem 0;
 `;
 
-const Totrinnskontroll: React.FC = () => {
+export const Totrinnskontroll: React.FC = () => {
     const {
         totrinnkontroll,
         skjemaData,
@@ -169,5 +169,3 @@ const Totrinnskontroll: React.FC = () => {
         </>
     );
 };
-
-export default Totrinnskontroll;

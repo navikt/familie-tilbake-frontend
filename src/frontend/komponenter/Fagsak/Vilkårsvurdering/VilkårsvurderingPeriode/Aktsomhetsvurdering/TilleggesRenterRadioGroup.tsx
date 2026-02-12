@@ -16,7 +16,7 @@ type Props = {
     visFeilmeldingerForSkjema: boolean;
 };
 
-const TilleggesRenterRadioGroup: React.FC<Props> = ({
+export const TilleggesRenterRadioGroup: React.FC<Props> = ({
     kanIlleggeRenter,
     felt,
     readOnly,
@@ -58,5 +58,3 @@ const TilleggesRenterRadioGroup: React.FC<Props> = ({
         </RadioGroup>
     );
 };
-
-export default TilleggesRenterRadioGroup;

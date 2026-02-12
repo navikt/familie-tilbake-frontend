@@ -10,7 +10,7 @@ import {
     Vilkårsresultat,
 } from '../../../../kodeverk';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
-import TilbakekrevingAktivitetTabell from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
+import { TilbakekrevingAktivitetTabell } from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
 
 const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.ForstoBurdeForstått]:
@@ -27,7 +27,7 @@ type Props = {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
 };
 
-const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
+export const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
     return (
         <VStack gap="space-40">
             {perioder.map(skjema => {
@@ -217,5 +217,3 @@ const LabelVerdiVisning: React.FC<{ label: string; verdi: number | string | unde
         </BodyShort>
     );
 };
-
-export default HistoriskVilkårsvurderingVisning;

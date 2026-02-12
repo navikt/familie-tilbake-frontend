@@ -6,7 +6,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { Journalposttype } from '../../../../typer/journalføring';
-import HentDokument from '../HentDokument';
+import { HentDokument } from '../HentDokument';
 
 const Dokument = styled.span`
     display: block;
@@ -17,7 +17,7 @@ type Props = {
     dokument: DokumentInfo;
 };
 
-const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
+export const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
     const [visDokument, settVisDokument] = React.useState<boolean>(false);
 
     return (
@@ -48,5 +48,3 @@ const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
         </Dokument>
     );
 };
-
-export default Dokumentvisning;

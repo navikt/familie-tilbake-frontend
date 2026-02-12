@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { harBrukerUttaltSegValgTilTekst } from '../../../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../../utils';
-import FaktaRevurdering from '../../FaktaRevurdering';
+import { FaktaRevurdering } from '../../FaktaRevurdering';
 import { FaktaPeriodeSkjema } from '../FaktaPeriodeSkjema';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
+export const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
     return (
         <HGrid columns={2} gap="space-40">
             <VStack gap="space-24">
@@ -90,4 +90,3 @@ const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
         </HGrid>
     );
 };
-export default HistoriskFaktaVisning;

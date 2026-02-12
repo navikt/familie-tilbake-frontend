@@ -9,7 +9,7 @@ type Props = {
     className?: string;
 };
 
-const Image: React.FC<Props> = ({
+export const Image: React.FC<Props> = ({
     src,
     srcHover,
     altText,
@@ -52,5 +52,3 @@ const Image: React.FC<Props> = ({
     );
     return image;
 };
-
-export default Image;

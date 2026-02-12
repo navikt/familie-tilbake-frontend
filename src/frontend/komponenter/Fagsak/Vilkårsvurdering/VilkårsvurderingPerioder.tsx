@@ -4,11 +4,11 @@ import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
-import VilkårsvurderingPeriodeSkjema from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
+import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
-import TilbakeTidslinje from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
+import { TilbakeTidslinje } from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
 const lagTidslinjeRader = (
     perioder: VilkårsvurderingPeriodeSkjemaData[],
@@ -62,7 +62,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const VilkårsvurderingPerioder: React.FC<Props> = ({
+export const VilkårsvurderingPerioder: React.FC<Props> = ({
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
     erLesevisning,
@@ -113,5 +113,3 @@ const VilkårsvurderingPerioder: React.FC<Props> = ({
         </VStack>
     ) : null;
 };
-
-export default VilkårsvurderingPerioder;

@@ -16,8 +16,8 @@ import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../utils';
-import HenterData from '../../Felleskomponenter/Datalast/HenterData';
-import Steginformasjon from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
+import { HenterData } from '../../Felleskomponenter/Datalast/HenterData';
+import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 const StyledVStack = styled(VStack)`

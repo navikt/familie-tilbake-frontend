@@ -30,7 +30,7 @@ const tidligsteRelevanteDato = startOfDay(new Date(1900, 0));
 
 const senesteRelevanteDato = startOfDay(new Date(2500, 0));
 
-const Datovelger: React.FC<Props> = ({
+export const Datovelger: React.FC<Props> = ({
     felt,
     label,
     visFeilmeldinger,
@@ -127,5 +127,3 @@ const Datovelger: React.FC<Props> = ({
         </DatePicker>
     );
 };
-
-export default Datovelger;

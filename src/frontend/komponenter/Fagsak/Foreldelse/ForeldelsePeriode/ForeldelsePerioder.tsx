@@ -5,10 +5,10 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
+import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../../typer/periodeSkjemaData';
-import TilbakeTidslinje from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
+import { TilbakeTidslinje } from '../../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 import { useForeldelse } from '../ForeldelseContext';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean): string => {
@@ -53,7 +53,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
+export const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const { valgtPeriode, settValgtPeriode } = useForeldelse();
 
@@ -79,5 +79,3 @@ const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
         </>
     ) : null;
 };
-
-export default ForeldelsePerioder;

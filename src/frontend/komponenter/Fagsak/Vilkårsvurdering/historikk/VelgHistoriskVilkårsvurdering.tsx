@@ -11,7 +11,7 @@ type Props = {
     setInaktivVilkårsvurdering: (valgtFakta?: VilkårsvurderingResponse) => void;
 };
 
-const VelgHistoriskVilkårsvurdering: React.FC<Props> = ({
+export const VelgHistoriskVilkårsvurdering: React.FC<Props> = ({
     inaktiveVilkårsvurderinger,
     setInaktivVilkårsvurdering,
 }) => {
@@ -44,5 +44,3 @@ const VelgHistoriskVilkårsvurdering: React.FC<Props> = ({
         </Select>
     );
 };
-
-export default VelgHistoriskVilkårsvurdering;

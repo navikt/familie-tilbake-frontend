@@ -5,7 +5,7 @@ import { useFagsak } from '../../../../context/FagsakContext';
 import { MottakerType } from '../../../../typer/Brevmottaker';
 import { formaterIdent, lagPersonLabel } from '../../../../utils/formatter';
 
-const BrevmottakerListe: React.FC = () => {
+export const BrevmottakerListe: React.FC = () => {
     const { institusjon, bruker } = useFagsak();
     const { manuelleBrevmottakere } = useBehandling();
     const brevmottakere = manuelleBrevmottakere.map(({ brevmottaker }) => brevmottaker);
@@ -61,5 +61,3 @@ const BrevmottakerListe: React.FC = () => {
         </ul>
     );
 };
-
-export default BrevmottakerListe;

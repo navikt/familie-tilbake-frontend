@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
 import { flyttDatoISODateStr } from '../../../../../utils';
-import Image from '../../../../Felleskomponenter/Image/Image';
+import { Image } from '../../../../Felleskomponenter/Image/Image';
 import { DelOppPeriode, useDelOppPeriode } from '../../../../Felleskomponenter/Modal/DelOppPeriode';
 
 const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TimelinePeriodProps => {
@@ -32,7 +32,7 @@ type Props = {
     ) => void;
 };
 
-const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
+export const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
     const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,
@@ -161,5 +161,3 @@ const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
         </div>
     ) : null;
 };
-
-export default SplittPeriode;

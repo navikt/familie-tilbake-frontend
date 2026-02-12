@@ -11,7 +11,7 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import Totrinnskontroll from './Totrinnskontroll';
+import { Totrinnskontroll } from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 import { FagsakContext } from '../../../../context/FagsakContext';
 import {

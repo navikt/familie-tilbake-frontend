@@ -41,7 +41,7 @@ import {
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
 import { FixedAlert } from '../Felleskomponenter/FixedAlert/FixedAlert';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
-import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
+import { PåVentModal } from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./Brevmottaker/Brevmottakere'),
@@ -356,7 +356,7 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
     }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
 };
 
-const BehandlingContainer: React.FC = () => {
+export const BehandlingContainer: React.FC = () => {
     const { ventegrunn, innholdsbredde } = useBehandlingState();
     const globalAlerts = useGlobalAlerts();
     const lukkGlobalAlert = useLukkGlobalAlert();
@@ -395,5 +395,3 @@ const BehandlingContainer: React.FC = () => {
         </>
     );
 };
-
-export default BehandlingContainer;

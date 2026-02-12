@@ -21,10 +21,10 @@ import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import AktsomhetsvurderingSkjema from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
-import GodTroSkjema from './GodTroSkjema';
-import SplittPeriode from './SplittPeriode/SplittPeriode';
-import TilbakekrevingAktivitetTabell from './TilbakekrevingAktivitetTabell';
+import { AktsomhetsvurderingSkjema } from './Aktsomhetsvurdering/AktsomhetsvurderingSkjema';
+import { GodTroSkjema } from './GodTroSkjema';
+import { SplittPeriode } from './SplittPeriode/SplittPeriode';
+import { TilbakekrevingAktivitetTabell } from './TilbakekrevingAktivitetTabell';
 import {
     ANDELER,
     EGENDEFINERT,
@@ -40,7 +40,7 @@ import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeve
 import { formatterDatostring, isEmpty } from '../../../../utils';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { ModalWrapper } from '../../../Felleskomponenter/Modal/ModalWrapper';
-import PeriodeOppsummering from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
+import { PeriodeOppsummering } from '../../../Felleskomponenter/Periodeinformasjon/PeriodeOppsummering';
 import { ActionBar } from '../../ActionBar/ActionBar';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { useVilkårsvurdering } from '../VilkårsvurderingContext';
@@ -117,7 +117,7 @@ type Props = {
     settPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
 };
 
-const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
+export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     periode,
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
@@ -502,5 +502,3 @@ const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         </div>
     );
 };
-
-export default VilkårsvurderingPeriodeSkjema;

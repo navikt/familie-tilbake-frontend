@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Suspense, useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-import BehandlingContainer from './BehandlingContainer';
+import { BehandlingContainer } from './BehandlingContainer';
 import { BehandlingProvider, finnBehandlingId } from '../../context/BehandlingContext';
 import { BehandlingStateProvider } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { useBehandlingStore } from '../../stores/behandlingStore';
 import { useFagsakStore } from '../../stores/fagsakStore';
 import { Spinner } from '../Felleskomponenter/Datalast/Spinner';
-import UlagretDataModal from '../Felleskomponenter/Modal/UlagretDataModal';
+import { UlagretDataModal } from '../Felleskomponenter/Modal/UlagretDataModal';
 
 const FagsakContainer: React.FC = () => {
     const location = useLocation();

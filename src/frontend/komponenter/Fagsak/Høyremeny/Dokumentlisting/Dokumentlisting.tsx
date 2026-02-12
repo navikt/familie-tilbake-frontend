@@ -2,11 +2,11 @@ import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useDokumentlisting } from './DokumentlistingContext';
-import JournalpostVisning from './Journalpostvisning';
+import { JournalpostVisning } from './Journalpostvisning';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { hentDatoRegistrertSendt } from '../../../../utils';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import HenterData from '../../../Felleskomponenter/Datalast/HenterData';
+import { DataLastIkkeSuksess } from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { HenterData } from '../../../Felleskomponenter/Datalast/HenterData';
 
 export const Dokumentlisting: React.FC = () => {
     return (

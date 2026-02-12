@@ -1,7 +1,7 @@
 import { Select } from '@navikt/ds-react';
 import * as React from 'react';
 
-import TilleggesRenterRadioGroup from './TilleggesRenterRadioGroup';
+import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 import { type Skjema } from '../../../../../hooks/skjema';
 import { Vilkårsresultat } from '../../../../../kodeverk';
 import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
@@ -12,7 +12,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-const GradForsettSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradForsettSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
     const { kanIlleggeRenter } = useVilkårsvurdering();
 
     const erValgtResultatTypeForstoBurdeForstått =
@@ -41,5 +41,3 @@ const GradForsettSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         </>
     );
 };
-
-export default GradForsettSkjema;

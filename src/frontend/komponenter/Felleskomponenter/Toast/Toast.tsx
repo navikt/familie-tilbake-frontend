@@ -1,4 +1,4 @@
-import type { Toast } from './typer';
+import type { Toast as TToast } from './typer';
 
 import { Alert } from '@navikt/ds-react';
 import React, { useEffect, useRef } from 'react';
@@ -19,7 +19,7 @@ const Container = styled.div`
     }
 `;
 
-const Toast: React.FC<{ toastId: string; toast: Toast }> = ({ toastId, toast }) => {
+export const Toast: React.FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
     const { toasts, settToasts } = useApp();
     const toastRef = useRef<HTMLDivElement>(null);
 
@@ -51,5 +51,3 @@ const Toast: React.FC<{ toastId: string; toast: Toast }> = ({ toastId, toast }) 
         </Container>
     );
 };
-
-export default Toast;

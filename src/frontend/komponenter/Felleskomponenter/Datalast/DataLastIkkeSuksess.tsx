@@ -1,7 +1,7 @@
 import { Alert } from '@navikt/ds-react';
 import * as React from 'react';
 
-import HenterData from './HenterData';
+import { HenterData } from './HenterData';
 import { ServerFeil } from '../../../pages/feilsider/Feilside';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
 
@@ -12,7 +12,7 @@ type Props = {
     spinnerStørrelse?: '2xlarge' | 'large';
 };
 
-const DataLastIkkeSuksess: React.FC<Props> = ({
+export const DataLastIkkeSuksess: React.FC<Props> = ({
     ressurser,
     spinnerStørrelse,
     henteBeskrivelse,
@@ -58,5 +58,3 @@ const DataLastIkkeSuksess: React.FC<Props> = ({
     }
     return null;
 };
-
-export default DataLastIkkeSuksess;

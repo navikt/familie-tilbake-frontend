@@ -13,7 +13,7 @@ import { målform } from '../../../../../typer/målform';
 import { hentFrontendFeilmelding } from '../../../../../utils';
 import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 import { MODAL_BREDDE } from '../../utils';
-import ForhåndsvisHenleggelsesBrev from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
+import { ForhåndsvisHenleggelsesBrev } from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;

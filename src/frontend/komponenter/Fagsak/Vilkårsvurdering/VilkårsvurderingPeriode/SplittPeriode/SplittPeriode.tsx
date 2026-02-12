@@ -9,11 +9,10 @@ import { Detail, Link } from '@navikt/ds-react';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useBehandling } from '../../../../../context/BehandlingContext';
 import splitPeriodImageUrl from '../../../../../images/splitt.svg';
 import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
 import { flyttDatoISODateStr } from '../../../../../utils';
-import Image from '../../../../Felleskomponenter/Image/Image';
+import { Image } from '../../../../Felleskomponenter/Image/Image';
 import { DelOppPeriode, useDelOppPeriode } from '../../../../Felleskomponenter/Modal/DelOppPeriode';
 
 const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): TimelinePeriodProps => {
@@ -33,8 +32,7 @@ type Props = {
     ) => void;
 };
 
-const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
-    const { behandlingId } = useBehandling();
+export const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
     const [splittetPerioder, settSplittetPerioder] =
         useState<VilkårsvurderingPeriodeSkjemaData[]>();
     const {
@@ -48,7 +46,7 @@ const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
         vedDatoEndring,
         sendInnSkjema,
         validateNyPeriode,
-    } = useDelOppPeriode(periode.periode.fom, behandlingId);
+    } = useDelOppPeriode(periode.periode.fom);
 
     const onChangeDato = useCallback(
         (nyVerdi?: string) => {
@@ -160,5 +158,3 @@ const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
         </div>
     ) : null;
 };
-
-export default SplittPeriode;

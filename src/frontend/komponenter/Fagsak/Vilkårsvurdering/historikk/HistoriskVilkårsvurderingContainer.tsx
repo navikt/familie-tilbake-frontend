@@ -2,10 +2,10 @@ import { Alert, Heading, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useHistoriskVilkårsvurdering } from './HistoriskVilkårsvurderingContext';
-import HistoriskVilkårsvurderingVisning from './HistoriskVilkårsvurderingVisning';
-import VelgHistoriskVilkårsvurdering from './VelgHistoriskVilkårsvurdering';
+import { HistoriskVilkårsvurderingVisning } from './HistoriskVilkårsvurderingVisning';
+import { VelgHistoriskVilkårsvurdering } from './VelgHistoriskVilkårsvurdering';
 import { RessursStatus } from '../../../../typer/ressurs';
-import DataLastIkkeSuksess from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { DataLastIkkeSuksess } from '../../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 const HistoriskVilkårsvurderingContainer: React.FC = () => {
     const { inaktiveVilkårsvurderinger, skjemaData, setInaktivVilkårsvurdering } =

@@ -28,7 +28,7 @@ type Props = {
     perioder: BeregningsresultatPeriode[];
 };
 
-const VedtakPerioder: React.FC<Props> = ({ perioder }) => {
+export const VedtakPerioder: React.FC<Props> = ({ perioder }) => {
     return (
         <StyledPeriodeTable cellPadding="0" cellSpacing="0">
             <thead>
@@ -94,5 +94,3 @@ const VedtakPerioder: React.FC<Props> = ({ perioder }) => {
         </StyledPeriodeTable>
     );
 };
-
-export default VedtakPerioder;

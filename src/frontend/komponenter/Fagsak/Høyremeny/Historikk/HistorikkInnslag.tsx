@@ -1,5 +1,5 @@
 import type { BehandlingsstegEnum } from '../../../../generated';
-import type { HistorikkInnslag } from '../../../../typer/historikk';
+import type { HistorikkInnslag as THistorikkInnslag } from '../../../../typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
@@ -11,7 +11,7 @@ import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/histo
 import { formatterDatoOgTidstring } from '../../../../utils';
 import { finnSideForSteg } from '../../../../utils/sider';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
-import HentDokument from '../HentDokument';
+import { HentDokument } from '../HentDokument';
 
 const Innslag = styled.div`
     display: flex;
@@ -36,10 +36,10 @@ const Tidslinje = styled.div`
 `;
 
 type Props = {
-    innslag: HistorikkInnslag;
+    innslag: THistorikkInnslag;
 };
 
-const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
+export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
     const { navigerTilSide } = useHistorikk();
     const [visDokument, settVisDokument] = React.useState<boolean>(false);
 
@@ -127,5 +127,3 @@ const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
         </Innslag>
     );
 };
-
-export default HistorikkInnslag;

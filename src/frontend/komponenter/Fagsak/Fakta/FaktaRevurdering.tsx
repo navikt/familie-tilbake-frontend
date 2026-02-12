@@ -10,7 +10,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-const FaktaRevurdering: React.FC<Props> = ({ fakta }) => {
+export const FaktaRevurdering: React.FC<Props> = ({ fakta }) => {
     return fakta ? (
         <VStack gap="space-20">
             <Heading level="2" size="small">
@@ -61,5 +61,3 @@ const FaktaRevurdering: React.FC<Props> = ({ fakta }) => {
         </VStack>
     ) : null;
 };
-
-export default FaktaRevurdering;

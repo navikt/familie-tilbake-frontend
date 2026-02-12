@@ -18,7 +18,7 @@ import {
 } from '../../../../typer/behandling';
 import { dateBeforeToday } from '../../../../utils';
 import { dagensDato } from '../../../../utils/dato';
-import Datovelger from '../../Datovelger/Datovelger';
+import { Datovelger } from '../../Datovelger/Datovelger';
 import { Spacer20 } from '../../Flytelementer';
 
 const StyledAlert = styled(Alert)`
@@ -38,7 +38,7 @@ type Props = {
     onClose: () => void;
 };
 
-const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
+export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
     const { behandlingId, saksbehandlingstype, kanEndres } = useBehandling();
     const queryClient = useQueryClient();
 
@@ -176,5 +176,3 @@ const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
         </Modal>
     );
 };
-
-export default PåVentModal;

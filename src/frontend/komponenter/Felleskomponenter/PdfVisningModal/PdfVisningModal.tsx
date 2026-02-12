@@ -35,7 +35,7 @@ type Props = {
     åpen: boolean;
 };
 
-const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
+export const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
     return (
         <StyledModal
             open={åpen}
@@ -86,5 +86,3 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdat
             return <Alert variant="warning">Kunne ikke hente dokument</Alert>;
     }
 };
-
-export default PdfVisningModal;

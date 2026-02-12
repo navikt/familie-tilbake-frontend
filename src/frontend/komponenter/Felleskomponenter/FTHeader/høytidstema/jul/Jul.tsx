@@ -2,7 +2,7 @@ import React from 'react';
 
 import christmasCandle from './christmasCandle.svg';
 import stars from './stars.svg';
-import Image from '../../../Image/Image';
+import { Image } from '../../../Image/Image';
 
 const beregnAntallAdventslys = (): number => {
     const iDag = new Date();

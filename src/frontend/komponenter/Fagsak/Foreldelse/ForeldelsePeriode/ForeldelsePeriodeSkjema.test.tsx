@@ -7,7 +7,7 @@ import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import ForeldelsePeriodeSkjema from './ForeldelsePeriodeSkjema';
+import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 import { Foreldelsevurdering } from '../../../../kodeverk';
 import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';

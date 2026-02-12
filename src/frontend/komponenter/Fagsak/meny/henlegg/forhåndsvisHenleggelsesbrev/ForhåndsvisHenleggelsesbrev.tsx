@@ -7,7 +7,7 @@ import { styled } from 'styled-components';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 import { type Skjema } from '../../../../../hooks/skjema';
-import PdfVisningModal from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
+import { PdfVisningModal } from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 
 const StyledContainer = styled.div`
     margin-top: -5px;
@@ -19,7 +19,7 @@ type Props = {
     kanForhåndsvise: boolean;
 };
 
-const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForhåndsvise }) => {
+export const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForhåndsvise }) => {
     const {
         hentetForhåndsvisning,
         hentBrev,
@@ -62,5 +62,3 @@ const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForhåndsvis
         </StyledContainer>
     ) : null;
 };
-
-export default ForhåndsvisHenleggelsesBrev;
