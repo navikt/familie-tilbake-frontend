@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData, UttalelseFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData, UttalelseFormData } from './schema';
 import type {
     BestillBrevDto,
     BrukeruttalelseDto,
@@ -21,7 +21,7 @@ import type { AxiosError } from 'axios';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './forhåndsvarselSchema';
+import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './schema';
 import { Feil } from '../../../api/feil';
 import { useBehandling } from '../../../context/BehandlingContext';
 import {

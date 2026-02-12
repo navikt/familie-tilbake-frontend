@@ -1,4 +1,4 @@
-import type { UttalelseFormData } from '../forhåndsvarselSchema';
+import type { UttalelseFormData } from '../schema';
 import type { SubmitHandler } from 'react-hook-form';
 
 import {
@@ -17,7 +17,7 @@ import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-
 import { ToggleName } from '../../../../context/toggles';
 import { useToggles } from '../../../../context/TogglesContext';
 import { dateTilIsoDatoString } from '../../../../utils/dato';
-import { HarUttaltSeg } from '../forhåndsvarselSchema';
+import { HarUttaltSeg } from '../schema';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;

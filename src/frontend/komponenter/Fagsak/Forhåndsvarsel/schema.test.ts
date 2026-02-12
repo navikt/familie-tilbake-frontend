@@ -3,7 +3,7 @@ import {
     uttalelseSchema,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
-} from './forhåndsvarselSchema';
+} from './schema';
 
 describe('Validering av forhåndsvarsel-skjema', () => {
     describe('Første spørsmål: skal sende forhåndsvarsel', () => {

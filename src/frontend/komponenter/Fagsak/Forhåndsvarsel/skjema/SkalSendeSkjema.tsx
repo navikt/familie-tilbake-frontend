@@ -1,5 +1,5 @@
 import type { Section, Varselbrevtekst } from '../../../../generated';
-import type { ForhåndsvarselFormData } from '../forhåndsvarselSchema';
+import type { ForhåndsvarselFormData } from '../schema';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
 import {
@@ -15,7 +15,7 @@ import {
 import React, { Fragment } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { SkalSendesForhåndsvarsel } from '../forhåndsvarselSchema';
+import { SkalSendesForhåndsvarsel } from '../schema';
 import { Unntak } from './UnntakSkjema';
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
     readOnly: boolean;
 };
 
-export const OpprettSkjema: React.FC<Props> = ({
+export const SkalSendeSkjema: React.FC<Props> = ({
     varselbrevtekster,
     varselErSendt,
     handleForhåndsvarselSubmit,

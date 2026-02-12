@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData } from '../forhåndsvarselSchema';
+import type { ForhåndsvarselFormData } from '../schema';
 
 import { RadioGroup, Radio, Textarea, Link } from '@navikt/ds-react';
 import React from 'react';

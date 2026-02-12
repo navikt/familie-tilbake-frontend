@@ -1,4 +1,4 @@
-import type { ForhåndsvarselFormData, UttalelseFormData } from './forhåndsvarselSchema';
+import type { ForhåndsvarselFormData, UttalelseFormData } from './schema';
 import type { ForhåndsvarselDto, RessursByte } from '../../../generated';
 import type { SubmitHandler } from 'react-hook-form';
 
@@ -18,8 +18,8 @@ import {
     uttalelseSchema,
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
-} from './forhåndsvarselSchema';
-import { OpprettSkjema } from './skjema/OpprettSkjema';
+} from './schema';
+import { SkalSendeSkjema } from './skjema/SkalSendeSkjema';
 import { Uttalelse } from './skjema/UttalelseSkjema';
 import {
     extractErrorFromMutationError,
@@ -391,7 +391,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
 
     return (
         <VStack gap="space-24">
-            <OpprettSkjema
+            <SkalSendeSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
