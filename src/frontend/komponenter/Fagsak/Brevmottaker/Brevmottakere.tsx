@@ -1,4 +1,4 @@
-import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker as TBrevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
@@ -20,10 +20,9 @@ import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 export type BrevmottakerProps = {
-    brevmottaker: Brevmottaker;
+    brevmottaker: TBrevmottaker;
     erStandardMottaker?: boolean;
     brevmottakerId: string;
-    erLesevisning: boolean;
     antallBrevmottakere: number;
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
@@ -33,7 +32,6 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
     erStandardMottaker,
-    erLesevisning,
     antallBrevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
@@ -41,7 +39,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
-
+    const { behandlingILesemodus } = useBehandlingState();
     const landnavn = brevmottaker.manuellAdresseInfo
         ? norskLandnavn(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
@@ -71,7 +69,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
                     {mottakerTypeVisningsnavn[brevmottaker.type]}
                 </BodyShort>
                 <div className="flex gap-1">
-                    {!erLesevisning && !erStandardMottaker && (
+                    {!behandlingILesemodus && !erStandardMottaker && (
                         <>
                             <Button
                                 variant="tertiary"
@@ -91,7 +89,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
                             </Button>
                         </>
                     )}
-                    {!erLesevisning && erStandardMottaker && antallBrevmottakere > 1 && (
+                    {!behandlingILesemodus && erStandardMottaker && antallBrevmottakere > 1 && (
                         <Button
                             variant="tertiary"
                             size="small"
@@ -233,13 +231,11 @@ export const Brevmottakere: React.FC = () => {
         undefined
     );
 
-    const erLesevisning = !!behandlingILesemodus;
-
     const antallBrevmottakere = Object.keys(manuelleBrevmottakere).length;
 
     const kanLeggeTilMottaker =
         antallBrevmottakere == 0 &&
-        !erLesevisning &&
+        !behandlingILesemodus &&
         !manuelleBrevmottakere.some(
             manuellBrevmottaker => manuellBrevmottaker.brevmottaker.type === MottakerType.Dødsbo
         );
@@ -274,7 +270,6 @@ export const Brevmottakere: React.FC = () => {
                             }}
                             erStandardMottaker
                             brevmottakerId={bruker.personIdent}
-                            erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}
                             settVisBrevmottakerModal={setVisBrevmottakerModal}
                             settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
@@ -290,9 +285,8 @@ export const Brevmottakere: React.FC = () => {
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker
-                                    brevmottaker={brevmottakerRespons.brevmottaker as Brevmottaker}
+                                    brevmottaker={brevmottakerRespons.brevmottaker as TBrevmottaker}
                                     brevmottakerId={brevmottakerRespons.id}
-                                    erLesevisning={erLesevisning}
                                     antallBrevmottakere={antallBrevmottakere}
                                     settVisBrevmottakerModal={setVisBrevmottakerModal}
                                     settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}

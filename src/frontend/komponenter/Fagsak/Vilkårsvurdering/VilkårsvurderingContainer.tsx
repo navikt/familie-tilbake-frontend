@@ -3,14 +3,11 @@ import * as React from 'react';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { RessursStatus } from '../../../typer/ressurs';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
 
 export const VilkårsvurderingContainer: React.FC = () => {
     const { containerRef, vilkårsvurdering, erAutoutført, skjemaData } = useVilkårsvurdering();
-    const { behandlingILesemodus } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
 
     if (vilkårsvurdering?.status === RessursStatus.Suksess) {
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
@@ -30,7 +27,6 @@ export const VilkårsvurderingContainer: React.FC = () => {
                         <VilkårsvurderingPerioder
                             perioder={skjemaData}
                             erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
-                            erLesevisning={erLesevisning}
                         />
                     )}
                 </VStack>

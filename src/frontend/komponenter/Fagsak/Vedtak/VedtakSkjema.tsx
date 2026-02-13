@@ -5,6 +5,7 @@ import * as React from 'react';
 import { styled } from 'styled-components';
 
 import { AvsnittSkjema, avsnittKey } from './AvsnittSkjema';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
 const StyledSkjema = styled.div`
     width: 90%;
@@ -15,23 +16,22 @@ const StyledAlert = styled(Alert)`
 
 type Props = {
     avsnitter: AvsnittSkjemaData[];
-    erLesevisning: boolean;
     erRevurderingBortfaltBeløp: boolean;
     harBrukerUttaltSeg: boolean;
 };
 
 export const VedtakSkjema: React.FC<Props> = ({
     avsnitter,
-    erLesevisning,
     erRevurderingBortfaltBeløp,
     harBrukerUttaltSeg,
 }) => {
+    const { behandlingILesemodus } = useBehandlingState();
     return (
         <StyledSkjema>
             <Heading size="small" level="2" spacing>
                 Vedtaksbrev
             </Heading>
-            {harBrukerUttaltSeg && !erLesevisning && (
+            {harBrukerUttaltSeg && !behandlingILesemodus && (
                 <StyledAlert variant="warning">Husk å vurdere uttalelse fra bruker</StyledAlert>
             )}
             {avsnitter.map(avsnitt => {
@@ -39,7 +39,6 @@ export const VedtakSkjema: React.FC<Props> = ({
                     <AvsnittSkjema
                         key={avsnittKey(avsnitt)}
                         avsnitt={avsnitt}
-                        erLesevisning={erLesevisning}
                         erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
                     />
                 );

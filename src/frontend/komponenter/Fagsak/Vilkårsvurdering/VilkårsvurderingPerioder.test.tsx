@@ -89,7 +89,6 @@ const renderVilkårsvurderingPerioder = (): RenderResult => {
                         <VilkårsvurderingPerioder
                             perioder={skjemaData}
                             erTotalbeløpUnder4Rettsgebyr={false}
-                            erLesevisning={false}
                         />
                     </VilkårsvurderingProvider>
                 </TestBehandlingProvider>

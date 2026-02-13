@@ -12,15 +12,14 @@ import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInf
 export const FaktaContainer: React.FC = () => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus;
 
     if (fakta?.status === RessursStatus.Suksess) {
         return (
             <>
-                <Heading level="1" size="small" spacing>
+                <Heading size="small" spacing>
                     Fakta fra feilutbetalingssaken
                 </Heading>
-                {(!erLesevisning || stegErBehandlet) && (
+                {(!behandlingILesemodus || stegErBehandlet) && (
                     <>
                         <Steginformasjon
                             behandletSteg={stegErBehandlet}
@@ -29,11 +28,7 @@ export const FaktaContainer: React.FC = () => {
                         <Spacer20 />
                     </>
                 )}
-                <GammelFaktaSkjema
-                    skjemaData={skjemaData}
-                    fakta={fakta.data}
-                    erLesevisning={erLesevisning}
-                />
+                <GammelFaktaSkjema skjemaData={skjemaData} fakta={fakta.data} />
             </>
         );
     } else {

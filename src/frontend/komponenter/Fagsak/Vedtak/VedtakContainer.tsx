@@ -23,7 +23,7 @@ import { vedtaksresultater } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
+import { Navigering } from '../../Felleskomponenter/Flytelementer';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 const StyledNavigering = styled(Navigering)`
@@ -46,7 +46,7 @@ export const VedtakContainer: React.FC = () => {
     } = useVedtak();
     const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus;
+
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
         type === 'REVURDERING_TILBAKEKREVING' &&
@@ -94,7 +94,7 @@ export const VedtakContainer: React.FC = () => {
     );
 
     const kanViseForhåndsvisning =
-        (!erLesevisning || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
+        (!behandlingILesemodus || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
         !erRevurderingKlageKA;
 
     if (
@@ -103,39 +103,35 @@ export const VedtakContainer: React.FC = () => {
     ) {
         return (
             <VStack gap="space-24">
-                <Heading level="1" size="small" spacing>
-                    Vedtak
-                </Heading>
+                <Heading size="small">Vedtak</Heading>
+
                 {erRevurderingKlageKA && (
-                    <>
-                        <Alert className="w-[90%] mb-3" variant="info">
-                            <BodyShort className="font-semibold">
-                                Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                            </BodyShort>
-                        </Alert>
-                        <Spacer20 />
-                    </>
+                    <Alert className="w-[90%] mb-3" variant="info">
+                        <BodyShort className="font-semibold">
+                            Vedtaksbrev sendes ikke ut fra denne behandlingen.
+                        </BodyShort>
+                    </Alert>
                 )}
+
                 {manuelleBrevmottakere.length > 0 && (
-                    <>
-                        <BrevmottakereAlert
-                            brevmottakere={manuelleBrevmottakere.map(
-                                ({ brevmottaker }) => brevmottaker
-                            )}
-                        />
-                        <Spacer20 />
-                    </>
+                    <BrevmottakereAlert
+                        brevmottakere={manuelleBrevmottakere.map(
+                            ({ brevmottaker }) => brevmottaker
+                        )}
+                    />
                 )}
-                <Detail weight="semibold">Resultat</Detail>
-                <BodyLong size="small" spacing>
-                    {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
-                </BodyLong>
+
+                <div>
+                    <Detail weight="semibold">Resultat</Detail>
+                    <BodyLong size="small">
+                        {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
+                    </BodyLong>
+                </div>
                 <VedtakPerioder perioder={beregningsresultat.data.beregningsresultatsperioder} />
-                <Spacer20 />
+
                 {!!skjemaData.length && (
                     <VedtakSkjema
                         avsnitter={skjemaData}
-                        erLesevisning={erLesevisning}
                         erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
                         harBrukerUttaltSeg={
                             beregningsresultat.data.vurderingAvBrukersUttalelse
@@ -143,7 +139,7 @@ export const VedtakContainer: React.FC = () => {
                         }
                     />
                 )}
-                <Spacer20 />
+
                 {foreslåVedtakRespons &&
                     (foreslåVedtakRespons.status === RessursStatus.Feilet ||
                         foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
@@ -156,7 +152,7 @@ export const VedtakContainer: React.FC = () => {
                         {kanViseForhåndsvisning && !!skjemaData.length && (
                             <ForhåndsvisVedtaksbrev />
                         )}
-                        {!erLesevisning && !erRevurderingKlageKA && !!skjemaData.length && (
+                        {!behandlingILesemodus && !erRevurderingKlageKA && !!skjemaData.length && (
                             <Button
                                 variant="tertiary"
                                 onClick={lagreUtkast}
@@ -166,7 +162,7 @@ export const VedtakContainer: React.FC = () => {
                                 Lagre utkast
                             </Button>
                         )}
-                        {!erLesevisning && erPerioderLike && (
+                        {!behandlingILesemodus && erPerioderLike && (
                             <Button
                                 variant="tertiary"
                                 onClick={handleKnappTrykk}
@@ -184,7 +180,7 @@ export const VedtakContainer: React.FC = () => {
                 </StyledNavigering>
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
-                    skjulNeste={erLesevisning}
+                    skjulNeste={behandlingILesemodus}
                     stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
