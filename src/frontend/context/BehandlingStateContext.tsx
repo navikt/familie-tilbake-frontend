@@ -23,8 +23,8 @@ export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     erStegAutoutført: (steg: BehandlingsstegEnum) => boolean;
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
-    contentBounds: { width: number };
-    setContentBounds: (bounds: { width: number }) => void;
+    innholdsbredde: number;
+    settInnholdsbredde: (bredde: number) => void;
 };
 
 export const BehandlingStateContext = createContext<BehandlingStateContextType | undefined>(
@@ -38,7 +38,7 @@ type Props = {
 export const BehandlingStateProvider = ({ children }: Props): React.ReactElement => {
     const behandling = useBehandling();
     const ulagretEndringer = useUlagretEndringer();
-    const [contentBounds, setContentBounds] = useState<{ width: number }>({ width: 0 });
+    const [innholdsbredde, settInnholdsbredde] = useState<number>(0);
 
     const behandlingILesemodus = useMemo((): boolean => {
         return (
@@ -133,8 +133,8 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         erStegAutoutført,
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
-        contentBounds,
-        setContentBounds,
+        innholdsbredde,
+        settInnholdsbredde,
         ...ulagretEndringer,
     };
 

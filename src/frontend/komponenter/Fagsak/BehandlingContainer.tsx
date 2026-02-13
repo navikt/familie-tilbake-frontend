@@ -177,20 +177,20 @@ type AktivBehandlingProps = {
 const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
-    const { setContentBounds } = useBehandlingState();
+    const { settInnholdsbredde } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
-        const updateBounds = (): void => {
+        const oppdaterBredde = (): void => {
             if (contentRef.current) {
                 const rect = contentRef.current.getBoundingClientRect();
-                setContentBounds({ width: rect.width });
+                settInnholdsbredde(rect.width);
             }
         };
-        updateBounds();
-        window.addEventListener('resize', updateBounds);
-        return (): void => window.removeEventListener('resize', updateBounds);
-    }, [setContentBounds]);
+        oppdaterBredde();
+        window.addEventListener('resize', oppdaterBredde);
+        return (): void => window.removeEventListener('resize', oppdaterBredde);
+    }, [settInnholdsbredde]);
 
     return (
         <>
@@ -357,7 +357,7 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const BehandlingContainer: React.FC = () => {
-    const { ventegrunn, contentBounds } = useBehandlingState();
+    const { ventegrunn, innholdsbredde } = useBehandlingState();
     const globalAlerts = useGlobalAlerts();
     const lukkGlobalAlert = useLukkGlobalAlert();
     const [visVenteModal, settVisVenteModal] = useState(false);
@@ -385,7 +385,7 @@ const BehandlingContainer: React.FC = () => {
                     aria-live="polite"
                     status={alert.status}
                     title={alert.title}
-                    width={contentBounds.width}
+                    width={innholdsbredde}
                     stackIndex={index}
                     onClose={() => lukkGlobalAlert(alert.id)}
                 >
