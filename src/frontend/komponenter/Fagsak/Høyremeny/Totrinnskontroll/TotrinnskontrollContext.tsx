@@ -15,6 +15,7 @@ import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
+import { useVisGlobalAlert } from '../../../../stores/globalAlertStore';
 import { behandlingssteg } from '../../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -41,6 +42,7 @@ const stegRekkefølge: BehandlingsstegEnum[] = [
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
+    const visGlobalAlert = useVisGlobalAlert();
     const queryClient = useQueryClient();
     const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
     const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
@@ -184,6 +186,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                             path: { behandlingId: behandling.behandlingId },
                         }),
                     });
+                    visGlobalAlert({
+                        title: 'Godkjenning er avbrutt',
+                        message:
+                            'Du kan gjøre endringer før du sender behandlingen til godkjenning på nytt.',
+                        status: 'success',
+                    });
                 } else {
                     settFeilmelding(
                         hentFrontendFeilmelding(res) ?? 'Ukjent feil ved angre send til beslutter'
@@ -223,6 +231,20 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
+                        if (sendTilSaksbehandler) {
+                            visGlobalAlert({
+                                title: 'Sendt til saksbehandler',
+                                message:
+                                    'Behandlingen er sendt tilbake til saksbehandler for en ny vurdering.',
+                                status: 'success',
+                            });
+                        } else {
+                            visGlobalAlert({
+                                title: 'Vedtaket er godkjent',
+                                message: 'Behandlingen er godkjent og du kan lukke denne saken.',
+                                status: 'success',
+                            });
+                        }
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil

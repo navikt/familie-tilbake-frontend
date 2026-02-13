@@ -1,4 +1,13 @@
-import { Alert, BodyLong, BodyShort, Button, Detail, Heading, HStack } from '@navikt/ds-react';
+import {
+    Alert,
+    BodyLong,
+    BodyShort,
+    Button,
+    Detail,
+    Heading,
+    HStack,
+    VStack,
+} from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -93,7 +102,7 @@ const VedtakContainer: React.FC = () => {
         vedtaksbrevavsnitt?.status === RessursStatus.Suksess
     ) {
         return (
-            <>
+            <VStack gap="space-24">
                 <Heading level="1" size="small" spacing>
                     Vedtak
                 </Heading>
@@ -107,7 +116,6 @@ const VedtakContainer: React.FC = () => {
                         <Spacer20 />
                     </>
                 )}
-
                 {manuelleBrevmottakere.length > 0 && (
                     <>
                         <BrevmottakereAlert
@@ -174,7 +182,6 @@ const VedtakContainer: React.FC = () => {
                         {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                     </HStack>
                 </StyledNavigering>
-
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={erLesevisning}
@@ -186,7 +193,7 @@ const VedtakContainer: React.FC = () => {
                     onForrige={navigerTilForrige}
                     isLoading={senderInn}
                 />
-            </>
+            </VStack>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[beregningsresultat, vedtaksbrevavsnitt]} />;

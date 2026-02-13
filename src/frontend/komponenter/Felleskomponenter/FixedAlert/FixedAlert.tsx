@@ -1,36 +1,55 @@
 import type { AlertProps } from '@navikt/ds-react';
 
-import { Alert } from '@navikt/ds-react';
-import React, { useEffect, useState } from 'react';
+import { LocalAlert } from '@navikt/ds-react';
+import React, { useState } from 'react';
 
 type Props = AlertProps & {
-    width?: string;
+    width?: number;
+    title: string;
+    stackIndex?: number;
 };
 
-export const FixedAlert: React.FC<Props> = ({ width, children, variant, ...props }) => {
+const alertHeight = 90;
+const alertGap = 8;
+const baseBottom = 112;
+const distanceToParent = 20;
+
+export const FixedAlert: React.FC<Props> = ({
+    width,
+    children,
+    title,
+    status,
+    stackIndex = 0,
+    onClose,
+    ...props
+}) => {
     const [isVisible, setIsVisible] = useState(true);
-
-    useEffect(() => {
-        if (variant !== 'error') {
-            const timer = setTimeout(() => setIsVisible(false), 7000);
-
-            return (): void => clearTimeout(timer);
-        }
-    }, [variant, children]);
-
     if (!isVisible) {
         return null;
     }
+    const handleClose = (e: React.MouseEvent<HTMLButtonElement>): void => {
+        setIsVisible(false);
+        onClose?.(e);
+    };
+
+    const bottomPosition = baseBottom + stackIndex * (alertHeight + alertGap);
+    const alertWidth = width && width > distanceToParent ? width - distanceToParent : undefined;
+
     return (
-        <Alert
-            size="small"
-            className="fixed bottom-34"
-            style={{ width }}
-            variant={variant}
-            contentMaxWidth={false}
+        <LocalAlert
+            className="fixed left-6.5"
+            style={{
+                width: alertWidth,
+                bottom: `${bottomPosition}px`,
+            }}
+            status={status}
             {...props}
         >
-            {children}
-        </Alert>
+            <LocalAlert.Header>
+                <LocalAlert.Title>{title}</LocalAlert.Title>
+                <LocalAlert.CloseButton onClick={handleClose} />
+            </LocalAlert.Header>
+            <LocalAlert.Content>{children}</LocalAlert.Content>
+        </LocalAlert>
     );
 };

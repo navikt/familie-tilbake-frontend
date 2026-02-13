@@ -7,7 +7,7 @@ import { FilePdfIcon, MegaphoneIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useState } from 'react';
 import { FormProvider, useForm, useWatch, useFormContext } from 'react-hook-form';
 
 import {
@@ -28,10 +28,9 @@ import {
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
+import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
 import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring, formatterRelativTid } from '../../../utils';
-import { updateParentBounds } from '../../../utils/updateParentBounds';
-import { FixedAlert } from '../../Felleskomponenter/FixedAlert/FixedAlert';
 import { FeilModal } from '../../Felleskomponenter/Modal/Feil/FeilModal';
 import PdfVisningModal from '../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -47,12 +46,11 @@ export const Forhåndsvarsel: React.FC = () => {
     const { behandlingId } = useBehandling();
     const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
     const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
     const queryClient = useQueryClient();
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [parentBounds, setParentBounds] = useState({ width: 'auto' });
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
 
@@ -95,19 +93,19 @@ export const Forhåndsvarsel: React.FC = () => {
         }
     );
 
-    useLayoutEffect(() => {
-        updateParentBounds(containerRef, setParentBounds);
-        window.addEventListener('resize', () => updateParentBounds(containerRef, setParentBounds));
-
-        return (): void =>
-            window.removeEventListener('resize', () =>
-                updateParentBounds(containerRef, setParentBounds)
-            );
-    }, []);
-
     useEffect(() => {
         handleMutationSuccess(forhåndsvisning.isSuccess, forhåndsvisning.data);
     }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
+
+    useEffect(() => {
+        if (forhåndsvisning.error) {
+            visGlobalAlert({
+                title: 'Forhåndsvisning feilet',
+                message: forhåndsvisning.error.message,
+                status: 'error',
+            });
+        }
+    }, [forhåndsvisning.error, visGlobalAlert]);
 
     const seForhåndsvisningWithModal = (): void => {
         const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
@@ -166,24 +164,8 @@ export const Forhåndsvarsel: React.FC = () => {
                 <ForhåndsvarselSkjema
                     forhåndsvarselInfo={forhåndsvarselInfo}
                     skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
-                    parentBounds={parentBounds}
-                    ref={containerRef}
                 />
             </FormProvider>
-            {forhåndsvisning.error && (
-                <FixedAlert
-                    aria-live="assertive"
-                    variant="error"
-                    closeButton
-                    width={parentBounds.width}
-                    onClose={forhåndsvisning.reset}
-                >
-                    <Heading spacing size="small" level="3">
-                        Forhåndsvisning feilet
-                    </Heading>
-                    {forhåndsvisning.error.message}
-                </FixedAlert>
-            )}
             {showModal && pdfData && (
                 <PdfVisningModal
                     åpen
@@ -198,18 +180,15 @@ export const Forhåndsvarsel: React.FC = () => {
 type ForhåndsvarselSkjemaProps = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
-    parentBounds: { width: string | undefined };
-    ref: React.RefObject<HTMLDivElement | null>;
 };
 
 export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
-    parentBounds,
-    ref,
 }) => {
     const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
         useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
 
     const {
         formState: { dirtyFields: forhåndsvarselDirtyFields },
@@ -271,6 +250,17 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
     useEffect(() => {
         getOppdatertUttalelseValues(harUttaltSeg);
     }, [harUttaltSeg]);
+
+    useEffect(() => {
+        if (sendForhåndsvarselMutation.isSuccess) {
+            visGlobalAlert({
+                title: 'Forhåndsvarsel er sendt',
+                message:
+                    'Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen for å uttale seg (3 uker) har gått ut.',
+                status: 'success',
+            });
+        }
+    }, [sendForhåndsvarselMutation.isSuccess, visGlobalAlert]);
 
     const uttalelseIsDirty = Object.keys(uttalelseMethods.formState.dirtyFields).length > 0;
 
@@ -400,7 +390,7 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
             begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
     return (
-        <VStack gap="space-24" ref={ref}>
+        <VStack gap="space-24">
             <OpprettSkjema
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
@@ -440,22 +430,6 @@ export const ForhåndsvarselSkjema: React.FC<ForhåndsvarselSkjemaProps> = ({
                           onNeste: navigerTilNeste,
                       })}
             />
-
-            {sendForhåndsvarselMutation.isSuccess && (
-                <FixedAlert
-                    aria-live="polite"
-                    variant="success"
-                    closeButton
-                    width={parentBounds.width}
-                    onClose={sendForhåndsvarselMutation.reset}
-                >
-                    <Heading spacing size="small" level="3">
-                        Forhåndsvarsel er sendt
-                    </Heading>
-                    Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen
-                    for å uttale seg (3 uker) har gått ut.
-                </FixedAlert>
-            )}
 
             {mutations.map(({ key, mutation }) => {
                 if (mutation?.isError) {

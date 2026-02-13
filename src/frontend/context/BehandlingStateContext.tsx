@@ -3,7 +3,7 @@ import type { Behandlingsstegstilstand } from '../typer/behandling';
 import type { ReactNode } from 'react';
 
 import * as React from 'react';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 import { useBehandling } from './BehandlingContext';
 import { useUlagretEndringer, type UseUlagretEndringerReturn } from '../hooks/useUlagretEndringer';
@@ -23,6 +23,8 @@ export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     erStegAutoutført: (steg: BehandlingsstegEnum) => boolean;
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
+    innholdsbredde: number;
+    settInnholdsbredde: (bredde: number) => void;
 };
 
 export const BehandlingStateContext = createContext<BehandlingStateContextType | undefined>(
@@ -36,6 +38,7 @@ type Props = {
 export const BehandlingStateProvider = ({ children }: Props): React.ReactElement => {
     const behandling = useBehandling();
     const ulagretEndringer = useUlagretEndringer();
+    const [innholdsbredde, settInnholdsbredde] = useState<number>(0);
 
     const behandlingILesemodus = useMemo((): boolean => {
         return (
@@ -130,6 +133,8 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         erStegAutoutført,
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
+        innholdsbredde,
+        settInnholdsbredde,
         ...ulagretEndringer,
     };
 

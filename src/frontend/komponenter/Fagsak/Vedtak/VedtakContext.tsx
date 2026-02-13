@@ -18,6 +18,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
+import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
 import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
@@ -83,6 +84,7 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
 const [VedtakProvider, useVedtak] = createUseContext(() => {
     const behandling = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const visGlobalAlert = useVisGlobalAlert();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
     const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
     const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
@@ -256,7 +258,11 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                                 path: { behandlingId: behandling.behandlingId },
                             }),
                         });
-                        navigerTilBehandling();
+                        visGlobalAlert({
+                            title: 'Sendt til godkjenning',
+                            message: 'Behandlingen er sendt til godkjenning hos beslutter.',
+                            status: 'success',
+                        });
                     } else if (
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil

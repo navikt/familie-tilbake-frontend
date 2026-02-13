@@ -22,6 +22,8 @@ export type BehandlingStateContextOverrides = {
     harUlagredeData?: boolean;
     settIkkePersistertKomponent?: BehandlingStateContextType['settIkkePersistertKomponent'];
     nullstillIkkePersisterteKomponenter?: BehandlingStateContextType['nullstillIkkePersisterteKomponenter'];
+    innholdsbredde?: BehandlingStateContextType['innholdsbredde'];
+    settInnholdsbredde?: BehandlingStateContextType['settInnholdsbredde'];
 };
 
 export type BehandlingContextOverrides = BehandlingStateContextOverrides & {
@@ -53,6 +55,8 @@ export const lagBehandlingStateContext = (
             overrides.nullstillIkkePersisterteKomponenter ??
             ulagretEndringer?.nullstillIkkePersisterteKomponenter ??
             ((): void => {}),
+        innholdsbredde: overrides.innholdsbredde ?? 800,
+        settInnholdsbredde: overrides.settInnholdsbredde ?? ((): void => {}),
     };
 };
 

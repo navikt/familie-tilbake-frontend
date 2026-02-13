@@ -4,7 +4,7 @@ import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
-import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { ActionBar } from './ActionBar/ActionBar';
@@ -28,6 +28,7 @@ import { useBehandlingState } from '../../context/BehandlingStateContext';
 import { useFagsak } from '../../context/FagsakContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
+import { useGlobalAlerts, useLukkGlobalAlert } from '../../stores/globalAlertStore';
 import { Behandlingssteg, Behandlingstatus, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
@@ -38,6 +39,7 @@ import {
     utledBehandlingSide,
 } from '../../utils/sider';
 import { lazyImportMedRetry } from '../Felleskomponenter/FeilInnlasting/FeilInnlasting';
+import { FixedAlert } from '../Felleskomponenter/FixedAlert/FixedAlert';
 import { FTAlertStripe } from '../Felleskomponenter/Flytelementer';
 import PåVentModal from '../Felleskomponenter/Modal/PåVent/PåVentModal';
 
@@ -175,6 +177,21 @@ type AktivBehandlingProps = {
 const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
+    const { settInnholdsbredde } = useBehandlingState();
+    const contentRef = useRef<HTMLElement>(null);
+
+    useLayoutEffect(() => {
+        const oppdaterBredde = (): void => {
+            if (contentRef.current) {
+                const rect = contentRef.current.getBoundingClientRect();
+                settInnholdsbredde(rect.width);
+            }
+        };
+        oppdaterBredde();
+        window.addEventListener('resize', oppdaterBredde);
+        return (): void => window.removeEventListener('resize', oppdaterBredde);
+    }, [settInnholdsbredde]);
+
     return (
         <>
             <section
@@ -196,6 +213,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                     </Button>
                 </div>
                 <section
+                    ref={contentRef}
                     className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
@@ -339,7 +357,9 @@ const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
 };
 
 const BehandlingContainer: React.FC = () => {
-    const { ventegrunn } = useBehandlingState();
+    const { ventegrunn, innholdsbredde } = useBehandlingState();
+    const globalAlerts = useGlobalAlerts();
+    const lukkGlobalAlert = useLukkGlobalAlert();
     const [visVenteModal, settVisVenteModal] = useState(false);
 
     return (
@@ -358,6 +378,20 @@ const BehandlingContainer: React.FC = () => {
             >
                 <Behandling />
             </div>
+
+            {globalAlerts.map((alert, index) => (
+                <FixedAlert
+                    key={alert.id}
+                    aria-live="polite"
+                    status={alert.status}
+                    title={alert.title}
+                    width={innholdsbredde}
+                    stackIndex={index}
+                    onClose={() => lukkGlobalAlert(alert.id)}
+                >
+                    {alert.message}
+                </FixedAlert>
+            ))}
         </>
     );
 };
