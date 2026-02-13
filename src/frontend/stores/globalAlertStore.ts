@@ -1,10 +1,12 @@
+import type { LocalAlertProps } from '@navikt/ds-react';
+
 import { create } from 'zustand';
 
 export type GlobalAlert = {
     id: string;
     title: string;
     message: string;
-    status: 'error' | 'info' | 'success' | 'warning';
+    status: LocalAlertProps['status'];
 };
 
 type GlobalAlertState = {

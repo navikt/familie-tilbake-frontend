@@ -1,12 +1,13 @@
-import type { AlertProps } from '@navikt/ds-react';
+import type { LocalAlertProps } from '@navikt/ds-react';
 
 import { LocalAlert } from '@navikt/ds-react';
 import React, { useState } from 'react';
 
-type Props = AlertProps & {
+type Props = LocalAlertProps & {
     width?: number;
     title: string;
     stackIndex?: number;
+    onClose?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const alertHeight = 90;
