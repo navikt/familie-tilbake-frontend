@@ -1,6 +1,5 @@
 import type { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
 
-import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { useEffect, useEffectEvent } from 'react';
@@ -56,7 +55,6 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
             ref={dialogRef}
             header={{
                 heading: 'Henlegg tilbakekrevingen',
-                icon: <CircleSlashIcon aria-hidden className="mr-2" />,
             }}
             onClose={nullstillSkjema}
             className={MODAL_BREDDE}

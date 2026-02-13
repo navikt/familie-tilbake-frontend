@@ -36,7 +36,6 @@ export const Gjenoppta: React.FC = () => {
                 ref={dialogRef}
                 header={{
                     heading: 'Gjenoppta behandlingen',
-                    icon: <TimerStartIcon aria-hidden className="mr-2" />,
                 }}
                 className={MODAL_BREDDE}
             >

@@ -23,7 +23,6 @@ export const StartPåNytt: React.FC = () => {
                 ref={dialogRef}
                 header={{
                     heading: 'Start behandlingen på nytt',
-                    icon: <ArrowCirclepathReverseIcon aria-hidden className="mr-2" />,
                 }}
                 className={MODAL_BREDDE}
             >

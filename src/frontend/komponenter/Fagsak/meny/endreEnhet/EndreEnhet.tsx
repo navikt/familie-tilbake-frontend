@@ -44,7 +44,6 @@ export const EndreEnhet: React.FC = () => {
                 ref={dialogRef}
                 header={{
                     heading: 'Endre enhet',
-                    icon: <Buildings3Icon aria-hidden className="mr-2" />,
                 }}
                 onClose={nullstillSkjema}
                 className={MODAL_BREDDE}

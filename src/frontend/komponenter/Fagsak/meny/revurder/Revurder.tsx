@@ -34,7 +34,6 @@ export const Revurder: React.FC = () => {
                 ref={ref}
                 header={{
                     heading: 'Revurder tilbakekreving',
-                    icon: <FileResetIcon aria-hidden className="mr-2" />,
                 }}
                 onClose={() => {
                     nullstillSkjema();

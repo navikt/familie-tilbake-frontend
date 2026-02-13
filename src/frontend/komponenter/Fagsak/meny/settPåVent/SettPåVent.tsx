@@ -49,7 +49,6 @@ export const SettPåVent: React.FC = () => {
                 ref={dialogRef}
                 header={{
                     heading: 'Sett behandlingen på vent',
-                    icon: <TimerPauseIcon aria-hidden className="mr-2" />,
                 }}
                 className={MODAL_BREDDE}
                 onClose={tilbakestillFelterTilDefault}

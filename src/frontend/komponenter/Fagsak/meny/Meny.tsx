@@ -56,16 +56,16 @@ export const Behandlingsmeny: React.FC = () => {
 
             <ActionMenu.Content onClick={() => setHoldMenyenÅpen(true)}>
                 <ActionMenu.Group aria-label="Menyvalg">
-                    {behandling.kanRevurderingOpprettes && <Revurder />}
+                    {behandling.kanRevurderingOpprettes && !behandling.erNyModell && <Revurder />}
 
-                    {erBehandlingenAktiv && (
+                    {(behandling.kanSetteTilbakeTilFakta || erForvalter) && <StartPåNytt />}
+
+                    {erBehandlingenAktiv && !behandling.erNyModell && (
                         <>
                             {behandling.kanHenleggeBehandling && <Henlegg />}
 
                             {!venterPåKravgrunnlag &&
                                 (erSattPåvent ? <Gjenoppta /> : <SettPåVent />)}
-
-                            {(behandling.kanSetteTilbakeTilFakta || erForvalter) && <StartPåNytt />}
 
                             {erForvalter && <HentKorrigertKravgrunnlag />}
 
@@ -73,8 +73,9 @@ export const Behandlingsmeny: React.FC = () => {
                                 <>
                                     <ActionMenu.Divider />
 
-                                    {behandling.støtterManuelleBrevmottakere &&
-                                        !behandling.erNyModell && <LeggTilFjernBrevmottakere />}
+                                    {behandling.støtterManuelleBrevmottakere && (
+                                        <LeggTilFjernBrevmottakere />
+                                    )}
 
                                     {kanEndreEnhet && <EndreEnhet />}
 

@@ -14,9 +14,7 @@ export const HistoriskeVurderinger: React.FC = () => {
     const harTilgang =
         innloggetSaksbehandler && ansvarligSaksbehandler === innloggetSaksbehandler.navIdent;
     return (
-        harTilgang &&
-        fagsystem &&
-        eksternFagsakId && (
+        harTilgang && (
             <ActionMenu.Item
                 className="text-xl cursor-pointer"
                 as="a"
