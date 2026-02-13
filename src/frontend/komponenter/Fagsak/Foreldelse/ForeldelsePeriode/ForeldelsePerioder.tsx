@@ -50,10 +50,9 @@ const genererRader = (
 
 type Props = {
     perioder: ForeldelsePeriodeSkjemeData[];
-    erLesevisning: boolean;
 };
 
-export const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
+export const ForeldelsePerioder: React.FC<Props> = ({ perioder }) => {
     const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
     const { valgtPeriode, settValgtPeriode } = useForeldelse();
 
@@ -73,9 +72,7 @@ export const ForeldelsePerioder: React.FC<Props> = ({ perioder, erLesevisning })
     return perioder && tidslinjeRader ? (
         <>
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-            {!!valgtPeriode && (
-                <ForeldelsePeriodeSkjema periode={valgtPeriode} erLesevisning={erLesevisning} />
-            )}
+            {!!valgtPeriode && <ForeldelsePeriodeSkjema periode={valgtPeriode} />}
         </>
     ) : null;
 };

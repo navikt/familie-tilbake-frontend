@@ -25,9 +25,8 @@ export const ForeldelseContainer: React.FC = () => {
     } = useForeldelse();
     const behandling = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
-        erAutoutført || (stegErBehandlet && erLesevisning) ? navigerTilNeste : sendInnSkjema;
+        erAutoutført || (stegErBehandlet && behandlingILesemodus) ? navigerTilNeste : sendInnSkjema;
 
     return (
         <VStack gap="space-24">
@@ -104,9 +103,7 @@ export const ForeldelseContainer: React.FC = () => {
                         </Alert>
                     )}
 
-                    {skjemaData.length > 0 && (
-                        <ForeldelsePerioder perioder={skjemaData} erLesevisning={erLesevisning} />
-                    )}
+                    {skjemaData.length > 0 && <ForeldelsePerioder perioder={skjemaData} />}
                 </>
             ) : (
                 <DataLastIkkeSuksess ressurser={[foreldelse]} />

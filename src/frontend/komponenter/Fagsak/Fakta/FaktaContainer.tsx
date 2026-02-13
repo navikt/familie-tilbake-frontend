@@ -11,23 +11,18 @@ import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInf
 export const FaktaContainer: React.FC = () => {
     const { stegErBehandlet, skjemaData, fakta } = useFakta();
     const { behandlingILesemodus } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus;
 
     if (fakta?.status === RessursStatus.Suksess) {
         return (
             <VStack gap="space-24">
                 <Heading size="small">Fakta fra feilutbetalingssaken</Heading>
-                {(!erLesevisning || stegErBehandlet) && (
+                {(!behandlingILesemodus || stegErBehandlet) && (
                     <Steginformasjon
                         behandletSteg={stegErBehandlet}
                         infotekst="Kontroller at korrekt hendelse er satt"
                     />
                 )}
-                <GammelFaktaSkjema
-                    skjemaData={skjemaData}
-                    fakta={fakta.data}
-                    erLesevisning={erLesevisning}
-                />
+                <GammelFaktaSkjema skjemaData={skjemaData} fakta={fakta.data} />
             </VStack>
         );
     } else {

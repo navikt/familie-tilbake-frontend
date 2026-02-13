@@ -14,6 +14,7 @@ import { parseISO } from 'date-fns/parseISO';
 import React, { useEffect, useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { ToggleName } from '../../../../context/toggles';
 import { useToggles } from '../../../../context/TogglesContext';
 import { dateTilIsoDatoString } from '../../../../utils/dato';
@@ -21,21 +22,19 @@ import { HarUttaltSeg } from '../schema';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
-    readOnly: boolean;
     kanUtsetteFrist?: boolean;
     varselErSendt: boolean;
 };
 
 export const Uttalelse: React.FC<Props> = ({
     handleUttalelseSubmit,
-    readOnly,
     kanUtsetteFrist = false,
     varselErSendt,
 }) => {
     const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
-
+    const { behandlingILesemodus } = useBehandlingState();
     const harUttaltSeg = useWatch({
         control: methods.control,
         name: 'harUttaltSeg',
@@ -103,7 +102,7 @@ export const Uttalelse: React.FC<Props> = ({
                     <RadioGroup
                         {...field}
                         size="small"
-                        readOnly={readOnly}
+                        readOnly={behandlingILesemodus}
                         legend={
                             varselErSendt
                                 ? 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?'
@@ -135,7 +134,7 @@ export const Uttalelse: React.FC<Props> = ({
                                         `uttalelsesDetaljer.${index}.uttalelsesdato`
                                     );
                                 }}
-                                readOnly={readOnly}
+                                readOnly={behandlingILesemodus}
                                 label="Når uttalte brukeren seg?"
                                 error={
                                     uttalelsesdatoFeil ??
@@ -151,7 +150,7 @@ export const Uttalelse: React.FC<Props> = ({
                                 `uttalelsesDetaljer.${index}.hvorBrukerenUttalteSeg`
                             )}
                             size="small"
-                            readOnly={readOnly}
+                            readOnly={behandlingILesemodus}
                             label="Hvordan uttalte brukeren seg?"
                             description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
                             className="max-w-xl"
@@ -165,7 +164,7 @@ export const Uttalelse: React.FC<Props> = ({
                                 `uttalelsesDetaljer.${index}.uttalelseBeskrivelse`
                             )}
                             size="small"
-                            readOnly={readOnly}
+                            readOnly={behandlingILesemodus}
                             label="Beskriv hva brukeren har uttalt seg om"
                             maxLength={4000}
                             minRows={3}
@@ -182,7 +181,7 @@ export const Uttalelse: React.FC<Props> = ({
                 <Textarea
                     {...methods.register('kommentar')}
                     size="small"
-                    readOnly={readOnly}
+                    readOnly={behandlingILesemodus}
                     label="Kommentar til valget over"
                     maxLength={4000}
                     minRows={3}
@@ -201,7 +200,7 @@ export const Uttalelse: React.FC<Props> = ({
                                 <DatePicker.Input
                                     {...nyFristDatepicker.inputProps}
                                     size="small"
-                                    readOnly={readOnly}
+                                    readOnly={behandlingILesemodus}
                                     label="Sett ny dato for frist"
                                     name={field.name}
                                     error={fieldState.error?.message}
@@ -212,7 +211,7 @@ export const Uttalelse: React.FC<Props> = ({
                     <Textarea
                         {...methods.register('utsettUttalelseFrist.begrunnelse')}
                         size="small"
-                        readOnly={readOnly}
+                        readOnly={behandlingILesemodus}
                         minRows={3}
                         label="Begrunnelse for utsatt frist"
                         maxLength={4000}

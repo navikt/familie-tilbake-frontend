@@ -58,13 +58,11 @@ const finnClassNamePeriodeStatus = (
 type Props = {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
-    erLesevisning: boolean;
 };
 
 export const VilkårsvurderingPerioder: React.FC<Props> = ({
     perioder,
     erTotalbeløpUnder4Rettsgebyr,
-    erLesevisning,
 }) => {
     const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
         useVilkårsvurdering();
@@ -103,7 +101,6 @@ export const VilkårsvurderingPerioder: React.FC<Props> = ({
                     periode={valgtPeriode}
                     behandletPerioder={behandletPerioder}
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                    erLesevisning={erLesevisning}
                     pendingPeriode={pendingPeriode}
                     settPendingPeriode={settPendingPeriode}
                     perioder={perioder}

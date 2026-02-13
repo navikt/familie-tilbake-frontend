@@ -34,15 +34,15 @@ import { useForeldelse } from '../ForeldelseContext';
 
 type Props = {
     periode: ForeldelsePeriodeSkjemeData;
-    erLesevisning: boolean;
 };
 
-export const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode, erLesevisning }) => {
-    const { oppdaterPeriode, onSplitPeriode } = useForeldelse();
+export const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode }) => {
+    const { erAutoutført, oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
+    const erLesevisning = behandlingILesemodus || !!erAutoutført;
 
     React.useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');

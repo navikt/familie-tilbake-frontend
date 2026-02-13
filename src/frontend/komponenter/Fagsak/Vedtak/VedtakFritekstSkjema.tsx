@@ -12,17 +12,15 @@ type Props = {
     avsnittIndex: string;
     underavsnitt: UnderavsnittSkjemaData;
     maximumLength?: number;
-    erLesevisning: boolean;
 };
 
 export const VedtakFritekstSkjema: React.FC<Props> = ({
     avsnittIndex,
     underavsnitt,
     maximumLength = 4000,
-    erLesevisning,
 }) => {
     const { oppdaterUnderavsnitt } = useVedtak();
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
     const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();
 
@@ -30,7 +28,7 @@ export const VedtakFritekstSkjema: React.FC<Props> = ({
         settFritekstfeltErSynlig(harVerdi(fritekst) || fritekstPåkrevet);
     }, [fritekst, fritekstPåkrevet]);
 
-    const lenkeKnappErSynlig = !fritekstfeltErSynlig && !erLesevisning;
+    const lenkeKnappErSynlig = !fritekstfeltErSynlig && !behandlingILesemodus;
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         const nyVerdi = e.target.value;
@@ -74,8 +72,8 @@ export const VedtakFritekstSkjema: React.FC<Props> = ({
                 <Textarea
                     name="fritekst"
                     data-testid={`fritekst-${avsnittIndex}-${index}`}
-                    label={!erLesevisning ? 'Utdypende tekst' : undefined}
-                    readOnly={erLesevisning}
+                    label={!behandlingILesemodus ? 'Utdypende tekst' : undefined}
+                    readOnly={behandlingILesemodus}
                     maxLength={maximumLength}
                     minLength={3}
                     value={fritekst ? fritekst : ''}
