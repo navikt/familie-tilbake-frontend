@@ -1,25 +1,16 @@
 import React from 'react';
-import { styled } from 'styled-components';
 
 import { Toast } from './Toast';
 import { useApp } from '../../../context/AppContext';
-
-const Container = styled.div`
-    position: fixed;
-    right: 2rem;
-    float: right;
-    bottom: 0;
-    z-index: 9999;
-`;
 
 export const Toasts: React.FC = () => {
     const { toasts } = useApp();
 
     return (
-        <Container>
+        <div className="fixed right-8 float-right bottom-0 z-9999">
             {Object.entries(toasts).map(([toastId, toast]) => (
                 <Toast key={toastId} toastId={toastId} toast={toast} />
             ))}
-        </Container>
+        </div>
     );
 };

@@ -4,7 +4,6 @@ import type { HistorikkInnslag as THistorikkInnslag } from '../../../../typer/hi
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useHistorikk } from './HistorikkContext';
 import { Aktør, aktører, Historikkinnslagstype } from '../../../../typer/historikk';
@@ -12,19 +11,6 @@ import { formatterDatoOgTidstring } from '../../../../utils';
 import { finnSideForSteg } from '../../../../utils/sider';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
 import { HentDokument } from '../HentDokument';
-
-const Tidslinje = styled.div`
-    width: 3.5rem;
-    min-width: 3.5rem;
-    text-align: center;
-    background-image: radial-gradient(
-        1px 1px at center,
-        var(--ax-border-neutral-strong) 1px,
-        transparent 1px,
-        transparent 4px
-    );
-    background-size: 100% 5px;
-`;
 
 type Props = {
     innslag: THistorikkInnslag;
@@ -89,12 +75,11 @@ export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
     const typeBrev = innslag.type === Historikkinnslagstype.Brev;
 
     return (
-        <div className="flex flex-row">
-            <Tidslinje>
-                {innslag.aktør === Aktør.Vedtaksløsning && <SystemIkon />}
-                {innslag.aktør === Aktør.Beslutter && <BeslutterIkon />}
-                {innslag.aktør === Aktør.Saksbehandler && <SaksbehandlerIkon />}
-            </Tidslinje>
+        <div className="flex flex-row gap-2">
+            {innslag.aktør === Aktør.Vedtaksløsning && <SystemIkon />}
+            {innslag.aktør === Aktør.Beslutter && <BeslutterIkon />}
+            {innslag.aktør === Aktør.Saksbehandler && <SaksbehandlerIkon />}
+
             <div className="mb-6">
                 <Label>{lagTittel()}</Label>
                 <Detail>

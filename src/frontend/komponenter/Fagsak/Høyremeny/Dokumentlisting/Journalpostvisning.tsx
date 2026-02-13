@@ -2,25 +2,11 @@ import type { Journalpost } from '../../../../typer/journalføring';
 
 import { Detail } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { Dokumentvisning } from './Dokumentvisning';
 import { Journalposttype } from '../../../../typer/journalføring';
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
-
-const Dialog = styled.div`
-    width: 3.5rem;
-    min-width: 3.5rem;
-    text-align: center;
-    background-image: radial-gradient(
-        1px 1px at center,
-        var(--ax-border-neutral-strong) 1px,
-        transparent 1px,
-        transparent 4px
-    );
-    background-size: 100% 5px;
-`;
 
 const typer: Record<Journalposttype, string> = {
     [Journalposttype.I]: 'Innkommende',
@@ -38,11 +24,9 @@ export const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
         journalpost.journalposttype
     );
     return (
-        <div className="flex flex-row">
-            <Dialog>
-                <DokumentIkon type={journalpost.journalposttype} />
-            </Dialog>
-            <div className="mb-6">
+        <div className="flex flex-row gap-2 mb-6">
+            <DokumentIkon type={journalpost.journalposttype} />
+            <div>
                 {journalpost.dokumenter?.map(dok => (
                     <Dokumentvisning
                         key={`${journalpost.journalpostId}_${dok.dokumentInfoId}`}

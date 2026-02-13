@@ -12,24 +12,9 @@ import {
 } from '@navikt/ds-react';
 import { endOfMonth, subMonths } from 'date-fns';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { formatterDatoDDMMYYYY, formatterDatostring } from '../../../../utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '../../../../utils/dato';
-
-const TidslinjeContainer = styled.div`
-    border: 1px solid var(--ax-border-info-strong);
-    margin-bottom: 24px;
-    padding: 12px 16px;
-
-    .etiketter div:last-child {
-        max-width: max-content;
-    }
-
-    .aksel-timeline__period {
-        cursor: default;
-    }
-`;
 
 type Props = {
     periode: PeriodeSkjemaData;
@@ -66,43 +51,38 @@ export const DelOppPeriode: React.FC<Props> = ({
                     open
                     header={{
                         heading: 'Del opp perioden',
-                        size: 'medium',
                     }}
                     portal
-                    width="small"
-                    onClose={() => {
-                        settVisModal(false);
-                    }}
+                    width="medium"
+                    onClose={() => settVisModal(false)}
                 >
-                    <Modal.Body>
+                    <Modal.Body className="flex flex-col gap-4">
                         <Label size="small">Periode</Label>
-                        <BodyShort size="small" spacing>
+                        <BodyShort size="small">
                             {`${formatterDatostring(periode.periode.fom)} - ${formatterDatostring(
                                 periode.periode.tom
                             )}`}
                         </BodyShort>
 
-                        <TidslinjeContainer>
-                            <Timeline>
-                                {tidslinjeRader.map(rad => (
-                                    <Timeline.Row label="" key={rad[0].id}>
-                                        {rad.map(periode => (
-                                            <Timeline.Period
-                                                key={periode.id}
-                                                start={periode.start}
-                                                end={periode.end}
-                                                status={periode.status}
-                                                isActive={periode.isActive}
-                                                className={periode.className}
-                                            >
-                                                Periode fra {formatterDatoDDMMYYYY(periode.start)}{' '}
-                                                til {formatterDatoDDMMYYYY(periode.end)}
-                                            </Timeline.Period>
-                                        ))}
-                                    </Timeline.Row>
-                                ))}
-                            </Timeline>
-                        </TidslinjeContainer>
+                        <Timeline>
+                            {tidslinjeRader.map(rad => (
+                                <Timeline.Row label="" key={rad[0].id}>
+                                    {rad.map(periode => (
+                                        <Timeline.Period
+                                            key={periode.id}
+                                            start={periode.start}
+                                            end={periode.end}
+                                            status={periode.status}
+                                            isActive={periode.isActive}
+                                            className={periode.className}
+                                        >
+                                            Periode fra {formatterDatoDDMMYYYY(periode.start)} til{' '}
+                                            {formatterDatoDDMMYYYY(periode.end)}
+                                        </Timeline.Period>
+                                    ))}
+                                </Timeline.Row>
+                            ))}
+                        </Timeline>
                         <MonthPicker {...monthpickerProps} dropdownCaption>
                             <MonthPicker.Input
                                 {...inputProps}
@@ -112,7 +92,7 @@ export const DelOppPeriode: React.FC<Props> = ({
                         </MonthPicker>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" key="bekreft" onClick={onSubmit} size="small">
+                        <Button key="bekreft" onClick={onSubmit} size="small">
                             Bekreft
                         </Button>
                         <Button

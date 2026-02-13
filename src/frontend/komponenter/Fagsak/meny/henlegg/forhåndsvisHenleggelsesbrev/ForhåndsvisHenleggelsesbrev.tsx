@@ -3,16 +3,10 @@ import type { HenleggelseSkjemaDefinisjon } from '../henleggModal/HenleggModalCo
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 import { type Skjema } from '../../../../../hooks/skjema';
 import { PdfVisningModal } from '../../../../Felleskomponenter/PdfVisningModal/PdfVisningModal';
-
-const StyledContainer = styled.div`
-    margin-top: -5px;
-    margin-right: auto;
-`;
 
 type Props = {
     skjema: Skjema<HenleggelseSkjemaDefinisjon, string>;
@@ -36,7 +30,7 @@ export const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForh�
     }, [visModal]);
 
     return kanForhåndsvise ? (
-        <StyledContainer>
+        <div className="m-auto">
             <Detail>Informer søker: </Detail>
             <Link
                 href="#"
@@ -59,6 +53,6 @@ export const ForhåndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForh�
                     }}
                 />
             )}
-        </StyledContainer>
+        </div>
     ) : null;
 };
