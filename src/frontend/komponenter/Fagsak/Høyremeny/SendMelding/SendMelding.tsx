@@ -8,7 +8,6 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
 import { målform } from '../../../../typer/målform';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { BrevmottakerListe } from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 
@@ -80,7 +79,7 @@ export const SendMelding: React.FC = () => {
                             maxLength={3000}
                         />
                     )}
-                    <Navigering>
+                    <div className="flex flex-row-reverse">
                         <Button
                             size="small"
                             onClick={() => sendBrev()}
@@ -90,7 +89,7 @@ export const SendMelding: React.FC = () => {
                             Send brev
                         </Button>
                         {kanSende && <ForhåndsvisBrev />}
-                    </Navigering>
+                    </div>
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
                 </div>
             </div>

@@ -9,7 +9,6 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useVerge } from './VergeContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
@@ -19,10 +18,6 @@ import { hentFrontendFeilmelding } from '../../../utils';
 import { HenterData } from '../../Felleskomponenter/Datalast/HenterData';
 import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
 import { ActionBar } from '../ActionBar/ActionBar';
-
-const StyledVStack = styled(VStack)`
-    max-width: 30rem;
-`;
 
 export const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
@@ -49,7 +44,7 @@ export const VergeContainer: React.FC = () => {
             {henterData ? (
                 <HenterData beskrivelse="Henting av vergeinformasjon tar litt tid." />
             ) : (
-                <StyledVStack gap="space-20">
+                <VStack gap="space-20" className="max-w-xl">
                     {erAutoutført && (
                         <BodyLong size="small">
                             Automatisk vurdert. Verge er kopiert fra fagsystemet.
@@ -144,7 +139,7 @@ export const VergeContainer: React.FC = () => {
                         onForrige={undefined}
                         isLoading={senderInn}
                     />
-                </StyledVStack>
+                </VStack>
             )}
         </>
     );

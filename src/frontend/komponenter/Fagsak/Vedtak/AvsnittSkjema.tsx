@@ -1,41 +1,12 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
-import type { RuleSet } from 'styled-components';
 
-import { BodyLong, ExpansionCard, Heading } from '@navikt/ds-react';
+import { BodyLong, ExpansionCard, Heading, VStack } from '@navikt/ds-react';
+import classNames from 'classnames';
 import * as React from 'react';
-import { css, styled } from 'styled-components';
 
 import { VedtakFritekstSkjema } from './VedtakFritekstSkjema';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
-const StyledExpansionCard = styled(ExpansionCard)`
-    margin-bottom: 8px;
-`;
-
-const stylingWarningKantlinje = css`
-    border-left-color: var(--ax-border-danger);
-    border-left-width: 5px;
-`;
-const StyledExpansionHeader = styled(ExpansionCard.Header)<{
-    $visWarningKantlinje: boolean;
-}>`
-    ${({ $visWarningKantlinje }): RuleSet<object> | undefined => {
-        if ($visWarningKantlinje) {
-            return stylingWarningKantlinje;
-        }
-    }}
-`;
-
-const StyledExpansionContent = styled(ExpansionCard.Content)<{
-    $visWarningKantlinje: boolean;
-}>`
-    ${({ $visWarningKantlinje }): RuleSet<object> | undefined => {
-        if ($visWarningKantlinje) {
-            return stylingWarningKantlinje;
-        }
-    }}
-`;
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData): boolean => {
     if (avsnitt.avsnittstype === Avsnittstype.Oppsummering) {
         return avsnitt.underavsnittsliste.some(
@@ -114,19 +85,28 @@ export const AvsnittSkjema: React.FC<Props> = ({
         .filter(ul => !ul.brødtekst?.includes('*-'));
 
     return (
-        <StyledExpansionCard
+        <ExpansionCard
             open={erEkspandert}
             onToggle={() => settErEkspandert(prevState => !prevState)}
             aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
             size="small"
         >
-            <StyledExpansionHeader
-                $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+            <ExpansionCard.Header
+                className={
+                    !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
+                        ? 'border-l-4 border-ax-border-danger'
+                        : ''
+                }
             >
                 <ExpansionCard.Title size="small">{avsnitt.overskrift ?? ''}</ExpansionCard.Title>
-            </StyledExpansionHeader>
-            <StyledExpansionContent
-                $visWarningKantlinje={!erLesevisning && harPåkrevetFritekstMenIkkeUtfylt}
+            </ExpansionCard.Header>
+
+            <ExpansionCard.Content
+                className={classNames(
+                    !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
+                        ? 'border-l-4 border-ax-border-danger'
+                        : ''
+                )}
             >
                 {bulletpoints.length > 0 && (
                     <ul>
@@ -141,7 +121,9 @@ export const AvsnittSkjema: React.FC<Props> = ({
                 )}
                 {underavsnittUtenBulletpoints.map(underavsnitt => {
                     return (
-                        <React.Fragment
+                        <VStack
+                            gap="space-8"
+                            className="pb-3"
                             key={
                                 '' +
                                 underavsnitt.underavsnittstype +
@@ -165,11 +147,10 @@ export const AvsnittSkjema: React.FC<Props> = ({
                                     maximumLength={erRevurderingBortfaltBeløp ? 10000 : undefined}
                                 />
                             )}
-                            <Spacer8 />
-                        </React.Fragment>
+                        </VStack>
                     );
                 })}
-            </StyledExpansionContent>
-        </StyledExpansionCard>
+            </ExpansionCard.Content>
+        </ExpansionCard>
     );
 };

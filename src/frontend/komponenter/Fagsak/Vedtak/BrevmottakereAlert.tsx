@@ -15,21 +15,20 @@ type Props = {
 export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere }) => {
     const navigerTilBrevmottakerSteg = useStegNavigering(Behandlingssteg.Brevmottaker);
     return (
-        <>
-            {brevmottakere && brevmottakere.length !== 0 && (
-                <Alert className="mb-6" variant="info">
-                    Brevmottaker(e) er endret, og vedtak sendes til:
-                    <BrevmottakerListe />
-                    <Button
-                        variant="tertiary"
-                        onClick={navigerTilBrevmottakerSteg}
-                        icon={<MagnifyingGlassIcon />}
-                        size="xsmall"
-                    >
-                        Se detaljer
-                    </Button>
-                </Alert>
-            )}
-        </>
+        brevmottakere &&
+        brevmottakere.length !== 0 && (
+            <Alert variant="info">
+                Brevmottaker(e) er endret, og vedtak sendes til:
+                <BrevmottakerListe />
+                <Button
+                    variant="tertiary"
+                    onClick={navigerTilBrevmottakerSteg}
+                    icon={<MagnifyingGlassIcon />}
+                    size="xsmall"
+                >
+                    Se detaljer
+                </Button>
+            </Alert>
+        )
     );
 };

@@ -3,14 +3,9 @@ import type { DokumentInfo, Journalpost } from '../../../../typer/journalføring
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { Journalposttype } from '../../../../typer/journalføring';
 import { HentDokument } from '../HentDokument';
-
-const Dokument = styled.span`
-    display: block;
-`;
 
 type Props = {
     journalpost: Journalpost;
@@ -21,7 +16,7 @@ export const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
     const [visDokument, settVisDokument] = React.useState<boolean>(false);
 
     return (
-        <Dokument>
+        <div>
             {journalpost.journalposttype === Journalposttype.N ? (
                 <span>{dokument.tittel}</span>
             ) : (
@@ -45,6 +40,6 @@ export const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
                     )}
                 </>
             )}
-        </Dokument>
+        </div>
     );
 };

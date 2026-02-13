@@ -1,13 +1,12 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 
-import { BodyShort, VStack, type TimelinePeriodProps } from '@navikt/ds-react';
+import { Alert, BodyShort, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
-import { FTAlertStripe } from '../../Felleskomponenter/Flytelementer';
 import { TilbakeTidslinje } from '../../Felleskomponenter/TilbakeTidslinje/TilbakeTidslinje';
 
 const lagTidslinjeRader = (
@@ -92,11 +91,11 @@ export const VilkårsvurderingPerioder: React.FC<Props> = ({
     };
 
     return perioder && tidslinjeRader ? (
-        <VStack gap="space-24">
+        <>
             {valideringsFeilmelding && (
-                <FTAlertStripe variant="error" fullWidth>
+                <Alert variant="error">
                     <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
-                </FTAlertStripe>
+                </Alert>
             )}
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {valgtPeriode && (
@@ -110,6 +109,6 @@ export const VilkårsvurderingPerioder: React.FC<Props> = ({
                     perioder={perioder}
                 />
             )}
-        </VStack>
+        </>
     ) : null;
 };

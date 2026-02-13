@@ -13,15 +13,6 @@ import { finnSideForSteg } from '../../../../utils/sider';
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '../../../Felleskomponenter/Ikoner/';
 import { HentDokument } from '../HentDokument';
 
-const Innslag = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
-const StyledBodyShort = styled(BodyShort)`
-    white-space: pre-line;
-`;
-
 const Tidslinje = styled.div`
     width: 3.5rem;
     min-width: 3.5rem;
@@ -75,7 +66,7 @@ export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
                 </>
             );
         }
-        return <StyledBodyShort>{innslag.tekst}</StyledBodyShort>;
+        return <BodyShort className="whitespace-pre-line">{innslag.tekst}</BodyShort>;
     };
 
     const lagBrevLink = (): React.ReactNode => {
@@ -98,7 +89,7 @@ export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
     const typeBrev = innslag.type === Historikkinnslagstype.Brev;
 
     return (
-        <Innslag>
+        <div className="flex flex-row">
             <Tidslinje>
                 {innslag.aktør === Aktør.Vedtaksløsning && <SystemIkon />}
                 {innslag.aktør === Aktør.Beslutter && <BeslutterIkon />}
@@ -124,6 +115,6 @@ export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
                     />
                 )}
             </div>
-        </Innslag>
+        </div>
     );
 };

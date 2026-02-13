@@ -34,8 +34,7 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
   - Zod for runtime-validering
 - **Styling**: 
   - Tailwind CSS (primær styling-løsning)
-  - Styled Components - *migrerer bort (maintenance mode)*
-  - NAV Design System (@navikt/ds-*)
+  - Nav Design System (@navikt/ds-*)
 - **Skjemaer**: React Hook Form med Zod-validering
 - **HTTP Client**: Axios
 - **API-generering**: @hey-api/openapi-ts (genererer TypeScript-typer, React Query hooks og Zod-schemas fra OpenAPI-spec)
@@ -146,7 +145,6 @@ App (QueryClientProvider, ErrorBoundary)
 #### Styling-strategi
 **Migrering pågår:**
 - **Mål**: Full migrering til Tailwind CSS
-- **Grunn**: Styled Components er i maintenance mode
 - **Nåværende tilstand**: Hybrid løsning under migrering
 - **NAV Design System**: Integreres via `@navikt/ds-tailwind`
 
@@ -259,16 +257,10 @@ Komponent re-renderer
 
 ## Pågående migreringer
 
-### 1. State Management: Constate → React useContext
+### State Management: Constate → React useContext
 **Status**: Pågår  
 **Grunn**: Forenkle state management, redusere avhengigheter  
 **Berørte filer**: Alle context providers i `src/frontend/context/`
-
-### 2. Styling: Styled Components → Tailwind CSS
-**Status**: Pågår  
-**Grunn**: Styled Components er i maintenance mode  
-**Strategi**: Gradvis migrering, komponent for komponent  
-**Mål**: Full Tailwind CSS med NAV Design System integrasjon
 
 ## Koderetningslinjer
 Denne kodebasen er på norsk. Følg disse retningslinjene:

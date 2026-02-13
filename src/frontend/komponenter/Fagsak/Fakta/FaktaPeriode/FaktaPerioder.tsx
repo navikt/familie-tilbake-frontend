@@ -2,21 +2,10 @@ import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
 import { Table } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { hentHendelseTyper } from '../../../../kodeverk';
-
-const StyledPeriodeTable = styled(Table)`
-    td {
-        vertical-align: top;
-
-        &:nth-of-type(2) {
-            padding-top: 0px;
-        }
-    }
-`;
 
 type Props = {
     perioder: FaktaPeriodeSkjemaData[];
@@ -28,7 +17,7 @@ export const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
     const hendelsestyper = hentHendelseTyper(ytelsestype, !!institusjon);
 
     return (
-        <StyledPeriodeTable size="small">
+        <Table size="small">
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
@@ -51,6 +40,6 @@ export const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
                     );
                 })}
             </Table.Body>
-        </StyledPeriodeTable>
+        </Table>
     );
 };

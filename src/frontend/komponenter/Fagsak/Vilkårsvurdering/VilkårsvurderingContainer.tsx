@@ -16,25 +16,22 @@ export const VilkårsvurderingContainer: React.FC = () => {
         const totalbeløpErUnder4Rettsgebyr = erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data);
 
         return (
-            <>
+            <VStack gap="space-24">
                 <Heading size="medium" ref={containerRef}>
                     Vilkårsvurdering
                 </Heading>
-                <VStack>
-                    {erAutoutført && (
-                        <BodyLong size="small">
-                            Automatisk vurdert. Alle perioder er foreldet.
-                        </BodyLong>
-                    )}
-                    {skjemaData && skjemaData.length > 0 && (
-                        <VilkårsvurderingPerioder
-                            perioder={skjemaData}
-                            erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
-                            erLesevisning={erLesevisning}
-                        />
-                    )}
-                </VStack>
-            </>
+
+                {erAutoutført && (
+                    <BodyLong size="small">Automatisk vurdert. Alle perioder er foreldet.</BodyLong>
+                )}
+                {skjemaData && skjemaData.length > 0 && (
+                    <VilkårsvurderingPerioder
+                        perioder={skjemaData}
+                        erTotalbeløpUnder4Rettsgebyr={totalbeløpErUnder4Rettsgebyr}
+                        erLesevisning={erLesevisning}
+                    />
+                )}
+            </VStack>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[vilkårsvurdering]} />;

@@ -2,18 +2,9 @@ import type { HendelseType } from '../../../kodeverk';
 
 import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { hendelsetyper } from '../../../kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../../utils';
-
-const StyledVStack = styled(VStack)`
-    background-color: var(--ax-bg-info-moderate);
-    padding: 12px 20px;
-    margin-top: 12px;
-    max-width: 30rem;
-    width: 100%;
-`;
 
 type Props = {
     fom: string;
@@ -24,7 +15,10 @@ type Props = {
 
 export const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
-        <StyledVStack gap="space-20" className="text-ax-text-info rounded-xl">
+        <VStack
+            gap="space-20"
+            className="text-ax-text-info rounded-xl bg-ax-bg-info-moderate px-4 py-3"
+        >
             <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="space-16">
                 <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
                     tom
@@ -40,6 +34,6 @@ export const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendels
                 </HStack>
                 {hendelsetype && <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>}
             </HGrid>
-        </StyledVStack>
+        </VStack>
     );
 };

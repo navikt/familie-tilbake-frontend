@@ -9,7 +9,6 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
-import { styled } from 'styled-components';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { ForhåndsvisVedtaksbrev } from './ForhåndsvisVedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -23,12 +22,7 @@ import { vedtaksresultater } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
-import { Navigering, Spacer20 } from '../../Felleskomponenter/Flytelementer';
 import { ActionBar } from '../ActionBar/ActionBar';
-
-const StyledNavigering = styled(Navigering)`
-    width: 90%;
-`;
 
 export const VedtakContainer: React.FC = () => {
     const {
@@ -103,35 +97,30 @@ export const VedtakContainer: React.FC = () => {
     ) {
         return (
             <VStack gap="space-24">
-                <Heading level="1" size="small" spacing>
-                    Vedtak
-                </Heading>
+                <Heading size="small">Vedtak</Heading>
                 {erRevurderingKlageKA && (
-                    <>
-                        <Alert className="w-[90%] mb-3" variant="info">
-                            <BodyShort className="font-semibold">
-                                Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                            </BodyShort>
-                        </Alert>
-                        <Spacer20 />
-                    </>
+                    <Alert variant="info">
+                        <BodyShort className="font-semibold">
+                            Vedtaksbrev sendes ikke ut fra denne behandlingen.
+                        </BodyShort>
+                    </Alert>
                 )}
                 {manuelleBrevmottakere.length > 0 && (
-                    <>
-                        <BrevmottakereAlert
-                            brevmottakere={manuelleBrevmottakere.map(
-                                ({ brevmottaker }) => brevmottaker
-                            )}
-                        />
-                        <Spacer20 />
-                    </>
+                    <BrevmottakereAlert
+                        brevmottakere={manuelleBrevmottakere.map(
+                            ({ brevmottaker }) => brevmottaker
+                        )}
+                    />
                 )}
-                <Detail weight="semibold">Resultat</Detail>
-                <BodyLong size="small" spacing>
-                    {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
-                </BodyLong>
+                <HStack gap="space-4" align="center">
+                    <Detail weight="semibold">Resultat</Detail>
+                    <BodyLong size="small">
+                        {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
+                    </BodyLong>
+                </HStack>
+
                 <VedtakPerioder perioder={beregningsresultat.data.beregningsresultatsperioder} />
-                <Spacer20 />
+
                 {!!skjemaData.length && (
                     <VedtakSkjema
                         avsnitter={skjemaData}
@@ -143,15 +132,14 @@ export const VedtakContainer: React.FC = () => {
                         }
                     />
                 )}
-                <Spacer20 />
+
                 {foreslåVedtakRespons &&
                     (foreslåVedtakRespons.status === RessursStatus.Feilet ||
                         foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
-                        <Alert className="w-[90%] mb-3" variant="error">
-                            {foreslåVedtakRespons.frontendFeilmelding}
-                        </Alert>
+                        <Alert variant="error">{foreslåVedtakRespons.frontendFeilmelding}</Alert>
                     )}
-                <StyledNavigering>
+
+                <div className="flex flex-row-reverse">
                     <HStack gap="space-4">
                         {kanViseForhåndsvisning && !!skjemaData.length && (
                             <ForhåndsvisVedtaksbrev />
@@ -181,7 +169,7 @@ export const VedtakContainer: React.FC = () => {
 
                         {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
                     </HStack>
-                </StyledNavigering>
+                </div>
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={erLesevisning}

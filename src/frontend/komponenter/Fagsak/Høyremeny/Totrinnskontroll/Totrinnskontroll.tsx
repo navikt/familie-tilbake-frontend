@@ -3,7 +3,6 @@ import type { SynligSteg } from '../../../../utils/sider';
 
 import { Alert, BodyShort, Button, Heading, Link, Radio, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
@@ -15,13 +14,8 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
-import { Navigering } from '../../../Felleskomponenter/Flytelementer';
 import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import { Steginformasjon } from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
-
-const AngreSendTilBeslutterContainer = styled.div`
-    margin: 1rem 0;
-`;
 
 export const Totrinnskontroll: React.FC = () => {
     const {
@@ -72,12 +66,12 @@ export const Totrinnskontroll: React.FC = () => {
                     />
                 )}
                 {aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak && erLesevisning && (
-                    <AngreSendTilBeslutterContainer>
+                    <div>
                         <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
                             Angre sendt til beslutter
                         </Button>
                         {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
-                    </AngreSendTilBeslutterContainer>
+                    </div>
                 )}
                 {skjemaData.map(totrinnSteg => {
                     const side = finnSideForSteg(totrinnSteg.behandlingssteg);
@@ -146,7 +140,7 @@ export const Totrinnskontroll: React.FC = () => {
                     );
                 })}
                 {!erLesevisning && (
-                    <Navigering>
+                    <div className="flex flex-row-reverse">
                         <Button
                             size="small"
                             onClick={sendInnSkjema}
@@ -163,7 +157,7 @@ export const Totrinnskontroll: React.FC = () => {
                         >
                             Send til saksbehandler
                         </Button>
-                    </Navigering>
+                    </div>
                 )}
             </div>
         </>

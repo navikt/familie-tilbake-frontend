@@ -30,7 +30,7 @@ export const ForeldelseContainer: React.FC = () => {
         erAutoutført || (stegErBehandlet && erLesevisning) ? navigerTilNeste : sendInnSkjema;
 
     return (
-        <>
+        <VStack gap="space-24">
             <Heading size="medium">Foreldelse</Heading>
             {erAutoutført ? (
                 <Alert variant="success" className="min-w-80">
@@ -126,6 +126,6 @@ export const ForeldelseContainer: React.FC = () => {
                 disableNeste={!allePerioderBehandlet}
                 isLoading={senderInn}
             />
-        </>
+        </VStack>
     );
 };

@@ -2,13 +2,8 @@ import type { YtelseInfo } from '../../../../typer/tilbakekrevingstyper';
 
 import { Table } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { formatCurrencyNoKr } from '../../../../utils';
-
-const StyledPeriodeTable = styled(Table)`
-    max-width: 30rem;
-`;
 
 type Props = {
     ytelser?: YtelseInfo[];
@@ -16,7 +11,7 @@ type Props = {
 
 export const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
     return ytelser && ytelser.length > 0 ? (
-        <StyledPeriodeTable>
+        <Table>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell scope="col">Aktivitet</Table.HeaderCell>
@@ -33,6 +28,6 @@ export const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
                     </Table.Row>
                 ))}
             </Table.Body>
-        </StyledPeriodeTable>
+        </Table>
     ) : null;
 };

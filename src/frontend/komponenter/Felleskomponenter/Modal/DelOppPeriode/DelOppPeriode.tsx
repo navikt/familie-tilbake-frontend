@@ -81,6 +81,7 @@ export const DelOppPeriode: React.FC<Props> = ({
                                 periode.periode.tom
                             )}`}
                         </BodyShort>
+
                         <TidslinjeContainer>
                             <Timeline>
                                 {tidslinjeRader.map(rad => (

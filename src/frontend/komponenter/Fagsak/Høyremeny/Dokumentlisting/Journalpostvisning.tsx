@@ -9,11 +9,6 @@ import { Journalposttype } from '../../../../typer/journalføring';
 import { formatterDatoOgTid, hentDatoRegistrertSendt } from '../../../../utils';
 import { DokumentIkon } from '../../../Felleskomponenter/Ikoner';
 
-const Journalpost = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
 const Dialog = styled.div`
     width: 3.5rem;
     min-width: 3.5rem;
@@ -43,7 +38,7 @@ export const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
         journalpost.journalposttype
     );
     return (
-        <Journalpost>
+        <div className="flex flex-row">
             <Dialog>
                 <DokumentIkon type={journalpost.journalposttype} />
             </Dialog>
@@ -60,6 +55,6 @@ export const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
                     {typer[journalpost.journalposttype]}
                 </Detail>
             </div>
-        </Journalpost>
+        </div>
     );
 };

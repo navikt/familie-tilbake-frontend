@@ -1,19 +1,13 @@
 import type { UnderavsnittSkjemaData } from './typer/vedtak';
 
 import { PlusCircleIcon } from '@navikt/aksel-icons';
-import { BodyShort, Link, Textarea } from '@navikt/ds-react';
+import { BodyShort, Link, Textarea, VStack } from '@navikt/ds-react';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { useVedtak } from './VedtakContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
-import { Spacer8 } from '../../Felleskomponenter/Flytelementer';
 
-const StyledUndertekst = styled(BodyShort)`
-    display: inline-block;
-    margin-left: 1ex;
-`;
 type Props = {
     avsnittIndex: string;
     underavsnitt: UnderavsnittSkjemaData;
@@ -24,7 +18,7 @@ type Props = {
 export const VedtakFritekstSkjema: React.FC<Props> = ({
     avsnittIndex,
     underavsnitt,
-    maximumLength,
+    maximumLength = 4000,
     erLesevisning,
 }) => {
     const { oppdaterUnderavsnitt } = useVedtak();
@@ -39,12 +33,11 @@ export const VedtakFritekstSkjema: React.FC<Props> = ({
     const lenkeKnappErSynlig = !fritekstfeltErSynlig && !erLesevisning;
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-        const maxLength = maximumLength ? maximumLength : 4000;
         const nyVerdi = e.target.value;
         const feilmelding =
             isEmpty(nyVerdi) && !fritekstPåkrevet
                 ? undefined
-                : validerTekstMaksLengde(maxLength)(nyVerdi);
+                : validerTekstMaksLengde(maximumLength)(nyVerdi);
         settIkkePersistertKomponent('vedtak');
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
@@ -55,47 +48,41 @@ export const VedtakFritekstSkjema: React.FC<Props> = ({
     };
 
     return (
-        <>
+        <VStack gap="space-8">
             {lenkeKnappErSynlig && (
-                <>
-                    <Spacer8 />
-                    <Link
-                        role="button"
-                        data-testid={`legg-til-fritekst-${avsnittIndex}-${index}`}
-                        onClick={e => {
-                            e.preventDefault();
+                <Link
+                    role="button"
+                    data-testid={`legg-til-fritekst-${avsnittIndex}-${index}`}
+                    onClick={e => {
+                        e.preventDefault();
+                        settFritekstfeltErSynlig(true);
+                    }}
+                    onKeyUp={e => {
+                        const key = e.code || e.keyCode;
+                        if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
                             settFritekstfeltErSynlig(true);
-                        }}
-                        onKeyUp={e => {
-                            const key = e.code || e.keyCode;
-                            if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
-                                settFritekstfeltErSynlig(true);
-                            }
-                        }}
-                        href="#"
-                    >
-                        <PlusCircleIcon aria-label="Legg til utdypende tekst" />
-                        <StyledUndertekst size="small">Legg til utdypende tekst</StyledUndertekst>
-                    </Link>
-                </>
+                        }
+                    }}
+                    href="#"
+                    className="flex flex-row gap-1"
+                >
+                    <PlusCircleIcon aria-label="Legg til utdypende tekst" />
+                    <BodyShort size="small">Legg til utdypende tekst</BodyShort>
+                </Link>
             )}
             {fritekstfeltErSynlig && (
-                <>
-                    <Spacer8 />
-                    <Textarea
-                        name="fritekst"
-                        data-testid={`fritekst-${avsnittIndex}-${index}`}
-                        label={!erLesevisning ? 'Utdypende tekst' : undefined}
-                        readOnly={erLesevisning}
-                        maxLength={maximumLength ? maximumLength : 4000}
-                        minLength={3}
-                        value={fritekst ? fritekst : ''}
-                        onChange={event => onChange(event)}
-                        error={harFeil ? feilmelding : null}
-                    />
-                    <Spacer8 />
-                </>
+                <Textarea
+                    name="fritekst"
+                    data-testid={`fritekst-${avsnittIndex}-${index}`}
+                    label={!erLesevisning ? 'Utdypende tekst' : undefined}
+                    readOnly={erLesevisning}
+                    maxLength={maximumLength}
+                    minLength={3}
+                    value={fritekst ? fritekst : ''}
+                    onChange={event => onChange(event)}
+                    error={harFeil ? feilmelding : null}
+                />
             )}
-        </>
+        </VStack>
     );
 };

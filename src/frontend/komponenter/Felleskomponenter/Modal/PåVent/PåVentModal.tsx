@@ -1,10 +1,9 @@
 import type { Behandlingsstegstilstand } from '../../../../typer/behandling';
 
-import { Alert, BodyLong, Button, Heading, Modal, Select } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
-import { styled } from 'styled-components';
 
 import { usePåVentBehandling } from './PåVentContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
@@ -19,19 +18,6 @@ import {
 import { dateBeforeToday } from '../../../../utils';
 import { dagensDato } from '../../../../utils/dato';
 import { Datovelger } from '../../Datovelger/Datovelger';
-import { Spacer20 } from '../../Flytelementer';
-
-const StyledAlert = styled(Alert)`
-    margin-bottom: 1.5rem;
-`;
-
-const FeilContainer = styled.div`
-    margin-top: 32px;
-
-    & .typo-normal {
-        color: var(--ax-text-danger);
-    }
-`;
 
 type Props = {
     ventegrunn: Behandlingsstegstilstand;
@@ -95,33 +81,33 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
                 size: 'medium',
                 closeButton: true,
             }}
-            portal={true}
-            width="small"
+            portal
+            width="medium"
         >
-            <Modal.Body>
+            <Modal.Body className="flex flex-col gap-4">
                 <>
                     {vilBliAutomatiskBehandletUnder4rettsgebyr && (
-                        <>
-                            <StyledAlert variant="info">
-                                {automatiskUnder4rettsgebyrBehandletTekst}
-                            </StyledAlert>
-                        </>
+                        <Alert variant="info" size="small">
+                            {automatiskUnder4rettsgebyrBehandletTekst}
+                        </Alert>
                     )}
-
                     {erFristenUtløpt && (
                         <>
-                            <Heading level="3" size="xsmall" spacing>
+                            <Heading level="3" size="xsmall">
                                 OBS! Fristen på denne behandlingen er utløpt!
                             </Heading>
-                            <BodyLong size="small">
-                                Kontroller hvorfor Økonomi ikke har dannet et kravgrunnlag.
-                            </BodyLong>
-                            <BodyLong size="small">
-                                Dersom det feilutbetalte beløpet er bortfalt skal saken henlegges.
-                            </BodyLong>
-                            <BodyLong size="small" spacing>
-                                For mer informasjon, se rutine under tilbakekreving.
-                            </BodyLong>
+                            <div>
+                                <BodyShort size="small">
+                                    Kontroller hvorfor Økonomi ikke har dannet et kravgrunnlag.
+                                </BodyShort>
+                                <BodyShort size="small">
+                                    Dersom det feilutbetalte beløpet er bortfalt skal saken
+                                    henlegges.
+                                </BodyShort>
+                                <BodyShort size="small">
+                                    For mer informasjon, se rutine under tilbakekreving.
+                                </BodyShort>
+                            </div>
                         </>
                     )}
                     <Datovelger
@@ -132,7 +118,7 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
                         minDatoAvgrensning={addDays(dagensDato, 1)}
                         maksDatoAvgrensning={addMonths(dagensDato, 3)}
                     />
-                    <Spacer20 />
+
                     <Select
                         {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
                         label="Årsak"
@@ -147,10 +133,11 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
                             </option>
                         ))}
                     </Select>
+
                     {feilmelding && feilmelding !== '' && (
-                        <FeilContainer>
-                            <BodyLong size="small">{feilmelding}</BodyLong>
-                        </FeilContainer>
+                        <BodyLong size="small" className="text-ax-text-danger">
+                            {feilmelding}
+                        </BodyLong>
                     )}
                 </>
             </Modal.Body>

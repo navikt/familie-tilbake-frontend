@@ -2,15 +2,11 @@ import { LeaveIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
 import * as React from 'react';
 import { useLocation } from 'react-router';
-import { styled } from 'styled-components';
 
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Behandlingsmeny } from '../meny/Meny';
 
-const Container = styled.div`
-    margin: 2rem;
-`;
 export const HistoriskeVurderingermeny: React.FC = () => {
     const { eksternBrukId } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
@@ -19,7 +15,7 @@ export const HistoriskeVurderingermeny: React.FC = () => {
     const behandlingsPath = location.pathname.split('/').at(-1);
 
     return (
-        <Container>
+        <div className="p-8">
             <HStack className="mb-4 flex gap-4">
                 <Behandlingsmeny />
 
@@ -38,6 +34,6 @@ export const HistoriskeVurderingermeny: React.FC = () => {
                 <Link href={`${basePath}/inaktiv-fakta`}>Fakta</Link>
                 <Link href={`${basePath}/inaktiv-vilkaarsvurdering`}>Vilkårsvurdering</Link>
             </HStack>
-        </Container>
+        </div>
     );
 };
