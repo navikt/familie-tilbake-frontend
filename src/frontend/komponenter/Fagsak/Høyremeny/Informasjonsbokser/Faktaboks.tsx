@@ -84,7 +84,7 @@ export const Faktaboks: React.FC = () => {
                         </>
                     )}
 
-                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-start">
                         <Buildings3Icon {...ICON_PROPS} />
                         Enhet
                     </dt>
