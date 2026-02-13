@@ -1,4 +1,5 @@
 import type { LocalAlertProps } from '@navikt/ds-react';
+import type { MouseEvent } from 'react';
 
 import { LocalAlert } from '@navikt/ds-react';
 import React, { useState } from 'react';
@@ -28,7 +29,7 @@ export const FixedAlert: React.FC<Props> = ({
     if (!isVisible) {
         return null;
     }
-    const handleClose = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const handleClose = (e: MouseEvent<HTMLButtonElement>): void => {
         setIsVisible(false);
         onClose?.(e);
     };
