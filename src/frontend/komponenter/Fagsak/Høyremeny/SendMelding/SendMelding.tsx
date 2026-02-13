@@ -23,7 +23,6 @@ export const SendMelding: React.FC = () => {
     const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus;
 
     const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const nyMal = e.target.value as DokumentMal;
@@ -49,7 +48,7 @@ export const SendMelding: React.FC = () => {
                         {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
                         id="dokumentMal"
                         label="Mal"
-                        readOnly={erLesevisning}
+                        readOnly={behandlingILesemodus}
                         value={skjema.felter.maltype.verdi}
                         onChange={event => onChangeMal(event)}
                     >
@@ -72,7 +71,7 @@ export const SendMelding: React.FC = () => {
                                 />
                             }
                             aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                            readOnly={erLesevisning}
+                            readOnly={behandlingILesemodus}
                             value={skjema.felter.fritekst.verdi}
                             onChange={event =>
                                 skjema.felter.fritekst.validerOgSettFelt(event.target.value)

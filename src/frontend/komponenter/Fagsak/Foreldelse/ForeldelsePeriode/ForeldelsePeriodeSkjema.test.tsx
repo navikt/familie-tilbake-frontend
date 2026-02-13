@@ -23,7 +23,7 @@ vi.mock('../ForeldelseContext', () => {
 const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): RenderResult =>
     render(
         <TestBehandlingProvider>
-            <ForeldelsePeriodeSkjema periode={periode} erLesevisning={false} />
+            <ForeldelsePeriodeSkjema periode={periode} />
         </TestBehandlingProvider>
     );
 

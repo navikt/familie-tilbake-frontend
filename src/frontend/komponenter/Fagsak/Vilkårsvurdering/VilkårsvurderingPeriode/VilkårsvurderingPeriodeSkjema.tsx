@@ -111,7 +111,6 @@ type Props = {
     periode: VilkårsvurderingPeriodeSkjemaData;
     behandletPerioder: VilkårsvurderingPeriodeSkjemaData[];
     erTotalbeløpUnder4Rettsgebyr: boolean;
-    erLesevisning: boolean;
     perioder: VilkårsvurderingPeriodeSkjemaData[];
     pendingPeriode: VilkårsvurderingPeriodeSkjemaData | undefined;
     settPendingPeriode: (periode: VilkårsvurderingPeriodeSkjemaData | undefined) => void;
@@ -121,7 +120,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     periode,
     behandletPerioder,
     erTotalbeløpUnder4Rettsgebyr,
-    erLesevisning,
     perioder,
     pendingPeriode,
     settPendingPeriode,
@@ -138,7 +136,10 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         sendInnSkjemaOgNaviger,
         settValgtPeriode,
         erAllePerioderBehandlet,
+        erAutoutført,
     } = useVilkårsvurdering();
+    const { behandlingILesemodus } = useBehandlingState();
+    const erLesevisning = behandlingILesemodus || !!erAutoutført;
     const { skjema, validerOgOppdaterFelter } = useVilkårsvurderingPeriodeSkjema(
         (oppdatertPeriode: VilkårsvurderingPeriodeSkjemaData) => {
             oppdaterPeriode(oppdatertPeriode);

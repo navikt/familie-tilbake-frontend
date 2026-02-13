@@ -37,8 +37,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
 }) => {
-    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
-        useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const {
         formState: { dirtyFields: forhåndsvarselDirtyFields },
@@ -245,14 +244,12 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                readOnly={behandlingILesemodus}
             />
 
             {forhåndsvarselInfo && skalViseUttalelseSkjema && (
                 <FormProvider {...uttalelseMethods}>
                     <Uttalelse
                         handleUttalelseSubmit={handleUttalelseSubmit}
-                        readOnly={behandlingILesemodus}
                         kanUtsetteFrist
                         varselErSendt={varselErSendt}
                     />

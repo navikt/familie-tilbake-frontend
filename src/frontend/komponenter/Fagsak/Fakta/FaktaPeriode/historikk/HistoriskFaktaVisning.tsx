@@ -60,8 +60,8 @@ export const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) =>
                                         key={i}
                                         periode={periode}
                                         hendelseTyper={[]}
-                                        erLesevisning={true}
                                         index={i}
+                                        erHistoriskVisning={true}
                                     />
                                 );
                             })}

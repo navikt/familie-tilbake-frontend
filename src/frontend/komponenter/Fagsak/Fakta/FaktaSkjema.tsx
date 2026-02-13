@@ -199,7 +199,6 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                                         muligeRettsligGrunnlag={
                                             faktaOmFeilutbetaling.muligeRettsligGrunnlag
                                         }
-                                        behandlingILesemodus={behandlingILesemodus}
                                         erSiste={periodeIndex === perioder.length - 1}
                                     />
                                 ))}
@@ -296,16 +295,15 @@ const PeriodeRad = ({
     periodeIndex,
     periodeInfo,
     muligeRettsligGrunnlag,
-    behandlingILesemodus,
     erSiste,
 }: {
     periode: OppdaterFaktaPeriode;
     periodeIndex: number;
     periodeInfo: FaktaPeriode;
     muligeRettsligGrunnlag: MuligeRettsligGrunnlag[];
-    behandlingILesemodus: boolean;
     erSiste?: boolean;
 }): React.JSX.Element => {
+    const { behandlingILesemodus } = useBehandlingState();
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(
             muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel === bestemmelse
