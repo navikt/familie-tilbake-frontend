@@ -79,7 +79,7 @@ export const SendMelding: React.FC = () => {
                             maxLength={3000}
                         />
                     )}
-                    <div className="flex flex-row-reverse">
+                    <div className="flex flex-row-reverse gap-2">
                         <Button
                             size="small"
                             onClick={() => sendBrev()}

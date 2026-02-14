@@ -3,13 +3,12 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
-import { Radio, Textarea, TextField } from '@navikt/ds-react';
+import { Radio, Textarea, TextField, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
-import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
@@ -28,13 +27,12 @@ export const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
         harVurderBeløpIBehold && skjema.felter.erBeløpetIBehold.verdi === OptionJA;
     return (
         <>
-            <HorisontalRadioGroup
+            <RadioGroup
                 id="erBelopetIBehold"
                 readOnly={erLesevisning}
                 size="small"
                 aria-live="polite"
                 legend="Er beløpet i behold?"
-                marginbottom="0"
                 value={skjema.felter.erBeløpetIBehold.verdi}
                 error={
                     ugyldigErBeløpetIBeholdValgt
@@ -51,7 +49,7 @@ export const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
                         {opt.label}
                     </Radio>
                 ))}
-            </HorisontalRadioGroup>
+            </RadioGroup>
             {harVurderBeløpIBehold && (
                 <Textarea
                     {...skjema.felter.aktsomhetBegrunnelse.hentNavInputProps(

@@ -2,22 +2,8 @@ import type { Toast as TToast } from './typer';
 
 import { Alert } from '@navikt/ds-react';
 import React, { useEffect, useRef } from 'react';
-import { styled } from 'styled-components';
 
 import { useApp } from '../../../context/AppContext';
-
-const Container = styled.div`
-    grid-column: 3;
-    width: 20rem;
-    z-index: 9999;
-    margin: auto 0 1.7rem auto;
-
-    &:focus {
-        border-radius: 4px;
-        box-shadow: 0 0 0 3px #00347d;
-        outline: none;
-    }
-`;
 
 export const Toast: React.FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
     const { toasts, settToasts } = useApp();
@@ -46,8 +32,11 @@ export const Toast: React.FC<{ toastId: string; toast: TToast }> = ({ toastId, t
     });
 
     return (
-        <Container ref={toastRef}>
+        <div
+            ref={toastRef}
+            className="col-start-3 w-80 z-9999 mt-auto mr-0 mb-[1.7rem] ml-auto focus:rounded focus:shadow-[0_0_0_3px_#00347d] focus:outline-none"
+        >
             <Alert variant={toast.alertType}>{toast.tekst}</Alert>
-        </Container>
+        </div>
     );
 };

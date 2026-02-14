@@ -1,7 +1,16 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 import type { SynligSteg } from '../../../../utils/sider';
 
-import { Alert, BodyShort, Button, Heading, Link, Radio, Textarea } from '@navikt/ds-react';
+import {
+    Alert,
+    BodyShort,
+    Button,
+    Heading,
+    Link,
+    Radio,
+    Textarea,
+    RadioGroup,
+} from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
@@ -14,7 +23,6 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
-import { HorisontalRadioGroup } from '../../../Felleskomponenter/Skjemaelementer';
 import { Steginformasjon } from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 export const Totrinnskontroll: React.FC = () => {
@@ -94,7 +102,7 @@ export const Totrinnskontroll: React.FC = () => {
                                           : 'Ikke vurdert'}
                                 </BodyShort>
                             ) : (
-                                <HorisontalRadioGroup
+                                <RadioGroup
                                     id={`stegetGodkjent_${totrinnSteg.index}`}
                                     legend={`Vurder steget ${
                                         behandlingssteg[totrinnSteg.behandlingssteg]
@@ -117,7 +125,7 @@ export const Totrinnskontroll: React.FC = () => {
                                             {opt.label}
                                         </Radio>
                                     ))}
-                                </HorisontalRadioGroup>
+                                </RadioGroup>
                             )}
                             {vurdertIkkeGodkjent && (
                                 <Textarea

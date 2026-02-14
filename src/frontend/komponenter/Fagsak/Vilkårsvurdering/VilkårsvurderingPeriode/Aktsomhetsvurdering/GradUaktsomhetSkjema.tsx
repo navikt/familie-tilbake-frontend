@@ -3,14 +3,13 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from '../VilkårsvurderingPeriodeSkjemaContext';
 
-import { Alert, Radio } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
 import { Aktsomhet } from '../../../../../kodeverk';
-import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
@@ -29,13 +28,12 @@ export const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning })
             {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Uaktsomt &&
                 erTotalbeløpUnder4Rettsgebyr && (
                     <>
-                        <HorisontalRadioGroup
+                        <RadioGroup
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
                             legend="Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
                             aria-live="polite"
                             size="small"
-                            marginbottom="0"
                             value={skjema.felter.tilbakekrevSmåbeløp.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
@@ -57,7 +55,7 @@ export const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning })
                                     {opt.label}
                                 </Radio>
                             ))}
-                        </HorisontalRadioGroup>
+                        </RadioGroup>
 
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
                             <SærligeGrunnerSkjema

@@ -1,6 +1,6 @@
 import type { Skjema } from '../../../../../hooks/skjema';
 
-import { Checkbox, CheckboxGroup, Radio, Textarea } from '@navikt/ds-react';
+import { Checkbox, CheckboxGroup, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 
 import {
@@ -13,7 +13,6 @@ import { ReduksjonAvBeløpSkjema } from './ReduksjonAvBeløpSkjema';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { Valideringsstatus } from '../../../../../hooks/skjema';
 import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
-import { HorisontalRadioGroup } from '../../../../Felleskomponenter/Skjemaelementer';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
@@ -75,13 +74,12 @@ export const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }
                 />
             )}
 
-            <HorisontalRadioGroup
+            <RadioGroup
                 id="harGrunnerTilReduksjon"
                 legend="Skal særlige grunner redusere beløpet?"
                 readOnly={erLesevisning}
                 size="small"
                 aria-live="polite"
-                marginbottom="0"
                 value={skjema.felter.harGrunnerTilReduksjon.verdi}
                 error={
                     ugyldigHarGrunnertilReduksjonValgt
@@ -104,7 +102,7 @@ export const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }
                         {opt.label}
                     </Radio>
                 ))}
-            </HorisontalRadioGroup>
+            </RadioGroup>
             <Textarea
                 {...skjema.felter.særligeGrunnerBegrunnelse.hentNavInputProps(
                     skjema.visFeilmeldinger
