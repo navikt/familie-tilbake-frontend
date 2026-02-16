@@ -1,5 +1,4 @@
-import type { BehandlingstypeEnum } from '../../../../../generated';
-import type { Behandlingresultat } from '../../../../../typer/behandling';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../../../generated';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -15,7 +14,7 @@ import { ForhåndsvisHenleggelsesBrev } from '../forhåndsvisHenleggelsesbrev/Fo
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;
-    årsaker: Behandlingresultat[];
+    årsaker: BehandlingsresultatstypeEnum[];
 };
 
 export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
@@ -34,7 +33,7 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
     }, [type]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-        const årsak = e.target.value as Behandlingresultat;
+        const årsak = e.target.value as BehandlingsresultatstypeEnum;
         skjema.felter.årsakkode.validerOgSettFelt(årsak);
     };
 

@@ -1,6 +1,9 @@
-import type { Behandlingresultat } from './behandling';
 import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
-import type { BehandlingsstegEnum, VenteårsakEnum } from '../generated';
+import type {
+    BehandlingsresultatstypeEnum,
+    BehandlingsstegEnum,
+    VenteårsakEnum,
+} from '../generated';
 import type {
     DokumentMal,
     Foreldelsevurdering,
@@ -118,7 +121,7 @@ export type VergeStegPayload = {
 };
 
 export type HenleggBehandlingPaylod = {
-    behandlingsresultatstype: Behandlingresultat;
+    behandlingsresultatstype: BehandlingsresultatstypeEnum;
     begrunnelse: string;
     fritekst: string;
 };

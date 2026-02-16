@@ -5,15 +5,13 @@ import type {
     BehandlingsstegstatusEnum,
 } from '../generated';
 
-import { Behandlingstatus } from '../typer/behandling';
-
 export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
     behandlingId: 'uuid-1',
     eksternBrukId: 'uuid-2',
     kanSetteTilbakeTilFakta: false,
     kanEndres: false,
     behandlingsstegsinfo: [],
-    status: Behandlingstatus.Opprettet,
+    status: 'OPPRETTET',
     type: 'TILBAKEKREVING',
     opprettetDato: new Date().toISOString(),
     varselSendt: false,

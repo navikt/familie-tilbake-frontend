@@ -30,7 +30,7 @@ import { useFagsak } from '../../context/FagsakContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
 import { useGlobalAlerts, useLukkGlobalAlert } from '../../stores/globalAlertStore';
-import { Behandlingstatus, venteårsaker } from '../../typer/behandling';
+import { venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
     erHistoriskSide,
@@ -327,7 +327,7 @@ const Behandling: React.FC = () => {
                     navigate(`${behandlingUrl}/${aktivSide.href}`);
                 }
             } else if (!erØnsketSideGyldig) {
-                if (behandling.status === Behandlingstatus.Avsluttet) {
+                if (behandling.status === 'AVSLUTTET') {
                     navigerTilVedtak();
                 } else {
                     navigerTilBehandling();

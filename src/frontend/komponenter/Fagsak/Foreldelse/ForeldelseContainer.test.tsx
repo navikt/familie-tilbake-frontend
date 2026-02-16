@@ -20,7 +20,6 @@ import { lagBehandling } from '../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../testdata/fagsakFactory';
 import { lagForeldelsePeriode, lagForeldelseResponse } from '../../../testdata/foreldelseFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { Behandlingstatus } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseBehandlingApi = vi.fn();
@@ -296,7 +295,7 @@ describe('ForeldelseContainer', () => {
         });
 
         const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
-            lagBehandling({ status: Behandlingstatus.FatterVedtak }),
+            lagBehandling({ status: 'FATTER_VEDTAK' }),
             true,
             true
         );

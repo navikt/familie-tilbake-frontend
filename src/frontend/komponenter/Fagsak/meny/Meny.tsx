@@ -17,7 +17,6 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
-import { Behandlingstatus } from '../../../typer/behandling';
 
 export const Behandlingsmeny: React.FC = () => {
     const behandling = useBehandling();
@@ -36,9 +35,7 @@ export const Behandlingsmeny: React.FC = () => {
         erStegBehandlet('FATTE_VEDTAK') || aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK';
 
     const erBehandlingenAktiv =
-        behandling.status !== Behandlingstatus.Avsluttet &&
-        !vedtakFattetEllerFattes &&
-        behandling.kanEndres;
+        behandling.status !== 'AVSLUTTET' && !vedtakFattetEllerFattes && behandling.kanEndres;
     const erSattPåvent = behandling.erBehandlingPåVent || ventegrunn;
     const kanEndreEnhet = fagsystem === Fagsystem.BA;
     return (

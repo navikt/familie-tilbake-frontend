@@ -1,6 +1,7 @@
 import type {
     BehandlingsresultatstypeEnum,
     BehandlingsstegEnum,
+    BehandlingstatusEnum,
     GetårsakstypeEnum,
     VenteårsakEnum,
 } from '../generated';
@@ -14,32 +15,13 @@ export const behandlingsårsaker: Record<GetårsakstypeEnum, string> = {
         'Feilutbetalt beløp helt eller delvis bortfalt',
 };
 
-export enum Behandlingstatus {
-    Opprettet = 'OPPRETTET',
-    Utredes = 'UTREDES',
-    FatterVedtak = 'FATTER_VEDTAK',
-    IverksetterVedtak = 'IVERKSETTER_VEDTAK',
-    Avsluttet = 'AVSLUTTET',
-}
-
-export const behandlingsstatuser: Record<Behandlingstatus, string> = {
-    [Behandlingstatus.Opprettet]: 'Opprettet',
-    [Behandlingstatus.Utredes]: 'Utredes',
-    [Behandlingstatus.FatterVedtak]: 'Fatter vedtak',
-    [Behandlingstatus.IverksetterVedtak]: 'Iverksetter vedtak',
-    [Behandlingstatus.Avsluttet]: 'Avsluttet',
+export const behandlingsstatuser: Record<BehandlingstatusEnum, string> = {
+    OPPRETTET: 'Opprettet',
+    UTREDES: 'Utredes',
+    FATTER_VEDTAK: 'Fatter vedtak',
+    IVERKSETTER_VEDTAK: 'Iverksetter vedtak',
+    AVSLUTTET: 'Avsluttet',
 };
-
-export enum Behandlingresultat {
-    IngenTilbakebetaling = 'INGEN_TILBAKEBETALING',
-    DelvisTilbakebetaling = 'DELVIS_TILBAKEBETALING',
-    FullTilbakebetaling = 'FULL_TILBAKEBETALING',
-    Henlagt = 'HENLAGT',
-    HenlagtFeilopprettet = 'HENLAGT_FEILOPPRETTET',
-    HenlagtFeilopprettetMedBrev = 'HENLAGT_FEILOPPRETTET_MED_BREV',
-    HenlagtFeilopprettetUtenBrev = 'HENLAGT_FEILOPPRETTET_UTEN_BREV',
-    IkkeFastsatt = 'IKKE_FASTSATT',
-}
 
 export const behandlingsresultater: Record<BehandlingsresultatstypeEnum, string> = {
     INGEN_TILBAKEBETALING: 'Ingen tilbakekreving',

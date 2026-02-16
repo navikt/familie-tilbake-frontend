@@ -1,5 +1,5 @@
 import type { BehandlingApiHook } from '../../../../../api/behandling';
-import type { BehandlingDto } from '../../../../../generated';
+import type { BehandlingDto, BehandlingsresultatstypeEnum } from '../../../../../generated';
 import type { Ressurs } from '../../../../../typer/ressurs';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -17,7 +17,6 @@ import { TestBehandlingProvider } from '../../../../../testdata/behandlingContex
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
-import { Behandlingresultat } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
 
 const mockUseBehandlingApi = vi.fn();
@@ -27,7 +26,7 @@ vi.mock('../../../../../api/behandling', () => ({
 
 const renderHenleggModal = (
     behandling: BehandlingDto,
-    årsaker: Behandlingresultat[]
+    årsaker: BehandlingsresultatstypeEnum[]
 ): RenderResult => {
     const queryClient = createTestQueryClient();
     const mockDialogRef = createRef<HTMLDialogElement | null>();
@@ -68,7 +67,7 @@ describe('HenleggModal', () => {
     test('Henlegger behandling med varsel sendt', async () => {
         const { getByLabelText, getByRole, queryByText, queryAllByText } = renderHenleggModal(
             lagBehandling({ varselSendt: true }),
-            [Behandlingresultat.HenlagtFeilopprettet]
+            ['HENLAGT_FEILOPPRETTET']
         );
 
         await waitFor(() => {
@@ -98,7 +97,7 @@ describe('HenleggModal', () => {
     test('Henlegger behandling med varsel ikke sendt', async () => {
         const { getByLabelText, getByRole, queryByText, queryAllByText } = renderHenleggModal(
             lagBehandling(),
-            [Behandlingresultat.HenlagtFeilopprettet]
+            ['HENLAGT_FEILOPPRETTET']
         );
 
         await waitFor(() => {
@@ -128,8 +127,8 @@ describe('HenleggModal', () => {
     test('Henlegger revurdering, med brev', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
             renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
-                Behandlingresultat.HenlagtFeilopprettetMedBrev,
-                Behandlingresultat.HenlagtFeilopprettetUtenBrev,
+                'HENLAGT_FEILOPPRETTET_MED_BREV',
+                'HENLAGT_FEILOPPRETTET_UTEN_BREV',
             ]);
 
         await waitFor(() => {
@@ -150,7 +149,7 @@ describe('HenleggModal', () => {
 
         await user.selectOptions(
             getByLabelText('Årsak til henleggelse'),
-            Behandlingresultat.HenlagtFeilopprettetMedBrev
+            'HENLAGT_FEILOPPRETTET_MED_BREV'
         );
         await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 
@@ -182,8 +181,8 @@ describe('HenleggModal', () => {
     test('Henlegger revurdering, uten brev', async () => {
         const { getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
             renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
-                Behandlingresultat.HenlagtFeilopprettetMedBrev,
-                Behandlingresultat.HenlagtFeilopprettetUtenBrev,
+                'HENLAGT_FEILOPPRETTET_MED_BREV',
+                'HENLAGT_FEILOPPRETTET_UTEN_BREV',
             ]);
 
         await waitFor(() => {
@@ -204,7 +203,7 @@ describe('HenleggModal', () => {
 
         await user.selectOptions(
             getByLabelText('Årsak til henleggelse'),
-            Behandlingresultat.HenlagtFeilopprettetUtenBrev
+            'HENLAGT_FEILOPPRETTET_UTEN_BREV'
         );
         await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 

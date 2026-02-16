@@ -12,7 +12,6 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { Behandlingstatus } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -31,8 +30,7 @@ const utledValgtPeriode = (
     );
     const skalViseÅpentVurderingspanel =
         skjemaPerioder.length > 0 &&
-        (behandlingStatus === Behandlingstatus.FatterVedtak ||
-            behandlingStatus === Behandlingstatus.Avsluttet);
+        (behandlingStatus === 'FATTER_VEDTAK' || behandlingStatus === 'AVSLUTTET');
 
     if (førsteUbehandletPeriode) {
         return førsteUbehandletPeriode;

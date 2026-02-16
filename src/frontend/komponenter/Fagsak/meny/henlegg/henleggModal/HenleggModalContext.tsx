@@ -1,4 +1,4 @@
-import type { BehandlingstypeEnum } from '../../../../../generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../../../generated';
 import type { Avhengigheter, FeltState, Skjema } from '../../../../../hooks/skjema';
 import type { HenleggBehandlingPaylod } from '../../../../../typer/api';
 
@@ -9,7 +9,6 @@ import { useBehandling } from '../../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../../../generated/@tanstack/react-query.gen';
 import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../../hooks/skjema';
-import { Behandlingresultat } from '../../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../../typer/ressurs';
 import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../../utils';
 
@@ -17,10 +16,10 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.Ok &&
     avhengigheter?.behandlingstype.verdi === 'REVURDERING_TILBAKEKREVING' &&
     avhengigheter?.årsakkode.valideringsstatus === Valideringsstatus.Ok &&
-    avhengigheter?.årsakkode.verdi === Behandlingresultat.HenlagtFeilopprettetMedBrev;
+    avhengigheter?.årsakkode.verdi === 'HENLAGT_FEILOPPRETTET_MED_BREV';
 
 export type HenleggelseSkjemaDefinisjon = {
-    årsakkode: Behandlingresultat | '';
+    årsakkode: BehandlingsresultatstypeEnum | '';
     behandlingstype: BehandlingstypeEnum | '';
     begrunnelse: string | '';
     fritekst: string | '';
@@ -44,9 +43,9 @@ export const useHenleggSkjema = ({ lukkModal }: Props): HenleggBehandlingSkjemaH
     const { behandlingId, varselSendt } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
 
-    const årsakkode = useFelt<Behandlingresultat | ''>({
+    const årsakkode = useFelt<BehandlingsresultatstypeEnum | ''>({
         verdi: '',
-        valideringsfunksjon: (felt: FeltState<Behandlingresultat | ''>) => {
+        valideringsfunksjon: (felt: FeltState<BehandlingsresultatstypeEnum | ''>) => {
             return erFeltetEmpty(felt);
         },
     });
