@@ -6,9 +6,7 @@ import { useEffect, useEffectEvent } from 'react';
 
 import { useHenleggSkjema } from './HenleggModalContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { useFagsak } from '../../../../../context/FagsakContext';
 import { behandlingsresultater } from '../../../../../typer/behandling';
-import { målform } from '../../../../../typer/målform';
 import { hentFrontendFeilmelding } from '../../../../../utils';
 import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 import { MODAL_BREDDE } from '../../utils';
@@ -24,7 +22,6 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
         lukkModal: () => dialogRef.current?.close(),
     });
-    const { språkkode } = useFagsak();
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     const oppdaterBehandlingstype = useEffectEvent((behandlingstype: Behandlingstype) => {
@@ -65,9 +62,9 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
                         {...skjema.felter.årsakkode.hentNavInputProps(skjema.visFeilmeldinger)}
                         label="Årsak til henleggelse"
                         onChange={onChangeÅrsakskode}
-                        value={skjema.felter.årsakkode.verdi || 'default'}
+                        value={skjema.felter.årsakkode.verdi || ''}
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg årsak
                         </option>
                         {årsaker.map(årsak => (
@@ -80,9 +77,7 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
                 {visFritekst() && (
                     <Textarea
                         {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={
-                            <LabelMedSpråk label="Fritekst til brev" språk={målform[språkkode]} />
-                        }
+                        label={<LabelMedSpråk label="Fritekst til brev" />}
                         aria-label="Fritekst til brev"
                         value={skjema.felter.fritekst.verdi}
                         onChange={event =>

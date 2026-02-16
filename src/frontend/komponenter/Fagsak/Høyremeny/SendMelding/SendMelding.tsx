@@ -5,9 +5,7 @@ import { ForhåndsvisBrev } from './ForhåndsvisBrev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../../context/FagsakContext';
 import { DokumentMal, dokumentMaler } from '../../../../kodeverk';
-import { målform } from '../../../../typer/målform';
 import { BrevmottakerListe } from '../../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 import { LabelMedSpråk } from '../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 
@@ -19,7 +17,6 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
 
 export const SendMelding: React.FC = () => {
     const { manuelleBrevmottakere } = useBehandling();
-    const { språkkode } = useFagsak();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandlingState();
 
@@ -66,7 +63,6 @@ export const SendMelding: React.FC = () => {
                             label={
                                 <LabelMedSpråk
                                     label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                                    språk={målform[språkkode]}
                                 />
                             }
                             aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}

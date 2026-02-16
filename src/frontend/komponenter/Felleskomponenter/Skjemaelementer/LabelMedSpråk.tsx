@@ -1,17 +1,21 @@
 import { HStack, Label, Tag } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { useFagsak } from '../../../context/FagsakContext';
+import { målform } from '../../../typer/målform';
+
 type Props = {
     label: string;
-    språk: string;
 };
 
-const LabelMedSpråk: React.FC<Props> = ({ label, språk }) => {
+const LabelMedSpråk: React.FC<Props> = ({ label }) => {
+    const { språkkode } = useFagsak();
+
     return (
         <HStack gap="space-8" align="center">
             <Label>{label}</Label>
             <Tag data-color="info" size="small">
-                {språk}
+                {målform[språkkode]}
             </Tag>
         </HStack>
     );
