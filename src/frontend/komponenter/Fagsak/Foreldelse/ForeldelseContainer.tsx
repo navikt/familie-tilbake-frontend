@@ -75,7 +75,7 @@ export const ForeldelseContainer: React.FC = () => {
                                     Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
                                     foreldet
                                 </Heading>
-                                <BodyLong size="medium">
+                                <BodyLong>
                                     Når den alminnelige foreldelsesfristen etter foreldelsesloven{' '}
                                     <Link
                                         href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"

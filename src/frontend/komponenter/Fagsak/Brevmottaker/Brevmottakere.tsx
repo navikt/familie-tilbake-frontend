@@ -65,7 +65,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     return (
         <>
             <div className="flex justify-between items-center mb-4">
-                <BodyShort weight="semibold" size="medium">
+                <BodyShort weight="semibold">
                     {mottakerTypeVisningsnavn[brevmottaker.type]}
                 </BodyShort>
                 <div className="flex gap-1">
@@ -252,9 +252,7 @@ export const Brevmottakere: React.FC = () => {
                 />
             )}
             <VStack gap="space-16" align="start">
-                <Heading size="small" level="1">
-                    Brevmottaker(e)
-                </Heading>
+                <Heading size="small">Brevmottaker(e)</Heading>
                 <VStack gap="space-16" minWidth="430px">
                     <Box
                         borderWidth="1"

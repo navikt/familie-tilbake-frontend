@@ -37,7 +37,7 @@ export const VergeContainer: React.FC = () => {
 
     return (
         <>
-            <Heading level="1" size="small" spacing>
+            <Heading size="small" spacing>
                 Verge
             </Heading>
             {henterData ? (
