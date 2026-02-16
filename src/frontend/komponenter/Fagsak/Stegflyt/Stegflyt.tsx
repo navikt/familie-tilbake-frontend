@@ -8,7 +8,6 @@ import { useLocation, useNavigate } from 'react-router';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { erStegUtført } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
-import { type Behandlingsstegstilstand } from '../../../typer/behandling';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '../../../utils/sider';
 
 interface StepperSteg extends SynligSteg {
@@ -16,16 +15,14 @@ interface StepperSteg extends SynligSteg {
     erAktiv: boolean;
 }
 
-const mapStegTilStepperSteg = (
-    stegsinfo: Behandlingsstegstilstand[],
-    behandling: BehandlingDto | undefined
-): StepperSteg[] | undefined => {
-    if (!behandling) return undefined;
+const mapStegTilStepperSteg = (behandling: BehandlingDto): StepperSteg[] | undefined => {
     return Object.values(SYNLIGE_STEG)
         .filter(({ steg }) => visSide(steg, behandling))
         .map(synligSteg => {
             const { behandlingsstegstatus } =
-                stegsinfo.find(({ behandlingssteg }) => behandlingssteg === synligSteg.steg) || {};
+                behandling.behandlingsstegsinfo.find(
+                    ({ behandlingssteg }) => behandlingssteg === synligSteg.steg
+                ) || {};
 
             return {
                 steg: synligSteg.steg,
@@ -43,20 +40,14 @@ export const Stegflyt: React.FC = () => {
     const navigate = useNavigate();
     const { fagsystem, eksternFagsakId } = useFagsak();
 
-    const stegsinfo = mapStegTilStepperSteg(
-        (behandling?.behandlingsstegsinfo as Behandlingsstegstilstand[]) || [],
-        behandling
-    );
+    const stegsinfo = mapStegTilStepperSteg(behandling);
 
     const aktivStegindeks =
         stegsinfo?.findIndex(steg => location.pathname.includes(steg.href)) ?? -1;
     const aktivStegnummer = aktivStegindeks > -1 ? aktivStegindeks + 1 : 0;
 
-    const fagsakPath = (sideHref: string): string | null => {
-        if (behandling && fagsystem && eksternFagsakId)
-            return `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sideHref}`;
-        else return null;
-    };
+    const fagsakPath = (sideHref: string): string =>
+        `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${sideHref}`;
 
     const gåTilSteg = (stegNummer: number): void => {
         const nyttSteg = stegsinfo?.[stegNummer - 1];

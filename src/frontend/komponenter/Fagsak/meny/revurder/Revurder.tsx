@@ -10,15 +10,8 @@ import { MODAL_BREDDE } from '../utils';
 
 export const Revurder: React.FC = () => {
     const ref = useRef<HTMLDialogElement>(null);
-    const {
-        skjema,
-        sendInn,
-        nullstillSkjema,
-        feilmelding: storeFeilmelding,
-        setFeilmelding,
-    } = useRevurderSkjema(ref);
-
-    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs) || storeFeilmelding;
+    const { skjema, sendInn, nullstillSkjema } = useRevurderSkjema(ref);
+    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
         <>
@@ -35,10 +28,7 @@ export const Revurder: React.FC = () => {
                 header={{
                     heading: 'Revurder tilbakekreving',
                 }}
-                onClose={() => {
-                    nullstillSkjema();
-                    setFeilmelding(undefined);
-                }}
+                onClose={() => nullstillSkjema()}
                 className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-4">
@@ -48,10 +38,10 @@ export const Revurder: React.FC = () => {
                         )}
                         name="Behandling"
                         label="Årsak til revurderingen"
-                        value={skjema.felter.behandlingsårsak.verdi || 'default'}
+                        value={skjema.felter.behandlingsårsak.verdi || ''}
                         onChange={skjema.felter.behandlingsårsak.onChange}
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg årsak
                         </option>
                         {Object.values(Behandlingårsak).map(årsak => (
@@ -72,7 +62,6 @@ export const Revurder: React.FC = () => {
                         key="avbryt"
                         onClick={() => {
                             nullstillSkjema();
-                            setFeilmelding(undefined);
                             ref.current?.close();
                         }}
                     >

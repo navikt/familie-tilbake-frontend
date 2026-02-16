@@ -40,7 +40,7 @@ const renderBrukerInformasjon = (
     return render(
         <FagsakContext.Provider
             value={lagFagsak({
-                bruker: bruker ? baseBruker(bruker) : undefined,
+                bruker: bruker ? baseBruker(bruker) : baseBruker(),
                 institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
             })}
         >
