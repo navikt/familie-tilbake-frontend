@@ -1,5 +1,5 @@
+import type { BehandlingstypeEnum, GetårsakstypeEnum } from '../../../../generated';
 import type { Skjema } from '../../../../hooks/skjema';
-import type { Behandlingårsak } from '../../../../typer/behandling';
 
 import { type RefObject } from 'react';
 
@@ -8,15 +8,14 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
-import { Behandlingstype } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../utils';
 
 type RevurderSkjemaHook = {
     skjema: Skjema<
         {
-            behandlingstype: Behandlingstype;
-            behandlingsårsak: Behandlingårsak | undefined;
+            behandlingstype: BehandlingstypeEnum;
+            behandlingsårsak: GetårsakstypeEnum | undefined;
         },
         string
     >;
@@ -32,16 +31,16 @@ const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): Revu
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
-            behandlingstype: Behandlingstype;
-            behandlingsårsak: Behandlingårsak | undefined;
+            behandlingstype: BehandlingstypeEnum;
+            behandlingsårsak: GetårsakstypeEnum | undefined;
         },
         string
     >({
         felter: {
-            behandlingstype: useFelt<Behandlingstype>({
-                verdi: Behandlingstype.RevurderingTilbakekreving,
+            behandlingstype: useFelt<BehandlingstypeEnum>({
+                verdi: 'REVURDERING_TILBAKEKREVING',
             }),
-            behandlingsårsak: useFelt<Behandlingårsak | undefined>({
+            behandlingsårsak: useFelt<GetårsakstypeEnum | undefined>({
                 feltId: 'behandlingsårsak',
                 verdi: undefined,
                 valideringsfunksjon: erFeltetEmpty,

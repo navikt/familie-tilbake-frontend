@@ -17,7 +17,7 @@ import { TestBehandlingProvider } from '../../../../../testdata/behandlingContex
 import { lagBehandling } from '../../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../../testdata/fagsakFactory';
 import { createTestQueryClient } from '../../../../../testutils/queryTestUtils';
-import { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
+import { Behandlingresultat } from '../../../../../typer/behandling';
 import { RessursStatus } from '../../../../../typer/ressurs';
 
 const mockUseBehandlingApi = vi.fn();
@@ -127,7 +127,7 @@ describe('HenleggModal', () => {
 
     test('Henlegger revurdering, med brev', async () => {
         const { getByText, getByLabelText, getByRole, queryByText, queryAllByText } =
-            renderHenleggModal(lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }), [
+            renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
                 Behandlingresultat.HenlagtFeilopprettetMedBrev,
                 Behandlingresultat.HenlagtFeilopprettetUtenBrev,
             ]);
@@ -181,7 +181,7 @@ describe('HenleggModal', () => {
 
     test('Henlegger revurdering, uten brev', async () => {
         const { getByLabelText, getByRole, queryByText, queryByRole, queryAllByText } =
-            renderHenleggModal(lagBehandling({ type: Behandlingstype.RevurderingTilbakekreving }), [
+            renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
                 Behandlingresultat.HenlagtFeilopprettetMedBrev,
                 Behandlingresultat.HenlagtFeilopprettetUtenBrev,
             ]);

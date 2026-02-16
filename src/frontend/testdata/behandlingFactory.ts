@@ -5,7 +5,7 @@ import type {
     BehandlingsstegstatusEnum,
 } from '../generated';
 
-import { Behandlingstatus, Behandlingstype, Saksbehandlingstype } from '../typer/behandling';
+import { Behandlingstatus } from '../typer/behandling';
 
 export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
     behandlingId: 'uuid-1',
@@ -14,12 +14,12 @@ export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): Behandlin
     kanEndres: false,
     behandlingsstegsinfo: [],
     status: Behandlingstatus.Opprettet,
-    type: Behandlingstype.Tilbakekreving,
+    type: 'TILBAKEKREVING',
     opprettetDato: new Date().toISOString(),
     varselSendt: false,
     fagsystemsbehandlingId: 'id-1',
     erBehandlingHenlagt: false,
-    saksbehandlingstype: Saksbehandlingstype.Ordinær,
+    saksbehandlingstype: 'ORDINÆR',
     manuelleBrevmottakere: [],
     kanRevurderingOpprettes: false,
     erBehandlingPåVent: false,

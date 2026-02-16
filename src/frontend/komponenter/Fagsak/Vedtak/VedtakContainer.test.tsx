@@ -30,7 +30,6 @@ import {
     lagVedaksbrevUnderavsnitt,
 } from '../../../testdata/vedtakFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { Behandlingstype, Behandlingårsak } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 
@@ -270,8 +269,8 @@ describe('VedtakContainer', () => {
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
             renderVedtakContainer(
                 lagBehandling({
-                    type: Behandlingstype.RevurderingTilbakekreving,
-                    behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
+                    type: 'REVURDERING_TILBAKEKREVING',
+                    behandlingsårsakstype: 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
                 })
             );
 
@@ -373,8 +372,8 @@ describe('VedtakContainer', () => {
         const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
             renderVedtakContainer(
                 lagBehandling({
-                    type: Behandlingstype.RevurderingTilbakekreving,
-                    behandlingsårsakstype: Behandlingårsak.RevurderingKlageKa,
+                    type: 'REVURDERING_TILBAKEKREVING',
+                    behandlingsårsakstype: 'REVURDERING_KLAGE_KA',
                 })
             );
 
@@ -472,8 +471,8 @@ describe('VedtakContainer', () => {
         const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
             renderVedtakContainer(
                 lagBehandling({
-                    type: Behandlingstype.RevurderingTilbakekreving,
-                    behandlingsårsakstype: Behandlingårsak.RevurderingKlageNfp,
+                    type: 'REVURDERING_TILBAKEKREVING',
+                    behandlingsårsakstype: 'REVURDERING_KLAGE_NFP',
                 })
             );
 

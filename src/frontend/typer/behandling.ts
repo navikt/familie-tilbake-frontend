@@ -1,33 +1,18 @@
 import type {
     BehandlingsresultatstypeEnum,
     BehandlingsstegEnum,
+    GetårsakstypeEnum,
     VenteårsakEnum,
 } from '../generated';
 
-export enum Behandlingårsak {
-    RevurderingKlageNfp = 'REVURDERING_KLAGE_NFP',
-    RevurderingKlageKa = 'REVURDERING_KLAGE_KA',
-    RevurderingOpplysningerOmVilkår = 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
-    RevurderingOpplysningerOmForeldelse = 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
-    RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt = 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
-}
-
-export const behandlingårsaker: Record<Behandlingårsak, string> = {
-    [Behandlingårsak.RevurderingKlageNfp]: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',
-    [Behandlingårsak.RevurderingKlageKa]: 'Revurdering etter KA-behandlet klage',
-    [Behandlingårsak.RevurderingOpplysningerOmVilkår]: 'Nye opplysninger om vilkårsvurdering',
-    [Behandlingårsak.RevurderingOpplysningerOmForeldelse]: 'Nye opplysninger om foreldelse',
-    [Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt]:
+export const behandlingsårsaker: Record<GetårsakstypeEnum, string> = {
+    REVURDERING_KLAGE_NFP: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',
+    REVURDERING_KLAGE_KA: 'Revurdering etter KA-behandlet klage',
+    REVURDERING_OPPLYSNINGER_OM_VILKÅR: 'Nye opplysninger om vilkårsvurdering',
+    REVURDERING_OPPLYSNINGER_OM_FORELDELSE: 'Nye opplysninger om foreldelse',
+    REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT:
         'Feilutbetalt beløp helt eller delvis bortfalt',
 };
-
-export const behandlingÅrsaker = [
-    Behandlingårsak.RevurderingKlageNfp,
-    Behandlingårsak.RevurderingKlageKa,
-    Behandlingårsak.RevurderingOpplysningerOmVilkår,
-    Behandlingårsak.RevurderingOpplysningerOmForeldelse,
-    Behandlingårsak.RevurderingFeilutbetaltBeløpHeltEllerDelvisBortfalt,
-];
 
 export enum Behandlingstatus {
     Opprettet = 'OPPRETTET',
@@ -69,17 +54,6 @@ export const behandlingsresultater: Record<BehandlingsresultatstypeEnum, string>
     HENLAGT_MANGLENDE_KRAVGRUNNLAG: 'Henlagt (manglende kravgrunnlag)',
     IKKE_FASTSATT: 'Ikke fastsatt',
 };
-
-export enum Saksbehandlingstype {
-    Ordinær = 'ORDINÆR',
-    AutomatiskIkkeInnkrevingLavtBeløp = 'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP',
-    AutomatiskIkkeInnkrevingUnder4XRettsgebyr = 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR',
-}
-
-export enum Behandlingstype {
-    Tilbakekreving = 'TILBAKEKREVING',
-    RevurderingTilbakekreving = 'REVURDERING_TILBAKEKREVING',
-}
 
 export const behandlingssteg: Record<BehandlingsstegEnum, string> = {
     VARSEL: 'Varsel',

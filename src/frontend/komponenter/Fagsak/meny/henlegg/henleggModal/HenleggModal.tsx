@@ -1,4 +1,5 @@
-import type { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
+import type { BehandlingstypeEnum } from '../../../../../generated';
+import type { Behandlingresultat } from '../../../../../typer/behandling';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -24,12 +25,12 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
     });
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
-    const oppdaterBehandlingstype = useEffectEvent((behandlingstype: Behandlingstype) => {
+    const oppdaterBehandlingstype = useEffectEvent((behandlingstype: BehandlingstypeEnum) => {
         skjema.felter.behandlingstype.onChange(behandlingstype);
     });
 
     useEffect(() => {
-        oppdaterBehandlingstype(type as Behandlingstype);
+        oppdaterBehandlingstype(type);
     }, [type]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {

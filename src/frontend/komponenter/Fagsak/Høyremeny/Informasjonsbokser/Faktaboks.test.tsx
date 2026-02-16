@@ -13,10 +13,9 @@ import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
     Behandlingstatus,
     Behandlingresultat,
-    Behandlingårsak,
     behandlingsstatuser,
     behandlingsresultater,
-    behandlingårsaker,
+    behandlingsårsaker,
 } from '../../../../typer/behandling';
 
 const renderFaktaboks = (
@@ -45,11 +44,11 @@ describe('Faktaboks', () => {
 
     test('Viser revurderingsårsak når satt', () => {
         renderFaktaboks({
-            behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
+            behandlingsårsakstype: 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
         });
         expect(screen.getByText('Revurderingsårsak')).toBeInTheDocument();
         expect(
-            screen.getByText(behandlingårsaker[Behandlingårsak.RevurderingOpplysningerOmVilkår])
+            screen.getByText(behandlingsårsaker['REVURDERING_OPPLYSNINGER_OM_VILKÅR'])
         ).toBeInTheDocument();
     });
 

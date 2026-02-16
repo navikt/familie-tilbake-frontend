@@ -9,11 +9,7 @@ import { usePåVentBehandling } from './PåVentContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { Valideringsstatus } from '../../../../hooks/skjema';
-import {
-    manuelleVenteÅrsaker,
-    Saksbehandlingstype,
-    venteårsaker,
-} from '../../../../typer/behandling';
+import { manuelleVenteÅrsaker, venteårsaker } from '../../../../typer/behandling';
 import { dateBeforeToday } from '../../../../utils';
 import { dagensDato } from '../../../../utils/dato';
 import { Datovelger } from '../../Datovelger/Datovelger';
@@ -60,7 +56,7 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
 
     const vilBliAutomatiskBehandletUnder4rettsgebyr =
         venterPåKravgrunnlag &&
-        saksbehandlingstype === Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
+        saksbehandlingstype === 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR';
 
     const lukkModal = (): void => {
         tilbakestillFelterTilDefault();
