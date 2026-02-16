@@ -13,7 +13,6 @@ import * as React from 'react';
 import { useVerge } from './VergeContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { HenterData } from '../../Felleskomponenter/Datalast/HenterData';
 import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
@@ -131,7 +130,7 @@ export const VergeContainer: React.FC = () => {
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
 
                     <ActionBar
-                        stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
+                        stegtekst={actionBarStegtekst('VERGE')}
                         forrigeAriaLabel={undefined}
                         nesteAriaLabel="Gå videre til faktasteget"
                         onNeste={sendInn}

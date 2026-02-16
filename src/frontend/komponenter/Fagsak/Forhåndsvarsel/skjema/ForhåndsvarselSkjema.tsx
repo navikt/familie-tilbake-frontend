@@ -10,7 +10,6 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useVisGlobalAlert } from '../../../../stores/globalAlertStore';
-import { Behandlingssteg } from '../../../../typer/behandling';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { HarUttaltSeg } from '../schema';
 import {
@@ -257,7 +256,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
             )}
 
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                stegtekst={actionBarStegtekst('FORHÅNDSVARSEL')}
                 nesteTekst={getNesteKnappTekst(submitAction)}
                 isLoading={
                     sendForhåndsvarselMutation.isPending ||

@@ -9,7 +9,6 @@ import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
-import { Behandlingssteg, Behandlingsstegstatus } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { useStegNavigering } from '../../../../utils/sider';
 import { AlertType, ToastTyper } from '../../../Felleskomponenter/Toast/typer';
@@ -21,7 +20,7 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [senderInn, settSenderInn] = useState(false);
     const [feilmelding, settFeilmelding] = useState('');
-    const navigerTilBrevmottakerSteg = useStegNavigering(Behandlingssteg.Brevmottaker);
+    const navigerTilBrevmottakerSteg = useStegNavigering('BREVMOTTAKER');
     const navigerTilBehandling = useStegNavigering();
     const queryClient = useQueryClient();
     const { request } = useHttp();
@@ -31,8 +30,8 @@ export const LeggTilFjernBrevmottakere: React.FC = () => {
         manuelleBrevmottakere.length ||
         behandlingsstegsinfo.some(
             steg =>
-                steg.behandlingssteg === Behandlingssteg.Brevmottaker &&
-                steg.behandlingsstegstatus !== Behandlingsstegstatus.Tilbakeført
+                steg.behandlingssteg === 'BREVMOTTAKER' &&
+                steg.behandlingsstegstatus !== 'TILBAKEFØRT'
         );
 
     const opprettBrevmottakerSteg = (): void => {

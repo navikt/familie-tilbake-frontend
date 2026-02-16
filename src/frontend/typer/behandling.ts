@@ -1,4 +1,8 @@
-import type { BehandlingsresultatstypeEnum } from '../generated';
+import type {
+    BehandlingsresultatstypeEnum,
+    BehandlingsstegEnum,
+    VenteårsakEnum,
+} from '../generated';
 
 export enum Behandlingårsak {
     RevurderingKlageNfp = 'REVURDERING_KLAGE_NFP',
@@ -77,73 +81,34 @@ export enum Behandlingstype {
     RevurderingTilbakekreving = 'REVURDERING_TILBAKEKREVING',
 }
 
-export enum Behandlingssteg {
-    Varsel = 'VARSEL',
-    Grunnlag = 'GRUNNLAG',
-    Verge = 'VERGE',
-    Brevmottaker = 'BREVMOTTAKER',
-    Fakta = 'FAKTA',
-    Foreldelse = 'FORELDELSE',
-    Vilkårsvurdering = 'VILKÅRSVURDERING',
-    ForeslåVedtak = 'FORESLÅ_VEDTAK',
-    FatteVedtak = 'FATTE_VEDTAK',
-    IverksettVedtak = 'IVERKSETT_VEDTAK',
-    Avsluttet = 'AVSLUTTET',
-    Forhåndsvarsel = 'FORHÅNDSVARSEL',
-}
-
-export const behandlingssteg: Record<Behandlingssteg, string> = {
-    [Behandlingssteg.Varsel]: 'Varsel',
-    [Behandlingssteg.Grunnlag]: 'Kravgrunnlag',
-    [Behandlingssteg.Verge]: 'Verge',
-    [Behandlingssteg.Brevmottaker]: 'Brevmottaker',
-    [Behandlingssteg.Fakta]: 'Fakta fra feilutbetalingssaken',
-    [Behandlingssteg.Foreldelse]: 'Foreldelse',
-    [Behandlingssteg.Vilkårsvurdering]: 'Tilbakekreving',
-    [Behandlingssteg.ForeslåVedtak]: 'Vedtak',
-    [Behandlingssteg.FatteVedtak]: 'Fatte vedtak',
-    [Behandlingssteg.IverksettVedtak]: 'Iverksetter vedtak',
-    [Behandlingssteg.Avsluttet]: 'Avsluttet',
-    [Behandlingssteg.Forhåndsvarsel]: 'Forhåndsvarsel',
+export const behandlingssteg: Record<BehandlingsstegEnum, string> = {
+    VARSEL: 'Varsel',
+    GRUNNLAG: 'Kravgrunnlag',
+    VERGE: 'Verge',
+    BREVMOTTAKER: 'Brevmottaker',
+    FAKTA: 'Fakta fra feilutbetalingssaken',
+    FORELDELSE: 'Foreldelse',
+    VILKÅRSVURDERING: 'Tilbakekreving',
+    FORESLÅ_VEDTAK: 'Vedtak',
+    FATTE_VEDTAK: 'Fatte vedtak',
+    IVERKSETT_VEDTAK: 'Iverksetter vedtak',
+    AVSLUTTET: 'Avsluttet',
+    FORHÅNDSVARSEL: 'Forhåndsvarsel',
 };
 
-export enum Behandlingsstegstatus {
-    Venter = 'VENTER',
-    Klar = 'KLAR',
-    Utført = 'UTFØRT',
-    Autoutført = 'AUTOUTFØRT',
-    Tilbakeført = 'TILBAKEFØRT',
-    Avbrutt = 'AVBRUTT',
-}
-
-export enum Venteårsak {
-    VentPåBrukertilbakemelding = 'VENT_PÅ_BRUKERTILBAKEMELDING',
-    VentPåTilbakekrevingsgrunnlag = 'VENT_PÅ_TILBAKEKREVINGSGRUNNLAG',
-    AvventerDokumentasjon = 'AVVENTER_DOKUMENTASJON',
-    UtvidetTilsvarFrist = 'UTVIDET_TILSVAR_FRIST',
-    EndreTilkjentYtelse = 'ENDRE_TILKJENT_YTELSE',
-    VentPåMuligMotregning = 'VENT_PÅ_MULIG_MOTREGNING',
-}
-
-export const manuelleVenteÅrsaker = [
-    Venteårsak.AvventerDokumentasjon,
-    Venteårsak.UtvidetTilsvarFrist,
-    Venteårsak.EndreTilkjentYtelse,
-    Venteårsak.VentPåMuligMotregning,
+export const manuelleVenteÅrsaker: VenteårsakEnum[] = [
+    'AVVENTER_DOKUMENTASJON',
+    'UTVIDET_TILSVAR_FRIST',
+    'ENDRE_TILKJENT_YTELSE',
+    'VENT_PÅ_MULIG_MOTREGNING',
 ];
 
-export const venteårsaker: Record<Venteårsak, string> = {
-    [Venteårsak.VentPåBrukertilbakemelding]: 'Venter på tilbakemelding fra bruker',
-    [Venteårsak.VentPåTilbakekrevingsgrunnlag]: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
-    [Venteårsak.AvventerDokumentasjon]: 'Avventer dokumentasjon',
-    [Venteårsak.UtvidetTilsvarFrist]: 'Bruker har fått utvidet tilsvarsfrist',
-    [Venteårsak.EndreTilkjentYtelse]: 'Mulig endring i tilkjent ytelse',
-    [Venteårsak.VentPåMuligMotregning]: 'Mulig motregning med annen ytelse',
-};
-
-export type Behandlingsstegstilstand = {
-    behandlingssteg: Behandlingssteg;
-    behandlingsstegstatus: Behandlingsstegstatus;
-    venteårsak?: Venteårsak;
-    tidsfrist?: string;
+export const venteårsaker: Record<VenteårsakEnum, string> = {
+    VENT_PÅ_BRUKERTILBAKEMELDING: 'Venter på tilbakemelding fra bruker',
+    VENT_PÅ_TILBAKEKREVINGSGRUNNLAG: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
+    AVVENTER_DOKUMENTASJON: 'Avventer dokumentasjon',
+    UTVIDET_TILSVAR_FRIST: 'Bruker har fått utvidet tilsvarsfrist',
+    ENDRE_TILKJENT_YTELSE: 'Mulig endring i tilkjent ytelse',
+    VENT_PÅ_MULIG_MOTREGNING: 'Mulig motregning med annen ytelse',
+    MANGLER_STØTTE: 'Mangler støtte',
 };

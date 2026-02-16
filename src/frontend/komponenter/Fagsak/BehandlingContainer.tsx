@@ -1,4 +1,4 @@
-import type { Behandlingsstegstilstand, Venteårsak } from '../../typer/behandling';
+import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '../../generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { Alert, BodyShort, Button } from '@navikt/ds-react';
@@ -30,7 +30,7 @@ import { useFagsak } from '../../context/FagsakContext';
 import { ToggleName } from '../../context/toggles';
 import { useToggles } from '../../context/TogglesContext';
 import { useGlobalAlerts, useLukkGlobalAlert } from '../../stores/globalAlertStore';
-import { Behandlingssteg, Behandlingstatus, venteårsaker } from '../../typer/behandling';
+import { Behandlingstatus, venteårsaker } from '../../typer/behandling';
 import { formatterDatostring } from '../../utils';
 import {
     erHistoriskSide,
@@ -311,7 +311,7 @@ const Behandling: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const navigate = useNavigate();
     const navigerTilBehandling = useStegNavigering();
-    const navigerTilVedtak = useStegNavigering(Behandlingssteg.ForeslåVedtak);
+    const navigerTilVedtak = useStegNavigering('FORESLÅ_VEDTAK');
 
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     const ønsketSide = location.pathname.split('/')[7];
@@ -320,7 +320,7 @@ const Behandling: React.FC = () => {
         !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
 
     const navigerHvisUgyldigSide = useEffectEvent(
-        (erØnsketSideGyldig: boolean, aktivtSteg: Behandlingsstegstilstand | undefined) => {
+        (erØnsketSideGyldig: boolean, aktivtSteg: BehandlingsstegsinfoDto | undefined) => {
             if (!erØnsketSideGyldig && aktivtSteg) {
                 const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
                 if (aktivSide) {
@@ -355,9 +355,9 @@ const Behandling: React.FC = () => {
     return <AktivBehandling dialogRef={dialogRef} />;
 };
 
-const venteBeskjed = (ventegrunn: Behandlingsstegstilstand): string => {
+const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string => {
     return `Behandlingen er satt på vent: ${
-        venteårsaker[ventegrunn.venteårsak as Venteårsak]
+        venteårsaker[ventegrunn.venteårsak as VenteårsakEnum]
     }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
 };
 

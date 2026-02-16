@@ -19,7 +19,6 @@ import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
-import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -168,7 +167,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
             });
     };
     const navigerTilBehandling = useStegNavigering();
-    const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
+    const navigerTilForrige = useStegNavigering('VILKÅRSVURDERING');
 
     const oppdaterUnderavsnitt = (
         avsnittIndex: string,

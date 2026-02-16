@@ -12,7 +12,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
 import { Foreldelsevurdering } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
+import { Behandlingstatus } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -77,18 +77,16 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
 
-    const navigerTilNeste = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
+    const navigerTilNeste = useStegNavigering('VILKÅRSVURDERING');
     const navigerTilForrige = useStegNavigering(
-        behandling.behandlingsstegsinfo.some(
-            steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
-        )
-            ? Behandlingssteg.Forhåndsvarsel
-            : Behandlingssteg.Fakta
+        behandling.behandlingsstegsinfo.some(steg => steg.behandlingssteg === 'FORHÅNDSVARSEL')
+            ? 'FORHÅNDSVARSEL'
+            : 'FAKTA'
     );
 
     useEffect(() => {
-        settStegErBehandlet(erStegBehandlet(Behandlingssteg.Foreldelse));
-        const autoutført = erStegAutoutført(Behandlingssteg.Foreldelse);
+        settStegErBehandlet(erStegBehandlet('FORELDELSE'));
+        const autoutført = erStegAutoutført('FORELDELSE');
         settErAutoutført(autoutført);
         if (!autoutført) {
             hentForeldelse();

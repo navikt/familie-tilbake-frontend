@@ -32,7 +32,6 @@ import {
     forhåndsvarselUnntakMutation,
     hentBehandlingQueryKey,
 } from '../../../generated/@tanstack/react-query.gen';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { useStegNavigering } from '../../../utils/sider';
 
 export type UseForhåndsvarselMutationsReturn = {
@@ -107,8 +106,8 @@ export const useForhåndsvarselMutations = (
 ): UseForhåndsvarselMutationsReturn => {
     const { behandlingId } = useBehandling();
 
-    const navigerTilNeste = useStegNavigering(Behandlingssteg.Foreldelse);
-    const navigerTilForrige = useStegNavigering(Behandlingssteg.Fakta);
+    const navigerTilNeste = useStegNavigering('FORELDELSE');
+    const navigerTilForrige = useStegNavigering('FAKTA');
 
     const queryClient = useQueryClient();
     const invalidateQueries = async (): Promise<void> => {

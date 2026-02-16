@@ -1,13 +1,11 @@
-import type { BehandlingDto } from '../generated';
-import type { Behandlingsstegstilstand } from '../typer/behandling';
+import type {
+    BehandlingDto,
+    BehandlingsstegEnum,
+    BehandlingsstegsinfoDto,
+    BehandlingsstegstatusEnum,
+} from '../generated';
 
-import {
-    Behandlingssteg,
-    Behandlingsstegstatus,
-    Behandlingstatus,
-    Behandlingstype,
-    Saksbehandlingstype,
-} from '../typer/behandling';
+import { Behandlingstatus, Behandlingstype, Saksbehandlingstype } from '../typer/behandling';
 
 export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
     behandlingId: 'uuid-1',
@@ -45,16 +43,16 @@ export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): Behandlin
 });
 
 export type StegValg = {
-    status?: Behandlingsstegstilstand['behandlingsstegstatus'];
-    venteårsak?: Behandlingsstegstilstand['venteårsak'];
-    tidsfrist?: Behandlingsstegstilstand['tidsfrist'];
+    status?: BehandlingsstegsinfoDto['behandlingsstegstatus'];
+    venteårsak?: BehandlingsstegsinfoDto['venteårsak'];
+    tidsfrist?: BehandlingsstegsinfoDto['tidsfrist'];
 };
 
 const lagSteg = (
-    steg: Behandlingssteg,
-    defaultStatus: Behandlingsstegstatus,
+    steg: BehandlingsstegEnum,
+    defaultStatus: BehandlingsstegstatusEnum,
     valg: StegValg = {}
-): Behandlingsstegstilstand => ({
+): BehandlingsstegsinfoDto => ({
     behandlingssteg: steg,
     behandlingsstegstatus: valg.status ?? defaultStatus,
     venteårsak: valg.venteårsak,
@@ -62,24 +60,24 @@ const lagSteg = (
 });
 
 /** Utført default steg */
-export const lagFaktaSteg = (valg: StegValg = {}): Behandlingsstegstilstand =>
-    lagSteg(Behandlingssteg.Fakta, Behandlingsstegstatus.Utført, valg);
+export const lagFaktaSteg = (valg: StegValg = {}): BehandlingsstegsinfoDto =>
+    lagSteg('FAKTA', 'UTFØRT', valg);
 
 /** Utført default steg */
-export const lagForeldelseSteg = (valg: StegValg = {}): Behandlingsstegstilstand =>
-    lagSteg(Behandlingssteg.Foreldelse, Behandlingsstegstatus.Utført, valg);
+export const lagForeldelseSteg = (valg: StegValg = {}): BehandlingsstegsinfoDto =>
+    lagSteg('FORELDELSE', 'UTFØRT', valg);
 
 /** Klar default steg */
-export const lagVilkårsvurderingSteg = (valg: StegValg = {}): Behandlingsstegstilstand =>
-    lagSteg(Behandlingssteg.Vilkårsvurdering, Behandlingsstegstatus.Klar, valg);
+export const lagVilkårsvurderingSteg = (valg: StegValg = {}): BehandlingsstegsinfoDto =>
+    lagSteg('VILKÅRSVURDERING', 'KLAR', valg);
 
 /** Klar default steg */
-export const lagBrevmottakerSteg = (valg: StegValg = {}): Behandlingsstegstilstand =>
-    lagSteg(Behandlingssteg.Brevmottaker, Behandlingsstegstatus.Klar, valg);
+export const lagBrevmottakerSteg = (valg: StegValg = {}): BehandlingsstegsinfoDto =>
+    lagSteg('BREVMOTTAKER', 'KLAR', valg);
 
 /** Klar default steg */
-export const lagForeslåVedtakSteg = (valg: StegValg = {}): Behandlingsstegstilstand =>
-    lagSteg(Behandlingssteg.ForeslåVedtak, Behandlingsstegstatus.Klar, valg);
+export const lagForeslåVedtakSteg = (valg: StegValg = {}): BehandlingsstegsinfoDto =>
+    lagSteg('FORESLÅ_VEDTAK', 'KLAR', valg);
 
 //TODO: Skal fjernes når vi tar i bruk BehandlingDto over
 export const lagBehandlingDto = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({

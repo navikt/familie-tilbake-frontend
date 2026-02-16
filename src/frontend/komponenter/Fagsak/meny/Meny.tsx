@@ -17,7 +17,7 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
+import { Behandlingstatus } from '../../../typer/behandling';
 
 export const Behandlingsmeny: React.FC = () => {
     const behandling = useBehandling();
@@ -31,10 +31,9 @@ export const Behandlingsmeny: React.FC = () => {
             : 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b';
     const erForvalter = innloggetSaksbehandler?.groups?.some(group => group === forvalterGruppe);
 
-    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.Grunnlag;
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === 'GRUNNLAG';
     const vedtakFattetEllerFattes =
-        erStegBehandlet(Behandlingssteg.FatteVedtak) ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak;
+        erStegBehandlet('FATTE_VEDTAK') || aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK';
 
     const erBehandlingenAktiv =
         behandling.status !== Behandlingstatus.Avsluttet &&

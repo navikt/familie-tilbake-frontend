@@ -21,7 +21,6 @@ import { FaktaRevurdering } from './FaktaRevurdering';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { HendelseType } from '../../../kodeverk';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -52,8 +51,7 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
 
     const harBrevmottakerSteg = behandling.behandlingsstegsinfo.some(
         steg =>
-            steg.behandlingssteg === Behandlingssteg.Brevmottaker &&
-            steg.behandlingsstegstatus !== 'TILBAKEFØRT'
+            steg.behandlingssteg === 'BREVMOTTAKER' && steg.behandlingsstegstatus !== 'TILBAKEFØRT'
     );
 
     return (
@@ -200,7 +198,7 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
             </VStack>
             <FaktaRevurdering fakta={fakta} />
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
+                stegtekst={actionBarStegtekst('FAKTA')}
                 forrigeAriaLabel={
                     behandling.harVerge
                         ? 'Gå tilbake til vergesteget'
@@ -210,7 +208,7 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
                 }
                 nesteAriaLabel={
                     behandling.behandlingsstegsinfo.some(
-                        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+                        steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
                     )
                         ? 'Gå videre til forhåndsvarselsteget'
                         : 'Gå videre til foreldelsessteget'

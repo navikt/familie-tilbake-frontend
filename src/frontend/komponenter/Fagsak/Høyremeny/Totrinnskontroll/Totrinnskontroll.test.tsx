@@ -22,7 +22,6 @@ import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import { lagTotrinnsStegInfo } from '../../../../testdata/totrinnskontrollFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
-import { Behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 
 const mockUseBehandlingApi = vi.fn();
@@ -77,9 +76,9 @@ describe('Totrinnskontroll', () => {
     test('Vis og fyll ut - godkjenner', async () => {
         setupMocks({
             totrinnsstegsinfo: [
-                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
-                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
-                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
+                lagTotrinnsStegInfo('FAKTA'),
+                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
             ],
         });
 
@@ -129,10 +128,10 @@ describe('Totrinnskontroll', () => {
     test('Vis og fyll ut - sender tilbake', async () => {
         setupMocks({
             totrinnsstegsinfo: [
-                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
-                lagTotrinnsStegInfo(Behandlingssteg.Foreldelse),
-                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
-                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
+                lagTotrinnsStegInfo('FAKTA'),
+                lagTotrinnsStegInfo('FORELDELSE'),
+                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
             ],
         });
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
@@ -196,18 +195,10 @@ describe('Totrinnskontroll', () => {
     test('Vis utfylt - sendt tilbake', async () => {
         setupMocks({
             totrinnsstegsinfo: [
-                lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
-                lagTotrinnsStegInfo(
-                    Behandlingssteg.Foreldelse,
-                    false,
-                    'Foreldelse må vurderes på nytt'
-                ),
-                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering, true),
-                lagTotrinnsStegInfo(
-                    Behandlingssteg.ForeslåVedtak,
-                    false,
-                    'Vedtaket må vurderes på nytt'
-                ),
+                lagTotrinnsStegInfo('FAKTA', true),
+                lagTotrinnsStegInfo('FORELDELSE', false, 'Foreldelse må vurderes på nytt'),
+                lagTotrinnsStegInfo('VILKÅRSVURDERING', true),
+                lagTotrinnsStegInfo('FORESLÅ_VEDTAK', false, 'Vedtaket må vurderes på nytt'),
             ],
         });
 
@@ -246,18 +237,10 @@ describe('Totrinnskontroll', () => {
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
         setupMocks({
             totrinnsstegsinfo: [
-                lagTotrinnsStegInfo(Behandlingssteg.Fakta, true),
-                lagTotrinnsStegInfo(
-                    Behandlingssteg.Foreldelse,
-                    false,
-                    'Foreldelse må vurderes på nytt'
-                ),
-                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering, true),
-                lagTotrinnsStegInfo(
-                    Behandlingssteg.ForeslåVedtak,
-                    false,
-                    'Vedtaket må vurderes på nytt'
-                ),
+                lagTotrinnsStegInfo('FAKTA', true),
+                lagTotrinnsStegInfo('FORELDELSE', false, 'Foreldelse må vurderes på nytt'),
+                lagTotrinnsStegInfo('VILKÅRSVURDERING', true),
+                lagTotrinnsStegInfo('FORESLÅ_VEDTAK', false, 'Vedtaket må vurderes på nytt'),
             ],
         });
 

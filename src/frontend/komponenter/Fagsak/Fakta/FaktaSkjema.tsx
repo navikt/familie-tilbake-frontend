@@ -39,7 +39,6 @@ import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { formatterDatostring } from '../../../utils';
 import { dateTilIsoDatoString } from '../../../utils/dato';
 import { useStegNavigering } from '../../../utils/sider';
@@ -57,7 +56,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
     const queryClient = useQueryClient();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
 
-    const navigerTilNeste = useStegNavigering(Behandlingssteg.Forhåndsvarsel);
+    const navigerTilNeste = useStegNavigering('FORHÅNDSVARSEL');
 
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
@@ -279,7 +278,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                               formId: 'fakta-skjema',
                           }
                         : { type: 'button', onNeste: navigerTilNeste })}
-                    stegtekst={actionBarStegtekst(Behandlingssteg.Fakta)}
+                    stegtekst={actionBarStegtekst('FAKTA')}
                     forrigeAriaLabel={undefined}
                     nesteAriaLabel="Gå videre til forhåndsvarselsteget"
                     onForrige={undefined}

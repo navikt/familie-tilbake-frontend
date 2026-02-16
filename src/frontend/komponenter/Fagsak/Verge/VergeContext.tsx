@@ -17,7 +17,6 @@ import {
     Valideringsstatus,
 } from '../../../hooks/skjema';
 import { Vergetype } from '../../../kodeverk/verge';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { byggFeiletRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
 import {
     erFeltetEmpty,
@@ -45,12 +44,12 @@ const [VergeProvider, useVerge] = createUseContext(() => {
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
-    const navigerTilNeste = useStegNavigering(Behandlingssteg.Fakta);
+    const navigerTilNeste = useStegNavigering('FAKTA');
 
     React.useEffect(() => {
         if (behandling.harVerge) {
-            settStegErBehandlet(erStegBehandlet(Behandlingssteg.Verge));
-            settErAutoutført(erStegAutoutført(Behandlingssteg.Verge));
+            settStegErBehandlet(erStegBehandlet('VERGE'));
+            settErAutoutført(erStegAutoutført('VERGE'));
             settHenterData(true);
             hentVerge();
         }

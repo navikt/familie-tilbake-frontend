@@ -29,7 +29,6 @@ import {
     behandlingHentVedtaksbrevOptions,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '../../../generated-new/@tanstack/react-query.gen';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { datoTilTekst } from '../../../utils';
 import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
@@ -76,7 +75,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
     const { ytelsestype } = useFagsak();
     const { behandlingId } = useBehandling();
     const { actionBarStegtekst } = useBehandlingState();
-    const navigerTilForrige = useStegNavigering(Behandlingssteg.Vilkårsvurdering);
+    const navigerTilForrige = useStegNavigering('VILKÅRSVURDERING');
     const { data: vedtaksbrevData } = useSuspenseQuery(
         behandlingHentVedtaksbrevOptions({ path: { behandlingId } })
     );
@@ -202,7 +201,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
                 </div>
             </div>
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.ForeslåVedtak)}
+                stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
                 nesteTekst="Send til godkjenning"
                 forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                 nesteAriaLabel="Send til godkjenning hos beslutter"

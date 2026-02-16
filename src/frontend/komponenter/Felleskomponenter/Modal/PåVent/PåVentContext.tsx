@@ -1,6 +1,6 @@
+import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '../../../../generated';
 import type { Skjema, FeltState } from '../../../../hooks/skjema';
 import type { RestSettPåVent } from '../../../../typer/api';
-import type { Behandlingsstegstilstand, Venteårsak } from '../../../../typer/behandling';
 import type { Ressurs } from '../../../../typer/ressurs';
 
 import { useState } from 'react';
@@ -16,7 +16,7 @@ type PåVentBehandlingHook = {
     skjema: Skjema<
         {
             tidsfrist: Date | undefined;
-            årsak: Venteårsak | '';
+            årsak: VenteårsakEnum | '';
         },
         string
     >;
@@ -29,7 +29,7 @@ type PåVentBehandlingHook = {
 
 export const usePåVentBehandling = (
     lukkModal: () => void,
-    ventegrunn?: Behandlingsstegstilstand | undefined
+    ventegrunn?: BehandlingsstegsinfoDto | undefined
 ): PåVentBehandlingHook => {
     const [feilmelding, settFeilmelding] = useState<string>();
     const { request } = useHttp();
@@ -38,7 +38,7 @@ export const usePåVentBehandling = (
     const { onSubmit, skjema, nullstillSkjema, kanSendeSkjema } = useSkjema<
         {
             tidsfrist: Date | undefined;
-            årsak: Venteårsak | '';
+            årsak: VenteårsakEnum | '';
         },
         string
     >({
@@ -51,9 +51,9 @@ export const usePåVentBehandling = (
                         : validerGyldigDato(felt);
                 },
             }),
-            årsak: useFelt<Venteårsak | ''>({
+            årsak: useFelt<VenteårsakEnum | ''>({
                 verdi: ventegrunn?.venteårsak ? ventegrunn.venteårsak : '',
-                valideringsfunksjon: (felt: FeltState<Venteårsak | ''>) =>
+                valideringsfunksjon: (felt: FeltState<VenteårsakEnum | ''>) =>
                     felt.verdi !== '' ? ok(felt) : feil(felt, 'Du må velge årsak'),
             }),
         },
@@ -61,7 +61,7 @@ export const usePåVentBehandling = (
     });
 
     const [forrigeVentegrunn, settForrigeVentegrunn] = useState<
-        Behandlingsstegstilstand | undefined
+        BehandlingsstegsinfoDto | undefined
     >();
 
     if (ventegrunn !== forrigeVentegrunn) {
@@ -93,7 +93,7 @@ export const usePåVentBehandling = (
                 () => {
                     if (ventegrunn) {
                         ventegrunn.tidsfrist = dateTilIsoDatoString(skjema.felter.tidsfrist.verdi);
-                        ventegrunn.venteårsak = skjema.felter.årsak.verdi as Venteårsak;
+                        ventegrunn.venteårsak = skjema.felter.årsak.verdi as VenteårsakEnum;
                     }
                     lukkModal();
                 },

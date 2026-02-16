@@ -4,7 +4,6 @@ import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Alert, Button } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { Behandlingssteg } from '../../../typer/behandling';
 import { useStegNavigering } from '../../../utils/sider';
 import { BrevmottakerListe } from '../../Felleskomponenter/Hendelsesoversikt/BrevModul/BrevmottakerListe';
 
@@ -13,7 +12,7 @@ type Props = {
 };
 
 export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere }) => {
-    const navigerTilBrevmottakerSteg = useStegNavigering(Behandlingssteg.Brevmottaker);
+    const navigerTilBrevmottakerSteg = useStegNavigering('BREVMOTTAKER');
     return (
         brevmottakere &&
         brevmottakere.length !== 0 && (
