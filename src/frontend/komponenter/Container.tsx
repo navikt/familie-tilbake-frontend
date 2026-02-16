@@ -19,7 +19,7 @@ import { FTHeader } from './Felleskomponenter/FTHeader/FTHeader';
 import { UgyldigSesjon } from './Felleskomponenter/Modal/SesjonUtløpt';
 import { Toasts } from './Felleskomponenter/Toast/Toasts';
 
-const Dashboard = lazyImportMedRetry(() => import('../pages/Dashboard'), 'Dashboard');
+const Landingsside = lazyImportMedRetry(() => import('../pages/Landingsside'), 'Landingsside');
 const FagsakContainer = lazyImportMedRetry(
     () => import('./Fagsak/FagsakContainer'),
     'FagsakContainer'
@@ -70,14 +70,7 @@ const AppRoutes: React.FC = () => {
                             }
                         />
                     </Route>
-                    <Route
-                        path="/"
-                        element={
-                            <Suspense fallback={<div>Dashboard laster...</div>}>
-                                <Dashboard />
-                            </Suspense>
-                        }
-                    />
+                    <Route path="/" element={<Landingsside />} />
                     <Route
                         path="/*"
                         element={
