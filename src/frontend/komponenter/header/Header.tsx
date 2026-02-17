@@ -152,7 +152,11 @@ export const Header: React.FC = () => {
                 </Dropdown.Menu>
             </Dropdown>
             <InternalHeader.Button onClick={toggleTheme} aria-label="Bytt tema">
-                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                {theme === 'light' ? (
+                    <MoonIcon title="Bytt til mørkt tema" />
+                ) : (
+                    <SunIcon title="Bytt til lyst tema" />
+                )}
             </InternalHeader.Button>
         </InternalHeader>
     );
