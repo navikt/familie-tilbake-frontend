@@ -278,9 +278,9 @@ describe('Totrinnskontroll', () => {
     test('Viser bekreftelsesmodal når bruker klikker Godkjenn vedtaket', async () => {
         setupMocks({
             totrinnsstegsinfo: [
-                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
-                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
-                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
+                lagTotrinnsStegInfo('FAKTA'),
+                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
             ],
         });
 
