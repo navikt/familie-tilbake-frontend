@@ -21,6 +21,7 @@ import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { ActionBar } from '../../../komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '../../../komponenter/datalast/DataLastIkkeSuksess';
+import { BekreftelsesModal } from '../../../komponenter/modal/bekreftelse/BekreftelsesModal';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 
@@ -40,6 +41,7 @@ export const VedtakContainer: React.FC = () => {
     } = useVedtak();
     const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
+    const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
 
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
@@ -177,9 +179,18 @@ export const VedtakContainer: React.FC = () => {
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"
-                    onNeste={sendInnSkjema}
+                    onNeste={() => settVisBekreftelsesmodal(true)}
                     onForrige={navigerTilForrige}
                     isLoading={senderInn}
+                />
+                <BekreftelsesModal
+                    åpen={visBekreftelsesmodal}
+                    onLukk={() => settVisBekreftelsesmodal(false)}
+                    overskrift="Send til godkjenning"
+                    brødtekst="Denne handlingen kan ikke angres."
+                    bekreftTekst="Send til godkjenning"
+                    onBekreft={sendInnSkjema}
+                    laster={senderInn}
                 />
             </VStack>
         );
