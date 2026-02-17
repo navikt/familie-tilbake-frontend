@@ -27,7 +27,7 @@ import { IkkeFunnet } from './pages/feilsider/ikke-funnet';
 import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { configureZod } from './utils/zodConfig';
 
-const Dashboard = lazyImportMedRetry(() => import('./pages/dashboard'), 'Dashboard');
+const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
 const FagsakContainer = lazyImportMedRetry(
     () => import('./pages/fagsak/Fagsak'),
     'FagsakContainer'
@@ -69,14 +69,7 @@ const router = createBrowserRouter(
                     </TogglesProvider>
                 }
             >
-                <Route
-                    path="/"
-                    element={
-                        <Suspense fallback={<div>Dashboard laster...</div>}>
-                            <Dashboard />
-                        </Suspense>
-                    }
-                />
+                <Route path="/" element={<Landingsside />} />
                 <Route
                     path="/fagsystem/:fagsystem/fagsak/:fagsakId/"
                     element={<FagsakProvidersWrapper />}
@@ -90,8 +83,8 @@ const router = createBrowserRouter(
                         }
                     />
                 </Route>
+                <Route path="*" element={<IkkeFunnet />} />
             </Route>
-            <Route path="*" element={<IkkeFunnet />} />
         </Route>
     )
 );
