@@ -9,20 +9,19 @@ import {
     lagForeslåVedtakSteg,
     lagVilkårsvurderingSteg,
 } from '../testdata/behandlingFactory';
-import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
 const mockBehandling = lagBehandling({
     behandlingsstegsinfo: [
         lagFaktaSteg(),
         lagForeldelseSteg(),
         lagVilkårsvurderingSteg(),
-        lagForeslåVedtakSteg({ status: Behandlingsstegstatus.Klar }),
+        lagForeslåVedtakSteg({ status: 'KLAR' }),
     ],
 });
 
 describe('Sider', () => {
     test('visSide skal ikke vise brevmottaker dersom den informasjonen ikke er på behandlingen', () => {
-        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandling);
+        const result = visSide('BREVMOTTAKER', mockBehandling);
         expect(result).toBe(false);
     });
 
@@ -31,7 +30,7 @@ describe('Sider', () => {
             ...mockBehandling,
             behandlingsstegsinfo: [...mockBehandling.behandlingsstegsinfo, lagBrevmottakerSteg()],
         };
-        const result = visSide(Behandlingssteg.Brevmottaker, mockBehandlingMedBrevmottakerSteg);
+        const result = visSide('BREVMOTTAKER', mockBehandlingMedBrevmottakerSteg);
         expect(result).toBe(true);
     });
 

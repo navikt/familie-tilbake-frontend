@@ -1,5 +1,4 @@
-import type { BehandlingsstegEnum } from '../generated/types.gen';
-import type { Behandlingsstegstilstand } from '../typer/behandling';
+import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '../generated/types.gen';
 import type { ReactNode } from 'react';
 
 import * as React from 'react';
@@ -15,8 +14,8 @@ export const erStegUtført = (status: string): boolean => {
 
 export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     behandlingILesemodus: boolean;
-    aktivtSteg: Behandlingsstegstilstand | undefined;
-    ventegrunn: Behandlingsstegstilstand | undefined;
+    aktivtSteg: BehandlingsstegsinfoDto | undefined;
+    ventegrunn: BehandlingsstegsinfoDto | undefined;
     harKravgrunnlag: boolean;
     actionBarStegtekst: (valgtSteg: BehandlingsstegEnum) => string | undefined;
     erStegBehandlet: (steg: BehandlingsstegEnum) => boolean;
@@ -62,7 +61,7 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
         );
     }, [behandling]);
 
-    const aktivtSteg = useMemo((): Behandlingsstegstilstand | undefined => {
+    const aktivtSteg = useMemo((): BehandlingsstegsinfoDto | undefined => {
         if (behandling.status === 'AVSLUTTET') {
             return undefined;
         }
@@ -70,14 +69,14 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
             ({ behandlingsstegstatus }) =>
                 behandlingsstegstatus === 'KLAR' || behandlingsstegstatus === 'VENTER'
         );
-        return steg as Behandlingsstegstilstand | undefined;
+        return steg as BehandlingsstegsinfoDto | undefined;
     }, [behandling]);
 
-    const ventegrunn = useMemo((): Behandlingsstegstilstand | undefined => {
+    const ventegrunn = useMemo((): BehandlingsstegsinfoDto | undefined => {
         const steg = behandling.behandlingsstegsinfo.find(
             stegInfo => stegInfo.behandlingsstegstatus === 'VENTER'
         );
-        return steg as Behandlingsstegstilstand | undefined;
+        return steg as BehandlingsstegsinfoDto | undefined;
     }, [behandling]);
 
     const actionBarStegtekst = (valgtSteg: BehandlingsstegEnum): string | undefined => {

@@ -5,7 +5,7 @@ export const IkkeFunnet: React.FC = () => {
     return (
         <Page.Block as="main" width="xl" gutters>
             <Box paddingBlock="space-80 space-64" data-aksel-template="404-v2">
-                <Heading level="1" size="large" spacing>
+                <Heading size="large" spacing>
                     Beklager, vi fant ikke siden
                 </Heading>
                 <BodyShort>

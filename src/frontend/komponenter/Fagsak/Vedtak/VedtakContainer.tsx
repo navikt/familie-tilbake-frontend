@@ -42,7 +42,7 @@ export const VedtakContainer: React.FC = () => {
     const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
-    const erLesevisning = !!behandlingILesemodus;
+
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
         type === 'REVURDERING_TILBAKEKREVING' &&
@@ -90,7 +90,7 @@ export const VedtakContainer: React.FC = () => {
     );
 
     const kanViseForhåndsvisning =
-        (!erLesevisning || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
+        (!behandlingILesemodus || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
         !erRevurderingKlageKA;
 
     if (
@@ -107,6 +107,7 @@ export const VedtakContainer: React.FC = () => {
                         </BodyShort>
                     </Alert>
                 )}
+
                 {manuelleBrevmottakere.length > 0 && (
                     <BrevmottakereAlert
                         brevmottakere={manuelleBrevmottakere.map(
@@ -126,7 +127,6 @@ export const VedtakContainer: React.FC = () => {
                 {!!skjemaData.length && (
                     <VedtakSkjema
                         avsnitter={skjemaData}
-                        erLesevisning={erLesevisning}
                         erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
                         harBrukerUttaltSeg={
                             beregningsresultat.data.vurderingAvBrukersUttalelse
@@ -146,7 +146,7 @@ export const VedtakContainer: React.FC = () => {
                         {kanViseForhåndsvisning && !!skjemaData.length && (
                             <ForhåndsvisVedtaksbrev />
                         )}
-                        {!erLesevisning && !erRevurderingKlageKA && !!skjemaData.length && (
+                        {!behandlingILesemodus && !erRevurderingKlageKA && !!skjemaData.length && (
                             <Button
                                 variant="tertiary"
                                 onClick={lagreUtkast}
@@ -156,7 +156,7 @@ export const VedtakContainer: React.FC = () => {
                                 Lagre utkast
                             </Button>
                         )}
-                        {!erLesevisning && erPerioderLike && (
+                        {!behandlingILesemodus && erPerioderLike && (
                             <Button
                                 variant="tertiary"
                                 onClick={handleKnappTrykk}
@@ -174,7 +174,7 @@ export const VedtakContainer: React.FC = () => {
                 </div>
                 <ActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
-                    skjulNeste={erLesevisning}
+                    skjulNeste={behandlingILesemodus}
                     stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"

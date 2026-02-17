@@ -5,7 +5,6 @@ import { useForeldelse } from './ForeldelseContext';
 import { ForeldelsePerioder } from './ForeldelsePeriode/ForeldelsePerioder';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
 import { finnDatoRelativtTilNå } from '../../../utils';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
@@ -25,9 +24,8 @@ export const ForeldelseContainer: React.FC = () => {
     } = useForeldelse();
     const behandling = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus || !!erAutoutført;
     const navigerEllerLagreOgNaviger =
-        erAutoutført || (stegErBehandlet && erLesevisning) ? navigerTilNeste : sendInnSkjema;
+        erAutoutført || (stegErBehandlet && behandlingILesemodus) ? navigerTilNeste : sendInnSkjema;
 
     return (
         <VStack gap="space-24">
@@ -76,7 +74,7 @@ export const ForeldelseContainer: React.FC = () => {
                                     Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
                                     foreldet
                                 </Heading>
-                                <BodyLong size="medium">
+                                <BodyLong>
                                     Når den alminnelige foreldelsesfristen etter foreldelsesloven{' '}
                                     <Link
                                         href="https://lovdata.no/dokument/NL/lov/1979-05-18-18/KAPITTEL_1#%C2%A72"
@@ -104,18 +102,16 @@ export const ForeldelseContainer: React.FC = () => {
                         </Alert>
                     )}
 
-                    {skjemaData.length > 0 && (
-                        <ForeldelsePerioder perioder={skjemaData} erLesevisning={erLesevisning} />
-                    )}
+                    {skjemaData.length > 0 && <ForeldelsePerioder perioder={skjemaData} />}
                 </>
             ) : (
                 <DataLastIkkeSuksess ressurser={[foreldelse]} />
             )}
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Foreldelse)}
+                stegtekst={actionBarStegtekst('FORELDELSE')}
                 forrigeAriaLabel={
                     behandling.behandlingsstegsinfo.some(
-                        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+                        steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
                     )
                         ? 'Gå tilbake til forhåndsvarselsteget'
                         : 'Gå tilbake til faktasteget'

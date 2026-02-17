@@ -1,5 +1,9 @@
-import type { Behandlingresultat, Behandlingssteg, Venteårsak } from './behandling';
 import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
+import type {
+    BehandlingsresultatstypeEnum,
+    BehandlingsstegEnum,
+    VenteårsakEnum,
+} from '../generated';
 import type {
     DokumentMal,
     Foreldelsevurdering,
@@ -68,7 +72,7 @@ export type ForeslåVedtakStegPayload = {
 };
 
 export type TotrinnsStegVurdering = {
-    behandlingssteg: Behandlingssteg;
+    behandlingssteg: BehandlingsstegEnum;
     godkjent: boolean;
     begrunnelse?: string;
 };
@@ -117,12 +121,12 @@ export type VergeStegPayload = {
 };
 
 export type HenleggBehandlingPaylod = {
-    behandlingsresultatstype: Behandlingresultat;
+    behandlingsresultatstype: BehandlingsresultatstypeEnum;
     begrunnelse: string;
     fritekst: string;
 };
 
 export type RestSettPåVent = {
-    venteårsak: Venteårsak;
+    venteårsak: VenteårsakEnum;
     tidsfrist: IsoDatoString;
 };

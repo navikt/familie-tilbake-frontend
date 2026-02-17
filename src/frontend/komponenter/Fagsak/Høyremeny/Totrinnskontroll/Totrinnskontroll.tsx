@@ -20,7 +20,7 @@ import {
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
+import { behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
 import { BekreftelsesModal } from '../../../Felleskomponenter/BekreftelsesModal/BekreftelsesModal';
@@ -75,7 +75,7 @@ export const Totrinnskontroll: React.FC = () => {
                         infotekst="Kontroller endrede opplysninger og faglige vurderinger"
                     />
                 )}
-                {aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak && erLesevisning && (
+                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && (
                     <div>
                         <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
                             Angre sendt til beslutter

@@ -1,4 +1,4 @@
-import type { BehandlingstypeEnum } from '../../../../generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../../generated';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
@@ -7,16 +7,12 @@ import { useRef } from 'react';
 
 import { HenleggModal } from './henleggModal/HenleggModal';
 import { useBehandling } from '../../../../context/BehandlingContext';
-import { Behandlingresultat } from '../../../../typer/behandling';
 
-const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): Behandlingresultat[] => {
+const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): BehandlingsresultatstypeEnum[] => {
     if (behandlingstype === 'TILBAKEKREVING') {
-        return [Behandlingresultat.HenlagtFeilopprettet];
+        return ['HENLAGT_FEILOPPRETTET'];
     } else {
-        return [
-            Behandlingresultat.HenlagtFeilopprettetMedBrev,
-            Behandlingresultat.HenlagtFeilopprettetUtenBrev,
-        ];
+        return ['HENLAGT_FEILOPPRETTET_MED_BREV', 'HENLAGT_FEILOPPRETTET_UTEN_BREV'];
     }
 };
 

@@ -23,7 +23,7 @@ export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Pro
     return (
         <Modal open onClose={lukkFeilModal} aria-labelledby="modal-heading" portal>
             <Modal.Header className="bg-[#FFE6E6]" closeButton={false}>
-                <Heading level="1" className="flex items-center flex-row gap-1" size="medium">
+                <Heading className="flex items-center flex-row gap-1" size="medium">
                     <XMarkOctagonFillIcon aria-hidden color="var(--ax-text-danger-decoration)" />
                     {feilObjekt.tittel}
                 </Heading>
@@ -66,18 +66,15 @@ export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Pro
                             </Box>
                         </VStack>
                     </VStack>
-                    {(eksternFagsakId || behandlingId) && (
-                        <VStack gap="space-4" className="text-sm text-[#010B18AD]">
-                            {eksternFagsakId && <span>Fagsak ID: {eksternFagsakId}</span>}
-                            {behandlingId && <span>Behandling ID: {behandlingId}</span>}
-                        </VStack>
-                    )}
+
+                    <VStack gap="space-4" className="text-sm text-[#010B18AD]">
+                        <span>Fagsak ID: {eksternFagsakId}</span>
+                        <span>Behandling ID: {behandlingId}</span>
+                    </VStack>
                 </VStack>
             </Modal.Body>
             <Modal.Footer>
-                <Button type="button" onClick={lukkFeilModal}>
-                    Ok
-                </Button>
+                <Button onClick={lukkFeilModal}>Ok</Button>
             </Modal.Footer>
         </Modal>
     );

@@ -1,7 +1,7 @@
-import type { Behandlingssteg } from './behandling';
+import type { BehandlingsstegEnum } from '../generated';
 
 export type TotrinnsStegInfo = {
-    behandlingssteg: Behandlingssteg;
+    behandlingssteg: BehandlingsstegEnum;
     godkjent?: boolean;
     begrunnelse?: string;
 };

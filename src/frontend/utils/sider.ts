@@ -9,58 +9,57 @@ import { useNavigate } from 'react-router';
 
 import { useBehandling } from '../context/BehandlingContext';
 import { useFagsak } from '../context/FagsakContext';
-import { Behandlingssteg, Behandlingsstegstatus } from '../typer/behandling';
 
 export type SynligSteg = {
     href: string;
     navn: string;
-    steg: Behandlingssteg;
+    steg: BehandlingsstegEnum;
 };
 
 export type SynligeStegType =
-    | Behandlingssteg.Brevmottaker
-    | Behandlingssteg.Fakta
-    | Behandlingssteg.Foreldelse
-    | Behandlingssteg.ForeslåVedtak
-    | Behandlingssteg.Forhåndsvarsel
-    | Behandlingssteg.Verge
-    | Behandlingssteg.Vilkårsvurdering;
+    | 'BREVMOTTAKER'
+    | 'FAKTA'
+    | 'FORELDELSE'
+    | 'FORESLÅ_VEDTAK'
+    | 'FORHÅNDSVARSEL'
+    | 'VERGE'
+    | 'VILKÅRSVURDERING';
 
 export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
-    [Behandlingssteg.Brevmottaker]: {
+    ['BREVMOTTAKER']: {
         href: 'brevmottakere',
         navn: 'Brevmottaker(e)',
-        steg: Behandlingssteg.Brevmottaker,
+        steg: 'BREVMOTTAKER',
     },
-    [Behandlingssteg.Verge]: {
+    ['VERGE']: {
         href: 'verge',
         navn: 'Verge',
-        steg: Behandlingssteg.Verge,
+        steg: 'VERGE',
     },
-    [Behandlingssteg.Fakta]: {
+    ['FAKTA']: {
         href: 'fakta',
         navn: 'Fakta',
-        steg: Behandlingssteg.Fakta,
+        steg: 'FAKTA',
     },
-    [Behandlingssteg.Forhåndsvarsel]: {
+    ['FORHÅNDSVARSEL']: {
         href: 'forhaandsvarsel',
         navn: 'Forhåndsvarsel',
-        steg: Behandlingssteg.Forhåndsvarsel,
+        steg: 'FORHÅNDSVARSEL',
     },
-    [Behandlingssteg.Foreldelse]: {
+    ['FORELDELSE']: {
         href: 'foreldelse',
         navn: 'Foreldelse',
-        steg: Behandlingssteg.Foreldelse,
+        steg: 'FORELDELSE',
     },
-    [Behandlingssteg.Vilkårsvurdering]: {
+    ['VILKÅRSVURDERING']: {
         href: 'vilkaarsvurdering',
         navn: 'Vilkårsvurdering',
-        steg: Behandlingssteg.Vilkårsvurdering,
+        steg: 'VILKÅRSVURDERING',
     },
-    [Behandlingssteg.ForeslåVedtak]: {
+    ['FORESLÅ_VEDTAK']: {
         href: 'vedtak',
         navn: 'Vedtak',
-        steg: Behandlingssteg.ForeslåVedtak,
+        steg: 'FORESLÅ_VEDTAK',
     },
 };
 
@@ -101,30 +100,27 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: BehandlingDto):
 };
 
 export const visSide = (steg: BehandlingsstegEnum, behandling: BehandlingDto): boolean => {
-    if (steg === Behandlingssteg.Brevmottaker) {
+    if (steg === 'BREVMOTTAKER') {
         return behandling.behandlingsstegsinfo
-            .filter(
-                ({ behandlingsstegstatus }) =>
-                    behandlingsstegstatus !== Behandlingsstegstatus.Tilbakeført
-            )
+            .filter(({ behandlingsstegstatus }) => behandlingsstegstatus !== 'TILBAKEFØRT')
             .some(({ behandlingssteg }) => behandlingssteg === steg);
     }
-    if (steg === Behandlingssteg.Verge) {
+    if (steg === 'VERGE') {
         return !behandling.støtterManuelleBrevmottakere;
     }
-    if (steg === Behandlingssteg.Forhåndsvarsel) {
+    if (steg === 'FORHÅNDSVARSEL') {
         return behandling.erNyModell;
     }
 
     return true;
 };
 
-export const utledBehandlingSide = (steg: Behandlingssteg): SynligSteg | undefined => {
+export const utledBehandlingSide = (steg: BehandlingsstegEnum): SynligSteg | undefined => {
     switch (steg) {
-        case Behandlingssteg.FatteVedtak:
+        case 'FATTE_VEDTAK':
             return SYNLIGE_STEG.FAKTA;
-        case Behandlingssteg.Avsluttet:
-        case Behandlingssteg.IverksettVedtak:
+        case 'AVSLUTTET':
+        case 'IVERKSETT_VEDTAK':
             return SYNLIGE_STEG.FORESLÅ_VEDTAK;
         default:
             return finnSideForSteg(steg);

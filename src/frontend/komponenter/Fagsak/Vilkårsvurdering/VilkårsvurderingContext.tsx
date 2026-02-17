@@ -17,7 +17,6 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Aktsomhet, Vilkårsresultat } from '../../../kodeverk';
-import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -96,8 +95,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
     const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(ytelsestype);
 
-    const navigerTilNeste = useStegNavigering(Behandlingssteg.ForeslåVedtak);
-    const navigerTilForrige = useStegNavigering(Behandlingssteg.Foreldelse);
+    const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
+    const navigerTilForrige = useStegNavigering('FORELDELSE');
 
     useEffect(() => {
         settErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));

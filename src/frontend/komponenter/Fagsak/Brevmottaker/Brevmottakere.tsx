@@ -1,4 +1,4 @@
-import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker as TBrevmottaker } from '../../../typer/Brevmottaker';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
@@ -12,7 +12,6 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
 import { norskLandnavn } from '../../../utils/land';
@@ -20,10 +19,9 @@ import { useStegNavigering } from '../../../utils/sider';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 export type BrevmottakerProps = {
-    brevmottaker: Brevmottaker;
+    brevmottaker: TBrevmottaker;
     erStandardMottaker?: boolean;
     brevmottakerId: string;
-    erLesevisning: boolean;
     antallBrevmottakere: number;
     settVisBrevmottakerModal: (vis: boolean) => void;
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
@@ -33,7 +31,6 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
     erStandardMottaker,
-    erLesevisning,
     antallBrevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
@@ -41,7 +38,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
-
+    const { behandlingILesemodus } = useBehandlingState();
     const landnavn = brevmottaker.manuellAdresseInfo
         ? norskLandnavn(brevmottaker.manuellAdresseInfo.landkode)
         : undefined;
@@ -67,11 +64,11 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     return (
         <>
             <div className="flex justify-between items-center mb-4">
-                <BodyShort weight="semibold" size="medium">
+                <BodyShort weight="semibold">
                     {mottakerTypeVisningsnavn[brevmottaker.type]}
                 </BodyShort>
                 <div className="flex gap-1">
-                    {!erLesevisning && !erStandardMottaker && (
+                    {!behandlingILesemodus && !erStandardMottaker && (
                         <>
                             <Button
                                 variant="tertiary"
@@ -91,7 +88,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
                             </Button>
                         </>
                     )}
-                    {!erLesevisning && erStandardMottaker && antallBrevmottakere > 1 && (
+                    {!behandlingILesemodus && erStandardMottaker && antallBrevmottakere > 1 && (
                         <Button
                             variant="tertiary"
                             size="small"
@@ -227,19 +224,17 @@ export const Brevmottakere: React.FC = () => {
     const { manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const { bruker } = useFagsak();
-    const navigerTilNeste = useStegNavigering(Behandlingssteg.Fakta);
+    const navigerTilNeste = useStegNavigering('FAKTA');
     const [visBrevmottakerModal, setVisBrevmottakerModal] = useState(false);
     const [brevmottakerIdTilEndring, setBrevmottakerIdTilEndring] = useState<string | undefined>(
         undefined
     );
 
-    const erLesevisning = !!behandlingILesemodus;
-
     const antallBrevmottakere = Object.keys(manuelleBrevmottakere).length;
 
     const kanLeggeTilMottaker =
         antallBrevmottakere == 0 &&
-        !erLesevisning &&
+        !behandlingILesemodus &&
         !manuelleBrevmottakere.some(
             manuellBrevmottaker => manuellBrevmottaker.brevmottaker.type === MottakerType.Dødsbo
         );
@@ -256,9 +251,7 @@ export const Brevmottakere: React.FC = () => {
                 />
             )}
             <VStack gap="space-16" align="start">
-                <Heading size="small" level="1">
-                    Brevmottaker(e)
-                </Heading>
+                <Heading size="small">Brevmottaker(e)</Heading>
                 <VStack gap="space-16" minWidth="430px">
                     <Box
                         borderWidth="1"
@@ -274,7 +267,6 @@ export const Brevmottakere: React.FC = () => {
                             }}
                             erStandardMottaker
                             brevmottakerId={bruker.personIdent}
-                            erLesevisning={erLesevisning}
                             antallBrevmottakere={antallBrevmottakere}
                             settVisBrevmottakerModal={setVisBrevmottakerModal}
                             settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
@@ -290,9 +282,8 @@ export const Brevmottakere: React.FC = () => {
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker
-                                    brevmottaker={brevmottakerRespons.brevmottaker as Brevmottaker}
+                                    brevmottaker={brevmottakerRespons.brevmottaker as TBrevmottaker}
                                     brevmottakerId={brevmottakerRespons.id}
-                                    erLesevisning={erLesevisning}
                                     antallBrevmottakere={antallBrevmottakere}
                                     settVisBrevmottakerModal={setVisBrevmottakerModal}
                                     settBrevmottakerIdTilEndring={setBrevmottakerIdTilEndring}
@@ -316,7 +307,7 @@ export const Brevmottakere: React.FC = () => {
             </VStack>
 
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Brevmottaker)}
+                stegtekst={actionBarStegtekst('BREVMOTTAKER')}
                 forrigeAriaLabel={undefined}
                 nesteAriaLabel="Gå til faktasteget"
                 onNeste={navigerTilNeste}

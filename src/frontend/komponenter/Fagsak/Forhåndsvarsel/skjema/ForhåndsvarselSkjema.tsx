@@ -10,7 +10,6 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useVisGlobalAlert } from '../../../../stores/globalAlertStore';
-import { Behandlingssteg } from '../../../../typer/behandling';
 import { FeilModal } from '../../../Felleskomponenter/Modal/Feil/FeilModal';
 import { HarUttaltSeg } from '../schema';
 import {
@@ -37,8 +36,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
 }) => {
-    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, behandlingILesemodus } =
-        useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const {
         formState: { dirtyFields: forhåndsvarselDirtyFields },
@@ -245,14 +243,12 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 varselbrevtekster={varselbrevtekster}
                 varselErSendt={varselErSendt}
                 handleForhåndsvarselSubmit={handleForhåndsvarselSubmit}
-                readOnly={behandlingILesemodus}
             />
 
             {forhåndsvarselInfo && skalViseUttalelseSkjema && (
                 <FormProvider {...uttalelseMethods}>
                     <Uttalelse
                         handleUttalelseSubmit={handleUttalelseSubmit}
-                        readOnly={behandlingILesemodus}
                         kanUtsetteFrist
                         varselErSendt={varselErSendt}
                     />
@@ -260,7 +256,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
             )}
 
             <ActionBar
-                stegtekst={actionBarStegtekst(Behandlingssteg.Forhåndsvarsel)}
+                stegtekst={actionBarStegtekst('FORHÅNDSVARSEL')}
                 nesteTekst={getNesteKnappTekst(submitAction)}
                 isLoading={
                     sendForhåndsvarselMutation.isPending ||

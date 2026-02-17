@@ -146,7 +146,7 @@ export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit">{tekster.sendInnTekst}</Button>
-                        <Button variant="secondary" type="button" onClick={lukkModal}>
+                        <Button variant="secondary" onClick={lukkModal}>
                             Avbryt
                         </Button>
                     </Modal.Footer>

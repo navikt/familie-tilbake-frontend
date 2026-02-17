@@ -14,18 +14,18 @@ type Props = {
     periode: FaktaPeriodeSkjemaData;
     hendelseTyper: HendelseType[] | undefined;
     index: number;
-    erLesevisning: boolean;
+    erHistoriskVisning?: boolean;
 };
 
 export const FaktaPeriodeSkjema: React.FC<Props> = ({
     periode,
     hendelseTyper,
     index,
-    erLesevisning,
+    erHistoriskVisning,
 }) => {
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFakta();
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
 
     useEffect(() => {
         const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelseTyper?.length === 1;
@@ -73,7 +73,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
             </Table.DataCell>
             <Table.DataCell>
                 <VStack gap="space-4" className="mt-1">
-                    {erLesevisning ? (
+                    {behandlingILesemodus || erHistoriskVisning ? (
                         <BodyShort size="small">
                             {periode.hendelsestype && hendelsetyper[periode.hendelsestype]}
                         </BodyShort>
@@ -105,7 +105,7 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
                     )}
                     {hendelseUnderTyper &&
                         hendelseUnderTyper.length > 0 &&
-                        (erLesevisning ? (
+                        (behandlingILesemodus || erHistoriskVisning ? (
                             <BodyShort size="small">
                                 {periode.hendelsesundertype &&
                                     hendelseundertyper[periode.hendelsesundertype]}

@@ -48,7 +48,6 @@ const renderVilkårsvurderingPeriodeSkjema = (
                         periode={periode}
                         behandletPerioder={behandletPerioder}
                         erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
-                        erLesevisning={false}
                         perioder={[periode]}
                         pendingPeriode={undefined}
                         settPendingPeriode={vi.fn()}

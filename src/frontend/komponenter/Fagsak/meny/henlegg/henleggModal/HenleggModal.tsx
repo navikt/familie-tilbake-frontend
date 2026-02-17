@@ -1,4 +1,4 @@
-import type { Behandlingresultat, Behandlingstype } from '../../../../../typer/behandling';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../../../generated';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -6,9 +6,7 @@ import { useEffect, useEffectEvent } from 'react';
 
 import { useHenleggSkjema } from './HenleggModalContext';
 import { useBehandling } from '../../../../../context/BehandlingContext';
-import { useFagsak } from '../../../../../context/FagsakContext';
 import { behandlingsresultater } from '../../../../../typer/behandling';
-import { målform } from '../../../../../typer/målform';
 import { hentFrontendFeilmelding } from '../../../../../utils';
 import { LabelMedSpråk } from '../../../../Felleskomponenter/Skjemaelementer/LabelMedSpråk';
 import { MODAL_BREDDE } from '../../utils';
@@ -16,7 +14,7 @@ import { ForhåndsvisHenleggelsesBrev } from '../forhåndsvisHenleggelsesbrev/Fo
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;
-    årsaker: Behandlingresultat[];
+    årsaker: BehandlingsresultatstypeEnum[];
 };
 
 export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
@@ -24,19 +22,18 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
         lukkModal: () => dialogRef.current?.close(),
     });
-    const { språkkode } = useFagsak();
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
-    const oppdaterBehandlingstype = useEffectEvent((behandlingstype: Behandlingstype) => {
+    const oppdaterBehandlingstype = useEffectEvent((behandlingstype: BehandlingstypeEnum) => {
         skjema.felter.behandlingstype.onChange(behandlingstype);
     });
 
     useEffect(() => {
-        oppdaterBehandlingstype(type as Behandlingstype);
+        oppdaterBehandlingstype(type);
     }, [type]);
 
     const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-        const årsak = e.target.value as Behandlingresultat;
+        const årsak = e.target.value as BehandlingsresultatstypeEnum;
         skjema.felter.årsakkode.validerOgSettFelt(årsak);
     };
 
@@ -65,9 +62,9 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
                         {...skjema.felter.årsakkode.hentNavInputProps(skjema.visFeilmeldinger)}
                         label="Årsak til henleggelse"
                         onChange={onChangeÅrsakskode}
-                        value={skjema.felter.årsakkode.verdi || 'default'}
+                        value={skjema.felter.årsakkode.verdi || ''}
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg årsak
                         </option>
                         {årsaker.map(årsak => (
@@ -80,9 +77,7 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
                 {visFritekst() && (
                     <Textarea
                         {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
-                        label={
-                            <LabelMedSpråk label="Fritekst til brev" språk={målform[språkkode]} />
-                        }
+                        label={<LabelMedSpråk label="Fritekst til brev" />}
                         aria-label="Fritekst til brev"
                         value={skjema.felter.fritekst.verdi}
                         onChange={event =>

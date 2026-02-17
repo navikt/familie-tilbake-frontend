@@ -14,7 +14,6 @@ import { useBehandlingApi } from '../../../api/behandling';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { Behandlingssteg } from '../../../typer/behandling';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
@@ -44,17 +43,15 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     });
     const navigerTilBehandling = useStegNavigering();
     const harForhåndsvarselSteg = behandling.behandlingsstegsinfo.some(
-        steg => steg.behandlingssteg === Behandlingssteg.Forhåndsvarsel
+        steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
     );
     const navigerTilNeste = useStegNavigering(
-        harForhåndsvarselSteg ? Behandlingssteg.Forhåndsvarsel : Behandlingssteg.Foreldelse
+        harForhåndsvarselSteg ? 'FORHÅNDSVARSEL' : 'FORELDELSE'
     );
     const navigerTilForrige = useStegNavigering(
-        behandling.behandlingsstegsinfo.some(
-            steg => steg.behandlingssteg === Behandlingssteg.Brevmottaker
-        )
-            ? Behandlingssteg.Brevmottaker
-            : Behandlingssteg.Verge
+        behandling.behandlingsstegsinfo.some(steg => steg.behandlingssteg === 'BREVMOTTAKER')
+            ? 'BREVMOTTAKER'
+            : 'VERGE'
     );
 
     const [behandlePerioderSamlet, settBehandlePerioderSamlet] = useState<boolean>(false);
@@ -67,7 +64,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
 
     useEffect(() => {
-        settStegErBehandlet(erStegBehandlet(Behandlingssteg.Fakta));
+        settStegErBehandlet(erStegBehandlet('FAKTA'));
         hentFakta();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);

@@ -51,12 +51,12 @@ export const EndreEnhet: React.FC = () => {
                 <Modal.Body className="flex flex-col gap-2">
                     <Select
                         {...skjema.felter.enhet.hentNavInputProps(skjema.visFeilmeldinger)}
-                        value={skjema.felter.enhet.verdi || 'default'}
+                        value={skjema.felter.enhet.verdi || ''}
                         readOnly={false}
                         name="enhet"
                         label="Velg en ny enhet"
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg enhet
                         </option>
                         {enheter.map(enhet => (

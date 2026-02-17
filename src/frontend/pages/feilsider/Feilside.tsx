@@ -23,7 +23,7 @@ export const ServerFeil: React.FC<Props> = ({ httpStatus }) => {
                                         Statuskode {httpStatus}
                                     </BodyShort>
                                 )}
-                                <Heading level="1" size="large" spacing>
+                                <Heading size="large" spacing>
                                     Oi, dette fungerte visst ikke
                                 </Heading>
                                 <BodyShort>
@@ -53,20 +53,17 @@ export const ServerFeil: React.FC<Props> = ({ httpStatus }) => {
                                     </List>
                                 </Box>
                             </div>
-                            {(eksternFagsakId || behandlingId) && (
-                                <div>
-                                    {!!eksternFagsakId && (
-                                        <BodyShort size="small" textColor="subtle">
-                                            Fagsak ID: {eksternFagsakId}
-                                        </BodyShort>
-                                    )}
-                                    {!!behandlingId && (
-                                        <BodyShort size="small" textColor="subtle">
-                                            Behandlings ID: {behandlingId}
-                                        </BodyShort>
-                                    )}
-                                </div>
-                            )}
+
+                            <div>
+                                <BodyShort size="small" textColor="subtle">
+                                    Fagsak ID: {eksternFagsakId}
+                                </BodyShort>
+
+                                <BodyShort size="small" textColor="subtle">
+                                    Behandlings ID: {behandlingId}
+                                </BodyShort>
+                            </div>
+
                             <Button onClick={() => location.reload()}>Last siden på nytt</Button>
                         </VStack>
                     </VStack>

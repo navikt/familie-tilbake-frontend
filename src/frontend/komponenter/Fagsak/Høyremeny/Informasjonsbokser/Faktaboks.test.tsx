@@ -1,4 +1,8 @@
-import type { BehandlingDto } from '../../../../generated';
+import type {
+    BehandlingDto,
+    BehandlingsresultatstypeEnum,
+    BehandlingstatusEnum,
+} from '../../../../generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { render, screen } from '@testing-library/react';
@@ -11,12 +15,9 @@ import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFa
 import { lagBehandling } from '../../../../testdata/behandlingFactory';
 import { lagFagsak } from '../../../../testdata/fagsakFactory';
 import {
-    Behandlingstatus,
-    Behandlingresultat,
-    Behandlingårsak,
     behandlingsstatuser,
     behandlingsresultater,
-    behandlingårsaker,
+    behandlingsårsaker,
 } from '../../../../typer/behandling';
 
 const renderFaktaboks = (
@@ -45,11 +46,11 @@ describe('Faktaboks', () => {
 
     test('Viser revurderingsårsak når satt', () => {
         renderFaktaboks({
-            behandlingsårsakstype: Behandlingårsak.RevurderingOpplysningerOmVilkår,
+            behandlingsårsakstype: 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
         });
         expect(screen.getByText('Revurderingsårsak')).toBeInTheDocument();
         expect(
-            screen.getByText(behandlingårsaker[Behandlingårsak.RevurderingOpplysningerOmVilkår])
+            screen.getByText(behandlingsårsaker['REVURDERING_OPPLYSNINGER_OM_VILKÅR'])
         ).toBeInTheDocument();
     });
 
@@ -58,12 +59,12 @@ describe('Faktaboks', () => {
         expect(screen.queryByText('Revurderingsårsak')).not.toBeInTheDocument();
     });
 
-    test.each<[Behandlingstatus, string]>([
-        [Behandlingstatus.Opprettet, 'neutral'],
-        [Behandlingstatus.Utredes, 'info'],
-        [Behandlingstatus.FatterVedtak, 'meta-lime'],
-        [Behandlingstatus.IverksetterVedtak, 'info'],
-        [Behandlingstatus.Avsluttet, 'success'],
+    test.each<[BehandlingstatusEnum, string]>([
+        ['OPPRETTET', 'neutral'],
+        ['UTREDES', 'info'],
+        ['FATTER_VEDTAK', 'meta-lime'],
+        ['IVERKSETTER_VEDTAK', 'info'],
+        ['AVSLUTTET', 'success'],
     ])('Status tag variant %s', (status, forventetDataColor) => {
         renderFaktaboks({ status });
         const tags = screen.getAllByText(behandlingsstatuser[status]);
@@ -72,11 +73,11 @@ describe('Faktaboks', () => {
         expect(tag?.getAttribute('data-color')).toBe(forventetDataColor);
     });
 
-    test.each<[Behandlingresultat, string]>([
-        [Behandlingresultat.Henlagt, 'danger'],
-        [Behandlingresultat.IngenTilbakebetaling, 'warning'],
-        [Behandlingresultat.DelvisTilbakebetaling, 'warning'],
-        [Behandlingresultat.FullTilbakebetaling, 'info'],
+    test.each<[BehandlingsresultatstypeEnum, string]>([
+        ['HENLAGT', 'danger'],
+        ['INGEN_TILBAKEBETALING', 'warning'],
+        ['DELVIS_TILBAKEBETALING', 'warning'],
+        ['FULL_TILBAKEBETALING', 'info'],
     ])('Resultat tag variant %s', (resultat, forventetDataColor) => {
         renderFaktaboks({ resultatstype: resultat });
         const tags = screen.getAllByText(behandlingsresultater[resultat]);

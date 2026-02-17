@@ -9,10 +9,9 @@ import { hentHendelseTyper } from '../../../../kodeverk';
 
 type Props = {
     perioder: FaktaPeriodeSkjemaData[];
-    erLesevisning: boolean;
 };
 
-export const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
+export const FaktaPerioder: React.FC<Props> = ({ perioder }) => {
     const { ytelsestype, institusjon } = useFagsak();
     const hendelsestyper = hentHendelseTyper(ytelsestype, !!institusjon);
 
@@ -35,7 +34,6 @@ export const FaktaPerioder: React.FC<Props> = ({ perioder, erLesevisning }) => {
                             periode={periode}
                             key={`formIndex${periode.index + 1}`}
                             index={periode.index}
-                            erLesevisning={erLesevisning}
                         />
                     );
                 })}

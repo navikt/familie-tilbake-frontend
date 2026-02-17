@@ -1,27 +1,24 @@
+import type { BehandlingstypeEnum, GetårsakstypeEnum } from '../../../../generated';
 import type { Skjema } from '../../../../hooks/skjema';
-import type { Behandlingårsak } from '../../../../typer/behandling';
 
-import { useState, type RefObject } from 'react';
+import { type RefObject } from 'react';
 
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../../context/FagsakContext';
 import { useFelt, useSkjema } from '../../../../hooks/skjema';
 import { useRedirectEtterLagring } from '../../../../hooks/useRedirectEtterLagring';
-import { Behandlingstype } from '../../../../typer/behandling';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { erFeltetEmpty } from '../../../../utils';
 
 type RevurderSkjemaHook = {
     skjema: Skjema<
         {
-            behandlingstype: Behandlingstype;
-            behandlingsårsak: Behandlingårsak | undefined;
+            behandlingstype: BehandlingstypeEnum;
+            behandlingsårsak: GetårsakstypeEnum | undefined;
         },
         string
     >;
-    feilmelding: string | undefined;
-    setFeilmelding: (feilmelding: string | undefined) => void;
     sendInn: () => void;
     nullstillSkjema: () => void;
 };
@@ -31,20 +28,19 @@ const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): Revu
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
-    const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
         {
-            behandlingstype: Behandlingstype;
-            behandlingsårsak: Behandlingårsak | undefined;
+            behandlingstype: BehandlingstypeEnum;
+            behandlingsårsak: GetårsakstypeEnum | undefined;
         },
         string
     >({
         felter: {
-            behandlingstype: useFelt<Behandlingstype>({
-                verdi: Behandlingstype.RevurderingTilbakekreving,
+            behandlingstype: useFelt<BehandlingstypeEnum>({
+                verdi: 'REVURDERING_TILBAKEKREVING',
             }),
-            behandlingsårsak: useFelt<Behandlingårsak | undefined>({
+            behandlingsårsak: useFelt<GetårsakstypeEnum | undefined>({
                 feltId: 'behandlingsårsak',
                 verdi: undefined,
                 valideringsfunksjon: erFeltetEmpty,
@@ -54,9 +50,8 @@ const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): Revu
     });
 
     const sendInn = (): void => {
-        if (kanSendeSkjema() && ytelsestype) {
+        if (kanSendeSkjema()) {
             nullstillIkkePersisterteKomponenter();
-            setFeilmelding(undefined);
             onSubmit(
                 {
                     method: 'POST',
@@ -68,23 +63,14 @@ const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): Revu
                     url: '/familie-tilbake/api/behandling/revurdering/v1',
                 },
                 (response: Ressurs<string>) => {
-                    if (response.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
+                    if (response.status === RessursStatus.Suksess) {
                         utførRedirect(
                             `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${response.data}`
                         );
                         dialogRef.current?.close();
-                    } else if (
-                        response.status === RessursStatus.Suksess &&
-                        (!fagsystem || !eksternFagsakId)
-                    ) {
-                        setFeilmelding(
-                            `Mangler ${!fagsystem ? 'fagsystemtype' : ''}${!eksternFagsakId ? 'eksternFagsakId' : ''} for å navigere til den nye opprettede behandlingen.`
-                        );
                     }
                 }
             );
-        } else if (!ytelsestype) {
-            setFeilmelding('Kan ikke opprette revurdering uten ytelsestype');
         }
     };
 
@@ -92,8 +78,6 @@ const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): Revu
         skjema,
         sendInn,
         nullstillSkjema,
-        feilmelding,
-        setFeilmelding,
     };
 };
 

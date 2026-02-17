@@ -17,22 +17,21 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { SkalSendesForhåndsvarsel } from '../schema';
 import { Unntak } from './UnntakSkjema';
+import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 
 type Props = {
     varselbrevtekster: Varselbrevtekst | undefined;
     varselErSendt: boolean;
     handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData>;
-    readOnly: boolean;
 };
 
 export const SkalSendeSkjema: React.FC<Props> = ({
     varselbrevtekster,
     varselErSendt,
     handleForhåndsvarselSubmit,
-    readOnly,
 }) => {
     const maksAntallTegn = 4000;
-
+    const { behandlingILesemodus } = useBehandlingState();
     const {
         control,
         register,
@@ -72,7 +71,7 @@ export const SkalSendeSkjema: React.FC<Props> = ({
                         legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
                         description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                         fattes, slik at de får mulighet til å uttale seg."
-                        readOnly={varselErSendt || readOnly}
+                        readOnly={varselErSendt || behandlingILesemodus}
                         error={fieldState.error?.message}
                     >
                         <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
@@ -123,9 +122,7 @@ export const SkalSendeSkjema: React.FC<Props> = ({
                 </VStack>
             )}
 
-            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && (
-                <Unntak readOnly={readOnly} />
-            )}
+            {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
         </VStack>
     );
 };

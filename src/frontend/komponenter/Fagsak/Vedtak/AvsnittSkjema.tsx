@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { VedtakFritekstSkjema } from './VedtakFritekstSkjema';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData): boolean => {
@@ -39,17 +40,12 @@ export const avsnittKey = (avsnitt: AvsnittSkjemaData): string =>
 
 type Props = {
     avsnitt: AvsnittSkjemaData;
-    erLesevisning: boolean;
     erRevurderingBortfaltBeløp: boolean;
 };
 
-export const AvsnittSkjema: React.FC<Props> = ({
-    avsnitt,
-    erLesevisning,
-    erRevurderingBortfaltBeløp,
-}) => {
+export const AvsnittSkjema: React.FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp }) => {
     const [erEkspandert, settErEkspandert] = React.useState<boolean>(false);
-
+    const { behandlingILesemodus } = useBehandlingState();
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);
 
     React.useEffect(() => {
@@ -93,7 +89,7 @@ export const AvsnittSkjema: React.FC<Props> = ({
         >
             <ExpansionCard.Header
                 className={
-                    !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
+                    !behandlingILesemodus && harPåkrevetFritekstMenIkkeUtfylt
                         ? 'border-l-4 border-ax-border-danger'
                         : ''
                 }
@@ -103,7 +99,7 @@ export const AvsnittSkjema: React.FC<Props> = ({
 
             <ExpansionCard.Content
                 className={classNames(
-                    !erLesevisning && harPåkrevetFritekstMenIkkeUtfylt
+                    !behandlingILesemodus && harPåkrevetFritekstMenIkkeUtfylt
                         ? 'border-l-4 border-ax-border-danger'
                         : ''
                 )}
@@ -143,7 +139,6 @@ export const AvsnittSkjema: React.FC<Props> = ({
                                 <VedtakFritekstSkjema
                                     avsnittIndex={avsnitt.index}
                                     underavsnitt={underavsnitt}
-                                    erLesevisning={erLesevisning}
                                     maximumLength={erRevurderingBortfaltBeløp ? 10000 : undefined}
                                 />
                             )}

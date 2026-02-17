@@ -51,48 +51,44 @@ export const BrukerInformasjon: React.FC = () => {
             </ExpansionCard.Header>
             <ExpansionCard.Content>
                 <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
-                    {bruker && (
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        {kjønnIkon(bruker.kjønn)}
+                        Navn
+                    </dt>
+                    <dd className="text-ax-medium">{bruker.navn}</dd>
+
+                    {bruker.fødselsdato && (
                         <>
                             <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                                {kjønnIkon(bruker.kjønn)}
-                                Navn
+                                <CandleIcon {...ICON_PROPS} />
+                                Alder
                             </dt>
-                            <dd className="text-ax-medium">{bruker.navn}</dd>
-
-                            {bruker.fødselsdato && (
-                                <>
-                                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                                        <CandleIcon {...ICON_PROPS} />
-                                        Alder
-                                    </dt>
-                                    <dd className="text-ax-medium">
-                                        {hentAlder(bruker.fødselsdato, bruker.dødsdato)} år
-                                    </dd>
-                                </>
-                            )}
-
-                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                                <BagdeIcon {...ICON_PROPS} />
-                                {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
-                            </dt>
-                            <dd className="text-ax-medium flex flex-row gap-2 items-center">
-                                {formatterPersonIdent(bruker.personIdent)}
-                                <CopyButton copyText={bruker.personIdent} className="p-0" />
+                            <dd className="text-ax-medium">
+                                {hentAlder(bruker.fødselsdato, bruker.dødsdato)} år
                             </dd>
+                        </>
+                    )}
 
-                            {bruker.dødsdato && (
-                                <>
-                                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                                        <FlowerPetalFallingIcon {...ICON_PROPS} />
-                                        Dødsdato
-                                    </dt>
-                                    <dd className="text-ax-medium">
-                                        <Tag data-color="neutral" size="small" variant="strong">
-                                            {formatterDatostring(bruker.dødsdato)}
-                                        </Tag>
-                                    </dd>
-                                </>
-                            )}
+                    <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <BagdeIcon {...ICON_PROPS} />
+                        {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
+                    </dt>
+                    <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                        {formatterPersonIdent(bruker.personIdent)}
+                        <CopyButton copyText={bruker.personIdent} className="p-0" />
+                    </dd>
+
+                    {bruker.dødsdato && (
+                        <>
+                            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                                <FlowerPetalFallingIcon {...ICON_PROPS} />
+                                Dødsdato
+                            </dt>
+                            <dd className="text-ax-medium">
+                                <Tag data-color="neutral" size="small" variant="strong">
+                                    {formatterDatostring(bruker.dødsdato)}
+                                </Tag>
+                            </dd>
                         </>
                     )}
                     {institusjon && (

@@ -1,4 +1,4 @@
-import type { Behandlingsstegstilstand } from '../../../../typer/behandling';
+import type { BehandlingsstegsinfoDto } from '../../../../generated';
 
 import { Alert, BodyLong, BodyShort, Button, Heading, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -9,18 +9,13 @@ import { usePåVentBehandling } from './PåVentContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { Valideringsstatus } from '../../../../hooks/skjema';
-import {
-    Behandlingssteg,
-    manuelleVenteÅrsaker,
-    Saksbehandlingstype,
-    venteårsaker,
-} from '../../../../typer/behandling';
+import { manuelleVenteÅrsaker, venteårsaker } from '../../../../typer/behandling';
 import { dateBeforeToday } from '../../../../utils';
 import { dagensDato } from '../../../../utils/dato';
 import { Datovelger } from '../../Datovelger/Datovelger';
 
 type Props = {
-    ventegrunn: Behandlingsstegstilstand;
+    ventegrunn: BehandlingsstegsinfoDto;
     onClose: () => void;
 };
 
@@ -38,9 +33,8 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
     const { skjema, onBekreft, onOkTaAvVent, tilbakestillFelterTilDefault, feilmelding } =
         usePåVentBehandling(lukkModalOgHentBehandling, ventegrunn);
 
-    const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === Behandlingssteg.Grunnlag;
-    const erAutomatiskVent =
-        ventegrunn.behandlingssteg === Behandlingssteg.Varsel || erVenterPåKravgrunnlag;
+    const erVenterPåKravgrunnlag = ventegrunn.behandlingssteg === 'GRUNNLAG';
+    const erAutomatiskVent = ventegrunn.behandlingssteg === 'VARSEL' || erVenterPåKravgrunnlag;
 
     const muligeÅrsaker =
         ventegrunn.venteårsak && !manuelleVenteÅrsaker.includes(ventegrunn.venteårsak)
@@ -58,11 +52,11 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
         ventegrunn.venteårsak === skjema.felter.årsak.verdi &&
         ventegrunn.tidsfrist === skjema.felter.tidsfrist.verdi;
 
-    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.Grunnlag;
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === 'GRUNNLAG';
 
     const vilBliAutomatiskBehandletUnder4rettsgebyr =
         venterPåKravgrunnlag &&
-        saksbehandlingstype === Saksbehandlingstype.AutomatiskIkkeInnkrevingUnder4XRettsgebyr;
+        saksbehandlingstype === 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR';
 
     const lukkModal = (): void => {
         tilbakestillFelterTilDefault();

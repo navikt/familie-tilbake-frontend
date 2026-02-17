@@ -7,7 +7,6 @@ import { useHttp } from '../../../../api/http/HttpProvider';
 import { useApp } from '../../../../context/AppContext';
 import { useBehandling } from '../../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../../context/FagsakContext';
 import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
 import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
 import { useStegNavigering } from '../../../../utils/sider';
@@ -19,7 +18,6 @@ export const HentKorrigertKravgrunnlag: React.FC = () => {
     const { request } = useHttp();
     const { settToast } = useApp();
     const queryClient = useQueryClient();
-    const { fagsystem, eksternFagsakId } = useFagsak();
     const navigerTilBehandling = useStegNavigering();
     const hentKorrigertKravgrunnlag = (): void => {
         nullstillIkkePersisterteKomponenter();
@@ -27,7 +25,7 @@ export const HentKorrigertKravgrunnlag: React.FC = () => {
             method: 'PUT',
             url: `/familie-tilbake/api/forvaltning/behandling/${behandlingId}/kravgrunnlag/v1`,
         }).then(async (respons: Ressurs<string>) => {
-            if (respons.status === RessursStatus.Suksess && fagsystem && eksternFagsakId) {
+            if (respons.status === RessursStatus.Suksess) {
                 settToast(ToastTyper.KravgrunnlaHentet, {
                     alertType: AlertType.Info,
                     tekst: 'Hentet korrigert kravgrunnlag',

@@ -13,7 +13,6 @@ import * as React from 'react';
 import { useVerge } from './VergeContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { Vergetype, vergetyper } from '../../../kodeverk/verge';
-import { Behandlingssteg } from '../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../utils';
 import { HenterData } from '../../Felleskomponenter/Datalast/HenterData';
 import { Steginformasjon } from '../../Felleskomponenter/Steginformasjon/StegInformasjon';
@@ -24,7 +23,6 @@ export const VergeContainer: React.FC = () => {
         useVerge();
     const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
         useBehandlingState();
-    const erLesevisning = !!behandlingILesemodus;
 
     const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         const nyVergetype = e.target.value as Vergetype;
@@ -38,7 +36,7 @@ export const VergeContainer: React.FC = () => {
 
     return (
         <>
-            <Heading level="1" size="small" spacing>
+            <Heading size="small" spacing>
                 Verge
             </Heading>
             {henterData ? (
@@ -58,7 +56,7 @@ export const VergeContainer: React.FC = () => {
                         {...skjema.felter.vergetype.hentNavInputProps(skjema.visFeilmeldinger)}
                         id="vergeType"
                         label="Vergetype"
-                        readOnly={erLesevisning}
+                        readOnly={behandlingILesemodus}
                         value={skjema.felter.vergetype.verdi}
                         onChange={event => onChangeVergeType(event)}
                     >
@@ -78,7 +76,7 @@ export const VergeContainer: React.FC = () => {
                             <TextField
                                 {...skjema.felter.navn.hentNavInputProps(skjema.visFeilmeldinger)}
                                 label="Navn"
-                                readOnly={erLesevisning}
+                                readOnly={behandlingILesemodus}
                                 value={skjema.felter.navn.verdi}
                                 onChange={event => {
                                     skjema.felter.navn.validerOgSettFelt(event.target.value);
@@ -91,7 +89,7 @@ export const VergeContainer: React.FC = () => {
                                         skjema.visFeilmeldinger
                                     )}
                                     label="Organisasjonsnummer"
-                                    readOnly={erLesevisning}
+                                    readOnly={behandlingILesemodus}
                                     value={skjema.felter.organisasjonsnummer.verdi}
                                     onChange={event => {
                                         skjema.felter.organisasjonsnummer.validerOgSettFelt(
@@ -106,7 +104,7 @@ export const VergeContainer: React.FC = () => {
                                         skjema.visFeilmeldinger
                                     )}
                                     label="Fødselsnummer"
-                                    readOnly={erLesevisning}
+                                    readOnly={behandlingILesemodus}
                                     value={skjema.felter.fødselsnummer.verdi}
                                     onChange={event => {
                                         skjema.felter.fødselsnummer.validerOgSettFelt(
@@ -122,7 +120,7 @@ export const VergeContainer: React.FC = () => {
                         {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                         label="Begrunn endringene"
                         value={skjema.felter.begrunnelse.verdi}
-                        readOnly={erLesevisning}
+                        readOnly={behandlingILesemodus}
                         onChange={event => {
                             skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
                             settIkkePersistertKomponent('verge');
@@ -132,7 +130,7 @@ export const VergeContainer: React.FC = () => {
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
 
                     <ActionBar
-                        stegtekst={actionBarStegtekst(Behandlingssteg.Verge)}
+                        stegtekst={actionBarStegtekst('VERGE')}
                         forrigeAriaLabel={undefined}
                         nesteAriaLabel="Gå videre til faktasteget"
                         onNeste={sendInn}

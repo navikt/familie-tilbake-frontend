@@ -64,9 +64,9 @@ export const SettPåVent: React.FC = () => {
                     <Select
                         {...skjema.felter.årsak.hentNavInputProps(skjema.visFeilmeldinger)}
                         label="Årsaken til at behandlingen settes på vent"
-                        value={skjema.felter.årsak.verdi || 'default'}
+                        value={skjema.felter.årsak.verdi || ''}
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg årsak
                         </option>
                         {manuelleVenteÅrsaker.map(årsak => (

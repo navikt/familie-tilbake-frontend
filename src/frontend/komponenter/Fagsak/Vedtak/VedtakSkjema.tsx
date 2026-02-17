@@ -4,26 +4,26 @@ import { Alert, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { AvsnittSkjema, avsnittKey } from './AvsnittSkjema';
+import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
 type Props = {
     avsnitter: AvsnittSkjemaData[];
-    erLesevisning: boolean;
     erRevurderingBortfaltBeløp: boolean;
     harBrukerUttaltSeg: boolean;
 };
 
 export const VedtakSkjema: React.FC<Props> = ({
     avsnitter,
-    erLesevisning,
     erRevurderingBortfaltBeløp,
     harBrukerUttaltSeg,
 }) => {
+    const { behandlingILesemodus } = useBehandlingState();
     return (
         <>
             <Heading size="small" level="2">
                 Vedtaksbrev
             </Heading>
-            {!harBrukerUttaltSeg && !erLesevisning && (
+            {!harBrukerUttaltSeg && !behandlingILesemodus && (
                 <Alert variant="warning">Husk å vurdere uttalelse fra bruker</Alert>
             )}
             {avsnitter.map(avsnitt => {
@@ -31,7 +31,6 @@ export const VedtakSkjema: React.FC<Props> = ({
                     <AvsnittSkjema
                         key={avsnittKey(avsnitt)}
                         avsnitt={avsnitt}
-                        erLesevisning={erLesevisning}
                         erRevurderingBortfaltBeløp={erRevurderingBortfaltBeløp}
                     />
                 );

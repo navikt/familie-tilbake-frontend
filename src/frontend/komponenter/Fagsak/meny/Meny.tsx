@@ -17,13 +17,12 @@ import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { useFagsak } from '../../../context/FagsakContext';
 import { Fagsystem } from '../../../kodeverk';
-import { Behandlingssteg, Behandlingstatus } from '../../../typer/behandling';
 
 export const Behandlingsmeny: React.FC = () => {
     const behandling = useBehandling();
     const { ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } = useBehandlingState();
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);
-    const { fagsystem, ytelsestype } = useFagsak();
+    const { fagsystem } = useFagsak();
     const { innloggetSaksbehandler } = useApp();
     const forvalterGruppe =
         process.env.NODE_ENV === 'production'
@@ -31,17 +30,14 @@ export const Behandlingsmeny: React.FC = () => {
             : 'c62e908a-cf20-4ad0-b7b3-3ff6ca4bf38b';
     const erForvalter = innloggetSaksbehandler?.groups?.some(group => group === forvalterGruppe);
 
-    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === Behandlingssteg.Grunnlag;
+    const venterPåKravgrunnlag = ventegrunn?.behandlingssteg === 'GRUNNLAG';
     const vedtakFattetEllerFattes =
-        erStegBehandlet(Behandlingssteg.FatteVedtak) ||
-        aktivtSteg?.behandlingssteg === Behandlingssteg.FatteVedtak;
+        erStegBehandlet('FATTE_VEDTAK') || aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK';
 
     const erBehandlingenAktiv =
-        behandling.status !== Behandlingstatus.Avsluttet &&
-        !vedtakFattetEllerFattes &&
-        behandling.kanEndres;
+        behandling.status !== 'AVSLUTTET' && !vedtakFattetEllerFattes && behandling.kanEndres;
     const erSattPåvent = behandling.erBehandlingPåVent || ventegrunn;
-    const kanEndreEnhet = fagsystem === Fagsystem.BA && ytelsestype;
+    const kanEndreEnhet = fagsystem === Fagsystem.BA;
     return (
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>

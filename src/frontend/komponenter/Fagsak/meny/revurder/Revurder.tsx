@@ -1,24 +1,19 @@
+import type { GetårsakstypeEnum } from '../../../../generated';
+
 import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef } from 'react';
 
 import { useRevurderSkjema } from './RevurderSkjemaContext';
-import { Behandlingårsak, behandlingårsaker } from '../../../../typer/behandling';
+import { behandlingsårsaker } from '../../../../typer/behandling';
 import { hentFrontendFeilmelding } from '../../../../utils';
 import { MODAL_BREDDE } from '../utils';
 
 export const Revurder: React.FC = () => {
     const ref = useRef<HTMLDialogElement>(null);
-    const {
-        skjema,
-        sendInn,
-        nullstillSkjema,
-        feilmelding: storeFeilmelding,
-        setFeilmelding,
-    } = useRevurderSkjema(ref);
-
-    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs) || storeFeilmelding;
+    const { skjema, sendInn, nullstillSkjema } = useRevurderSkjema(ref);
+    const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);
 
     return (
         <>
@@ -35,10 +30,7 @@ export const Revurder: React.FC = () => {
                 header={{
                     heading: 'Revurder tilbakekreving',
                 }}
-                onClose={() => {
-                    nullstillSkjema();
-                    setFeilmelding(undefined);
-                }}
+                onClose={() => nullstillSkjema()}
                 className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-4">
@@ -48,15 +40,15 @@ export const Revurder: React.FC = () => {
                         )}
                         name="Behandling"
                         label="Årsak til revurderingen"
-                        value={skjema.felter.behandlingsårsak.verdi || 'default'}
+                        value={skjema.felter.behandlingsårsak.verdi || ''}
                         onChange={skjema.felter.behandlingsårsak.onChange}
                     >
-                        <option value="default" disabled>
+                        <option value="" disabled>
                             Velg årsak
                         </option>
-                        {Object.values(Behandlingårsak).map(årsak => (
+                        {(Object.keys(behandlingsårsaker) as GetårsakstypeEnum[]).map(årsak => (
                             <option key={årsak} value={årsak}>
-                                {behandlingårsaker[årsak]}
+                                {behandlingsårsaker[årsak]}
                             </option>
                         ))}
                     </Select>
@@ -72,7 +64,6 @@ export const Revurder: React.FC = () => {
                         key="avbryt"
                         onClick={() => {
                             nullstillSkjema();
-                            setFeilmelding(undefined);
                             ref.current?.close();
                         }}
                     >

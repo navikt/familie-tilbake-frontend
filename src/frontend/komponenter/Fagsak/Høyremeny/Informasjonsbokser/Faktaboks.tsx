@@ -21,7 +21,7 @@ import { useFagsak } from '../../../../context/FagsakContext';
 import {
     behandlingsresultater,
     behandlingsstatuser,
-    behandlingårsaker,
+    behandlingsårsaker,
 } from '../../../../typer/behandling';
 import { formatterDatostring } from '../../../../utils';
 import { ICON_PROPS } from '../utils';
@@ -52,7 +52,7 @@ export const Faktaboks: React.FC = () => {
                             </dt>
                             <dd className="text-ax-medium items-center flex">
                                 <Tag data-color="neutral" size="small" variant="moderate">
-                                    {behandlingårsaker[behandling.behandlingsårsakstype]}
+                                    {behandlingsårsaker[behandling.behandlingsårsakstype]}
                                 </Tag>
                             </dd>
                         </>
