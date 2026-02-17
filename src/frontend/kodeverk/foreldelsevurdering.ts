@@ -19,4 +19,4 @@ export const foreldelseVurderingTyper: readonly Foreldelsevurdering[] = [
     Foreldelsevurdering.IkkeForeldet,
     Foreldelsevurdering.Foreldet,
     Foreldelsevurdering.Tilleggsfrist,
-] as const;
+];

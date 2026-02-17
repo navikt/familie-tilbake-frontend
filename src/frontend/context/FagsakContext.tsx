@@ -18,7 +18,7 @@ export const FagsakProvider = ({ children }: Props): React.ReactElement => {
     const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
     const fagsystem =
         fagsystemParam == 'KS'
-            ? Fagsystem[fagsystemParam as keyof typeof Fagsystem]
+            ? Fagsystem[fagsystemParam satisfies keyof typeof Fagsystem]
             : (fagsystemParam as Fagsystem);
 
     const { data: fagsak } = useSuspenseQuery({

@@ -41,4 +41,4 @@ export default defineConfig([
             lint: 'eslint',
         },
     },
-] as UserConfig[]);
+] satisfies UserConfig[]);

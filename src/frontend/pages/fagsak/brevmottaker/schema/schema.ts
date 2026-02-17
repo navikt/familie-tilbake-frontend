@@ -525,13 +525,13 @@ export const mapBrevmottakerToFormData = (
                 adresseData = {
                     adresseKilde,
                     fødselsnummer: brevmottaker.personIdent || '',
-                } as RegisterOppslag;
+                } satisfies RegisterOppslag;
             } else {
                 adresseData = {
                     adresseKilde,
                     organisasjonsnummer: brevmottaker.organisasjonsnummer || '',
                     navn: brevmottaker.navn,
-                } as OrganisasjonsregisterOppslag;
+                } satisfies OrganisasjonsregisterOppslag;
             }
 
             return {
@@ -560,17 +560,17 @@ export const mapBrevmottakerToFormData = (
                 adresseData = {
                     adresseKilde,
                     fødselsnummer: brevmottaker.personIdent || '',
-                } as RegisterOppslag;
+                } satisfies RegisterOppslag;
             } else {
                 adresseData = {
                     adresseKilde: AdresseKilde.ManuellRegistrering,
                     navn: baseAddress.navn,
                     land: baseAddress.land,
-                    adresselinje1: baseAddress.adresselinje1,
+                    adresselinje1: baseAddress.adresselinje1 ?? undefined,
                     adresselinje2: baseAddress.adresselinje2,
                     postnummer: baseAddress.postnummer,
                     poststed: baseAddress.poststed,
-                } as VergeData;
+                } satisfies VergeData;
             }
 
             return {
