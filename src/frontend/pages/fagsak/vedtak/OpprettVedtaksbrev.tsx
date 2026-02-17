@@ -119,6 +119,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
     };
 
     const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
+    // eslint-disable-next-line react-hooks/incompatible-library
     methods.watch(() => debouncedUpdate());
 
     const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
