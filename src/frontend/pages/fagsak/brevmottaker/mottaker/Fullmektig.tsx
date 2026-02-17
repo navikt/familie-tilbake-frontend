@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AdresseKilde, adresseKilder, MottakerType } from '../../../../typer/Brevmottaker';
-import { ManuellRegistrering } from '../adressekilde-edit/ManuellRegistrering';
+import { ManuellRegistrering } from '../adressekilde/ManuellRegistrering';
 
 export const Fullmektig: React.FC = () => {
     const { register, watch, control, formState } = useFormContext<BrevmottakerFormData>();

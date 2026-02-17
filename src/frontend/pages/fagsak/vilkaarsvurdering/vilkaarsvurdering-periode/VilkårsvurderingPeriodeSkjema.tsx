@@ -21,7 +21,7 @@ import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering-edit/AktsomhetsvurderingSkjema';
+import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
 import { SplittPeriode } from './splitt-periode/SplittPeriode';
 import { TilbakekrevingAktivitetTabell } from './TilbakekrevingAktivitetTabell';
