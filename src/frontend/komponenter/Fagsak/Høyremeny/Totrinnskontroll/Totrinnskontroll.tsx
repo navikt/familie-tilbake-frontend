@@ -23,7 +23,7 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
-import { BekreftelsesModal } from '../../../Felleskomponenter/BekreftelsesModal/BekreftelsesModal';
+import { BekreftelsesModal } from '../../../Felleskomponenter/Modal/BekreftelsesModal/BekreftelsesModal';
 import { Steginformasjon } from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 export const Totrinnskontroll: React.FC = () => {

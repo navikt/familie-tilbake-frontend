@@ -21,8 +21,8 @@ import { useSammenslåPerioder } from '../../../hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '../../../kodeverk';
 import { RessursStatus } from '../../../typer/ressurs';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
-import { BekreftelsesModal } from '../../Felleskomponenter/BekreftelsesModal/BekreftelsesModal';
 import { DataLastIkkeSuksess } from '../../Felleskomponenter/Datalast/DataLastIkkeSuksess';
+import { BekreftelsesModal } from '../../Felleskomponenter/Modal/BekreftelsesModal/BekreftelsesModal';
 import { ActionBar } from '../ActionBar/ActionBar';
 
 export const VedtakContainer: React.FC = () => {
