@@ -802,4 +802,45 @@ describe('VedtakContainer', () => {
         expect(getByText('Denne friteksten var påkrevet')).toBeInTheDocument();
         expect(getByText('Denne friteksten var lagt til ekstra')).toBeInTheDocument();
     });
+
+    test('Viser bekreftelsesmodal når bruker klikker Send til godkjenning', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: false,
+                }),
+            ]),
+        ];
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
+            lagBehandling({ kanEndres: true })
+        );
+
+        await waitFor(() => {
+            expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        });
+
+        expect(queryByRole('dialog')).not.toBeInTheDocument();
+
+        await user.click(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        );
+
+        await waitFor(() => {
+            expect(getByRole('dialog')).toBeInTheDocument();
+        });
+
+        expect(getByText('Denne handlingen kan ikke angres.')).toBeInTheDocument();
+        expect(
+            getByRole('button', {
+                name: 'Avbryt',
+            })
+        ).toBeInTheDocument();
+    });
 });
