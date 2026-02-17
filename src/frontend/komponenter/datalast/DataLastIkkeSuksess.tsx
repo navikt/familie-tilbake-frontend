@@ -2,7 +2,7 @@ import { Alert } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { HenterData } from './HenterData';
-import { ServerFeil } from '../../pages/feilsider/ErrorPage';
+import { Serverfeil } from '../../pages/feilsider/serverfeil';
 import { type Ressurs, RessursStatus } from '../../typer/ressurs';
 
 type Props = {
@@ -35,7 +35,7 @@ export const DataLastIkkeSuksess: React.FC<Props> = ({
             ressurs.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
-        return <ServerFeil />;
+        return <Serverfeil />;
     }
     if (feiletRessurs) {
         return <Alert variant="error">{feiletRessurs.frontendFeilmelding}</Alert>;

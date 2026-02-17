@@ -9,7 +9,7 @@ type Props = {
 
 export const Serverfeil: React.FC<Props> = ({ httpStatus, fagsakId, behandlingId }) => {
     return (
-        <Page.Block as="main" width="xl" gutters>
+        <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-32">
                 <HGrid columns="minmax(auto,600px)" data-aksel-template="500-v2">
                     <VStack gap="space-64">

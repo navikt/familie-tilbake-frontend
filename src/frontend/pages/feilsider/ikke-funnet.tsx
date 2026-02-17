@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 export const IkkeFunnet: React.FC = () => {
     return (
-        <Page.Block as="main" width="xl" gutters>
+        <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-64" data-aksel-template="404-v2">
                 <VStack gap="space-48" align="start">
                     <div>

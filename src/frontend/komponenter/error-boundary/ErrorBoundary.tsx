@@ -1,11 +1,11 @@
 import type { Saksbehandler } from '../../typer/saksbehandler';
 
-import { Label } from '@navikt/ds-react';
 import { getCurrentScope, showReportDialog } from '@sentry/browser';
 import { captureException, withScope } from '@sentry/core';
 import * as React from 'react';
 
 import { apiLoggFeil } from '../../api/axios';
+import { Serverfeil } from '../../pages/feilsider/serverfeil';
 
 type Props = {
     autentisertSaksbehandler?: Saksbehandler;
@@ -54,8 +54,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
     render(): React.ReactNode {
         if (this.state.hasError) {
-            // You can render any custom fallback UI
-            return <Label size="small">Noe har gått feil!</Label>;
+            return <Serverfeil />;
         }
 
         return this.props.children;

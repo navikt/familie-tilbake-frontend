@@ -6,7 +6,6 @@ import { createRoot } from 'react-dom/client';
 
 import './api/http/configureHeyApi';
 import { App } from './App';
-import { ErrorBoundary } from './komponenter/error-boundary/ErrorBoundary';
 import { initGrafanaFaro } from './utils/grafanaFaro';
 
 import './index.css';
@@ -34,8 +33,4 @@ if (!container) {
     throw new Error('Fant ikke rot-element: "app"');
 }
 
-createRoot(container).render(
-    <ErrorBoundary>
-        <App />
-    </ErrorBoundary>
-);
+createRoot(container).render(<App />);

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 export const IkkeTilgang: React.FC = () => {
     return (
-        <Page.Block as="main" width="xl" gutters>
+        <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-64" data-aksel-template="403-v2">
                 <VStack gap="space-48" align="start">
                     <div>

@@ -23,7 +23,8 @@ import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting'
 import { Header } from './komponenter/header/Header';
 import { StegflytSkeleton } from './komponenter/stegflyt/StegflytSkeleton';
 import { Toasts } from './komponenter/toast/Toasts';
-import { IkkeTilgang } from './pages/feilsider/Unauthenticated';
+import { IkkeFunnet } from './pages/feilsider/ikke-funnet';
+import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { configureZod } from './utils/zodConfig';
 
 const Dashboard = lazyImportMedRetry(() => import('./pages/dashboard'), 'Dashboard');
@@ -31,7 +32,6 @@ const FagsakContainer = lazyImportMedRetry(
     () => import('./pages/fagsak/Fagsak'),
     'FagsakContainer'
 );
-const IkkeFunnet = lazyImportMedRetry(() => import('./pages/feilsider/NotFound'), 'IkkeFunnet');
 
 const AppLayout: React.FC = () => {
     const { autentisert } = useApp();
@@ -90,15 +90,8 @@ const router = createBrowserRouter(
                         }
                     />
                 </Route>
-                <Route
-                    path="*"
-                    element={
-                        <Suspense fallback={<div>Feilmelding laster...</div>}>
-                            <IkkeFunnet />
-                        </Suspense>
-                    }
-                />
             </Route>
+            <Route path="*" element={<IkkeFunnet />} />
         </Route>
     )
 );
