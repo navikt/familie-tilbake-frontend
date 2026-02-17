@@ -60,34 +60,40 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
         router.use(vite.middlewares);
     }
 
+    const serveApp = async (req: Request, res: Response): Promise<void> => {
+        const csrfToken = genererCsrfToken(req.session);
+        const url = req.originalUrl;
+        try {
+            let htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
+            htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
+
+            res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
+        } catch (error) {
+            logError(`Feil ved lesing av index.html: ${error}`);
+            res.status(500).json({
+                frontendFeilmelding: 'Feil ved lesing av index.html.',
+                status: 'FEILET',
+            });
+        }
+    };
+
     router.get(
         ['/', '/fagsystem/*splat'],
         ensureAuthenticated(texasClient, false),
-        async (req: Request, res: Response): Promise<void> => {
+        (req: Request, res: Response): void => {
             prometheusTellere.appLoad.inc();
             const gammelCsrfToken = req.session.csrfToken;
             const csrfToken = genererCsrfToken(req.session);
             logInfo(
                 `Gammel CSRF-tokenstart=${gammelCsrfToken?.substring(0, 4)}, CSRF-tokenstart=${csrfToken.substring(0, 4)}, path=${req.path}`
             );
-            const url = req.originalUrl;
-            try {
-                let htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
-                htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
-
-                res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
-            } catch (error) {
-                logError(`Feil ved lesing av index.html: ${error}`);
-                res.status(500).json({
-                    frontendFeilmelding: 'Feil ved lesing av index.html.',
-                    status: 'FEILET',
-                });
-            }
+            void serveApp(req, res);
         }
     );
 
-    router.use((_: Request, res: Response) => {
-        res.status(404).sendFile(`${path.join(process.cwd(), buildPath)}/index.html`);
+    // Catch-all: server SPA for ukjente ruter slik at React Router håndterer 404
+    router.use(ensureAuthenticated(texasClient, false), (req: Request, res: Response): void => {
+        void serveApp(req, res);
     });
 
     return router;

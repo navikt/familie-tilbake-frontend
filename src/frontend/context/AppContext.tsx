@@ -1,4 +1,4 @@
-import type { Toast, ToastTyper } from '../komponenter/Felleskomponenter/Toast/typer';
+import type { Toast, ToastTyper } from '../komponenter/toast/typer';
 import type { Ressurs } from '../typer/ressurs';
 import type { Saksbehandler } from '../typer/saksbehandler';
 
