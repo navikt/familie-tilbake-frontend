@@ -13,7 +13,6 @@ import { HistoriskFaktaProvider } from './fakta/fakta-periode/historikk/Historis
 import { FaktaProvider } from './fakta/FaktaContext';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
-import { Forhåndsvarsel } from './forhåndsvarsel/Forhåndsvarsel';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
 import { OpprettVedtaksbrevSkeleton } from './vedtak/OpprettVedtaksbrevSkeleton';
 import { VedtakProvider } from './vedtak/VedtakContext';
@@ -51,6 +50,10 @@ const FaktaContainer = lazyImportMedRetry(() => import('./fakta/FaktaContainer')
 const HistoriskFaktaContainer = lazyImportMedRetry(
     () => import('./fakta/fakta-periode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
+);
+const Forhåndsvarsel = lazyImportMedRetry(
+    () => import('./forhåndsvarsel/Forhåndsvarsel'),
+    'Forhåndsvarsel'
 );
 const ForeldelseContainer = lazyImportMedRetry(
     () => import('./foreldelse/ForeldelseContainer'),
