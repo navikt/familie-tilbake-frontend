@@ -17,11 +17,7 @@ import {
 } from '../../../hooks/skjema';
 import { DokumentMal } from '../../../kodeverk';
 import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
-import {
-    erFeltetEmpty,
-    hentFrontendFeilmelding,
-    validerTekstFeltMaksLengde,
-} from '../../../utils';
+import { erFeltetEmpty, hentFrontendFeilmelding, validerTekstFeltMaksLengde } from '../../../utils';
 
 type Mottaker = {
     verdi: string;
