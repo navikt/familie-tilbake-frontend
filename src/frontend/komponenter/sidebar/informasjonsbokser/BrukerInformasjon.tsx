@@ -73,9 +73,16 @@ export const BrukerInformasjon: React.FC = () => {
                         <BagdeIcon {...ICON_PROPS} />
                         {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
                     </dt>
-                    <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                    <dd
+                        className="text-ax-medium flex flex-row gap-2 items-center"
+                        aria-label={formatterPersonIdent(bruker.personIdent).split('').join(' ')}
+                    >
                         {formatterPersonIdent(bruker.personIdent)}
-                        <CopyButton copyText={bruker.personIdent} className="p-0" />
+                        <CopyButton
+                            copyText={bruker.personIdent}
+                            className="p-0"
+                            title="Kopier fødselsnummer"
+                        />
                     </dd>
 
                     {bruker.dødsdato && (
@@ -103,11 +110,15 @@ export const BrukerInformasjon: React.FC = () => {
                                 <Buildings2Icon {...ICON_PROPS} />
                                 Org.nummer
                             </dt>
-                            <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                            <dd
+                                className="text-ax-medium flex flex-row gap-2 items-center"
+                                aria-label={institusjon.organisasjonsnummer.split('').join(' ')}
+                            >
                                 {formatterOrgNummer(institusjon.organisasjonsnummer)}
                                 <CopyButton
                                     copyText={institusjon.organisasjonsnummer}
                                     className="p-0"
+                                    title="Kopier organisasjonsnummer"
                                 />
                             </dd>
                         </>

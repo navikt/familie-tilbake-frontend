@@ -151,7 +151,7 @@ export const Header: React.FC = () => {
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
             </Dropdown>
-            <InternalHeader.Button onClick={toggleTheme}>
+            <InternalHeader.Button onClick={toggleTheme} aria-label="Bytt tema">
                 {theme === 'light' ? <MoonIcon /> : <SunIcon />}
             </InternalHeader.Button>
         </InternalHeader>
