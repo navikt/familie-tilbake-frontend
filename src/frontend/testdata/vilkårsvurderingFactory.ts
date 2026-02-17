@@ -1,4 +1,4 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '../komponenter/Fagsak/Vilkårsvurdering/typer/vilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../pages/fagsak/vilkaarsvurdering/typer/vilkårsvurdering';
 import type {
     VilkårsvurderingPeriode,
     VilkårsvurderingResponse,

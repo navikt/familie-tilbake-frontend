@@ -1,4 +1,4 @@
-import type { ForeldelsePeriodeSkjemeData } from '../komponenter/Fagsak/Foreldelse/typer/foreldelse';
+import type { ForeldelsePeriodeSkjemeData } from '../pages/fagsak/foreldelse/typer/foreldelse';
 import type { ForeldelsePeriode, ForeldelseResponse } from '../typer/tilbakekrevingstyper';
 
 export const lagForeldelsePeriode = (
