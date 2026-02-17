@@ -6,10 +6,10 @@ import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { BrukerMedUtenlandskAdresse } from './mottaker/BrukerMedUtenlandskAdresse';
-import { Dødsbo } from './mottaker/Dødsbo';
-import { Fullmektig } from './mottaker/Fullmektig';
-import { Verge } from './mottaker/Verge';
+import { BrukerMedUtenlandskAdresse } from './mottaker-edit/BrukerMedUtenlandskAdresse';
+import { Dødsbo } from './mottaker-edit/Dødsbo';
+import { Fullmektig } from './mottaker-edit/Fullmektig';
+import { Verge } from './mottaker-edit/Verge';
 import {
     brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,

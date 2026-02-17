@@ -3,8 +3,8 @@ import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurderi
 import { Alert, BodyShort, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { VilkårsvurderingPeriodeSkjema } from './vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjema';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
-import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriode/VilkårsvurderingPeriodeSkjema';
 import { Vilkårsresultat } from '../../../kodeverk';
 import { TilbakeTidslinje } from '../../../komponenter/tilbake-tidslinje/TilbakeTidslinje';
 import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';

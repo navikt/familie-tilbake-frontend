@@ -10,7 +10,7 @@ import {
     Vilkårsresultat,
 } from '../../../../kodeverk';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
-import { TilbakekrevingAktivitetTabell } from '../VilkårsvurderingPeriode/TilbakekrevingAktivitetTabell';
+import { TilbakekrevingAktivitetTabell } from '../vilkaarsvurdering-periode/TilbakekrevingAktivitetTabell';
 
 const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.ForstoBurdeForstått]:
