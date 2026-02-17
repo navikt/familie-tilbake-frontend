@@ -21,7 +21,6 @@ import { FaktaRevurdering } from './FaktaRevurdering';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { HendelseType } from '../../../kodeverk';
-import { ActionBar } from '../../../komponenter/action-bar/ActionBar';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 
@@ -38,21 +37,12 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
         oppdaterBrukerHarUttaltSeg,
         behandlePerioderSamlet,
         settBehandlePerioderSamlet,
-        sendInnSkjema,
-        senderInn,
         visFeilmeldinger,
         feilmeldinger,
-        navigerTilForrige,
     } = useFakta();
-    const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
-        useBehandlingState();
+    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
-
-    const harBrevmottakerSteg = behandling.behandlingsstegsinfo.some(
-        steg =>
-            steg.behandlingssteg === 'BREVMOTTAKER' && steg.behandlingsstegstatus !== 'TILBAKEFØRT'
-    );
 
     return (
         <HGrid columns={2} gap="space-40">
@@ -197,28 +187,6 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
                 </VStack>
             </VStack>
             <FaktaRevurdering fakta={fakta} />
-            <ActionBar
-                stegtekst={actionBarStegtekst('FAKTA')}
-                forrigeAriaLabel={
-                    behandling.harVerge
-                        ? 'Gå tilbake til vergesteget'
-                        : harBrevmottakerSteg
-                          ? 'Gå tilbake til brevmottakersteget'
-                          : undefined
-                }
-                nesteAriaLabel={
-                    behandling.behandlingsstegsinfo.some(
-                        steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
-                    )
-                        ? 'Gå videre til forhåndsvarselsteget'
-                        : 'Gå videre til foreldelsessteget'
-                }
-                onForrige={
-                    behandling.harVerge || harBrevmottakerSteg ? navigerTilForrige : undefined
-                }
-                onNeste={sendInnSkjema}
-                isLoading={senderInn}
-            />
         </HGrid>
     );
 };
