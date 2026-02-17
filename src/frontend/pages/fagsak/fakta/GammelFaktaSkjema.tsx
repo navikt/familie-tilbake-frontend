@@ -21,7 +21,6 @@ import { FaktaRevurdering } from './FaktaRevurdering';
 import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { HendelseType } from '../../../kodeverk';
-import { ActionBar } from '../../../komponenter/action-bar/ActionBar';
 import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 
