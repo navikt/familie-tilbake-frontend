@@ -11,7 +11,7 @@ import {
     Textarea,
     RadioGroup,
 } from '@navikt/ds-react';
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
@@ -23,6 +23,7 @@ import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 import { Behandlingssteg, behandlingssteg } from '../../../../typer/behandling';
 import { RessursStatus } from '../../../../typer/ressurs';
 import { finnSideForSteg } from '../../../../utils/sider';
+import { BekreftelsesModal } from '../../../Felleskomponenter/BekreftelsesModal/BekreftelsesModal';
 import { Steginformasjon } from '../../../Felleskomponenter/Steginformasjon/StegInformasjon';
 
 export const Totrinnskontroll: React.FC = () => {
@@ -45,8 +46,9 @@ export const Totrinnskontroll: React.FC = () => {
     } = useTotrinnskontroll();
 
     const { aktivtSteg } = useBehandlingState();
+    const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // console.log('bør no trigge re-rendring');
     }, [nonUsedKey]);
 
@@ -151,7 +153,7 @@ export const Totrinnskontroll: React.FC = () => {
                     <div className="flex flex-row-reverse">
                         <Button
                             size="small"
-                            onClick={sendInnSkjema}
+                            onClick={() => settVisBekreftelsesmodal(true)}
                             loading={senderInn}
                             disabled={senderInn || disableBekreft || sendTilSaksbehandler}
                         >
@@ -167,6 +169,15 @@ export const Totrinnskontroll: React.FC = () => {
                         </Button>
                     </div>
                 )}
+                <BekreftelsesModal
+                    åpen={visBekreftelsesmodal}
+                    onLukk={() => settVisBekreftelsesmodal(false)}
+                    overskrift="Godkjenn vedtaket"
+                    brødtekst="Denne handlingen kan ikke angres."
+                    bekreftTekst="Godkjenn vedtaket"
+                    onBekreft={sendInnSkjema}
+                    laster={senderInn}
+                />
             </div>
         </>
     );

@@ -291,4 +291,45 @@ describe('Totrinnskontroll', () => {
         expect(getByText('Foreldelse må vurderes på nytt')).toBeInTheDocument();
         expect(getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
     });
+
+    test('Viser bekreftelsesmodal når bruker klikker Godkjenn vedtaket', async () => {
+        setupMocks({
+            totrinnsstegsinfo: [
+                lagTotrinnsStegInfo(Behandlingssteg.Fakta),
+                lagTotrinnsStegInfo(Behandlingssteg.Vilkårsvurdering),
+                lagTotrinnsStegInfo(Behandlingssteg.ForeslåVedtak),
+            ],
+        });
+
+        const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
+            lagBehandling({ kanEndres: true })
+        );
+
+        await waitFor(() => {
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+        });
+
+        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+
+        expect(queryByRole('dialog')).not.toBeInTheDocument();
+
+        await user.click(
+            getByRole('button', {
+                name: 'Godkjenn vedtaket',
+            })
+        );
+
+        await waitFor(() => {
+            expect(getByRole('dialog')).toBeInTheDocument();
+        });
+
+        expect(getByText('Denne handlingen kan ikke angres.')).toBeInTheDocument();
+        expect(
+            getByRole('button', {
+                name: 'Avbryt',
+            })
+        ).toBeInTheDocument();
+    });
 });
