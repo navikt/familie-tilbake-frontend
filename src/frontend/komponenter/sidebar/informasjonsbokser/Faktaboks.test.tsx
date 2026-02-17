@@ -62,8 +62,8 @@ describe('Faktaboks', () => {
     test.each<[BehandlingstatusEnum, string]>([
         ['OPPRETTET', 'neutral'],
         ['UTREDES', 'info'],
-        ['FATTER_VEDTAK', 'meta-lime'],
-        ['IVERKSETTER_VEDTAK', 'info'],
+        ['FATTER_VEDTAK', 'meta-purple'],
+        ['IVERKSETTER_VEDTAK', 'meta-lime'],
         ['AVSLUTTET', 'success'],
     ])('Status tag variant %s', (status, forventetDataColor) => {
         renderFaktaboks({ status });

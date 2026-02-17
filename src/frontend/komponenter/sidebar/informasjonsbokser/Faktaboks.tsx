@@ -109,12 +109,12 @@ const STATUS_META = {
         icon: FileLoadingIcon,
     },
     FATTER_VEDTAK: {
-        dataColor: 'meta-lime',
+        dataColor: 'meta-purple',
         variant: 'moderate',
         icon: TasklistIcon,
     },
     IVERKSETTER_VEDTAK: {
-        dataColor: 'info',
+        dataColor: 'meta-lime',
         variant: 'moderate',
         icon: TasklistSendIcon,
     },
