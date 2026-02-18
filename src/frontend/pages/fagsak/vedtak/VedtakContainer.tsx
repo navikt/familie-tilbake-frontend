@@ -189,7 +189,7 @@ export const VedtakContainer: React.FC = () => {
                     overskrift="Send til godkjenning"
                     brødtekst="Denne handlingen kan ikke angres."
                     bekreftTekst="Send til godkjenning"
-                    onBekreft={sendInnSkjema}
+                    onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
                     laster={senderInn}
                 />
             </VStack>

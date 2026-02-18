@@ -843,4 +843,44 @@ describe('VedtakContainer', () => {
             })
         ).toBeInTheDocument();
     });
+
+    test('Lukker bekreftelsesmodal etter vellykket sending til godkjenning', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: false,
+                }),
+            ]),
+        ];
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
+        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
+            lagBehandling({ kanEndres: true })
+        );
+
+        await waitFor(() => {
+            expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        });
+
+        await user.click(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        );
+
+        const modal = await waitFor(() => getByRole('dialog'));
+
+        await user.click(
+            within(modal).getByRole('button', {
+                name: 'Send til godkjenning',
+            })
+        );
+
+        await waitFor(() => {
+            expect(queryByRole('dialog')).not.toBeInTheDocument();
+        });
+    });
 });
