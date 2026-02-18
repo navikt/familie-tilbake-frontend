@@ -203,7 +203,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
             });
     };
 
-    const sendInnSkjema = (): void => {
+    const sendInnSkjema = async (onSuccess?: () => void): Promise<void> => {
         if (validerToTrinn()) {
             if (senderInn) {
                 return;
@@ -223,41 +223,40 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                 }),
             };
 
-            sendInnFatteVedtak(behandling.behandlingId, payload)
-                .then(async (respons: Ressurs<string>) => {
-                    if (respons.status === RessursStatus.Suksess) {
-                        await queryClient.invalidateQueries({
-                            queryKey: hentBehandlingQueryKey({
-                                path: { behandlingId: behandling.behandlingId },
-                            }),
+            try {
+                const respons = await sendInnFatteVedtak(behandling.behandlingId, payload);
+                if (respons.status === RessursStatus.Suksess) {
+                    await queryClient.invalidateQueries({
+                        queryKey: hentBehandlingQueryKey({
+                            path: { behandlingId: behandling.behandlingId },
+                        }),
+                    });
+                    if (sendTilSaksbehandler) {
+                        visGlobalAlert({
+                            title: 'Sendt til saksbehandler',
+                            message:
+                                'Behandlingen er sendt tilbake til saksbehandler for en ny vurdering.',
+                            status: 'success',
                         });
-                        if (sendTilSaksbehandler) {
-                            visGlobalAlert({
-                                title: 'Sendt til saksbehandler',
-                                message:
-                                    'Behandlingen er sendt tilbake til saksbehandler for en ny vurdering.',
-                                status: 'success',
-                            });
-                        } else {
-                            visGlobalAlert({
-                                title: 'Vedtaket er godkjent',
-                                message: 'Behandlingen er godkjent og du kan lukke denne saken.',
-                                status: 'success',
-                            });
-                        }
-                    } else if (
-                        respons.status === RessursStatus.Feilet ||
-                        respons.status === RessursStatus.FunksjonellFeil
-                    ) {
-                        settFatteVedtakRespons(respons);
+                    } else {
+                        visGlobalAlert({
+                            title: 'Vedtaket er godkjent',
+                            message: 'Behandlingen er godkjent og du kan lukke denne saken.',
+                            status: 'success',
+                        });
                     }
-                })
-                .catch(() => {
-                    settFatteVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
-                })
-                .finally(() => {
-                    settSenderInn(false);
-                });
+                    onSuccess?.();
+                } else if (
+                    respons.status === RessursStatus.Feilet ||
+                    respons.status === RessursStatus.FunksjonellFeil
+                ) {
+                    settFatteVedtakRespons(respons);
+                }
+            } catch {
+                settFatteVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
+            } finally {
+                settSenderInn(false);
+            }
         }
     };
 
