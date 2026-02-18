@@ -24,6 +24,18 @@ export default defineConfig(
         plugins: { 'react-hooks': reactHooks, import: importPlugin },
         rules: {
             ...reactHooks.configs.recommended.rules,
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['../*'],
+                            message:
+                                'Bruk path alias (@komponenter/*, @pages/*, etc.) i stedet for relative imports.',
+                        },
+                    ],
+                },
+            ],
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
