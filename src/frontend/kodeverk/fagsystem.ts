@@ -1,4 +1,4 @@
-import type { SchemaEnum4 } from '../generated';
+import type { SchemaEnum4 } from '@generated';
 
 import { HendelseType } from './rettsligGrunnlag';
 

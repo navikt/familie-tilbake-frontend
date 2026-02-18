@@ -1,22 +1,22 @@
-import type { Brevmottaker as TBrevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker as TBrevmottaker } from '@typer/Brevmottaker';
 
+import { useBehandlingApi } from '@api/behandling';
+import { useBehandling } from '@context/BehandlingContext';
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { useFagsak } from '@context/FagsakContext';
+import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
+import { ActionBar } from '@komponenter/action-bar/ActionBar';
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
-import * as React from 'react';
+import { MottakerType, mottakerTypeVisningsnavn } from '@typer/Brevmottaker';
+import { RessursStatus, type Ressurs } from '@typer/ressurs';
+import { norskLandnavn } from '@utils/land';
+import { useStegNavigering } from '@utils/sider';
 import { useState } from 'react';
+import * as React from 'react';
 
 import { BrevmottakerModal } from './BrevmottakerModal';
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { ActionBar } from '../../../komponenter/action-bar/ActionBar';
-import { MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
-import { RessursStatus, type Ressurs } from '../../../typer/ressurs';
-import { norskLandnavn } from '../../../utils/land';
-import { useStegNavigering } from '../../../utils/sider';
 
 export type BrevmottakerProps = {
     brevmottaker: TBrevmottaker;

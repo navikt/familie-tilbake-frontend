@@ -2,6 +2,15 @@ import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPerio
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
 
+import { useBehandling } from '@context/BehandlingContext';
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
+import { type Skjema, Valideringsstatus } from '@hooks/skjema';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@kodeverk';
+import { ActionBar } from '@komponenter/action-bar/ActionBar';
+import { FeilModal } from '@komponenter/modal/feil/FeilModal';
+import { ModalWrapper } from '@komponenter/modal/ModalWrapper';
+import { PeriodeOppsummering } from '@komponenter/periodeinformasjon/PeriodeOppsummering';
 import {
     BodyShort,
     Button,
@@ -16,7 +25,10 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
+import { useVilkårsvurdering } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 import { useQueryClient } from '@tanstack/react-query';
+import { PeriodeHandling } from '../typer/periodeHandling';
+import { formatterDatostring, isEmpty } from '@utils';
 import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -32,18 +44,6 @@ import {
     OptionNEI,
     useVilkårsvurderingPeriodeSkjema,
 } from './VilkårsvurderingPeriodeSkjemaContext';
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
-import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import { ActionBar } from '../../../../komponenter/action-bar/ActionBar';
-import { FeilModal } from '../../../../komponenter/modal/feil/FeilModal';
-import { ModalWrapper } from '../../../../komponenter/modal/ModalWrapper';
-import { PeriodeOppsummering } from '../../../../komponenter/periodeinformasjon/PeriodeOppsummering';
-import { formatterDatostring, isEmpty } from '../../../../utils';
-import { PeriodeHandling } from '../typer/periodeHandling';
-import { useVilkårsvurdering } from '../VilkårsvurderingContext';
 
 const settSkjemadataFraPeriode = (
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>,

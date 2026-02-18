@@ -1,18 +1,12 @@
-import type { VilkårsvurderingResponse } from '../../../../typer/tilbakekrevingstyper';
+import type { VilkårsvurderingResponse } from '@typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
+import { useBehandlingApi } from '@api/behandling';
+import { useBehandling } from '@context/BehandlingContext';
+import { byggFeiletRessurs, byggHenterRessurs, byggTomRessurs, type Ressurs } from '@typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '@utils';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
-
-import { useBehandlingApi } from '../../../../api/behandling';
-import { useBehandling } from '../../../../context/BehandlingContext';
-import {
-    byggFeiletRessurs,
-    byggHenterRessurs,
-    byggTomRessurs,
-    type Ressurs,
-} from '../../../../typer/ressurs';
-import { sorterFeilutbetaltePerioder } from '../../../../utils';
 
 const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = createUseContext(() => {
     const behandling = useBehandling();

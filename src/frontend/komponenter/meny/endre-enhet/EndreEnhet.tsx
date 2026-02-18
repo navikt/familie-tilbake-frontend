@@ -1,14 +1,14 @@
-import type { BehandlingDto } from '../../../generated';
+import type { BehandlingDto } from '@generated';
 
 import { Buildings3Icon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import { RessursStatus } from '@typer/ressurs';
+import { hentFrontendFeilmelding } from '@utils';
+import { MODAL_BREDDE } from '../utils';
 import * as React from 'react';
 import { useRef } from 'react';
 
 import { useEndreEnhet } from './EndreEnhetContext';
-import { RessursStatus } from '../../../typer/ressurs';
-import { hentFrontendFeilmelding } from '../../../utils';
-import { MODAL_BREDDE } from '../utils';
 
 type Arbeidsfordelingsenhet = {
     enhetskode: BehandlingDto['enhetskode'];

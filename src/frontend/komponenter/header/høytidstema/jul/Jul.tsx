@@ -1,8 +1,8 @@
+import { Image } from '@komponenter/image/Image';
 import React from 'react';
 
 import christmasCandle from './christmasCandle.svg';
 import stars from './stars.svg';
-import { Image } from '../../../image/Image';
 
 const beregnAntallAdventslys = (): number => {
     const iDag = new Date();

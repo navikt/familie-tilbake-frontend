@@ -1,16 +1,16 @@
-import { Heading, Tag, VStack } from '@navikt/ds-react';
-import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
-import classNames from 'classnames';
-import * as React from 'react';
-
-import { FaktaSkjema } from './FaktaSkjema';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { useBehandling } from '@context/BehandlingContext';
 import {
     behandlingFaktaOptions,
     behandlingFaktaQueryKey,
     behandlingOppdaterFaktaMutation,
-} from '../../../generated-new/@tanstack/react-query.gen';
-import { formatterDatostring } from '../../../utils';
+} from '@generated-new/@tanstack/react-query.gen';
+import { Heading, Tag, VStack } from '@navikt/ds-react';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
+import { formatterDatostring } from '@utils';
+import classNames from 'classnames';
+import * as React from 'react';
+
+import { FaktaSkjema } from './FaktaSkjema';
 
 export const Fakta: React.FC = (): React.JSX.Element => {
     const { behandlingId } = useBehandling();

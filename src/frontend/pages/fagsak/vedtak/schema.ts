@@ -1,5 +1,5 @@
-import type { Vedtaksbrev } from '../../../generated-new';
-import type { zVedtaksbrev } from '../../../generated-new/zod.gen';
+import type { Vedtaksbrev } from '@generated-new';
+import type { zVedtaksbrev } from '@generated-new/zod.gen';
 import type z from 'zod';
 
 const vedtaksbrevMockData: Vedtaksbrev = {

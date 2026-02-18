@@ -2,23 +2,19 @@ import type {
     BehandlingDto,
     BehandlingsresultatstypeEnum,
     BehandlingstatusEnum,
-} from '../../../generated';
+} from '@generated';
 import type { RenderResult } from '@testing-library/react';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { Ytelsetype } from '@kodeverk';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagBehandling } from '@testdata/behandlingFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
 import { render, screen } from '@testing-library/react';
+import { behandlingsstatuser, behandlingsresultater, behandlingsårsaker } from '@typer/behandling';
 import React from 'react';
 
 import { Faktaboks } from './Faktaboks';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { Ytelsetype } from '../../../kodeverk';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import {
-    behandlingsstatuser,
-    behandlingsresultater,
-    behandlingsårsaker,
-} from '../../../typer/behandling';
 
 const renderFaktaboks = (
     delvisBehandling: Partial<BehandlingDto> = {},

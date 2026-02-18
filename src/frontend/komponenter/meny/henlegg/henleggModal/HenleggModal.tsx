@@ -1,16 +1,16 @@
-import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../../generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '@generated';
 
+import { useBehandling } from '@context/BehandlingContext';
+import { LabelMedSpråk } from '@komponenter/label-med-språk/LabelMedSpråk';
+import { ForhåndsvisHenleggelsesBrev } from '@komponenter/meny/henlegg/forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
+import { behandlingsresultater } from '@typer/behandling';
+import { hentFrontendFeilmelding } from '@utils';
+import { MODAL_BREDDE } from '../../utils';
 import * as React from 'react';
 import { useEffect, useEffectEvent } from 'react';
 
 import { useHenleggSkjema } from './HenleggModalContext';
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { behandlingsresultater } from '../../../../typer/behandling';
-import { hentFrontendFeilmelding } from '../../../../utils';
-import { LabelMedSpråk } from '../../../label-med-språk/LabelMedSpråk';
-import { MODAL_BREDDE } from '../../utils';
-import { ForhåndsvisHenleggelsesBrev } from '../forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;

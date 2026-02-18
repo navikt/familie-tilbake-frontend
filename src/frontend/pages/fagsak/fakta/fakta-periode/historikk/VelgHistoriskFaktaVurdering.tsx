@@ -1,10 +1,9 @@
-import type { FaktaResponse } from '../../../../../typer/tilbakekrevingstyper';
+import type { FaktaResponse } from '@typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
+import { formatterDatoOgTidstring } from '@utils';
 import { parseISO } from 'date-fns';
 import * as React from 'react';
-
-import { formatterDatoOgTidstring } from '../../../../../utils';
 
 type Props = {
     inaktiveFakta: FaktaResponse[];

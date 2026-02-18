@@ -1,6 +1,8 @@
-import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '../../../generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '@generated';
 import type { TagProps } from '@navikt/ds-react';
 
+import { useBehandling } from '@context/BehandlingContext';
+import { useFagsak } from '@context/FagsakContext';
 import {
     Buildings3Icon,
     CalendarFillIcon,
@@ -14,17 +16,10 @@ import {
     TasklistSendIcon,
 } from '@navikt/aksel-icons';
 import { ExpansionCard, Tag } from '@navikt/ds-react';
-import React from 'react';
-
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import {
-    behandlingsresultater,
-    behandlingsstatuser,
-    behandlingsårsaker,
-} from '../../../typer/behandling';
-import { formatterDatostring } from '../../../utils';
+import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@typer/behandling';
+import { formatterDatostring } from '@utils';
 import { ICON_PROPS } from '../utils';
+import React from 'react';
 
 export const Faktaboks: React.FC = () => {
     const behandling = useBehandling();

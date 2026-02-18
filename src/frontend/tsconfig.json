@@ -10,10 +10,13 @@
         "paths": {
             "@api/*": ["api/*"],
             "@context/*": ["context/*"],
+            "@generated": ["generated/index"],
             "@generated/*": ["generated/*"],
+            "@generated-new": ["generated-new/index"],
             "@generated-new/*": ["generated-new/*"],
             "@hooks/*": ["hooks/*"],
             "@images/*": ["images/*"],
+            "@kodeverk": ["kodeverk/index"],
             "@kodeverk/*": ["kodeverk/*"],
             "@komponenter/*": ["komponenter/*"],
             "@pages/*": ["pages/*"],
@@ -21,6 +24,7 @@
             "@testdata/*": ["testdata/*"],
             "@testutils/*": ["testutils/*"],
             "@typer/*": ["typer/*"],
+            "@utils": ["utils/index"],
             "@utils/*": ["utils/*"]
         }
     },

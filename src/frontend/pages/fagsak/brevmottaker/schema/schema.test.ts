@@ -1,7 +1,8 @@
 import type { BrevmottakerFormData } from './schema';
 
+import { AdresseKilde, MottakerType } from '@typer/Brevmottaker';
+
 import { brevmottakerFormDataInputSchema } from './schema';
-import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
 
 describe('brevmottakerSchema', () => {
     const expectValidationError = (

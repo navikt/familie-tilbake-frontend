@@ -1,20 +1,20 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
-import type { VilkårsvurderingHook } from '../VilkårsvurderingContext';
+import type { VilkårsvurderingHook } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@kodeverk';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
+import { lagVilkårsvurderingPeriodeSkjemaData } from '@testdata/vilkårsvurderingFactory';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { createTestQueryClient } from '@testutils/queryTestUtils';
 import * as React from 'react';
 
 import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriodeSkjema';
-import { FagsakContext } from '../../../../context/FagsakContext';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
-import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { lagVilkårsvurderingPeriodeSkjemaData } from '../../../../testdata/vilkårsvurderingFactory';
-import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
 
 vi.setConfig({ testTimeout: 10000 });
 

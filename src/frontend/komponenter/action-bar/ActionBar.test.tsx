@@ -1,12 +1,12 @@
 import type { RenderResult } from '@testing-library/react';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { ActionBar } from './ActionBar';
-import { FagsakContext } from '../../context/FagsakContext';
-import { TestBehandlingProvider } from '../../testdata/behandlingContextFactory';
-import { lagFagsak } from '../../testdata/fagsakFactory';
 
 const renderActionBar = (
     onForrige: () => void,

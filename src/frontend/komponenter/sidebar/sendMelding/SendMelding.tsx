@@ -1,13 +1,13 @@
+import { useBehandling } from '@context/BehandlingContext';
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { DokumentMal, dokumentMaler } from '@kodeverk';
+import { BrevmottakerListe } from '@komponenter/brevmottaker-liste/BrevmottakerListe';
+import { LabelMedSpråk } from '@komponenter/label-med-språk/LabelMedSpråk';
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { ForhåndsvisBrev } from './forhåndsvis-brev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { DokumentMal, dokumentMaler } from '../../../kodeverk';
-import { BrevmottakerListe } from '../../brevmottaker-liste/BrevmottakerListe';
-import { LabelMedSpråk } from '../../label-med-språk/LabelMedSpråk';
 
 const tekstfeltLabel = (mal: DokumentMal): string => {
     return mal === DokumentMal.InnhentDokumentasjon

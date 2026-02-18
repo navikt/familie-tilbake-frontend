@@ -1,13 +1,13 @@
-import type { BehandlingStateContextType } from '../context/BehandlingStateContext';
-import type { BehandlingDto } from '../generated';
-import type { UseUlagretEndringerReturn } from '../hooks/useUlagretEndringer';
+import type { BehandlingStateContextType } from '@context/BehandlingStateContext';
+import type { BehandlingDto } from '@generated';
+import type { UseUlagretEndringerReturn } from '@hooks/useUlagretEndringer';
 
+import { BehandlingContext } from '@context/BehandlingContext';
+import { BehandlingStateContext } from '@context/BehandlingStateContext';
+import { useUlagretEndringer } from '@hooks/useUlagretEndringer';
 import * as React from 'react';
 
 import { lagBehandling } from './behandlingFactory';
-import { BehandlingContext } from '../context/BehandlingContext';
-import { BehandlingStateContext } from '../context/BehandlingStateContext';
-import { useUlagretEndringer } from '../hooks/useUlagretEndringer';
 
 export type BehandlingStateContextOverrides = {
     behandlingILesemodus?: boolean;

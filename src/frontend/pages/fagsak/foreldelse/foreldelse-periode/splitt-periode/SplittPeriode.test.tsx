@@ -1,12 +1,12 @@
 import type { UserEvent } from '@testing-library/user-event';
 
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagForeldelsePeriodeSkjemaData } from '@testdata/foreldelseFactory';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { SplittPeriode } from './SplittPeriode';
-import { TestBehandlingProvider } from '../../../../../testdata/behandlingContextFactory';
-import { lagForeldelsePeriodeSkjemaData } from '../../../../../testdata/foreldelseFactory';
 
 describe('SplittPeriode - Foreldelse', () => {
     let user: UserEvent;

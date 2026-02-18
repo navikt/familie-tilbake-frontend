@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios';
 
-import { client as oldClient } from '../../generated/client.gen';
-import { client as newClient } from '../../generated-new/client.gen';
+import { client as oldClient } from '@generated/client.gen';
+import { client as newClient } from '@generated-new/client.gen';
 
 const hentCsrfTokenFraMeta = (): string | null =>
     document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;

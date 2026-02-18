@@ -1,13 +1,13 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 
+import { Vilkårsresultat } from '@kodeverk';
+import { TilbakeTidslinje } from '@komponenter/tilbake-tidslinje/TilbakeTidslinje';
 import { Alert, BodyShort, type TimelinePeriodProps } from '@navikt/ds-react';
+import { ClassNamePeriodeStatus } from '@typer/periodeSkjemaData';
 import * as React from 'react';
 
 import { VilkårsvurderingPeriodeSkjema } from './vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjema';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
-import { Vilkårsresultat } from '../../../kodeverk';
-import { TilbakeTidslinje } from '../../../komponenter/tilbake-tidslinje/TilbakeTidslinje';
-import { ClassNamePeriodeStatus } from '../../../typer/periodeSkjemaData';
 
 const lagTidslinjeRader = (
     perioder: VilkårsvurderingPeriodeSkjemaData[],

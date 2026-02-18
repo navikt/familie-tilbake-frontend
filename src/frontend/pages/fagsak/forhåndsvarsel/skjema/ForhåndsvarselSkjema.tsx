@@ -1,31 +1,34 @@
-import type { ForhåndsvarselDto } from '../../../../generated';
-import type { ForhåndsvarselFormData, UttalelseFormData } from '../schema';
+import type { ForhåndsvarselDto } from '@generated';
+import type {
+    ForhåndsvarselFormData,
+    UttalelseFormData,
+} from '@pages/fagsak/forhåndsvarsel/schema';
 import type { SubmitHandler } from 'react-hook-form';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ActionBar } from '@komponenter/action-bar/ActionBar';
+import { FeilModal } from '@komponenter/modal/feil/FeilModal';
 import { VStack } from '@navikt/ds-react';
-import React from 'react';
-import { useEffect, useEffectEvent } from 'react';
-import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
-
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { FeilModal } from '../../../../komponenter/modal/feil/FeilModal';
-import { useVisGlobalAlert } from '../../../../stores/globalAlertStore';
-import { HarUttaltSeg } from '../schema';
+import { HarUttaltSeg } from '@pages/fagsak/forhåndsvarsel/schema';
 import {
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
-} from '../schema';
+} from '@pages/fagsak/forhåndsvarsel/schema';
 import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
-} from '../useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
+} from '@pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '@pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
+import { useVisGlobalAlert } from '@stores/globalAlertStore';
+import { useEffect, useEffectEvent } from 'react';
+import React from 'react';
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
+
 import { SkalSendeSkjema } from './SkalSendeSkjema';
 import { Uttalelse } from './UttalelseSkjema';
-import { ActionBar } from '../../../../komponenter/action-bar/ActionBar';
 
 type Props = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;

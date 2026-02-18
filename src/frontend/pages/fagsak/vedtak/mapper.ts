@@ -1,5 +1,5 @@
 import type { VedtaksbrevFormData } from './schema';
-import type { Avsnitt, Hovedavsnitt, RotElement, VedtaksbrevData } from '../../../generated-new';
+import type { Avsnitt, Hovedavsnitt, RotElement, VedtaksbrevData } from '@generated-new';
 
 import { formatISO } from 'date-fns';
 

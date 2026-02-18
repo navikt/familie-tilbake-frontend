@@ -1,9 +1,5 @@
-import type { Skjema } from '../../../../hooks/skjema';
-import type {
-    Aktsomhetsvurdering,
-    GodTro,
-    SærligeGrunnerDto,
-} from '../../../../typer/tilbakekrevingstyper';
+import type { Skjema } from '@hooks/skjema';
+import type { Aktsomhetsvurdering, GodTro, SærligeGrunnerDto } from '@typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
 import {
@@ -14,14 +10,14 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '../../../../hooks/skjema';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '../../../../kodeverk';
+} from '@hooks/skjema';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@kodeverk';
 import {
     parseStringToNumber,
     erFeltetEmpty,
     validerNummerFelt,
     validerTekstFeltMaksLengde,
-} from '../../../../utils';
+} from '@utils';
 
 export const EGENDEFINERT = 'Egendefinert';
 export const ANDELER = ['30', '50', '70', EGENDEFINERT];

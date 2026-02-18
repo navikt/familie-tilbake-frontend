@@ -1,10 +1,10 @@
 import type { AvsnittSkjemaData } from './typer/vedtak';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
 import { Alert, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { AvsnittSkjema, avsnittKey } from './AvsnittSkjema';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
 
 type Props = {
     avsnitter: AvsnittSkjemaData[];

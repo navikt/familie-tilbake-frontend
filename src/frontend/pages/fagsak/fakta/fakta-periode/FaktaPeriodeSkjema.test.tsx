@@ -1,25 +1,25 @@
-import type { BehandlingApiHook } from '../../../../api/behandling';
-import type { Ressurs } from '../../../../typer/ressurs';
-import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { BehandlingApiHook } from '@api/behandling';
 import type { RenderResult } from '@testing-library/react';
+import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { Ressurs } from '@typer/ressurs';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { HendelseUndertype, HendelseType } from '@kodeverk';
+import { FaktaProvider } from '@pages/fagsak/fakta/FaktaContext';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagBehandling } from '@testdata/behandlingFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
+import { lagFaktaPeriode } from '@testdata/faktaFactory';
 import { render, screen, waitFor } from '@testing-library/react';
+import { createTestQueryClient } from '@testutils/queryTestUtils';
+import { RessursStatus } from '@typer/ressurs';
+import { HarBrukerUttaltSegValg, type FaktaResponse } from '@typer/tilbakekrevingstyper';
 import * as React from 'react';
 
-import { HarBrukerUttaltSegValg, type FaktaResponse } from '../../../../typer/tilbakekrevingstyper';
-import { FaktaProvider } from '../FaktaContext';
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
-import { FagsakContext } from '../../../../context/FagsakContext';
-import { HendelseUndertype, HendelseType } from '../../../../kodeverk';
-import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
-import { lagFaktaPeriode } from '../../../../testdata/faktaFactory';
-import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
-import { RessursStatus } from '../../../../typer/ressurs';
 
-vi.mock('../../../../api/behandling', () => ({
+vi.mock('@api/behandling', () => ({
     useBehandlingApi: (): Partial<BehandlingApiHook> => ({
         gjerFaktaKall: vi.fn().mockResolvedValue({
             status: RessursStatus.Suksess,

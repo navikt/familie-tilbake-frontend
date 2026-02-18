@@ -1,7 +1,15 @@
 import type { VedtaksbrevFormData } from './schema';
-import type { Element } from '../../../generated-new';
+import type { Element } from '@generated-new';
 import type { FieldPath } from 'react-hook-form';
 
+import { useBehandling } from '@context/BehandlingContext';
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { useFagsak } from '@context/FagsakContext';
+import {
+    behandlingHentVedtaksbrevOptions,
+    vedtaksbrevLagSvgVedtaksbrevMutation,
+} from '@generated-new/@tanstack/react-query.gen';
+import { ActionBar } from '@komponenter/action-bar/ActionBar';
 import {
     BodyShort,
     Button,
@@ -16,22 +24,14 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { datoTilTekst } from '@utils';
+import { useStegNavigering } from '@utils/sider';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { mapFormDataTilVedtaksbrevData } from './mapper';
 import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import {
-    behandlingHentVedtaksbrevOptions,
-    vedtaksbrevLagSvgVedtaksbrevMutation,
-} from '../../../generated-new/@tanstack/react-query.gen';
-import { ActionBar } from '../../../komponenter/action-bar/ActionBar';
-import { datoTilTekst } from '../../../utils';
-import { useStegNavigering } from '../../../utils/sider';
 
 const ElementTextarea: React.FC<
     Omit<TextareaProps, 'onChange' | 'value'> & {

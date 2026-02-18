@@ -1,11 +1,11 @@
+import { DataLastIkkeSuksess } from '@komponenter/datalast/DataLastIkkeSuksess';
 import { Heading } from '@navikt/ds-react';
+import { RessursStatus } from '@typer/ressurs';
 import { parseISO } from 'date-fns';
 import * as React from 'react';
 
 import { useHistorikk } from './HistorikkContext';
 import { HistorikkInnslag } from './HistorikkInnslag';
-import { RessursStatus } from '../../../typer/ressurs';
-import { DataLastIkkeSuksess } from '../../datalast/DataLastIkkeSuksess';
 
 export const Historikk: React.FC = () => {
     const { historikkInnslag } = useHistorikk();

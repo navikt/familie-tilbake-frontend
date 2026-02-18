@@ -1,12 +1,12 @@
 import type { UnderavsnittSkjemaData } from './typer/vedtak';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link, Textarea, VStack } from '@navikt/ds-react';
+import { harVerdi, isEmpty, validerTekstMaksLengde } from '@utils';
 import * as React from 'react';
 
 import { useVedtak } from './VedtakContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { harVerdi, isEmpty, validerTekstMaksLengde } from '../../../utils';
 
 type Props = {
     avsnittIndex: string;

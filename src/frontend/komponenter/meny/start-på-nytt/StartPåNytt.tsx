@@ -1,10 +1,10 @@
+import { FeilModal } from '@komponenter/modal/feil/FeilModal';
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
+import { MODAL_BREDDE } from '../utils';
 import * as React from 'react';
 
 import { useStartPåNytt } from './useStartPåNytt';
-import { FeilModal } from '../../modal/feil/FeilModal';
-import { MODAL_BREDDE } from '../utils';
 
 export const StartPåNytt: React.FC = () => {
     const { mutate, isError, error, reset, dialogRef, åpneDialog, isPending } = useStartPåNytt();

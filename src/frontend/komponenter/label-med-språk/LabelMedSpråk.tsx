@@ -1,8 +1,7 @@
+import { useFagsak } from '@context/FagsakContext';
 import { HStack, Label, Tag } from '@navikt/ds-react';
+import { målform } from '@typer/målform';
 import * as React from 'react';
-
-import { useFagsak } from '../../context/FagsakContext';
-import { målform } from '../../typer/målform';
 
 type Props = {
     label: string;

@@ -1,14 +1,14 @@
-import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
+import type { VilkårsvurderingSkjemaDefinisjon } from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { type Skjema, Valideringsstatus } from '@hooks/skjema';
+import { Aktsomhet, aktsomheter, Vilkårsresultat } from '@kodeverk';
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { OptionNEI } from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 import * as React from 'react';
 
 import { GradForsettSkjema } from './GradForsettSkjema';
 import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';
-import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
-import { Aktsomhet, aktsomheter, Vilkårsresultat } from '../../../../../kodeverk';
-import { OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;

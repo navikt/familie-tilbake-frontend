@@ -1,12 +1,11 @@
-import type { ApiRessurs, Ressurs } from '../../typer/ressurs';
-import type { Saksbehandler } from '../../typer/saksbehandler';
+import type { ApiRessurs, Ressurs } from '@typer/ressurs';
+import type { Saksbehandler } from '@typer/saksbehandler';
 import type { AxiosError, AxiosResponse } from 'axios';
 
 import * as Sentry from '@sentry/core';
+import { RessursStatus } from '@typer/ressurs';
+import { erServerFeil } from '@utils/httpUtils';
 import axios from 'axios';
-
-import { RessursStatus } from '../../typer/ressurs';
-import { erServerFeil } from '../../utils/httpUtils';
 
 axios.defaults.baseURL = window.location.origin;
 export const preferredAxios = axios;

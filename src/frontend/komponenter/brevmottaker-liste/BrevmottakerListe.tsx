@@ -1,9 +1,8 @@
+import { useBehandling } from '@context/BehandlingContext';
+import { useFagsak } from '@context/FagsakContext';
+import { MottakerType } from '@typer/Brevmottaker';
+import { formaterIdent, lagPersonLabel } from '@utils/formatter';
 import React from 'react';
-
-import { useBehandling } from '../../context/BehandlingContext';
-import { useFagsak } from '../../context/FagsakContext';
-import { MottakerType } from '../../typer/Brevmottaker';
-import { formaterIdent, lagPersonLabel } from '../../utils/formatter';
 
 export const BrevmottakerListe: React.FC = () => {
     const { institusjon, bruker } = useFagsak();

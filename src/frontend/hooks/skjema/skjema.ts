@@ -6,18 +6,13 @@ import type {
     Skjema,
     UseSkjemaVerdi,
 } from './typer';
-import type { FamilieRequestConfig } from '../../api/http/HttpProvider';
+import type { FamilieRequestConfig } from '@api/http/HttpProvider';
 
+import { useHttp } from '@api/http/HttpProvider';
+import { byggHenterRessurs, byggTomRessurs, type Ressurs, RessursStatus } from '@typer/ressurs';
 import { useState } from 'react';
 
 import { Valideringsstatus } from './typer';
-import { useHttp } from '../../api/http/HttpProvider';
-import {
-    byggHenterRessurs,
-    byggTomRessurs,
-    type Ressurs,
-    RessursStatus,
-} from '../../typer/ressurs';
 
 export const useSkjema = <Felter, SkjemaRespons>({
     felter,

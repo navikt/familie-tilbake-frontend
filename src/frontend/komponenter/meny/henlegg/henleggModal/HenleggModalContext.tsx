@@ -1,16 +1,15 @@
-import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../../generated';
-import type { Avhengigheter, FeltState, Skjema } from '../../../../hooks/skjema';
-import type { HenleggBehandlingPaylod } from '../../../../typer/api';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '@generated';
+import type { Avhengigheter, FeltState, Skjema } from '@hooks/skjema';
+import type { HenleggBehandlingPaylod } from '@typer/api';
 
+import { useBehandlingApi } from '@api/behandling';
+import { useBehandling } from '@context/BehandlingContext';
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
+import { ok, useFelt, useSkjema, Valideringsstatus } from '@hooks/skjema';
 import { useQueryClient } from '@tanstack/react-query';
-
-import { useBehandlingApi } from '../../../../api/behandling';
-import { useBehandling } from '../../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '../../../../generated/@tanstack/react-query.gen';
-import { ok, useFelt, useSkjema, Valideringsstatus } from '../../../../hooks/skjema';
-import { type Ressurs, RessursStatus } from '../../../../typer/ressurs';
-import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../../utils';
+import { type Ressurs, RessursStatus } from '@typer/ressurs';
+import { erFeltetEmpty, validerTekstFeltMaksLengde } from '@utils';
 
 const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.behandlingstype.valideringsstatus === Valideringsstatus.Ok &&

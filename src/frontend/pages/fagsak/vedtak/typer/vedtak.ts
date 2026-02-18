@@ -1,4 +1,4 @@
-import type { Avsnittstype, Underavsnittstype } from '../../../../kodeverk';
+import type { Avsnittstype, Underavsnittstype } from '@kodeverk';
 
 export type UnderavsnittSkjemaData = {
     index: string;

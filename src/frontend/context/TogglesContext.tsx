@@ -1,11 +1,10 @@
 import type { Toggles } from './toggles';
 
+import { useHttp } from '@api/http/HttpProvider';
+import { type Ressurs, RessursStatus } from '@typer/ressurs';
+import { hentFrontendFeilmelding } from '@utils';
 import createUseContext from 'constate';
 import { useCallback, useEffect, useState } from 'react';
-
-import { useHttp } from '../api/http/HttpProvider';
-import { type Ressurs, RessursStatus } from '../typer/ressurs';
-import { hentFrontendFeilmelding } from '../utils';
 
 export type TogglesHook = {
     toggles: Toggles;

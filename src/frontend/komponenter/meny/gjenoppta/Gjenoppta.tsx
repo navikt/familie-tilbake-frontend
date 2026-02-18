@@ -1,13 +1,12 @@
+import { useBehandling } from '@context/BehandlingContext';
+import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
+import { usePåVentBehandling } from '@komponenter/modal/på-vent/PåVentContext';
 import { TimerStartIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { MODAL_BREDDE } from '../utils';
 import * as React from 'react';
 import { useRef } from 'react';
-
-import { useBehandling } from '../../../context/BehandlingContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { usePåVentBehandling } from '../../modal/på-vent/PåVentContext';
-import { MODAL_BREDDE } from '../utils';
 
 export const Gjenoppta: React.FC = () => {
     const behandling = useBehandling();

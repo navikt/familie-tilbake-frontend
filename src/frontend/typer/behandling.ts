@@ -4,7 +4,7 @@ import type {
     BehandlingstatusEnum,
     GetårsakstypeEnum,
     VenteårsakEnum,
-} from '../generated';
+} from '@generated';
 
 export const behandlingsårsaker: Record<GetårsakstypeEnum, string> = {
     REVURDERING_KLAGE_NFP: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',

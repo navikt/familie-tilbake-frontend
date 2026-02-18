@@ -1,31 +1,31 @@
-import type { BehandlingApiHook } from '../../../api/behandling';
-import type { BehandlingDto } from '../../../generated';
-import type { Ressurs } from '../../../typer/ressurs';
-import type { Totrinnkontroll } from '../../../typer/totrinnTyper';
+import type { BehandlingApiHook } from '@api/behandling';
+import type { BehandlingDto } from '@generated';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { Ressurs } from '@typer/ressurs';
+import type { Totrinnkontroll } from '@typer/totrinnTyper';
 
+import { FagsakContext } from '@context/FagsakContext';
 import { QueryClientProvider } from '@tanstack/react-query';
+import {
+    TestBehandlingProvider,
+    type BehandlingStateContextOverrides,
+} from '@testdata/behandlingContextFactory';
+import { lagBehandling } from '@testdata/behandlingFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
+import { lagTotrinnsStegInfo } from '@testdata/totrinnskontrollFactory';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { createTestQueryClient } from '@testutils/queryTestUtils';
+import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
 import { vi } from 'vitest';
 
 import { Totrinnskontroll } from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
-import { FagsakContext } from '../../../context/FagsakContext';
-import {
-    TestBehandlingProvider,
-    type BehandlingStateContextOverrides,
-} from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { lagTotrinnsStegInfo } from '../../../testdata/totrinnskontrollFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseBehandlingApi = vi.fn();
-vi.mock('../../../api/behandling', () => ({
+vi.mock('@api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 

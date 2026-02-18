@@ -1,15 +1,15 @@
-import type { ForeldelsePeriode } from '../../../../typer/tilbakekrevingstyper';
-import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
+import type { ForeldelsePeriode } from '@typer/tilbakekrevingstyper';
 
+import { Foreldelsevurdering } from '@kodeverk';
+import { TilbakeTidslinje } from '@komponenter/tilbake-tidslinje/TilbakeTidslinje';
+import { useForeldelse } from '@pages/fagsak/foreldelse/ForeldelseContext';
+import { ClassNamePeriodeStatus } from '@typer/periodeSkjemaData';
 import classNames from 'classnames';
 import * as React from 'react';
 
 import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
-import { Foreldelsevurdering } from '../../../../kodeverk';
-import { TilbakeTidslinje } from '../../../../komponenter/tilbake-tidslinje/TilbakeTidslinje';
-import { ClassNamePeriodeStatus } from '../../../../typer/periodeSkjemaData';
-import { useForeldelse } from '../ForeldelseContext';
 
 const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean): string => {
     const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';

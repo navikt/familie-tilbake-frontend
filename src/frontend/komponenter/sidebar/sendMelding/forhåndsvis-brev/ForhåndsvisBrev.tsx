@@ -1,9 +1,9 @@
+import { PdfVisningModal } from '@komponenter/pdf-visning-modal/PdfVisningModal';
+import { useSendMelding } from '@komponenter/sidebar/sendMelding/SendMeldingContext';
 import { Button } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useForhåndsvisBrev } from './useForhåndsvisBrev';
-import { PdfVisningModal } from '../../../pdf-visning-modal/PdfVisningModal';
-import { useSendMelding } from '../SendMeldingContext';
 
 type Props = {
     test?: boolean;

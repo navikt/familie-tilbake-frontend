@@ -1,14 +1,14 @@
-import type { GetårsakstypeEnum } from '../../../generated';
+import type { GetårsakstypeEnum } from '@generated';
 
 import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
+import { behandlingsårsaker } from '@typer/behandling';
+import { hentFrontendFeilmelding } from '@utils';
+import { MODAL_BREDDE } from '../utils';
 import * as React from 'react';
 import { useRef } from 'react';
 
 import { useRevurderSkjema } from './RevurderSkjemaContext';
-import { behandlingsårsaker } from '../../../typer/behandling';
-import { hentFrontendFeilmelding } from '../../../utils';
-import { MODAL_BREDDE } from '../utils';
 
 export const Revurder: React.FC = () => {
     const ref = useRef<HTMLDialogElement>(null);

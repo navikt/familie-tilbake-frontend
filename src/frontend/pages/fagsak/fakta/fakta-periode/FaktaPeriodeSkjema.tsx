@@ -1,14 +1,13 @@
-import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
+import type { HendelseType, HendelseUndertype } from '@kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '@kodeverk';
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
+import { useFakta } from '@pages/fagsak/fakta/FaktaContext';
+import { formatterDatostring, formatCurrencyNoKr } from '@utils';
 import * as React from 'react';
 import { useEffect, useMemo } from 'react';
-
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '../../../../kodeverk';
-import { formatterDatostring, formatCurrencyNoKr } from '../../../../utils';
-import { useFakta } from '../FaktaContext';
 
 type Props = {
     periode: FaktaPeriodeSkjemaData;

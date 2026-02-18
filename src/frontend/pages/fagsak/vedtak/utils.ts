@@ -1,6 +1,6 @@
-import type { Element } from '../../../generated-new';
+import type { Element } from '@generated-new';
 
-import { datoTilTekst } from '../../../utils';
+import { datoTilTekst } from '@utils';
 
 export const elementArrayTilTekst = (elementer: Element[]): string => {
     return elementer.map(e => e.tekst).join('\n\n');

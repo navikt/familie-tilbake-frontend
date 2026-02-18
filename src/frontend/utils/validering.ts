@@ -1,7 +1,7 @@
+import { feil, type FeltState, ok } from '@hooks/skjema';
 import { isValid, parseISO } from 'date-fns';
 
 import { isNumeric } from './miscUtils';
-import { feil, type FeltState, ok } from '../hooks/skjema';
 
 const textRegex =
     /^[0-9a-zA-ZæøåÆØÅAaÁáBbCcČčDdĐđEeFfGgHhIiJjKkLlMmNnŊŋOoPpRrSsŠšTtŦŧUuVvZzŽžéôèÉöüäÖÜÄ .'‐—–\-/\n%§!?#@_()«»+:;,="&\n\u00A0]*$/;

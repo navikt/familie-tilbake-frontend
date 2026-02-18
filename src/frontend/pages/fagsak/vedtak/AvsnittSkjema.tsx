@@ -1,12 +1,12 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { Avsnittstype, Underavsnittstype } from '@kodeverk';
 import { BodyLong, ExpansionCard, Heading, VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
 import { VedtakFritekstSkjema } from './VedtakFritekstSkjema';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { Avsnittstype, Underavsnittstype } from '../../../kodeverk';
 
 const skalVisesÅpen = (avsnitt: AvsnittSkjemaData): boolean => {
     if (avsnitt.avsnittstype === Avsnittstype.Oppsummering) {

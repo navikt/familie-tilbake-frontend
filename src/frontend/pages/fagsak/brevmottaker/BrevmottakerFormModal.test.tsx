@@ -1,20 +1,20 @@
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { Ytelsetype } from '@kodeverk';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagBehandling } from '@testdata/behandlingFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { MottakerType } from '@typer/Brevmottaker';
+import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { Ytelsetype } from '../../../kodeverk';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { MottakerType } from '../../../typer/Brevmottaker';
-import { RessursStatus } from '../../../typer/ressurs';
 
-vi.mock('../../../hooks/useBrevmottakerApi', () => ({
+vi.mock('@hooks/useBrevmottakerApi', () => ({
     useBrevmottakerApi: vi.fn(() => ({
         lagreBrevmottaker: vi.fn().mockResolvedValue({
             status: RessursStatus.Suksess,
