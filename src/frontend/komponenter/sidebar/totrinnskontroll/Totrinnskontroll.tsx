@@ -19,6 +19,7 @@ import {
     OptionIkkeGodkjent,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
+import { useBehandling } from '../../../context/BehandlingContext';
 import { useBehandlingState } from '../../../context/BehandlingStateContext';
 import { behandlingssteg } from '../../../typer/behandling';
 import { RessursStatus } from '../../../typer/ressurs';
@@ -44,7 +45,7 @@ export const Totrinnskontroll: React.FC = () => {
         feilmelding,
         erLesevisning,
     } = useTotrinnskontroll();
-
+    const { erNyModell } = useBehandling();
     const { aktivtSteg } = useBehandlingState();
     const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
 
@@ -75,7 +76,7 @@ export const Totrinnskontroll: React.FC = () => {
                         infotekst="Kontroller endrede opplysninger og faglige vurderinger"
                     />
                 )}
-                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && (
+                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && !erNyModell && (
                     <div>
                         <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
                             Angre sendt til beslutter
