@@ -2,16 +2,12 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "rootDir": ".",
-        "module": "esnext",
-        "allowSyntheticDefaultImports": true,
-        "typeRoots": ["../../node_modules/@types", "../../node_modules", "./@types"],
+        "module": "es2022",
+        "moduleResolution": "bundler",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
         "types": ["@testing-library/jest-dom", "vitest/globals", "node"]
     },
     "exclude": [
         "../../node_modules"
-    ],
-    "lib": [
-        "es2015",
-        "esnext"
     ]
 }

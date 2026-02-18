@@ -3,10 +3,13 @@
     "compilerOptions": {
         "outDir": "node_dist",
         "rootDir": "./src",
+        "module": "es2022",
+        "moduleResolution": "node10",
+        "lib": ["ES2022"],
+        "declaration": true,
         "resolveJsonModule": true,
-        "types": ["express-session"],
+        "types": ["express-session"]
     },
     "include": ["./src/backend"],
-    "exclude": ["./src/frontend"],
-    "lib": ["es2015"]
+    "exclude": ["./src/frontend"]
 }
