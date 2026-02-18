@@ -29,9 +29,6 @@ type Props = {
     settAutentisert?: (autentisert: boolean) => void;
 };
 
-const hentCsrfTokenFraMeta = (): string | null =>
-    document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null;
-
 export const [HttpProvider, useHttp] = constate(
     ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
         const [ressurserSomLaster, settRessurserSomLaster] = React.useState<string[]>([]);
@@ -54,18 +51,6 @@ export const [HttpProvider, useHttp] = constate(
             const ressursId = `${config.method}_${config.url}`;
             config.påvirkerSystemLaster &&
                 settRessurserSomLaster([...ressurserSomLaster, ressursId]);
-
-            // Setter csrf-token i header for request som ikke er GET, HEAD eller OPTIONS
-            const ikkeSikreMetoder = ['GET', 'HEAD', 'OPTIONS'];
-            if (config.method && !ikkeSikreMetoder.includes(config.method)) {
-                const csrfToken = hentCsrfTokenFraMeta();
-                if (csrfToken) {
-                    config.headers = {
-                        ...config.headers,
-                        'x-csrf-token': csrfToken,
-                    };
-                }
-            }
 
             return preferredAxios
                 .request(config)
