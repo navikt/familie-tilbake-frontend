@@ -17,8 +17,9 @@ type Props = {
 
 export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget }) => {
     const { erNyModell } = useBehandling();
+    const valgtSideGittModell = !erNyModell ? Menysider.Historikk : Menysider.Dokumenter;
     const [valgtSide, setValgtSide] = useState(
-        værtPåFatteVedtakSteget ? Menysider.Totrinn : Menysider.Historikk
+        værtPåFatteVedtakSteget ? Menysider.Totrinn : valgtSideGittModell
     );
 
     return (
