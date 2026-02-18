@@ -5,7 +5,23 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import { readdirSync, statSync } from 'fs';
+import { join } from 'path';
 import tseslint from 'typescript-eslint';
+
+function relativeImportPattern(frontendPath) {
+    const folders = readdirSync(frontendPath).filter(navn =>
+        statSync(join(frontendPath, navn)).isDirectory()
+    );
+    const relativeDybder = Array.from({ length: 10 }, (_, i) => '../'.repeat(i + 1));
+
+    return folders.map(folder => ({
+        group: relativeDybder.flatMap(d => [`${d}${folder}`, `${d}${folder}/*`]),
+        message: `Bruk @${folder}/* i stedet for relative imports.`,
+    }));
+}
+
+const relativeImportPatterns = relativeImportPattern('./src/frontend');
 
 export default defineConfig(
     eslint.configs.recommended,
@@ -24,18 +40,7 @@ export default defineConfig(
         plugins: { 'react-hooks': reactHooks, import: importPlugin },
         rules: {
             ...reactHooks.configs.recommended.rules,
-            'no-restricted-imports': [
-                'error',
-                {
-                    patterns: [
-                        {
-                            group: ['../*'],
-                            message:
-                                'Bruk path alias (@komponenter/*, @pages/*, etc.) i stedet for relative imports.',
-                        },
-                    ],
-                },
-            ],
+            'no-restricted-imports': ['error', { patterns: relativeImportPatterns }],
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
