@@ -41,6 +41,7 @@ import {
     useStegNavigering,
     utledBehandlingSide,
 } from '../../utils/sider';
+import { IkkeFunnet } from '../feilsider/IkkeFunnet';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./brevmottaker/Brevmottakere'),
@@ -169,6 +170,7 @@ const HistoriskBehandling: React.FC<HistoriskBehandlingProps> = ({ dialogRef }) 
                 }
             />
             <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+            <Route path="*" element={<IkkeFunnet />} />
         </Routes>
     </BehandlingLayout>
 );
@@ -295,6 +297,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
                                 element={<BrevmottakerContainer />}
                             />
+                            <Route path="*" element={<IkkeFunnet />} />
                         </Routes>
                     </Suspense>
                 </section>

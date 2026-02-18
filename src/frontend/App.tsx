@@ -23,8 +23,8 @@ import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting'
 import { Header } from './komponenter/header/Header';
 import { StegflytSkeleton } from './komponenter/stegflyt/StegflytSkeleton';
 import { Toasts } from './komponenter/toast/Toasts';
-import { IkkeFunnet } from './pages/feilsider/ikke-funnet';
 import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
+import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { configureZod } from './utils/zodConfig';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
