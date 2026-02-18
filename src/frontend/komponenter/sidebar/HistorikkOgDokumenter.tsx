@@ -31,10 +31,12 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteg
                 fill
                 className="sticky top-0"
             >
-                <ToggleGroup.Item
-                    value={Menysider.Historikk}
-                    icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
-                />
+                {!erNyModell && (
+                    <ToggleGroup.Item
+                        value={Menysider.Historikk}
+                        icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
+                    />
+                )}
                 <ToggleGroup.Item
                     value={Menysider.Dokumenter}
                     icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
