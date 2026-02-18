@@ -161,7 +161,7 @@ export const Totrinnskontroll: React.FC = () => {
                         </Button>
                         <Button
                             size="small"
-                            onClick={sendInnSkjema}
+                            onClick={() => sendInnSkjema()}
                             loading={senderInn}
                             disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
                         >
@@ -175,7 +175,7 @@ export const Totrinnskontroll: React.FC = () => {
                     overskrift="Godkjenn vedtaket"
                     brødtekst="Denne handlingen kan ikke angres."
                     bekreftTekst="Godkjenn vedtaket"
-                    onBekreft={sendInnSkjema}
+                    onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
                     laster={senderInn}
                 />
             </div>
