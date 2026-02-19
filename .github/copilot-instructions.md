@@ -188,6 +188,7 @@ Backend Response
 - **Sesjonsbasert autentisering** med Redis backing
 - **Token management**: Henter og fester access tokens til backend-requests
 - **Proxy-konfigurasjon**: Router `/familie-tilbake/api` til backend-service
+- **Statisk asset serving**: Gzippede produksjonsassets fra `/dist`
 - **Metrics endpoint**: Prometheus metrics på `/internal/metrics`
 
 ### Sikkerhet

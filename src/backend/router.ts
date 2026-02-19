@@ -38,6 +38,11 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
         res.status(200).send({ aInntektUrl, gosysBaseUrl, modiaBaseUrl }).end();
     });
 
+    router.get('/error', (_: Request, res: Response) => {
+        prometheusTellere.errorRoute.inc();
+        res.sendFile('error.html', { root: path.join(`assets/`) });
+    });
+
     // Feilhåndtering
     router.post('/logg-feil', (req: Request, res: Response) => {
         logRequest(req, req.body.melding, LogLevel.Error);
