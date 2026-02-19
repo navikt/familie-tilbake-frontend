@@ -21,40 +21,42 @@ export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteg
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : valgtSideGittModell
     );
-
+    const skalViseToggleGroup = !erNyModell || værtPåFatteVedtakSteget;
     return (
         <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
-            <ToggleGroup
-                data-color="neutral"
-                value={valgtSide}
-                onChange={value => setValgtSide(value as Menysider)}
-                size="small"
-                fill
-                className="sticky top-0"
-            >
-                {!erNyModell && (
+            {skalViseToggleGroup && (
+                <ToggleGroup
+                    data-color="neutral"
+                    value={valgtSide}
+                    onChange={value => setValgtSide(value as Menysider)}
+                    size="small"
+                    fill
+                    className="sticky top-0"
+                >
+                    {!erNyModell && (
+                        <ToggleGroup.Item
+                            value={Menysider.Historikk}
+                            icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
+                        />
+                    )}
                     <ToggleGroup.Item
-                        value={Menysider.Historikk}
-                        icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
+                        value={Menysider.Dokumenter}
+                        icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
                     />
-                )}
-                <ToggleGroup.Item
-                    value={Menysider.Dokumenter}
-                    icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
-                />
-                {!erNyModell && (
-                    <ToggleGroup.Item
-                        value={Menysider.SendBrev}
-                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
-                    />
-                )}
-                {værtPåFatteVedtakSteget && (
-                    <ToggleGroup.Item
-                        value={Menysider.Totrinn}
-                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
-                    />
-                )}
-            </ToggleGroup>
+                    {!erNyModell && (
+                        <ToggleGroup.Item
+                            value={Menysider.SendBrev}
+                            icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
+                        />
+                    )}
+                    {værtPåFatteVedtakSteget && (
+                        <ToggleGroup.Item
+                            value={Menysider.Totrinn}
+                            icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
+                        />
+                    )}
+                </ToggleGroup>
+            )}
             <MenySideInnhold valgtMenyside={valgtSide} />
         </div>
     );
