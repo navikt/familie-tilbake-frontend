@@ -6,11 +6,6 @@ export const prometheusTellere = {
         labelNames: ['code'],
         name: 'app_load',
     }),
-    errorRoute: new Counter({
-        help: 'Counter for times error page is loaded',
-        labelNames: ['code'],
-        name: 'error_route',
-    }),
     loginRoute: new Counter({
         help: 'Counter for times login route is requested',
         labelNames: ['code'],
