@@ -7,10 +7,9 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
-import { genererCsrfToken } from './backend/auth/middleware';
 import { logRequest } from './backend/utils';
 import { aInntektUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
-import { logError, logInfo, LogLevel } from './logging/logging';
+import { logError, LogLevel } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 let vite: ViteDevServer;
@@ -61,12 +60,9 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
     }
 
     const serveApp = async (req: Request, res: Response): Promise<void> => {
-        const csrfToken = genererCsrfToken(req.session);
         const url = req.originalUrl;
         try {
-            let htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
-            htmlInnhold = htmlInnhold.replace('content="__CSRF__"', `content="${csrfToken}"`);
-
+            const htmlInnhold = isProd ? getHtmlInnholdProd() : await getHtmlInnholdDev(url);
             res.status(200).set({ 'Content-Type': 'text/html' }).end(htmlInnhold);
         } catch (error) {
             logError(`Feil ved lesing av index.html: ${error}`);
@@ -82,11 +78,6 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
         ensureAuthenticated(texasClient, false),
         (req: Request, res: Response): void => {
             prometheusTellere.appLoad.inc();
-            const gammelCsrfToken = req.session.csrfToken;
-            const csrfToken = genererCsrfToken(req.session);
-            logInfo(
-                `Gammel CSRF-tokenstart=${gammelCsrfToken?.substring(0, 4)}, CSRF-tokenstart=${csrfToken.substring(0, 4)}, path=${req.path}`
-            );
             void serveApp(req, res);
         }
     );

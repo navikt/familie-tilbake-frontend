@@ -14,6 +14,7 @@ import { SidebarSkeleton } from '@komponenter/sidebar/SidebarSkeleton';
 import { Stegflyt } from '@komponenter/stegflyt/Stegflyt';
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { Alert, BodyShort, Button } from '@navikt/ds-react';
+import { IkkeFunnet } from '@pages/feilsider/IkkeFunnet';
 import { useGlobalAlerts, useLukkGlobalAlert } from '@stores/globalAlertStore';
 import { venteårsaker } from '@typer/behandling';
 import { formatterDatostring } from '@utils';
@@ -169,6 +170,7 @@ const HistoriskBehandling: React.FC<HistoriskBehandlingProps> = ({ dialogRef }) 
                 }
             />
             <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+            <Route path="*" element={<IkkeFunnet />} />
         </Routes>
     </BehandlingLayout>
 );
@@ -295,6 +297,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
                                 element={<BrevmottakerContainer />}
                             />
+                            <Route path="*" element={<IkkeFunnet />} />
                         </Routes>
                     </Suspense>
                 </section>

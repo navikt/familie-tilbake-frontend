@@ -1,6 +1,7 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 import type { SynligSteg } from '@utils/sider';
 
+import { useBehandling } from '@context/BehandlingContext';
 import { useBehandlingState } from '@context/BehandlingStateContext';
 import { BekreftelsesModal } from '@komponenter/modal/bekreftelse/BekreftelsesModal';
 import { Steginformasjon } from '@komponenter/steginformasjon/StegInformasjon';
@@ -44,7 +45,7 @@ export const Totrinnskontroll: React.FC = () => {
         feilmelding,
         erLesevisning,
     } = useTotrinnskontroll();
-
+    const { erNyModell } = useBehandling();
     const { aktivtSteg } = useBehandlingState();
     const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
 
@@ -75,7 +76,7 @@ export const Totrinnskontroll: React.FC = () => {
                         infotekst="Kontroller endrede opplysninger og faglige vurderinger"
                     />
                 )}
-                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && (
+                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && !erNyModell && (
                     <div>
                         <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
                             Angre sendt til beslutter
@@ -161,7 +162,7 @@ export const Totrinnskontroll: React.FC = () => {
                         </Button>
                         <Button
                             size="small"
-                            onClick={sendInnSkjema}
+                            onClick={() => sendInnSkjema()}
                             loading={senderInn}
                             disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
                         >
@@ -175,7 +176,7 @@ export const Totrinnskontroll: React.FC = () => {
                     overskrift="Godkjenn vedtaket"
                     brødtekst="Denne handlingen kan ikke angres."
                     bekreftTekst="Godkjenn vedtaket"
-                    onBekreft={sendInnSkjema}
+                    onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
                     laster={senderInn}
                 />
             </div>

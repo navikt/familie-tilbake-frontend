@@ -32,7 +32,5 @@ export type User = {
 declare module 'express-session' {
     interface Session {
         user: User | null;
-        csrfToken: string | null;
-        gyldigeCsrfTokens: string[];
     }
 }

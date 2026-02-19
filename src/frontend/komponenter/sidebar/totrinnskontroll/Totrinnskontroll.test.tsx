@@ -14,7 +14,7 @@ import {
 import { lagBehandling } from '@testdata/behandlingFactory';
 import { lagFagsak } from '@testdata/fagsakFactory';
 import { lagTotrinnsStegInfo } from '@testdata/totrinnskontrollFactory';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createTestQueryClient } from '@testutils/queryTestUtils';
 import { RessursStatus } from '@typer/ressurs';
@@ -314,5 +314,45 @@ describe('Totrinnskontroll', () => {
                 name: 'Avbryt',
             })
         ).toBeInTheDocument();
+    });
+
+    test('Lukker bekreftelsesmodal etter vellykket godkjenning', async () => {
+        setupMocks({
+            totrinnsstegsinfo: [
+                lagTotrinnsStegInfo('FAKTA'),
+                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
+            ],
+        });
+
+        const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
+            lagBehandling({ kanEndres: true })
+        );
+
+        await waitFor(() => {
+            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+        });
+
+        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+
+        await user.click(
+            getByRole('button', {
+                name: 'Godkjenn vedtaket',
+            })
+        );
+
+        const modal = await waitFor(() => getByRole('dialog'));
+
+        await user.click(
+            within(modal).getByRole('button', {
+                name: 'Godkjenn vedtaket',
+            })
+        );
+
+        await waitFor(() => {
+            expect(queryByRole('dialog')).not.toBeInTheDocument();
+        });
     });
 });

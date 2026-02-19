@@ -233,7 +233,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         };
     };
 
-    const sendInnSkjema = (): void => {
+    const sendInnSkjema = async (onSuccess?: () => void): Promise<void> => {
         if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
             settSenderInn(true);
             settForeslåVedtakRespons(undefined);
@@ -242,33 +242,31 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                 '@type': 'FORESLÅ_VEDTAK',
                 fritekstavsnitt: lagFritekstavsnitt(),
             };
-            sendInnForeslåVedtak(behandling.behandlingId, payload)
-                .then(async (respons: Ressurs<string>) => {
-                    settSenderInn(false);
-                    if (respons.status === RessursStatus.Suksess) {
-                        await queryClient.invalidateQueries({
-                            queryKey: hentBehandlingQueryKey({
-                                path: { behandlingId: behandling.behandlingId },
-                            }),
-                        });
-                        visGlobalAlert({
-                            title: 'Sendt til godkjenning',
-                            message: 'Behandlingen er sendt til godkjenning hos beslutter.',
-                            status: 'success',
-                        });
-                    } else if (
-                        respons.status === RessursStatus.Feilet ||
-                        respons.status === RessursStatus.FunksjonellFeil
-                    ) {
-                        settForeslåVedtakRespons(respons);
-                    }
-                })
-                .catch(() => {
-                    settSenderInn(false);
-                    settForeslåVedtakRespons(
-                        byggFeiletRessurs('Ukjent feil ved sending av vedtak')
-                    );
-                });
+            try {
+                const respons = await sendInnForeslåVedtak(behandling.behandlingId, payload);
+                settSenderInn(false);
+                if (respons.status === RessursStatus.Suksess) {
+                    await queryClient.invalidateQueries({
+                        queryKey: hentBehandlingQueryKey({
+                            path: { behandlingId: behandling.behandlingId },
+                        }),
+                    });
+                    visGlobalAlert({
+                        title: 'Sendt til godkjenning',
+                        message: 'Behandlingen er sendt til godkjenning hos beslutter.',
+                        status: 'success',
+                    });
+                    onSuccess?.();
+                } else if (
+                    respons.status === RessursStatus.Feilet ||
+                    respons.status === RessursStatus.FunksjonellFeil
+                ) {
+                    settForeslåVedtakRespons(respons);
+                }
+            } catch {
+                settSenderInn(false);
+                settForeslåVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
+            }
         }
     };
 

@@ -3,7 +3,9 @@
     "compilerOptions": {
         "rootDir": ".",
         "baseUrl": ".",
-        "module": "esnext",
+        "module": "es2022",
+        "moduleResolution": "bundler",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
         "allowSyntheticDefaultImports": true,
         "typeRoots": ["../../node_modules/@types", "../../node_modules", "./@types"],
         "types": ["@testing-library/jest-dom", "vitest/globals", "node"],
@@ -30,9 +32,5 @@
     },
     "exclude": [
         "../../node_modules"
-    ],
-    "lib": [
-        "es2015",
-        "esnext"
     ]
 }
