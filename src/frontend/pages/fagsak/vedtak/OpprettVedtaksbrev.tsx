@@ -151,7 +151,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
                         <HStack
                             justify="center"
                             align="center"
-                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
+                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl"
                         >
                             <Pagination
                                 page={gjeldendeSide}
