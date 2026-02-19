@@ -1,8 +1,4 @@
-import type {
-    BehandlingDto,
-    BehandlingsresultatstypeEnum,
-    BehandlingstatusEnum,
-} from '@generated';
+import type { BehandlingDto, BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '@generated';
 import type { RenderResult } from '@testing-library/react';
 
 import { FagsakContext } from '@context/FagsakContext';

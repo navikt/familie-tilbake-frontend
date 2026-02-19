@@ -5,23 +5,66 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import { readdirSync, statSync } from 'fs';
-import { join } from 'path';
 import tseslint from 'typescript-eslint';
 
-function relativeImportPattern(frontendPath) {
-    const folders = readdirSync(frontendPath).filter(navn =>
-        statSync(join(frontendPath, navn)).isDirectory()
-    );
-    const relativeDybder = Array.from({ length: 10 }, (_, i) => '../'.repeat(i + 1));
-
-    return folders.map(folder => ({
-        group: relativeDybder.flatMap(d => [`${d}${folder}`, `${d}${folder}/*`]),
-        message: `Bruk @${folder}/* i stedet for relative imports.`,
-    }));
-}
-
-const relativeImportPatterns = relativeImportPattern('./src/frontend');
+const relativeImportPatterns = [
+    {
+        group: ['../../../api', '../../../api/*'],
+        message: 'Bruk @api/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../context', '../../../context/*'],
+        message: 'Bruk @context/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../generated', '../../../generated/*'],
+        message: 'Bruk @generated/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../generated-new', '../../../generated-new/*'],
+        message: 'Bruk @generated-new/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../hooks', '../../../hooks/*'],
+        message: 'Bruk @hooks/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../images', '../../../images/*'],
+        message: 'Bruk @images/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../kodeverk', '../../../kodeverk/*'],
+        message: 'Bruk @kodeverk/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../komponenter', '../../../komponenter/*'],
+        message: 'Bruk @komponenter/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../pages', '../../../pages/*'],
+        message: 'Bruk @pages/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../stores', '../../../stores/*'],
+        message: 'Bruk @stores/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../testdata', '../../../testdata/*'],
+        message: 'Bruk @testdata/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../testutils', '../../../testutils/*'],
+        message: 'Bruk @testutils/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../typer', '../../../typer/*'],
+        message: 'Bruk @typer/* i stedet for relative imports.',
+    },
+    {
+        group: ['../../../utils', '../../../utils/*'],
+        message: 'Bruk @utils/* i stedet for relative imports.',
+    },
+];
 
 export default defineConfig(
     eslint.configs.recommended,

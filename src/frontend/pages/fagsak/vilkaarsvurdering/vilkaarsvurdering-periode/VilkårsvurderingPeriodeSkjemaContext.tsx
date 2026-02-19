@@ -1,6 +1,6 @@
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { Skjema } from '@hooks/skjema';
 import type { Aktsomhetsvurdering, GodTro, SærligeGrunnerDto } from '@typer/tilbakekrevingstyper';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
 import {
     type Avhengigheter,

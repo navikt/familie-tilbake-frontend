@@ -8,10 +8,11 @@ import { PersonPlusIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Ressurs, RessursStatus } from '@typer/ressurs';
-import { MODAL_BREDDE } from '../utils';
 import { useStegNavigering } from '@utils/sider';
 import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
+
+import { MODAL_BREDDE } from '../utils';
 
 export const LeggTilFjernBrevmottakere: React.FC = () => {
     const { behandlingId, manuelleBrevmottakere, behandlingsstegsinfo } = useBehandling();

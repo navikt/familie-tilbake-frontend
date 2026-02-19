@@ -1,5 +1,5 @@
-import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { BeregnSplittetPeriodeRespons, Periode } from '@typer/tilbakekrevingstyper';
 
 import splitPeriodImageUrl from '@images/splitt.svg';

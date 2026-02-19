@@ -1,9 +1,5 @@
 import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
-import type {
-    BehandlingsresultatstypeEnum,
-    BehandlingsstegEnum,
-    VenteårsakEnum,
-} from '@generated';
+import type { BehandlingsresultatstypeEnum, BehandlingsstegEnum, VenteårsakEnum } from '@generated';
 import type {
     DokumentMal,
     Foreldelsevurdering,

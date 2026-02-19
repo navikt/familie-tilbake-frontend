@@ -6,11 +6,11 @@ import { ForhåndsvisHenleggelsesBrev } from '@komponenter/meny/henlegg/forhånd
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
 import { behandlingsresultater } from '@typer/behandling';
 import { hentFrontendFeilmelding } from '@utils';
-import { MODAL_BREDDE } from '../../utils';
 import * as React from 'react';
 import { useEffect, useEffectEvent } from 'react';
 
 import { useHenleggSkjema } from './HenleggModalContext';
+import { MODAL_BREDDE } from '../../utils';
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;

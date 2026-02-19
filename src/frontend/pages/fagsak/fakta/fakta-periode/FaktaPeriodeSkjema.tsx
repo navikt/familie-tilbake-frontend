@@ -1,5 +1,5 @@
-import type { HendelseType, HendelseUndertype } from '@kodeverk';
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { HendelseType, HendelseUndertype } from '@kodeverk';
 
 import { useBehandlingState } from '@context/BehandlingStateContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '@kodeverk';

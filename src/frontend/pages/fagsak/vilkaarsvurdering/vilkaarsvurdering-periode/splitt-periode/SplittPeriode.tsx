@@ -1,6 +1,6 @@
+import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { BeregnSplittetPeriodeRespons, Periode } from '@typer/tilbakekrevingstyper';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 
 import splitPeriodImageUrl from '@images/splitt.svg';
 import splitPeriodImageHoverUrl from '@images/splitt_hover.svg';

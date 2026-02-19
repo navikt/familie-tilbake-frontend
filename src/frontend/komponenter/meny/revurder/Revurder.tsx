@@ -4,10 +4,10 @@ import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { behandlingsårsaker } from '@typer/behandling';
 import { hentFrontendFeilmelding } from '@utils';
-import { MODAL_BREDDE } from '../utils';
 import * as React from 'react';
 import { useRef } from 'react';
 
+import { MODAL_BREDDE } from '../utils';
 import { useRevurderSkjema } from './RevurderSkjemaContext';
 
 export const Revurder: React.FC = () => {

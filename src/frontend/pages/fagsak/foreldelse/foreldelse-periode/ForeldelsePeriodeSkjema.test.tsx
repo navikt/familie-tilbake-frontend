@@ -1,7 +1,7 @@
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ForeldelseHook } from '@pages/fagsak/foreldelse/ForeldelseContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
 import { Foreldelsevurdering } from '@kodeverk';
 import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';

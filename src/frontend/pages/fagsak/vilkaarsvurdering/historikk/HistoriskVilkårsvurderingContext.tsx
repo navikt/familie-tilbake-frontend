@@ -1,5 +1,5 @@
-import type { VilkårsvurderingResponse } from '@typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
+import type { VilkårsvurderingResponse } from '@typer/tilbakekrevingstyper';
 
 import { useBehandlingApi } from '@api/behandling';
 import { useBehandling } from '@context/BehandlingContext';

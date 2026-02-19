@@ -1,7 +1,7 @@
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingHook } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
 import { FagsakContext } from '@context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@kodeverk';

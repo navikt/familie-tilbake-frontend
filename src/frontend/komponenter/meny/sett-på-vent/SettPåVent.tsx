@@ -7,11 +7,12 @@ import { TimerPauseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { manuelleVenteÅrsaker, venteårsaker } from '@typer/behandling';
-import { MODAL_BREDDE } from '../utils';
 import { dagensDato } from '@utils/dato';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { useRef } from 'react';
+
+import { MODAL_BREDDE } from '../utils';
 
 export const SettPåVent: React.FC = () => {
     const { behandlingId } = useBehandling();

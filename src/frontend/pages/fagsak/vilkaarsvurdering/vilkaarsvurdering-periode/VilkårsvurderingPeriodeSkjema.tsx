@@ -27,12 +27,12 @@ import {
 } from '@navikt/ds-react';
 import { useVilkårsvurdering } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 import { useQueryClient } from '@tanstack/react-query';
-import { PeriodeHandling } from '../typer/periodeHandling';
 import { formatterDatostring, isEmpty } from '@utils';
 import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import { PeriodeHandling } from '../typer/periodeHandling';
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
 import { SplittPeriode } from './splitt-periode/SplittPeriode';

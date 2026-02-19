@@ -1,5 +1,5 @@
-import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
+import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { ForeldelsePeriode } from '@typer/tilbakekrevingstyper';
 
 import { Foreldelsevurdering } from '@kodeverk';

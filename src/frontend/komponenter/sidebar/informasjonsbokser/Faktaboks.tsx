@@ -18,8 +18,9 @@ import {
 import { ExpansionCard, Tag } from '@navikt/ds-react';
 import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@typer/behandling';
 import { formatterDatostring } from '@utils';
-import { ICON_PROPS } from '../utils';
 import React from 'react';
+
+import { ICON_PROPS } from '../utils';
 
 export const Faktaboks: React.FC = () => {
     const behandling = useBehandling();

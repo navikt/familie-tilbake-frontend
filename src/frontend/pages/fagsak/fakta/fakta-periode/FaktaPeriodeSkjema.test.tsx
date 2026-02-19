@@ -1,6 +1,6 @@
+import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { BehandlingApiHook } from '@api/behandling';
 import type { RenderResult } from '@testing-library/react';
-import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 import type { Ressurs } from '@typer/ressurs';
 
 import { FagsakContext } from '@context/FagsakContext';
