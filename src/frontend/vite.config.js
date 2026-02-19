@@ -34,7 +34,6 @@ export default defineConfig(() => {
                     uploadLegacySourcemaps: {
                         paths: ['./dist'],
                         ignore: ['./node_modules'],
-                        urlPrefix: `~/assets`,
                     },
                 },
                 errorHandler: err => {

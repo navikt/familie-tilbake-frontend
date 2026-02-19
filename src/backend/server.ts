@@ -2,8 +2,6 @@ import type { NextFunction, Request, Response } from 'express';
 
 import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
-import expressStaticGzip from 'express-static-gzip';
-import path from 'path';
 
 import backend from './backend';
 import { ensureAuthenticated } from './backend/auth/authenticate';
@@ -18,10 +16,6 @@ import setupRouter from './router';
     const port = 8000;
 
     const { app, texasClient, router } = backend(texasConfig, prometheusTellere);
-
-    if (process.env.NODE_ENV === 'production') {
-        app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'dist/assets'), {}));
-    }
 
     app.use((req: Request, _res: Response, next: NextFunction) => {
         req.headers['nav-call-id'] = crypto.randomUUID();
