@@ -1,7 +1,8 @@
 import type { FamilieRequest } from './http/HttpProvider';
 
+import { RessursStatus } from '@typer/ressurs';
+
 import { preferredAxios } from './axios';
-import { RessursStatus } from '../typer/ressurs';
 
 type BrukerlenkerResponse = {
     aInntektUrl: string;

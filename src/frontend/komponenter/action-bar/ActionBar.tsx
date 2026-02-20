@@ -1,9 +1,8 @@
+import { Behandlingsmeny } from '@komponenter/meny/Meny';
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
-
-import { Behandlingsmeny } from '../meny/Meny';
 
 type BaseProps = {
     stegtekst: string | undefined;

@@ -1,3 +1,4 @@
+import { useBehandling } from '@context/BehandlingContext';
 import {
     ClockDashedIcon,
     EnvelopeClosedIcon,
@@ -9,7 +10,6 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Menysider, MenySideInnhold } from './Menykontainer';
-import { useBehandling } from '../../context/BehandlingContext';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;

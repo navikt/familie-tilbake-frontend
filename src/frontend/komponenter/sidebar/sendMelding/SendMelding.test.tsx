@@ -1,25 +1,25 @@
-import type { DokumentApiHook } from '../../../api/dokument';
-import type { BehandlingDto, SpråkkodeEnum } from '../../../generated';
+import type { DokumentApiHook } from '@api/dokument';
+import type { BehandlingDto, SpråkkodeEnum } from '@generated';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { DokumentMal } from '@kodeverk';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagBehandling } from '@testdata/behandlingFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { createTestQueryClient } from '@testutils/queryTestUtils';
+import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
 
 import { SendMelding } from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { DokumentMal } from '../../../kodeverk';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseDokumentApi = vi.fn();
-vi.mock('../../../api/dokument', () => ({
+vi.mock('@api/dokument', () => ({
     useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
 }));
 

@@ -1,11 +1,11 @@
+import { DataLastIkkeSuksess } from '@komponenter/datalast/DataLastIkkeSuksess';
 import { Alert, Heading, VStack } from '@navikt/ds-react';
+import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
 
 import { useHistoriskFakta } from './HistoriskFaktaContext';
 import { HistoriskFaktaVisning } from './HistoriskFaktaVisning';
 import { VelgHistoriskFaktaVurdering } from './VelgHistoriskFaktaVurdering';
-import { DataLastIkkeSuksess } from '../../../../../komponenter/datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '../../../../../typer/ressurs';
 
 export const HistoriskFaktaContainer: React.FC = () => {
     const { inaktiveFakta, skjemaData, fakta, setInaktivFakta } = useHistoriskFakta();

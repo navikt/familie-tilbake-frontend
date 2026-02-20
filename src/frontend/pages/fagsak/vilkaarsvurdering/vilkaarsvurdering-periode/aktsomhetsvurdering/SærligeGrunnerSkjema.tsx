@@ -1,18 +1,18 @@
-import type { Skjema } from '../../../../../hooks/skjema';
+import type { Skjema } from '@hooks/skjema';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { Valideringsstatus } from '@hooks/skjema';
+import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '@kodeverk';
 import { Checkbox, CheckboxGroup, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
-
 import {
     jaNeiOptions,
     OptionNEI,
     type JaNeiOption,
     type VilkårsvurderingSkjemaDefinisjon,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+} from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import * as React from 'react';
+
 import { ReduksjonAvBeløpSkjema } from './ReduksjonAvBeløpSkjema';
-import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
-import { Valideringsstatus } from '../../../../../hooks/skjema';
-import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '../../../../../kodeverk';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;

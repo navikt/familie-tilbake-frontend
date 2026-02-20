@@ -1,5 +1,5 @@
-import type { HendelseType, HendelseUndertype } from '../../../../kodeverk';
-import type { VurderingAvBrukersUttalelse, Periode } from '../../../../typer/tilbakekrevingstyper';
+import type { HendelseType, HendelseUndertype } from '@kodeverk';
+import type { VurderingAvBrukersUttalelse, Periode } from '@typer/tilbakekrevingstyper';
 
 export type FaktaPeriodeSkjemaData = {
     index: number;

@@ -1,16 +1,15 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
-import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
-import * as React from 'react';
-
 import {
     aktsomheter,
     forstodBurdeForståttAktsomheter,
     særligegrunner,
     Vilkårsresultat,
-} from '../../../../kodeverk';
-import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
-import { TilbakekrevingAktivitetTabell } from '../vilkaarsvurdering-periode/TilbakekrevingAktivitetTabell';
+} from '@kodeverk';
+import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
+import { TilbakekrevingAktivitetTabell } from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/TilbakekrevingAktivitetTabell';
+import { formatCurrencyNoKr, formatterDatostring } from '@utils';
+import * as React from 'react';
 
 const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.ForstoBurdeForstått]:

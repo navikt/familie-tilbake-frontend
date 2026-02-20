@@ -1,10 +1,9 @@
-import type { BeregningsresultatPeriode } from '../../../typer/vedtakTyper';
+import type { BeregningsresultatPeriode } from '@typer/vedtakTyper';
 
+import { vurderinger } from '@kodeverk';
 import { Table } from '@navikt/ds-react';
+import { formatCurrencyNoKr, formatterDatostring } from '@utils';
 import * as React from 'react';
-
-import { vurderinger } from '../../../kodeverk';
-import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 
 type Props = {
     perioder: BeregningsresultatPeriode[];

@@ -5,7 +5,7 @@ import type {
     Vilkårsresultat,
     Aktsomhet,
     SærligeGrunner,
-} from '../kodeverk';
+} from '@kodeverk';
 
 export enum Tilbakekrevingsvalg {
     OpprettTilbakekrevingMedVarsel = 'OPPRETT_TILBAKEKREVING_MED_VARSEL',

@@ -1,12 +1,11 @@
-import type { FagsakDto } from '../generated';
+import type { FagsakDto } from '@generated';
 import type { ReactNode } from 'react';
 
+import { hentFagsak } from '@generated/sdk.gen';
+import { Fagsystem } from '@kodeverk';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import React, { createContext, useContext } from 'react';
 import { useParams } from 'react-router';
-
-import { hentFagsak } from '../generated/sdk.gen';
-import { Fagsystem } from '../kodeverk';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
 

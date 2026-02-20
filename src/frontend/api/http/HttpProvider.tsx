@@ -1,5 +1,5 @@
-import type { ApiRessurs, Ressurs } from '../../typer/ressurs';
-import type { Saksbehandler } from '../../typer/saksbehandler';
+import type { ApiRessurs, Ressurs } from '@typer/ressurs';
+import type { Saksbehandler } from '@typer/saksbehandler';
 import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 import constate from 'constate';

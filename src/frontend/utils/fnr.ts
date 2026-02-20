@@ -1,5 +1,6 @@
+import { feil, type FeltState, ok } from '@hooks/skjema';
+
 import { definerteFeilmeldinger, DefinertFeilmelding, isEmpty } from './validering';
-import { feil, type FeltState, ok } from '../hooks/skjema';
 
 /**
  * Validering fødselsnummer

@@ -1,4 +1,4 @@
-import type { Feil } from '../../../api/feil';
+import type { Feil } from '@api/feil';
 import type { AxiosError } from 'axios';
 
 import { isAxiosError } from 'axios';

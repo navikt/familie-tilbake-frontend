@@ -1,11 +1,11 @@
+import { type Skjema } from '@hooks/skjema';
+import { Vilkårsresultat } from '@kodeverk';
 import { Select } from '@navikt/ds-react';
+import { type VilkårsvurderingSkjemaDefinisjon } from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 import * as React from 'react';
 
 import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
-import { type Skjema } from '../../../../../hooks/skjema';
-import { Vilkårsresultat } from '../../../../../kodeverk';
-import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
-import { type VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;

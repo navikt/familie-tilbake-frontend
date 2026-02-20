@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import type { BlockerFunction } from 'react-router';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
 import React, { useCallback, useEffect } from 'react';
 import { useBeforeUnload, useBlocker } from 'react-router';
 
 import { ModalWrapper } from './ModalWrapper';
-import { useBehandlingState } from '../../context/BehandlingStateContext';
 
 export const UlagretDataModal: FC = () => {
     const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandlingState();

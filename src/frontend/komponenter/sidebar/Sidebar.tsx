@@ -1,3 +1,4 @@
+import { useBehandlingState } from '@context/BehandlingStateContext';
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import { useEffect } from 'react';
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './informasjonsbokser/Faktaboks';
-import { useBehandlingState } from '../../context/BehandlingStateContext';
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;

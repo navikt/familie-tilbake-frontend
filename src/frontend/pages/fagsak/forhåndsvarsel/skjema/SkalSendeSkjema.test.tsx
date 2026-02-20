@@ -1,22 +1,21 @@
 import type { RenderResult } from '@testing-library/react';
 
+import { FagsakContext } from '@context/FagsakContext';
+import { Forhåndsvarsel } from '@pages/fagsak/forhåndsvarsel/Forhåndsvarsel';
+import { useForhåndsvarselMutations } from '@pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '@pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, fireEvent } from '@testing-library/react';
-import React from 'react';
-
-import { FagsakContext } from '../../../../context/FagsakContext';
-import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '../../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../../testdata/fagsakFactory';
+import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
+import { lagBehandlingDto } from '@testdata/behandlingFactory';
+import { lagFagsak } from '@testdata/fagsakFactory';
 import {
     lagForhåndsvarselQueries,
     lagForhåndsvarselQueriesSendt,
     lagForhåndsvarselMutations,
-} from '../../../../testdata/forhåndsvarselFactory';
-import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
-import { Forhåndsvarsel } from '../Forhåndsvarsel';
-import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
+} from '@testdata/forhåndsvarselFactory';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { createTestQueryClient } from '@testutils/queryTestUtils';
+import React from 'react';
 
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),

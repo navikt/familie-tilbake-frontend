@@ -1,9 +1,9 @@
 import { Alert } from '@navikt/ds-react';
+import { Serverfeil } from '@pages/feilsider/serverfeil';
+import { type Ressurs, RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
 
 import { HenterData } from './HenterData';
-import { Serverfeil } from '../../pages/feilsider/serverfeil';
-import { type Ressurs, RessursStatus } from '../../typer/ressurs';
 
 type Props = {
     ressurser: (Ressurs<unknown> | undefined)[];

@@ -1,8 +1,7 @@
+import { useHttp } from '@api/http/HttpProvider';
+import { useBehandling } from '@context/BehandlingContext';
+import { type Ressurs, RessursStatus } from '@typer/ressurs';
 import { useCallback, useState } from 'react';
-
-import { useHttp } from '../api/http/HttpProvider';
-import { useBehandling } from '../context/BehandlingContext';
-import { type Ressurs, RessursStatus } from '../typer/ressurs';
 
 export type SammenslåttPeriodeHook = {
     hentErPerioderLike: () => Promise<boolean>;

@@ -1,9 +1,8 @@
-import type { YtelseInfo } from '../../../../typer/tilbakekrevingstyper';
+import type { YtelseInfo } from '@typer/tilbakekrevingstyper';
 
 import { Table } from '@navikt/ds-react';
+import { formatCurrencyNoKr } from '@utils';
 import * as React from 'react';
-
-import { formatCurrencyNoKr } from '../../../../utils';
 
 type Props = {
     ytelser?: YtelseInfo[];

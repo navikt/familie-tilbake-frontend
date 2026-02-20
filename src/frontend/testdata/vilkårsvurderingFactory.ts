@@ -1,10 +1,10 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '../pages/fagsak/vilkaarsvurdering/typer/vilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from '@pages/fagsak/vilkaarsvurdering/typer/vilkårsvurdering';
 import type {
     VilkårsvurderingPeriode,
     VilkårsvurderingResponse,
-} from '../typer/tilbakekrevingstyper';
+} from '@typer/tilbakekrevingstyper';
 
-import { HendelseType } from '../kodeverk';
+import { HendelseType } from '@kodeverk';
 
 export const lagVilkårsvurderingPeriodeSkjemaData = (
     overrides?: Partial<VilkårsvurderingPeriodeSkjemaData>

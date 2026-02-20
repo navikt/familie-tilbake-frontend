@@ -1,4 +1,4 @@
-import type { Brevmottaker, ManuellBrevmottakerResponsDto } from '../../../generated';
+import type { Brevmottaker, ManuellBrevmottakerResponsDto } from '@generated';
 
 import React from 'react';
 

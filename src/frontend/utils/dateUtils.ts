@@ -1,7 +1,8 @@
-import type { JournalpostRelevantDato } from '../typer/journalføring';
-import type { FaktaPeriode } from '../typer/tilbakekrevingstyper';
+import type { JournalpostRelevantDato } from '@typer/journalføring';
+import type { FaktaPeriode } from '@typer/tilbakekrevingstyper';
 import type { Duration } from 'date-fns';
 
+import { JournalpostDatotype } from '@typer/journalføring';
 import {
     add,
     differenceInCalendarYears,
@@ -17,7 +18,6 @@ import {
 } from 'date-fns';
 
 import { isEmpty } from './validering';
-import { JournalpostDatotype } from '../typer/journalføring';
 
 const datoformat: Intl.DateTimeFormatOptions = {
     day: '2-digit',

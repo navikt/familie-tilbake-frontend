@@ -1,5 +1,5 @@
-import type { ForeldelsePeriodeSkjemeData } from '../pages/fagsak/foreldelse/typer/foreldelse';
-import type { ForeldelsePeriode, ForeldelseResponse } from '../typer/tilbakekrevingstyper';
+import type { ForeldelsePeriodeSkjemeData } from '@pages/fagsak/foreldelse/typer/foreldelse';
+import type { ForeldelsePeriode, ForeldelseResponse } from '@typer/tilbakekrevingstyper';
 
 export const lagForeldelsePeriode = (
     overrides?: Partial<ForeldelsePeriode>

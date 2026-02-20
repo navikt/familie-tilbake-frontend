@@ -1,6 +1,6 @@
-import type { Varselbrevtekst } from '../generated';
-import type { UseForhåndsvarselMutationsReturn } from '../pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
-import type { UseForhåndsvarselQueriesReturn } from '../pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
+import type { Varselbrevtekst } from '@generated';
+import type { UseForhåndsvarselMutationsReturn } from '@pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
+import type { UseForhåndsvarselQueriesReturn } from '@pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
 import type { UseQueryResult, UseSuspenseQueryResult } from '@tanstack/react-query';
 
 import { vi } from 'vitest';

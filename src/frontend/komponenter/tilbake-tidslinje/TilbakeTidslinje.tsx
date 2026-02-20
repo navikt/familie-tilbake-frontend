@@ -2,10 +2,9 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 
 import { CheckmarkCircleIcon, PencilIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
 import { Timeline } from '@navikt/ds-react';
+import { dateTilIsoDatoStringEllerUndefined } from '@utils/dato';
 import classNames from 'classnames';
 import * as React from 'react';
-
-import { dateTilIsoDatoStringEllerUndefined } from '../../utils/dato';
 
 type Props = {
     rader: TimelinePeriodProps[][];

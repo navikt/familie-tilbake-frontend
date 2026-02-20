@@ -1,16 +1,20 @@
 import type {
     JaNeiOption,
     VilkårsvurderingSkjemaDefinisjon,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+} from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
+import { useBehandlingState } from '@context/BehandlingStateContext';
+import { type Skjema, Valideringsstatus } from '@hooks/skjema';
+import { Aktsomhet } from '@kodeverk';
 import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
+import {
+    jaNeiOptions,
+    OptionJA,
+    OptionNEI,
+} from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 import * as React from 'react';
 
 import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
-import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '../../../../../hooks/skjema';
-import { Aktsomhet } from '../../../../../kodeverk';
-import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;

@@ -1,5 +1,6 @@
+import { RessursStatus, type Ressurs } from '@typer/ressurs';
+
 import { hentFrontendFeilmelding } from './ressursUtils';
-import { RessursStatus, type Ressurs } from '../typer/ressurs';
 
 describe('hentFrontendFeilmelding', () => {
     test('Returnerer feilmelding for ServerFeil status', () => {

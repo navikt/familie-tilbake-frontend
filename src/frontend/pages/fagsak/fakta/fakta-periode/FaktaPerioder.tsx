@@ -1,11 +1,11 @@
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
 
+import { useFagsak } from '@context/FagsakContext';
+import { hentHendelseTyper } from '@kodeverk';
 import { Table } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
-import { useFagsak } from '../../../../context/FagsakContext';
-import { hentHendelseTyper } from '../../../../kodeverk';
 
 type Props = {
     perioder: FaktaPeriodeSkjemaData[];
