@@ -202,7 +202,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
                 if (submitAction === 'SEND_UNNTAK_OG_UTTALELSE') {
                     sendUnntak(data);
                 }
-                sendBrukeruttalelse(uttalelseMethods.getValues());
+                sendBrukeruttalelse(uttalelseMethods.getValues(), varselErSendt);
                 break;
             }
             case 'NAVIGER':
@@ -222,7 +222,7 @@ export const ForhåndsvarselSkjema: React.FC<Props> = ({
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             sendUtsettUttalelseFrist(data);
         }
-        sendBrukeruttalelse(data);
+        sendBrukeruttalelse(data, varselErSendt);
     };
 
     const formId = ((): 'opprettForm' | 'uttalelseForm' | undefined => {

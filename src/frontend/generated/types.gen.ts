@@ -969,7 +969,13 @@ export type BehandlingsresultatstypeEnum =
     | 'DELVIS_TILBAKEBETALING'
     | 'FULL_TILBAKEBETALING';
 
-export type HarBrukerUttaltSegEnum = 'JA' | 'NEI' | 'ALLEREDE_UTTALET_SEG';
+export type HarBrukerUttaltSegEnum =
+    | 'JA_ETTER_FORHÅNDSVARSEL'
+    | 'NEI_ETTER_FORHÅNDSVARSEL'
+    | 'UNNTAK_ALLEREDE_UTTALT_SEG'
+    | 'UNNTAK_INGEN_UTTALELSE'
+    | 'JA'
+    | 'NEI';
 
 export type BegrunnelseForUnntakEnum =
     | 'IKKE_PRAKTISK_MULIG'
