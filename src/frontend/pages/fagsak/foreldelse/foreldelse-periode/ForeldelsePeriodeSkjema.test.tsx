@@ -39,7 +39,7 @@ describe('ForeldelsePeriodeSkjema', () => {
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
-        expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
+        expect(queryByLabelText('Fristavbrudd - dato frist')).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -50,7 +50,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
         await user.click(getByLabelText('Perioden er ikke foreldet'));
 
-        expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
+        expect(queryByLabelText('Fristavbrudd - dato frist')).not.toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -74,12 +74,12 @@ describe('ForeldelsePeriodeSkjema', () => {
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
-        expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
+        expect(queryByLabelText('Fristavbrudd - dato frist')).not.toBeInTheDocument();
 
         await user.click(getByLabelText('Perioden er foreldet'));
 
         expect(
-            queryByLabelText('Foreldelsesfrist', {
+            queryByLabelText('Fristavbrudd - dato frist', {
                 selector: 'input',
                 exact: false,
             })
@@ -95,7 +95,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
         await user.type(getByLabelText('Vurdering'), 'begrunnelse');
         await user.type(
-            getByLabelText('Foreldelsesfrist', {
+            getByLabelText('Fristavbrudd - dato frist', {
                 selector: 'input',
                 exact: false,
             }),
@@ -116,7 +116,7 @@ describe('ForeldelsePeriodeSkjema', () => {
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
-        expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
+        expect(queryByLabelText('Fristavbrudd - dato frist')).not.toBeInTheDocument();
         expect(
             queryByLabelText('Dato for når feilutbetaling ble oppdaget')
         ).not.toBeInTheDocument();
@@ -126,7 +126,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         );
 
         expect(
-            queryByLabelText('Foreldelsesfrist', {
+            queryByLabelText('Fristavbrudd - dato frist', {
                 selector: 'input',
                 exact: false,
             })
@@ -143,7 +143,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
         await user.type(getByLabelText('Vurdering'), 'begrunnelse');
         await user.type(
-            getByLabelText('Foreldelsesfrist', {
+            getByLabelText('Fristavbrudd - dato frist', {
                 selector: 'input',
                 exact: false,
             }),
@@ -172,7 +172,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(
-            queryByLabelText('Foreldelsesfrist', {
+            queryByLabelText('Fristavbrudd - dato frist', {
                 selector: 'input',
                 exact: false,
             })
@@ -184,7 +184,7 @@ describe('ForeldelsePeriodeSkjema', () => {
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         ).toBeChecked();
         expect(
-            getByLabelText('Foreldelsesfrist', {
+            getByLabelText('Fristavbrudd - dato frist', {
                 selector: 'input',
                 exact: false,
             })

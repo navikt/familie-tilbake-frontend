@@ -117,6 +117,7 @@ export const Datovelger: React.FC<Props> = ({
                 label={label}
                 description={description}
                 placeholder="DD.MM.ÅÅÅÅ"
+                size="small"
                 readOnly={readOnly}
                 error={
                     error && visFeilmeldinger
