@@ -229,7 +229,9 @@ type AvsnittSkjemaProps = {
 const AvsnittSkjema: React.FC<AvsnittSkjemaProps> = ({ avsnitt, indeks, antallAvsnitt }) => {
     const innhold = (
         <VStack gap="space-24">
-            {antallAvsnitt === 1 && <Heading size="xsmall">{avsnitt.tittel}</Heading>}
+            {antallAvsnitt === 1 && avsnitt.underavsnitt.length > 0 && (
+                <Heading size="xsmall">{avsnitt.tittel}fefe</Heading>
+            )}
             {avsnitt.underavsnitt.map((underavsnitt, uaIndeks) => {
                 if (underavsnitt.type === 'underavsnitt') {
                     return (
