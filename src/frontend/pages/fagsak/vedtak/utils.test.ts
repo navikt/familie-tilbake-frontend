@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
+import { elementArrayTilTekst, tekstTilElementArray } from './utils';
 
 describe('elementArrayTilTekst', () => {
     test('konverterer ett element til tekst', () => {
@@ -56,19 +56,5 @@ describe('tekstTilElementArray', () => {
             { type: 'rentekst', tekst: 'Første linje\nAndre linje' },
             { type: 'rentekst', tekst: 'Nytt avsnitt' },
         ]);
-    });
-});
-
-describe('formaterPeriodeTittel', () => {
-    test('formaterer periode med samme år', () => {
-        const result = formaterPeriodeTittel('2024-01-01', '2024-12-31');
-
-        expect(result).toBe('1. januar 2024–31. desember 2024');
-    });
-
-    test('formaterer periode over årsskifte', () => {
-        const result = formaterPeriodeTittel('2023-12-01', '2024-01-31');
-
-        expect(result).toBe('1. desember 2023–31. januar 2024');
     });
 });
