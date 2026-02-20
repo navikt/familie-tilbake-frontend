@@ -61,7 +61,7 @@ export type UseForhåndsvarselMutationsReturn = {
         Options<ForhåndsvarselUnntakData>
     >;
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
-    readonly sendBrukeruttalelse: (formData: UttalelseFormData) => void;
+    readonly sendBrukeruttalelse: (formData: UttalelseFormData, varselErSendt: boolean) => void;
     readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
     readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
@@ -69,17 +69,24 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly navigerTilForrige: () => void;
 };
 
-const brukerUttalelsePayload = (formData: UttalelseFormData): BrukeruttalelseDto | undefined => {
+const brukerUttalelsePayload = (
+    formData: UttalelseFormData,
+    varselErSendt: boolean
+): BrukeruttalelseDto | undefined => {
     if (formData.harUttaltSeg === HarUttaltSeg.Ja && 'uttalelsesDetaljer' in formData) {
         return {
-            harBrukerUttaltSeg: 'JA',
+            harBrukerUttaltSeg: varselErSendt
+                ? 'JA_ETTER_FORHÅNDSVARSEL'
+                : 'UNNTAK_ALLEREDE_UTTALT_SEG',
             uttalelsesdetaljer: formData.uttalelsesDetaljer,
         };
     }
 
     if (formData.harUttaltSeg === HarUttaltSeg.Nei && 'kommentar' in formData) {
         return {
-            harBrukerUttaltSeg: 'NEI',
+            harBrukerUttaltSeg: varselErSendt
+                ? 'NEI_ETTER_FORHÅNDSVARSEL'
+                : 'UNNTAK_INGEN_UTTALELSE',
             kommentar: formData.kommentar,
         };
     }
@@ -177,8 +184,8 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendBrukeruttalelse: (formData: UttalelseFormData): void => {
-            const payload = brukerUttalelsePayload(formData);
+        sendBrukeruttalelse: (formData: UttalelseFormData, varselErSendt: boolean): void => {
+            const payload = brukerUttalelsePayload(formData, varselErSendt);
             if (!payload) return;
             sendBrukeruttalelseMutation.mutate({
                 path: {

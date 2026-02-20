@@ -1,7 +1,6 @@
 FROM gcr.io/distroless/nodejs20-debian12:nonroot
 WORKDIR /app
 
-COPY assets ./assets
 COPY node_dist ./node_dist
 COPY dist ./dist
 

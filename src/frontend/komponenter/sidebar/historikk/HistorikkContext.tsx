@@ -15,7 +15,7 @@ type Props = {
 };
 
 const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: Props) => {
-    const { behandlingId, eksternBrukId } = useBehandling();
+    const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const [historikkInnslag, settHistorikkInnslag] = useState<Ressurs<HistorikkInnslag[]>>();
     const navigate = useNavigate();
@@ -26,13 +26,13 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
             hentHistorikkinnslag();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [behandlingId, valgtMenyside]);
+    }, [behandling, valgtMenyside]);
 
     const hentHistorikkinnslag = (): void => {
         settHistorikkInnslag(byggHenterRessurs());
         request<void, HistorikkInnslag[]>({
             method: 'GET',
-            url: `/familie-tilbake/api/behandlinger/${behandlingId}/historikk`,
+            url: `/familie-tilbake/api/behandlinger/${behandling.behandlingId}/historikk`,
         })
             .then((hentetHistorikk: Ressurs<HistorikkInnslag[]>) => {
                 settHistorikkInnslag(hentetHistorikk);
@@ -46,7 +46,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
 
     const navigerTilSide = (side: SynligSteg): void => {
         navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/${side.href}`
+            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
         );
     };
 

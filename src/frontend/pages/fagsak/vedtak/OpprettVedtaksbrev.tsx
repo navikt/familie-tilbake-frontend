@@ -4,12 +4,12 @@ import type { FieldPath } from 'react-hook-form';
 
 import { useBehandling } from '@context/BehandlingContext';
 import { useBehandlingState } from '@context/BehandlingStateContext';
-import { useFagsak } from '@context/FagsakContext';
 import {
     behandlingHentVedtaksbrevOptions,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '@generated-new/@tanstack/react-query.gen';
 import { ActionBar } from '@komponenter/action-bar/ActionBar';
+import { useStegNavigering } from '@utils/sider';
 import {
     BodyShort,
     Button,
@@ -24,14 +24,12 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { datoTilTekst } from '@utils';
-import { useStegNavigering } from '@utils/sider';
+import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { mapFormDataTilVedtaksbrevData } from './mapper';
-import { elementArrayTilTekst, formaterPeriodeTittel, tekstTilElementArray } from './utils';
+import { elementArrayTilTekst, tekstTilElementArray } from './utils';
 
 const ElementTextarea: React.FC<
     Omit<TextareaProps, 'onChange' | 'value'> & {
@@ -72,7 +70,6 @@ const useDebounce = (updateFunction: () => void): (() => void) => {
 
 export const OpprettVedtaksbrev: React.FC = () => {
     const queryClient = useQueryClient();
-    const { ytelsestype } = useFagsak();
     const { behandlingId } = useBehandling();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering('VILKÅRSVURDERING');
@@ -109,12 +106,8 @@ export const OpprettVedtaksbrev: React.FC = () => {
     });
 
     const sendInnSkjemaData = (): void => {
-        const vedtaksbrevData = mapFormDataTilVedtaksbrevData(
-            ytelsestype.toLocaleLowerCase(),
-            methods.getValues()
-        );
         vedtaksbrevMutation.mutate({
-            body: vedtaksbrevData,
+            body: methods.getValues(),
         });
     };
 
@@ -130,16 +123,19 @@ export const OpprettVedtaksbrev: React.FC = () => {
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
-                <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
+                <VStack className="col-span-1 flex-1 min-h-0 gap-4">
                     <Heading size="small">Opprett vedtaksbrev</Heading>
                     <FormProvider {...methods}>
-                        <ElementTextarea name="innledning" label="Brevets innledning" />
-                        {methods.getValues('perioder').map((periode, indeks) => (
-                            <PeriodeAvsnittSkjema
-                                key={`${periode.fom}-${periode.tom}`}
-                                periode={periode}
+                        <ElementTextarea
+                            name="hovedavsnitt.underavsnitt"
+                            label="Brevets innledning"
+                        />
+                        {methods.getValues('avsnitt').map((avsnitt, indeks) => (
+                            <AvsnittSkjema
+                                key={avsnitt.tittel}
+                                avsnitt={avsnitt}
                                 indeks={indeks}
-                                antallPerioder={methods.getValues('perioder').length}
+                                antallAvsnitt={methods.getValues('avsnitt').length}
                             />
                         ))}
                     </FormProvider>
@@ -150,7 +146,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
                         <HStack
                             justify="center"
                             align="center"
-                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
+                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl"
                         >
                             <Pagination
                                 page={gjeldendeSide}
@@ -160,7 +156,15 @@ export const OpprettVedtaksbrev: React.FC = () => {
                             />
                         </HStack>
                     )}
-                    <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
+                    <div
+                        className={classNames(
+                            'flex-1 flex items-start justify-center overflow-auto rounded-b-xl',
+                            {
+                                'border-t border-ax-border-neutral-subtle':
+                                    !vedtaksbrevMutation.isError,
+                            }
+                        )}
+                    >
                         {vedtaksbrevMutation.isError ? (
                             <VStack
                                 gap="space-16"
@@ -215,57 +219,39 @@ export const OpprettVedtaksbrev: React.FC = () => {
     );
 };
 
-type PeriodeAvsnittSkjemaProps = {
-    periode: VedtaksbrevFormData['perioder'][number];
+type AvsnittSkjemaProps = {
+    avsnitt: VedtaksbrevFormData['avsnitt'][number];
     indeks: number;
-    antallPerioder: number;
+    antallAvsnitt: number;
 };
 
-const PeriodeAvsnittSkjema: React.FC<PeriodeAvsnittSkjemaProps> = ({
-    periode,
-    indeks,
-    antallPerioder,
-}) => {
-    const periodeTittel = formaterPeriodeTittel(periode.fom, periode.tom);
-
+const AvsnittSkjema: React.FC<AvsnittSkjemaProps> = ({ avsnitt, indeks, antallAvsnitt }) => {
     const innhold = (
         <VStack gap="space-24">
-            <VStack gap="space-16">
-                <ElementTextarea
-                    name={`perioder.${indeks}.beskrivelse`}
-                    label={`Perioden fra og med ${datoTilTekst(periode.fom)} til og med ${datoTilTekst(periode.tom)}`}
-                    description="Beskriv kort hva som har skjedd i denne perioden"
-                />
-            </VStack>
-
-            {periode.konklusjon.length > 0 && (
-                <VStack gap="space-16">
-                    <ElementTextarea
-                        name={`perioder.${indeks}.konklusjon`}
-                        label="Hvordan har vi kommet fram til at du må betale tilbake?"
-                    />
-                </VStack>
-            )}
-
-            {periode.vurderinger.map((vurdering, vurderingIndeks) => (
-                <VStack key={vurdering.tittel} gap="space-16">
-                    <ElementTextarea
-                        name={`perioder.${indeks}.vurderinger.${vurderingIndeks}.beskrivelse`}
-                        label={vurdering.tittel}
-                    />
-                </VStack>
-            ))}
+            {antallAvsnitt === 1 && <Heading size="xsmall">{avsnitt.tittel}</Heading>}
+            {avsnitt.underavsnitt.map((underavsnitt, uaIndeks) => {
+                if (underavsnitt.type === 'underavsnitt') {
+                    return (
+                        <ElementTextarea
+                            key={`${avsnitt.tittel}-${underavsnitt.tittel}`}
+                            name={`avsnitt.${indeks}.underavsnitt.${uaIndeks}.underavsnitt`}
+                            label={underavsnitt.tittel}
+                        />
+                    );
+                }
+                return null;
+            })}
         </VStack>
     );
 
-    if (antallPerioder === 1) {
+    if (antallAvsnitt === 1) {
         return innhold;
     }
 
     return (
-        <ExpansionCard size="small" aria-label={periodeTittel}>
+        <ExpansionCard size="small" aria-label={avsnitt.tittel}>
             <ExpansionCard.Header className="flex items-center">
-                <BodyShort className="font-ax-bold">{periodeTittel}</BodyShort>
+                <BodyShort className="font-ax-bold">{avsnitt.tittel}</BodyShort>
             </ExpansionCard.Header>
             <ExpansionCard.Content>{innhold}</ExpansionCard.Content>
         </ExpansionCard>

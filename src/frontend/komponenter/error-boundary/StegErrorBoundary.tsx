@@ -27,7 +27,7 @@ const mapSynligStegTilStegNavn = (steg: SynligSteg): string => {
             return 'Foreldelse';
         case 'VILKÅRSVURDERING':
             return 'Vilkårsvurdering';
-        case 'FATTE_VEDTAK':
+        case 'FORESLÅ_VEDTAK':
             return 'Vedtak';
         default:
             return 'Steg';
@@ -66,7 +66,7 @@ export class StegErrorBoundary extends Component<Props, State> {
                                     Den kan være midlertidig, men meld gjerne fra hva som gikk galt.
                                 </span>
                             </p>
-                            <p className="flex flex-col">
+                            <div className="flex flex-col">
                                 <span className="font-bold">Hva kan du gjøre?</span>
                                 <List>
                                     <List.Item>Last inn siden på nytt</List.Item>
@@ -80,7 +80,7 @@ export class StegErrorBoundary extends Component<Props, State> {
                                         </Link>
                                     </List.Item>
                                 </List>
-                            </p>
+                            </div>
                         </LocalAlert.Content>
                     </LocalAlert>
                     <div>
