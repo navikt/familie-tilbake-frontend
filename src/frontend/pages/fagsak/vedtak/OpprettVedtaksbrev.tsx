@@ -16,6 +16,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -130,7 +131,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
-                <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
+                <VStack className="col-span-1 flex-1 min-h-0 gap-4">
                     <Heading size="small">Opprett vedtaksbrev</Heading>
                     <FormProvider {...methods}>
                         <ElementTextarea name="innledning" label="Brevets innledning" />
@@ -150,7 +151,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
                         <HStack
                             justify="center"
                             align="center"
-                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl "
+                            className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl"
                         >
                             <Pagination
                                 page={gjeldendeSide}
@@ -160,7 +161,15 @@ export const OpprettVedtaksbrev: React.FC = () => {
                             />
                         </HStack>
                     )}
-                    <div className="flex-1 flex items-start justify-center overflow-auto rounded-b-xl border-t border-ax-border-neutral-subtle">
+                    <div
+                        className={classNames(
+                            'flex-1 flex items-start justify-center overflow-auto rounded-b-xl',
+                            {
+                                'border-t border-ax-border-neutral-subtle':
+                                    !vedtaksbrevMutation.isError,
+                            }
+                        )}
+                    >
                         {vedtaksbrevMutation.isError ? (
                             <VStack
                                 gap="space-16"
