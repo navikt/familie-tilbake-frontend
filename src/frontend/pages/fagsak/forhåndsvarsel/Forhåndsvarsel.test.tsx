@@ -14,6 +14,7 @@ import {
     lagForhåndsvarselMutations,
 } from '~/testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { configureZod } from '~/utils/zodConfig';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
@@ -51,6 +52,10 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
         </FagsakContext.Provider>
     );
 };
+
+beforeAll(() => {
+    configureZod();
+});
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {

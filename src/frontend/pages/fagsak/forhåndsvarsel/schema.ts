@@ -24,14 +24,10 @@ export enum HarUttaltSeg {
     IkkeValgt = '',
 }
 
-const fritekstSchema = z
-    .string()
-    .trim()
-    .min(1, 'Du må fylle inn en verdi')
-    .max(4000, 'Maksimalt 4000 tegn tillatt');
+const fritekstSchema = z.string().trim().min(1).max(4000);
 
 const uttalelsesDetaljerSchema = z.object({
-    uttalelsesdato: z.iso.date({ error: 'Du må skrive en dato på denne måten: dd.mm.åååå' }),
+    uttalelsesdato: z.iso.date(),
     hvorBrukerenUttalteSeg: fritekstSchema,
     uttalelseBeskrivelse: fritekstSchema,
 });
@@ -47,7 +43,7 @@ const harIkkeUttaltSegSchema = z.object({
 });
 
 const utsettUttalelseFristSchema = z.object({
-    nyFrist: z.iso.date({ error: 'Du må legge inn en gyldig dato' }),
+    nyFrist: z.iso.date(),
     begrunnelse: fritekstSchema,
 });
 
@@ -169,16 +165,13 @@ export const getOpprettValues = (
     };
 };
 
-const unntakSchema = z
-    .object({
-        skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
-        begrunnelseForUnntak: zBegrunnelseForUnntakEnum.optional(),
-        beskrivelse: z.string().min(1, 'Du må fylle inn en verdi').max(2000),
-    })
-    .refine(data => data.begrunnelseForUnntak !== undefined, {
-        message: 'Du må velge en begrunnelse for unntak fra forhåndsvarsel',
-        path: ['begrunnelseForUnntak'],
-    });
+const unntakSchema = z.object({
+    skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
+    begrunnelseForUnntak: z.enum(zBegrunnelseForUnntakEnum.enum, {
+        error: 'Du må velge en begrunnelse for unntak fra forhåndsvarsel',
+    }),
+    beskrivelse: fritekstSchema,
+});
 
 export const getUnntakValues = (
     forhåndsvarselUnntak: ForhåndsvarselUnntakDto

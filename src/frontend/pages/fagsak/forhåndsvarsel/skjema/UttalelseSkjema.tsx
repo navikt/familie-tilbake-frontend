@@ -2,7 +2,6 @@ import type { SubmitHandler } from 'react-hook-form';
 import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import {
-    VStack,
     RadioGroup,
     Radio,
     DatePicker,
@@ -11,7 +10,7 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -40,6 +39,7 @@ export const Uttalelse: React.FC<Props> = ({
         name: 'harUttaltSeg',
     });
 
+    const { name, ...radioProps } = methods.register('harUttaltSeg');
     const errors = methods.formState.errors;
 
     const {
@@ -89,40 +89,37 @@ export const Uttalelse: React.FC<Props> = ({
     }, [harUttaltSeg, fields.length, replace]);
 
     return (
-        <VStack
-            as="form"
-            gap="space-24"
-            onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
+        <form
             id="uttalelseForm"
+            onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
+            className="flex flex-col gap-6"
         >
-            <Controller
-                control={methods.control}
-                name="harUttaltSeg"
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        {...field}
-                        size="small"
-                        readOnly={behandlingILesemodus}
-                        legend={
-                            varselErSendt
-                                ? 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?'
-                                : 'Har brukeren uttalt seg?'
-                        }
-                        error={fieldState.error?.message}
-                    >
-                        <Radio value={HarUttaltSeg.Ja}>Ja</Radio>
-                        <Radio value={HarUttaltSeg.Nei}>Nei</Radio>
-                        {toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist && (
-                            <Radio value={HarUttaltSeg.UtsettFrist}>
-                                Utsett frist for å uttale seg
-                            </Radio>
-                        )}
-                    </RadioGroup>
+            <RadioGroup
+                name={name}
+                size="small"
+                readOnly={behandlingILesemodus}
+                legend={
+                    varselErSendt
+                        ? 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?'
+                        : 'Har brukeren uttalt seg?'
+                }
+                error={errors.harUttaltSeg?.message}
+            >
+                <Radio value={HarUttaltSeg.Ja} {...radioProps}>
+                    Ja
+                </Radio>
+                <Radio value={HarUttaltSeg.Nei} {...radioProps}>
+                    Nei
+                </Radio>
+                {toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist && (
+                    <Radio value={HarUttaltSeg.UtsettFrist} {...radioProps}>
+                        Utsett frist for å uttale seg
+                    </Radio>
                 )}
-            />
+            </RadioGroup>
             {harUttaltSeg === HarUttaltSeg.Ja &&
                 fields.map((fieldItem, index) => (
-                    <React.Fragment key={fieldItem.id}>
+                    <Fragment key={fieldItem.id}>
                         <DatePicker {...datepickerProps} dropdownCaption>
                             <DatePicker.Input
                                 size="small"
@@ -175,7 +172,7 @@ export const Uttalelse: React.FC<Props> = ({
                                 `uttalelsesDetaljer.${index}.uttalelseBeskrivelse.message`
                             )}
                         />
-                    </React.Fragment>
+                    </Fragment>
                 ))}
             {harUttaltSeg === HarUttaltSeg.Nei && (
                 <Textarea
@@ -192,6 +189,7 @@ export const Uttalelse: React.FC<Props> = ({
             )}
             {harUttaltSeg === HarUttaltSeg.UtsettFrist && (
                 <>
+                    {/* Husk at denne skal ha focus hvis utsatt frist velges og det ikke er valgt frist */}
                     <Controller
                         name="utsettUttalelseFrist.nyFrist"
                         control={methods.control}
@@ -221,6 +219,6 @@ export const Uttalelse: React.FC<Props> = ({
                     />
                 </>
             )}
-        </VStack>
+        </form>
     );
 };

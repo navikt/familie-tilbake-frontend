@@ -16,6 +16,7 @@ import {
     lagForhåndsvarselMutations,
 } from '~/testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { configureZod } from '~/utils/zodConfig';
 
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
@@ -25,6 +26,10 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     useForhåndsvarselMutations: vi.fn(),
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
+
+beforeAll(() => {
+    configureZod();
+});
 
 const renderUnntak = (): RenderResult => {
     const behandling = lagBehandlingDto();
