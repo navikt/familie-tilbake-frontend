@@ -2,16 +2,7 @@ import type { Section, Varselbrevtekst } from '../../../../generated';
 import type { ForhåndsvarselFormData } from '../schema';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
-import {
-    BodyLong,
-    Box,
-    Heading,
-    HStack,
-    Radio,
-    RadioGroup,
-    Textarea,
-    VStack,
-} from '@navikt/ds-react';
+import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import React, { Fragment } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -54,11 +45,10 @@ export const SkalSendeSkjema: React.FC<Props> = ({
         !varselErSendt;
 
     return (
-        <VStack
-            as="form"
-            gap="space-24"
-            onSubmit={handleSubmit(handleForhåndsvarselSubmit)}
+        <form
             id="opprettForm"
+            onSubmit={handleSubmit(handleForhåndsvarselSubmit)}
+            className="flex flex-col gap-6"
         >
             <Controller
                 control={control}
@@ -81,48 +71,42 @@ export const SkalSendeSkjema: React.FC<Props> = ({
             />
 
             {visSkjema && (
-                <VStack gap="space-16">
-                    <HStack gap="space-16">
-                        <Box className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
-                            <Heading level="2" size="small" className="mb-6">
-                                Opprett forhåndsvarsel
-                            </Heading>
-                            <HStack align="center" justify="space-between">
-                                <Heading size="medium" level="3" spacing>
-                                    {varselbrevtekster.overskrift}
-                                </Heading>
-                            </HStack>
-                            <VStack className="max-w-xl">
-                                {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
-                                    <Fragment key={avsnitt.title}>
-                                        <Heading size="xsmall" level="4" spacing>
-                                            {avsnitt.title}
-                                        </Heading>
-                                        <BodyLong size="small" spacing>
-                                            {avsnitt.body}
-                                        </BodyLong>
-                                        {avsnitt.title === 'Dette har skjedd' && (
-                                            <Textarea
-                                                {...register('fritekst')}
-                                                size="small"
-                                                minRows={3}
-                                                label="Legg til utdypende tekst"
-                                                maxLength={maksAntallTegn}
-                                                error={fieldError.fritekst?.message?.toString()}
-                                                className="mb-6"
-                                                readOnly={varselErSendt}
-                                                resize
-                                            />
-                                        )}
-                                    </Fragment>
-                                ))}
-                            </VStack>
-                        </Box>
-                    </HStack>
-                </VStack>
+                <div className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
+                    <Heading level="2" size="small" spacing>
+                        Opprett forhåndsvarsel
+                    </Heading>
+                    <VStack className="max-w-xl pt-4" gap="space-24">
+                        <Heading level="3" size="medium">
+                            {varselbrevtekster.overskrift}
+                        </Heading>
+                        {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
+                            <Fragment key={avsnitt.title}>
+                                {/* Første element sin tittel er tom */}
+                                {avsnitt.title && (
+                                    <Heading level="4" size="xsmall">
+                                        {avsnitt.title}
+                                    </Heading>
+                                )}
+                                <BodyLong size="small">{avsnitt.body}</BodyLong>
+                                {avsnitt.title === 'Dette har skjedd' && (
+                                    <Textarea
+                                        {...register('fritekst')}
+                                        size="small"
+                                        minRows={3}
+                                        label="Legg til utdypende tekst"
+                                        maxLength={maksAntallTegn}
+                                        error={fieldError.fritekst?.message?.toString()}
+                                        readOnly={varselErSendt}
+                                        resize
+                                    />
+                                )}
+                            </Fragment>
+                        ))}
+                    </VStack>
+                </div>
             )}
 
             {skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei && <Unntak />}
-        </VStack>
+        </form>
     );
 };
