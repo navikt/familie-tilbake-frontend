@@ -1,10 +1,11 @@
+import { configureZod } from '~/utils/zodConfig';
+
 import {
     forhåndsvarselSchema,
     uttalelseSchema,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
 } from './schema';
-import { configureZod } from '../../../utils/zodConfig';
 
 beforeAll(() => {
     configureZod();
