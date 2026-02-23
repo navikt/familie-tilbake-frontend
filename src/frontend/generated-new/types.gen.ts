@@ -6,6 +6,7 @@ export type ClientOptions = {
 
 export type Avsnitt = {
     tittel: string;
+    id: string;
     underavsnitt: Array<RotElement>;
 };
 
@@ -120,34 +121,20 @@ export type UnderavsnittElement = {
     underavsnitt: Array<Element>;
 };
 
-export type Vedtaksbrev = {
-    innledning: Array<Element>;
-    perioder: Array<VedtaksbrevPeriode>;
-    brevGjelder: Brevmottaker;
-    ytelse: Ytelse;
-    signatur: Signatur;
-};
-
 export type VedtaksbrevData = {
     hovedavsnitt: Hovedavsnitt;
     avsnitt: Array<Avsnitt>;
+    readonly sistOppdatert: string;
     brevGjelder: Brevmottaker;
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
 };
 
-export type VedtaksbrevPeriode = {
-    fom: string;
-    tom: string;
-    beskrivelse: Array<Element>;
-    konklusjon: Array<Element>;
-    vurderinger: Array<VedtaksbrevVurdering>;
-};
-
-export type VedtaksbrevVurdering = {
-    tittel: string;
-    beskrivelse: Array<Element>;
+export type VedtaksbrevRedigerbareData = {
+    hovedavsnitt: Hovedavsnitt;
+    avsnitt: Array<Avsnitt>;
+    readonly sistOppdatert: string;
 };
 
 export type Vurdering = {
@@ -164,6 +151,20 @@ export type Ytelse = {
 export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
+
+export type VedtaksbrevDataWritable = {
+    hovedavsnitt: Hovedavsnitt;
+    avsnitt: Array<Avsnitt>;
+    brevGjelder: Brevmottaker;
+    sendtDato: string;
+    ytelse: Ytelse;
+    signatur: Signatur;
+};
+
+export type VedtaksbrevRedigerbareDataWritable = {
+    hovedavsnitt: Hovedavsnitt;
+    avsnitt: Array<Avsnitt>;
+};
 
 export type BehandlingFaktaData = {
     body?: never;
@@ -256,14 +257,47 @@ export type BehandlingHentVedtaksbrevResponses = {
     /**
      * The request has succeeded.
      */
-    200: Vedtaksbrev;
+    200: VedtaksbrevData;
 };
 
 export type BehandlingHentVedtaksbrevResponse =
     BehandlingHentVedtaksbrevResponses[keyof BehandlingHentVedtaksbrevResponses];
 
+export type BehandlingOppdaterVedtaksbrevData = {
+    body: VedtaksbrevRedigerbareDataWritable;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vedtak/brev';
+};
+
+export type BehandlingOppdaterVedtaksbrevErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingOppdaterVedtaksbrevError =
+    BehandlingOppdaterVedtaksbrevErrors[keyof BehandlingOppdaterVedtaksbrevErrors];
+
+export type BehandlingOppdaterVedtaksbrevResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: VedtaksbrevRedigerbareData;
+};
+
+export type BehandlingOppdaterVedtaksbrevResponse =
+    BehandlingOppdaterVedtaksbrevResponses[keyof BehandlingOppdaterVedtaksbrevResponses];
+
 export type VedtaksbrevLagSvgVedtaksbrevData = {
-    body: VedtaksbrevData;
+    body: VedtaksbrevDataWritable;
     path?: never;
     query?: never;
     url: '/api/v1/brev/vedtaksbrev/svg';

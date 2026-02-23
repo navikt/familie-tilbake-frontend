@@ -12,6 +12,9 @@ import type {
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaErrors,
     BehandlingOppdaterFaktaResponses,
+    BehandlingOppdaterVedtaksbrevData,
+    BehandlingOppdaterVedtaksbrevErrors,
+    BehandlingOppdaterVedtaksbrevResponses,
     VedtaksbrevLagSvgVedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevResponses,
 } from './types.gen';
@@ -70,6 +73,23 @@ export const behandlingHentVedtaksbrev = <ThrowOnError extends boolean = false>(
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/vedtak/brev',
         ...options,
+    });
+
+export const behandlingOppdaterVedtaksbrev = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingOppdaterVedtaksbrevData, ThrowOnError>
+) =>
+    (options.client ?? client).put<
+        BehandlingOppdaterVedtaksbrevResponses,
+        BehandlingOppdaterVedtaksbrevErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/vedtak/brev',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 
 export const vedtaksbrevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(

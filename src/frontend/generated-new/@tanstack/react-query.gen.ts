@@ -8,6 +8,7 @@ import {
     behandlingFakta,
     behandlingHentVedtaksbrev,
     behandlingOppdaterFakta,
+    behandlingOppdaterVedtaksbrev,
     type Options,
     vedtaksbrevLagSvgVedtaksbrev,
 } from '../sdk.gen';
@@ -21,6 +22,9 @@ import type {
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
     BehandlingOppdaterFaktaResponse,
+    BehandlingOppdaterVedtaksbrevData,
+    BehandlingOppdaterVedtaksbrevError,
+    BehandlingOppdaterVedtaksbrevResponse,
     VedtaksbrevLagSvgVedtaksbrevData,
 } from '../types.gen';
 
@@ -131,6 +135,30 @@ export const behandlingHentVedtaksbrevOptions = (options: Options<BehandlingHent
         },
         queryKey: behandlingHentVedtaksbrevQueryKey(options),
     });
+
+export const behandlingOppdaterVedtaksbrevMutation = (
+    options?: Partial<Options<BehandlingOppdaterVedtaksbrevData>>
+): UseMutationOptions<
+    BehandlingOppdaterVedtaksbrevResponse,
+    AxiosError<BehandlingOppdaterVedtaksbrevError>,
+    Options<BehandlingOppdaterVedtaksbrevData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BehandlingOppdaterVedtaksbrevResponse,
+        AxiosError<BehandlingOppdaterVedtaksbrevError>,
+        Options<BehandlingOppdaterVedtaksbrevData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingOppdaterVedtaksbrev({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
 
 export const vedtaksbrevLagSvgVedtaksbrevMutation = (
     options?: Partial<Options<VedtaksbrevLagSvgVedtaksbrevData>>

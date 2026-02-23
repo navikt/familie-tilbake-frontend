@@ -92,6 +92,7 @@ export const zRotElement = z.union([
 
 export const zAvsnitt = z.object({
     tittel: z.string().min(3).max(300),
+    id: z.uuid(),
     underavsnitt: z.array(zRotElement),
 });
 
@@ -100,17 +101,10 @@ export const zHovedavsnitt = z.object({
     underavsnitt: z.array(zRotElement),
 });
 
-export const zVedtaksbrevVurdering = z.object({
-    tittel: z.string(),
-    beskrivelse: z.array(zElement),
-});
-
-export const zVedtaksbrevPeriode = z.object({
-    fom: z.iso.date(),
-    tom: z.iso.date(),
-    beskrivelse: z.array(zElement),
-    konklusjon: z.array(zElement),
-    vurderinger: z.array(zVedtaksbrevVurdering),
+export const zVedtaksbrevRedigerbareData = z.object({
+    hovedavsnitt: zHovedavsnitt,
+    avsnitt: z.array(zAvsnitt),
+    sistOppdatert: z.iso.datetime().readonly(),
 });
 
 export const zYtelse = z.object({
@@ -119,17 +113,10 @@ export const zYtelse = z.object({
     bestemtEntall: z.string(),
 });
 
-export const zVedtaksbrev = z.object({
-    innledning: z.array(zElement),
-    perioder: z.array(zVedtaksbrevPeriode),
-    brevGjelder: zBrevmottaker,
-    ytelse: zYtelse,
-    signatur: zSignatur,
-});
-
 export const zVedtaksbrevData = z.object({
     hovedavsnitt: zHovedavsnitt,
     avsnitt: z.array(zAvsnitt),
+    sistOppdatert: z.iso.datetime().readonly(),
     brevGjelder: zBrevmottaker,
     sendtDato: z.string(),
     ytelse: zYtelse,
@@ -187,6 +174,20 @@ export const zFaktaOmFeilutbetaling = z.object({
     ferdigvurdert: z.boolean(),
 });
 
+export const zVedtaksbrevDataWritable = z.object({
+    hovedavsnitt: zHovedavsnitt,
+    avsnitt: z.array(zAvsnitt),
+    brevGjelder: zBrevmottaker,
+    sendtDato: z.string(),
+    ytelse: zYtelse,
+    signatur: zSignatur,
+});
+
+export const zVedtaksbrevRedigerbareDataWritable = z.object({
+    hovedavsnitt: zHovedavsnitt,
+    avsnitt: z.array(zAvsnitt),
+});
+
 export const zBehandlingFaktaData = z.object({
     body: z.optional(z.never()),
     path: z.object({
@@ -224,10 +225,23 @@ export const zBehandlingHentVedtaksbrevData = z.object({
 /**
  * The request has succeeded.
  */
-export const zBehandlingHentVedtaksbrevResponse = zVedtaksbrev;
+export const zBehandlingHentVedtaksbrevResponse = zVedtaksbrevData;
+
+export const zBehandlingOppdaterVedtaksbrevData = z.object({
+    body: zVedtaksbrevRedigerbareDataWritable,
+    path: z.object({
+        behandlingId: z.uuid(),
+    }),
+    query: z.optional(z.never()),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingOppdaterVedtaksbrevResponse = zVedtaksbrevRedigerbareData;
 
 export const zVedtaksbrevLagSvgVedtaksbrevData = z.object({
-    body: zVedtaksbrevData,
+    body: zVedtaksbrevDataWritable,
     path: z.optional(z.never()),
     query: z.optional(z.never()),
 });
