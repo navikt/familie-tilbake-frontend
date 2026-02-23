@@ -241,7 +241,7 @@ describe('ForeldelseContainer', () => {
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 1');
         expect(getByLabelText('Perioden er foreldet')).toBeChecked();
         expect(
-            getByLabelText('Fristavbrudd - dato frist', {
+            getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
                 exact: false,
             })
@@ -259,7 +259,7 @@ describe('ForeldelseContainer', () => {
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
         ).toBeChecked();
         expect(
-            getByLabelText('Fristavbrudd - dato frist', {
+            getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
                 exact: false,
             })
@@ -320,7 +320,7 @@ describe('ForeldelseContainer', () => {
                 exact: false,
             })
         ).not.toBeChecked();
-        expect(getByLabelText('Fristavbrudd - dato frist')).toHaveValue('01.01.2021');
+        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
         // Alle tidslinje knappene skal alltid være synlige
         expect(
@@ -376,7 +376,7 @@ describe('ForeldelseContainer', () => {
         expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '24.12.2020'
         );
-        expect(getByLabelText('Fristavbrudd - dato frist')).toHaveValue('01.01.2021');
+        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
         expect(
             getByRole('button', {
