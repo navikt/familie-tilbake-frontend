@@ -4,7 +4,7 @@ import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import React, { Fragment } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { SkalSendesForhåndsvarsel } from '../schema';
 import { Unntak } from './UnntakSkjema';
@@ -33,7 +33,7 @@ export const SkalSendeSkjema: React.FC<Props> = ({
     const fieldError: FieldErrors<
         Extract<ForhåndsvarselFormData, { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja }>
     > = errors;
-
+    const { name, ...radioProps } = register('skalSendesForhåndsvarsel');
     const skalSendesForhåndsvarsel = useWatch({
         control: control,
         name: 'skalSendesForhåndsvarsel',
@@ -50,25 +50,23 @@ export const SkalSendeSkjema: React.FC<Props> = ({
             onSubmit={handleSubmit(handleForhåndsvarselSubmit)}
             className="flex flex-col gap-6"
         >
-            <Controller
-                control={control}
-                name="skalSendesForhåndsvarsel"
-                render={({ field, fieldState }) => (
-                    <RadioGroup
-                        {...field}
-                        size="small"
-                        className="max-w-xl"
-                        legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
-                        description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
+            <RadioGroup
+                name={name}
+                size="small"
+                readOnly={varselErSendt || behandlingILesemodus}
+                className="max-w-xl"
+                legend="Skal det sendes forhåndsvarsel om tilbakekreving?"
+                description="Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving
                         fattes, slik at de får mulighet til å uttale seg."
-                        readOnly={varselErSendt || behandlingILesemodus}
-                        error={fieldState.error?.message}
-                    >
-                        <Radio value={SkalSendesForhåndsvarsel.Ja}>Ja</Radio>
-                        <Radio value={SkalSendesForhåndsvarsel.Nei}>Nei</Radio>
-                    </RadioGroup>
-                )}
-            />
+                error={errors.skalSendesForhåndsvarsel?.message}
+            >
+                <Radio value={SkalSendesForhåndsvarsel.Ja} {...radioProps}>
+                    Ja
+                </Radio>
+                <Radio value={SkalSendesForhåndsvarsel.Nei} {...radioProps}>
+                    Nei
+                </Radio>
+            </RadioGroup>
 
             {visSkjema && (
                 <div className="flex-1 border border-ax-border-neutral-strong rounded-lg py-3 px-4">
@@ -81,7 +79,7 @@ export const SkalSendeSkjema: React.FC<Props> = ({
                         </Heading>
                         {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                             <Fragment key={avsnitt.title}>
-                                {/* Første element sin tittel er tom */}
+                                {/* I første element er tittel er tom */}
                                 {avsnitt.title && (
                                     <Heading level="4" size="xsmall">
                                         {avsnitt.title}
