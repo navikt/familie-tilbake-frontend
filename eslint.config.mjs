@@ -7,65 +7,6 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
-const relativeImportPatterns = [
-    {
-        group: ['../../../api', '../../../api/*'],
-        message: 'Bruk ~/api/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../context', '../../../context/*'],
-        message: 'Bruk ~/context/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../generated', '../../../generated/*'],
-        message: 'Bruk ~/generated/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../generated-new', '../../../generated-new/*'],
-        message: 'Bruk ~/generated-new/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../hooks', '../../../hooks/*'],
-        message: 'Bruk ~/hooks/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../images', '../../../images/*'],
-        message: 'Bruk ~/images/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../kodeverk', '../../../kodeverk/*'],
-        message: 'Bruk ~/kodeverk/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../komponenter', '../../../komponenter/*'],
-        message: 'Bruk ~/komponenter/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../pages', '../../../pages/*'],
-        message: 'Bruk ~/pages/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../stores', '../../../stores/*'],
-        message: 'Bruk ~/stores/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../testdata', '../../../testdata/*'],
-        message: 'Bruk ~/testdata/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../testutils', '../../../testutils/*'],
-        message: 'Bruk ~/testutils/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../typer', '../../../typer/*'],
-        message: 'Bruk ~/typer/* i stedet for relative imports.',
-    },
-    {
-        group: ['../../../utils', '../../../utils/*'],
-        message: 'Bruk ~/utils/* i stedet for relative imports.',
-    },
-];
-
 export default defineConfig(
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
@@ -83,7 +24,17 @@ export default defineConfig(
         plugins: { 'react-hooks': reactHooks, import: importPlugin },
         rules: {
             ...reactHooks.configs.recommended.rules,
-            'no-restricted-imports': ['error', { patterns: relativeImportPatterns }],
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['../../../*', '../../../**/*'],
+                            message: 'Bruk ~/* i stedet for dype relative imports.',
+                        },
+                    ],
+                },
+            ],
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
