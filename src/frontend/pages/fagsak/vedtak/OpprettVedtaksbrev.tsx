@@ -3,14 +3,13 @@ import type { FieldPath } from 'react-hook-form';
 import type { Element } from '~/generated-new';
 
 import {
-    BodyShort,
     Button,
-    ExpansionCard,
     Heading,
     HStack,
     InlineMessage,
     Pagination,
     Skeleton,
+    Tag,
     Textarea,
     type TextareaProps,
     VStack,
@@ -28,6 +27,7 @@ import {
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
 import { useStegNavigering } from '~/utils/sider';
 
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
@@ -125,18 +125,31 @@ export const OpprettVedtaksbrev: React.FC = () => {
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
                 <VStack className="col-span-1 flex-1 min-h-0 gap-4">
-                    <Heading size="small">Opprett vedtaksbrev</Heading>
+                    <HStack className="flex justify-between">
+                        <Heading size="small">Opprett vedtaksbrev</Heading>
+                        {vedtaksbrevData.sendtDato ? (
+                            <Tag data-color="success" size="small">
+                                Sendt: {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sendtDato))}
+                            </Tag>
+                        ) : (
+                            <Tag data-color="info" size="small">
+                                Sist oppdatert:{' '}
+                                {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sistOppdatert))}{' '}
+                                {/* Klokkeslett? */}
+                            </Tag>
+                        )}
+                    </HStack>
+
                     <FormProvider {...methods}>
                         <ElementTextarea
                             name="hovedavsnitt.underavsnitt"
                             label="Brevets innledning"
                         />
                         {methods.getValues('avsnitt').map((avsnitt, indeks) => (
-                            <AvsnittSkjema
+                            <ElementTextarea
                                 key={avsnitt.tittel}
-                                avsnitt={avsnitt}
-                                indeks={indeks}
-                                antallAvsnitt={methods.getValues('avsnitt').length}
+                                name={`avsnitt.${indeks}.underavsnitt`}
+                                label={avsnitt.tittel}
                             />
                         ))}
                     </FormProvider>
@@ -217,46 +230,5 @@ export const OpprettVedtaksbrev: React.FC = () => {
                 onForrige={navigerTilForrige}
             />
         </>
-    );
-};
-
-type AvsnittSkjemaProps = {
-    avsnitt: VedtaksbrevFormData['avsnitt'][number];
-    indeks: number;
-    antallAvsnitt: number;
-};
-
-const AvsnittSkjema: React.FC<AvsnittSkjemaProps> = ({ avsnitt, indeks, antallAvsnitt }) => {
-    const innhold = (
-        <VStack gap="space-24">
-            {antallAvsnitt === 1 && avsnitt.underavsnitt.length > 0 && (
-                <Heading size="xsmall">{avsnitt.tittel}fefe</Heading>
-            )}
-            {avsnitt.underavsnitt.map((underavsnitt, uaIndeks) => {
-                if (underavsnitt.type === 'underavsnitt') {
-                    return (
-                        <ElementTextarea
-                            key={`${avsnitt.tittel}-${underavsnitt.tittel}`}
-                            name={`avsnitt.${indeks}.underavsnitt.${uaIndeks}.underavsnitt`}
-                            label={underavsnitt.tittel}
-                        />
-                    );
-                }
-                return null;
-            })}
-        </VStack>
-    );
-
-    if (antallAvsnitt === 1) {
-        return innhold;
-    }
-
-    return (
-        <ExpansionCard size="small" aria-label={avsnitt.tittel}>
-            <ExpansionCard.Header className="flex items-center">
-                <BodyShort className="font-ax-bold">{avsnitt.tittel}</BodyShort>
-            </ExpansionCard.Header>
-            <ExpansionCard.Content>{innhold}</ExpansionCard.Content>
-        </ExpansionCard>
     );
 };
