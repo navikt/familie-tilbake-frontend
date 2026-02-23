@@ -17,6 +17,7 @@ import {
     lagForhåndsvarselMutations,
 } from '../../../testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '../../../testutils/queryTestUtils';
+import { configureZod } from '../../../utils/zodConfig';
 
 vi.mock('./useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
@@ -50,6 +51,10 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
         </FagsakContext.Provider>
     );
 };
+
+beforeAll(() => {
+    configureZod();
+});
 
 describe('Forhåndsvarsel', () => {
     beforeEach(() => {

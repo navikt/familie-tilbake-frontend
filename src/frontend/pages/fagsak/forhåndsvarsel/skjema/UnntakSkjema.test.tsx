@@ -13,6 +13,7 @@ import {
     lagForhåndsvarselMutations,
 } from '../../../../testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
+import { configureZod } from '../../../../utils/zodConfig';
 import { Forhåndsvarsel } from '../Forhåndsvarsel';
 import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
@@ -25,6 +26,10 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     useForhåndsvarselMutations: vi.fn(),
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
+
+beforeAll(() => {
+    configureZod();
+});
 
 const renderUnntak = (): RenderResult => {
     const behandling = lagBehandlingDto();

@@ -14,6 +14,7 @@ import {
     lagForhåndsvarselMutations,
 } from '../../../../testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '../../../../testutils/queryTestUtils';
+import { configureZod } from '../../../../utils/zodConfig';
 import { Forhåndsvarsel } from '../Forhåndsvarsel';
 import { useForhåndsvarselMutations } from '../useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '../useForhåndsvarselQueries';
@@ -42,6 +43,10 @@ const renderBrukeruttalelse = (): RenderResult => {
         </FagsakContext.Provider>
     );
 };
+
+beforeAll(() => {
+    configureZod();
+});
 
 describe('Brukeruttalelse', () => {
     beforeEach(() => {
