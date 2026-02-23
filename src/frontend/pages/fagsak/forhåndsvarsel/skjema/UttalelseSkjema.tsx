@@ -2,7 +2,6 @@ import type { UttalelseFormData } from '../schema';
 import type { SubmitHandler } from 'react-hook-form';
 
 import {
-    VStack,
     RadioGroup,
     Radio,
     DatePicker,
@@ -90,11 +89,10 @@ export const Uttalelse: React.FC<Props> = ({
     }, [harUttaltSeg, fields.length, replace]);
 
     return (
-        <VStack
-            as="form"
-            gap="space-24"
-            onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
+        <form
             id="uttalelseForm"
+            onSubmit={methods.handleSubmit(handleUttalelseSubmit)}
+            className="flex flex-col gap-6"
         >
             <RadioGroup
                 name={name}
@@ -221,6 +219,6 @@ export const Uttalelse: React.FC<Props> = ({
                     />
                 </>
             )}
-        </VStack>
+        </form>
     );
 };

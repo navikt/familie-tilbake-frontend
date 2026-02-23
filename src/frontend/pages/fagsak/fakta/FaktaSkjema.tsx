@@ -26,7 +26,6 @@ import {
     Table,
     Textarea,
     useDatepicker,
-    VStack,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
@@ -163,13 +162,12 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
 
     return (
         <FormProvider {...methods}>
-            <VStack
-                as="form"
-                gap="space-32"
-                onSubmit={methods.handleSubmit(onSubmit)}
+            <form
                 id="fakta-skjema"
+                className="flex flex-col gap-8"
+                onSubmit={methods.handleSubmit(onSubmit)}
             >
-                <VStack as="section" gap="space-24" aria-label="Rettslig grunnlag innhold">
+                <section className="flex flex-col gap-6" aria-label="Rettslig grunnlag innhold">
                     <Heading level="2" size="small">
                         Rettslig grunnlag
                     </Heading>
@@ -204,11 +202,9 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                             </Table.Body>
                         </Table>
                     </div>
-                </VStack>
-                <VStack
-                    as="section"
-                    gap="space-24"
-                    className="max-w-xl"
+                </section>
+                <section
+                    className="flex flex-col gap-6 max-w-xl"
                     aria-label="Rettslig grunnlag innhold"
                 >
                     <Heading level="2" size="small">
@@ -261,13 +257,12 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                         {...methods.register('vurdering.oppdaget.beskrivelse')}
                         error={methods.formState.errors.vurdering?.oppdaget?.beskrivelse?.message}
                         size="small"
-                        className="mb-6"
                         minRows={3}
                         resize
                         maxLength={3000}
                         readOnly={behandlingILesemodus}
                     />
-                </VStack>
+                </section>
                 <ActionBar
                     {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
                         ? {
@@ -284,7 +279,7 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
                     onForrige={undefined}
                     isLoading={oppdaterMutation.isPending}
                 />
-            </VStack>
+            </form>
         </FormProvider>
     );
 };
@@ -349,39 +344,33 @@ const PeriodeRad = ({
                 ))}
             </Table.DataCell>
             <Table.DataCell className={erSiste ? 'border-b-0' : ''}>
-                <VStack>
-                    {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
-                        <Select
-                            label="Velg grunnlag"
-                            hideLabel
-                            size="small"
-                            key={`${rettsligGrunnlag.grunnlag}${index}`}
-                            readOnly={behandlingILesemodus}
-                            error={
-                                formState.errors.perioder
-                                    ?.at?.(periodeIndex)
-                                    ?.rettsligGrunnlag?.at?.(index)?.grunnlag?.message
-                            }
-                            {...register(
-                                `perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`
-                            )}
-                            className="flex-1"
-                        >
-                            <>
-                                <option value="" disabled>
-                                    Velg grunnlag
+                {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
+                    <Select
+                        label="Velg grunnlag"
+                        hideLabel
+                        size="small"
+                        key={`${rettsligGrunnlag.grunnlag}${index}`}
+                        readOnly={behandlingILesemodus}
+                        error={
+                            formState.errors.perioder
+                                ?.at?.(periodeIndex)
+                                ?.rettsligGrunnlag?.at?.(index)?.grunnlag?.message
+                        }
+                        {...register(`perioder.${periodeIndex}.rettsligGrunnlag.${index}.grunnlag`)}
+                        className="flex-1"
+                    >
+                        <>
+                            <option value="" disabled>
+                                Velg grunnlag
+                            </option>
+                            {tilgjengeligeGrunnlag(rettsligGrunnlag.bestemmelse).map(grunnlag => (
+                                <option key={grunnlag.nøkkel} value={grunnlag.nøkkel}>
+                                    {grunnlag.beskrivelse}
                                 </option>
-                                {tilgjengeligeGrunnlag(rettsligGrunnlag.bestemmelse).map(
-                                    grunnlag => (
-                                        <option key={grunnlag.nøkkel} value={grunnlag.nøkkel}>
-                                            {grunnlag.beskrivelse}
-                                        </option>
-                                    )
-                                )}
-                            </>
-                        </Select>
-                    ))}
-                </VStack>
+                            ))}
+                        </>
+                    </Select>
+                ))}
             </Table.DataCell>
             <Table.DataCell
                 className={`text-end text-ax-text-brand-magenta ${erSiste ? 'border-b-0 rounded-br-xl' : ''}`}
