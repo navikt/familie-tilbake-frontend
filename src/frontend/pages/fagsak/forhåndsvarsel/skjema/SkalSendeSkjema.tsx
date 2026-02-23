@@ -93,7 +93,7 @@ export const SkalSendeSkjema: React.FC<Props> = ({
                                         minRows={3}
                                         label="Legg til utdypende tekst"
                                         maxLength={maksAntallTegn}
-                                        error={fieldError.fritekst?.message?.toString()}
+                                        error={fieldError.fritekst?.message}
                                         readOnly={varselErSendt}
                                         resize
                                     />
