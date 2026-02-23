@@ -3,12 +3,13 @@ import type { RenderResult } from '@testing-library/react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { Feil } from '~/api/feil';
+import { FagsakContext } from '~/context/FagsakContext';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+
 import { FeilModal } from './FeilModal';
-import { Feil } from '../../../api/feil';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
 
 const mockSetVisFeilModal = vi.fn();
 

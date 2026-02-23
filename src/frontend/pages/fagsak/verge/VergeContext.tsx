@@ -1,13 +1,13 @@
-import type { VergeDto, VergeStegPayload } from '../../../typer/api';
+import type { VergeDto, VergeStegPayload } from '~/typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import * as React from 'react';
 
-import { useBehandlingApi } from '../../../api/behandling';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
+import { useBehandlingApi } from '~/api/behandling';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 import {
     type Avhengigheter,
     type FeltState,
@@ -15,16 +15,16 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '../../../hooks/skjema';
-import { Vergetype } from '../../../kodeverk/verge';
-import { byggFeiletRessurs, type Ressurs, RessursStatus } from '../../../typer/ressurs';
+} from '~/hooks/skjema';
+import { Vergetype } from '~/kodeverk/verge';
+import { byggFeiletRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
 import {
     erFeltetEmpty,
     validerFødselsnummerFelt,
     validerTekstFelt,
     validerTekstFeltMaksLengde,
-} from '../../../utils';
-import { useStegNavigering } from '../../../utils/sider';
+} from '~/utils';
+import { useStegNavigering } from '~/utils/sider';
 
 const erVergetypeOppfylt = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.vergetype.valideringsstatus === Valideringsstatus.Ok;

@@ -8,9 +8,9 @@ import {
     forstodBurdeForståttAktsomheter,
     særligegrunner,
     Vilkårsresultat,
-} from '../../../../kodeverk';
-import { formatCurrencyNoKr, formatterDatostring } from '../../../../utils';
-import { TilbakekrevingAktivitetTabell } from '../vilkaarsvurdering-periode/TilbakekrevingAktivitetTabell';
+} from '~/kodeverk';
+import { TilbakekrevingAktivitetTabell } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/TilbakekrevingAktivitetTabell';
+import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
 
 const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
     [Vilkårsresultat.ForstoBurdeForstått]:

@@ -1,20 +1,21 @@
-import type { Skjema } from '../../../../../hooks/skjema';
-import type { VilkårsvurderingSkjemaDefinisjon } from '../VilkårsvurderingPeriodeSkjemaContext';
+import type { Skjema } from '~/hooks/skjema';
+import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
-import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
-import { Aktsomhet } from '../../../../../kodeverk';
-import { formatCurrencyNoKr, isEmpty, isNumeric } from '../../../../../utils';
-import { useVilkårsvurdering } from '../../VilkårsvurderingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { Aktsomhet } from '~/kodeverk';
 import {
     ANDELER,
     EGENDEFINERT,
     OptionJA,
     OptionNEI,
-} from '../VilkårsvurderingPeriodeSkjemaContext';
+} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
+import { formatCurrencyNoKr, isEmpty, isNumeric } from '~/utils';
+
+import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;

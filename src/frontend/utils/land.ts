@@ -1,4 +1,4 @@
-import type { Land } from '../komponenter/landvelger/Landvelger';
+import type { Land } from '~/komponenter/landvelger/Landvelger';
 
 export const norskLandnavn = (alpha2: Land['alpha2']): string => {
     if (!alpha2 || alpha2.length === 0) {

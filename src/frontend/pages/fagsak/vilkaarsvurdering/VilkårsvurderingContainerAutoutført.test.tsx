@@ -1,26 +1,27 @@
-import type { BehandlingApiHook } from '../../../api/behandling';
-import type { Ressurs } from '../../../typer/ressurs';
-import type { VilkårsvurderingResponse } from '../../../typer/tilbakekrevingstyper';
+import type { BehandlingApiHook } from '~/api/behandling';
+import type { Ressurs } from '~/typer/ressurs';
+import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { vi } from 'vitest';
 
+import { FagsakContext } from '~/context/FagsakContext';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { lagVilkårsvurderingResponse } from '~/testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { RessursStatus } from '~/typer/ressurs';
+
 import { VilkårsvurderingContainer } from './VilkårsvurderingContainer';
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { lagVilkårsvurderingResponse } from '../../../testdata/vilkårsvurderingFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const queryClient = createTestQueryClient();
 
 const mockUseBehandlingApi = vi.fn();
-vi.mock('../../../api/behandling', () => ({
+vi.mock('~/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 

@@ -1,12 +1,13 @@
-import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '../../../generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '~/generated';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
 import { useRef } from 'react';
 
+import { useBehandling } from '~/context/BehandlingContext';
+
 import { HenleggModal } from './henleggModal/HenleggModal';
-import { useBehandling } from '../../../context/BehandlingContext';
 
 const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): BehandlingsresultatstypeEnum[] => {
     if (behandlingstype === 'TILBAKEKREVING') {

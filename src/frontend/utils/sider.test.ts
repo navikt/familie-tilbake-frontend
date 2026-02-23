@@ -1,6 +1,5 @@
-import type { BehandlingDto } from '../generated';
+import type { BehandlingDto } from '~/generated';
 
-import { visSide } from './sider';
 import {
     lagBehandling,
     lagBrevmottakerSteg,
@@ -8,7 +7,9 @@ import {
     lagForeldelseSteg,
     lagForeslåVedtakSteg,
     lagVilkårsvurderingSteg,
-} from '../testdata/behandlingFactory';
+} from '~/testdata/behandlingFactory';
+
+import { visSide } from './sider';
 
 const mockBehandling = lagBehandling({
     behandlingsstegsinfo: [

@@ -1,7 +1,7 @@
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons';
 import * as React from 'react';
 
-import { Journalposttype } from '../../typer/journalføring';
+import { Journalposttype } from '~/typer/journalføring';
 
 type Props = {
     type: Journalposttype;

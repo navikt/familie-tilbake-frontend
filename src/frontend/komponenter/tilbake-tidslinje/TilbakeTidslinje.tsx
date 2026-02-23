@@ -5,7 +5,7 @@ import { Timeline } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { dateTilIsoDatoStringEllerUndefined } from '../../utils/dato';
+import { dateTilIsoDatoStringEllerUndefined } from '~/utils/dato';
 
 type Props = {
     rader: TimelinePeriodProps[][];

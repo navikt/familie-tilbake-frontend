@@ -10,13 +10,14 @@ import {
 } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { Vergetype, vergetyper } from '~/kodeverk/verge';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { HenterData } from '~/komponenter/datalast/HenterData';
+import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
+import { hentFrontendFeilmelding } from '~/utils';
+
 import { useVerge } from './VergeContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { Vergetype, vergetyper } from '../../../kodeverk/verge';
-import { ActionBar } from '../../../komponenter/action-bar/ActionBar';
-import { HenterData } from '../../../komponenter/datalast/HenterData';
-import { Steginformasjon } from '../../../komponenter/steginformasjon/StegInformasjon';
-import { hentFrontendFeilmelding } from '../../../utils';
 
 export const VergeContainer: React.FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =

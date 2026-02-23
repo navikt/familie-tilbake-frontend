@@ -1,12 +1,13 @@
-import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '../generated/types.gen';
 import type { ReactNode } from 'react';
+import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '~/generated/types.gen';
 
 import * as React from 'react';
 import { createContext, useContext, useMemo, useState } from 'react';
 
+import { useUlagretEndringer, type UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
+import { SYNLIGE_STEG } from '~/utils/sider';
+
 import { useBehandling } from './BehandlingContext';
-import { useUlagretEndringer, type UseUlagretEndringerReturn } from '../hooks/useUlagretEndringer';
-import { SYNLIGE_STEG } from '../utils/sider';
 
 export const erStegUtført = (status: string): boolean => {
     return status === 'UTFØRT' || status === 'AUTOUTFØRT';

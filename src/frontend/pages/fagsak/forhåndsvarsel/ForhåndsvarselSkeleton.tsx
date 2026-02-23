@@ -1,7 +1,7 @@
 import { BodyShort, Heading, Skeleton, VStack } from '@navikt/ds-react';
 import React from 'react';
 
-import { ActionBarSkeleton } from '../../../komponenter/action-bar/ActionBarSkeleton';
+import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
 export const ForhåndsvarselSkeleton: React.FC = () => {
     return (

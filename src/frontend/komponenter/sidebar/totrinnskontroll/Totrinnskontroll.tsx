@@ -1,5 +1,5 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
-import type { SynligSteg } from '../../../utils/sider';
+import type { SynligSteg } from '~/utils/sider';
 
 import {
     Alert,
@@ -13,19 +13,20 @@ import {
 } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
 
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { BekreftelsesModal } from '~/komponenter/modal/bekreftelse/BekreftelsesModal';
+import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
+import { behandlingssteg } from '~/typer/behandling';
+import { RessursStatus } from '~/typer/ressurs';
+import { finnSideForSteg } from '~/utils/sider';
+
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {
     OptionGodkjent,
     OptionIkkeGodkjent,
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { behandlingssteg } from '../../../typer/behandling';
-import { RessursStatus } from '../../../typer/ressurs';
-import { finnSideForSteg } from '../../../utils/sider';
-import { BekreftelsesModal } from '../../modal/bekreftelse/BekreftelsesModal';
-import { Steginformasjon } from '../../steginformasjon/StegInformasjon';
 
 export const Totrinnskontroll: React.FC = () => {
     const {

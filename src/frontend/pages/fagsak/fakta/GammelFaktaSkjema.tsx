@@ -1,5 +1,5 @@
 import type { FaktaSkjemaData } from './typer/fakta';
-import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
+import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import {
     Alert,
@@ -15,14 +15,15 @@ import {
 } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { HendelseType } from '~/kodeverk';
+import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
+import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
+
 import { FaktaPerioder } from './fakta-periode/FaktaPerioder';
 import { useFakta } from './FaktaContext';
 import { FaktaRevurdering } from './FaktaRevurdering';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { HendelseType } from '../../../kodeverk';
-import { HarBrukerUttaltSegValg } from '../../../typer/tilbakekrevingstyper';
-import { formatCurrencyNoKr, formatterDatostring } from '../../../utils';
 
 type Props = {
     skjemaData: FaktaSkjemaData;

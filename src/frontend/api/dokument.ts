@@ -3,8 +3,8 @@ import type {
     ForhåndsvisHenleggelsesbrevPayload,
     ForhåndsvisVedtaksbrev,
     Fritekstavsnitt,
-} from '../typer/api';
-import type { Ressurs } from '../typer/ressurs';
+} from '~/typer/api';
+import type { Ressurs } from '~/typer/ressurs';
 
 import { useHttp } from './http/HttpProvider';
 

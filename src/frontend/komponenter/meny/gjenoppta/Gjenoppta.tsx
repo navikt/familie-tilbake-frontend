@@ -4,9 +4,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useRef } from 'react';
 
-import { useBehandling } from '../../../context/BehandlingContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { usePåVentBehandling } from '../../modal/på-vent/PåVentContext';
+import { useBehandling } from '~/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { usePåVentBehandling } from '~/komponenter/modal/på-vent/PåVentContext';
+
 import { MODAL_BREDDE } from '../utils';
 
 export const Gjenoppta: React.FC = () => {

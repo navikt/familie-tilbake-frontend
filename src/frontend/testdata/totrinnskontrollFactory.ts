@@ -1,4 +1,4 @@
-import type { TotrinnsStegInfo } from '../typer/totrinnTyper';
+import type { TotrinnsStegInfo } from '~/typer/totrinnTyper';
 
 export const lagTotrinnsStegInfo = (
     behandlingssteg: TotrinnsStegInfo['behandlingssteg'],

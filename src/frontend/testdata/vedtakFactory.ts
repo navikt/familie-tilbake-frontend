@@ -1,6 +1,6 @@
-import type { VedtaksbrevAvsnitt, VedtaksbrevUnderavsnitt } from '../typer/vedtakTyper';
+import type { VedtaksbrevAvsnitt, VedtaksbrevUnderavsnitt } from '~/typer/vedtakTyper';
 
-import { Avsnittstype } from '../kodeverk';
+import { Avsnittstype } from '~/kodeverk';
 
 export const lagOppsummeringAvsnitt = (): VedtaksbrevAvsnitt => ({
     avsnittstype: Avsnittstype.Oppsummering,

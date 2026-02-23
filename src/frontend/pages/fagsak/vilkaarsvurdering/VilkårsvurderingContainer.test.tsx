@@ -1,12 +1,12 @@
-import type { BehandlingApiHook } from '../../../api/behandling';
-import type { BehandlingDto } from '../../../generated';
-import type { Ressurs } from '../../../typer/ressurs';
+import type { RenderResult } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
+import type { BehandlingApiHook } from '~/api/behandling';
+import type { BehandlingDto } from '~/generated';
+import type { Ressurs } from '~/typer/ressurs';
 import type {
     VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
-} from '../../../typer/tilbakekrevingstyper';
-import type { RenderResult } from '@testing-library/react';
-import type { UserEvent } from '@testing-library/user-event';
+} from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
@@ -14,24 +14,25 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import { VilkårsvurderingContainer } from './VilkårsvurderingContainer';
-import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { Aktsomhet, HendelseType, Vilkårsresultat } from '../../../kodeverk';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
+import { FagsakContext } from '~/context/FagsakContext';
+import { Aktsomhet, HendelseType, Vilkårsresultat } from '~/kodeverk';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
 import {
     lagVilkårsvurderingPeriode,
     lagVilkårsvurderingResponse,
-} from '../../../testdata/vilkårsvurderingFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { RessursStatus } from '../../../typer/ressurs';
+} from '~/testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { RessursStatus } from '~/typer/ressurs';
+
+import { VilkårsvurderingContainer } from './VilkårsvurderingContainer';
+import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 
 vi.setConfig({ testTimeout: 10000 });
 
 const mockUseBehandlingApi = vi.fn();
-vi.mock('../../../api/behandling', () => ({
+vi.mock('~/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 

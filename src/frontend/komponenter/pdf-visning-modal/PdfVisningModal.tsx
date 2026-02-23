@@ -1,10 +1,10 @@
-import type { RessursByte } from '../../generated';
+import type { RessursByte } from '~/generated';
 
 import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { type Ressurs, RessursStatus } from '../../typer/ressurs';
-import { handlePdfData } from '../../utils/pdfUtils';
+import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { handlePdfData } from '~/utils/pdfUtils';
 
 type Props = {
     onRequestClose: () => void;

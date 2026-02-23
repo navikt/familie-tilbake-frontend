@@ -1,12 +1,12 @@
-import type { Brevmottaker } from '../typer/Brevmottaker';
+import type { Brevmottaker } from '~/typer/Brevmottaker';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { useHttp } from '../api/http/HttpProvider';
-import { useBehandling } from '../context/BehandlingContext';
-import { hentBehandlingQueryKey } from '../generated/@tanstack/react-query.gen';
-import { RessursStatus } from '../typer/ressurs';
+import { useHttp } from '~/api/http/HttpProvider';
+import { useBehandling } from '~/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { RessursStatus } from '~/typer/ressurs';
 
 export const useBrevmottakerApi = (): {
     lagreBrevmottaker: (

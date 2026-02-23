@@ -3,14 +3,14 @@ import { ActionMenu } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { useHttp } from '../../../api/http/HttpProvider';
-import { useApp } from '../../../context/AppContext';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
-import { useStegNavigering } from '../../../utils/sider';
-import { AlertType, ToastTyper } from '../../toast/typer';
+import { useHttp } from '~/api/http/HttpProvider';
+import { useApp } from '~/context/AppContext';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { AlertType, ToastTyper } from '~/komponenter/toast/typer';
+import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { useStegNavigering } from '~/utils/sider';
 
 export const HentKorrigertKravgrunnlag: React.FC = () => {
     const { behandlingId } = useBehandling();

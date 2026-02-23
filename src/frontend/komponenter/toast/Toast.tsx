@@ -3,7 +3,7 @@ import type { Toast as TToast } from './typer';
 import { Alert } from '@navikt/ds-react';
 import React, { useEffect, useRef } from 'react';
 
-import { useApp } from '../../context/AppContext';
+import { useApp } from '~/context/AppContext';
 
 export const Toast: React.FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
     const { toasts, settToasts } = useApp();

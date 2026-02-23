@@ -1,19 +1,16 @@
-import type {
-    BeregnSplittetPeriodeRespons,
-    Periode,
-} from '../../../../../typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
 
 import { Detail, Link } from '@navikt/ds-react';
-import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
 
-import splitPeriodImageUrl from '../../../../../images/splitt.svg';
-import splitPeriodImageHoverUrl from '../../../../../images/splitt_hover.svg';
-import { Image } from '../../../../../komponenter/image/Image';
-import { DelOppPeriode, useDelOppPeriode } from '../../../../../komponenter/modal/del-opp-periode';
-import { flyttDatoISODateStr } from '../../../../../utils';
+import splitPeriodImageUrl from '~/images/splitt.svg';
+import splitPeriodImageHoverUrl from '~/images/splitt_hover.svg';
+import { Image } from '~/komponenter/image/Image';
+import { DelOppPeriode, useDelOppPeriode } from '~/komponenter/modal/del-opp-periode';
+import { flyttDatoISODateStr } from '~/utils';
 
 const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TimelinePeriodProps => {
     return {

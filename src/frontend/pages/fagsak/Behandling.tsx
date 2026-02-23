@@ -1,4 +1,4 @@
-import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '../../generated';
+import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { Alert, BodyShort, Button } from '@navikt/ds-react';
@@ -6,6 +6,30 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { ToggleName } from '~/context/toggles';
+import { useToggles } from '~/context/TogglesContext';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { StegErrorBoundary } from '~/komponenter/error-boundary/StegErrorBoundary';
+import { lazyImportMedRetry } from '~/komponenter/feilInnlasting/FeilInnlasting';
+import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
+import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
+import { SidebarSkeleton } from '~/komponenter/sidebar/SidebarSkeleton';
+import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
+import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
+import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
+import { venteårsaker } from '~/typer/behandling';
+import { formatterDatostring } from '~/utils';
+import {
+    erHistoriskSide,
+    erØnsketSideTilgjengelig,
+    SYNLIGE_STEG,
+    useStegNavigering,
+    utledBehandlingSide,
+} from '~/utils/sider';
 
 import { BehandlingContainerSkeleton } from './BehandlingSkeleton';
 import { Fakta } from './fakta/Fakta';
@@ -19,29 +43,6 @@ import { VedtakProvider } from './vedtak/VedtakContext';
 import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './vilkaarsvurdering/VilkårsvurderingContext';
-import { useBehandling } from '../../context/BehandlingContext';
-import { useBehandlingState } from '../../context/BehandlingStateContext';
-import { useFagsak } from '../../context/FagsakContext';
-import { ToggleName } from '../../context/toggles';
-import { useToggles } from '../../context/TogglesContext';
-import { ActionBar } from '../../komponenter/action-bar/ActionBar';
-import { StegErrorBoundary } from '../../komponenter/error-boundary/StegErrorBoundary';
-import { lazyImportMedRetry } from '../../komponenter/feilInnlasting/FeilInnlasting';
-import { FixedAlert } from '../../komponenter/fixedAlert/FixedAlert';
-import { PåVentModal } from '../../komponenter/modal/på-vent/PåVentModal';
-import { SidebarSkeleton } from '../../komponenter/sidebar/SidebarSkeleton';
-import { Stegflyt } from '../../komponenter/stegflyt/Stegflyt';
-import { useGlobalAlerts, useLukkGlobalAlert } from '../../stores/globalAlertStore';
-import { venteårsaker } from '../../typer/behandling';
-import { formatterDatostring } from '../../utils';
-import {
-    erHistoriskSide,
-    erØnsketSideTilgjengelig,
-    SYNLIGE_STEG,
-    useStegNavigering,
-    utledBehandlingSide,
-} from '../../utils/sider';
-import { IkkeFunnet } from '../feilsider/IkkeFunnet';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./brevmottaker/Brevmottakere'),

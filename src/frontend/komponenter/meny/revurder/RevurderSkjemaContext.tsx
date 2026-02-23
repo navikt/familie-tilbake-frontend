@@ -1,15 +1,15 @@
-import type { BehandlingstypeEnum, GetårsakstypeEnum } from '../../../generated';
-import type { Skjema } from '../../../hooks/skjema';
+import type { BehandlingstypeEnum, GetårsakstypeEnum } from '~/generated';
+import type { Skjema } from '~/hooks/skjema';
 
 import { type RefObject } from 'react';
 
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import { useFelt, useSkjema } from '../../../hooks/skjema';
-import { useRedirectEtterLagring } from '../../../hooks/useRedirectEtterLagring';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
-import { erFeltetEmpty } from '../../../utils';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { useFelt, useSkjema } from '~/hooks/skjema';
+import { useRedirectEtterLagring } from '~/hooks/useRedirectEtterLagring';
+import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { erFeltetEmpty } from '~/utils';
 
 type RevurderSkjemaHook = {
     skjema: Skjema<

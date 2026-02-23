@@ -1,5 +1,5 @@
 import type { ForhåndsvarselFormData } from './schema';
-import type { RessursByte } from '../../../generated';
+import type { RessursByte } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePdfIcon, MegaphoneIcon } from '@navikt/aksel-icons';
@@ -9,15 +9,16 @@ import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useEffect, useEffectEvent, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
+import { useVisGlobalAlert } from '~/stores/globalAlertStore';
+import { formatterDatostring, formatterRelativTid } from '~/utils';
+
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
 import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { PdfVisningModal } from '../../../komponenter/pdf-visning-modal/PdfVisningModal';
-import { useVisGlobalAlert } from '../../../stores/globalAlertStore';
-import { formatterDatostring, formatterRelativTid } from '../../../utils';
 
 type TagVariant = 'info-moderate' | 'success-moderate';
 

@@ -1,18 +1,19 @@
 import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
 import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
-import * as React from 'react';
 import { useMemo } from 'react';
+import * as React from 'react';
+
+import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '~/api/brukerlenker';
+import { useHttp } from '~/api/http/HttpProvider';
+import { useApp } from '~/context/AppContext';
+import { useTheme } from '~/context/ThemeContext';
+import { Fagsystem } from '~/kodeverk';
+import { useBehandlingStore } from '~/stores/behandlingStore';
+import { useFagsakStore } from '~/stores/fagsakStore';
+import { erHistoriskSide } from '~/utils/sider';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
-import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '../../api/brukerlenker';
-import { useHttp } from '../../api/http/HttpProvider';
-import { useApp } from '../../context/AppContext';
-import { useTheme } from '../../context/ThemeContext';
-import { Fagsystem } from '../../kodeverk';
-import { useBehandlingStore } from '../../stores/behandlingStore';
-import { useFagsakStore } from '../../stores/fagsakStore';
-import { erHistoriskSide } from '../../utils/sider';
 
 export const Header: React.FC = () => {
     const { innloggetSaksbehandler } = useApp();

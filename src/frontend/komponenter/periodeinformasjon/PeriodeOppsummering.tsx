@@ -1,10 +1,10 @@
-import type { HendelseType } from '../../kodeverk';
+import type { HendelseType } from '~/kodeverk';
 
 import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { hendelsetyper } from '../../kodeverk';
-import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '../../utils';
+import { hendelsetyper } from '~/kodeverk';
+import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '~/utils';
 
 type Props = {
     fom: string;

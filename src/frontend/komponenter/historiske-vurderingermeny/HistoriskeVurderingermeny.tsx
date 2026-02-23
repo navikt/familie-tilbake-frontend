@@ -3,9 +3,9 @@ import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
 import * as React from 'react';
 import { useLocation } from 'react-router';
 
-import { useBehandling } from '../../context/BehandlingContext';
-import { useFagsak } from '../../context/FagsakContext';
-import { Behandlingsmeny } from '../meny/Meny';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { Behandlingsmeny } from '~/komponenter/meny/Meny';
 
 export const HistoriskeVurderingermeny: React.FC = () => {
     const { eksternBrukId } = useBehandling();

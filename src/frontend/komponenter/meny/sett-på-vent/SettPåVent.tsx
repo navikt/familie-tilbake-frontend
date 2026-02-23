@@ -5,13 +5,14 @@ import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { useRef } from 'react';
 
-import { useBehandling } from '../../../context/BehandlingContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { Valideringsstatus } from '../../../hooks/skjema/typer';
-import { manuelleVenteÅrsaker, venteårsaker } from '../../../typer/behandling';
-import { dagensDato } from '../../../utils/dato';
-import { Datovelger } from '../../datovelger/Datovelger';
-import { usePåVentBehandling } from '../../modal/på-vent/PåVentContext';
+import { useBehandling } from '~/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { Valideringsstatus } from '~/hooks/skjema/typer';
+import { Datovelger } from '~/komponenter/datovelger/Datovelger';
+import { usePåVentBehandling } from '~/komponenter/modal/på-vent/PåVentContext';
+import { manuelleVenteÅrsaker, venteårsaker } from '~/typer/behandling';
+import { dagensDato } from '~/utils/dato';
+
 import { MODAL_BREDDE } from '../utils';
 
 export const SettPåVent: React.FC = () => {

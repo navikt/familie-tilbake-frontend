@@ -8,8 +8,9 @@ import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
+import { useBehandling } from '~/context/BehandlingContext';
+
 import { Menysider, MenySideInnhold } from './Menykontainer';
-import { useBehandling } from '../../context/BehandlingContext';
 
 type Props = {
     værtPåFatteVedtakSteget: boolean;

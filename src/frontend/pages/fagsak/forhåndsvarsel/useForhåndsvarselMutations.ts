@@ -1,4 +1,6 @@
 import type { ForhåndsvarselFormData, UttalelseFormData } from './schema';
+import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import type {
     BestillBrevDto,
     BrukeruttalelseDto,
@@ -14,16 +16,13 @@ import type {
     ForhåndsvarselUnntakDto,
     ForhåndsvarselUnntakData,
     ForhåndsvarselUnntakResponse,
-} from '../../../generated';
-import type { Ressurs } from '../../../typer/ressurs';
-import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
+} from '~/generated';
+import type { Ressurs } from '~/typer/ressurs';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './schema';
-import { Feil } from '../../../api/feil';
-import { useBehandling } from '../../../context/BehandlingContext';
+import { Feil } from '~/api/feil';
+import { useBehandling } from '~/context/BehandlingContext';
 import {
     bestillBrevMutation,
     forhåndsvisBrevMutation,
@@ -31,8 +30,10 @@ import {
     utsettUttalelseFristMutation,
     forhåndsvarselUnntakMutation,
     hentBehandlingQueryKey,
-} from '../../../generated/@tanstack/react-query.gen';
-import { useStegNavigering } from '../../../utils/sider';
+} from '~/generated/@tanstack/react-query.gen';
+import { useStegNavigering } from '~/utils/sider';
+
+import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './schema';
 
 export type UseForhåndsvarselMutationsReturn = {
     readonly sendForhåndsvarselMutation: UseMutationResult<

@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { useApp } from '~/context/AppContext';
+
 import { Toast } from './Toast';
-import { useApp } from '../../context/AppContext';
 
 export const Toasts: React.FC = () => {
     const { toasts } = useApp();

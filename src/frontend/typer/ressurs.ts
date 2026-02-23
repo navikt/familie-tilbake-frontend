@@ -1,4 +1,4 @@
-import { erServerFeil } from '../utils/httpUtils';
+import { erServerFeil } from '~/utils/httpUtils';
 
 export enum RessursStatus {
     Feilet = 'FEILET',

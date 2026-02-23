@@ -1,4 +1,4 @@
-import type { KjønnEnum } from '../../../generated';
+import type { KjønnEnum } from '~/generated';
 
 import {
     BagdeIcon,
@@ -12,8 +12,9 @@ import {
 import { CopyButton, ExpansionCard, Tag } from '@navikt/ds-react';
 import React from 'react';
 
-import { useFagsak } from '../../../context/FagsakContext';
-import { formatterDatostring, hentAlder } from '../../../utils';
+import { useFagsak } from '~/context/FagsakContext';
+import { formatterDatostring, hentAlder } from '~/utils';
+
 import { ICON_PROPS } from '../utils';
 
 const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';

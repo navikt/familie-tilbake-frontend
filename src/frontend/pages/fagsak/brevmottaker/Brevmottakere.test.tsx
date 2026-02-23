@@ -1,17 +1,18 @@
-import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
+import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
+import { FagsakContext } from '~/context/FagsakContext';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { MottakerType } from '~/typer/Brevmottaker';
+
 import { Brevmottakere } from './Brevmottakere';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { MottakerType } from '../../../typer/Brevmottaker';
 
 const createMockManuelleBrevmottakere = (): ManuellBrevmottakerResponsDto[] => [
     {

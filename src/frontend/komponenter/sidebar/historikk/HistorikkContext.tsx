@@ -1,15 +1,15 @@
-import type { HistorikkInnslag } from '../../../typer/historikk';
-import type { SynligSteg } from '../../../utils/sider';
+import type { HistorikkInnslag } from '~/typer/historikk';
+import type { SynligSteg } from '~/utils/sider';
 
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { useHttp } from '../../../api/http/HttpProvider';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useFagsak } from '../../../context/FagsakContext';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '../../../typer/ressurs';
-import { Menysider } from '../Menykontainer';
+import { useHttp } from '~/api/http/HttpProvider';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { Menysider } from '~/komponenter/sidebar/Menykontainer';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '~/typer/ressurs';
 
 type Props = {
     valgtMenyside: Menysider;

@@ -1,16 +1,17 @@
-import type { ForeldelseHook } from '../ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { ForeldelseHook } from '~/pages/fagsak/foreldelse/ForeldelseContext';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
+import { Foreldelsevurdering } from '~/kodeverk';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagForeldelsePeriodeSkjemaData } from '~/testdata/foreldelseFactory';
+
 import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
-import { Foreldelsevurdering } from '../../../../kodeverk';
-import { TestBehandlingProvider } from '../../../../testdata/behandlingContextFactory';
-import { lagForeldelsePeriodeSkjemaData } from '../../../../testdata/foreldelseFactory';
 
 vi.mock('../ForeldelseContext', () => {
     return {

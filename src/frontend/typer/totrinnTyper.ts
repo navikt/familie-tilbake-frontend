@@ -1,4 +1,4 @@
-import type { BehandlingsstegEnum } from '../generated';
+import type { BehandlingsstegEnum } from '~/generated';
 
 export type TotrinnsStegInfo = {
     behandlingssteg: BehandlingsstegEnum;

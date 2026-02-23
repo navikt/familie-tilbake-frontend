@@ -1,12 +1,16 @@
-import type { Felt } from '../../../../../hooks/skjema';
-import type { JaNeiOption } from '../VilkårsvurderingPeriodeSkjemaContext';
+import type { Felt } from '~/hooks/skjema';
+import type { JaNeiOption } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup, Stack } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { useBehandlingState } from '../../../../../context/BehandlingStateContext';
-import { Valideringsstatus } from '../../../../../hooks/skjema';
-import { jaNeiOptions, OptionJA, OptionNEI } from '../VilkårsvurderingPeriodeSkjemaContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { Valideringsstatus } from '~/hooks/skjema';
+import {
+    jaNeiOptions,
+    OptionJA,
+    OptionNEI,
+} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
     kanIlleggeRenter: boolean;

@@ -1,4 +1,4 @@
-import type { SchemaEnum2 } from '../generated';
+import type { SchemaEnum2 } from '~/generated';
 
 import { create } from 'zustand';
 

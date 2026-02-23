@@ -11,6 +11,8 @@ import compression from 'vite-plugin-compression';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const frontendPath = resolve(__dirname, '.');
+
 // https://vitejs.dev/config/
 export default defineConfig(() => {
     return {
@@ -42,5 +44,10 @@ export default defineConfig(() => {
                 },
             }),
         ],
+        resolve: {
+            alias: {
+                '~': frontendPath,
+            },
+        },
     };
 });

@@ -1,5 +1,5 @@
-import type { UttalelseFormData } from '../schema';
 import type { SubmitHandler } from 'react-hook-form';
+import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import {
     RadioGroup,
@@ -13,11 +13,11 @@ import { parseISO } from 'date-fns/parseISO';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { ToggleName } from '../../../../context/toggles';
-import { useToggles } from '../../../../context/TogglesContext';
-import { dateTilIsoDatoString } from '../../../../utils/dato';
-import { HarUttaltSeg } from '../schema';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { ToggleName } from '~/context/toggles';
+import { useToggles } from '~/context/TogglesContext';
+import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
+import { dateTilIsoDatoString } from '~/utils/dato';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;

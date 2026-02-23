@@ -3,10 +3,11 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect } from 'react';
 
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './informasjonsbokser/Faktaboks';
-import { useBehandlingState } from '../../context/BehandlingStateContext';
 
 type Props = {
     dialogRef: React.RefObject<HTMLDialogElement | null>;

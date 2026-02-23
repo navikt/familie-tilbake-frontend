@@ -1,14 +1,15 @@
-import type { Section, Varselbrevtekst } from '../../../../generated';
-import type { ForhåndsvarselFormData } from '../schema';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
+import type { Section, Varselbrevtekst } from '~/generated';
+import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import React, { Fragment } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { SkalSendesForhåndsvarsel } from '../schema';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/schema';
+
 import { Unntak } from './UnntakSkjema';
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
 
 type Props = {
     varselbrevtekster: Varselbrevtekst | undefined;

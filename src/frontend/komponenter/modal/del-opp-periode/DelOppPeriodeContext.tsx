@@ -1,12 +1,12 @@
-import type { BeregnSplittetPeriodeRespons, Periode } from '../../../typer/tilbakekrevingstyper';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
 
 import { useState } from 'react';
 
-import { useHttp } from '../../../api/http/HttpProvider';
-import { useBehandling } from '../../../context/BehandlingContext';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
-import { getEndOfMonthISODateStr, validerDato } from '../../../utils';
+import { useHttp } from '~/api/http/HttpProvider';
+import { useBehandling } from '~/context/BehandlingContext';
+import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { getEndOfMonthISODateStr, validerDato } from '~/utils';
 
 type DelOppPeriodeHook = {
     visModal: boolean;

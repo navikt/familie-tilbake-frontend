@@ -1,10 +1,10 @@
-import type { Brevmottaker, TypeEnum } from '../../../../generated';
+import type { Brevmottaker, TypeEnum } from '~/generated';
 
 import { z } from 'zod';
 
-import { Vergetype as VergetypeEnum } from '../../../../kodeverk/verge';
-import { AdresseKilde, MottakerType } from '../../../../typer/Brevmottaker';
-import { isNumeric } from '../../../../utils';
+import { Vergetype as VergetypeEnum } from '~/kodeverk/verge';
+import { AdresseKilde, MottakerType } from '~/typer/Brevmottaker';
+import { isNumeric } from '~/utils';
 
 const TYPE_ENUM_VALUES: TypeEnum[] = [
     'BRUKER_MED_UTENLANDSK_ADRESSE',

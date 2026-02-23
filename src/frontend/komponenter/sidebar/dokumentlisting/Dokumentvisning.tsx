@@ -1,11 +1,11 @@
-import type { DokumentInfo, Journalpost } from '../../../typer/journalføring';
+import type { DokumentInfo, Journalpost } from '~/typer/journalføring';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link } from '@navikt/ds-react';
 import * as React from 'react';
 
-import { Journalposttype } from '../../../typer/journalføring';
-import { HentDokument } from '../HentDokument';
+import { HentDokument } from '~/komponenter/sidebar/HentDokument';
+import { Journalposttype } from '~/typer/journalføring';
 
 type Props = {
     journalpost: Journalpost;

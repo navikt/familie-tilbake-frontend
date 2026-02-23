@@ -1,10 +1,13 @@
-import type { Brevmottaker } from '../../../typer/Brevmottaker';
+import type { Brevmottaker } from '~/typer/Brevmottaker';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+
+import { useBrevmottakerApi } from '~/hooks/useBrevmottakerApi';
+import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '~/typer/Brevmottaker';
 
 import { BrukerMedUtenlandskAdresse } from './mottaker/BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './mottaker/Dødsbo';
@@ -15,8 +18,6 @@ import {
     brevmottakerFormDataSchema,
     type BrevmottakerFormData,
 } from './schema/schema';
-import { useBrevmottakerApi } from '../../../hooks/useBrevmottakerApi';
-import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '../../../typer/Brevmottaker';
 
 type BrevmottakerFormModalProps = {
     mode: 'endre' | 'leggTil';

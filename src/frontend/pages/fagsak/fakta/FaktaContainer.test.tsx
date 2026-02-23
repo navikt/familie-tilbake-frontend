@@ -1,9 +1,9 @@
-import type { BehandlingApiHook } from '../../../api/behandling';
-import type { BehandlingDto, SchemaEnum4 } from '../../../generated';
-import type { Ressurs } from '../../../typer/ressurs';
-import type { FaktaResponse } from '../../../typer/tilbakekrevingstyper';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { BehandlingApiHook } from '~/api/behandling';
+import type { BehandlingDto, SchemaEnum4 } from '~/generated';
+import type { Ressurs } from '~/typer/ressurs';
+import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
@@ -11,19 +11,20 @@ import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
 
+import { FagsakContext } from '~/context/FagsakContext';
+import { HendelseType, HendelseUndertype } from '~/kodeverk';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { lagFaktaPeriode, lagFaktaResponse } from '~/testdata/faktaFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { RessursStatus } from '~/typer/ressurs';
+
 import { FaktaContainer } from './FaktaContainer';
 import { FaktaProvider } from './FaktaContext';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { HendelseType, HendelseUndertype } from '../../../kodeverk';
-import { TestBehandlingProvider } from '../../../testdata/behandlingContextFactory';
-import { lagBehandling } from '../../../testdata/behandlingFactory';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { lagFaktaPeriode, lagFaktaResponse } from '../../../testdata/faktaFactory';
-import { createTestQueryClient } from '../../../testutils/queryTestUtils';
-import { RessursStatus } from '../../../typer/ressurs';
 
 const mockUseBehandlingApi = vi.fn();
-vi.mock('../../../api/behandling', () => ({
+vi.mock('~/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 

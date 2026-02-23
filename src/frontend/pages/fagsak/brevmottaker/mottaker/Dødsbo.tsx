@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { useFagsak } from '../../../../context/FagsakContext';
-import { MottakerType } from '../../../../typer/Brevmottaker';
-import { ManuellRegistrering } from '../adressekilde/ManuellRegistrering';
+import { useFagsak } from '~/context/FagsakContext';
+import { ManuellRegistrering } from '~/pages/fagsak/brevmottaker/adressekilde/ManuellRegistrering';
+import { MottakerType } from '~/typer/Brevmottaker';
 
 export const Dødsbo: React.FC = () => {
     const { bruker } = useFagsak();

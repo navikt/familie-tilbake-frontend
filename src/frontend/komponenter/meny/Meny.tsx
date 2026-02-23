@@ -3,6 +3,12 @@ import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
 
+import { useApp } from '~/context/AppContext';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { Fagsystem } from '~/kodeverk';
+
 import { EndreEnhet } from './endre-enhet/EndreEnhet';
 import { Gjenoppta } from './gjenoppta/Gjenoppta';
 import { Henlegg } from './henlegg/Henlegg';
@@ -12,11 +18,6 @@ import { LeggTilFjernBrevmottakere } from './legg-til-fjern-brevmottakere/LeggTi
 import { Revurder } from './revurder/Revurder';
 import { SettPåVent } from './sett-på-vent/SettPåVent';
 import { StartPåNytt } from './start-på-nytt/StartPåNytt';
-import { useApp } from '../../context/AppContext';
-import { useBehandling } from '../../context/BehandlingContext';
-import { useBehandlingState } from '../../context/BehandlingStateContext';
-import { useFagsak } from '../../context/FagsakContext';
-import { Fagsystem } from '../../kodeverk';
 
 export const Behandlingsmeny: React.FC = () => {
     const behandling = useBehandling();

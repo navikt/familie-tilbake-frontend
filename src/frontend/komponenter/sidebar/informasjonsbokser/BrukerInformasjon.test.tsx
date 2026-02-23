@@ -1,17 +1,18 @@
-import type { InstitusjonDto } from '../../../generated';
-import type { FrontendBrukerDto } from '../../../generated';
 import type { RenderResult } from '@testing-library/react';
+import type { InstitusjonDto } from '~/generated';
+import type { FrontendBrukerDto } from '~/generated';
 
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-import { BrukerInformasjon } from './BrukerInformasjon';
-import { FagsakContext } from '../../../context/FagsakContext';
-import { lagFagsak } from '../../../testdata/fagsakFactory';
-import { Kjønn } from '../../../typer/bruker';
+import { FagsakContext } from '~/context/FagsakContext';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { Kjønn } from '~/typer/bruker';
 
-vi.mock('../../../utils', async () => {
-    const actual = await vi.importActual('../../../utils');
+import { BrukerInformasjon } from './BrukerInformasjon';
+
+vi.mock(import('~/utils'), async importOriginal => {
+    const actual = await importOriginal();
     return {
         ...actual,
         hentAlder: vi.fn(() => 42),

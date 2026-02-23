@@ -1,8 +1,9 @@
 import { Button } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
+
 import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
-import { PdfVisningModal } from '../../../../komponenter/pdf-visning-modal/PdfVisningModal';
 
 export const ForhåndsvisVedtaksbrev: React.FC = () => {
     const {

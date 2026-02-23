@@ -24,6 +24,17 @@ export default defineConfig(
         plugins: { 'react-hooks': reactHooks, import: importPlugin },
         rules: {
             ...reactHooks.configs.recommended.rules,
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['../../../*', '../../../**/*'],
+                            message: 'Bruk ~/* i stedet for dype relative imports.',
+                        },
+                    ],
+                },
+            ],
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
@@ -41,6 +52,13 @@ export default defineConfig(
                         ['internal'],
                         ['parent', 'sibling', 'index'],
                     ],
+                    pathGroups: [
+                        {
+                            pattern: '~/**',
+                            group: 'internal',
+                        },
+                    ],
+                    pathGroupsExcludedImportTypes: ['type'],
                     'newlines-between': 'always',
                     alphabetize: {
                         order: 'asc',

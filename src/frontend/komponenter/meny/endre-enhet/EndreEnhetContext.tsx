@@ -1,13 +1,13 @@
-import type { FeltState, Skjema } from '../../../hooks/skjema';
+import type { FeltState, Skjema } from '~/hooks/skjema';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useBehandling } from '../../../context/BehandlingContext';
-import { useBehandlingState } from '../../../context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '../../../generated/@tanstack/react-query.gen';
-import { useFelt, useSkjema } from '../../../hooks/skjema';
-import { type Ressurs, RessursStatus } from '../../../typer/ressurs';
-import { erFeltetEmpty, validerTekstFeltMaksLengde } from '../../../utils';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { useFelt, useSkjema } from '~/hooks/skjema';
+import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { erFeltetEmpty, validerTekstFeltMaksLengde } from '~/utils';
 
 type EndreEnhetHook = {
     skjema: Skjema<

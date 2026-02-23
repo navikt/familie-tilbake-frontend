@@ -1,9 +1,17 @@
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
+
+const frontendPath = resolve(__dirname, 'src/frontend');
 
 export default defineConfig({
     plugins: [react()],
     cacheDir: '.vitest-cache',
+    resolve: {
+        alias: {
+            '~': frontendPath,
+        },
+    },
     test: {
         globals: true,
         environment: 'jsdom',

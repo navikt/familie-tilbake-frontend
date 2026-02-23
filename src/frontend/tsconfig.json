@@ -2,10 +2,16 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "rootDir": ".",
+        "baseUrl": ".",
         "module": "es2022",
         "moduleResolution": "bundler",
         "lib": ["ES2022", "DOM", "DOM.Iterable"],
-        "types": ["@testing-library/jest-dom", "vitest/globals", "node"]
+        "allowSyntheticDefaultImports": true,
+        "typeRoots": ["../../node_modules/@types", "../../node_modules", "./@types"],
+        "types": ["@testing-library/jest-dom", "vitest/globals", "node"],
+        "paths": {
+            "~/*": ["./*"]
+        }
     },
     "exclude": [
         "../../node_modules"

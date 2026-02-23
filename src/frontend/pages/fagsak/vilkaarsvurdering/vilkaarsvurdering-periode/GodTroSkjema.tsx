@@ -6,9 +6,10 @@ import type {
 import { Radio, Textarea, TextField, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
+
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
-import { useBehandlingState } from '../../../../context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '../../../../hooks/skjema';
 
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;

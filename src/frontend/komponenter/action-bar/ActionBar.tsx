@@ -3,7 +3,7 @@ import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 import classNames from 'classnames';
 import React from 'react';
 
-import { Behandlingsmeny } from '../meny/Meny';
+import { Behandlingsmeny } from '~/komponenter/meny/Meny';
 
 type BaseProps = {
     stegtekst: string | undefined;
