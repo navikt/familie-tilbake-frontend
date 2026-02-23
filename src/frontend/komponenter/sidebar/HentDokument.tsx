@@ -1,6 +1,8 @@
-import { useHttp } from '@api/http/HttpProvider';
-import { useBehandling } from '@context/BehandlingContext';
-import { PdfVisningModal } from '@komponenter/pdf-visning-modal/PdfVisningModal';
+import * as React from 'react';
+
+import { useHttp } from '~/api/http/HttpProvider';
+import { useBehandling } from '~/context/BehandlingContext';
+import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -8,9 +10,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '@typer/ressurs';
-import { base64ToArrayBuffer } from '@utils';
-import * as React from 'react';
+} from '~/typer/ressurs';
+import { base64ToArrayBuffer } from '~/utils';
 
 type Props = {
     journalpostId: string | undefined;

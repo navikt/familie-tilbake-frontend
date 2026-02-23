@@ -1,6 +1,7 @@
-import { useBehandlingState } from '@context/BehandlingStateContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+
+import { useBehandlingState } from '~/context/BehandlingStateContext';
 
 export type RedirectEtterLagringHook = {
     utførRedirect: (url: string) => void;

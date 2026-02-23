@@ -1,5 +1,6 @@
-import { Image } from '@komponenter/image/Image';
 import React from 'react';
+
+import { Image } from '~/komponenter/image/Image';
 
 import christmasCandle from './christmasCandle.svg';
 import stars from './stars.svg';

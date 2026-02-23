@@ -1,24 +1,25 @@
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
-import type { VilkårdsvurderingStegPayload } from '@typer/api';
+import type { AxiosError } from 'axios';
+import type { VilkårdsvurderingStegPayload } from '~/typer/api';
 import type {
     VilkårsvurderingResponse,
     VilkårsvurderingPeriode,
-} from '@typer/tilbakekrevingstyper';
-import type { AxiosError } from 'axios';
+} from '~/typer/tilbakekrevingstyper';
 
-import { useBehandlingApi } from '@api/behandling';
-import { Feil } from '@api/feil';
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { useFagsak } from '@context/FagsakContext';
-import { Aktsomhet, Vilkårsresultat } from '@kodeverk';
 import { useMutation } from '@tanstack/react-query';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@typer/ressurs';
-import { sorterFeilutbetaltePerioder } from '@utils';
-import { useStegNavigering } from '@utils/sider';
 import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
+
+import { useBehandlingApi } from '~/api/behandling';
+import { Feil } from '~/api/feil';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '~/utils';
+import { useStegNavigering } from '~/utils/sider';
 
 export type VilkårsvurderingHook = {
     containerRef: React.RefObject<HTMLDivElement | null>;

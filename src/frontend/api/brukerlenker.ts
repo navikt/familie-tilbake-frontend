@@ -1,6 +1,6 @@
 import type { FamilieRequest } from './http/HttpProvider';
 
-import { RessursStatus } from '@typer/ressurs';
+import { RessursStatus } from '~/typer/ressurs';
 
 import { preferredAxios } from './axios';
 

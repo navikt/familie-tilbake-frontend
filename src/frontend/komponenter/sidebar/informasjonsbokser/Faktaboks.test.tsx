@@ -1,14 +1,19 @@
-import type { BehandlingDto, BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '@generated';
 import type { RenderResult } from '@testing-library/react';
+import type {
+    BehandlingDto,
+    BehandlingsresultatstypeEnum,
+    BehandlingstatusEnum,
+} from '~/generated';
 
-import { FagsakContext } from '@context/FagsakContext';
-import { Ytelsetype } from '@kodeverk';
-import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
-import { lagBehandling } from '@testdata/behandlingFactory';
-import { lagFagsak } from '@testdata/fagsakFactory';
 import { render, screen } from '@testing-library/react';
-import { behandlingsstatuser, behandlingsresultater, behandlingsårsaker } from '@typer/behandling';
 import React from 'react';
+
+import { FagsakContext } from '~/context/FagsakContext';
+import { Ytelsetype } from '~/kodeverk';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { behandlingsstatuser, behandlingsresultater, behandlingsårsaker } from '~/typer/behandling';
 
 import { Faktaboks } from './Faktaboks';
 

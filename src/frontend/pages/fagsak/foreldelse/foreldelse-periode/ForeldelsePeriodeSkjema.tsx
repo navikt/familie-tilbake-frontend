@@ -1,11 +1,6 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ReactNode } from 'react';
 
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { Valideringsstatus } from '@hooks/skjema/typer';
-import { Foreldelsevurdering, foreldelsevurderinger, foreldelseVurderingTyper } from '@kodeverk';
-import { Datovelger } from '@komponenter/datovelger/Datovelger';
-import { PeriodeOppsummering } from '@komponenter/periodeinformasjon/PeriodeOppsummering';
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
     BodyLong,
@@ -20,10 +15,16 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { useForeldelse } from '@pages/fagsak/foreldelse/ForeldelseContext';
-import { isoStringTilDate } from '@utils/dato';
 import { differenceInMonths, parseISO } from 'date-fns';
 import * as React from 'react';
+
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { Valideringsstatus } from '~/hooks/skjema/typer';
+import { Foreldelsevurdering, foreldelsevurderinger, foreldelseVurderingTyper } from '~/kodeverk';
+import { Datovelger } from '~/komponenter/datovelger/Datovelger';
+import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
+import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
+import { isoStringTilDate } from '~/utils/dato';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import { SplittPeriode } from './splitt-periode/SplittPeriode';

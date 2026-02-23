@@ -3,16 +3,16 @@ import type { RenderResult } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createTestQueryClient } from '@testutils/queryTestUtils';
 import * as React from 'react';
 
-vi.mock('@api/brukerlenker');
+vi.mock('~/api/brukerlenker');
+
+import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '~/api/brukerlenker';
+import { useBehandlingStore } from '~/stores/behandlingStore';
+import { useFagsakStore } from '~/stores/fagsakStore';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
 
 import { Header } from './Header';
-
-import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '@api/brukerlenker';
-import { useBehandlingStore } from '@stores/behandlingStore';
-import { useFagsakStore } from '@stores/fagsakStore';
 
 const mockHentBrukerlenkeBaseUrl = vi.mocked(hentBrukerlenkeBaseUrl);
 const mockHentAInntektUrl = vi.mocked(hentAInntektUrl);

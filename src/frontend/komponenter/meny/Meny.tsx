@@ -1,12 +1,13 @@
-import { useApp } from '@context/AppContext';
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { useFagsak } from '@context/FagsakContext';
-import { Fagsystem } from '@kodeverk';
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
+
+import { useApp } from '~/context/AppContext';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { Fagsystem } from '~/kodeverk';
 
 import { EndreEnhet } from './endre-enhet/EndreEnhet';
 import { Gjenoppta } from './gjenoppta/Gjenoppta';

@@ -1,18 +1,19 @@
-import type { Skjema } from '@hooks/skjema';
-import type { VilkårsvurderingSkjemaDefinisjon } from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { Skjema } from '~/hooks/skjema';
+import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { Aktsomhet } from '@kodeverk';
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
+import * as React from 'react';
+
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { Aktsomhet } from '~/kodeverk';
 import {
     ANDELER,
     EGENDEFINERT,
     OptionJA,
     OptionNEI,
-} from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
-import { useVilkårsvurdering } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
-import { formatCurrencyNoKr, isEmpty, isNumeric } from '@utils';
-import * as React from 'react';
+} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
+import { formatCurrencyNoKr, isEmpty, isNumeric } from '~/utils';
 
 import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 

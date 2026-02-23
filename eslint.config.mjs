@@ -10,59 +10,59 @@ import tseslint from 'typescript-eslint';
 const relativeImportPatterns = [
     {
         group: ['../../../api', '../../../api/*'],
-        message: 'Bruk @api/* i stedet for relative imports.',
+        message: 'Bruk ~/api/* i stedet for relative imports.',
     },
     {
         group: ['../../../context', '../../../context/*'],
-        message: 'Bruk @context/* i stedet for relative imports.',
+        message: 'Bruk ~/context/* i stedet for relative imports.',
     },
     {
         group: ['../../../generated', '../../../generated/*'],
-        message: 'Bruk @generated/* i stedet for relative imports.',
+        message: 'Bruk ~/generated/* i stedet for relative imports.',
     },
     {
         group: ['../../../generated-new', '../../../generated-new/*'],
-        message: 'Bruk @generated-new/* i stedet for relative imports.',
+        message: 'Bruk ~/generated-new/* i stedet for relative imports.',
     },
     {
         group: ['../../../hooks', '../../../hooks/*'],
-        message: 'Bruk @hooks/* i stedet for relative imports.',
+        message: 'Bruk ~/hooks/* i stedet for relative imports.',
     },
     {
         group: ['../../../images', '../../../images/*'],
-        message: 'Bruk @images/* i stedet for relative imports.',
+        message: 'Bruk ~/images/* i stedet for relative imports.',
     },
     {
         group: ['../../../kodeverk', '../../../kodeverk/*'],
-        message: 'Bruk @kodeverk/* i stedet for relative imports.',
+        message: 'Bruk ~/kodeverk/* i stedet for relative imports.',
     },
     {
         group: ['../../../komponenter', '../../../komponenter/*'],
-        message: 'Bruk @komponenter/* i stedet for relative imports.',
+        message: 'Bruk ~/komponenter/* i stedet for relative imports.',
     },
     {
         group: ['../../../pages', '../../../pages/*'],
-        message: 'Bruk @pages/* i stedet for relative imports.',
+        message: 'Bruk ~/pages/* i stedet for relative imports.',
     },
     {
         group: ['../../../stores', '../../../stores/*'],
-        message: 'Bruk @stores/* i stedet for relative imports.',
+        message: 'Bruk ~/stores/* i stedet for relative imports.',
     },
     {
         group: ['../../../testdata', '../../../testdata/*'],
-        message: 'Bruk @testdata/* i stedet for relative imports.',
+        message: 'Bruk ~/testdata/* i stedet for relative imports.',
     },
     {
         group: ['../../../testutils', '../../../testutils/*'],
-        message: 'Bruk @testutils/* i stedet for relative imports.',
+        message: 'Bruk ~/testutils/* i stedet for relative imports.',
     },
     {
         group: ['../../../typer', '../../../typer/*'],
-        message: 'Bruk @typer/* i stedet for relative imports.',
+        message: 'Bruk ~/typer/* i stedet for relative imports.',
     },
     {
         group: ['../../../utils', '../../../utils/*'],
-        message: 'Bruk @utils/* i stedet for relative imports.',
+        message: 'Bruk ~/utils/* i stedet for relative imports.',
     },
 ];
 
@@ -101,6 +101,13 @@ export default defineConfig(
                         ['internal'],
                         ['parent', 'sibling', 'index'],
                     ],
+                    pathGroups: [
+                        {
+                            pattern: '~/**',
+                            group: 'internal',
+                        },
+                    ],
+                    pathGroupsExcludedImportTypes: ['type'],
                     'newlines-between': 'always',
                     alphabetize: {
                         order: 'asc',

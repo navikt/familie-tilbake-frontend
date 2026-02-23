@@ -1,18 +1,19 @@
 import type { ForhåndsvarselFormData } from './schema';
-import type { RessursByte } from '@generated';
+import type { RessursByte } from '~/generated';
 
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PdfVisningModal } from '@komponenter/pdf-visning-modal/PdfVisningModal';
 import { FilePdfIcon, MegaphoneIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
-import { useVisGlobalAlert } from '@stores/globalAlertStore';
 import { useQueryClient } from '@tanstack/react-query';
-import { formatterDatostring, formatterRelativTid } from '@utils';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
 import React, { useEffect, useEffectEvent, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
+import { useVisGlobalAlert } from '~/stores/globalAlertStore';
+import { formatterDatostring, formatterRelativTid } from '~/utils';
 
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
 import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';

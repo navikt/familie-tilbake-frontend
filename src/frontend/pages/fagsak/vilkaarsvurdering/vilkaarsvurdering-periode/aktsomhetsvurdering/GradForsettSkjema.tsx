@@ -1,9 +1,10 @@
-import { type Skjema } from '@hooks/skjema';
-import { Vilkårsresultat } from '@kodeverk';
 import { Select } from '@navikt/ds-react';
-import { type VilkårsvurderingSkjemaDefinisjon } from '@pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
-import { useVilkårsvurdering } from '@pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 import * as React from 'react';
+
+import { type Skjema } from '~/hooks/skjema';
+import { Vilkårsresultat } from '~/kodeverk';
+import { type VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 
 import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 

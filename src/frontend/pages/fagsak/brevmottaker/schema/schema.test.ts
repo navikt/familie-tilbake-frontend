@@ -1,6 +1,6 @@
 import type { BrevmottakerFormData } from './schema';
 
-import { AdresseKilde, MottakerType } from '@typer/Brevmottaker';
+import { AdresseKilde, MottakerType } from '~/typer/Brevmottaker';
 
 import { brevmottakerFormDataInputSchema } from './schema';
 

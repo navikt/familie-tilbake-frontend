@@ -1,13 +1,14 @@
-import type { BehandlingDto } from '@generated';
-import type { SynligSteg } from '@utils/sider';
+import type { BehandlingDto } from '~/generated';
+import type { SynligSteg } from '~/utils/sider';
 
-import { useBehandling } from '@context/BehandlingContext';
-import { erStegUtført } from '@context/BehandlingStateContext';
-import { useFagsak } from '@context/FagsakContext';
 import { Stepper } from '@navikt/ds-react';
-import { erSidenAktiv, SYNLIGE_STEG, visSide } from '@utils/sider';
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { erStegUtført } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { erSidenAktiv, SYNLIGE_STEG, visSide } from '~/utils/sider';
 
 interface StepperSteg extends SynligSteg {
     erUtført: boolean;

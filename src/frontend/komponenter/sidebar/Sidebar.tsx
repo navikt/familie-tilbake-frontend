@@ -1,8 +1,9 @@
-import { useBehandlingState } from '@context/BehandlingStateContext';
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect } from 'react';
+
+import { useBehandlingState } from '~/context/BehandlingStateContext';
 
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';

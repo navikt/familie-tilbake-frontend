@@ -1,11 +1,12 @@
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { ActionBar } from '@komponenter/action-bar/ActionBar';
-import { DataLastIkkeSuksess } from '@komponenter/datalast/DataLastIkkeSuksess';
-import { Steginformasjon } from '@komponenter/steginformasjon/StegInformasjon';
 import { Heading, VStack } from '@navikt/ds-react';
-import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
+import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
+import { RessursStatus } from '~/typer/ressurs';
 
 import { useFakta } from './FaktaContext';
 import { GammelFaktaSkjema } from './GammelFaktaSkjema';

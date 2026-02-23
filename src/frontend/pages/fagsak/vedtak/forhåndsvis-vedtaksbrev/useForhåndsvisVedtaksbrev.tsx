@@ -1,5 +1,7 @@
-import { useDokumentApi } from '@api/dokument';
-import { useVedtak } from '@pages/fagsak/vedtak/VedtakContext';
+import * as React from 'react';
+
+import { useDokumentApi } from '~/api/dokument';
+import { useVedtak } from '~/pages/fagsak/vedtak/VedtakContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -7,9 +9,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '@typer/ressurs';
-import { base64ToArrayBuffer } from '@utils';
-import * as React from 'react';
+} from '~/typer/ressurs';
+import { base64ToArrayBuffer } from '~/utils';
 
 type ForhåndsvisVedtaksbrevHook = {
     visModal: boolean;

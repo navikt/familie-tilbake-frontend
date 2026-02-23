@@ -1,13 +1,14 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
-import type { ForeldelsePeriode } from '@typer/tilbakekrevingstyper';
+import type { ForeldelsePeriode } from '~/typer/tilbakekrevingstyper';
 
-import { Foreldelsevurdering } from '@kodeverk';
-import { TilbakeTidslinje } from '@komponenter/tilbake-tidslinje/TilbakeTidslinje';
-import { useForeldelse } from '@pages/fagsak/foreldelse/ForeldelseContext';
-import { ClassNamePeriodeStatus } from '@typer/periodeSkjemaData';
 import classNames from 'classnames';
 import * as React from 'react';
+
+import { Foreldelsevurdering } from '~/kodeverk';
+import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
+import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
+import { ClassNamePeriodeStatus } from '~/typer/periodeSkjemaData';
 
 import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 

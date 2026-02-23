@@ -1,7 +1,8 @@
-import type { BehandlingDto } from '@generated';
+import type { BehandlingDto } from '~/generated';
 
-import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
 import { QueryClient } from '@tanstack/react-query';
+
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 
 export const createTestQueryClient = (): QueryClient => {
     return new QueryClient({

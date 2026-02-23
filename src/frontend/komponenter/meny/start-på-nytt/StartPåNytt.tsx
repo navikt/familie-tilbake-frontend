@@ -1,7 +1,8 @@
-import { FeilModal } from '@komponenter/modal/feil/FeilModal';
 import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
 import * as React from 'react';
+
+import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 
 import { MODAL_BREDDE } from '../utils';
 import { useStartPåNytt } from './useStartPåNytt';

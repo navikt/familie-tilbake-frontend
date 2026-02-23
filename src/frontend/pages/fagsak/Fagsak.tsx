@@ -1,13 +1,14 @@
-import { BehandlingProvider, finnBehandlingId } from '@context/BehandlingContext';
-import { BehandlingStateProvider } from '@context/BehandlingStateContext';
-import { useFagsak } from '@context/FagsakContext';
-import { Spinner } from '@komponenter/datalast/Spinner';
-import { UlagretDataModal } from '@komponenter/modal/UlagretDataModal';
-import { useBehandlingStore } from '@stores/behandlingStore';
-import { useFagsakStore } from '@stores/fagsakStore';
 import { Suspense, useEffect } from 'react';
 import * as React from 'react';
 import { useLocation } from 'react-router';
+
+import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
+import { BehandlingStateProvider } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { Spinner } from '~/komponenter/datalast/Spinner';
+import { UlagretDataModal } from '~/komponenter/modal/UlagretDataModal';
+import { useBehandlingStore } from '~/stores/behandlingStore';
+import { useFagsakStore } from '~/stores/fagsakStore';
 
 import { BehandlingContainer } from './Behandling';
 

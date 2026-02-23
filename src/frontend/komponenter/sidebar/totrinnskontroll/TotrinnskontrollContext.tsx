@@ -1,22 +1,23 @@
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
-import type { BehandlingsstegEnum } from '@generated';
-import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '@typer/api';
-import type { Totrinnkontroll } from '@typer/totrinnTyper';
-import type { SynligSteg } from '@utils/sider';
+import type { BehandlingsstegEnum } from '~/generated';
+import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '~/typer/api';
+import type { Totrinnkontroll } from '~/typer/totrinnTyper';
+import type { SynligSteg } from '~/utils/sider';
 
-import { useBehandlingApi } from '@api/behandling';
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { useFagsak } from '@context/FagsakContext';
-import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
-import { useVisGlobalAlert } from '@stores/globalAlertStore';
 import { useQueryClient } from '@tanstack/react-query';
-import { behandlingssteg } from '@typer/behandling';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@typer/ressurs';
-import { hentFrontendFeilmelding, validerTekstMaksLengde } from '@utils';
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+
+import { useBehandlingApi } from '~/api/behandling';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { useVisGlobalAlert } from '~/stores/globalAlertStore';
+import { behandlingssteg } from '~/typer/behandling';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { hentFrontendFeilmelding, validerTekstMaksLengde } from '~/utils';
 
 import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSkjemaTyper';
 

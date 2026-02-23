@@ -1,15 +1,16 @@
-import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '@generated';
-import type { Skjema, FeltState } from '@hooks/skjema';
-import type { RestSettPåVent } from '@typer/api';
-import type { Ressurs } from '@typer/ressurs';
+import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
+import type { Skjema, FeltState } from '~/hooks/skjema';
+import type { RestSettPåVent } from '~/typer/api';
+import type { Ressurs } from '~/typer/ressurs';
 
-import { useHttp } from '@api/http/HttpProvider';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { useSkjema, useFelt, feil, ok } from '@hooks/skjema';
-import { RessursStatus } from '@typer/ressurs';
-import { isEmpty, validerGyldigDato } from '@utils';
-import { dateTilIsoDatoString, isoStringTilDate } from '@utils/dato';
 import { useState } from 'react';
+
+import { useHttp } from '~/api/http/HttpProvider';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useSkjema, useFelt, feil, ok } from '~/hooks/skjema';
+import { RessursStatus } from '~/typer/ressurs';
+import { isEmpty, validerGyldigDato } from '~/utils';
+import { dateTilIsoDatoString, isoStringTilDate } from '~/utils/dato';
 
 type PåVentBehandlingHook = {
     skjema: Skjema<

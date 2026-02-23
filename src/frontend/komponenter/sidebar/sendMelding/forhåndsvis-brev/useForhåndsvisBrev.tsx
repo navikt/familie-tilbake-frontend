@@ -1,5 +1,7 @@
-import { useDokumentApi } from '@api/dokument';
-import { useSendMelding } from '@komponenter/sidebar/sendMelding/SendMeldingContext';
+import * as React from 'react';
+
+import { useDokumentApi } from '~/api/dokument';
+import { useSendMelding } from '~/komponenter/sidebar/sendMelding/SendMeldingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -7,9 +9,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '@typer/ressurs';
-import { base64ToArrayBuffer } from '@utils';
-import * as React from 'react';
+} from '~/typer/ressurs';
+import { base64ToArrayBuffer } from '~/utils';
 
 type ForhåndsvisBrevHook = {
     visModal: boolean;

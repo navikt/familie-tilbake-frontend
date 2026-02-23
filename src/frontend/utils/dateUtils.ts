@@ -1,8 +1,7 @@
-import type { JournalpostRelevantDato } from '@typer/journalføring';
-import type { FaktaPeriode } from '@typer/tilbakekrevingstyper';
 import type { Duration } from 'date-fns';
+import type { JournalpostRelevantDato } from '~/typer/journalføring';
+import type { FaktaPeriode } from '~/typer/tilbakekrevingstyper';
 
-import { JournalpostDatotype } from '@typer/journalføring';
 import {
     add,
     differenceInCalendarYears,
@@ -16,6 +15,8 @@ import {
     isBefore,
     parseISO,
 } from 'date-fns';
+
+import { JournalpostDatotype } from '~/typer/journalføring';
 
 import { isEmpty } from './validering';
 

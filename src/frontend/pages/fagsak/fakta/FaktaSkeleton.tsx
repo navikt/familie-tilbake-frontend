@@ -1,6 +1,7 @@
-import { ActionBarSkeleton } from '@komponenter/action-bar/ActionBarSkeleton';
 import { BodyShort, Heading, Skeleton, Table } from '@navikt/ds-react';
 import * as React from 'react';
+
+import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
 export const FaktaSkeleton: React.FC = () => {
     return (

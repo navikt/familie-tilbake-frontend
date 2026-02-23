@@ -1,11 +1,12 @@
-import type { BehandlingStateContextType } from '@context/BehandlingStateContext';
-import type { BehandlingDto } from '@generated';
-import type { UseUlagretEndringerReturn } from '@hooks/useUlagretEndringer';
+import type { BehandlingStateContextType } from '~/context/BehandlingStateContext';
+import type { BehandlingDto } from '~/generated';
+import type { UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
 
-import { BehandlingContext } from '@context/BehandlingContext';
-import { BehandlingStateContext } from '@context/BehandlingStateContext';
-import { useUlagretEndringer } from '@hooks/useUlagretEndringer';
 import * as React from 'react';
+
+import { BehandlingContext } from '~/context/BehandlingContext';
+import { BehandlingStateContext } from '~/context/BehandlingStateContext';
+import { useUlagretEndringer } from '~/hooks/useUlagretEndringer';
 
 import { lagBehandling } from './behandlingFactory';
 

@@ -1,6 +1,7 @@
-import { MODAL_BREDDE } from '@komponenter/meny/utils';
 import { BodyLong, Button, Modal } from '@navikt/ds-react';
 import React from 'react';
+
+import { MODAL_BREDDE } from '~/komponenter/meny/utils';
 
 type Props = {
     åpen: boolean;

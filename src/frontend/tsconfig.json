@@ -10,24 +10,7 @@
         "typeRoots": ["../../node_modules/@types", "../../node_modules", "./@types"],
         "types": ["@testing-library/jest-dom", "vitest/globals", "node"],
         "paths": {
-            "@api/*": ["api/*"],
-            "@context/*": ["context/*"],
-            "@generated": ["generated/index"],
-            "@generated/*": ["generated/*"],
-            "@generated-new": ["generated-new/index"],
-            "@generated-new/*": ["generated-new/*"],
-            "@hooks/*": ["hooks/*"],
-            "@images/*": ["images/*"],
-            "@kodeverk": ["kodeverk/index"],
-            "@kodeverk/*": ["kodeverk/*"],
-            "@komponenter/*": ["komponenter/*"],
-            "@pages/*": ["pages/*"],
-            "@stores/*": ["stores/*"],
-            "@testdata/*": ["testdata/*"],
-            "@testutils/*": ["testutils/*"],
-            "@typer/*": ["typer/*"],
-            "@utils": ["utils/index"],
-            "@utils/*": ["utils/*"]
+            "~/*": ["./*"]
         }
     },
     "exclude": [

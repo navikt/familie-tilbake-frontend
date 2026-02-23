@@ -1,14 +1,15 @@
-import type { BehandlingsstegEnum } from '@generated';
-import type { HistorikkInnslag as THistorikkInnslag } from '@typer/historikk';
+import type { BehandlingsstegEnum } from '~/generated';
+import type { HistorikkInnslag as THistorikkInnslag } from '~/typer/historikk';
 
-import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '@komponenter/ikoner';
-import { HentDokument } from '@komponenter/sidebar/HentDokument';
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
-import { Aktør, aktører, Historikkinnslagstype } from '@typer/historikk';
-import { formatterDatoOgTidstring } from '@utils';
-import { finnSideForSteg } from '@utils/sider';
 import * as React from 'react';
+
+import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '~/komponenter/ikoner';
+import { HentDokument } from '~/komponenter/sidebar/HentDokument';
+import { Aktør, aktører, Historikkinnslagstype } from '~/typer/historikk';
+import { formatterDatoOgTidstring } from '~/utils';
+import { finnSideForSteg } from '~/utils/sider';
 
 import { useHistorikk } from './HistorikkContext';
 

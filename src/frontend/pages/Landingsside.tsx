@@ -1,7 +1,8 @@
-import LandingssideImageUrl from '@images/dokumenter.svg';
-import { Image } from '@komponenter/image/Image';
 import { BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
+
+import LandingssideImageUrl from '~/images/dokumenter.svg';
+import { Image } from '~/komponenter/image/Image';
 
 export const Landingsside: React.FC = () => (
     <div className="flex items-center justify-center h-screen px-4">

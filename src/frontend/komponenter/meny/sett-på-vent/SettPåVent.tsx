@@ -1,16 +1,17 @@
-import { useBehandling } from '@context/BehandlingContext';
-import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
-import { Valideringsstatus } from '@hooks/skjema/typer';
-import { Datovelger } from '@komponenter/datovelger/Datovelger';
-import { usePåVentBehandling } from '@komponenter/modal/på-vent/PåVentContext';
 import { TimerPauseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { manuelleVenteÅrsaker, venteårsaker } from '@typer/behandling';
-import { dagensDato } from '@utils/dato';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
 import { useRef } from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { Valideringsstatus } from '~/hooks/skjema/typer';
+import { Datovelger } from '~/komponenter/datovelger/Datovelger';
+import { usePåVentBehandling } from '~/komponenter/modal/på-vent/PåVentContext';
+import { manuelleVenteÅrsaker, venteårsaker } from '~/typer/behandling';
+import { dagensDato } from '~/utils/dato';
 
 import { MODAL_BREDDE } from '../utils';
 

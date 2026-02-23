@@ -1,12 +1,13 @@
-import type { Brevmottaker } from '@typer/Brevmottaker';
+import type { Brevmottaker } from '~/typer/Brevmottaker';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useBrevmottakerApi } from '@hooks/useBrevmottakerApi';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
-import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '@typer/Brevmottaker';
 import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+
+import { useBrevmottakerApi } from '~/hooks/useBrevmottakerApi';
+import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '~/typer/Brevmottaker';
 
 import { BrukerMedUtenlandskAdresse } from './mottaker/BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './mottaker/Dødsbo';

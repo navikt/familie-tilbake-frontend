@@ -1,15 +1,16 @@
 import type { StartPåNyttHook } from './useStartPåNytt';
 
-import { FagsakContext } from '@context/FagsakContext';
 import { ActionMenu, Button } from '@navikt/ds-react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@testdata/behandlingFactory';
-import { lagFagsak } from '@testdata/fagsakFactory';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createTestQueryClient } from '@testutils/queryTestUtils';
 import * as React from 'react';
+
+import { FagsakContext } from '~/context/FagsakContext';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandlingDto } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
 
 import { StartPåNytt } from './StartPåNytt';
 

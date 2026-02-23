@@ -1,10 +1,11 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { Avsnittstype, Underavsnittstype } from '@kodeverk';
 import { BodyLong, ExpansionCard, Heading, VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
+
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { Avsnittstype, Underavsnittstype } from '~/kodeverk';
 
 import { VedtakFritekstSkjema } from './VedtakFritekstSkjema';
 

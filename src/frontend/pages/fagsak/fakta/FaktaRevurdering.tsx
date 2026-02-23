@@ -1,9 +1,10 @@
-import type { FaktaResponse } from '@typer/tilbakekrevingstyper';
+import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import { BodyShort, Detail, Heading, HGrid, VStack } from '@navikt/ds-react';
-import { tilbakekrevingsvalg } from '@typer/tilbakekrevingstyper';
-import { formatterDatostring } from '@utils';
 import * as React from 'react';
+
+import { tilbakekrevingsvalg } from '~/typer/tilbakekrevingstyper';
+import { formatterDatostring } from '~/utils';
 
 type Props = {
     fakta: FaktaResponse;

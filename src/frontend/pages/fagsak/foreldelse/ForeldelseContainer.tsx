@@ -1,11 +1,12 @@
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { ActionBar } from '@komponenter/action-bar/ActionBar';
-import { DataLastIkkeSuksess } from '@komponenter/datalast/DataLastIkkeSuksess';
 import { Alert, BodyLong, Heading, Link, VStack } from '@navikt/ds-react';
-import { RessursStatus } from '@typer/ressurs';
-import { finnDatoRelativtTilNå } from '@utils';
 import * as React from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '~/typer/ressurs';
+import { finnDatoRelativtTilNå } from '~/utils';
 
 import { ForeldelsePerioder } from './foreldelse-periode/ForeldelsePerioder';
 import { useForeldelse } from './ForeldelseContext';

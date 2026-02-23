@@ -1,11 +1,12 @@
-import type { Toast, ToastTyper } from '@komponenter/toast/typer';
-import type { Ressurs } from '@typer/ressurs';
-import type { Saksbehandler } from '@typer/saksbehandler';
+import type { Toast, ToastTyper } from '~/komponenter/toast/typer';
+import type { Ressurs } from '~/typer/ressurs';
+import type { Saksbehandler } from '~/typer/saksbehandler';
 
-import { HttpProvider, useHttp } from '@api/http/HttpProvider';
 import createUseContext from 'constate';
 import * as React from 'react';
 import { useState } from 'react';
+
+import { HttpProvider, useHttp } from '~/api/http/HttpProvider';
 
 type Info = {
     appImage: string;

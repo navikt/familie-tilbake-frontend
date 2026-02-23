@@ -1,10 +1,11 @@
-import type { HenleggelseSkjemaDefinisjon } from '@komponenter/meny/henlegg/henleggModal/HenleggModalContext';
+import type { HenleggelseSkjemaDefinisjon } from '~/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
 
-import { type Skjema } from '@hooks/skjema';
-import { PdfVisningModal } from '@komponenter/pdf-visning-modal/PdfVisningModal';
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
 import * as React from 'react';
+
+import { type Skjema } from '~/hooks/skjema';
+import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 

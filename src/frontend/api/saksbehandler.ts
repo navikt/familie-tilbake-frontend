@@ -1,4 +1,4 @@
-import type { Saksbehandler } from '@typer/saksbehandler';
+import type { Saksbehandler } from '~/typer/saksbehandler';
 
 import { preferredAxios } from './http/axios';
 

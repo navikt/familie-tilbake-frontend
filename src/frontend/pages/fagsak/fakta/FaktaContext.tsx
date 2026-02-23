@@ -1,24 +1,25 @@
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/fakta';
-import type { HendelseType, HendelseUndertype } from '@kodeverk';
-import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '@typer/api';
-import type { FaktaResponse, VurderingAvBrukersUttalelse } from '@typer/tilbakekrevingstyper';
+import type { HendelseType, HendelseUndertype } from '~/kodeverk';
+import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '~/typer/api';
+import type { FaktaResponse, VurderingAvBrukersUttalelse } from '~/typer/tilbakekrevingstyper';
 
-import { useBehandlingApi } from '@api/behandling';
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
 import { useQueryClient } from '@tanstack/react-query';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@typer/ressurs';
-import { HarBrukerUttaltSegValg } from '@typer/tilbakekrevingstyper';
+import createUseContext from 'constate';
+import { useEffect, useState } from 'react';
+
+import { useBehandlingApi } from '~/api/behandling';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
 import {
     DefinertFeilmelding,
     definerteFeilmeldinger,
     sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
-} from '@utils';
-import { useStegNavigering } from '@utils/sider';
-import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+} from '~/utils';
+import { useStegNavigering } from '~/utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 

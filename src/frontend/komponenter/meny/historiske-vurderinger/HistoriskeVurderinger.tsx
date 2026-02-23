@@ -1,9 +1,10 @@
-import { useApp } from '@context/AppContext';
-import { useBehandling } from '@context/BehandlingContext';
-import { useFagsak } from '@context/FagsakContext';
 import { ClockDashedIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
 import * as React from 'react';
+
+import { useApp } from '~/context/AppContext';
+import { useBehandling } from '~/context/BehandlingContext';
+import { useFagsak } from '~/context/FagsakContext';
 
 export const HistoriskeVurderinger: React.FC = () => {
     const { eksternBrukId, ansvarligSaksbehandler } = useBehandling();

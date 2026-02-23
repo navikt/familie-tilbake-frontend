@@ -1,10 +1,3 @@
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { useSammenslåPerioder } from '@hooks/useSammenslåPerioder';
-import { vedtaksresultater } from '@kodeverk';
-import { ActionBar } from '@komponenter/action-bar/ActionBar';
-import { DataLastIkkeSuksess } from '@komponenter/datalast/DataLastIkkeSuksess';
-import { BekreftelsesModal } from '@komponenter/modal/bekreftelse/BekreftelsesModal';
 import {
     Alert,
     BodyLong,
@@ -15,9 +8,17 @@ import {
     HStack,
     VStack,
 } from '@navikt/ds-react';
-import { RessursStatus } from '@typer/ressurs';
-import { HarBrukerUttaltSegValg } from '@typer/tilbakekrevingstyper';
 import React, { useEffect, useState } from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
+import { vedtaksresultater } from '~/kodeverk';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
+import { BekreftelsesModal } from '~/komponenter/modal/bekreftelse/BekreftelsesModal';
+import { RessursStatus } from '~/typer/ressurs';
+import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { ForhåndsvisVedtaksbrev } from './forhåndsvis-vedtaksbrev/ForhåndsvisVedtaksbrev';

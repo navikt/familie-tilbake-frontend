@@ -9,20 +9,7 @@ export default defineConfig({
     cacheDir: '.vitest-cache',
     resolve: {
         alias: {
-            '@api': resolve(frontendPath, 'api'),
-            '@context': resolve(frontendPath, 'context'),
-            '@generated': resolve(frontendPath, 'generated'),
-            '@generated-new': resolve(frontendPath, 'generated-new'),
-            '@hooks': resolve(frontendPath, 'hooks'),
-            '@images': resolve(frontendPath, 'images'),
-            '@kodeverk': resolve(frontendPath, 'kodeverk'),
-            '@komponenter': resolve(frontendPath, 'komponenter'),
-            '@pages': resolve(frontendPath, 'pages'),
-            '@stores': resolve(frontendPath, 'stores'),
-            '@testdata': resolve(frontendPath, 'testdata'),
-            '@testutils': resolve(frontendPath, 'testutils'),
-            '@typer': resolve(frontendPath, 'typer'),
-            '@utils': resolve(frontendPath, 'utils'),
+            '~': frontendPath,
         },
     },
     test: {

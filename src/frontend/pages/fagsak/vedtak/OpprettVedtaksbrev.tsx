@@ -1,15 +1,7 @@
 import type { VedtaksbrevFormData } from './schema';
-import type { Element } from '@generated-new';
 import type { FieldPath } from 'react-hook-form';
+import type { Element } from '~/generated-new';
 
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import {
-    behandlingHentVedtaksbrevOptions,
-    vedtaksbrevLagSvgVedtaksbrevMutation,
-} from '@generated-new/@tanstack/react-query.gen';
-import { ActionBar } from '@komponenter/action-bar/ActionBar';
-import { useStegNavigering } from '@utils/sider';
 import {
     BodyShort,
     Button,
@@ -28,6 +20,15 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import {
+    behandlingHentVedtaksbrevOptions,
+    vedtaksbrevLagSvgVedtaksbrevMutation,
+} from '~/generated-new/@tanstack/react-query.gen';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useStegNavigering } from '~/utils/sider';
 
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
 

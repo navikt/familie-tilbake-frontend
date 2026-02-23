@@ -1,8 +1,12 @@
-import type { BrevPayload } from '@typer/api';
+import type { BrevPayload } from '~/typer/api';
 
-import { useDokumentApi } from '@api/dokument';
-import { useBehandling } from '@context/BehandlingContext';
-import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
+import { useQueryClient } from '@tanstack/react-query';
+import createUseContext from 'constate';
+import * as React from 'react';
+
+import { useDokumentApi } from '~/api/dokument';
+import { useBehandling } from '~/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 import {
     type Avhengigheter,
     type FeltState,
@@ -10,13 +14,10 @@ import {
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '@hooks/skjema';
-import { DokumentMal } from '@kodeverk';
-import { useQueryClient } from '@tanstack/react-query';
-import { type Ressurs, RessursStatus } from '@typer/ressurs';
-import { erFeltetEmpty, hentFrontendFeilmelding, validerTekstFeltMaksLengde } from '@utils';
-import createUseContext from 'constate';
-import * as React from 'react';
+} from '~/hooks/skjema';
+import { DokumentMal } from '~/kodeverk';
+import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { erFeltetEmpty, hentFrontendFeilmelding, validerTekstFeltMaksLengde } from '~/utils';
 
 type Mottaker = {
     verdi: string;

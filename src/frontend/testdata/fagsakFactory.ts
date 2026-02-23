@@ -1,8 +1,8 @@
-import type { FagsakDto, FrontendBrukerDto } from '@generated';
+import type { FagsakDto, FrontendBrukerDto } from '~/generated';
 
-import { Fagsystem, Ytelsetype } from '@kodeverk';
-import { Kjønn } from '@typer/bruker';
-import { Målform } from '@typer/målform';
+import { Fagsystem, Ytelsetype } from '~/kodeverk';
+import { Kjønn } from '~/typer/bruker';
+import { Målform } from '~/typer/målform';
 
 export const lagFagsak = (overrides: Partial<FagsakDto> = {}): FagsakDto => ({
     eksternFagsakId: 'id-1',

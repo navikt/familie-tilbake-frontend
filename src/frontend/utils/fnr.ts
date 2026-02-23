@@ -1,4 +1,4 @@
-import { feil, type FeltState, ok } from '@hooks/skjema';
+import { feil, type FeltState, ok } from '~/hooks/skjema';
 
 import { definerteFeilmeldinger, DefinertFeilmelding, isEmpty } from './validering';
 

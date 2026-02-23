@@ -3,10 +3,11 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '@hooks/skjema';
 import { Radio, Textarea, TextField, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
+
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 

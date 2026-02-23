@@ -3,7 +3,7 @@ import type {
     BehandlingsstegEnum,
     BehandlingsstegsinfoDto,
     BehandlingsstegstatusEnum,
-} from '@generated';
+} from '~/generated';
 
 export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
     behandlingId: 'uuid-1',

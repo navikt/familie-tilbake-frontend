@@ -1,5 +1,6 @@
-import { feil, type FeltState, ok } from '@hooks/skjema';
 import { isValid, parseISO } from 'date-fns';
+
+import { feil, type FeltState, ok } from '~/hooks/skjema';
 
 import { isNumeric } from './miscUtils';
 

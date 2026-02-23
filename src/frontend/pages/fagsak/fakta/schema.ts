@@ -1,5 +1,6 @@
-import { zFritekst, zOppdaterFaktaOmFeilutbetaling, zVurdering } from '@generated-new/zod.gen';
 import { z } from 'zod';
+
+import { zFritekst, zOppdaterFaktaOmFeilutbetaling, zVurdering } from '~/generated-new/zod.gen';
 
 export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
     ...zOppdaterFaktaOmFeilutbetaling.shape,

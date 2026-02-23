@@ -1,10 +1,6 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
-import type { SynligSteg } from '@utils/sider';
+import type { SynligSteg } from '~/utils/sider';
 
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { BekreftelsesModal } from '@komponenter/modal/bekreftelse/BekreftelsesModal';
-import { Steginformasjon } from '@komponenter/steginformasjon/StegInformasjon';
 import {
     Alert,
     BodyShort,
@@ -15,10 +11,15 @@ import {
     Textarea,
     RadioGroup,
 } from '@navikt/ds-react';
-import { behandlingssteg } from '@typer/behandling';
-import { RessursStatus } from '@typer/ressurs';
-import { finnSideForSteg } from '@utils/sider';
 import React, { useEffect, useState } from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { BekreftelsesModal } from '~/komponenter/modal/bekreftelse/BekreftelsesModal';
+import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
+import { behandlingssteg } from '~/typer/behandling';
+import { RessursStatus } from '~/typer/ressurs';
+import { finnSideForSteg } from '~/utils/sider';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {

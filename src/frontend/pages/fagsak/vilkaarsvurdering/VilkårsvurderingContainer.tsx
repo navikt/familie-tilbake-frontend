@@ -1,7 +1,8 @@
-import { DataLastIkkeSuksess } from '@komponenter/datalast/DataLastIkkeSuksess';
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
-import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
+
+import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '~/typer/ressurs';
 
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';

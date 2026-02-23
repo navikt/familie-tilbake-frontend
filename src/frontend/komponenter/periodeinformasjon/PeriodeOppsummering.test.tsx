@@ -1,8 +1,9 @@
 import type { RenderResult } from '@testing-library/react';
 
-import { HendelseType } from '@kodeverk';
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
+
+import { HendelseType } from '~/kodeverk';
 
 import { PeriodeOppsummering } from './PeriodeOppsummering';
 

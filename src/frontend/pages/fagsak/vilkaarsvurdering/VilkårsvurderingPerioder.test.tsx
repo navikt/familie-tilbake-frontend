@@ -1,33 +1,34 @@
-import type { BehandlingApiHook } from '@api/behandling';
 import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { Ressurs } from '@typer/ressurs';
+import type { BehandlingApiHook } from '~/api/behandling';
+import type { Ressurs } from '~/typer/ressurs';
 import type {
     VilkårsvurderingPeriode,
     VilkårsvurderingResponse,
-} from '@typer/tilbakekrevingstyper';
+} from '~/typer/tilbakekrevingstyper';
 
-import { FagsakContext } from '@context/FagsakContext';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
-import { lagBehandling } from '@testdata/behandlingFactory';
-import { lagFagsak } from '@testdata/fagsakFactory';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import * as React from 'react';
+import { vi } from 'vitest';
+
+import { FagsakContext } from '~/context/FagsakContext';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
 import {
     lagVilkårsvurderingPeriode,
     lagVilkårsvurderingResponse,
-} from '@testdata/vilkårsvurderingFactory';
-import { render } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { createTestQueryClient } from '@testutils/queryTestUtils';
-import { RessursStatus } from '@typer/ressurs';
-import * as React from 'react';
-import { vi } from 'vitest';
+} from '~/testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { RessursStatus } from '~/typer/ressurs';
 
 import { VilkårsvurderingProvider } from './VilkårsvurderingContext';
 import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';
 
 const mockUseBehandlingApi = vi.fn();
-vi.mock('@api/behandling', () => ({
+vi.mock('~/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 

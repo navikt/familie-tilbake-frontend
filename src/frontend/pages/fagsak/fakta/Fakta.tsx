@@ -1,14 +1,15 @@
-import { useBehandling } from '@context/BehandlingContext';
+import { Heading, Tag, VStack } from '@navikt/ds-react';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
+import classNames from 'classnames';
+import * as React from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
 import {
     behandlingFaktaOptions,
     behandlingFaktaQueryKey,
     behandlingOppdaterFaktaMutation,
-} from '@generated-new/@tanstack/react-query.gen';
-import { Heading, Tag, VStack } from '@navikt/ds-react';
-import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
-import { formatterDatostring } from '@utils';
-import classNames from 'classnames';
-import * as React from 'react';
+} from '~/generated-new/@tanstack/react-query.gen';
+import { formatterDatostring } from '~/utils';
 
 import { FaktaSkjema } from './FaktaSkjema';
 

@@ -1,24 +1,25 @@
-import type { Http } from '@api/http/HttpProvider';
+import type { Http } from '~/api/http/HttpProvider';
 
-import { Feil } from '@api/feil';
-import { FagsakContext } from '@context/FagsakContext';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { TestBehandlingProvider } from '@testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@testdata/behandlingFactory';
-import { lagFagsak } from '@testdata/fagsakFactory';
 import { renderHook } from '@testing-library/react';
-import { createTestQueryClient } from '@testutils/queryTestUtils';
-import { RessursStatus } from '@typer/ressurs';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
+
+import { Feil } from '~/api/feil';
+import { FagsakContext } from '~/context/FagsakContext';
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandlingDto } from '~/testdata/behandlingFactory';
+import { lagFagsak } from '~/testdata/fagsakFactory';
+import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { RessursStatus } from '~/typer/ressurs';
 
 import { useStartPåNytt } from './useStartPåNytt';
 
 const mockRequest = vi.fn();
 const behandlingId = '123';
 
-vi.mock('@api/http/HttpProvider', () => ({
+vi.mock('~/api/http/HttpProvider', () => ({
     useHttp: (): Http => ({
         systemetLaster: () => false,
         request: mockRequest,

@@ -1,9 +1,10 @@
-import type { ForhåndsvarselDto, Varselbrevtekst } from '@generated';
 import type { UseQueryResult } from '@tanstack/react-query';
+import type { ForhåndsvarselDto, Varselbrevtekst } from '~/generated';
 
-import { useBehandling } from '@context/BehandlingContext';
-import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '@generated';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '~/generated';
 
 export type UseForhåndsvarselQueriesReturn = {
     readonly varselbrevteksterQuery: UseQueryResult<Varselbrevtekst | undefined>;

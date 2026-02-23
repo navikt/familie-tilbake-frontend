@@ -1,11 +1,12 @@
-import type { Journalpost } from '@typer/journalføring';
+import type { Journalpost } from '~/typer/journalføring';
 
-import { useHttp } from '@api/http/HttpProvider';
-import { useBehandling } from '@context/BehandlingContext';
-import { Menysider } from '@komponenter/sidebar/Menykontainer';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@typer/ressurs';
 import createUseContext from 'constate';
 import { useState, useEffect } from 'react';
+
+import { useHttp } from '~/api/http/HttpProvider';
+import { useBehandling } from '~/context/BehandlingContext';
+import { Menysider } from '~/komponenter/sidebar/Menykontainer';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '~/typer/ressurs';
 
 type Props = {
     valgtMenyside: Menysider | null;

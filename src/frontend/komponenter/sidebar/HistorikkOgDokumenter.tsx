@@ -1,4 +1,3 @@
-import { useBehandling } from '@context/BehandlingContext';
 import {
     ClockDashedIcon,
     EnvelopeClosedIcon,
@@ -8,6 +7,8 @@ import {
 import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
 import { useState } from 'react';
+
+import { useBehandling } from '~/context/BehandlingContext';
 
 import { Menysider, MenySideInnhold } from './Menykontainer';
 

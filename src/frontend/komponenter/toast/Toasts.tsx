@@ -1,5 +1,6 @@
-import { useApp } from '@context/AppContext';
 import React from 'react';
+
+import { useApp } from '~/context/AppContext';
 
 import { Toast } from './Toast';
 

@@ -1,25 +1,21 @@
 import type { OppdaterFaktaOmFeilutbetalingSchema } from './schema';
+import type { AxiosError } from 'axios';
+import type { SubmitHandler } from 'react-hook-form';
 import type {
+    BehandlingOppdaterFaktaData,
+    BehandlingOppdaterFaktaError,
+    BehandlingOppdaterFaktaResponse,
     BestemmelseEllerGrunnlag,
     FaktaOmFeilutbetaling,
     FaktaPeriode,
     MuligeRettsligGrunnlag,
-    BehandlingOppdaterFaktaData,
-    BehandlingOppdaterFaktaError,
     OppdaterFaktaOmFeilutbetaling,
     OppdaterFaktaPeriode,
-    BehandlingOppdaterFaktaResponse,
     Options,
-} from '@generated-new';
-import type { AxiosError } from 'axios';
-import type { SubmitHandler } from 'react-hook-form';
+} from '~/generated-new';
 
-import { useBehandling } from '@context/BehandlingContext';
-import { useBehandlingState } from '@context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '@generated/@tanstack/react-query.gen';
 import { zodResolver } from '@hookform/resolvers/zod';
 // import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
-import { ActionBar } from '@komponenter/action-bar/ActionBar';
 import {
     // Button,
     DatePicker,
@@ -34,13 +30,18 @@ import {
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { formatterDatostring } from '@utils';
-import { dateTilIsoDatoString } from '@utils/dato';
-import { useStegNavigering } from '@utils/sider';
 import { parseISO } from 'date-fns';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+
+import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { formatterDatostring } from '~/utils';
+import { dateTilIsoDatoString } from '~/utils/dato';
+import { useStegNavigering } from '~/utils/sider';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 
