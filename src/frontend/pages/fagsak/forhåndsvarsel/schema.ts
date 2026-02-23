@@ -172,10 +172,10 @@ export const getOpprettValues = (
 const unntakSchema = z
     .object({
         skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
-        begrunnelseForUnntak: zBegrunnelseForUnntakEnum.optional(),
+        begrunnelseForUnntak: zBegrunnelseForUnntakEnum.nullable().or(z.literal('')),
         beskrivelse: z.string().min(1, 'Du må fylle inn en verdi').max(2000),
     })
-    .refine(data => data.begrunnelseForUnntak !== undefined, {
+    .refine(data => data.begrunnelseForUnntak !== null && data.begrunnelseForUnntak !== '', {
         message: 'Du må velge en begrunnelse for unntak fra forhåndsvarsel',
         path: ['begrunnelseForUnntak'],
     });
