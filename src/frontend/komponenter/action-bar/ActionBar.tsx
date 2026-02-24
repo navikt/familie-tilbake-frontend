@@ -1,6 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
-import classNames from 'classnames';
 import React from 'react';
 
 import { Behandlingsmeny } from '~/komponenter/meny/Meny';
@@ -44,9 +43,7 @@ const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
     return (
         <nav
             /* Hacker plasseringen til pga at den ikke er på behandlingcontainer nivå men nede i stegcontainerene som styrer hvor startposisjon er */
-            className={classNames(
-                'flex flex-row fixed bottom-4 bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between z-10 flex-nowrap ax-lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)] min-w-96 -ml-6'
-            )}
+            className="flex flex-row fixed bottom-4 bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between z-10 flex-nowrap ax-lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)] min-w-96 -ml-6"
             aria-label="Meny og behandlingens steg"
         >
             <Behandlingsmeny />
