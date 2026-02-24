@@ -40,7 +40,8 @@ export const VedtakContainer: React.FC = () => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
+    const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere, erNyModell } =
+        useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
 
@@ -198,7 +199,7 @@ export const VedtakContainer: React.FC = () => {
                     åpen={visBekreftelsesmodal}
                     onLukk={() => settVisBekreftelsesmodal(false)}
                     overskrift="Send til godkjenning"
-                    brødtekst="Denne handlingen kan ikke angres."
+                    brødtekst={erNyModell ? 'Denne handlingen kan ikke angres.' : undefined}
                     bekreftTekst="Send til godkjenning"
                     onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
                     laster={senderInn}

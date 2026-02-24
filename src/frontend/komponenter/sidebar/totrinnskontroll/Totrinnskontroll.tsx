@@ -183,7 +183,7 @@ export const Totrinnskontroll: React.FC = () => {
                     åpen={visBekreftelsesmodal}
                     onLukk={() => settVisBekreftelsesmodal(false)}
                     overskrift="Godkjenn vedtaket"
-                    brødtekst="Denne handlingen kan ikke angres."
+                    brødtekst={erNyModell ? 'Denne handlingen kan ikke angres.' : undefined}
                     bekreftTekst="Godkjenn vedtaket"
                     onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
                     laster={senderInn}

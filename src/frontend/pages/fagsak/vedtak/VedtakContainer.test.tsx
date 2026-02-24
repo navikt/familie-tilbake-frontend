@@ -818,7 +818,7 @@ describe('VedtakContainer', () => {
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
         const { getByText, getByRole, queryByRole } = renderVedtakContainer(
-            lagBehandling({ kanEndres: true })
+            lagBehandling({ kanEndres: true, erNyModell: true })
         );
 
         await waitFor(() => {

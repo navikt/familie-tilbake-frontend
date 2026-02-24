@@ -7,7 +7,7 @@ type Props = {
     åpen: boolean;
     onLukk: () => void;
     overskrift: string;
-    brødtekst: string;
+    brødtekst: string | undefined;
     bekreftTekst: string;
     onBekreft: () => void;
     laster?: boolean;
@@ -30,7 +30,7 @@ export const BekreftelsesModal: React.FC<Props> = ({
             className={MODAL_BREDDE}
         >
             <Modal.Body className="flex flex-col gap-2">
-                <BodyLong>{brødtekst}</BodyLong>
+                {brødtekst && <BodyLong>{brødtekst}</BodyLong>}
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={onBekreft} loading={laster} disabled={laster}>

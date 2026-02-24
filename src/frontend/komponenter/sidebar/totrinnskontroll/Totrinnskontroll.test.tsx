@@ -286,7 +286,7 @@ describe('Totrinnskontroll', () => {
         });
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true })
+            lagBehandling({ kanEndres: true, erNyModell: true })
         );
 
         await waitFor(() => {
