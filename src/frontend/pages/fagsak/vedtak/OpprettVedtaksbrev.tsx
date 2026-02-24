@@ -126,7 +126,7 @@ export const OpprettVedtaksbrev: React.FC = () => {
                 <VStack className="col-span-1 flex-1 min-h-0 gap-6">
                     <HStack className="flex justify-between">
                         <Heading size="small">Lag vedtaksbrev</Heading>
-                        {!vedtaksbrevData.sendtDato ? (
+                        {vedtaksbrevData.sendtDato ? (
                             <Tag data-color="success" size="small" variant="moderate">
                                 Sendt: {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sendtDato))}
                             </Tag>
