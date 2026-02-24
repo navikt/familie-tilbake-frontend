@@ -1,6 +1,6 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { FieldPath } from 'react-hook-form';
-import type { Element } from '~/generated-new';
+import type { PakrevdBegrunnelse, RotElement } from '~/generated-new';
 
 import {
     Button,
@@ -18,7 +18,7 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -45,7 +45,7 @@ const ElementTextarea: React.FC<
                 <Textarea
                     {...props}
                     {...restField}
-                    value={elementArrayTilTekst(value as Element[])}
+                    value={elementArrayTilTekst(value as RotElement[])}
                     onChange={e => restField.onChange(tekstTilElementArray(e.target.value))}
                     size="small"
                     maxLength={3000}
@@ -125,9 +125,9 @@ export const OpprettVedtaksbrev: React.FC = () => {
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
-                <VStack className="col-span-1 flex-1 min-h-0 gap-4">
+                <VStack className="col-span-1 flex-1 min-h-0 gap-6">
                     <HStack className="flex justify-between">
-                        <Heading size="small">Opprett vedtaksbrev</Heading>
+                        <Heading size="small">Lag vedtaksbrev</Heading>
                         {!vedtaksbrevData.sendtDato ? (
                             <Tag data-color="success" size="small" variant="moderate">
                                 Sendt: {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sendtDato))}
@@ -143,14 +143,10 @@ export const OpprettVedtaksbrev: React.FC = () => {
                     <FormProvider {...methods}>
                         <ElementTextarea
                             name="hovedavsnitt.underavsnitt"
-                            label="Brevets innledning"
+                            label={methods.getValues('hovedavsnitt').tittel}
                         />
-                        {methods.getValues('avsnitt').map((avsnitt, indeks) => (
-                            <ElementTextarea
-                                key={avsnitt.tittel}
-                                name={`avsnitt.${indeks}.underavsnitt`}
-                                label={avsnitt.tittel}
-                            />
+                        {methods.getValues('avsnitt').map((avsnitt, index) => (
+                            <Avsnitt key={avsnitt.id} avsnitt={avsnitt} avsnittIndex={index} />
                         ))}
                     </FormProvider>
                 </VStack>
@@ -230,5 +226,55 @@ export const OpprettVedtaksbrev: React.FC = () => {
                 onForrige={navigerTilForrige}
             />
         </>
+    );
+};
+
+const Avsnitt: React.FC<{
+    avsnitt: VedtaksbrevFormData['avsnitt'][number];
+    avsnittIndex: number;
+}> = ({ avsnitt, avsnittIndex }) => {
+    const { control } = useFormContext<VedtaksbrevFormData>();
+    return (
+        <VStack gap="space-24">
+            <Controller<VedtaksbrevFormData>
+                control={control}
+                name={`avsnitt.${avsnittIndex}.underavsnitt`}
+                render={({ field: { value, onChange, ...restField } }) => {
+                    const elementer = value as RotElement[];
+                    const rentekstTekst = elementArrayTilTekst(elementer);
+                    return (
+                        <Textarea
+                            {...restField}
+                            label={avsnitt.tittel}
+                            value={rentekstTekst}
+                            onChange={e => {
+                                const nyeRentekst = tekstTilElementArray(e.target.value);
+                                const andreElementer = elementer.filter(
+                                    ({ type }) => type !== 'rentekst'
+                                );
+                                onChange([...nyeRentekst, ...andreElementer]);
+                            }}
+                            size="small"
+                            maxLength={3000}
+                            minRows={3}
+                            resize
+                        />
+                    );
+                }}
+            />
+
+            {avsnitt.underavsnitt.map((element, elementIndex) => {
+                if (element.type !== 'påkrevd_begrunnelse') return null;
+                const påkrevdBegrunnelse = element as PakrevdBegrunnelse;
+                return (
+                    <ElementTextarea
+                        key={påkrevdBegrunnelse.tittel}
+                        name={`avsnitt.${avsnittIndex}.underavsnitt.${elementIndex}.underavsnitt`}
+                        label={påkrevdBegrunnelse.tittel}
+                        description={påkrevdBegrunnelse.forklaring}
+                    />
+                );
+            })}
+        </VStack>
     );
 };
