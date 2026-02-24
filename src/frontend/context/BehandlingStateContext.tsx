@@ -120,7 +120,9 @@ export const BehandlingStateProvider = ({ children }: Props): React.ReactElement
 
     const harVærtPåFatteVedtakSteget = (): boolean =>
         behandling.behandlingsstegsinfo.some(
-            ({ behandlingssteg }) => behandlingssteg === 'FATTE_VEDTAK'
+            stegInfo =>
+                stegInfo.behandlingssteg === 'FATTE_VEDTAK' &&
+                stegInfo.behandlingsstegstatus !== 'TILBAKEFØRT'
         );
 
     const contextValue: BehandlingStateContextType = {

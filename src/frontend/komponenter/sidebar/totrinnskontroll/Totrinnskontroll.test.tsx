@@ -99,15 +99,10 @@ describe('Totrinnskontroll', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Godkjenn vedtaket',
+                    name: 'Godkjenn vedtak',
                 })
-            ).toBeDisabled();
+            ).toBeInTheDocument();
         });
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
         await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
@@ -115,13 +110,13 @@ describe('Totrinnskontroll', () => {
 
         expect(
             getByRole('button', {
-                name: 'Godkjenn vedtaket',
+                name: 'Godkjenn vedtak',
             })
-        ).toBeEnabled();
+        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
-                name: 'Godkjenn vedtaket',
+                name: 'Godkjenn vedtak',
             })
         );
     });
@@ -152,43 +147,34 @@ describe('Totrinnskontroll', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Godkjenn vedtaket',
+                    name: 'Godkjenn vedtak',
                 })
-            ).toBeDisabled();
+            ).toBeInTheDocument();
         });
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
         await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
         await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
         await user.click(getByTestId('stegetGodkjent_idx_steg_3-false'));
 
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
+        await waitFor(() => {
+            expect(
+                getByRole('button', {
+                    name: 'Returner til saksbehandler',
+                })
+            ).toBeInTheDocument();
+        });
 
         await user.type(
             getByRole('textbox', {
-                name: 'Begrunnelse',
+                name: /Begrunn hvorfor steget må vurderes på nytt/i,
             }),
             'Vurder på nytt!!!!'
         );
 
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeEnabled();
-
         await user.click(
             getByRole('button', {
-                name: 'Send til saksbehandler',
+                name: 'Returner til saksbehandler',
             })
         );
     });
@@ -225,7 +211,7 @@ describe('Totrinnskontroll', () => {
         ).not.toBeInTheDocument();
         expect(
             queryByRole('button', {
-                name: 'Send til saksbehandler',
+                name: 'Returner til saksbehandler',
             })
         ).not.toBeInTheDocument();
 
@@ -266,7 +252,7 @@ describe('Totrinnskontroll', () => {
         ).not.toBeInTheDocument();
         expect(
             queryByRole('button', {
-                name: 'Send til saksbehandler',
+                name: 'Returner til saksbehandler',
             })
         ).not.toBeInTheDocument();
 
@@ -301,7 +287,7 @@ describe('Totrinnskontroll', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Godkjenn vedtaket',
+                name: 'Godkjenn vedtak',
             })
         );
 
@@ -340,7 +326,7 @@ describe('Totrinnskontroll', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Godkjenn vedtaket',
+                name: 'Godkjenn vedtak',
             })
         );
 

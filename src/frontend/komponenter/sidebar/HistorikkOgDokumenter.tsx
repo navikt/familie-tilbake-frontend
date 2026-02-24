@@ -6,7 +6,7 @@ import {
 } from '@navikt/aksel-icons';
 import { ToggleGroup } from '@navikt/ds-react';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -15,20 +15,54 @@ import { Menysider, MenySideInnhold } from './Menykontainer';
 
 export const HistorikkOgDokumenter: React.FC = () => {
     const { erNyModell } = useBehandling();
-    const { harVærtPåFatteVedtakSteget } = useBehandlingState();
+    const { harVærtPåFatteVedtakSteget, aktivtSteg } = useBehandlingState();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
+    const aktivtStegErFatteVedtak = aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK';
 
-    const valgtSideGittModell = !erNyModell ? Menysider.Historikk : Menysider.Dokumenter;
-    const [valgtSide, setValgtSide] = useState(
-        værtPåFatteVedtakSteget ? Menysider.Totrinn : valgtSideGittModell
+    const tilgjengeligeFaner = useMemo(() => {
+        const faner: Menysider[] = [];
+        if (!erNyModell) faner.push(Menysider.Historikk);
+        faner.push(Menysider.Dokumenter);
+        if (!erNyModell) faner.push(Menysider.SendBrev);
+        if (værtPåFatteVedtakSteget) faner.push(Menysider.Totrinn);
+        return faner;
+    }, [erNyModell, værtPåFatteVedtakSteget]);
+
+    const forrigeTilgjengeligeFaner = useRef(tilgjengeligeFaner);
+
+    const utledStandardfane = (): Menysider => {
+        if (aktivtStegErFatteVedtak) return Menysider.Totrinn;
+        if (erNyModell) return Menysider.Dokumenter;
+        return Menysider.Historikk;
+    };
+
+    const standardFane = utledStandardfane();
+    const [valgtSide, setValgtSide] = useState(standardFane);
+
+    const onFanerEndret = useEffectEvent(
+        (nåværendeFaner: Menysider[], forrigeFaner: Menysider[]) => {
+            const nyFane = nåværendeFaner.find(fane => !forrigeFaner.includes(fane));
+            if (nyFane) {
+                setValgtSide(nyFane);
+            }
+        }
     );
+
+    useEffect(() => {
+        onFanerEndret(tilgjengeligeFaner, forrigeTilgjengeligeFaner.current);
+        forrigeTilgjengeligeFaner.current = tilgjengeligeFaner;
+    }, [tilgjengeligeFaner]);
+
+    const aktivSide = tilgjengeligeFaner.includes(valgtSide) ? valgtSide : standardFane;
+
     const skalViseToggleGroup = !erNyModell || værtPåFatteVedtakSteget;
+
     return (
         <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
             {skalViseToggleGroup && (
                 <ToggleGroup
                     data-color="neutral"
-                    value={valgtSide}
+                    value={aktivSide}
                     onChange={value => setValgtSide(value as Menysider)}
                     size="small"
                     fill
@@ -58,7 +92,7 @@ export const HistorikkOgDokumenter: React.FC = () => {
                     )}
                 </ToggleGroup>
             )}
-            <MenySideInnhold valgtMenyside={valgtSide} />
+            <MenySideInnhold valgtMenyside={aktivSide} />
         </div>
     );
 };

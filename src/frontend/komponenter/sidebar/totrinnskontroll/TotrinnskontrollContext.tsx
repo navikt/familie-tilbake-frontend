@@ -43,7 +43,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
     const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
     const [erLesevisning, settErLesevisning] = useState<boolean>(false);
-    const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
     const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
     const [senderInn, settSenderInn] = useState<boolean>(false);
     const [fatteVedtakRespons, settFatteVedtakRespons] = useState<Ressurs<string>>();
@@ -94,9 +93,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                     totrinn.harFeilIBegrunnelse ||
                     (totrinn.godkjent === OptionIkkeGodkjent && !totrinn.begrunnelse)
             );
+        const harNoenIkkeGodkjent = skjemaData.some(
+            totrinn => totrinn.godkjent === OptionIkkeGodkjent
+        );
         settDisableBekreft(stegIkkeVurdert || harValideringsFeil);
-        settSendTilSaksbehandler(!stegIkkeVurdert && !harValideringsFeil && !alleGodkjent);
-    }, [skjemaData, nonUsedKey]);
+        settSendTilSaksbehandler(harNoenIkkeGodkjent);
+    }, [skjemaData]);
 
     const hentTotrinnkontroll = (): void => {
         settTotrinnkontroll(byggHenterRessurs());
@@ -112,34 +114,29 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     };
 
     const oppdaterGodkjenning = (stegIndex: string, verdi: TotrinnGodkjenningOption): void => {
-        const totrinnsSteg = skjemaData;
-        const ttsIndex = totrinnsSteg.findIndex(steg => steg.index === stegIndex);
-        const steg = totrinnsSteg.find(steg => steg.index === stegIndex);
-        if (steg) {
-            totrinnsSteg.splice(ttsIndex, 1, {
-                ...steg,
-                godkjent: verdi,
-            });
-            settSkjemaData(totrinnsSteg);
-            settNonUsedKey(Date.now().toString());
-        }
+        settSkjemaData(prev =>
+            prev.map(steg =>
+                steg.index === stegIndex
+                    ? { ...steg, godkjent: verdi, feilmelding: undefined }
+                    : steg
+            )
+        );
     };
 
     const oppdaterBegrunnelse = (stegIndex: string, verdi: string): void => {
-        const totrinnsSteg = skjemaData;
-        const ttsIndex = totrinnsSteg.findIndex(steg => steg.index === stegIndex);
-        const steg = totrinnsSteg.find(steg => steg.index === stegIndex);
         const feilmelding = validerTekst2000(verdi);
-        if (steg) {
-            totrinnsSteg.splice(ttsIndex, 1, {
-                ...steg,
-                begrunnelse: verdi,
-                harFeilIBegrunnelse: !!feilmelding,
-                begrunnelseFeilmelding: feilmelding || undefined,
-            });
-            settSkjemaData(totrinnsSteg);
-            settNonUsedKey(Date.now().toString());
-        }
+        settSkjemaData(prev =>
+            prev.map(steg =>
+                steg.index === stegIndex
+                    ? {
+                          ...steg,
+                          begrunnelse: verdi,
+                          harFeilIBegrunnelse: !!feilmelding,
+                          begrunnelseFeilmelding: feilmelding || undefined,
+                      }
+                    : steg
+            )
+        );
     };
 
     const validerToTrinn = (): boolean => {
@@ -164,7 +161,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
             };
         });
         settSkjemaData(nySkjemaData);
-        settNonUsedKey(Date.now().toString());
         return !harFeil;
     };
 
@@ -269,11 +265,11 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         skjemaData,
         oppdaterGodkjenning,
         oppdaterBegrunnelse,
+        validerToTrinn,
         sendInnSkjema,
         disableBekreft,
         sendTilSaksbehandler,
         senderInn,
-        nonUsedKey,
         fatteVedtakRespons,
         angreSendTilBeslutter,
         feilmelding,
