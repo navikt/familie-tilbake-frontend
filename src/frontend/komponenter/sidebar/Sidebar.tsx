@@ -14,8 +14,7 @@ type Props = {
 };
 
 export const Sidebar: React.FC<Props> = ({ dialogRef }) => {
-    const { harVærtPåFatteVedtakSteget, ventegrunn } = useBehandlingState();
-    const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
+    const { ventegrunn } = useBehandlingState();
 
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 1024px)');
@@ -47,7 +46,7 @@ export const Sidebar: React.FC<Props> = ({ dialogRef }) => {
                 <div className="gap-4 flex flex-col flex-1 min-h-0">
                     <Faktaboks />
                     <BrukerInformasjon />
-                    <HistorikkOgDokumenter værtPåFatteVedtakSteget={værtPåFatteVedtakSteget} />
+                    <HistorikkOgDokumenter />
                 </div>
             </aside>
 
@@ -61,7 +60,7 @@ export const Sidebar: React.FC<Props> = ({ dialogRef }) => {
                 <Modal.Body className="flex flex-col gap-4">
                     <Faktaboks />
                     <BrukerInformasjon />
-                    <HistorikkOgDokumenter værtPåFatteVedtakSteget={værtPåFatteVedtakSteget} />
+                    <HistorikkOgDokumenter />
                 </Modal.Body>
             </Modal>
         </>

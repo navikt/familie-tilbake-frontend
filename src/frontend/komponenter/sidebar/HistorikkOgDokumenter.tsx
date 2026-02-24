@@ -9,15 +9,15 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingState } from '~/context/BehandlingStateContext';
 
 import { Menysider, MenySideInnhold } from './Menykontainer';
 
-type Props = {
-    værtPåFatteVedtakSteget: boolean;
-};
-
-export const HistorikkOgDokumenter: React.FC<Props> = ({ værtPåFatteVedtakSteget }) => {
+export const HistorikkOgDokumenter: React.FC = () => {
     const { erNyModell } = useBehandling();
+    const { harVærtPåFatteVedtakSteget } = useBehandlingState();
+    const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
+
     const valgtSideGittModell = !erNyModell ? Menysider.Historikk : Menysider.Dokumenter;
     const [valgtSide, setValgtSide] = useState(
         værtPåFatteVedtakSteget ? Menysider.Totrinn : valgtSideGittModell
