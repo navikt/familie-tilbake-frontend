@@ -18,7 +18,7 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import classNames from 'classnames';
 import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -38,21 +38,19 @@ const ElementTextarea: React.FC<
         name: FieldPath<VedtaksbrevFormData>;
     }
 > = ({ name, ...props }) => {
+    const { setValue } = useFormContext<VedtaksbrevFormData>();
+    const value = useWatch<VedtaksbrevFormData>({ name });
+
     return (
-        <Controller<VedtaksbrevFormData>
+        <Textarea
+            {...props}
             name={name}
-            render={({ field: { value, ...restField } }) => (
-                <Textarea
-                    {...props}
-                    {...restField}
-                    value={elementArrayTilTekst(value as RotElement[])}
-                    onChange={e => restField.onChange(tekstTilElementArray(e.target.value))}
-                    size="small"
-                    maxLength={3000}
-                    minRows={3}
-                    resize
-                />
-            )}
+            value={elementArrayTilTekst(value as RotElement[])}
+            onChange={e => setValue(name, tekstTilElementArray(e.target.value) as never)}
+            size="small"
+            maxLength={3000}
+            minRows={3}
+            resize
         />
     );
 };
@@ -233,34 +231,26 @@ const Avsnitt: React.FC<{
     avsnitt: VedtaksbrevFormData['avsnitt'][number];
     avsnittIndex: number;
 }> = ({ avsnitt, avsnittIndex }) => {
-    const { control } = useFormContext<VedtaksbrevFormData>();
+    const name = `avsnitt.${avsnittIndex}.underavsnitt` as FieldPath<VedtaksbrevFormData>;
+    const { setValue } = useFormContext<VedtaksbrevFormData>();
+    const value = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
+    const rentekstTekst = elementArrayTilTekst(value);
+
     return (
-        <VStack gap="space-24">
-            <Controller<VedtaksbrevFormData>
-                control={control}
-                name={`avsnitt.${avsnittIndex}.underavsnitt`}
-                render={({ field: { value, onChange, ...restField } }) => {
-                    const elementer = value as RotElement[];
-                    const rentekstTekst = elementArrayTilTekst(elementer);
-                    return (
-                        <Textarea
-                            {...restField}
-                            label={avsnitt.tittel}
-                            value={rentekstTekst}
-                            onChange={e => {
-                                const nyeRentekst = tekstTilElementArray(e.target.value);
-                                const andreElementer = elementer.filter(
-                                    ({ type }) => type !== 'rentekst'
-                                );
-                                onChange([...nyeRentekst, ...andreElementer]);
-                            }}
-                            size="small"
-                            maxLength={3000}
-                            minRows={3}
-                            resize
-                        />
-                    );
+        <>
+            <Textarea
+                name={name}
+                label={avsnitt.tittel}
+                value={rentekstTekst}
+                onChange={e => {
+                    const nyeRentekst = tekstTilElementArray(e.target.value);
+                    const andreElementer = value.filter(({ type }) => type !== 'rentekst');
+                    setValue(name, [...nyeRentekst, ...andreElementer] as never);
                 }}
+                size="small"
+                maxLength={3000}
+                minRows={3}
+                resize
             />
 
             {avsnitt.underavsnitt.map((element, elementIndex) => {
@@ -275,6 +265,6 @@ const Avsnitt: React.FC<{
                     />
                 );
             })}
-        </VStack>
+        </>
     );
 };
