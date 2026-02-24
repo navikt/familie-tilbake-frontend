@@ -38,3 +38,9 @@ export const isoStringTilDate = (isoDatoString: IsoDatoString): Date => {
 
     return dato;
 };
+
+/** Får inn f.eks. 2026-02-27T12:34:56Z som gir 27.02.2026 kl. 12:34 */
+export const fraIsoStringTilDatoOgKlokkeslett = (isoDatoString: IsoDatoString): string => {
+    const dato = isoStringTilDate(isoDatoString);
+    return format(dato, "dd.MM.yyyy 'kl'. HH:mm");
+};

@@ -28,6 +28,7 @@ import {
 } from '~/generated-new/@tanstack/react-query.gen';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
+import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 import { useStegNavigering } from '~/utils/sider';
 
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
@@ -127,15 +128,14 @@ export const OpprettVedtaksbrev: React.FC = () => {
                 <VStack className="col-span-1 flex-1 min-h-0 gap-4">
                     <HStack className="flex justify-between">
                         <Heading size="small">Opprett vedtaksbrev</Heading>
-                        {vedtaksbrevData.sendtDato ? (
-                            <Tag data-color="success" size="small">
+                        {!vedtaksbrevData.sendtDato ? (
+                            <Tag data-color="success" size="small" variant="moderate">
                                 Sendt: {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sendtDato))}
                             </Tag>
                         ) : (
-                            <Tag data-color="info" size="small">
-                                Sist oppdatert:{' '}
-                                {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sistOppdatert))}{' '}
-                                {/* Klokkeslett? */}
+                            <Tag data-color="info" size="small" variant="moderate">
+                                Oppdatert:{' '}
+                                {fraIsoStringTilDatoOgKlokkeslett(vedtaksbrevData.sistOppdatert)}
                             </Tag>
                         )}
                     </HStack>
