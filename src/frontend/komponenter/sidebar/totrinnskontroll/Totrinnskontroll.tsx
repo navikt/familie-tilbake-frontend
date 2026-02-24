@@ -2,11 +2,11 @@ import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 import type { SynligSteg } from '~/utils/sider';
 
 import {
-    Alert,
     BodyShort,
     Button,
     Heading,
     Link,
+    LocalAlert,
     Radio,
     Textarea,
     RadioGroup,
@@ -69,7 +69,11 @@ export const Totrinnskontroll: React.FC = () => {
             </Heading>
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable flex flex-col gap-2">
                 {skalViseFeilmelding && (
-                    <Alert variant="error">{fatteVedtakRespons.frontendFeilmelding}</Alert>
+                    <LocalAlert status="error">
+                        <LocalAlert.Content>
+                            {fatteVedtakRespons.frontendFeilmelding}
+                        </LocalAlert.Content>
+                    </LocalAlert>
                 )}
                 {!erLesevisning && (
                     <Steginformasjon
@@ -82,7 +86,11 @@ export const Totrinnskontroll: React.FC = () => {
                         <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
                             Angre sendt til beslutter
                         </Button>
-                        {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
+                        {feilmelding && (
+                            <LocalAlert status="error">
+                                <LocalAlert.Content>{feilmelding}</LocalAlert.Content>
+                            </LocalAlert>
+                        )}
                     </div>
                 )}
                 {skjemaData.map(totrinnSteg => {

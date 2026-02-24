@@ -1,4 +1,4 @@
-import { Alert, BodyShort, Label } from '@navikt/ds-react';
+import { BodyShort, Label, LocalAlert } from '@navikt/ds-react';
 import * as React from 'react';
 
 type Props = {
@@ -8,9 +8,9 @@ type Props = {
 
 export const Steginformasjon: React.FC<Props> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
-        <Alert variant="info" size="small">
-            {infotekst}
-        </Alert>
+        <LocalAlert status="announcement">
+            <LocalAlert.Content>{infotekst}</LocalAlert.Content>
+        </LocalAlert>
     ) : (
         <p className="flex flex-row gap-2">
             <Label size="small">Behandlet:</Label> <BodyShort size="small">{infotekst}</BodyShort>

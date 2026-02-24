@@ -2,12 +2,12 @@ import type { FaktaSkjemaData } from './typer/fakta';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import {
-    Alert,
     BodyShort,
     Checkbox,
     Detail,
     Heading,
     HGrid,
+    LocalAlert,
     Radio,
     RadioGroup,
     Textarea,
@@ -53,11 +53,13 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
                 </Heading>
                 {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
                     <div>
-                        <Alert variant="warning" size="small">
-                            Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
-                            <br />
-                            Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
-                        </Alert>
+                        <LocalAlert status="warning">
+                            <LocalAlert.Content>
+                                Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
+                                <br />
+                                Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
+                            </LocalAlert.Content>
+                        </LocalAlert>
                     </div>
                 )}
                 <HGrid columns={3} gap="space-4">
@@ -96,10 +98,12 @@ export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
                         </Checkbox>
                     )}
                     {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
-                        <Alert variant="warning" size="small">
-                            Husk å kontrollere faktisk inntekt den siste måneden i
-                            feilutbetalingsperioden
-                        </Alert>
+                        <LocalAlert status="warning">
+                            <LocalAlert.Content>
+                                Husk å kontrollere faktisk inntekt den siste måneden i
+                                feilutbetalingsperioden
+                            </LocalAlert.Content>
+                        </LocalAlert>
                     )}
                     {skjemaData.perioder && <FaktaPerioder perioder={skjemaData.perioder} />}
                 </VStack>

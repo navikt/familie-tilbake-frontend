@@ -1,6 +1,6 @@
 import type { RessursByte } from '~/generated';
 
-import { Modal, Loader, Heading, Alert } from '@navikt/ds-react';
+import { Modal, Loader, Heading, LocalAlert } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
@@ -58,8 +58,16 @@ const Dokument: React.FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdat
         case RessursStatus.Feilet:
         case RessursStatus.FunksjonellFeil:
         case RessursStatus.IkkeTilgang:
-            return <Alert variant="error">{pdfdata.frontendFeilmelding}</Alert>;
+            return (
+                <LocalAlert status="error">
+                    <LocalAlert.Content>{pdfdata.frontendFeilmelding}</LocalAlert.Content>
+                </LocalAlert>
+            );
         default:
-            return <Alert variant="error">Kunne ikke hente dokument</Alert>;
+            return (
+                <LocalAlert status="error">
+                    <LocalAlert.Content>Kunne ikke hente dokument</LocalAlert.Content>
+                </LocalAlert>
+            );
     }
 };

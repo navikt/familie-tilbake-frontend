@@ -1,4 +1,4 @@
-import { Alert, Heading, VStack } from '@navikt/ds-react';
+import { Heading, LocalAlert, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
@@ -15,11 +15,15 @@ export const HistoriskFaktaContainer: React.FC = () => {
         return (
             <div className="p-3">
                 <VStack gap="space-20">
-                    <Alert variant="info">
-                        <Heading level="2" size="small">
-                            Tidligere fakta på denne behandlingen
-                        </Heading>
-                    </Alert>
+                    <LocalAlert status="announcement">
+                        <LocalAlert.Header>
+                            <LocalAlert.Title>
+                                <Heading level="2" size="small">
+                                    Tidligere fakta på denne behandlingen
+                                </Heading>
+                            </LocalAlert.Title>
+                        </LocalAlert.Header>
+                    </LocalAlert>
                     <VelgHistoriskFaktaVurdering
                         inaktiveFakta={inaktiveFakta.data}
                         setInaktivFakta={setInaktivFakta}

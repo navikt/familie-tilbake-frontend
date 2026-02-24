@@ -1,11 +1,11 @@
 import {
-    Alert,
     BodyLong,
     BodyShort,
     Button,
     Detail,
     Heading,
     HStack,
+    LocalAlert,
     VStack,
 } from '@navikt/ds-react';
 import React, { useEffect, useState } from 'react';
@@ -102,11 +102,13 @@ export const VedtakContainer: React.FC = () => {
             <VStack gap="space-24">
                 <Heading size="small">Vedtak</Heading>
                 {erRevurderingKlageKA && (
-                    <Alert variant="info">
-                        <BodyShort className="font-semibold">
-                            Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                        </BodyShort>
-                    </Alert>
+                    <LocalAlert status="announcement">
+                        <LocalAlert.Content>
+                            <BodyShort className="font-semibold">
+                                Vedtaksbrev sendes ikke ut fra denne behandlingen.
+                            </BodyShort>
+                        </LocalAlert.Content>
+                    </LocalAlert>
                 )}
 
                 {manuelleBrevmottakere.length > 0 && (
@@ -139,7 +141,11 @@ export const VedtakContainer: React.FC = () => {
                 {foreslåVedtakRespons &&
                     (foreslåVedtakRespons.status === RessursStatus.Feilet ||
                         foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
-                        <Alert variant="error">{foreslåVedtakRespons.frontendFeilmelding}</Alert>
+                        <LocalAlert status="error">
+                            <LocalAlert.Content>
+                                {foreslåVedtakRespons.frontendFeilmelding}
+                            </LocalAlert.Content>
+                        </LocalAlert>
                     )}
 
                 <div className="flex flex-row-reverse">
@@ -170,7 +176,11 @@ export const VedtakContainer: React.FC = () => {
                             </Button>
                         )}
 
-                        {feilmelding && <Alert variant="error">{feilmelding}</Alert>}
+                        {feilmelding && (
+                            <LocalAlert status="error">
+                                <LocalAlert.Content>{feilmelding}</LocalAlert.Content>
+                            </LocalAlert>
+                        )}
                     </HStack>
                 </div>
                 <ActionBar

@@ -1,4 +1,4 @@
-import { Alert, BodyLong, Heading, Link, VStack } from '@navikt/ds-react';
+import { BodyLong, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -32,11 +32,15 @@ export const ForeldelseContainer: React.FC = () => {
         <VStack gap="space-24">
             <Heading size="medium">Foreldelse</Heading>
             {erAutoutført ? (
-                <Alert variant="success" className="min-w-80">
-                    <VStack gap="space-8">
-                        <Heading size="small" level="3">
-                            Perioden er ikke foreldet
-                        </Heading>
+                <LocalAlert status="success" className="min-w-80">
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>
+                            <Heading size="small" level="3">
+                                Perioden er ikke foreldet
+                            </Heading>
+                        </LocalAlert.Title>
+                    </LocalAlert.Header>
+                    <LocalAlert.Content>
                         <VStack gap="space-24">
                             <BodyLong>
                                 Ingen perioder er foreldet etter foreldelsesloven{' '}
@@ -64,17 +68,21 @@ export const ForeldelseContainer: React.FC = () => {
                                 den er foreldet.
                             </BodyLong>
                         </VStack>
-                    </VStack>
-                </Alert>
+                    </LocalAlert.Content>
+                </LocalAlert>
             ) : foreldelse?.status === RessursStatus.Suksess ? (
                 <>
                     {behandling.erNyModell ? null : (
-                        <Alert variant="info" className="min-w-80" contentMaxWidth={false}>
-                            <VStack gap="space-8">
-                                <Heading size="small" level="3">
-                                    Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
-                                    foreldet
-                                </Heading>
+                        <LocalAlert status="announcement" className="min-w-80">
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>
+                                    <Heading size="small" level="3">
+                                        Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan
+                                        være foreldet
+                                    </Heading>
+                                </LocalAlert.Title>
+                            </LocalAlert.Header>
+                            <LocalAlert.Content>
                                 <BodyLong>
                                     Når den alminnelige foreldelsesfristen etter foreldelsesloven{' '}
                                     <Link
@@ -99,8 +107,8 @@ export const ForeldelseContainer: React.FC = () => {
                                     foreldelse vurderes manuelt. Del opp perioden ved behov og
                                     begrunn vurderingen.
                                 </BodyLong>
-                            </VStack>
-                        </Alert>
+                            </LocalAlert.Content>
+                        </LocalAlert>
                     )}
 
                     {skjemaData.length > 0 && <ForeldelsePerioder perioder={skjemaData} />}

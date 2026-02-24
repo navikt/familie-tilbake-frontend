@@ -3,7 +3,7 @@ import type {
     VilkårsvurderingSkjemaDefinisjon,
 } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
-import { Alert, Radio, RadioGroup } from '@navikt/ds-react';
+import { LocalAlert, Radio, RadioGroup } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -70,9 +70,11 @@ export const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning })
                             />
                         )}
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
-                            <Alert variant="warning" size="small" aria-live="polite">
-                                Når 6. ledd anvendes må alle perioder behandles likt
-                            </Alert>
+                            <LocalAlert status="warning" aria-live="polite">
+                                <LocalAlert.Content>
+                                    Når 6. ledd anvendes må alle perioder behandles likt
+                                </LocalAlert.Content>
+                            </LocalAlert>
                         )}
                     </>
                 )}
