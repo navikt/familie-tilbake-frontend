@@ -1,7 +1,7 @@
 import type { Brevmottaker } from '~/generated';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
-import { Alert, Button } from '@navikt/ds-react';
+import { Button, LocalAlert } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { BrevmottakerListe } from '~/komponenter/brevmottaker-liste/BrevmottakerListe';
@@ -16,18 +16,20 @@ export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere }) => {
     return (
         brevmottakere &&
         brevmottakere.length !== 0 && (
-            <Alert variant="info">
-                Brevmottaker(e) er endret, og vedtak sendes til:
-                <BrevmottakerListe />
-                <Button
-                    variant="tertiary"
-                    onClick={navigerTilBrevmottakerSteg}
-                    icon={<MagnifyingGlassIcon />}
-                    size="xsmall"
-                >
-                    Se detaljer
-                </Button>
-            </Alert>
+            <LocalAlert status="announcement">
+                <LocalAlert.Content>
+                    Brevmottaker(e) er endret, og vedtak sendes til:
+                    <BrevmottakerListe />
+                    <Button
+                        variant="tertiary"
+                        onClick={navigerTilBrevmottakerSteg}
+                        icon={<MagnifyingGlassIcon />}
+                        size="xsmall"
+                    >
+                        Se detaljer
+                    </Button>
+                </LocalAlert.Content>
+            </LocalAlert>
         )
     );
 };

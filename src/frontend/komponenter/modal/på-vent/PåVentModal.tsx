@@ -1,6 +1,6 @@
 import type { BehandlingsstegsinfoDto } from '~/generated';
 
-import { Alert, BodyLong, BodyShort, Button, Heading, Modal, Select } from '@navikt/ds-react';
+import { BodyLong, BodyShort, Button, Heading, LocalAlert, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 import * as React from 'react';
@@ -82,9 +82,11 @@ export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
             <Modal.Body className="flex flex-col gap-4">
                 <>
                     {vilBliAutomatiskBehandletUnder4rettsgebyr && (
-                        <Alert variant="info" size="small">
-                            {automatiskUnder4rettsgebyrBehandletTekst}
-                        </Alert>
+                        <LocalAlert status="announcement">
+                            <LocalAlert.Content>
+                                {automatiskUnder4rettsgebyrBehandletTekst}
+                            </LocalAlert.Content>
+                        </LocalAlert>
                     )}
                     {erFristenUtløpt && (
                         <>

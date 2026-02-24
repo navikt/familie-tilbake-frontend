@@ -1,4 +1,4 @@
-import { Alert } from '@navikt/ds-react';
+import { LocalAlert } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { Serverfeil } from '~/pages/feilsider/serverfeil';
@@ -28,7 +28,11 @@ export const DataLastIkkeSuksess: React.FC<Props> = ({
     );
 
     if (ingenTilgangRessurs) {
-        return <Alert variant="warning">Ingen tilgang</Alert>;
+        return (
+            <LocalAlert status="warning">
+                <LocalAlert.Content>Ingen tilgang</LocalAlert.Content>
+            </LocalAlert>
+        );
     }
     const feiletRessurs = filtrerteRessurser.find(
         ressurs =>
@@ -39,11 +43,19 @@ export const DataLastIkkeSuksess: React.FC<Props> = ({
         return <Serverfeil />;
     }
     if (feiletRessurs) {
-        return <Alert variant="error">{feiletRessurs.frontendFeilmelding}</Alert>;
+        return (
+            <LocalAlert status="error">
+                <LocalAlert.Content>{feiletRessurs.frontendFeilmelding}</LocalAlert.Content>
+            </LocalAlert>
+        );
     }
 
     if (serverFeil) {
-        return <Alert variant="error">{serverFeil.frontendFeilmelding}</Alert>;
+        return (
+            <LocalAlert status="error">
+                <LocalAlert.Content>{serverFeil.frontendFeilmelding}</LocalAlert.Content>
+            </LocalAlert>
+        );
     }
 
     const henterRessurs = filtrerteRessurser.find(

@@ -1,6 +1,6 @@
 import type { Toast as TToast } from './typer';
 
-import { Alert } from '@navikt/ds-react';
+import { LocalAlert } from '@navikt/ds-react';
 import React, { useEffect, useRef } from 'react';
 
 import { useApp } from '~/context/AppContext';
@@ -36,7 +36,9 @@ export const Toast: React.FC<{ toastId: string; toast: TToast }> = ({ toastId, t
             ref={toastRef}
             className="col-start-3 w-80 z-9999 mt-auto mr-0 mb-[1.7rem] ml-auto focus:rounded focus:shadow-[0_0_0_3px_#00347d] focus:outline-none"
         >
-            <Alert variant={toast.alertType}>{toast.tekst}</Alert>
+            <LocalAlert status={toast.alertType}>
+                <LocalAlert.Content>{toast.tekst}</LocalAlert.Content>
+            </LocalAlert>
         </div>
     );
 };

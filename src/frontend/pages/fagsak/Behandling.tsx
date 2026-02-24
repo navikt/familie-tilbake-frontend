@@ -1,7 +1,7 @@
 import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { Alert, BodyShort, Button } from '@navikt/ds-react';
+import { BodyShort, Button, LocalAlert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
@@ -377,9 +377,9 @@ export const BehandlingContainer: React.FC = () => {
     return (
         <>
             {ventegrunn && (
-                <Alert variant="info" fullWidth>
-                    {venteBeskjed(ventegrunn)}
-                </Alert>
+                <LocalAlert status="announcement" className="w-full">
+                    <LocalAlert.Content>{venteBeskjed(ventegrunn)}</LocalAlert.Content>
+                </LocalAlert>
             )}
             {ventegrunn && !visVenteModal && (
                 <PåVentModal ventegrunn={ventegrunn} onClose={() => settVisVenteModal(true)} />

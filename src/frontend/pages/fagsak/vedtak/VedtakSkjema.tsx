@@ -1,6 +1,6 @@
 import type { AvsnittSkjemaData } from './typer/vedtak';
 
-import { Alert, Heading } from '@navikt/ds-react';
+import { Heading, LocalAlert } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -25,7 +25,9 @@ export const VedtakSkjema: React.FC<Props> = ({
                 Vedtaksbrev
             </Heading>
             {!harBrukerUttaltSeg && !behandlingILesemodus && (
-                <Alert variant="warning">Husk å vurdere uttalelse fra bruker</Alert>
+                <LocalAlert status="warning">
+                    <LocalAlert.Content>Husk å vurdere uttalelse fra bruker</LocalAlert.Content>
+                </LocalAlert>
             )}
             {avsnitter.map(avsnitt => {
                 return (

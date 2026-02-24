@@ -14,6 +14,6 @@ export enum ToastTyper {
 export enum AlertType {
     Error = 'error',
     Warning = 'warning',
-    Info = 'info',
+    Announcement = 'announcement',
     Success = 'success',
 }

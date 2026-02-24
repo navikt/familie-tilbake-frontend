@@ -1,6 +1,6 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 
-import { Alert, BodyShort, type TimelinePeriodProps } from '@navikt/ds-react';
+import { BodyShort, LocalAlert, type TimelinePeriodProps } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { Vilkårsresultat } from '~/kodeverk';
@@ -92,9 +92,11 @@ export const VilkårsvurderingPerioder: React.FC<Props> = ({
     return perioder && tidslinjeRader ? (
         <>
             {valideringsFeilmelding && (
-                <Alert variant="error">
-                    <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
-                </Alert>
+                <LocalAlert status="error">
+                    <LocalAlert.Content>
+                        <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
+                    </LocalAlert.Content>
+                </LocalAlert>
             )}
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
             {valgtPeriode && (

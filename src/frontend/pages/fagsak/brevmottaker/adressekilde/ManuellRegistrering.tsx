@@ -1,6 +1,6 @@
 import type { Land } from '~/komponenter/landvelger/Landvelger';
 
-import { Alert, Fieldset, HStack, TextField, VStack } from '@navikt/ds-react';
+import { Fieldset, HStack, LocalAlert, TextField, VStack } from '@navikt/ds-react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext, get } from 'react-hook-form';
 
@@ -79,10 +79,12 @@ export const ManuellRegistrering: React.FC<Props> = ({ preutfyltNavn, mottakerTy
                             error={getFieldError('adresselinje2')}
                         />
                         {landValue !== 'NO' && (
-                            <Alert variant="info">
-                                Ved utenlandsk adresse skal postnummer og poststed legges i
-                                adresselinjene.
-                            </Alert>
+                            <LocalAlert status="announcement">
+                                <LocalAlert.Content>
+                                    Ved utenlandsk adresse skal postnummer og poststed legges i
+                                    adresselinjene.
+                                </LocalAlert.Content>
+                            </LocalAlert>
                         )}
                         {landValue === 'NO' && (
                             <HStack gap="space-16" wrap>

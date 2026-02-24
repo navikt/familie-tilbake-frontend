@@ -27,7 +27,7 @@ export const HentKorrigertKravgrunnlag: React.FC = () => {
         }).then(async (respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
                 settToast(ToastTyper.KravgrunnlaHentet, {
-                    alertType: AlertType.Info,
+                    alertType: AlertType.Announcement,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
 
