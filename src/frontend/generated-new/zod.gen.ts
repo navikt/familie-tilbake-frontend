@@ -33,6 +33,18 @@ export const zElement = z
     })
     .and(zRentekstElement);
 
+export const zPakrevdBegrunnelse = z.object({
+    tittel: z.string(),
+    forklaring: z.string().readonly(),
+    begrunnelseType: z.string(),
+    underavsnitt: z.array(zElement),
+});
+
+export const zPakrevdBegrunnelseUpdateItem = z.object({
+    begrunnelseType: z.string(),
+    underavsnitt: z.array(zElement),
+});
+
 export const zRettsligGrunnlag = z.object({
     bestemmelse: z.string().min(1),
     grunnlag: z.string().min(1),
@@ -88,6 +100,11 @@ export const zRotElement = z.union([
             type: z.literal('underavsnitt'),
         })
         .and(zUnderavsnittElement),
+    z
+        .object({
+            type: z.literal('påkrevd_begrunnelse'),
+        })
+        .and(zPakrevdBegrunnelse),
 ]);
 
 export const zAvsnitt = z.object({
@@ -101,10 +118,44 @@ export const zHovedavsnitt = z.object({
     underavsnitt: z.array(zRotElement),
 });
 
+export const zRotElementUpdateItem = z.union([
+    z
+        .object({
+            type: z.literal('rentekst'),
+        })
+        .and(zRentekstElement),
+    z
+        .object({
+            type: z.literal('underavsnitt'),
+        })
+        .and(zUnderavsnittElement),
+    z
+        .object({
+            type: z.literal('påkrevd_begrunnelse'),
+        })
+        .and(zPakrevdBegrunnelseUpdateItem),
+]);
+
+export const zAvsnittUpdateItem = z.object({
+    tittel: z.string().min(3).max(300),
+    id: z.uuid(),
+    underavsnitt: z.array(zRotElementUpdateItem),
+});
+
+export const zHovedavsnittUpdate = z.object({
+    tittel: z.string().min(3).max(300),
+    underavsnitt: z.array(zRotElementUpdateItem),
+});
+
 export const zVedtaksbrevRedigerbareData = z.object({
     hovedavsnitt: zHovedavsnitt,
     avsnitt: z.array(zAvsnitt),
     sistOppdatert: z.iso.datetime().readonly(),
+});
+
+export const zVedtaksbrevRedigerbareDataUpdate = z.object({
+    hovedavsnitt: zHovedavsnittUpdate,
+    avsnitt: z.array(zAvsnittUpdateItem),
 });
 
 export const zYtelse = z.object({
@@ -174,9 +225,44 @@ export const zFaktaOmFeilutbetaling = z.object({
     ferdigvurdert: z.boolean(),
 });
 
+export const zPakrevdBegrunnelseWritable = z.object({
+    tittel: z.string(),
+    begrunnelseType: z.string(),
+    underavsnitt: z.array(zElement),
+});
+
+export const zRotElementWritable = z.union([
+    z
+        .object({
+            type: z.literal('rentekst'),
+        })
+        .and(zRentekstElement),
+    z
+        .object({
+            type: z.literal('underavsnitt'),
+        })
+        .and(zUnderavsnittElement),
+    z
+        .object({
+            type: z.literal('påkrevd_begrunnelse'),
+        })
+        .and(zPakrevdBegrunnelseWritable),
+]);
+
+export const zAvsnittWritable = z.object({
+    tittel: z.string().min(3).max(300),
+    id: z.uuid(),
+    underavsnitt: z.array(zRotElementWritable),
+});
+
+export const zHovedavsnittWritable = z.object({
+    tittel: z.string().min(3).max(300),
+    underavsnitt: z.array(zRotElementWritable),
+});
+
 export const zVedtaksbrevDataWritable = z.object({
-    hovedavsnitt: zHovedavsnitt,
-    avsnitt: z.array(zAvsnitt),
+    hovedavsnitt: zHovedavsnittWritable,
+    avsnitt: z.array(zAvsnittWritable),
     brevGjelder: zBrevmottaker,
     sendtDato: z.string(),
     ytelse: zYtelse,
@@ -184,8 +270,8 @@ export const zVedtaksbrevDataWritable = z.object({
 });
 
 export const zVedtaksbrevRedigerbareDataWritable = z.object({
-    hovedavsnitt: zHovedavsnitt,
-    avsnitt: z.array(zAvsnitt),
+    hovedavsnitt: zHovedavsnittWritable,
+    avsnitt: z.array(zAvsnittWritable),
 });
 
 export const zBehandlingFaktaData = z.object({
@@ -228,7 +314,7 @@ export const zBehandlingHentVedtaksbrevData = z.object({
 export const zBehandlingHentVedtaksbrevResponse = zVedtaksbrevData;
 
 export const zBehandlingOppdaterVedtaksbrevData = z.object({
-    body: zVedtaksbrevRedigerbareDataWritable,
+    body: zVedtaksbrevRedigerbareDataUpdate,
     path: z.object({
         behandlingId: z.uuid(),
     }),

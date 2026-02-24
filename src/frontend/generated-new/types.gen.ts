@@ -10,6 +10,12 @@ export type Avsnitt = {
     underavsnitt: Array<RotElement>;
 };
 
+export type AvsnittUpdateItem = {
+    tittel: string;
+    id: string;
+    underavsnitt: Array<RotElementUpdateItem>;
+};
+
 export type BestemmelseEllerGrunnlag = {
     nøkkel: string;
     beskrivelse: string;
@@ -66,6 +72,11 @@ export type Hovedavsnitt = {
     underavsnitt: Array<RotElement>;
 };
 
+export type HovedavsnittUpdate = {
+    tittel: string;
+    underavsnitt: Array<RotElementUpdateItem>;
+};
+
 export type MuligeRettsligGrunnlag = {
     bestemmelse: BestemmelseEllerGrunnlag;
     grunnlag: Array<BestemmelseEllerGrunnlag>;
@@ -85,6 +96,18 @@ export type OppdaterFaktaOmFeilutbetaling = {
 export type OppdaterFaktaPeriode = {
     id: string;
     rettsligGrunnlag: Array<RettsligGrunnlag>;
+};
+
+export type PakrevdBegrunnelse = {
+    tittel: string;
+    readonly forklaring: string;
+    begrunnelseType: string;
+    underavsnitt: Array<Element>;
+};
+
+export type PakrevdBegrunnelseUpdateItem = {
+    begrunnelseType: string;
+    underavsnitt: Array<Element>;
 };
 
 export type RentekstElement = {
@@ -108,7 +131,21 @@ export type RotElement =
       } & RentekstElement)
     | ({
           type: 'underavsnitt';
-      } & UnderavsnittElement);
+      } & UnderavsnittElement)
+    | ({
+          type: 'påkrevd_begrunnelse';
+      } & PakrevdBegrunnelse);
+
+export type RotElementUpdateItem =
+    | ({
+          type: 'rentekst';
+      } & RentekstElement)
+    | ({
+          type: 'underavsnitt';
+      } & UnderavsnittElement)
+    | ({
+          type: 'påkrevd_begrunnelse';
+      } & PakrevdBegrunnelseUpdateItem);
 
 export type Signatur = {
     enhetNavn: string;
@@ -137,6 +174,11 @@ export type VedtaksbrevRedigerbareData = {
     readonly sistOppdatert: string;
 };
 
+export type VedtaksbrevRedigerbareDataUpdate = {
+    hovedavsnitt: HovedavsnittUpdate;
+    avsnitt: Array<AvsnittUpdateItem>;
+};
+
 export type Vurdering = {
     årsak: Fritekst | null;
     oppdaget?: Oppdaget;
@@ -152,9 +194,37 @@ export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
 
+export type AvsnittWritable = {
+    tittel: string;
+    id: string;
+    underavsnitt: Array<RotElementWritable>;
+};
+
+export type HovedavsnittWritable = {
+    tittel: string;
+    underavsnitt: Array<RotElementWritable>;
+};
+
+export type PakrevdBegrunnelseWritable = {
+    tittel: string;
+    begrunnelseType: string;
+    underavsnitt: Array<Element>;
+};
+
+export type RotElementWritable =
+    | ({
+          type: 'rentekst';
+      } & RentekstElement)
+    | ({
+          type: 'underavsnitt';
+      } & UnderavsnittElement)
+    | ({
+          type: 'påkrevd_begrunnelse';
+      } & PakrevdBegrunnelseWritable);
+
 export type VedtaksbrevDataWritable = {
-    hovedavsnitt: Hovedavsnitt;
-    avsnitt: Array<Avsnitt>;
+    hovedavsnitt: HovedavsnittWritable;
+    avsnitt: Array<AvsnittWritable>;
     brevGjelder: Brevmottaker;
     sendtDato: string;
     ytelse: Ytelse;
@@ -162,8 +232,8 @@ export type VedtaksbrevDataWritable = {
 };
 
 export type VedtaksbrevRedigerbareDataWritable = {
-    hovedavsnitt: Hovedavsnitt;
-    avsnitt: Array<Avsnitt>;
+    hovedavsnitt: HovedavsnittWritable;
+    avsnitt: Array<AvsnittWritable>;
 };
 
 export type BehandlingFaktaData = {
@@ -264,7 +334,7 @@ export type BehandlingHentVedtaksbrevResponse =
     BehandlingHentVedtaksbrevResponses[keyof BehandlingHentVedtaksbrevResponses];
 
 export type BehandlingOppdaterVedtaksbrevData = {
-    body: VedtaksbrevRedigerbareDataWritable;
+    body: VedtaksbrevRedigerbareDataUpdate;
     path: {
         behandlingId: string;
     };
