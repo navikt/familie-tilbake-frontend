@@ -46,7 +46,7 @@ const ElementTextarea: React.FC<
             {...props}
             name={name}
             value={elementArrayTilTekst(value as RotElement[])}
-            onChange={e => setValue(name, tekstTilElementArray(e.target.value) as never)}
+            onChange={e => setValue(name, tekstTilElementArray(e.target.value))}
             size="small"
             maxLength={3000}
             minRows={3}
@@ -245,7 +245,7 @@ const Avsnitt: React.FC<{
                 onChange={e => {
                     const nyeRentekst = tekstTilElementArray(e.target.value);
                     const andreElementer = value.filter(({ type }) => type !== 'rentekst');
-                    setValue(name, [...nyeRentekst, ...andreElementer] as never);
+                    setValue(name, [...nyeRentekst, ...andreElementer]);
                 }}
                 size="small"
                 maxLength={3000}
