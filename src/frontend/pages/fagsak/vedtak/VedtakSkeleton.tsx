@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
-export const OpprettVedtaksbrevSkeleton: React.FC = () => {
+export const VedtakSkeleton: React.FC = () => {
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
                 <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
-                    <Heading size="small">Opprett vedtaksbrev</Heading>
+                    <Heading size="small">Lag vedtaksbrev</Heading>
                     <Skeleton variant="rounded" width="40%" height={20} />
                     <BodyShort className="text-ax-text-neutral-subtle text-ax-medium">
                         Beskriv kort hva som har skjedd i denne perioden
