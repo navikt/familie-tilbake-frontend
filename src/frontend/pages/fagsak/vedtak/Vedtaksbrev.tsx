@@ -17,7 +17,7 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '~/generated-new/@tanstack/react-query.gen';
-import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
+// import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
 import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
@@ -91,16 +91,15 @@ export const Vedtaksbrev: React.FC<Props> = ({ vedtaksbrevData }) => {
             <section className="col-span-1 flex-1 min-h-0 flex flex-col gap-6">
                 <HStack className="flex justify-between">
                     <Heading size="small">Lag vedtaksbrev</Heading>
-                    {!vedtaksbrevData.sendtDato ? (
+                    {/* {vedtaksbrevData.sendtDato ? ( TODO: Legg til korrekt dato verdi her.
                         <Tag data-color="success" size="small" variant="moderate">
                             Sendt: {formatterDatoDDMMYYYY(new Date(vedtaksbrevData.sendtDato))}
                         </Tag>
-                    ) : (
-                        <Tag data-color="info" size="small" variant="moderate">
-                            Oppdatert:{' '}
-                            {fraIsoStringTilDatoOgKlokkeslett(vedtaksbrevData.sistOppdatert)}
-                        </Tag>
-                    )}
+                    ) : ( */}
+                    <Tag data-color="info" size="small" variant="moderate">
+                        Oppdatert: {fraIsoStringTilDatoOgKlokkeslett(vedtaksbrevData.sistOppdatert)}
+                    </Tag>
+                    {/* )} */}
                 </HStack>
 
                 <FormProvider {...methods}>
