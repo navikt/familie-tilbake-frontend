@@ -1,7 +1,7 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { TextareaProps } from '@navikt/ds-react';
 import type { FieldPath } from 'react-hook-form';
-import type { PakrevdBegrunnelse, RotElement } from '~/generated-new';
+import type { RotElement } from '~/generated-new';
 
 import { Textarea } from '@navikt/ds-react';
 import * as React from 'react';
@@ -28,7 +28,7 @@ const Avsnitt: React.FC<{
     avsnitt: VedtaksbrevFormData['avsnitt'][number];
     avsnittIndex: number;
 }> = ({ avsnitt, avsnittIndex }) => {
-    const name = `avsnitt.${avsnittIndex}.underavsnitt` as FieldPath<VedtaksbrevFormData>;
+    const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
     const { setValue } = useFormContext<VedtaksbrevFormData>();
     const value = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
     const rentekstTekst = elementArrayTilTekst(value);
@@ -52,13 +52,12 @@ const Avsnitt: React.FC<{
 
             {avsnitt.underavsnitt.map((element, elementIndex) => {
                 if (element.type !== 'påkrevd_begrunnelse') return null;
-                const påkrevdBegrunnelse = element as PakrevdBegrunnelse;
                 return (
                     <ElementTextarea
-                        key={påkrevdBegrunnelse.tittel}
+                        key={element.tittel}
                         name={`avsnitt.${avsnittIndex}.underavsnitt.${elementIndex}.underavsnitt`}
-                        label={påkrevdBegrunnelse.tittel}
-                        description={påkrevdBegrunnelse.forklaring}
+                        label={element.tittel}
+                        description={element.forklaring}
                     />
                 );
             })}
@@ -73,7 +72,6 @@ const ElementTextarea: React.FC<
 > = ({ name, ...props }) => {
     const { setValue } = useFormContext<VedtaksbrevFormData>();
     const value = useWatch<VedtaksbrevFormData>({ name });
-
     return (
         <Textarea
             {...props}
