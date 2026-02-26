@@ -1,4 +1,5 @@
 import type { VedtaksbrevFormData } from './schema';
+import type { VedtaksbrevData } from '~/generated-new';
 
 import {
     Button,
@@ -36,7 +37,7 @@ const useDebounce = (updateFunction: () => void): (() => void) => {
 };
 
 type Props = {
-    vedtaksbrevData: VedtaksbrevFormData;
+    vedtaksbrevData: VedtaksbrevData;
 };
 
 export const Vedtaksbrev: React.FC<Props> = ({ vedtaksbrevData }) => {
