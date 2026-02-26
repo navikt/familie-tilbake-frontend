@@ -38,7 +38,7 @@ import { FaktaProvider } from './fakta/FaktaContext';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
-import { VedtakProvider } from './vedtak/VedtakContext';
+import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
 import { VedtakSkeleton } from './vedtak/VedtakSkeleton';
 import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/historikk/HistoriskVilkårsvurderingContext';
@@ -62,7 +62,7 @@ const ForeldelseContainer = lazyImportMedRetry(
     'ForeldelseContainer'
 );
 const VedtakContainer = lazyImportMedRetry(
-    () => import('./vedtak/VedtakContainer'),
+    () => import('./vedtak/gammel-vedtak/VedtakContainer'),
     'VedtakContainer'
 );
 const Vedtak = lazyImportMedRetry(() => import('./vedtak/Vedtak'), 'Vedtak');

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useDokumentApi } from '~/api/dokument';
-import { useVedtak } from '~/pages/fagsak/vedtak/VedtakContext';
+import { useVedtak } from '~/pages/fagsak/vedtak/gammel-vedtak/VedtakContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
