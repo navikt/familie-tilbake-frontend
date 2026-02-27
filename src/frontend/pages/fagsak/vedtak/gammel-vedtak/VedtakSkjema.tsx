@@ -24,7 +24,7 @@ export const VedtakSkjema: React.FC<Props> = ({
             <Heading size="small" level="2">
                 Vedtaksbrev
             </Heading>
-            {!harBrukerUttaltSeg && !behandlingILesemodus && (
+            {harBrukerUttaltSeg && !behandlingILesemodus && (
                 <LocalAlert status="warning">
                     <LocalAlert.Content>Husk å vurdere uttalelse fra bruker</LocalAlert.Content>
                 </LocalAlert>

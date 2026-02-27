@@ -38,8 +38,8 @@ import { FaktaProvider } from './fakta/FaktaContext';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
-import { OpprettVedtaksbrevSkeleton } from './vedtak/OpprettVedtaksbrevSkeleton';
-import { VedtakProvider } from './vedtak/VedtakContext';
+import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
+import { VedtakSkeleton } from './vedtak/VedtakSkeleton';
 import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './vilkaarsvurdering/VilkårsvurderingContext';
@@ -62,13 +62,10 @@ const ForeldelseContainer = lazyImportMedRetry(
     'ForeldelseContainer'
 );
 const VedtakContainer = lazyImportMedRetry(
-    () => import('./vedtak/VedtakContainer'),
+    () => import('./vedtak/gammel-vedtak/VedtakContainer'),
     'VedtakContainer'
 );
-const OpprettVedtaksbrev = lazyImportMedRetry(
-    () => import('./vedtak/OpprettVedtaksbrev'),
-    'OpprettVedtaksbrev'
-);
+const Vedtak = lazyImportMedRetry(() => import('./vedtak/Vedtak'), 'Vedtak');
 const VergeContainer = lazyImportMedRetry(() => import('./verge/VergeContainer'), 'VergeContainer');
 const VilkårsvurderingContainer = lazyImportMedRetry(
     () => import('./vilkaarsvurdering/VilkårsvurderingContainer'),
@@ -275,8 +272,8 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
                                 element={
                                     behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
                                         <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
-                                            <Suspense fallback={<OpprettVedtaksbrevSkeleton />}>
-                                                <OpprettVedtaksbrev />
+                                            <Suspense fallback={<VedtakSkeleton />}>
+                                                <Vedtak />
                                             </Suspense>
                                         </StegErrorBoundary>
                                     ) : (
