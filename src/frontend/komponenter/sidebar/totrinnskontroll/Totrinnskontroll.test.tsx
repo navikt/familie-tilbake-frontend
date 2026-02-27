@@ -25,6 +25,19 @@ import { RessursStatus } from '~/typer/ressurs';
 import { Totrinnskontroll } from './Totrinnskontroll';
 import { TotrinnskontrollProvider } from './TotrinnskontrollContext';
 
+const standardSteg = [
+    lagTotrinnsStegInfo('FAKTA'),
+    lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+    lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
+];
+
+const standardStegMedForeldelse = [
+    lagTotrinnsStegInfo('FAKTA'),
+    lagTotrinnsStegInfo('FORELDELSE'),
+    lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+    lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
+];
+
 const mockUseBehandlingApi = vi.fn();
 vi.mock('~/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
@@ -48,23 +61,50 @@ const renderTotrinnskontroll = (
     );
 };
 
-const setupMocks = (totrinnkontroll: Totrinnkontroll): void => {
-    mockUseBehandlingApi.mockImplementation(() => ({
-        gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> => {
-            const ressurs: Ressurs<Totrinnkontroll> = {
-                status: RessursStatus.Suksess,
-                data: totrinnkontroll,
-            };
-            return Promise.resolve(ressurs);
-        },
-        sendInnFatteVedtak: (): Promise<Ressurs<string>> => {
-            const ressurs: Ressurs<string> = {
-                status: RessursStatus.Suksess,
-                data: 'suksess',
-            };
-            return Promise.resolve(ressurs);
-        },
-    }));
+const setupMocks = (options: {
+    totrinnkontroll?: Totrinnkontroll;
+    totrinnkontrollFeil?: string;
+    angreSendTilBeslutterSuksess?: boolean;
+}): void => {
+    const { totrinnkontroll, totrinnkontrollFeil, angreSendTilBeslutterSuksess = true } = options;
+
+    mockUseBehandlingApi.mockImplementation(
+        (): Partial<BehandlingApiHook> => ({
+            gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> => {
+                if (totrinnkontrollFeil) {
+                    const ressurs: Ressurs<Totrinnkontroll> = {
+                        status: RessursStatus.Feilet,
+                        frontendFeilmelding: totrinnkontrollFeil,
+                    };
+                    return Promise.resolve(ressurs);
+                }
+                const ressurs: Ressurs<Totrinnkontroll> = {
+                    status: RessursStatus.Suksess,
+                    data: totrinnkontroll as Totrinnkontroll,
+                };
+                return Promise.resolve(ressurs);
+            },
+            sendInnFatteVedtak: (): Promise<Ressurs<string>> => {
+                const ressurs: Ressurs<string> = {
+                    status: RessursStatus.Suksess,
+                    data: 'suksess',
+                };
+                return Promise.resolve(ressurs);
+            },
+            kallAngreSendTilBeslutter: (): Promise<Ressurs<string>> => {
+                if (angreSendTilBeslutterSuksess) {
+                    return Promise.resolve({
+                        status: RessursStatus.Suksess,
+                        data: 'suksess',
+                    });
+                }
+                return Promise.resolve({
+                    status: RessursStatus.Feilet,
+                    frontendFeilmelding: 'Kunne ikke angre send til beslutter',
+                });
+            },
+        })
+    );
 };
 
 describe('Totrinnskontroll', () => {
@@ -76,11 +116,7 @@ describe('Totrinnskontroll', () => {
 
     test('Vis og fyll ut - godkjenner', async () => {
         setupMocks({
-            totrinnsstegsinfo: [
-                lagTotrinnsStegInfo('FAKTA'),
-                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
-                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
-            ],
+            totrinnkontroll: { totrinnsstegsinfo: standardSteg },
         });
 
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
@@ -88,12 +124,12 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(3);
 
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         await waitFor(() => {
@@ -123,25 +159,20 @@ describe('Totrinnskontroll', () => {
 
     test('Vis og fyll ut - sender tilbake', async () => {
         setupMocks({
-            totrinnsstegsinfo: [
-                lagTotrinnsStegInfo('FAKTA'),
-                lagTotrinnsStegInfo('FORELDELSE'),
-                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
-                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
-            ],
+            totrinnkontroll: { totrinnsstegsinfo: standardStegMedForeldelse },
         });
         const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
             lagBehandling({ kanEndres: true })
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
 
         expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         await waitFor(() => {
@@ -181,12 +212,14 @@ describe('Totrinnskontroll', () => {
 
     test('Vis utfylt - sendt tilbake', async () => {
         setupMocks({
-            totrinnsstegsinfo: [
-                lagTotrinnsStegInfo('FAKTA', true),
-                lagTotrinnsStegInfo('FORELDELSE', false, 'Foreldelse må vurderes på nytt'),
-                lagTotrinnsStegInfo('VILKÅRSVURDERING', true),
-                lagTotrinnsStegInfo('FORESLÅ_VEDTAK', false, 'Vedtaket må vurderes på nytt'),
-            ],
+            totrinnkontroll: {
+                totrinnsstegsinfo: [
+                    lagTotrinnsStegInfo('FAKTA', true),
+                    lagTotrinnsStegInfo('FORELDELSE', false, 'Foreldelse må vurderes på nytt'),
+                    lagTotrinnsStegInfo('VILKÅRSVURDERING', true),
+                    lagTotrinnsStegInfo('FORESLÅ_VEDTAK', false, 'Vedtaket må vurderes på nytt'),
+                ],
+            },
         });
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
@@ -195,13 +228,13 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
 
         expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         expect(
@@ -223,12 +256,14 @@ describe('Totrinnskontroll', () => {
 
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
         setupMocks({
-            totrinnsstegsinfo: [
-                lagTotrinnsStegInfo('FAKTA', true),
-                lagTotrinnsStegInfo('FORELDELSE', false, 'Foreldelse må vurderes på nytt'),
-                lagTotrinnsStegInfo('VILKÅRSVURDERING', true),
-                lagTotrinnsStegInfo('FORESLÅ_VEDTAK', false, 'Vedtaket må vurderes på nytt'),
-            ],
+            totrinnkontroll: {
+                totrinnsstegsinfo: [
+                    lagTotrinnsStegInfo('FAKTA', true),
+                    lagTotrinnsStegInfo('FORELDELSE', false, 'Foreldelse må vurderes på nytt'),
+                    lagTotrinnsStegInfo('VILKÅRSVURDERING', true),
+                    lagTotrinnsStegInfo('FORESLÅ_VEDTAK', false, 'Vedtaket må vurderes på nytt'),
+                ],
+            },
         });
 
         const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
@@ -236,13 +271,13 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
 
         expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         expect(
@@ -264,11 +299,7 @@ describe('Totrinnskontroll', () => {
 
     test('Viser bekreftelsesmodal når bruker klikker Godkjenn vedtaket', async () => {
         setupMocks({
-            totrinnsstegsinfo: [
-                lagTotrinnsStegInfo('FAKTA'),
-                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
-                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
-            ],
+            totrinnkontroll: { totrinnsstegsinfo: standardSteg },
         });
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
@@ -276,7 +307,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
@@ -305,11 +336,7 @@ describe('Totrinnskontroll', () => {
 
     test('Lukker bekreftelsesmodal etter vellykket godkjenning', async () => {
         setupMocks({
-            totrinnsstegsinfo: [
-                lagTotrinnsStegInfo('FAKTA'),
-                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
-                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
-            ],
+            totrinnkontroll: { totrinnsstegsinfo: standardSteg },
         });
 
         const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
@@ -317,7 +344,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
@@ -340,6 +367,149 @@ describe('Totrinnskontroll', () => {
 
         await waitFor(() => {
             expect(queryByRole('dialog')).not.toBeInTheDocument();
+        });
+    });
+
+    test('Viser feilmelding når henting av totrinnkontroll feiler', async () => {
+        setupMocks({
+            totrinnkontrollFeil: 'Kunne ikke hente totrinnkontroll',
+        });
+
+        const { getByText } = renderTotrinnskontroll(lagBehandling({ kanEndres: true }));
+
+        await waitFor(() => {
+            expect(getByText('Kunne ikke hente totrinnkontroll')).toBeInTheDocument();
+        });
+    });
+
+    test('Viser skeleton under lasting', async () => {
+        let resolvePromise: (value: Ressurs<Totrinnkontroll>) => void = () => {};
+        const pendingPromise = new Promise<Ressurs<Totrinnkontroll>>(resolve => {
+            resolvePromise = resolve;
+        });
+
+        mockUseBehandlingApi.mockImplementation(
+            (): Partial<BehandlingApiHook> => ({
+                gjerTotrinnkontrollKall: () => pendingPromise,
+                sendInnFatteVedtak: vi.fn(),
+                kallAngreSendTilBeslutter: vi.fn(),
+            })
+        );
+
+        const { getByText } = renderTotrinnskontroll(lagBehandling({ kanEndres: true }));
+
+        expect(getByText('Fatter vedtak')).toBeInTheDocument();
+
+        resolvePromise({
+            status: RessursStatus.Suksess,
+            data: {
+                totrinnsstegsinfo: [lagTotrinnsStegInfo('FAKTA')],
+            },
+        });
+
+        await waitFor(() => {
+            expect(getByText('Fakta')).toBeInTheDocument();
+        });
+    });
+
+    test('Viser valideringsfeil når bruker prøver å sende uten å velge alle steg', async () => {
+        setupMocks({
+            totrinnkontroll: { totrinnsstegsinfo: standardSteg },
+        });
+
+        const { getByText, queryByText, getByRole } = renderTotrinnskontroll(
+            lagBehandling({ kanEndres: true })
+        );
+
+        await waitFor(() => {
+            expect(getByText('Fakta')).toBeInTheDocument();
+        });
+
+        expect(
+            queryByText(/Du må velge om stegene skal godkjennes eller vurderes på nytt/i)
+        ).not.toBeInTheDocument();
+
+        await user.click(getByRole('button', { name: 'Godkjenn vedtak' }));
+
+        expect(
+            getByText(/Du må velge om stegene skal godkjennes eller vurderes på nytt/i)
+        ).toBeInTheDocument();
+    });
+
+    test('Viser Avbryt-knapp og kaller angreSendTilBeslutter', async () => {
+        const kallAngreSendTilBeslutterMock = vi.fn().mockResolvedValue({
+            status: RessursStatus.Suksess,
+            data: 'suksess',
+        });
+
+        mockUseBehandlingApi.mockImplementation(
+            (): Partial<BehandlingApiHook> => ({
+                gjerTotrinnkontrollKall: (): Promise<Ressurs<Totrinnkontroll>> =>
+                    Promise.resolve({
+                        status: RessursStatus.Suksess,
+                        data: {
+                            totrinnsstegsinfo: [
+                                lagTotrinnsStegInfo('FAKTA'),
+                                lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+                                lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
+                            ],
+                        },
+                    }),
+                sendInnFatteVedtak: vi.fn(),
+                kallAngreSendTilBeslutter: kallAngreSendTilBeslutterMock,
+            })
+        );
+
+        const { getByText, getByRole } = renderTotrinnskontroll(
+            lagBehandling({
+                kanEndres: false,
+                behandlingsstegsinfo: [
+                    { behandlingssteg: 'FATTE_VEDTAK', behandlingsstegstatus: 'KLAR' },
+                ],
+            }),
+            {
+                aktivtSteg: { behandlingssteg: 'FATTE_VEDTAK', behandlingsstegstatus: 'KLAR' },
+            }
+        );
+
+        await waitFor(() => {
+            expect(getByText('Fakta')).toBeInTheDocument();
+        });
+
+        const avbrytKnapp = getByRole('button', { name: 'Avbryt' });
+        expect(avbrytKnapp).toBeInTheDocument();
+
+        await user.click(avbrytKnapp);
+
+        expect(kallAngreSendTilBeslutterMock).toHaveBeenCalled();
+    });
+
+    test('Viser feilmelding når angreSendTilBeslutter feiler', async () => {
+        setupMocks({
+            totrinnkontroll: { totrinnsstegsinfo: standardSteg },
+            angreSendTilBeslutterSuksess: false,
+        });
+
+        const { getByText, getByRole } = renderTotrinnskontroll(
+            lagBehandling({
+                kanEndres: false,
+                behandlingsstegsinfo: [
+                    { behandlingssteg: 'FATTE_VEDTAK', behandlingsstegstatus: 'KLAR' },
+                ],
+            }),
+            {
+                aktivtSteg: { behandlingssteg: 'FATTE_VEDTAK', behandlingsstegstatus: 'KLAR' },
+            }
+        );
+
+        await waitFor(() => {
+            expect(getByText('Fakta')).toBeInTheDocument();
+        });
+
+        await user.click(getByRole('button', { name: 'Avbryt' }));
+
+        await waitFor(() => {
+            expect(getByText('Kunne ikke angre send til beslutter')).toBeInTheDocument();
         });
     });
 });
