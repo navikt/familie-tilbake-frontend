@@ -6,7 +6,7 @@ import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 export const FaktaSkeleton: React.FC = () => {
     return (
         <>
-            <div className="flex flex-col gap-8" aria-label="Fakta om feilutbetaling">
+            <div className="flex flex-col gap-6" aria-label="Fakta om feilutbetaling">
                 <Heading size="medium">Fakta om feilutbetalingen</Heading>
                 <section
                     className="flex md:flex-row flex-col flex-col-3 w-full gap-6"
