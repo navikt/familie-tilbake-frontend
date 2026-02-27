@@ -109,6 +109,7 @@ export const zRotElement = z.union([
 
 export const zAvsnitt = z.object({
     tittel: z.string().min(3).max(300),
+    forklaring: z.string().readonly(),
     id: z.uuid(),
     underavsnitt: z.array(zRotElement),
 });

@@ -6,6 +6,7 @@ export type ClientOptions = {
 
 export type Avsnitt = {
     tittel: string;
+    readonly forklaring: string;
     id: string;
     underavsnitt: Array<RotElement>;
 };
