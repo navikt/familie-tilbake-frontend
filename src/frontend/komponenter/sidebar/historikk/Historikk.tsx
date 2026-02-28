@@ -1,6 +1,7 @@
+import type { FC } from 'react';
+
 import { Heading } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
-import * as React from 'react';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '~/typer/ressurs';
@@ -8,7 +9,7 @@ import { RessursStatus } from '~/typer/ressurs';
 import { useHistorikk } from './HistorikkContext';
 import { HistorikkInnslag } from './HistorikkInnslag';
 
-export const Historikk: React.FC = () => {
+export const Historikk: FC = () => {
     const { historikkInnslag } = useHistorikk();
     if (historikkInnslag?.status !== RessursStatus.Suksess) {
         return (

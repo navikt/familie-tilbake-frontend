@@ -1,8 +1,9 @@
 import type { UnderavsnittSkjemaData } from './typer/vedtak';
+import type { ChangeEvent, FC } from 'react';
 
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link, Textarea, VStack } from '@navikt/ds-react';
-import * as React from 'react';
+import { useState } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { harVerdi, isEmpty, validerTekstMaksLengde } from '~/utils';
@@ -15,7 +16,7 @@ type Props = {
     maximumLength?: number;
 };
 
-export const VedtakFritekstSkjema: React.FC<Props> = ({
+export const VedtakFritekstSkjema: FC<Props> = ({
     avsnittIndex,
     underavsnitt,
     maximumLength = 4000,
@@ -23,15 +24,13 @@ export const VedtakFritekstSkjema: React.FC<Props> = ({
     const { oppdaterUnderavsnitt } = useVedtak();
     const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
-    const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = React.useState<boolean>();
-
-    React.useEffect(() => {
-        settFritekstfeltErSynlig(harVerdi(fritekst) || fritekstPåkrevet);
-    }, [fritekst, fritekstPåkrevet]);
+    const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = useState<boolean>(
+        harVerdi(fritekst) || fritekstPåkrevet
+    );
 
     const lenkeKnappErSynlig = !fritekstfeltErSynlig && !behandlingILesemodus;
 
-    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+    const onChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
         const nyVerdi = e.target.value;
         const feilmelding =
             isEmpty(nyVerdi) && !fritekstPåkrevet

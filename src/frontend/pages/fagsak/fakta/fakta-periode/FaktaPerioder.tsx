@@ -1,7 +1,7 @@
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { FC } from 'react';
 
 import { Table } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useFagsak } from '~/context/FagsakContext';
 import { hentHendelseTyper } from '~/kodeverk';
@@ -12,7 +12,7 @@ type Props = {
     perioder: FaktaPeriodeSkjemaData[];
 };
 
-export const FaktaPerioder: React.FC<Props> = ({ perioder }) => {
+export const FaktaPerioder: FC<Props> = ({ perioder }) => {
     const { ytelsestype, institusjon } = useFagsak();
     const hendelsestyper = hentHendelseTyper(ytelsestype, !!institusjon);
 

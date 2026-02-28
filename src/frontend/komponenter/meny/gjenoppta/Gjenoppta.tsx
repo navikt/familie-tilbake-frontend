@@ -1,7 +1,8 @@
+import type { FC } from 'react';
+
 import { TimerStartIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
-import * as React from 'react';
 import { useRef } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -10,7 +11,7 @@ import { usePåVentBehandling } from '~/komponenter/modal/på-vent/PåVentContex
 
 import { MODAL_BREDDE } from '../utils';
 
-export const Gjenoppta: React.FC = () => {
+export const Gjenoppta: FC = () => {
     const behandling = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const queryClient = useQueryClient();

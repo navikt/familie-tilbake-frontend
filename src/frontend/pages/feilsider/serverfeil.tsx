@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { BodyShort, Box, Button, HGrid, Heading, Link, List, Page, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 type Props = {
     httpStatus?: number;
@@ -7,7 +8,7 @@ type Props = {
     behandlingId?: string;
 };
 
-export const Serverfeil: React.FC<Props> = ({ httpStatus, fagsakId, behandlingId }) => {
+export const Serverfeil: FC<Props> = ({ httpStatus, fagsakId, behandlingId }) => {
     return (
         <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-32">

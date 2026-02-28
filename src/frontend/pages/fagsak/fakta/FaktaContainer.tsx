@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { Heading, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -11,7 +12,7 @@ import { RessursStatus } from '~/typer/ressurs';
 import { useFakta } from './FaktaContext';
 import { GammelFaktaSkjema } from './GammelFaktaSkjema';
 
-export const FaktaContainer: React.FC = () => {
+export const FaktaContainer: FC = () => {
     const { stegErBehandlet, skjemaData, fakta, navigerTilForrige, sendInnSkjema, senderInn } =
         useFakta();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();

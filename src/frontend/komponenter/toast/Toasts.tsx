@@ -1,10 +1,10 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { useApp } from '~/context/AppContext';
 
 import { Toast } from './Toast';
 
-export const Toasts: React.FC = () => {
+export const Toasts: FC = () => {
     const { toasts } = useApp();
 
     return (

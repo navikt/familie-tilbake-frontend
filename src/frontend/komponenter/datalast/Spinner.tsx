@@ -1,11 +1,12 @@
+import type { FC } from 'react';
+
 import { Loader } from '@navikt/ds-react';
-import React from 'react';
 
 type Props = {
     type: string;
 };
 
-export const Spinner: React.FC<Props> = ({ type }) => {
+export const Spinner: FC<Props> = ({ type }) => {
     return (
         <div className="min-h-screen bg-surface-subtle flex items-center justify-center">
             <div className="text-center">

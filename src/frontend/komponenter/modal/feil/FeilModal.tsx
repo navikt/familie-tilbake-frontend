@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { Feil } from '~/api/feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Link, List, Modal, VStack, Box } from '@navikt/ds-react';
-import React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useFagsak } from '~/context/FagsakContext';
@@ -16,7 +16,7 @@ type Props = {
     beskjed?: string;
 };
 
-export const FeilModal: React.FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) => {
+export const FeilModal: FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) => {
     const { behandlingId } = useBehandling();
     const { eksternFagsakId } = useFagsak();
     const feilObjekt = hentFeilObjekt(hentStatus(feil));

@@ -36,6 +36,7 @@ export default defineConfig(
                 },
             ],
             '@typescript-eslint/explicit-function-return-type': 'warn',
+            'react/react-in-jsx-scope': 'off',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
                 {

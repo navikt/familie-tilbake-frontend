@@ -1,9 +1,10 @@
+import type { FC } from 'react';
+
 import { BodyShort, Heading, Skeleton, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
-export const VedtakSkeleton: React.FC = () => {
+export const VedtakSkeleton: FC = () => {
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">

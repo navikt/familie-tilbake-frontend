@@ -1,11 +1,12 @@
+import type { FC } from 'react';
+
 import { BagdeIcon, Buildings3Icon, CalendarIcon, CandleIcon } from '@navikt/aksel-icons';
 import { Box, CopyButton, Heading, Skeleton } from '@navikt/ds-react';
 import classNames from 'classnames';
-import React from 'react';
 
 import { ICON_PROPS } from './utils';
 
-export const SidebarSkeleton: React.FC = () => {
+export const SidebarSkeleton: FC = () => {
     return (
         <aside
             aria-label="Laster informasjon om tilbakekrevingen og bruker"

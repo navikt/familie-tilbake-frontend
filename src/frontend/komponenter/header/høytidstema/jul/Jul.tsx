@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { Image } from '~/komponenter/image/Image';
 
@@ -35,7 +35,7 @@ const beregnAntallAdventslys = (): number => {
     return 4; // Etter 4. søndag i advent
 };
 
-export const Jul: React.FC = () => {
+export const Jul: FC = () => {
     const antallLys = beregnAntallAdventslys();
 
     if (antallLys === 0) return null;

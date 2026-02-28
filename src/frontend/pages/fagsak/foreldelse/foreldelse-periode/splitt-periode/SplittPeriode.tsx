@@ -1,10 +1,10 @@
 import type { ForeldelsePeriodeSkjemeData } from '../../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { FC } from 'react';
 import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
 
 import { Detail, Link } from '@navikt/ds-react';
 import { useCallback, useEffect, useState } from 'react';
-import * as React from 'react';
 
 import splitPeriodImageUrl from '~/images/splitt.svg';
 import splitPeriodImageHoverUrl from '~/images/splitt_hover.svg';
@@ -29,7 +29,7 @@ type Props = {
     ) => void;
 };
 
-export const SplittPeriode: React.FC<Props> = ({ periode, onBekreft }) => {
+export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
     const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,

@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { FagsakDto } from '~/generated';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { useParams } from 'react-router';
 
 import { hentFagsak } from '~/generated/sdk.gen';
@@ -14,7 +14,7 @@ type Props = {
     children: ReactNode;
 };
 
-export const FagsakProvider = ({ children }: Props): React.ReactElement => {
+export const FagsakProvider = ({ children }: Props): ReactElement => {
     const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
     const fagsystem =
         fagsystemParam == 'KS'

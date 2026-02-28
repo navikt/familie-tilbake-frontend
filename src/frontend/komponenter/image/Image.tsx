@@ -1,15 +1,17 @@
-import * as React from 'react';
+import type { FC, MouseEvent, KeyboardEvent } from 'react';
+
+import { useCallback, useState } from 'react';
 
 type Props = {
     src: string;
     srcHover?: string;
     altText: string;
-    onClick?: (event: React.MouseEvent) => void;
-    onKeyDown?: (event: React.KeyboardEvent) => void;
+    onClick?: (event: MouseEvent) => void;
+    onKeyDown?: (event: KeyboardEvent) => void;
     className?: string;
 };
 
-export const Image: React.FC<Props> = ({
+export const Image: FC<Props> = ({
     src,
     srcHover,
     altText,
@@ -17,15 +19,15 @@ export const Image: React.FC<Props> = ({
     onKeyDown,
     className,
 }) => {
-    const [isHovering, setHoovering] = React.useState(false);
+    const [isHovering, setHoovering] = useState(false);
 
-    const onFocus = React.useCallback((): void => {
+    const onFocus = useCallback((): void => {
         setHoovering(true);
     }, []);
-    const onBlur = React.useCallback((): void => {
+    const onBlur = useCallback((): void => {
         setHoovering(false);
     }, []);
-    const onKeyDownFn = React.useCallback((e: React.KeyboardEvent): void => {
+    const onKeyDownFn = useCallback((e: KeyboardEvent): void => {
         if (e.key === 'Enter' || e.key === ' ') {
             if (onKeyDown) {
                 onKeyDown(e);

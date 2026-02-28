@@ -3,7 +3,6 @@ import type { InstitusjonDto } from '~/generated';
 import type { FrontendBrukerDto } from '~/generated';
 
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { lagFagsak } from '~/testdata/fagsakFactory';

@@ -1,3 +1,5 @@
+import type { FC } from 'react';
+
 import {
     ClockDashedIcon,
     EnvelopeClosedIcon,
@@ -5,7 +7,6 @@ import {
     PersonGavelIcon,
 } from '@navikt/aksel-icons';
 import { ToggleGroup } from '@navikt/ds-react';
-import * as React from 'react';
 import { useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -13,7 +14,7 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 
 import { Menysider, MenySideInnhold } from './Menykontainer';
 
-export const HistorikkOgDokumenter: React.FC = () => {
+export const HistorikkOgDokumenter: FC = () => {
     const { erNyModell } = useBehandling();
     const { harVærtPåFatteVedtakSteget } = useBehandlingState();
     const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();

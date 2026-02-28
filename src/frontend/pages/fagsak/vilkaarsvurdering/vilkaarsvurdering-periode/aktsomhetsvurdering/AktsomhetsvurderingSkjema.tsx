@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
@@ -16,7 +16,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const AktsomhetsvurderingSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;

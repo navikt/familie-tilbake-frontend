@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '~/generated';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
-import * as React from 'react';
 import { useRef } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -17,7 +17,7 @@ const hentÅrsaker = (behandlingstype: BehandlingstypeEnum): Behandlingsresultat
     }
 };
 
-export const Henlegg: React.FC = () => {
+export const Henlegg: FC = () => {
     const behandling = useBehandling();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const årsaker = hentÅrsaker(behandling.type);

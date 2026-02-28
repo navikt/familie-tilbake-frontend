@@ -1,12 +1,13 @@
+import type { FC } from 'react';
+
 import { BodyShort, Label, LocalAlert } from '@navikt/ds-react';
-import * as React from 'react';
 
 type Props = {
     behandletSteg: boolean;
     infotekst: string;
 };
 
-export const Steginformasjon: React.FC<Props> = ({ behandletSteg, infotekst }) => {
+export const Steginformasjon: FC<Props> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <LocalAlert status="announcement">
             <LocalAlert.Content>{infotekst}</LocalAlert.Content>

@@ -1,3 +1,5 @@
+import type { FC } from 'react';
+
 import {
     BodyLong,
     BodyShort,
@@ -8,7 +10,7 @@ import {
     LocalAlert,
     VStack,
 } from '@navikt/ds-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -26,7 +28,7 @@ import { useVedtak } from './VedtakContext';
 import { VedtakPerioder } from './VedtakPerioder';
 import { VedtakSkjema } from './VedtakSkjema';
 
-export const VedtakContainer: React.FC = () => {
+export const VedtakContainer: FC = () => {
     const {
         vedtaksbrevavsnitt,
         beregningsresultat,

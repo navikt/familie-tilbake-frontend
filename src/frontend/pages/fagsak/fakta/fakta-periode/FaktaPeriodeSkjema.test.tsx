@@ -5,7 +5,6 @@ import type { Ressurs } from '~/typer/ressurs';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
-import * as React from 'react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { HendelseUndertype, HendelseType } from '~/kodeverk';

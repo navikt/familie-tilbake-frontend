@@ -1,5 +1,7 @@
+import type { ErrorInfo, ReactNode } from 'react';
+
 import { BodyLong, BodyShort, Button, Heading, LocalAlert, VStack } from '@navikt/ds-react';
-import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component } from 'react';
 
 type Props = {
     children: ReactNode;

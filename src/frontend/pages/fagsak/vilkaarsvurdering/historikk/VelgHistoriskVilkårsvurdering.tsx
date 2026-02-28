@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
-import * as React from 'react';
 
 import { formatterDatoOgTidstring } from '~/utils';
 
@@ -11,7 +11,7 @@ type Props = {
     setInaktivVilkårsvurdering: (valgtFakta?: VilkårsvurderingResponse) => void;
 };
 
-export const VelgHistoriskVilkårsvurdering: React.FC<Props> = ({
+export const VelgHistoriskVilkårsvurdering: FC<Props> = ({
     inaktiveVilkårsvurderinger,
     setInaktivVilkårsvurdering,
 }) => {

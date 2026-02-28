@@ -1,9 +1,9 @@
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { FC } from 'react';
 
 import { CheckmarkCircleIcon, PencilIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
 import { Timeline } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { dateTilIsoDatoStringEllerUndefined } from '~/utils/dato';
 
@@ -12,7 +12,7 @@ type Props = {
     onSelectPeriode: (periode: TimelinePeriodProps) => void;
 };
 
-export const TilbakeTidslinje: React.FC<Props> = ({ rader, onSelectPeriode }) => {
+export const TilbakeTidslinje: FC<Props> = ({ rader, onSelectPeriode }) => {
     return (
         <Timeline>
             {rader.map(rad => (

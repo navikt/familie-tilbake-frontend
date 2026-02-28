@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { BodyLong, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -11,7 +12,7 @@ import { finnDatoRelativtTilNå } from '~/utils';
 import { ForeldelsePerioder } from './foreldelse-periode/ForeldelsePerioder';
 import { useForeldelse } from './ForeldelseContext';
 
-export const ForeldelseContainer: React.FC = () => {
+export const ForeldelseContainer: FC = () => {
     const {
         foreldelse,
         skjemaData,

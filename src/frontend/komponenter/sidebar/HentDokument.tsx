@@ -1,4 +1,6 @@
-import * as React from 'react';
+import type { FC } from 'react';
+
+import { useEffect, useState } from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -19,13 +21,13 @@ type Props = {
     onClose: () => void;
 };
 
-export const HentDokument: React.FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
-    const [hentetDokument, settHentetDokument] = React.useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
+    const [hentetDokument, settHentetDokument] = useState<Ressurs<string>>(byggTomRessurs());
+    const [visModal, settVisModal] = useState<boolean>(false);
     const { behandlingId } = useBehandling();
     const { request } = useHttp();
 
-    React.useEffect(() => {
+    useEffect(() => {
         settVisModal(true);
         settHentetDokument(byggHenterRessurs());
         request<void, string>({

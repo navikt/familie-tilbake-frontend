@@ -1,10 +1,10 @@
+import type { FC } from 'react';
 import type { Brevmottaker as TBrevmottaker } from '~/typer/Brevmottaker';
 
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import * as React from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -28,7 +28,7 @@ export type BrevmottakerProps = {
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
-const Brevmottaker: React.FC<BrevmottakerProps> = ({
+const Brevmottaker: FC<BrevmottakerProps> = ({
     brevmottaker,
     brevmottakerId,
     erStandardMottaker,
@@ -221,7 +221,7 @@ const Brevmottaker: React.FC<BrevmottakerProps> = ({
     );
 };
 
-export const Brevmottakere: React.FC = () => {
+export const Brevmottakere: FC = () => {
     const { manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
     const { bruker } = useFagsak();

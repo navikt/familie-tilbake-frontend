@@ -1,10 +1,10 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import { useFagsak } from '~/context/FagsakContext';
 import { ManuellRegistrering } from '~/pages/fagsak/brevmottaker/adressekilde/ManuellRegistrering';
 import { MottakerType } from '~/typer/Brevmottaker';
 
-export const Dødsbo: React.FC = () => {
+export const Dødsbo: FC = () => {
     const { bruker } = useFagsak();
 
     const dødsboNavn = `${bruker.navn} v/dødsbo`;

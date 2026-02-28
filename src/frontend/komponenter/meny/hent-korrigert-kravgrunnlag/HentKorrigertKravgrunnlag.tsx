@@ -1,7 +1,8 @@
+import type { FC } from 'react';
+
 import { HddUpIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
-import * as React from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { useApp } from '~/context/AppContext';
@@ -12,7 +13,7 @@ import { AlertType, ToastTyper } from '~/komponenter/toast/typer';
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
 import { useStegNavigering } from '~/utils/sider';
 
-export const HentKorrigertKravgrunnlag: React.FC = () => {
+export const HentKorrigertKravgrunnlag: FC = () => {
     const { behandlingId } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const { request } = useHttp();

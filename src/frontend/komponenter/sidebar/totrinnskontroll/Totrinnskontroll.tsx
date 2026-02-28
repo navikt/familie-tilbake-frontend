@@ -1,4 +1,5 @@
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
+import type { FC, MouseEvent } from 'react';
 import type { SynligSteg } from '~/utils/sider';
 
 import {
@@ -11,7 +12,7 @@ import {
     Textarea,
     RadioGroup,
 } from '@navikt/ds-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -28,7 +29,7 @@ import {
     totrinnGodkjenningOptions,
 } from './typer/totrinnSkjemaTyper';
 
-export const Totrinnskontroll: React.FC = () => {
+export const Totrinnskontroll: FC = () => {
     const {
         totrinnkontroll,
         skjemaData,
@@ -100,7 +101,7 @@ export const Totrinnskontroll: React.FC = () => {
                         <div key={totrinnSteg.behandlingssteg} className="flex flex-col gap-1">
                             <Link
                                 href="#"
-                                onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
+                                onMouseDown={(e: MouseEvent) => e.preventDefault()}
                                 onClick={() => navigerTilSide(side as SynligSteg)}
                             >
                                 {behandlingssteg[totrinnSteg.behandlingssteg]}

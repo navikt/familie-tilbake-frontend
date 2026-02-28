@@ -1,7 +1,8 @@
+import type { FC } from 'react';
+
 import { Heading, Tag, VStack } from '@navikt/ds-react';
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import {
@@ -13,7 +14,7 @@ import { formatterDatostring } from '~/utils';
 
 import { FaktaSkjema } from './FaktaSkjema';
 
-export const Fakta: React.FC = (): React.JSX.Element => {
+export const Fakta: FC = () => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const { data: faktaOmFeilutbetaling } = useSuspenseQuery(

@@ -1,6 +1,7 @@
+import type { FC } from 'react';
+
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
-import React from 'react';
 
 import { Behandlingsmeny } from '~/komponenter/meny/Meny';
 
@@ -27,7 +28,7 @@ type SubmitProps = BaseProps & {
     onNeste?: never;
 };
 
-const ActionBar: React.FC<ButtonProps | SubmitProps> = ({
+const ActionBar: FC<ButtonProps | SubmitProps> = ({
     stegtekst = '',
     forrigeAriaLabel,
     nesteAriaLabel,

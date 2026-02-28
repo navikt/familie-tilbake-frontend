@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { useSuspenseQuery } from '@tanstack/react-query';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -9,7 +10,7 @@ import { useStegNavigering } from '~/utils/sider';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 
-export const Vedtak: React.FC = () => {
+export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering('VILKÅRSVURDERING');

@@ -1,4 +1,5 @@
 import type { TagProps } from '@navikt/ds-react';
+import type { ComponentType, FC } from 'react';
 import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '~/generated';
 
 import {
@@ -14,7 +15,6 @@ import {
     TasklistSendIcon,
 } from '@navikt/aksel-icons';
 import { ExpansionCard, Tag } from '@navikt/ds-react';
-import React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useFagsak } from '~/context/FagsakContext';
@@ -23,7 +23,7 @@ import { formatterDatostring } from '~/utils';
 
 import { ICON_PROPS } from '../utils';
 
-export const Faktaboks: React.FC = () => {
+export const Faktaboks: FC = () => {
     const behandling = useBehandling();
     const { ytelsestype } = useFagsak();
 
@@ -125,11 +125,11 @@ const STATUS_META = {
     {
         dataColor: TagProps['data-color'];
         variant: TagProps['variant'];
-        icon: React.ComponentType;
+        icon: ComponentType;
     }
 >;
 
-const StatusTag: React.FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
+const StatusTag: FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
     const { dataColor, variant, icon: StatusIkon } = STATUS_META[status];
     return (
         <>
@@ -163,7 +163,7 @@ const RESULTAT_META: Record<
     FULL_TILBAKEBETALING: { dataColor: 'info', variant: 'moderate' },
 };
 
-const ResultatTag: React.FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat }) => {
+const ResultatTag: FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat }) => {
     const { dataColor, variant } = RESULTAT_META[resultat];
     return (
         <>

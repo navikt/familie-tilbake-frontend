@@ -1,7 +1,7 @@
 import type { Saksbehandler } from './typer/saksbehandler';
+import type { FC } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import * as React from 'react';
 import { Suspense, useEffect, useState } from 'react';
 import {
     createBrowserRouter,
@@ -33,7 +33,7 @@ const FagsakContainer = lazyImportMedRetry(
     'FagsakContainer'
 );
 
-const AppLayout: React.FC = () => {
+const AppLayout: FC = () => {
     const { autentisert } = useApp();
 
     if (!autentisert) {
@@ -49,7 +49,7 @@ const AppLayout: React.FC = () => {
     );
 };
 
-const FagsakProvidersWrapper: React.FC = () => (
+const FagsakProvidersWrapper: FC = () => (
     <Suspense fallback={<Spinner type="fagsak" />}>
         <FagsakErrorBoundary>
             <FagsakProvider>
@@ -89,7 +89,7 @@ const router = createBrowserRouter(
     )
 );
 
-export const App: React.FC = () => {
+export const App: FC = () => {
     const [autentisertSaksbehandler, settAutentisertSaksbehandler] = useState<
         Saksbehandler | undefined
     >(undefined);

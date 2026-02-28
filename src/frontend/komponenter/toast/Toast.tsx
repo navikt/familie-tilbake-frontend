@@ -1,11 +1,12 @@
 import type { Toast as TToast } from './typer';
+import type { FC } from 'react';
 
 import { LocalAlert } from '@navikt/ds-react';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useApp } from '~/context/AppContext';
 
-export const Toast: React.FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
+export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
     const { toasts, settToasts } = useApp();
     const toastRef = useRef<HTMLDivElement>(null);
 

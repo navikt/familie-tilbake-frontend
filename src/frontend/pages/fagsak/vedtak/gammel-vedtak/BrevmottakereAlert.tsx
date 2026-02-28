@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { Brevmottaker } from '~/generated';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Button, LocalAlert } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { BrevmottakerListe } from '~/komponenter/brevmottaker-liste/BrevmottakerListe';
 import { useStegNavigering } from '~/utils/sider';
@@ -11,7 +11,7 @@ type Props = {
     brevmottakere: Brevmottaker[];
 };
 
-export const BrevmottakereAlert: React.FC<Props> = ({ brevmottakere }) => {
+export const BrevmottakereAlert: FC<Props> = ({ brevmottakere }) => {
     const navigerTilBrevmottakerSteg = useStegNavigering('BREVMOTTAKER');
     return (
         brevmottakere &&

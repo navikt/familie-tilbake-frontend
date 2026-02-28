@@ -1,7 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '~/generated/types.gen';
 
-import * as React from 'react';
 import { createContext, useContext, useMemo, useState } from 'react';
 
 import { useUlagretEndringer, type UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
@@ -35,7 +34,7 @@ type Props = {
     children: ReactNode;
 };
 
-export const BehandlingStateProvider = ({ children }: Props): React.ReactElement => {
+export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
     const behandling = useBehandling();
     const ulagretEndringer = useUlagretEndringer();
     const [innholdsbredde, settInnholdsbredde] = useState<number>(0);

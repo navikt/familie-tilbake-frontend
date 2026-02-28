@@ -1,6 +1,8 @@
+import type { FC } from 'react';
+
 import { UNSAFE_Combobox } from '@navikt/ds-react';
 import { countries } from 'countries-list';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { norskLandnavn } from '~/utils/land';
 
@@ -16,7 +18,7 @@ type Props = {
     error?: string;
 };
 
-export const Landvelger: React.FC<Props> = ({
+export const Landvelger: FC<Props> = ({
     id,
     eksluderLandkoder = [],
     valgtLandkode,

@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { Heading, LocalAlert, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '~/typer/ressurs';
@@ -8,7 +9,7 @@ import { useHistoriskVilkårsvurdering } from './HistoriskVilkårsvurderingConte
 import { HistoriskVilkårsvurderingVisning } from './HistoriskVilkårsvurderingVisning';
 import { VelgHistoriskVilkårsvurdering } from './VelgHistoriskVilkårsvurdering';
 
-export const HistoriskVilkårsvurderingContainer: React.FC = () => {
+export const HistoriskVilkårsvurderingContainer: FC = () => {
     const { inaktiveVilkårsvurderinger, skjemaData, setInaktivVilkårsvurdering } =
         useHistoriskVilkårsvurdering();
 

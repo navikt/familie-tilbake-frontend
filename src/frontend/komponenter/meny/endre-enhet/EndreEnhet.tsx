@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { BehandlingDto } from '~/generated';
 
 import { Buildings3Icon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
-import * as React from 'react';
 import { useRef } from 'react';
 
 import { RessursStatus } from '~/typer/ressurs';
@@ -25,7 +25,7 @@ const enheter: Arbeidsfordelingsenhet[] = [
     { enhetskode: '4817', enhetsnavn: 'Nav Familie- og pensjonsytelser Steinkjer' },
 ];
 
-export const EndreEnhet: React.FC = () => {
+export const EndreEnhet: FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { skjema, sendInn, nullstillSkjema } = useEndreEnhet(() => dialogRef.current?.close());
 

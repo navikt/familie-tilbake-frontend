@@ -2,7 +2,7 @@ import type { VergeDto, VergeStegPayload } from '~/typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -35,18 +35,18 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
 const [VergeProvider, useVerge] = createUseContext(() => {
     const behandling = useBehandling();
     const queryClient = useQueryClient();
-    const [stegErBehandlet, settStegErBehandlet] = React.useState<boolean>(false);
-    const [erAutoutført, settErAutoutført] = React.useState<boolean>();
-    const [verge, settVerge] = React.useState<VergeDto>();
-    const [henterData, settHenterData] = React.useState<boolean>(false);
-    const [senderInn, settSenderInn] = React.useState<boolean>(false);
-    const [vergeRespons, settVergeRepons] = React.useState<Ressurs<string>>();
+    const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
+    const [erAutoutført, settErAutoutført] = useState<boolean>();
+    const [verge, settVerge] = useState<VergeDto>();
+    const [henterData, settHenterData] = useState<boolean>(false);
+    const [senderInn, settSenderInn] = useState<boolean>(false);
+    const [vergeRespons, settVergeRepons] = useState<Ressurs<string>>();
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const navigerTilNeste = useStegNavigering('FAKTA');
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (behandling.harVerge) {
             settStegErBehandlet(erStegBehandlet('VERGE'));
             settErAutoutført(erStegAutoutført('VERGE'));

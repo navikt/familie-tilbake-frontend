@@ -1,9 +1,10 @@
+import type { FC } from 'react';
+
 import { BodyShort, Heading, Skeleton, VStack } from '@navikt/ds-react';
-import React from 'react';
 
 import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
-export const ForhåndsvarselSkeleton: React.FC = () => {
+export const ForhåndsvarselSkeleton: FC = () => {
     return (
         <VStack className="gap-6">
             <Heading size="medium">Forhåndsvarsel</Heading>

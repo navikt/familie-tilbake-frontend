@@ -2,7 +2,7 @@ import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 
 import { BodyLong, ExpansionCard, Heading, VStack } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
+import { useState, type FC } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Avsnittstype, Underavsnittstype } from '~/kodeverk';
@@ -44,15 +44,10 @@ type Props = {
     erRevurderingBortfaltBeløp: boolean;
 };
 
-export const AvsnittSkjema: React.FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp }) => {
-    const [erEkspandert, settErEkspandert] = React.useState<boolean>(false);
-    const { behandlingILesemodus } = useBehandlingState();
+export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp }) => {
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);
-
-    React.useEffect(() => {
-        settErEkspandert(erEkspandert || harPåkrevetFritekstMenIkkeUtfylt);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [avsnitt]);
+    const [erEkspandert, settErEkspandert] = useState(harPåkrevetFritekstMenIkkeUtfylt);
+    const { behandlingILesemodus } = useBehandlingState();
 
     const finnBulletpointsFraListe = (
         underavsnittsliste: UnderavsnittSkjemaData[]

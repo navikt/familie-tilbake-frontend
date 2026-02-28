@@ -1,5 +1,6 @@
+import type { FC, ReactNode } from 'react';
+
 import { Button, Modal } from '@navikt/ds-react';
-import React from 'react';
 
 type Aksjonsknapp = {
     tekst: string;
@@ -12,11 +13,11 @@ type Props = {
     tittel: string;
     visModal: boolean;
     aksjonsknapper: { hovedKnapp: Aksjonsknapp; lukkKnapp: Aksjonsknapp };
-    children: React.ReactNode;
+    children: ReactNode;
     onClose: () => void;
 };
 
-export const ModalWrapper: React.FC<Props> = ({
+export const ModalWrapper: FC<Props> = ({
     tittel,
     visModal,
     onClose,

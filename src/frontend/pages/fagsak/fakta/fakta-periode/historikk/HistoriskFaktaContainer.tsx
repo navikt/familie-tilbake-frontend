@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { Heading, LocalAlert, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '~/typer/ressurs';
@@ -8,7 +9,7 @@ import { useHistoriskFakta } from './HistoriskFaktaContext';
 import { HistoriskFaktaVisning } from './HistoriskFaktaVisning';
 import { VelgHistoriskFaktaVurdering } from './VelgHistoriskFaktaVurdering';
 
-export const HistoriskFaktaContainer: React.FC = () => {
+export const HistoriskFaktaContainer: FC = () => {
     const { inaktiveFakta, skjemaData, fakta, setInaktivFakta } = useHistoriskFakta();
 
     if (inaktiveFakta?.status === RessursStatus.Suksess) {

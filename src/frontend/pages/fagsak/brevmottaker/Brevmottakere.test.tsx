@@ -3,7 +3,6 @@ import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
-import * as React from 'react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';

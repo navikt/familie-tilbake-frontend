@@ -1,6 +1,5 @@
+import type { FC } from 'react';
 import type { Brevmottaker, ManuellBrevmottakerResponsDto } from '~/generated';
-
-import React from 'react';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 import { mapBrevmottakerToFormData } from './schema/schema';
@@ -22,7 +21,7 @@ type BrevmottakerModalProps = {
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
-export const BrevmottakerModal: React.FC<BrevmottakerModalProps> = ({
+export const BrevmottakerModal: FC<BrevmottakerModalProps> = ({
     visBrevmottakerModal,
     brevmottakerIdTilEndring,
     brevmottakere,

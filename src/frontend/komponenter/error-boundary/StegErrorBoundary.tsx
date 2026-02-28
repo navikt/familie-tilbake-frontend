@@ -1,7 +1,8 @@
+import type { ErrorInfo, ReactNode } from 'react';
 import type { SynligSteg } from '~/utils/sider';
 
 import { Button, Heading, Link, List, LocalAlert, VStack } from '@navikt/ds-react';
-import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component } from 'react';
 
 type Props = {
     steg: SynligSteg;

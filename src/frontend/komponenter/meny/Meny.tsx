@@ -1,6 +1,7 @@
+import type { FC } from 'react';
+
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button } from '@navikt/ds-react';
-import * as React from 'react';
 import { useState } from 'react';
 
 import { useApp } from '~/context/AppContext';
@@ -19,7 +20,7 @@ import { Revurder } from './revurder/Revurder';
 import { SettPåVent } from './sett-på-vent/SettPåVent';
 import { StartPåNytt } from './start-på-nytt/StartPåNytt';
 
-export const Behandlingsmeny: React.FC = () => {
+export const Behandlingsmeny: FC = () => {
     const behandling = useBehandling();
     const { ventegrunn, erStegBehandlet, aktivtSteg, behandlingILesemodus } = useBehandlingState();
     const [holdMenyenÅpen, setHoldMenyenÅpen] = useState(false);

@@ -1,8 +1,9 @@
+import type { FC, MouseEvent } from 'react';
 import type { DokumentInfo, Journalpost } from '~/typer/journalføring';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Link } from '@navikt/ds-react';
-import * as React from 'react';
+import { useState } from 'react';
 
 import { HentDokument } from '~/komponenter/sidebar/HentDokument';
 import { Journalposttype } from '~/typer/journalføring';
@@ -12,8 +13,8 @@ type Props = {
     dokument: DokumentInfo;
 };
 
-export const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
-    const [visDokument, settVisDokument] = React.useState<boolean>(false);
+export const Dokumentvisning: FC<Props> = ({ journalpost, dokument }) => {
+    const [visDokument, settVisDokument] = useState<boolean>(false);
 
     return (
         <div>
@@ -23,7 +24,7 @@ export const Dokumentvisning: React.FC<Props> = ({ journalpost, dokument }) => {
                 <>
                     <Link
                         href="#"
-                        onClick={(e: React.MouseEvent) => {
+                        onClick={(e: MouseEvent) => {
                             e.preventDefault();
                             settVisDokument(true);
                         }}

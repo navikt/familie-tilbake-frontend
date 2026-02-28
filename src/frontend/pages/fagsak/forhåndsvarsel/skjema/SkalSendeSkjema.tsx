@@ -1,9 +1,10 @@
+import type { FC } from 'react';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 import type { Section, Varselbrevtekst } from '~/generated';
 import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -17,7 +18,7 @@ type Props = {
     handleForhåndsvarselSubmit: SubmitHandler<ForhåndsvarselFormData>;
 };
 
-export const SkalSendeSkjema: React.FC<Props> = ({
+export const SkalSendeSkjema: FC<Props> = ({
     varselbrevtekster,
     varselErSendt,
     handleForhåndsvarselSubmit,

@@ -1,8 +1,8 @@
 import type { FaktaSkjemaData } from '../../typer/fakta';
+import type { FC } from 'react';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import { BodyShort, HGrid, HStack, Table, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { FaktaPeriodeSkjema } from '~/pages/fagsak/fakta/fakta-periode/FaktaPeriodeSkjema';
 import { FaktaRevurdering } from '~/pages/fagsak/fakta/FaktaRevurdering';
@@ -14,7 +14,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-export const HistoriskFaktaVisning: React.FC<Props> = ({ skjemaData, fakta }) => {
+export const HistoriskFaktaVisning: FC<Props> = ({ skjemaData, fakta }) => {
     return (
         <HGrid columns={2} gap="space-40">
             <VStack gap="space-24">

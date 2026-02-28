@@ -1,8 +1,9 @@
+import type { FC } from 'react';
+
 import { PersonPlusIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import * as React from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { useApp } from '~/context/AppContext';
@@ -15,7 +16,7 @@ import { useStegNavigering } from '~/utils/sider';
 
 import { MODAL_BREDDE } from '../utils';
 
-export const LeggTilFjernBrevmottakere: React.FC = () => {
+export const LeggTilFjernBrevmottakere: FC = () => {
     const { behandlingId, manuelleBrevmottakere, behandlingsstegsinfo } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const dialogRef = useRef<HTMLDialogElement>(null);

@@ -1,8 +1,8 @@
+import type { FC, ReactNode } from 'react';
 import type { Http } from '~/api/http/HttpProvider';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
-import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
 
@@ -26,7 +26,7 @@ vi.mock('~/api/http/HttpProvider', () => ({
     }),
 }));
 
-const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const wrapper: FC<{ children: ReactNode }> = ({ children }) => (
     <QueryClientProvider client={createTestQueryClient()}>
         <MemoryRouter>
             <FagsakContext.Provider value={lagFagsak()}>

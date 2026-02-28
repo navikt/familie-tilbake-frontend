@@ -1,11 +1,13 @@
+import type { FC } from 'react';
+
 import { Button } from '@navikt/ds-react';
-import * as React from 'react';
+import { useEffect } from 'react';
 
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 
 import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
 
-export const ForhåndsvisVedtaksbrev: React.FC = () => {
+export const ForhåndsvisVedtaksbrev: FC = () => {
     const {
         hentetForhåndsvisning,
         hentVedtaksbrev,
@@ -14,7 +16,7 @@ export const ForhåndsvisVedtaksbrev: React.FC = () => {
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisVedtaksbrev();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (visModal) {
             hentVedtaksbrev();
         }

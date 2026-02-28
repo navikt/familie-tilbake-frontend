@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '~/typer/ressurs';
@@ -7,7 +8,7 @@ import { RessursStatus } from '~/typer/ressurs';
 import { erTotalbeløpUnder4Rettsgebyr, useVilkårsvurdering } from './VilkårsvurderingContext';
 import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';
 
-export const VilkårsvurderingContainer: React.FC = () => {
+export const VilkårsvurderingContainer: FC = () => {
     const { containerRef, vilkårsvurdering, erAutoutført, skjemaData } = useVilkårsvurdering();
 
     if (vilkårsvurdering?.status === RessursStatus.Suksess) {

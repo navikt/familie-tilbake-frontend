@@ -1,4 +1,5 @@
 import type { VedtaksbrevFormData } from './schema';
+import type { FC } from 'react';
 import type { VedtaksbrevData } from '~/generated-new';
 
 import {
@@ -13,7 +14,6 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import * as React from 'react';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -40,7 +40,7 @@ type Props = {
     vedtaksbrevData: VedtaksbrevData;
 };
 
-export const Vedtaksbrev: React.FC<Props> = ({ vedtaksbrevData }) => {
+export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({

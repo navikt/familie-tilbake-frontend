@@ -4,7 +4,7 @@ import type { BehandlingDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, fireEvent } from '@testing-library/react';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 
 import { BehandlingProvider } from '~/context/BehandlingContext';
 import { FagsakContext } from '~/context/FagsakContext';

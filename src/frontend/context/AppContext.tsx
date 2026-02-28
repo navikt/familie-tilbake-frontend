@@ -1,10 +1,10 @@
+import type { FC, ReactNode } from 'react';
 import type { Toast, ToastTyper } from '~/komponenter/toast/typer';
 import type { Ressurs } from '~/typer/ressurs';
 import type { Saksbehandler } from '~/typer/saksbehandler';
 
 import createUseContext from 'constate';
-import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { HttpProvider, useHttp } from '~/api/http/HttpProvider';
 
@@ -15,7 +15,7 @@ type Info = {
 };
 
 type Props = {
-    children: React.ReactNode;
+    children: ReactNode;
 };
 
 type AppProps = {
@@ -30,11 +30,11 @@ type AuthProviderExports = {
 
 const [AuthProvider, useAuth] = createUseContext(
     ({ autentisertSaksbehandler }: AppProps): AuthProviderExports => {
-        const [autentisert, settAutentisert] = React.useState(true);
+        const [autentisert, settAutentisert] = useState(true);
         const [innloggetSaksbehandler, settInnloggetSaksbehandler] =
-            React.useState(autentisertSaksbehandler);
+            useState(autentisertSaksbehandler);
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (autentisertSaksbehandler) {
                 settAutentisert(true);
                 settInnloggetSaksbehandler(autentisertSaksbehandler);
@@ -81,7 +81,7 @@ const [AppContentProvider, useApp] = createUseContext(() => {
     };
 });
 
-const AuthOgHttpProvider: React.FC<Props> = ({ children }) => {
+const AuthOgHttpProvider: FC<Props> = ({ children }) => {
     const { innloggetSaksbehandler, settAutentisert } = useAuth();
 
     return (
@@ -94,7 +94,7 @@ const AuthOgHttpProvider: React.FC<Props> = ({ children }) => {
     );
 };
 
-const AppProvider: React.FC<AppProps & Props> = ({ autentisertSaksbehandler, children }) => {
+const AppProvider: FC<AppProps & Props> = ({ autentisertSaksbehandler, children }) => {
     return (
         <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>
             <AuthOgHttpProvider>{children}</AuthOgHttpProvider>

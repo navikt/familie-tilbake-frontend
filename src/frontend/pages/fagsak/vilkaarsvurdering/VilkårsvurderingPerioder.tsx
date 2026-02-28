@@ -1,7 +1,7 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 
 import { BodyShort, LocalAlert, type TimelinePeriodProps } from '@navikt/ds-react';
-import * as React from 'react';
+import { useEffect, useState, type FC } from 'react';
 
 import { Vilkårsresultat } from '~/kodeverk';
 import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
@@ -61,19 +61,16 @@ type Props = {
     erTotalbeløpUnder4Rettsgebyr: boolean;
 };
 
-export const VilkårsvurderingPerioder: React.FC<Props> = ({
-    perioder,
-    erTotalbeløpUnder4Rettsgebyr,
-}) => {
+export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUnder4Rettsgebyr }) => {
     const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
         useVilkårsvurdering();
-    const [pendingPeriode, settPendingPeriode] = React.useState<
+    const [pendingPeriode, settPendingPeriode] = useState<
         VilkårsvurderingPeriodeSkjemaData | undefined
     >();
 
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!valgtPeriode && perioder && perioder.length > 0) {
             settValgtPeriode(perioder[0]);
         }

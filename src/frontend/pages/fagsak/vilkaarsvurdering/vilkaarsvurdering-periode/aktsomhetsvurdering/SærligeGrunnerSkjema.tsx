@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { Skjema } from '~/hooks/skjema';
 
 import { Checkbox, CheckboxGroup, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema';
@@ -20,7 +20,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const SærligeGrunnerSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
 
     const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {

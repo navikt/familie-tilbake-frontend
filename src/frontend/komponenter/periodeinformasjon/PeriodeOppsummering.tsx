@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { HendelseType } from '~/kodeverk';
 
 import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { hendelsetyper } from '~/kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '~/utils';
@@ -13,7 +13,7 @@ type Props = {
     hendelsetype?: HendelseType;
 };
 
-export const PeriodeOppsummering: React.FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
+export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
         <VStack
             gap="space-20"

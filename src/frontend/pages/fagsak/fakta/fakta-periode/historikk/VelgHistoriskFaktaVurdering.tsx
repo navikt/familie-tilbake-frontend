@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
-import * as React from 'react';
 
 import { formatterDatoOgTidstring } from '~/utils';
 
@@ -11,10 +11,7 @@ type Props = {
     setInaktivFakta: (valgtFakta?: FaktaResponse) => void;
 };
 
-export const VelgHistoriskFaktaVurdering: React.FC<Props> = ({
-    inaktiveFakta,
-    setInaktivFakta,
-}) => {
+export const VelgHistoriskFaktaVurdering: FC<Props> = ({ inaktiveFakta, setInaktivFakta }) => {
     return (
         <Select
             onChange={e => {

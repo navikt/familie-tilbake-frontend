@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type { ForhåndsvarselDto } from '~/generated';
 import type {
@@ -8,7 +9,6 @@ import type {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { VStack } from '@navikt/ds-react';
 import { useEffect, useEffectEvent } from 'react';
-import React from 'react';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -36,7 +36,7 @@ type Props = {
     skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel;
 };
 
-export const ForhåndsvarselSkjema: React.FC<Props> = ({
+export const ForhåndsvarselSkjema: FC<Props> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
 }) => {

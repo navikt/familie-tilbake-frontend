@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { LocalAlert } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { Serverfeil } from '~/pages/feilsider/serverfeil';
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
@@ -13,7 +14,7 @@ type Props = {
     spinnerStørrelse?: '2xlarge' | 'large';
 };
 
-export const DataLastIkkeSuksess: React.FC<Props> = ({
+export const DataLastIkkeSuksess: FC<Props> = ({
     ressurser,
     spinnerStørrelse,
     henteBeskrivelse,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 
 import { Dokumentlisting } from './dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './dokumentlisting/DokumentlistingContext';
@@ -20,7 +20,7 @@ type Props = {
     valgtMenyside: Menysider;
 };
 
-export const MenySideInnhold: React.FC<Props> = ({ valgtMenyside }) => {
+export const MenySideInnhold: FC<Props> = ({ valgtMenyside }) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (

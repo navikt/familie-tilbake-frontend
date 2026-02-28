@@ -1,8 +1,9 @@
+import type { FC } from 'react';
 import type { HenleggelseSkjemaDefinisjon } from '~/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
-import * as React from 'react';
+import { useEffect } from 'react';
 
 import { type Skjema } from '~/hooks/skjema';
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
@@ -14,7 +15,7 @@ type Props = {
     kanForh책ndsvise: boolean;
 };
 
-export const Forh책ndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForh책ndsvise }) => {
+export const Forh책ndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForh책ndsvise }) => {
     const {
         hentetForh책ndsvisning,
         hentBrev,
@@ -23,7 +24,7 @@ export const Forh책ndsvisHenleggelsesBrev: React.FC<Props> = ({ skjema, kanForh�
         nullstillHentetForh책ndsvisning,
     } = useForh책ndsvisHenleggelsesbrev({ skjema });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (visModal) {
             hentBrev();
         }

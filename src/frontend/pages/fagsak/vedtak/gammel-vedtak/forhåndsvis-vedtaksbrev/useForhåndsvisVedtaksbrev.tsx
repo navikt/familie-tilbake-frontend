@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 
 import { useDokumentApi } from '~/api/dokument';
 import { useVedtak } from '~/pages/fagsak/vedtak/gammel-vedtak/VedtakContext';
@@ -22,8 +22,8 @@ type ForhåndsvisVedtaksbrevHook = {
 
 const useForhåndsvisVedtaksbrev = (): ForhåndsvisVedtaksbrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
-        React.useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+        useState<Ressurs<string>>(byggTomRessurs());
+    const [visModal, settVisModal] = useState<boolean>(false);
     const { hentBrevdata, validerAlleAvsnittOk } = useVedtak();
     const { forhåndsvisVedtaksbrev } = useDokumentApi();
 
