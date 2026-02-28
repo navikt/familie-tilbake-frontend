@@ -1,7 +1,9 @@
-import { Box, Skeleton } from '@navikt/ds-react';
-import React, { Fragment } from 'react';
+import type { FC } from 'react';
 
-export const StegflytSkeleton: React.FC = () => {
+import { Box, Skeleton } from '@navikt/ds-react';
+import { Fragment } from 'react';
+
+export const StegflytSkeleton: FC = () => {
     const antallGjentagelser = 4;
     return (
         <nav

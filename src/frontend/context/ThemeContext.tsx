@@ -1,6 +1,7 @@
+import type { ComponentProps, FC, ReactNode } from 'react';
+
 import { Theme } from '@navikt/ds-react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import React from 'react';
 
 const COOKIE_NAVN = 'app-theme';
 const COOKIE_MAKS_ALDER_DAGER = 365;
@@ -17,7 +18,7 @@ const settTemaCookie = (name: string, value: string | undefined, days: number): 
     document.cookie = `${name}=${encodeURIComponent(value)}; Expires=${expires}; Path=/; SameSite=Lax`;
 };
 
-type Themes = React.ComponentProps<typeof Theme>['theme'];
+type Themes = ComponentProps<typeof Theme>['theme'];
 
 type ThemeContextValue = {
     theme: Themes;
@@ -38,11 +39,11 @@ export const useTheme = (): ThemeContextValue => {
 };
 
 type ThemeProviderProps = {
-    children: React.ReactNode;
+    children: ReactNode;
     defaultTheme?: Themes;
 };
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+export const ThemeProvider: FC<ThemeProviderProps> = ({
     children,
     defaultTheme = 'light',
 }: ThemeProviderProps) => {

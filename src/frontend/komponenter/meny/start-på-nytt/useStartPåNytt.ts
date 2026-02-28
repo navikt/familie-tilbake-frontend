@@ -1,4 +1,5 @@
 import type { UseMutationResult } from '@tanstack/react-query';
+import type { RefObject } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
@@ -25,7 +26,7 @@ const startPåNytt = async (
 };
 
 export type StartPåNyttHook = UseMutationResult<Ressurs<string>, Feil, void, unknown> & {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
     åpneDialog: () => void;
 };
 

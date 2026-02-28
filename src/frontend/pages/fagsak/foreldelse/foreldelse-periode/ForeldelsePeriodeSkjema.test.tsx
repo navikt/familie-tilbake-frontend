@@ -5,7 +5,6 @@ import type { ForeldelseHook } from '~/pages/fagsak/foreldelse/ForeldelseContext
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import * as React from 'react';
 
 import { Foreldelsevurdering } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';

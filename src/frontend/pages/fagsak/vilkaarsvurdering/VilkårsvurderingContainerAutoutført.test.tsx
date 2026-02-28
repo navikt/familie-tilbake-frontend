@@ -4,7 +4,6 @@ import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
-import * as React from 'react';
 import { vi } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';

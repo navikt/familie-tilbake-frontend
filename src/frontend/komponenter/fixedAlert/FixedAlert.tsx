@@ -1,14 +1,14 @@
 import type { LocalAlertProps } from '@navikt/ds-react';
-import type { MouseEvent } from 'react';
+import type { FC, MouseEvent } from 'react';
 
 import { LocalAlert } from '@navikt/ds-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 type Props = LocalAlertProps & {
     width?: number;
     title: string;
     stackIndex?: number;
-    onClose?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    onClose?: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
 const alertHeight = 90;
@@ -16,7 +16,7 @@ const alertGap = 8;
 const baseBottom = 112;
 const distanceToParent = 20;
 
-export const FixedAlert: React.FC<Props> = ({
+export const FixedAlert: FC<Props> = ({
     width,
     children,
     title,

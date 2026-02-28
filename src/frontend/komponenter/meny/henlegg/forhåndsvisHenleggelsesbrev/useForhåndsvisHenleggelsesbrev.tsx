@@ -1,6 +1,6 @@
 import type { HenleggelseSkjemaDefinisjon } from '~/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
 
-import * as React from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 
 import { useDokumentApi } from '~/api/dokument';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -17,7 +17,7 @@ import { base64ToArrayBuffer } from '~/utils';
 
 type ForhåndsvisHenleggelsesbrevHook = {
     visModal: boolean;
-    settVisModal: React.Dispatch<React.SetStateAction<boolean>>;
+    settVisModal: Dispatch<SetStateAction<boolean>>;
     hentetForhåndsvisning: Ressurs<string>;
     hentBrev: () => void;
     nullstillHentetForhåndsvisning: () => void;
@@ -32,8 +32,8 @@ export const useForhåndsvisHenleggelsesbrev = ({
 }: Props): ForhåndsvisHenleggelsesbrevHook => {
     const { behandlingId } = useBehandling();
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
-        React.useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+        useState<Ressurs<string>>(byggTomRessurs());
+    const [visModal, settVisModal] = useState<boolean>(false);
     const { forhåndsvisHenleggelsesbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = (): void => {

@@ -1,4 +1,5 @@
 import type { ForhåndsvarselFormData } from './schema';
+import type { FC } from 'react';
 import type { RessursByte } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,7 +7,7 @@ import { FilePdfIcon, MegaphoneIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import React, { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -27,7 +28,7 @@ const getTagVariant = (sendtTid: string): TagVariant => {
     return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
 };
 
-export const Forhåndsvarsel: React.FC = () => {
+export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
     const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();

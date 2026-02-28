@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { Skjema } from '~/hooks/skjema';
 import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Aktsomhet } from '~/kodeverk';
@@ -22,7 +22,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const ReduksjonAvBeløpSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;

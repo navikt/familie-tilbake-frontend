@@ -1,15 +1,15 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { TextareaProps } from '@navikt/ds-react';
+import type { FC } from 'react';
 import type { FieldPath } from 'react-hook-form';
 import type { RotElement } from '~/generated-new';
 
 import { Textarea } from '@navikt/ds-react';
-import * as React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
 
-export const VedtaksbrevSkjema: React.FC = () => {
+export const VedtaksbrevSkjema: FC = () => {
     const methods = useFormContext<VedtaksbrevFormData>();
     return (
         <>
@@ -24,7 +24,7 @@ export const VedtaksbrevSkjema: React.FC = () => {
     );
 };
 
-const Avsnitt: React.FC<{
+const Avsnitt: FC<{
     avsnitt: VedtaksbrevFormData['avsnitt'][number];
     avsnittIndex: number;
 }> = ({ avsnitt, avsnittIndex }) => {
@@ -65,7 +65,7 @@ const Avsnitt: React.FC<{
     );
 };
 
-const ElementTextarea: React.FC<
+const ElementTextarea: FC<
     Omit<TextareaProps, 'onChange' | 'value'> & {
         name: FieldPath<VedtaksbrevFormData>;
     }

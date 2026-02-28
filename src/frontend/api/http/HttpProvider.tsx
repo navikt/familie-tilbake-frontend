@@ -3,7 +3,7 @@ import type { ApiRessurs, Ressurs } from '~/typer/ressurs';
 import type { Saksbehandler } from '~/typer/saksbehandler';
 
 import constate from 'constate';
-import React from 'react';
+import { useState } from 'react';
 
 import { preferredAxios, håndterApiRespons } from './axios';
 
@@ -31,7 +31,7 @@ type Props = {
 
 export const [HttpProvider, useHttp] = constate(
     ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
-        const [ressurserSomLaster, settRessurserSomLaster] = React.useState<string[]>([]);
+        const [ressurserSomLaster, settRessurserSomLaster] = useState<string[]>([]);
 
         const fjernRessursSomLaster = (ressursId: string): void => {
             setTimeout(() => {

@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { Felt } from '~/hooks/skjema';
 import type { JaNeiOption } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup, Stack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema';
@@ -20,7 +20,7 @@ type Props = {
     visFeilmeldingerForSkjema: boolean;
 };
 
-export const TilleggesRenterRadioGroup: React.FC<Props> = ({
+export const TilleggesRenterRadioGroup: FC<Props> = ({
     kanIlleggeRenter,
     felt,
     readOnly,

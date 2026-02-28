@@ -1,6 +1,7 @@
+import type { FC, MouseEventHandler, RefObject } from 'react';
+
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
 import { useEffect } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -10,10 +11,10 @@ import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './informasjonsbokser/Faktaboks';
 
 type Props = {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-export const Sidebar: React.FC<Props> = ({ dialogRef }) => {
+export const Sidebar: FC<Props> = ({ dialogRef }) => {
     const { ventegrunn } = useBehandlingState();
 
     useEffect(() => {
@@ -28,7 +29,7 @@ export const Sidebar: React.FC<Props> = ({ dialogRef }) => {
         return (): void => mq.removeEventListener('change', lukkModalenHvisStørreEnnLg);
     }, [dialogRef]);
 
-    const handleKlikkUtenforModal: React.MouseEventHandler<HTMLDialogElement> = e => {
+    const handleKlikkUtenforModal: MouseEventHandler<HTMLDialogElement> = e => {
         if (e.target === e.currentTarget) {
             (e.currentTarget as HTMLDialogElement).close();
         }

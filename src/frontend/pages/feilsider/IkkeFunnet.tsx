@@ -1,8 +1,9 @@
+import type { FC } from 'react';
+
 import { BugIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Heading, Link, Page, VStack, List } from '@navikt/ds-react';
-import * as React from 'react';
 
-export const IkkeFunnet: React.FC = () => {
+export const IkkeFunnet: FC = () => {
     return (
         <Page.Block width="xl" gutters className="h-screen">
             <Box paddingBlock="space-80 space-64" data-aksel-template="404-v2">

@@ -1,7 +1,7 @@
 import type { AvsnittSkjemaData } from './typer/vedtak';
+import type { FC } from 'react';
 
 import { Heading, LocalAlert } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 
@@ -13,7 +13,7 @@ type Props = {
     harBrukerUttaltSeg: boolean;
 };
 
-export const VedtakSkjema: React.FC<Props> = ({
+export const VedtakSkjema: FC<Props> = ({
     avsnitter,
     erRevurderingBortfaltBeløp,
     harBrukerUttaltSeg,

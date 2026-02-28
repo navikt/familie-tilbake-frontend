@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { BodyLong, Button, Modal } from '@navikt/ds-react';
-import React from 'react';
 
 import { MODAL_BREDDE } from '~/komponenter/meny/utils';
 
@@ -13,7 +14,7 @@ type Props = {
     laster?: boolean;
 };
 
-export const BekreftelsesModal: React.FC<Props> = ({
+export const BekreftelsesModal: FC<Props> = ({
     åpen,
     onLukk,
     overskrift,

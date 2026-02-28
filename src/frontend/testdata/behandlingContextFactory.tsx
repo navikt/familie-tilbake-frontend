@@ -1,8 +1,7 @@
+import type { FC, ReactNode } from 'react';
 import type { BehandlingStateContextType } from '~/context/BehandlingStateContext';
 import type { BehandlingDto } from '~/generated';
 import type { UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
-
-import * as React from 'react';
 
 import { BehandlingContext } from '~/context/BehandlingContext';
 import { BehandlingStateContext } from '~/context/BehandlingStateContext';
@@ -65,10 +64,10 @@ export const lagBehandlingStateContext = (
  * Test provider som wrapper både BehandlingContext og BehandlingStateContext.
  * Bruk denne for enkel testing av komponenter som trenger begge kontekstene.
  */
-export const TestBehandlingProvider: React.FC<{
+export const TestBehandlingProvider: FC<{
     behandling?: BehandlingDto;
     stateOverrides?: BehandlingStateContextOverrides;
-    children: React.ReactNode;
+    children: ReactNode;
 }> = ({ behandling, stateOverrides = {}, children }) => {
     const ulagretEndringer = useUlagretEndringer();
     const behandlingValue = behandling ?? lagBehandling();

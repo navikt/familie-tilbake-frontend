@@ -2,7 +2,7 @@ import type { BrevPayload } from '~/typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import * as React from 'react';
+import { useState } from 'react';
 
 import { useDokumentApi } from '~/api/dokument';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -43,8 +43,8 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
 const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
     const { behandlingId, varselSendt } = useBehandling();
     const queryClient = useQueryClient();
-    const [senderInn, settSenderInn] = React.useState<boolean>(false);
-    const [feilmelding, settFeilmelding] = React.useState<string | undefined>();
+    const [senderInn, settSenderInn] = useState<boolean>(false);
+    const [feilmelding, settFeilmelding] = useState<string | undefined>();
     const { bestillBrev } = useDokumentApi();
 
     const maler = [

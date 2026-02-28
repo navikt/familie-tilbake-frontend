@@ -1,6 +1,7 @@
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 import type { AxiosError } from 'axios';
+import type { RefObject } from 'react';
 import type { VilkårdsvurderingStegPayload } from '~/typer/api';
 import type {
     VilkårsvurderingResponse,
@@ -22,7 +23,7 @@ import { sorterFeilutbetaltePerioder } from '~/utils';
 import { useStegNavigering } from '~/utils/sider';
 
 export type VilkårsvurderingHook = {
-    containerRef: React.RefObject<HTMLDivElement | null>;
+    containerRef: RefObject<HTMLDivElement | null>;
     vilkårsvurdering: Ressurs<VilkårsvurderingResponse> | undefined;
     stegErBehandlet: boolean;
     erAutoutført: boolean | undefined;

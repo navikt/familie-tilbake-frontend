@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { YtelseInfo } from '~/typer/tilbakekrevingstyper';
 
 import { Table } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { formatCurrencyNoKr } from '~/utils';
 
@@ -9,7 +9,7 @@ type Props = {
     ytelser?: YtelseInfo[];
 };
 
-export const TilbakekrevingAktivitetTabell: React.FC<Props> = ({ ytelser }) => {
+export const TilbakekrevingAktivitetTabell: FC<Props> = ({ ytelser }) => {
     return ytelser && ytelser.length > 0 ? (
         <Table>
             <Table.Header>

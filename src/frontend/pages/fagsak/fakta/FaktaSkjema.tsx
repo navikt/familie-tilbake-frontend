@@ -1,5 +1,6 @@
 import type { OppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import type { AxiosError } from 'axios';
+import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type {
     BehandlingOppdaterFaktaData,
@@ -30,7 +31,6 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { parseISO } from 'date-fns';
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
@@ -48,7 +48,7 @@ type Props = {
     faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
-export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element => {
+export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
     const { behandlingId } = useBehandling();
     const { behandlingILesemodus } = useBehandlingState();
     const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
@@ -285,19 +285,21 @@ export const FaktaSkjema = ({ faktaOmFeilutbetaling }: Props): React.JSX.Element
     );
 };
 
-const PeriodeRad = ({
-    periode,
-    periodeIndex,
-    periodeInfo,
-    muligeRettsligGrunnlag,
-    erSiste,
-}: {
+type PeriodeRadProps = {
     periode: OppdaterFaktaPeriode;
     periodeIndex: number;
     periodeInfo: FaktaPeriode;
     muligeRettsligGrunnlag: MuligeRettsligGrunnlag[];
     erSiste?: boolean;
-}): React.JSX.Element => {
+};
+
+const PeriodeRad: FC<PeriodeRadProps> = ({
+    periode,
+    periodeIndex,
+    periodeInfo,
+    muligeRettsligGrunnlag,
+    erSiste,
+}) => {
     const { behandlingILesemodus } = useBehandlingState();
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(

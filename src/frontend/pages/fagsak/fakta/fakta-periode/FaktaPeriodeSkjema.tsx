@@ -1,8 +1,8 @@
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { ChangeEvent, FC } from 'react';
 import type { HendelseType, HendelseUndertype } from '~/kodeverk';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 import { useEffect, useMemo } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -17,7 +17,7 @@ type Props = {
     erHistoriskVisning?: boolean;
 };
 
-export const FaktaPeriodeSkjema: React.FC<Props> = ({
+export const FaktaPeriodeSkjema: FC<Props> = ({
     periode,
     hendelseTyper,
     index,
@@ -52,13 +52,13 @@ export const FaktaPeriodeSkjema: React.FC<Props> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hendelseUnderTyper]);
 
-    const onChangeÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const onChangeÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value === '-' ? undefined : (e.target.value as HendelseType);
         oppdaterÅrsakPåPeriode(periode, årsak);
         settIkkePersistertKomponent('fakta');
     };
 
-    const onChangeUnderÅrsak = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const onChangeUnderÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {
         const underÅrsak =
             e.target.value === '-' ? undefined : (e.target.value as HendelseUndertype);
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);

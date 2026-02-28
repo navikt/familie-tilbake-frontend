@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { BeregningsresultatPeriode } from '~/typer/vedtakTyper';
 
 import { Table } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { vurderinger } from '~/kodeverk';
 import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
@@ -10,7 +10,7 @@ type Props = {
     perioder: BeregningsresultatPeriode[];
 };
 
-export const VedtakPerioder: React.FC<Props> = ({ perioder }) => {
+export const VedtakPerioder: FC<Props> = ({ perioder }) => {
     return (
         <Table>
             <Table.Header>

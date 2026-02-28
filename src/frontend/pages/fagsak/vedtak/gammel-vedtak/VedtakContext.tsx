@@ -9,8 +9,7 @@ import type { Beregningsresultat, VedtaksbrevAvsnitt } from '~/typer/vedtakTyper
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useState } from 'react';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useDokumentApi } from '~/api/dokument';
@@ -93,13 +92,13 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         useBehandlingApi();
     const { lagreUtkastVedtaksbrev } = useDokumentApi();
 
-    React.useEffect(() => {
+    useEffect(() => {
         hentBeregningsresultat();
         hentVedtaksbrevtekster();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (vedtaksbrevavsnitt?.status === RessursStatus.Suksess) {
             const avsnitter = vedtaksbrevavsnitt.data;
             const skjemaAvsnitter = avsnitter.map<AvsnittSkjemaData>((avsnitt, index) => {
@@ -124,7 +123,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         }
     }, [vedtaksbrevavsnitt]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const påkrevetIkkeUtfylt = skjemaData.some(avs =>
             avs.underavsnittsliste.some(uavs => !!uavs.fritekstPåkrevet && isEmpty(uavs.fritekst))
         );

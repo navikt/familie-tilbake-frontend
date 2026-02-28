@@ -1,7 +1,7 @@
+import type { ChangeEvent, FC, RefObject } from 'react';
 import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '~/generated';
 
 import { Button, ErrorMessage, Modal, Select, Textarea } from '@navikt/ds-react';
-import * as React from 'react';
 import { useEffect, useEffectEvent } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -14,11 +14,11 @@ import { useHenleggSkjema } from './HenleggModalContext';
 import { MODAL_BREDDE } from '../../utils';
 
 type Props = {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
     årsaker: BehandlingsresultatstypeEnum[];
 };
 
-export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
+export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }) => {
     const { type } = useBehandling();
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
         lukkModal: () => dialogRef.current?.close(),
@@ -33,7 +33,7 @@ export const HenleggModal: React.FC<Props> = ({ dialogRef, årsaker }) => {
         oppdaterBehandlingstype(type);
     }, [type]);
 
-    const onChangeÅrsakskode = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const onChangeÅrsakskode = (e: ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value as BehandlingsresultatstypeEnum;
         skjema.felter.årsakkode.validerOgSettFelt(årsak);
     };

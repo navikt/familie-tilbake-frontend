@@ -1,14 +1,13 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, FC, LazyExoticComponent } from 'react';
 
 import { Button, Heading, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 import { lazy } from 'react';
 
 type Props = {
     komponentNavn: string;
 };
 
-const FeilInnlasting: React.FC<Props> = ({ komponentNavn }: Props) => {
+const FeilInnlasting: FC<Props> = ({ komponentNavn }: Props) => {
     return (
         <VStack gap="space-8" align="center" justify="center">
             <Heading level="2" size="small" spacing className="mt-6">
@@ -25,7 +24,7 @@ const FeilInnlasting: React.FC<Props> = ({ komponentNavn }: Props) => {
 export const lazyImportMedRetry = <T,>(
     importFunksjon: () => Promise<Record<string, ComponentType<T>>>,
     komponentNavn: string
-): React.LazyExoticComponent<ComponentType<T>> => {
+): LazyExoticComponent<ComponentType<T>> => {
     return lazy(() => {
         let forsøkAntall = 0;
         const maxForsøk = 2;

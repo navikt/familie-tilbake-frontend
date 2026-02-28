@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { GetårsakstypeEnum } from '~/generated';
 
 import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
-import * as React from 'react';
 import { useRef } from 'react';
 
 import { behandlingsårsaker } from '~/typer/behandling';
@@ -11,7 +11,7 @@ import { hentFrontendFeilmelding } from '~/utils';
 import { MODAL_BREDDE } from '../utils';
 import { useRevurderSkjema } from './RevurderSkjemaContext';
 
-export const Revurder: React.FC = () => {
+export const Revurder: FC = () => {
     const ref = useRef<HTMLDialogElement>(null);
     const { skjema, sendInn, nullstillSkjema } = useRevurderSkjema(ref);
     const feilmelding = hentFrontendFeilmelding(skjema.submitRessurs);

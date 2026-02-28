@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { Journalpost } from '~/typer/journalføring';
 
 import { Detail } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { DokumentIkon } from '~/komponenter/ikoner';
 import { Journalposttype } from '~/typer/journalføring';
@@ -19,7 +19,7 @@ type Props = {
     journalpost: Journalpost;
 };
 
-export const JournalpostVisning: React.FC<Props> = ({ journalpost }) => {
+export const JournalpostVisning: FC<Props> = ({ journalpost }) => {
     const datoRegistrertSendt = hentDatoRegistrertSendt(
         journalpost.relevanteDatoer,
         journalpost.journalposttype

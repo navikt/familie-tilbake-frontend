@@ -1,9 +1,10 @@
+import type { FC, ReactNode, MouseEvent } from 'react';
 import type { BehandlingsstegEnum } from '~/generated';
 import type { HistorikkInnslag as THistorikkInnslag } from '~/typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
-import * as React from 'react';
+import { useState } from 'react';
 
 import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '~/komponenter/ikoner';
 import { HentDokument } from '~/komponenter/sidebar/HentDokument';
@@ -17,18 +18,18 @@ type Props = {
     innslag: THistorikkInnslag;
 };
 
-export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
+export const HistorikkInnslag: FC<Props> = ({ innslag }) => {
     const { navigerTilSide } = useHistorikk();
-    const [visDokument, settVisDokument] = React.useState<boolean>(false);
+    const [visDokument, settVisDokument] = useState<boolean>(false);
 
-    const lagTittel = (): React.ReactNode => {
+    const lagTittel = (): ReactNode => {
         if (innslag.type === Historikkinnslagstype.Skjermlenke && innslag.steg) {
             const steg = innslag.steg as BehandlingsstegEnum;
             const side = finnSideForSteg(steg);
             return steg && side ? (
                 <Link
                     href="#"
-                    onMouseDown={(e: React.MouseEvent) => e.preventDefault()}
+                    onMouseDown={(e: MouseEvent) => e.preventDefault()}
                     onClick={() => navigerTilSide(side)}
                 >
                     {innslag.tittel}
@@ -38,7 +39,7 @@ export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
         return innslag.tittel;
     };
 
-    const tilpassTekst = (): React.ReactNode => {
+    const tilpassTekst = (): ReactNode => {
         // @ts-expect-error har verdi her
         const indexÅrsakMedBegrunnelse = innslag.tekst.indexOf(', Begrunnelse:');
         if (indexÅrsakMedBegrunnelse > -1) {
@@ -56,12 +57,12 @@ export const HistorikkInnslag: React.FC<Props> = ({ innslag }) => {
         return <BodyShort className="whitespace-pre-line">{innslag.tekst}</BodyShort>;
     };
 
-    const lagBrevLink = (): React.ReactNode => {
+    const lagBrevLink = (): ReactNode => {
         return (
             <span>
                 <Link
                     href="#"
-                    onClick={(e: React.MouseEvent) => {
+                    onClick={(e: MouseEvent) => {
                         e.preventDefault();
                         settVisDokument(true);
                     }}

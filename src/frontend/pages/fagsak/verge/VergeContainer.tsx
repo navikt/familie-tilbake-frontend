@@ -1,3 +1,5 @@
+import type { ChangeEvent, FC } from 'react';
+
 import {
     BodyLong,
     ErrorMessage,
@@ -8,7 +10,6 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Vergetype, vergetyper } from '~/kodeverk/verge';
@@ -19,13 +20,13 @@ import { hentFrontendFeilmelding } from '~/utils';
 
 import { useVerge } from './VergeContext';
 
-export const VergeContainer: React.FC = () => {
+export const VergeContainer: FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
         useVerge();
     const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
         useBehandlingState();
 
-    const onChangeVergeType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const onChangeVergeType = (e: ChangeEvent<HTMLSelectElement>): void => {
         const nyVergetype = e.target.value as Vergetype;
         skjema.felter.vergetype.validerOgSettFelt(nyVergetype);
         settIkkePersistertKomponent('verge');
