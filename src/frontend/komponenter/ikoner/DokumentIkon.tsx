@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons';
-import * as React from 'react';
 
 import { Journalposttype } from '~/typer/journalføring';
 
@@ -7,9 +8,9 @@ type Props = {
     type: Journalposttype;
 };
 
-const DokumentIkon: React.FC<Props> = ({ type }) => {
+const DokumentIkon: FC<Props> = ({ type }) => {
     return (
-        <div className="bg-ax-neutral-400A w-[26px] h-[26px] rounded-full inline-flex items-center justify-center">
+        <div className="bg-ax-neutral-400A w-6.5 h-6.5 rounded-full inline-flex items-center justify-center">
             {type === Journalposttype.I && (
                 <ArrowRightIcon fontSize="1.2rem" aria-label="Innkommende" />
             )}

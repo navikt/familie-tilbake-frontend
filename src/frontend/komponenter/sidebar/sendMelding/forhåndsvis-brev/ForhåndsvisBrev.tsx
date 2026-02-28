@@ -1,5 +1,7 @@
+import type { FC } from 'react';
+
 import { Button } from '@navikt/ds-react';
-import * as React from 'react';
+import { useEffect } from 'react';
 
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useSendMelding } from '~/komponenter/sidebar/sendMelding/SendMeldingContext';
@@ -10,7 +12,7 @@ type Props = {
     test?: boolean;
 };
 
-export const ForhåndsvisBrev: React.FC<Props> = () => {
+export const ForhåndsvisBrev: FC<Props> = () => {
     const {
         hentetForhåndsvisning,
         hentBrev,
@@ -20,7 +22,7 @@ export const ForhåndsvisBrev: React.FC<Props> = () => {
     } = useForhåndsvisBrev();
     const { kanSendeSkjema } = useSendMelding();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (visModal) {
             hentBrev();
         }

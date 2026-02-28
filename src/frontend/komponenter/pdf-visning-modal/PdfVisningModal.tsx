@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { RessursByte } from '~/generated';
 
 import { Modal, Loader, Heading, LocalAlert } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
 import { handlePdfData } from '~/utils/pdfUtils';
@@ -12,7 +12,7 @@ type Props = {
     åpen: boolean;
 };
 
-export const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
+export const PdfVisningModal: FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
     return (
         <Modal
             open={åpen}
@@ -26,7 +26,7 @@ export const PdfVisningModal: React.FC<Props> = ({ onRequestClose, pdfdata, åpe
     );
 };
 
-const Dokument: React.FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) => {
+const Dokument: FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) => {
     switch (pdfdata.status) {
         case RessursStatus.Henter:
             return (

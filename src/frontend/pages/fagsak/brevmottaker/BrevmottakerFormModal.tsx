@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { Brevmottaker } from '~/typer/Brevmottaker';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
-import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -28,7 +28,7 @@ type BrevmottakerFormModalProps = {
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
-export const BrevmottakerFormModal: React.FC<BrevmottakerFormModalProps> = ({
+export const BrevmottakerFormModal: FC<BrevmottakerFormModalProps> = ({
     mode,
     initialData,
     mottakerId,

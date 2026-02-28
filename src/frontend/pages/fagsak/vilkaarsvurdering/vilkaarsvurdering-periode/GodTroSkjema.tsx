@@ -2,9 +2,9 @@ import type {
     JaNeiOption,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
+import type { FC } from 'react';
 
 import { Radio, Textarea, TextField, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
@@ -16,7 +16,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const GodTroSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
 
     const ugyldigErBeløpetIBeholdValgt =

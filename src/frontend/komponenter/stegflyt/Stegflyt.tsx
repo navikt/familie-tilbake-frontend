@@ -1,8 +1,8 @@
+import type { FC } from 'react';
 import type { BehandlingDto } from '~/generated';
 import type { SynligSteg } from '~/utils/sider';
 
 import { Stepper } from '@navikt/ds-react';
-import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -34,7 +34,7 @@ const mapStegTilStepperSteg = (behandling: BehandlingDto): StepperSteg[] | undef
         });
 };
 
-export const Stegflyt: React.FC = () => {
+export const Stegflyt: FC = () => {
     const behandling = useBehandling();
     const location = useLocation();
     const navigate = useNavigate();

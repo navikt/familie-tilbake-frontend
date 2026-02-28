@@ -1,4 +1,5 @@
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { FC } from 'react';
 import type { PeriodeSkjemaData } from '~/typer/periodeSkjemaData';
 
 import {
@@ -11,7 +12,6 @@ import {
     useMonthpicker,
 } from '@navikt/ds-react';
 import { endOfMonth, subMonths } from 'date-fns';
-import * as React from 'react';
 
 import { formatterDatoDDMMYYYY, formatterDatostring } from '~/utils';
 import { dateTilIsoDatoString, isoStringTilDate } from '~/utils/dato';
@@ -27,7 +27,7 @@ type Props = {
     feilmelding?: string;
 };
 
-export const DelOppPeriode: React.FC<Props> = ({
+export const DelOppPeriode: FC<Props> = ({
     periode,
     tidslinjeRader,
     splittDato,

@@ -18,7 +18,6 @@ import {
 } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';

@@ -1,7 +1,8 @@
+import type { FC } from 'react';
 import type { Land } from '~/komponenter/landvelger/Landvelger';
 
 import { Fieldset, HStack, LocalAlert, TextField, VStack } from '@navikt/ds-react';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext, get } from 'react-hook-form';
 
 import { Landvelger } from '~/komponenter/landvelger/Landvelger';
@@ -13,7 +14,7 @@ type Props = {
     prefix: string;
 };
 
-export const ManuellRegistrering: React.FC<Props> = ({ preutfyltNavn, mottakerType, prefix }) => {
+export const ManuellRegistrering: FC<Props> = ({ preutfyltNavn, mottakerType, prefix }) => {
     const {
         register,
         watch,

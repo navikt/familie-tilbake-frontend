@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { Select } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { type Skjema } from '~/hooks/skjema';
 import { Vilkårsresultat } from '~/kodeverk';
@@ -13,7 +14,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const GradForsettSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradForsettSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { kanIlleggeRenter } = useVilkårsvurdering();
 
     const erValgtResultatTypeForstoBurdeForstått =

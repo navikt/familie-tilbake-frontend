@@ -1,4 +1,5 @@
 import type { FaktaSkjemaData } from './typer/fakta';
+import type { FC } from 'react';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import {
@@ -13,7 +14,6 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -30,7 +30,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-export const GammelFaktaSkjema: React.FC<Props> = ({ skjemaData, fakta }) => {
+export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
     const behandling = useBehandling();
     const {
         oppdaterBegrunnelse,

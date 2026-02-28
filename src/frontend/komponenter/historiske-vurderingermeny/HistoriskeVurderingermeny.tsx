@@ -1,13 +1,14 @@
+import type { FC } from 'react';
+
 import { LeaveIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
-import * as React from 'react';
 import { useLocation } from 'react-router';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useFagsak } from '~/context/FagsakContext';
 import { Behandlingsmeny } from '~/komponenter/meny/Meny';
 
-export const HistoriskeVurderingermeny: React.FC = () => {
+export const HistoriskeVurderingermeny: FC = () => {
     const { eksternBrukId } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`;

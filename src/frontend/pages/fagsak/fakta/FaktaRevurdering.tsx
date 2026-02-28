@@ -1,7 +1,7 @@
+import type { FC } from 'react';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import { BodyShort, Detail, Heading, HGrid, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { tilbakekrevingsvalg } from '~/typer/tilbakekrevingstyper';
 import { formatterDatostring } from '~/utils';
@@ -10,7 +10,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-export const FaktaRevurdering: React.FC<Props> = ({ fakta }) => {
+export const FaktaRevurdering: FC<Props> = ({ fakta }) => {
     return fakta ? (
         <VStack gap="space-20">
             <Heading level="2" size="small">

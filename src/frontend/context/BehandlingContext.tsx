@@ -1,8 +1,7 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { BehandlingsoppsummeringDto, BehandlingDto } from '~/generated/types.gen';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import * as React from 'react';
 import { createContext, useContext, useMemo } from 'react';
 
 import { hentBehandlingOptions } from '~/generated/@tanstack/react-query.gen';
@@ -22,7 +21,7 @@ type Props = {
     children: ReactNode;
 };
 
-export const BehandlingProvider = ({ behandlingId, children }: Props): React.ReactElement => {
+export const BehandlingProvider = ({ behandlingId, children }: Props): ReactElement => {
     const { data: behandlingResponse } = useSuspenseQuery(
         hentBehandlingOptions({
             path: {

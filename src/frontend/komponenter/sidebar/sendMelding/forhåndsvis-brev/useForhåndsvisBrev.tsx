@@ -1,4 +1,6 @@
-import * as React from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+
+import { useState } from 'react';
 
 import { useDokumentApi } from '~/api/dokument';
 import { useSendMelding } from '~/komponenter/sidebar/sendMelding/SendMeldingContext';
@@ -14,7 +16,7 @@ import { base64ToArrayBuffer } from '~/utils';
 
 type ForhåndsvisBrevHook = {
     visModal: boolean;
-    settVisModal: React.Dispatch<React.SetStateAction<boolean>>;
+    settVisModal: Dispatch<SetStateAction<boolean>>;
     hentetForhåndsvisning: Ressurs<string>;
     hentBrev: () => void;
     nullstillHentetForhåndsvisning: () => void;
@@ -22,8 +24,8 @@ type ForhåndsvisBrevHook = {
 
 const useForhåndsvisBrev = (): ForhåndsvisBrevHook => {
     const [hentetForhåndsvisning, settHentetForhåndsvisning] =
-        React.useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = React.useState<boolean>(false);
+        useState<Ressurs<string>>(byggTomRessurs());
+    const [visModal, settVisModal] = useState<boolean>(false);
     const { hentBrevdata } = useSendMelding();
     const { forhåndsvisBrev } = useDokumentApi();
 

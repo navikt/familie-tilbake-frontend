@@ -1,7 +1,7 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
+import type { FC } from 'react';
 
 import { BodyShort, Box, Heading, HGrid, List, VStack } from '@navikt/ds-react';
-import * as React from 'react';
 
 import {
     aktsomheter,
@@ -27,7 +27,7 @@ type Props = {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
 };
 
-export const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder }) => {
+export const HistoriskVilkårsvurderingVisning: FC<Props> = ({ perioder }) => {
     return (
         <VStack gap="space-40">
             {perioder.map(skjema => {
@@ -206,7 +206,7 @@ export const HistoriskVilkårsvurderingVisning: React.FC<Props> = ({ perioder })
     );
 };
 
-const LabelVerdiVisning: React.FC<{ label: string; verdi: number | string | undefined }> = ({
+const LabelVerdiVisning: FC<{ label: string; verdi: number | string | undefined }> = ({
     label,
     verdi,
 }) => {

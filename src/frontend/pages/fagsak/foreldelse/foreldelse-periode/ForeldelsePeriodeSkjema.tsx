@@ -1,5 +1,4 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
-import type { ReactNode } from 'react';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
@@ -14,7 +13,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { differenceInMonths, parseISO } from 'date-fns';
-import * as React from 'react';
+import { useEffect, type FC, type ReactNode } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema/typer';
@@ -31,7 +30,7 @@ type Props = {
     periode: ForeldelsePeriodeSkjemeData;
 };
 
-export const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode }) => {
+export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
     const { erAutoutført, oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
@@ -39,7 +38,7 @@ export const ForeldelsePeriodeSkjema: React.FC<Props> = ({ periode }) => {
     const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
     const erLesevisning = behandlingILesemodus || !!erAutoutført;
 
-    React.useEffect(() => {
+    useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
         skjema.felter.foreldelsesvurderingstype.onChange(periode?.foreldelsesvurderingstype || '');
         skjema.felter.foreldelsesfrist.onChange(

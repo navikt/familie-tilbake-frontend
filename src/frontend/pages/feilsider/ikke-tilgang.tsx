@@ -1,7 +1,8 @@
-import { BodyShort, Box, Button, Heading, Page, VStack } from '@navikt/ds-react';
-import * as React from 'react';
+import type { FC } from 'react';
 
-export const IkkeTilgang: React.FC = () => {
+import { BodyShort, Box, Button, Heading, Page, VStack } from '@navikt/ds-react';
+
+export const IkkeTilgang: FC = () => {
     return (
         <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-64" data-aksel-template="403-v2">

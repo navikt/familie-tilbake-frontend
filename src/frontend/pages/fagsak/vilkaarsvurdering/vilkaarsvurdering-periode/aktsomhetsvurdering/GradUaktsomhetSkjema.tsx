@@ -1,10 +1,10 @@
+import type { FC } from 'react';
 import type {
     JaNeiOption,
     VilkårsvurderingSkjemaDefinisjon,
 } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { LocalAlert, Radio, RadioGroup } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
@@ -22,7 +22,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const GradUaktsomhetSkjema: React.FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&

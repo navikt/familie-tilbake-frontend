@@ -2,7 +2,6 @@ import type { UserEvent } from '@testing-library/user-event';
 
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import * as React from 'react';
 
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '~/testdata/foreldelseFactory';

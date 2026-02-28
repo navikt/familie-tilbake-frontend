@@ -3,7 +3,6 @@ import type { FaktaOmFeilutbetaling, BehandlingOppdaterFaktaData } from '~/gener
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import React from 'react';
 import { expect } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';

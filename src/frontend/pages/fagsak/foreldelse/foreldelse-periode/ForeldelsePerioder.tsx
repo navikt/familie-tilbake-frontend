@@ -1,9 +1,9 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
+import type { FC } from 'react';
 import type { ForeldelsePeriode } from '~/typer/tilbakekrevingstyper';
 
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { Foreldelsevurdering } from '~/kodeverk';
 import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
@@ -53,13 +53,9 @@ type Props = {
     perioder: ForeldelsePeriodeSkjemeData[];
 };
 
-export const ForeldelsePerioder: React.FC<Props> = ({ perioder }) => {
-    const [tidslinjeRader, settTidslinjeRader] = React.useState<TimelinePeriodProps[][]>();
+export const ForeldelsePerioder: FC<Props> = ({ perioder }) => {
     const { valgtPeriode, settValgtPeriode } = useForeldelse();
-
-    React.useEffect(() => {
-        settTidslinjeRader(genererRader(perioder, valgtPeriode));
-    }, [perioder, valgtPeriode]);
+    const tidslinjeRader = genererRader(perioder, valgtPeriode);
 
     const onSelectPeriode = (periode: TimelinePeriodProps): void => {
         const periodeFom = periode.start.toISOString().substring(0, 10);

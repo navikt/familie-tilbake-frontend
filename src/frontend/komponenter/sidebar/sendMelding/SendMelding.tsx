@@ -1,5 +1,6 @@
+import type { ChangeEvent, FC } from 'react';
+
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -16,12 +17,12 @@ const tekstfeltLabel = (mal: DokumentMal): string => {
         : 'Fritekst';
 };
 
-export const SendMelding: React.FC = () => {
+export const SendMelding: FC = () => {
     const { manuelleBrevmottakere } = useBehandling();
     const { maler, skjema, senderInn, sendBrev, feilmelding } = useSendMelding();
     const { behandlingILesemodus } = useBehandlingState();
 
-    const onChangeMal = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const onChangeMal = (e: ChangeEvent<HTMLSelectElement>): void => {
         const nyMal = e.target.value as DokumentMal;
         skjema.felter.maltype.validerOgSettFelt(nyMal);
     };

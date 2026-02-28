@@ -1,8 +1,8 @@
+import type { FC, ReactNode } from 'react';
 import type { Felt } from '~/hooks/skjema';
 
 import { DatePicker, useDatepicker } from '@navikt/ds-react';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
-import * as React from 'react';
 import { useState } from 'react';
 
 import { dagensDato, Datoformat } from '~/utils/dato';
@@ -10,7 +10,7 @@ import { dagensDato, Datoformat } from '~/utils/dato';
 type Props = {
     felt: Felt<Date | undefined>;
     label: string;
-    description?: React.ReactNode;
+    description?: ReactNode;
     visFeilmeldinger: boolean;
     minDatoAvgrensning?: Date;
     maksDatoAvgrensning?: Date;
@@ -30,7 +30,7 @@ const tidligsteRelevanteDato = startOfDay(new Date(1900, 0));
 
 const senesteRelevanteDato = startOfDay(new Date(2500, 0));
 
-export const Datovelger: React.FC<Props> = ({
+export const Datovelger: FC<Props> = ({
     felt,
     label,
     visFeilmeldinger,

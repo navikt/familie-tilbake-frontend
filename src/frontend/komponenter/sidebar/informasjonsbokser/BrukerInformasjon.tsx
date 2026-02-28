@@ -1,3 +1,4 @@
+import type { FC, ReactNode } from 'react';
 import type { KjønnEnum } from '~/generated';
 
 import {
@@ -10,7 +11,6 @@ import {
     FlowerPetalFallingIcon,
 } from '@navikt/aksel-icons';
 import { CopyButton, ExpansionCard, Tag } from '@navikt/ds-react';
-import React from 'react';
 
 import { useFagsak } from '~/context/FagsakContext';
 import { formatterDatostring, hentAlder } from '~/utils';
@@ -25,7 +25,7 @@ const formatterPersonIdent = (personIdent: string): string =>
 const formatterOrgNummer = (orgNummer: string): string =>
     orgNummer.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
 
-const kjønnIkon = (kjønn: KjønnEnum): React.ReactNode => {
+const kjønnIkon = (kjønn: KjønnEnum): ReactNode => {
     switch (kjønn) {
         case 'KVINNE':
             return <FigureOutwardIcon {...ICON_PROPS} />;
@@ -36,7 +36,7 @@ const kjønnIkon = (kjønn: KjønnEnum): React.ReactNode => {
     }
 };
 
-export const BrukerInformasjon: React.FC = () => {
+export const BrukerInformasjon: FC = () => {
     const { bruker, institusjon } = useFagsak();
     return (
         <ExpansionCard

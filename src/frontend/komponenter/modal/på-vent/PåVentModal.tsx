@@ -1,9 +1,9 @@
+import type { FC } from 'react';
 import type { BehandlingsstegsinfoDto } from '~/generated';
 
 import { BodyLong, BodyShort, Button, Heading, LocalAlert, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
-import * as React from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
@@ -20,7 +20,7 @@ type Props = {
     onClose: () => void;
 };
 
-export const PåVentModal: React.FC<Props> = ({ ventegrunn, onClose }) => {
+export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
     const { behandlingId, saksbehandlingstype, kanEndres } = useBehandling();
     const queryClient = useQueryClient();
 

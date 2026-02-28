@@ -1,5 +1,6 @@
+import type { FC } from 'react';
+
 import { Suspense, useEffect } from 'react';
-import * as React from 'react';
 import { useLocation } from 'react-router';
 
 import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
@@ -12,7 +13,7 @@ import { useFagsakStore } from '~/stores/fagsakStore';
 
 import { BehandlingContainer } from './Behandling';
 
-export const FagsakContainer: React.FC = () => {
+export const FagsakContainer: FC = () => {
     const location = useLocation();
     const eksternBrukId = location.pathname.split('/')[6];
 

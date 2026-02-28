@@ -1,8 +1,9 @@
+import type { FC } from 'react';
+
 import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
 import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import * as React from 'react';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '~/api/brukerlenker';
 import { useHttp } from '~/api/http/HttpProvider';
@@ -15,7 +16,7 @@ import { erHistoriskSide } from '~/utils/sider';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
 
-export const Header: React.FC = () => {
+export const Header: FC = () => {
     const { innloggetSaksbehandler } = useApp();
     const { data: brukerlenker } = useQuery({
         queryKey: ['hentBrukerlenkeBaseUrl'],

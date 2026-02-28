@@ -1,9 +1,9 @@
+import type { FC, ReactNode, RefObject } from 'react';
 import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, LocalAlert } from '@navikt/ds-react';
 import classNames from 'classnames';
-import * as React from 'react';
 import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
@@ -84,12 +84,12 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
 type BehandlingLayoutProps = {
-    children: React.ReactNode;
+    children: ReactNode;
     visHøyremeny?: boolean;
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const BehandlingLayout: React.FC<BehandlingLayoutProps> = ({
+const BehandlingLayout: FC<BehandlingLayoutProps> = ({
     children,
     visHøyremeny = true,
     dialogRef,
@@ -105,10 +105,10 @@ const BehandlingLayout: React.FC<BehandlingLayoutProps> = ({
 );
 
 type HenlagtBehandlingProps = {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const HenlagtBehandling: React.FC<HenlagtBehandlingProps> = ({ dialogRef }) => (
+const HenlagtBehandling: FC<HenlagtBehandlingProps> = ({ dialogRef }) => (
     <BehandlingLayout dialogRef={dialogRef}>
         <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
             <BodyShort size="small">Behandlingen er henlagt</BodyShort>
@@ -117,12 +117,10 @@ const HenlagtBehandling: React.FC<HenlagtBehandlingProps> = ({ dialogRef }) => (
 );
 
 type VenterPåKravgrunnlagBehandlingProps = {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const VenterPåKravgrunnlagBehandling: React.FC<VenterPåKravgrunnlagBehandlingProps> = ({
-    dialogRef,
-}) => (
+const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> = ({ dialogRef }) => (
     <BehandlingLayout dialogRef={dialogRef}>
         <section className="px-6 text-center" aria-label="Venter på kravgrunnlag">
             <ActionBar
@@ -138,10 +136,10 @@ const VenterPåKravgrunnlagBehandling: React.FC<VenterPåKravgrunnlagBehandlingP
 );
 
 type HistoriskBehandlingProps = {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const HistoriskBehandling: React.FC<HistoriskBehandlingProps> = ({ dialogRef }) => (
+const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({ dialogRef }) => (
     <BehandlingLayout dialogRef={dialogRef} visHøyremeny={false}>
         <Suspense fallback="Historiske vurderinger laster...">
             <HistoriskeVurderingermeny />
@@ -174,10 +172,10 @@ const HistoriskBehandling: React.FC<HistoriskBehandlingProps> = ({ dialogRef }) 
 );
 
 type AktivBehandlingProps = {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
+const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
     const { ventegrunn, settInnholdsbredde } = useBehandlingState();
@@ -307,7 +305,7 @@ const AktivBehandling: React.FC<AktivBehandlingProps> = ({ dialogRef }) => {
     );
 };
 
-const Behandling: React.FC = () => {
+const Behandling: FC = () => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const behandling = useBehandling();
     const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
@@ -365,7 +363,7 @@ const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string => {
     }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
 };
 
-export const BehandlingContainer: React.FC = () => {
+export const BehandlingContainer: FC = () => {
     const { ventegrunn, innholdsbredde } = useBehandlingState();
     const globalAlerts = useGlobalAlerts();
     const lukkGlobalAlert = useLukkGlobalAlert();

@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
@@ -10,7 +11,7 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -25,7 +26,7 @@ type Props = {
     varselErSendt: boolean;
 };
 
-export const Uttalelse: React.FC<Props> = ({
+export const Uttalelse: FC<Props> = ({
     handleUttalelseSubmit,
     kanUtsetteFrist = false,
     varselErSendt,
