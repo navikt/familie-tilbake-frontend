@@ -253,7 +253,6 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                     });
                     visGlobalAlert({
                         title: 'Sendt til godkjenning',
-                        message: 'Behandlingen er sendt til godkjenning hos beslutter.',
                         status: 'success',
                     });
                     onSuccess?.();
