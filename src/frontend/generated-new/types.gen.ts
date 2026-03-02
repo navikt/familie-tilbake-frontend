@@ -70,6 +70,7 @@ export type Fritekst = string;
 
 export type Hovedavsnitt = {
     tittel: string;
+    readonly forklaring: string;
     underavsnitt: Array<RotElement>;
 };
 

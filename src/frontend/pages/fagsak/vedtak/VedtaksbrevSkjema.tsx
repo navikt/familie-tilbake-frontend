@@ -15,6 +15,7 @@ export const VedtaksbrevSkjema: FC = () => {
         <>
             <ElementTextarea
                 name="hovedavsnitt.underavsnitt"
+                description={methods.getValues('hovedavsnitt').forklaring}
                 label={methods.getValues('hovedavsnitt').tittel}
             />
             {methods.getValues('avsnitt').map((avsnitt, index) => (
@@ -38,6 +39,7 @@ const Avsnitt: FC<{
             <Textarea
                 name={name}
                 label={avsnitt.tittel}
+                description={avsnitt.forklaring}
                 value={rentekstTekst}
                 onChange={e => {
                     const nyeRentekst = tekstTilElementArray(e.target.value);

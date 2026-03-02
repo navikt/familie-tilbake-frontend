@@ -116,6 +116,7 @@ export const zAvsnitt = z.object({
 
 export const zHovedavsnitt = z.object({
     tittel: z.string().min(3).max(300),
+    forklaring: z.string().readonly(),
     underavsnitt: z.array(zRotElement),
 });
 

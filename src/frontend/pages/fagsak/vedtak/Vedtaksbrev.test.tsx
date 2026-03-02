@@ -17,12 +17,15 @@ const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevFormData): RenderResult =
     );
 };
 
+const standardTextareaDescription = 'Tekstområde med plass til 3000 tegn.';
+
 describe('Vedtaksbrev', () => {
-    test('skal vise hovedavsnitt-textarea', () => {
+    test('skal vise vedtaksbrevtittel og hovedavsnitt-textarea', () => {
         renderVedtaksbrev(
             lagVedtaksbrevData({
                 hovedavsnitt: {
                     tittel: 'Du må betale tilbake stønaden',
+                    forklaring: 'Forklaring til hovedavsnitt',
                     underavsnitt: [
                         {
                             type: 'rentekst',
@@ -40,16 +43,22 @@ describe('Vedtaksbrev', () => {
         expect(screen.getByRole('heading', { name: 'Lag vedtaksbrev' })).toBeInTheDocument();
         const hovedavsnitt = screen.getByRole('textbox', { name: 'Du må betale tilbake stønaden' });
         expect(hovedavsnitt).toBeInTheDocument();
+        expect(hovedavsnitt).toHaveAccessibleDescription(
+            `Forklaring til hovedavsnitt ${standardTextareaDescription}`
+        );
         expect(hovedavsnitt).toHaveValue('Dette er første avsnitt\n\nDette er andre avsnitt');
     });
 
     test('skal vise avsnitt-textareas', () => {
+        const tredjeAvsnittForklaring =
+            'Her viser du til § 22-15 fjerde ledd, hva som kan være særlige grunner, og hvordan vi vurderer disse opp mot de faktiske forholdene i saken.';
         renderVedtaksbrev(
             lagVedtaksbrevData({
                 avsnitt: [
                     {
                         id: '1',
                         tittel: 'Perioden 12.02.2025–12.03.2025',
+                        forklaring: 'Forklaring til perioden',
                         underavsnitt: [
                             { type: 'rentekst', tekst: 'Første textarea' },
                             {
@@ -63,8 +72,7 @@ describe('Vedtaksbrev', () => {
                                 type: 'påkrevd_begrunnelse',
                                 tittel: 'Hvorfor har vi ikke redusert beløpet?',
                                 begrunnelseType: 'IKKE_REDUSERT_SÆRLIGE_GRUNNER',
-                                forklaring:
-                                    'Her viser du til § 22-15 fjerde ledd, hva som kan være særlige grunner, og hvordan vi  vurderer disse opp mot de faktiske forholdene i saken.',
+                                forklaring: tredjeAvsnittForklaring,
                                 underavsnitt: [{ type: 'rentekst', tekst: 'Tredje textarea' }],
                             },
                         ],
@@ -77,6 +85,9 @@ describe('Vedtaksbrev', () => {
             name: 'Perioden 12.02.2025–12.03.2025',
         });
         expect(førstePeriodeAvsnitt).toBeInTheDocument();
+        expect(førstePeriodeAvsnitt).toHaveAccessibleDescription(
+            `Forklaring til perioden ${standardTextareaDescription}`
+        );
         expect(førstePeriodeAvsnitt).toHaveValue('Første textarea');
 
         const andrePeriodeAvsnitt = screen.getByRole('textbox', {
@@ -89,6 +100,9 @@ describe('Vedtaksbrev', () => {
             name: 'Hvorfor har vi ikke redusert beløpet?',
         });
         expect(tredjePeriodeAvsnitt).toBeInTheDocument();
+        expect(tredjePeriodeAvsnitt).toHaveAccessibleDescription(
+            `${tredjeAvsnittForklaring} ${standardTextareaDescription}`
+        );
         expect(tredjePeriodeAvsnitt).toHaveValue('Tredje textarea');
     });
 });
@@ -97,6 +111,7 @@ const lagVedtaksbrevData = (overrides?: Partial<VedtaksbrevData>): VedtaksbrevDa
     return {
         hovedavsnitt: {
             tittel: 'Du må betale tilbake stønaden',
+            forklaring: 'Forklaring til hovedavsnitt',
             underavsnitt: [
                 {
                     type: 'rentekst',
