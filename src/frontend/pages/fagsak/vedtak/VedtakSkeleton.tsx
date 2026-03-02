@@ -23,7 +23,7 @@ export const VedtakSkeleton: FC = () => {
                     <TextAreaSkeleton />
                 </VStack>
                 <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
-                    <Skeleton variant="rounded" width="100%" height={400} />
+                    <Skeleton variant="rounded" width="100%" height={990} />
                 </VStack>
             </div>
             <ActionBarSkeleton />
