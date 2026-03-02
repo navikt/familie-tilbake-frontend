@@ -119,7 +119,16 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                         />
                     }
                 >
-                    <section className="col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle">
+                    <section
+                        className={classNames(
+                            'col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle flex flex-col',
+                            {
+                                /* Må trekke fra høyden på alt annet enn den hvite boksen for å gi den en korrekt høyde */
+                                'h-[calc(100vh-17.8rem)] overflow-hidden':
+                                    vedtaksbrevMutation.isError,
+                            }
+                        )}
+                    >
                         {pdfSider.length > 0 && (
                             <HStack
                                 justify="center"
@@ -136,7 +145,8 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                         )}
                         <div
                             className={classNames(
-                                'flex-1 flex items-start justify-center overflow-auto rounded-b-xl',
+                                'flex-1 flex justify-center overflow-auto rounded-b-xl',
+                                vedtaksbrevMutation.isError ? 'items-center' : 'items-start',
                                 {
                                     'border-t border-ax-border-neutral-subtle':
                                         !vedtaksbrevMutation.isError,
@@ -150,9 +160,9 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                                     className="flex justify-center items-center h-full"
                                 >
                                     <InlineMessage size="small" status="error">
-                                        Kunne ikke laste inn forhåndsvisningen. Dette kan være et
-                                        midlertidig problem. Prøv å laste siden på nytt, eller prøv
-                                        igjen om litt.
+                                        Kunne ikke laste inn forhåndsvisningen av vedtaksbrevet.
+                                        Dette kan være et midlertidig problem. Prøv å laste siden på
+                                        nytt, eller prøv igjen om litt.
                                     </InlineMessage>
 
                                     <Button
