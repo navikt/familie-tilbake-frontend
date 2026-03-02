@@ -44,11 +44,9 @@ export const Sidebar: FC<Props> = ({ dialogRef }) => {
                     'max-h-[calc(100vh-142px)]': !!ventegrunn,
                 })}
             >
-                <div className="gap-4 flex flex-col flex-1 min-h-0">
-                    <Faktaboks />
-                    <BrukerInformasjon />
-                    <HistorikkOgDokumenter />
-                </div>
+                <Faktaboks />
+                <BrukerInformasjon />
+                <HistorikkOgDokumenter />
             </aside>
 
             <Modal
@@ -58,7 +56,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }) => {
                 onClick={handleKlikkUtenforModal}
             >
                 <Modal.Header />
-                <Modal.Body className="flex flex-col gap-4">
+                <Modal.Body className="flex flex-col gap-4 pt-1">
                     <Faktaboks />
                     <BrukerInformasjon />
                     <HistorikkOgDokumenter />
