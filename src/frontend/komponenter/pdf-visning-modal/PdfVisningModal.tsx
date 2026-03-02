@@ -60,13 +60,17 @@ const Dokument: FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) =
         case RessursStatus.IkkeTilgang:
             return (
                 <LocalAlert status="error">
-                    <LocalAlert.Content>{pdfdata.frontendFeilmelding}</LocalAlert.Content>
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>{pdfdata.frontendFeilmelding}</LocalAlert.Title>
+                    </LocalAlert.Header>
                 </LocalAlert>
             );
         default:
             return (
                 <LocalAlert status="error">
-                    <LocalAlert.Content>Kunne ikke hente dokument</LocalAlert.Content>
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>Kunne ikke hente dokument</LocalAlert.Title>
+                    </LocalAlert.Header>
                 </LocalAlert>
             );
     }

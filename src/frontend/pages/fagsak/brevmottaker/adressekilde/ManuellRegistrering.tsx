@@ -81,10 +81,12 @@ export const ManuellRegistrering: FC<Props> = ({ preutfyltNavn, mottakerType, pr
                         />
                         {landValue !== 'NO' && (
                             <LocalAlert status="announcement">
-                                <LocalAlert.Content>
-                                    Ved utenlandsk adresse skal postnummer og poststed legges i
-                                    adresselinjene.
-                                </LocalAlert.Content>
+                                <LocalAlert.Header>
+                                    <LocalAlert.Title>
+                                        Ved utenlandsk adresse skal postnummer og poststed legges i
+                                        adresselinjene.
+                                    </LocalAlert.Title>
+                                </LocalAlert.Header>
                             </LocalAlert>
                         )}
                         {landValue === 'NO' && (

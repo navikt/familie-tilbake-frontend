@@ -17,18 +17,20 @@ export const BrevmottakereAlert: FC<Props> = ({ brevmottakere }) => {
         brevmottakere &&
         brevmottakere.length !== 0 && (
             <LocalAlert status="announcement">
-                <LocalAlert.Content>
-                    Brevmottaker(e) er endret, og vedtak sendes til:
-                    <BrevmottakerListe />
-                    <Button
-                        variant="tertiary"
-                        onClick={navigerTilBrevmottakerSteg}
-                        icon={<MagnifyingGlassIcon />}
-                        size="xsmall"
-                    >
-                        Se detaljer
-                    </Button>
-                </LocalAlert.Content>
+                <LocalAlert.Header>
+                    <LocalAlert.Title>
+                        Brevmottaker(e) er endret, og vedtak sendes til:
+                    </LocalAlert.Title>
+                </LocalAlert.Header>
+                <BrevmottakerListe />
+                <Button
+                    variant="tertiary"
+                    onClick={navigerTilBrevmottakerSteg}
+                    icon={<MagnifyingGlassIcon />}
+                    size="xsmall"
+                >
+                    Se detaljer
+                </Button>
             </LocalAlert>
         )
     );

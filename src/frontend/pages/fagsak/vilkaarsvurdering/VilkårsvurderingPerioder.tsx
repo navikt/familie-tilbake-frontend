@@ -90,9 +90,13 @@ export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUn
         <>
             {valideringsFeilmelding && (
                 <LocalAlert status="error">
-                    <LocalAlert.Content>
-                        <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
-                    </LocalAlert.Content>
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>
+                            <BodyShort className="font-semibold">
+                                {valideringsFeilmelding}
+                            </BodyShort>
+                        </LocalAlert.Title>
+                    </LocalAlert.Header>
                 </LocalAlert>
             )}
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />

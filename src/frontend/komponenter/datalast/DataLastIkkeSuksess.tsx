@@ -31,7 +31,9 @@ export const DataLastIkkeSuksess: FC<Props> = ({
     if (ingenTilgangRessurs) {
         return (
             <LocalAlert status="warning">
-                <LocalAlert.Content>Ingen tilgang</LocalAlert.Content>
+                <LocalAlert.Header>
+                    <LocalAlert.Title>Ingen tilgang</LocalAlert.Title>
+                </LocalAlert.Header>
             </LocalAlert>
         );
     }
@@ -46,7 +48,9 @@ export const DataLastIkkeSuksess: FC<Props> = ({
     if (feiletRessurs) {
         return (
             <LocalAlert status="error">
-                <LocalAlert.Content>{feiletRessurs.frontendFeilmelding}</LocalAlert.Content>
+                <LocalAlert.Header>
+                    <LocalAlert.Title>{feiletRessurs.frontendFeilmelding}</LocalAlert.Title>
+                </LocalAlert.Header>
             </LocalAlert>
         );
     }
@@ -54,7 +58,9 @@ export const DataLastIkkeSuksess: FC<Props> = ({
     if (serverFeil) {
         return (
             <LocalAlert status="error">
-                <LocalAlert.Content>{serverFeil.frontendFeilmelding}</LocalAlert.Content>
+                <LocalAlert.Header>
+                    <LocalAlert.Title>{serverFeil.frontendFeilmelding}</LocalAlert.Title>
+                </LocalAlert.Header>
             </LocalAlert>
         );
     }

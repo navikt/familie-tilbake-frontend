@@ -38,7 +38,9 @@ export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }
             className="col-start-3 w-80 z-9999 mt-auto mr-0 mb-[1.7rem] ml-auto focus:rounded focus:shadow-[0_0_0_3px_#00347d] focus:outline-none"
         >
             <LocalAlert status={toast.alertType}>
-                <LocalAlert.Content>{toast.tekst}</LocalAlert.Content>
+                <LocalAlert.Header>
+                    <LocalAlert.Title>{toast.tekst}</LocalAlert.Title>
+                </LocalAlert.Header>
             </LocalAlert>
         </div>
     );

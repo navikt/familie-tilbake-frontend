@@ -106,11 +106,13 @@ export const VedtakContainer: FC = () => {
                 <Heading size="small">Vedtak</Heading>
                 {erRevurderingKlageKA && (
                     <LocalAlert status="announcement">
-                        <LocalAlert.Content>
-                            <BodyShort className="font-semibold">
-                                Vedtaksbrev sendes ikke ut fra denne behandlingen.
-                            </BodyShort>
-                        </LocalAlert.Content>
+                        <LocalAlert.Header>
+                            <LocalAlert.Title>
+                                <BodyShort className="font-semibold">
+                                    Vedtaksbrev sendes ikke ut fra denne behandlingen.
+                                </BodyShort>
+                            </LocalAlert.Title>
+                        </LocalAlert.Header>
                     </LocalAlert>
                 )}
 
@@ -145,9 +147,11 @@ export const VedtakContainer: FC = () => {
                     (foreslåVedtakRespons.status === RessursStatus.Feilet ||
                         foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
                         <LocalAlert status="error">
-                            <LocalAlert.Content>
-                                {foreslåVedtakRespons.frontendFeilmelding}
-                            </LocalAlert.Content>
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>
+                                    {foreslåVedtakRespons.frontendFeilmelding}
+                                </LocalAlert.Title>
+                            </LocalAlert.Header>
                         </LocalAlert>
                     )}
 
@@ -181,7 +185,9 @@ export const VedtakContainer: FC = () => {
 
                         {feilmelding && (
                             <LocalAlert status="error">
-                                <LocalAlert.Content>{feilmelding}</LocalAlert.Content>
+                                <LocalAlert.Header>
+                                    <LocalAlert.Title>{feilmelding}</LocalAlert.Title>
+                                </LocalAlert.Header>
                             </LocalAlert>
                         )}
                     </HStack>

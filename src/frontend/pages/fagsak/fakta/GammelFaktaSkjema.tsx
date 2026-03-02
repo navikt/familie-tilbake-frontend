@@ -54,11 +54,14 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                 {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
                     <div>
                         <LocalAlert status="warning">
-                            <LocalAlert.Content>
-                                Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
-                                <br />
-                                Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
-                            </LocalAlert.Content>
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>
+                                    Det finnes flere revurderinger knyttet til denne
+                                    tilbakekrevingen.
+                                    <br />
+                                    Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
+                                </LocalAlert.Title>
+                            </LocalAlert.Header>
                         </LocalAlert>
                     </div>
                 )}
@@ -99,10 +102,12 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     )}
                     {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
                         <LocalAlert status="warning">
-                            <LocalAlert.Content>
-                                Husk å kontrollere faktisk inntekt den siste måneden i
-                                feilutbetalingsperioden
-                            </LocalAlert.Content>
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>
+                                    Husk å kontrollere faktisk inntekt den siste måneden i
+                                    feilutbetalingsperioden
+                                </LocalAlert.Title>
+                            </LocalAlert.Header>
                         </LocalAlert>
                     )}
                     {skjemaData.perioder && <FaktaPerioder perioder={skjemaData.perioder} />}

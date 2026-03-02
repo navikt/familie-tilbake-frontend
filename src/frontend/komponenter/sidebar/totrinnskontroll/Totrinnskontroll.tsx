@@ -71,9 +71,11 @@ export const Totrinnskontroll: FC = () => {
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable flex flex-col gap-2">
                 {skalViseFeilmelding && (
                     <LocalAlert status="error">
-                        <LocalAlert.Content>
-                            {fatteVedtakRespons.frontendFeilmelding}
-                        </LocalAlert.Content>
+                        <LocalAlert.Header>
+                            <LocalAlert.Title>
+                                {fatteVedtakRespons.frontendFeilmelding}
+                            </LocalAlert.Title>
+                        </LocalAlert.Header>
                     </LocalAlert>
                 )}
                 {!erLesevisning && (
@@ -89,7 +91,9 @@ export const Totrinnskontroll: FC = () => {
                         </Button>
                         {feilmelding && (
                             <LocalAlert status="error">
-                                <LocalAlert.Content>{feilmelding}</LocalAlert.Content>
+                                <LocalAlert.Header>
+                                    <LocalAlert.Title>{feilmelding}</LocalAlert.Title>
+                                </LocalAlert.Header>
                             </LocalAlert>
                         )}
                     </div>

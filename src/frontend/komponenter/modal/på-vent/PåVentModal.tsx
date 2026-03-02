@@ -83,9 +83,11 @@ export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
                 <>
                     {vilBliAutomatiskBehandletUnder4rettsgebyr && (
                         <LocalAlert status="announcement">
-                            <LocalAlert.Content>
-                                {automatiskUnder4rettsgebyrBehandletTekst}
-                            </LocalAlert.Content>
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>
+                                    {automatiskUnder4rettsgebyrBehandletTekst}
+                                </LocalAlert.Title>
+                            </LocalAlert.Header>
                         </LocalAlert>
                     )}
                     {erFristenUtløpt && (
