@@ -18,7 +18,7 @@ export const SidebarSkeleton: FC = () => {
                 defaultOpen
                 size="small"
                 aria-label="Laster informasjon om tilbakekrevingen"
-                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
+                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
             >
                 <ExpansionCard.Header>
                     <ExpansionCard.Title
@@ -38,7 +38,7 @@ export const SidebarSkeleton: FC = () => {
 
                 <ExpansionCard.Content>
                     <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-3 items-center">
                             <Skeleton
                                 variant="circle"
                                 width={16}
@@ -89,7 +89,7 @@ export const SidebarSkeleton: FC = () => {
                 defaultOpen
                 size="small"
                 aria-label="Laster informasjon om bruker"
-                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
+                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
             >
                 <ExpansionCard.Header>
                     <ExpansionCard.Title as="h2" size="small" className="text-lg">

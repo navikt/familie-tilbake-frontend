@@ -16,12 +16,12 @@ import { AppProvider, useApp } from './context/AppContext';
 import { FagsakProvider } from './context/FagsakContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { TogglesProvider } from './context/TogglesContext';
-import { Spinner } from './komponenter/datalast/Spinner';
 import { ErrorBoundary } from './komponenter/error-boundary/ErrorBoundary';
 import { FagsakErrorBoundary } from './komponenter/error-boundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting';
 import { Header } from './komponenter/header/Header';
 import { Toasts } from './komponenter/toast/Toasts';
+import { BehandlingSkeleton } from './pages/fagsak/BehandlingSkeleton';
 import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { configureZod } from './utils/zodConfig';
@@ -49,7 +49,7 @@ const AppLayout: FC = () => {
 };
 
 const FagsakProvidersWrapper: FC = () => (
-    <Suspense fallback={<Spinner type="fagsak" />}>
+    <Suspense fallback={<BehandlingSkeleton />}>
         <FagsakErrorBoundary>
             <FagsakProvider>
                 <Outlet />

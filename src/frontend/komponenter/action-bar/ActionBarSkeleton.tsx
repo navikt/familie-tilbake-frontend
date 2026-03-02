@@ -14,6 +14,7 @@ export const ActionBarSkeleton: FC<Props> = ({ className }) => {
         >
             <Button
                 variant="tertiary"
+                size="small"
                 icon={<MenuElipsisHorizontalIcon fontSize="1.5rem" aria-hidden />}
             >
                 Meny

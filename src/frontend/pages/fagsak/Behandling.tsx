@@ -17,7 +17,6 @@ import { StegErrorBoundary } from '~/komponenter/error-boundary/StegErrorBoundar
 import { lazyImportMedRetry } from '~/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
 import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
-import { SidebarSkeleton } from '~/komponenter/sidebar/SidebarSkeleton';
 import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
 import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
 import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
@@ -95,11 +94,7 @@ const BehandlingLayout: FC<BehandlingLayoutProps> = ({
 }) => (
     <>
         <div className="flex-1 overflow-auto">{children}</div>
-        {visHøyremeny && (
-            <Suspense fallback={<SidebarSkeleton />}>
-                <Sidebar dialogRef={dialogRef} />
-            </Suspense>
-        )}
+        {visHøyremeny && <Sidebar dialogRef={dialogRef} />}
     </>
 );
 
@@ -295,9 +290,8 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                     </Routes>
                 </section>
             </section>
-            <Suspense fallback={<SidebarSkeleton />}>
-                <Sidebar dialogRef={dialogRef} />
-            </Suspense>
+
+            <Sidebar dialogRef={dialogRef} />
         </>
     );
 };

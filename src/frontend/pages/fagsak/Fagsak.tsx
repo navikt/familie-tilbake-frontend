@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
@@ -11,7 +11,6 @@ import { useBehandlingStore } from '~/stores/behandlingStore';
 import { useFagsakStore } from '~/stores/fagsakStore';
 
 import { BehandlingContainer } from './Behandling';
-import { BehandlingSkeleton } from './BehandlingSkeleton';
 
 export const FagsakContainer: FC = () => {
     const location = useLocation();
@@ -45,13 +44,11 @@ export const FagsakContainer: FC = () => {
     }
 
     return (
-        <Suspense fallback={<BehandlingSkeleton />}>
-            <BehandlingProvider behandlingId={behandlingId}>
-                <BehandlingStateProvider>
-                    <BehandlingContainer />
-                    <UlagretDataModal />
-                </BehandlingStateProvider>
-            </BehandlingProvider>
-        </Suspense>
+        <BehandlingProvider behandlingId={behandlingId}>
+            <BehandlingStateProvider>
+                <BehandlingContainer />
+                <UlagretDataModal />
+            </BehandlingStateProvider>
+        </BehandlingProvider>
     );
 };
