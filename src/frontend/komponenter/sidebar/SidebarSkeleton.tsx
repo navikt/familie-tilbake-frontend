@@ -124,7 +124,7 @@ export const SidebarSkeleton: FC = () => {
                         <dd className="text-ax-medium flex flex-row gap-2 items-center">
                             <Skeleton
                                 variant="rounded"
-                                width={100}
+                                width={30}
                                 height={24}
                                 className="flex items-center"
                             />
