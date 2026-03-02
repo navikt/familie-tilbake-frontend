@@ -55,13 +55,13 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     <div>
                         <LocalAlert status="warning">
                             <LocalAlert.Header>
-                                <LocalAlert.Title>
-                                    Det finnes flere revurderinger knyttet til denne
-                                    tilbakekrevingen.
-                                    <br />
-                                    Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
-                                </LocalAlert.Title>
+                                <LocalAlert.Title>Flere revurderinger</LocalAlert.Title>
                             </LocalAlert.Header>
+                            <LocalAlert.Content>
+                                Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
+                                <br />
+                                Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
+                            </LocalAlert.Content>
                         </LocalAlert>
                     </div>
                 )}
