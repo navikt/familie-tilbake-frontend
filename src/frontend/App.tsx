@@ -21,7 +21,6 @@ import { ErrorBoundary } from './komponenter/error-boundary/ErrorBoundary';
 import { FagsakErrorBoundary } from './komponenter/error-boundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting';
 import { Header } from './komponenter/header/Header';
-import { StegflytSkeleton } from './komponenter/stegflyt/StegflytSkeleton';
 import { Toasts } from './komponenter/toast/Toasts';
 import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
@@ -74,14 +73,7 @@ const router = createBrowserRouter(
                     path="/fagsystem/:fagsystem/fagsak/:fagsakId/"
                     element={<FagsakProvidersWrapper />}
                 >
-                    <Route
-                        path="*"
-                        element={
-                            <Suspense fallback={<StegflytSkeleton />}>
-                                <FagsakContainer />
-                            </Suspense>
-                        }
-                    />
+                    <Route path="*" element={<FagsakContainer />} />
                 </Route>
                 <Route path="*" element={<IkkeFunnet />} />
             </Route>

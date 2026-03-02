@@ -6,12 +6,12 @@ import { useLocation } from 'react-router';
 import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
 import { BehandlingStateProvider } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
-import { Spinner } from '~/komponenter/datalast/Spinner';
 import { UlagretDataModal } from '~/komponenter/modal/UlagretDataModal';
 import { useBehandlingStore } from '~/stores/behandlingStore';
 import { useFagsakStore } from '~/stores/fagsakStore';
 
 import { BehandlingContainer } from './Behandling';
+import { BehandlingSkeleton } from './BehandlingSkeleton';
 
 export const FagsakContainer: FC = () => {
     const location = useLocation();
@@ -45,7 +45,7 @@ export const FagsakContainer: FC = () => {
     }
 
     return (
-        <Suspense fallback={<Spinner type="behandling" />}>
+        <Suspense fallback={<BehandlingSkeleton />}>
             <BehandlingProvider behandlingId={behandlingId}>
                 <BehandlingStateProvider>
                     <BehandlingContainer />
