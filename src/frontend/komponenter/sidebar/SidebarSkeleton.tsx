@@ -152,6 +152,7 @@ export const SidebarSkeleton: FC = () => {
                     </dl>
                 </ExpansionCard.Content>
             </ExpansionCard>
+            <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"></div>
         </aside>
     );
 };
