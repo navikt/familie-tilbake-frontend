@@ -18,7 +18,7 @@ import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '~/kodeverk';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
+import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsessmodal';
 import { RessursStatus } from '~/typer/ressurs';
 import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
 
