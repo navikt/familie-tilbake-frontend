@@ -6,10 +6,7 @@ import { Fragment } from 'react';
 export const StegflytSkeleton: FC = () => {
     const antallGjentagelser = 4;
     return (
-        <nav
-            aria-label="Laster behandlingssteg navigasjon"
-            className="flex flex-row py-2 mt-4 mx-6"
-        >
+        <nav aria-label="Laster behandlingssteg navigasjon" className="flex flex-row py-1.5 mx-6">
             <ol className="flex flex-row mx-auto gap-5 w-full max-w-4xl">
                 {Array.from({ length: antallGjentagelser }).map((_, index) => (
                     <Fragment key={`skjelett-steg-indeks-${index}`}>

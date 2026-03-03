@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { BodyShort, Heading, Skeleton, VStack } from '@navikt/ds-react';
+import { Heading, HStack, Skeleton, VStack } from '@navikt/ds-react';
 
 import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
@@ -8,23 +8,37 @@ export const VedtakSkeleton: FC = () => {
     return (
         <>
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
-                <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
-                    <Heading size="small">Lag vedtaksbrev</Heading>
-                    <Skeleton variant="rounded" width="40%" height={20} />
-                    <BodyShort className="text-ax-text-neutral-subtle text-ax-medium">
-                        Beskriv kort hva som har skjedd i denne perioden
-                    </BodyShort>
-                    <Skeleton variant="rounded" width="100%" height={100} />
-                    <BodyShort className="text-ax-medium font-semibold">
-                        Hvordan har vi kommet fram til at du må betale tilbake?
-                    </BodyShort>
-                    <Skeleton variant="rounded" width="100%" height={100} />
+                <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-6">
+                    <HStack justify="space-between" align="center">
+                        <Heading size="small">Lag vedtaksbrev</Heading>
+                        <Skeleton variant="rounded" width="40%" height={20} />
+                    </HStack>
+
+                    <TextAreaSkeleton />
+
+                    <TextAreaSkeleton />
+
+                    <TextAreaSkeleton />
+
+                    <TextAreaSkeleton />
                 </VStack>
                 <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-4">
-                    <Skeleton variant="rounded" width="100%" height={400} />
+                    <Skeleton variant="rounded" width="100%" height={990} />
                 </VStack>
             </div>
             <ActionBarSkeleton />
         </>
+    );
+};
+
+const TextAreaSkeleton: FC = () => {
+    return (
+        <VStack gap="space-4">
+            <Skeleton variant="rounded" width="40%" height={20} />
+            <Skeleton variant="rounded" width="100%" height={20} />
+            <Skeleton variant="rounded" width="30%" height={20} />
+            <Skeleton variant="rounded" width="100%" height={80} />
+            <Skeleton variant="rounded" width="20%" height={20} />
+        </VStack>
     );
 };

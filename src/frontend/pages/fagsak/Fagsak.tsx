@@ -1,12 +1,11 @@
 import type { FC } from 'react';
 
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
 import { BehandlingStateProvider } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
-import { Spinner } from '~/komponenter/datalast/Spinner';
 import { UlagretDataModal } from '~/komponenter/modal/UlagretDataModal';
 import { useBehandlingStore } from '~/stores/behandlingStore';
 import { useFagsakStore } from '~/stores/fagsakStore';
@@ -45,13 +44,11 @@ export const FagsakContainer: FC = () => {
     }
 
     return (
-        <Suspense fallback={<Spinner type="behandling" />}>
-            <BehandlingProvider behandlingId={behandlingId}>
-                <BehandlingStateProvider>
-                    <BehandlingContainer />
-                    <UlagretDataModal />
-                </BehandlingStateProvider>
-            </BehandlingProvider>
-        </Suspense>
+        <BehandlingProvider behandlingId={behandlingId}>
+            <BehandlingStateProvider>
+                <BehandlingContainer />
+                <UlagretDataModal />
+            </BehandlingStateProvider>
+        </BehandlingProvider>
     );
 };

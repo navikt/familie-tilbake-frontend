@@ -17,7 +17,6 @@ import { StegErrorBoundary } from '~/komponenter/error-boundary/StegErrorBoundar
 import { lazyImportMedRetry } from '~/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
 import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
-import { SidebarSkeleton } from '~/komponenter/sidebar/SidebarSkeleton';
 import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
 import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
 import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
@@ -31,7 +30,6 @@ import {
     utledBehandlingSide,
 } from '~/utils/sider';
 
-import { BehandlingContainerSkeleton } from './BehandlingSkeleton';
 import { Fakta } from './fakta/Fakta';
 import { HistoriskFaktaProvider } from './fakta/fakta-periode/historikk/HistoriskFaktaContext';
 import { FaktaProvider } from './fakta/FaktaContext';
@@ -96,11 +94,7 @@ const BehandlingLayout: FC<BehandlingLayoutProps> = ({
 }) => (
     <>
         <div className="flex-1 overflow-auto">{children}</div>
-        {visHøyremeny && (
-            <Suspense fallback={<SidebarSkeleton />}>
-                <Sidebar dialogRef={dialogRef} />
-            </Suspense>
-        )}
+        {visHøyremeny && <Sidebar dialogRef={dialogRef} />}
     </>
 );
 
@@ -221,86 +215,83 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                     className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
-                    <Suspense fallback={<BehandlingContainerSkeleton />}>
-                        <Routes>
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/fakta'}
-                                element={
-                                    behandling.erNyModell ? (
-                                        <StegErrorBoundary steg={SYNLIGE_STEG.FAKTA}>
-                                            <Suspense fallback={<FaktaSkeleton />}>
-                                                <Fakta />
-                                            </Suspense>
-                                        </StegErrorBoundary>
-                                    ) : (
-                                        <FaktaProvider>
-                                            <FaktaContainer />
-                                        </FaktaProvider>
-                                    )
-                                }
-                            />
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
-                                element={
-                                    <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
-                                        <Suspense fallback={<ForhåndsvarselSkeleton />}>
-                                            <Forhåndsvarsel />
+                    <Routes>
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/fakta'}
+                            element={
+                                behandling.erNyModell ? (
+                                    <StegErrorBoundary steg={SYNLIGE_STEG.FAKTA}>
+                                        <Suspense fallback={<FaktaSkeleton />}>
+                                            <Fakta />
                                         </Suspense>
                                     </StegErrorBoundary>
-                                }
-                            />
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
-                                element={
-                                    <ForeldelseProvider>
-                                        <ForeldelseContainer />
-                                    </ForeldelseProvider>
-                                }
-                            />
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
-                                element={
-                                    <VilkårsvurderingProvider>
-                                        <VilkårsvurderingContainer />
-                                    </VilkårsvurderingProvider>
-                                }
-                            />
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
-                                element={
-                                    behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
-                                        <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
-                                            <Suspense fallback={<VedtakSkeleton />}>
-                                                <Vedtak />
-                                            </Suspense>
-                                        </StegErrorBoundary>
-                                    ) : (
-                                        <VedtakProvider>
-                                            <VedtakContainer />
-                                        </VedtakProvider>
-                                    )
-                                }
-                            />
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/verge'}
-                                element={
-                                    <VergeProvider>
-                                        <VergeContainer />
-                                    </VergeProvider>
-                                }
-                            />
-                            <Route
-                                path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
-                                element={<BrevmottakerContainer />}
-                            />
-                            <Route path="*" element={<IkkeFunnet />} />
-                        </Routes>
-                    </Suspense>
+                                ) : (
+                                    <FaktaProvider>
+                                        <FaktaContainer />
+                                    </FaktaProvider>
+                                )
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
+                            element={
+                                <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
+                                    <Suspense fallback={<ForhåndsvarselSkeleton />}>
+                                        <Forhåndsvarsel />
+                                    </Suspense>
+                                </StegErrorBoundary>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
+                            element={
+                                <ForeldelseProvider>
+                                    <ForeldelseContainer />
+                                </ForeldelseProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
+                            element={
+                                <VilkårsvurderingProvider>
+                                    <VilkårsvurderingContainer />
+                                </VilkårsvurderingProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
+                            element={
+                                behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
+                                    <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
+                                        <Suspense fallback={<VedtakSkeleton />}>
+                                            <Vedtak />
+                                        </Suspense>
+                                    </StegErrorBoundary>
+                                ) : (
+                                    <VedtakProvider>
+                                        <VedtakContainer />
+                                    </VedtakProvider>
+                                )
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/verge'}
+                            element={
+                                <VergeProvider>
+                                    <VergeContainer />
+                                </VergeProvider>
+                            }
+                        />
+                        <Route
+                            path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
+                            element={<BrevmottakerContainer />}
+                        />
+                        <Route path="*" element={<IkkeFunnet />} />
+                    </Routes>
                 </section>
             </section>
-            <Suspense fallback={<SidebarSkeleton />}>
-                <Sidebar dialogRef={dialogRef} />
-            </Suspense>
+
+            <Sidebar dialogRef={dialogRef} />
         </>
     );
 };

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { BagdeIcon, Buildings3Icon, CalendarIcon, CandleIcon } from '@navikt/aksel-icons';
-import { Box, CopyButton, Heading, Skeleton } from '@navikt/ds-react';
+import { CopyButton, ExpansionCard, Skeleton } from '@navikt/ds-react';
 import classNames from 'classnames';
 
 import { ICON_PROPS } from './utils';
@@ -14,23 +14,31 @@ export const SidebarSkeleton: FC = () => {
                 'flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]'
             )}
         >
-            <div className="gap-4 flex flex-col flex-1 min-h-0">
-                <Box
-                    padding="space-16"
-                    className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
-                >
-                    <Heading size="xsmall" level="2" className="flex flex-row gap-2">
-                        Tilbakekreving av
+            <ExpansionCard
+                defaultOpen
+                size="small"
+                aria-label="Laster informasjon om tilbakekrevingen"
+                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
+            >
+                <ExpansionCard.Header>
+                    <ExpansionCard.Title
+                        as="h2"
+                        size="small"
+                        className="text-lg flex flex-row gap-2"
+                    >
+                        <span>Tilbakekreving av</span>
                         <Skeleton
-                            variant="rectangle"
-                            width={154}
+                            variant="rounded"
+                            width={104}
                             height={24}
                             className="flex items-center"
                         />
-                    </Heading>
+                    </ExpansionCard.Title>
+                </ExpansionCard.Header>
 
+                <ExpansionCard.Content>
                     <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-3 items-center">
                             <Skeleton
                                 variant="circle"
                                 width={16}
@@ -41,7 +49,7 @@ export const SidebarSkeleton: FC = () => {
                         </dt>
                         <dd className="text-ax-medium items-center flex">
                             <Skeleton
-                                variant="rectangle"
+                                variant="rounded"
                                 width={154}
                                 height={24}
                                 className="flex items-center"
@@ -54,7 +62,7 @@ export const SidebarSkeleton: FC = () => {
                         </dt>
                         <dd className="text-ax-medium items-center flex">
                             <Skeleton
-                                variant="rectangle"
+                                variant="rounded"
                                 width={154}
                                 height={24}
                                 className="flex items-center"
@@ -67,24 +75,31 @@ export const SidebarSkeleton: FC = () => {
                         </dt>
                         <dd className="text-ax-medium items-center flex">
                             <Skeleton
-                                variant="rectangle"
+                                variant="rounded"
                                 width={154}
                                 height={24}
                                 className="flex items-center"
                             />
                         </dd>
                     </dl>
-                </Box>
-                <Box
-                    padding="space-16"
-                    className="border rounded-xl border-ax-border-neutral-subtle flex flex-col gap-4 bg-ax-bg-default"
-                >
-                    <Heading size="xsmall" level="2">
-                        Bruker
-                    </Heading>
+                </ExpansionCard.Content>
+            </ExpansionCard>
 
+            <ExpansionCard
+                defaultOpen
+                size="small"
+                aria-label="Laster informasjon om bruker"
+                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
+            >
+                <ExpansionCard.Header>
+                    <ExpansionCard.Title as="h2" size="small" className="text-lg">
+                        Informasjon om bruker
+                    </ExpansionCard.Title>
+                </ExpansionCard.Header>
+
+                <ExpansionCard.Content>
                     <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4">
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-3 items-center">
                             <Skeleton
                                 variant="circle"
                                 width={16}
@@ -95,7 +110,7 @@ export const SidebarSkeleton: FC = () => {
                         </dt>
                         <dd className="text-ax-medium">
                             <Skeleton
-                                variant="rectangle"
+                                variant="rounded"
                                 width={154}
                                 height={24}
                                 className="flex items-center"
@@ -108,8 +123,8 @@ export const SidebarSkeleton: FC = () => {
                         </dt>
                         <dd className="text-ax-medium flex flex-row gap-2 items-center">
                             <Skeleton
-                                variant="rectangle"
-                                width={100}
+                                variant="rounded"
+                                width={30}
                                 height={24}
                                 className="flex items-center"
                             />
@@ -119,7 +134,7 @@ export const SidebarSkeleton: FC = () => {
                         <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                             <BagdeIcon {...ICON_PROPS} />
                             <Skeleton
-                                variant="rectangle"
+                                variant="rounded"
                                 width={100}
                                 height={24}
                                 className="flex items-center"
@@ -127,7 +142,7 @@ export const SidebarSkeleton: FC = () => {
                         </dt>
                         <dd className="text-ax-medium flex flex-row gap-2 items-center">
                             <Skeleton
-                                variant="rectangle"
+                                variant="rounded"
                                 width={100}
                                 height={24}
                                 className="flex items-center"
@@ -135,8 +150,9 @@ export const SidebarSkeleton: FC = () => {
                             <CopyButton copyText="" className="p-0" />
                         </dd>
                     </dl>
-                </Box>
-            </div>
+                </ExpansionCard.Content>
+            </ExpansionCard>
+            <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"></div>
         </aside>
     );
 };

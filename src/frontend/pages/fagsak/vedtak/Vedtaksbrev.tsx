@@ -14,7 +14,7 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { vedtaksbrevLagSvgVedtaksbrevMutation } from '~/generated-new/@tanstack/react-query.gen';
@@ -86,6 +86,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     useEffect(() => {
         sendInnSkjemaVedFørsteRendering();
     }, []);
+    const harDataEllerFeil = pdfSider.length > 0 || vedtaksbrevMutation.isError;
 
     return (
         <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
@@ -108,69 +109,85 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                 </FormProvider>
             </section>
 
-            <section className="col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle">
-                {pdfSider.length > 0 && (
-                    <HStack
-                        justify="center"
-                        align="center"
-                        className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl"
-                    >
-                        <Pagination
-                            page={gjeldendeSide}
-                            count={pdfSider.length}
-                            size="small"
-                            onPageChange={settGjeldendeSide}
-                        />
-                    </HStack>
-                )}
-                <div
-                    className={classNames(
-                        'flex-1 flex items-start justify-center overflow-auto rounded-b-xl',
-                        {
-                            'border-t border-ax-border-neutral-subtle':
-                                !vedtaksbrevMutation.isError,
-                        }
-                    )}
-                >
-                    {vedtaksbrevMutation.isError ? (
-                        <VStack
-                            gap="space-16"
-                            padding="space-16"
-                            className="flex justify-center items-center h-full"
-                        >
-                            <InlineMessage size="small" status="error">
-                                Kunne ikke laste inn forhåndsvisningen. Dette kan være et
-                                midlertidig problem. Prøv å laste siden på nytt, eller prøv igjen om
-                                litt.
-                            </InlineMessage>
-
-                            <Button
-                                variant="secondary"
-                                size="small"
-                                onClick={() => {
-                                    vedtaksbrevMutation.reset();
-                                    sendInnSkjemaData();
-                                }}
-                            >
-                                Last inn på nytt
-                            </Button>
-                        </VStack>
-                    ) : pdfSider.length > 0 ? (
-                        <img
-                            className="max-w-full max-h-full object-contain"
-                            alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
-                            src={pdfSider[gjeldendeSide - 1]}
-                        />
-                    ) : (
-                        /* Fikser suspense etter hvert, dette er midlertidig */
+            {harDataEllerFeil && (
+                <Suspense
+                    fallback={
                         <Skeleton
                             variant="rounded"
                             className="aspect-[1/1.414] w-full max-w-md"
                             height={600}
                         />
-                    )}
-                </div>
-            </section>
+                    }
+                >
+                    <section
+                        className={classNames(
+                            'col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle flex flex-col',
+                            {
+                                /* Må trekke fra høyden på alt annet enn den hvite boksen for å gi den en korrekt høyde */
+                                'h-[calc(100vh-17.8rem)] overflow-hidden':
+                                    vedtaksbrevMutation.isError,
+                            }
+                        )}
+                    >
+                        {pdfSider.length > 0 && (
+                            <HStack
+                                justify="center"
+                                align="center"
+                                className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl"
+                            >
+                                <Pagination
+                                    page={gjeldendeSide}
+                                    count={pdfSider.length}
+                                    size="small"
+                                    onPageChange={settGjeldendeSide}
+                                />
+                            </HStack>
+                        )}
+                        <div
+                            className={classNames(
+                                'flex-1 flex justify-center overflow-auto rounded-b-xl',
+                                vedtaksbrevMutation.isError ? 'items-center' : 'items-start',
+                                {
+                                    'border-t border-ax-border-neutral-subtle':
+                                        !vedtaksbrevMutation.isError,
+                                }
+                            )}
+                        >
+                            {vedtaksbrevMutation.isError && (
+                                <VStack
+                                    gap="space-16"
+                                    padding="space-16"
+                                    className="flex justify-center items-center h-full"
+                                >
+                                    <InlineMessage size="small" status="error">
+                                        Kunne ikke laste inn forhåndsvisningen av vedtaksbrevet.
+                                        Dette kan være et midlertidig problem. Prøv å laste siden på
+                                        nytt, eller prøv igjen om litt.
+                                    </InlineMessage>
+
+                                    <Button
+                                        variant="secondary"
+                                        size="small"
+                                        onClick={() => {
+                                            vedtaksbrevMutation.reset();
+                                            sendInnSkjemaData();
+                                        }}
+                                    >
+                                        Last inn på nytt
+                                    </Button>
+                                </VStack>
+                            )}
+                            {pdfSider.length > 0 && (
+                                <img
+                                    className="max-w-full max-h-full object-contain"
+                                    alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
+                                    src={pdfSider[gjeldendeSide - 1]}
+                                />
+                            )}
+                        </div>
+                    </section>
+                </Suspense>
+            )}
         </div>
     );
 };
