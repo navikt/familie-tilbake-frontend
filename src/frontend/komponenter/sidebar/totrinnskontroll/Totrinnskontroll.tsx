@@ -72,10 +72,11 @@ export const Totrinnskontroll: FC = () => {
                 {skalViseFeilmelding && (
                     <LocalAlert status="error">
                         <LocalAlert.Header>
-                            <LocalAlert.Title>
-                                {fatteVedtakRespons.frontendFeilmelding}
-                            </LocalAlert.Title>
+                            <LocalAlert.Title>Kunne ikke sende vedtaket</LocalAlert.Title>
                         </LocalAlert.Header>
+                        <LocalAlert.Content>
+                            {fatteVedtakRespons.frontendFeilmelding}
+                        </LocalAlert.Content>
                     </LocalAlert>
                 )}
                 {!erLesevisning && (

@@ -61,8 +61,9 @@ const Dokument: FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) =
             return (
                 <LocalAlert status="error">
                     <LocalAlert.Header>
-                        <LocalAlert.Title>{pdfdata.frontendFeilmelding}</LocalAlert.Title>
+                        <LocalAlert.Title>Ingen tilgang</LocalAlert.Title>
                     </LocalAlert.Header>
+                    <LocalAlert.Content>{pdfdata.frontendFeilmelding}</LocalAlert.Content>
                 </LocalAlert>
             );
         default:

@@ -49,8 +49,9 @@ export const DataLastIkkeSuksess: FC<Props> = ({
         return (
             <LocalAlert status="error">
                 <LocalAlert.Header>
-                    <LocalAlert.Title>{feiletRessurs.frontendFeilmelding}</LocalAlert.Title>
+                    <LocalAlert.Title>En feil har oppstått</LocalAlert.Title>
                 </LocalAlert.Header>
+                <LocalAlert.Content>{feiletRessurs.frontendFeilmelding}</LocalAlert.Content>
             </LocalAlert>
         );
     }
@@ -59,8 +60,9 @@ export const DataLastIkkeSuksess: FC<Props> = ({
         return (
             <LocalAlert status="error">
                 <LocalAlert.Header>
-                    <LocalAlert.Title>{serverFeil.frontendFeilmelding}</LocalAlert.Title>
+                    <LocalAlert.Title>En feil har oppstått</LocalAlert.Title>
                 </LocalAlert.Header>
+                <LocalAlert.Content>{serverFeil.frontendFeilmelding}</LocalAlert.Content>
             </LocalAlert>
         );
     }
