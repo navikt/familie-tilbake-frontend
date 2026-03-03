@@ -19,7 +19,7 @@ export const useGlobalAlertStore = create<GlobalAlertState>(set => ({
     alerts: [],
     visAlert: (alert): void => {
         const id = crypto.randomUUID();
-        set(state => ({ alerts: [...state.alerts, { ...alert, id }] }));
+        set(() => ({ alerts: [{ ...alert, id }] }));
     },
     lukkAlert: (id): void => {
         set(state => ({ alerts: state.alerts.filter(alert => alert.id !== id) }));
