@@ -8,11 +8,12 @@ import type {
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { VStack } from '@navikt/ds-react';
-import { useEffect, useEffectEvent } from 'react';
+import { useEffect, useEffectEvent, useRef } from 'react';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import {
@@ -42,8 +43,10 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 }) => {
     const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
+    const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
     const {
         formState: { dirtyFields: forhåndsvarselDirtyFields },
+        getValues: getForhåndsvarselValues,
     } = useFormContext<ForhåndsvarselFormData>();
     const forhåndsvarselIsDirty = Object.keys(forhåndsvarselDirtyFields).length > 0;
 
@@ -105,6 +108,9 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 
     useEffect(() => {
         if (sendForhåndsvarselMutation.isSuccess) {
+            if (bekreftelsesmodalRef.current?.open) {
+                bekreftelsesmodalRef.current.close();
+            }
             visGlobalAlert({
                 title: 'Forhåndsvarsel er sendt',
                 message:
@@ -166,7 +172,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
             case 'UTSETT_FRIST':
                 return 'Utsett frist';
             case 'SEND_FORHÅNDSVARSEL':
-                return 'Send forhåndsvarsel';
+                return 'Send forhåndsvarselet';
             case 'NAVIGER':
                 return 'Neste';
             default:
@@ -194,8 +200,8 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
     ): Promise<void> => {
         switch (submitAction) {
             case 'SEND_FORHÅNDSVARSEL':
-                sendForhåndsvarsel(data);
-                break;
+                bekreftelsesmodalRef.current?.showModal();
+                return;
             case 'SEND_UNNTAK':
                 sendUnntak(data);
                 break;
@@ -213,6 +219,11 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
                 navigerTilNeste();
                 break;
         }
+        nullstillIkkePersisterteKomponenter();
+    };
+
+    const bekreftSendForhåndsvarsel = (): void => {
+        sendForhåndsvarsel(getForhåndsvarselValues());
         nullstillIkkePersisterteKomponenter();
     };
 
@@ -288,6 +299,18 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
                 }
                 return null;
             })}
+
+            <Bekreftelsesmodal
+                dialogRef={bekreftelsesmodalRef}
+                tekster={{
+                    overskrift: 'Send forhåndsvarselet',
+                    brødtekst:
+                        'Er du sikker på at du vil sende forhåndsvarselet? Dette kan ikke angres.',
+                    bekreftTekst: 'Send forhåndsvarselet',
+                }}
+                onBekreft={bekreftSendForhåndsvarsel}
+                laster={sendForhåndsvarselMutation.isPending}
+            />
         </VStack>
     );
 };
