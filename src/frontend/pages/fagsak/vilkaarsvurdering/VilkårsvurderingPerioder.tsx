@@ -90,6 +90,9 @@ export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUn
         <>
             {valideringsFeilmelding && (
                 <LocalAlert status="error">
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>Valideringsfeil</LocalAlert.Title>
+                    </LocalAlert.Header>
                     <LocalAlert.Content>
                         <BodyShort className="font-semibold">{valideringsFeilmelding}</BodyShort>
                     </LocalAlert.Content>

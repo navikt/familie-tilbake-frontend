@@ -54,6 +54,9 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                 {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
                     <div>
                         <LocalAlert status="warning">
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>Flere revurderinger</LocalAlert.Title>
+                            </LocalAlert.Header>
                             <LocalAlert.Content>
                                 Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
                                 <br />
@@ -99,10 +102,12 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     )}
                     {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
                         <LocalAlert status="warning">
-                            <LocalAlert.Content>
-                                Husk å kontrollere faktisk inntekt den siste måneden i
-                                feilutbetalingsperioden
-                            </LocalAlert.Content>
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>
+                                    Husk å kontrollere faktisk inntekt den siste måneden i
+                                    feilutbetalingsperioden
+                                </LocalAlert.Title>
+                            </LocalAlert.Header>
                         </LocalAlert>
                     )}
                     {skjemaData.perioder && <FaktaPerioder perioder={skjemaData.perioder} />}

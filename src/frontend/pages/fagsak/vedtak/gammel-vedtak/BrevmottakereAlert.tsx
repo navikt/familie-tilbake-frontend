@@ -17,6 +17,9 @@ export const BrevmottakereAlert: FC<Props> = ({ brevmottakere }) => {
         brevmottakere &&
         brevmottakere.length !== 0 && (
             <LocalAlert status="announcement">
+                <LocalAlert.Header>
+                    <LocalAlert.Title>Endret brevmottaker</LocalAlert.Title>
+                </LocalAlert.Header>
                 <LocalAlert.Content>
                     Brevmottaker(e) er endret, og vedtak sendes til:
                     <BrevmottakerListe />

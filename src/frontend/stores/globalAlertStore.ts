@@ -5,7 +5,7 @@ import { create } from 'zustand';
 export type GlobalAlert = {
     id: string;
     title: string;
-    message: string;
+    message?: string;
     status: LocalAlertProps['status'];
 };
 

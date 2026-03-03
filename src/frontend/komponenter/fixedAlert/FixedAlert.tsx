@@ -51,7 +51,7 @@ export const FixedAlert: FC<Props> = ({
                 <LocalAlert.Title>{title}</LocalAlert.Title>
                 <LocalAlert.CloseButton onClick={handleClose} />
             </LocalAlert.Header>
-            <LocalAlert.Content>{children}</LocalAlert.Content>
+            {children && <LocalAlert.Content>{children}</LocalAlert.Content>}
         </LocalAlert>
     );
 };

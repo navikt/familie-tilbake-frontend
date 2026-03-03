@@ -364,7 +364,9 @@ export const BehandlingContainer: FC = () => {
         <>
             {ventegrunn && (
                 <LocalAlert status="announcement" className="w-full">
-                    <LocalAlert.Content>{venteBeskjed(ventegrunn)}</LocalAlert.Content>
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>{venteBeskjed(ventegrunn)}</LocalAlert.Title>
+                    </LocalAlert.Header>
                 </LocalAlert>
             )}
             {ventegrunn && !visVenteModal && (

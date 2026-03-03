@@ -10,7 +10,9 @@ type Props = {
 export const Steginformasjon: FC<Props> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
         <LocalAlert status="announcement">
-            <LocalAlert.Content>{infotekst}</LocalAlert.Content>
+            <LocalAlert.Header>
+                <LocalAlert.Title>{infotekst}</LocalAlert.Title>
+            </LocalAlert.Header>
         </LocalAlert>
     ) : (
         <p className="flex flex-row gap-2">

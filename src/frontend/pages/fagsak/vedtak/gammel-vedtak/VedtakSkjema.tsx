@@ -26,7 +26,9 @@ export const VedtakSkjema: FC<Props> = ({
             </Heading>
             {harBrukerUttaltSeg && !behandlingILesemodus && (
                 <LocalAlert status="warning">
-                    <LocalAlert.Content>Husk å vurdere uttalelse fra bruker</LocalAlert.Content>
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>Husk å vurdere uttalelse fra bruker</LocalAlert.Title>
+                    </LocalAlert.Header>
                 </LocalAlert>
             )}
             {avsnitter.map(avsnitt => {

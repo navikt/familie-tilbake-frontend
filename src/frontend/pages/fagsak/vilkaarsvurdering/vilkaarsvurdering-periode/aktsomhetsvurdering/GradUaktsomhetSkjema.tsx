@@ -71,9 +71,11 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                         )}
                         {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
                             <LocalAlert status="warning" aria-live="polite">
-                                <LocalAlert.Content>
-                                    Når 6. ledd anvendes må alle perioder behandles likt
-                                </LocalAlert.Content>
+                                <LocalAlert.Header>
+                                    <LocalAlert.Title>
+                                        Når 6. ledd anvendes må alle perioder behandles likt
+                                    </LocalAlert.Title>
+                                </LocalAlert.Header>
                             </LocalAlert>
                         )}
                     </>
