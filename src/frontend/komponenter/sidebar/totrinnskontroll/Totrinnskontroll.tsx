@@ -16,7 +16,7 @@ import { useEffect, useRef } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsessmodal';
+import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
 import { behandlingssteg } from '~/typer/behandling';
 import { RessursStatus } from '~/typer/ressurs';
