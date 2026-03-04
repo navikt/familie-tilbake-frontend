@@ -10,7 +10,7 @@ import {
     LocalAlert,
     VStack,
 } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -18,7 +18,7 @@ import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
 import { vedtaksresultater } from '~/kodeverk';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { BekreftelsesModal } from '~/komponenter/modal/bekreftelse/BekreftelsesModal';
+import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { RessursStatus } from '~/typer/ressurs';
 import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
 
@@ -45,7 +45,7 @@ export const VedtakContainer: FC = () => {
     const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere, erNyModell } =
         useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
-    const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
+    const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
 
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
@@ -199,17 +199,18 @@ export const VedtakContainer: FC = () => {
                     nesteTekst="Send til godkjenning"
                     forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                     nesteAriaLabel="Send til godkjenning hos beslutter"
-                    onNeste={() => settVisBekreftelsesmodal(true)}
+                    onNeste={() => bekreftelsesmodalRef.current?.showModal()}
                     onForrige={navigerTilForrige}
                     isLoading={senderInn}
                 />
-                <BekreftelsesModal
-                    åpen={visBekreftelsesmodal}
-                    onLukk={() => settVisBekreftelsesmodal(false)}
-                    overskrift="Send til godkjenning"
-                    brødtekst={erNyModell ? 'Denne handlingen kan ikke angres.' : undefined}
-                    bekreftTekst="Send til godkjenning"
-                    onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
+                <Bekreftelsesmodal
+                    dialogRef={bekreftelsesmodalRef}
+                    tekster={{
+                        overskrift: 'Send til godkjenning',
+                        brødtekst: erNyModell ? 'Denne handlingen kan ikke angres.' : undefined,
+                        bekreftTekst: 'Send til godkjenning',
+                    }}
+                    onBekreft={() => sendInnSkjema(() => bekreftelsesmodalRef.current?.close())}
                     laster={senderInn}
                 />
             </VStack>
