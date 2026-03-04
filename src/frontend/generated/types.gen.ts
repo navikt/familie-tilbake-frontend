@@ -501,7 +501,7 @@ export type Behandling = {
     aktiv: boolean;
     getårsak?: GetårsakstypeEnum;
     type: BehandlingstypeEnum;
-    status: BehandlingstatusEnum;
+    status: StatusEnum2;
     vedtaksdato?: string;
     resultat?: ResultatEnum;
 };
@@ -912,11 +912,13 @@ export type SchemaEnum =
     | 'AVVENTER_FAGSYSTEMINFO'
     | 'AVVENTER_BRUKERINFO'
     | 'SEND_VARSELBREV'
-    | 'IVERKSETT_VEDTAK'
     | 'TIL_BEHANDLING'
+    | 'IVERKSETT_VEDTAK'
+    | 'JOURNALFØR_VEDTAK'
+    | 'DISTRIUBER_VEDTAK'
     | 'AVSLUTTET';
 
-export type SchemaEnum2 = 'BA' | 'EF' | 'AAP' | 'KONT' | 'IT01' | 'TS';
+export type SchemaEnum2 = 'BA' | 'EF' | 'AAP' | 'KONT' | 'IT01' | 'TS' | 'TP';
 
 export type SchemaEnum3 =
     | 'BARNETRYGD'
@@ -933,7 +935,8 @@ export type SchemaEnum4 =
     | 'KONTANTSTØTTE'
     | 'TILLEGGSSTØNAD'
     | 'INFOTRYGD'
-    | 'ARBEIDSAVKLARINGSPENGER';
+    | 'ARBEIDSAVKLARINGSPENGER'
+    | 'TILTAKSPENGER';
 
 export type StatusEnum = 'SUKSESS' | 'FEILET' | 'IKKE_HENTET' | 'IKKE_TILGANG' | 'FUNKSJONELL_FEIL';
 
@@ -1194,11 +1197,20 @@ export type BehandlingstatusEnum =
     | 'FATTER_VEDTAK'
     | 'IVERKSETTER_VEDTAK'
     | 'OPPRETTET'
-    | 'UTREDES';
+    | 'UTREDES'
+    | 'JOURNALFØR_VEDTAK'
+    | 'DISTRIUBER_VEDTAK';
 
 export type FagsystemTypeEnum = 'TILBAKEKREVING';
 
 export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
+
+export type StatusEnum2 =
+    | 'AVSLUTTET'
+    | 'FATTER_VEDTAK'
+    | 'IVERKSETTER_VEDTAK'
+    | 'OPPRETTET'
+    | 'UTREDES';
 
 export type ResultatEnum =
     | 'INGEN_TILBAKEBETALING'

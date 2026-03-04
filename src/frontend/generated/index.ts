@@ -419,6 +419,7 @@ export type {
     SimulerMottakAvKravgrunnlagResponses,
     SpråkkodeEnum,
     StatusEnum,
+    StatusEnum2,
     TaBehandlingAvVentData,
     TaBehandlingAvVentResponse,
     TaBehandlingAvVentResponses,

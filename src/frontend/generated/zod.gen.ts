@@ -240,12 +240,14 @@ export const zSchemaEnum = z.enum([
     'AVVENTER_FAGSYSTEMINFO',
     'AVVENTER_BRUKERINFO',
     'SEND_VARSELBREV',
-    'IVERKSETT_VEDTAK',
     'TIL_BEHANDLING',
+    'IVERKSETT_VEDTAK',
+    'JOURNALFØR_VEDTAK',
+    'DISTRIUBER_VEDTAK',
     'AVSLUTTET',
 ]);
 
-export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS']);
+export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS', 'TP']);
 
 export const zSchemaEnum3 = z.enum([
     'BARNETRYGD',
@@ -264,6 +266,7 @@ export const zSchemaEnum4 = z.enum([
     'TILLEGGSSTØNAD',
     'INFOTRYGD',
     'ARBEIDSAVKLARINGSPENGER',
+    'TILTAKSPENGER',
 ]);
 
 export const zOpprettManueltTilbakekrevingRequest = z.object({
@@ -1035,6 +1038,8 @@ export const zBehandlingstatusEnum = z.enum([
     'IVERKSETTER_VEDTAK',
     'OPPRETTET',
     'UTREDES',
+    'JOURNALFØR_VEDTAK',
+    'DISTRIUBER_VEDTAK',
 ]);
 
 export const zBehandlingsinfo = z.object({
@@ -1109,6 +1114,14 @@ export const zRessursFagsakDto = z.object({
     stacktrace: z.optional(z.string()),
 });
 
+export const zStatusEnum2 = z.enum([
+    'AVSLUTTET',
+    'FATTER_VEDTAK',
+    'IVERKSETTER_VEDTAK',
+    'OPPRETTET',
+    'UTREDES',
+]);
+
 export const zResultatEnum = z.enum([
     'INGEN_TILBAKEBETALING',
     'DELVIS_TILBAKEBETALING',
@@ -1122,7 +1135,7 @@ export const zBehandling = z.object({
     aktiv: z.boolean(),
     getårsak: z.optional(zGetårsakstypeEnum),
     type: zBehandlingstypeEnum,
-    status: zBehandlingstatusEnum,
+    status: zStatusEnum2,
     vedtaksdato: z.optional(z.iso.datetime()),
     resultat: z.optional(zResultatEnum),
 });

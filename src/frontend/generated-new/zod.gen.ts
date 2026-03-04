@@ -24,7 +24,7 @@ export const zMuligeRettsligGrunnlag = z.object({
 });
 
 export const zRentekstElement = z.object({
-    tekst: z.string().min(3).max(3000),
+    tekst: z.string(),
 });
 
 export const zElement = z
