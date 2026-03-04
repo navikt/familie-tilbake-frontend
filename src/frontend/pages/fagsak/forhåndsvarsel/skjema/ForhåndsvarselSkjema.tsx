@@ -13,7 +13,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
-import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
+import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/BekreftelsessModal';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import {
