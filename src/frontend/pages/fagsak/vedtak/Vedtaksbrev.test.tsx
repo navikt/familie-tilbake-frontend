@@ -6,13 +6,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
 
+import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+
 import { Vedtaksbrev } from './Vedtaksbrev';
 
 const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevFormData): RenderResult => {
     const client = new QueryClient();
     return render(
         <QueryClientProvider client={client}>
-            <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} />
+            <TestBehandlingProvider>
+                <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} />
+            </TestBehandlingProvider>
         </QueryClientProvider>
     );
 };

@@ -1,6 +1,10 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
-import type { VedtaksbrevData } from '~/generated-new';
+import type {
+    VedtaksbrevData,
+    VedtaksbrevDataWritable,
+    VedtaksbrevRedigerbareDataUpdate,
+} from '~/generated-new';
 
 import {
     Button,
@@ -17,13 +21,18 @@ import classNames from 'classnames';
 import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { vedtaksbrevLagSvgVedtaksbrevMutation } from '~/generated-new/@tanstack/react-query.gen';
+import { useBehandling } from '~/context/BehandlingContext';
+import {
+    behandlingHentVedtaksbrevQueryKey,
+    behandlingOppdaterVedtaksbrevMutation,
+    vedtaksbrevLagSvgVedtaksbrevMutation,
+} from '~/generated-new/@tanstack/react-query.gen';
 // import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
 import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
 
-const useDebounce = (updateFunction: () => void): (() => void) => {
+const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) => {
     const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
     return (): void => {
         if (timeoutId.current) {
@@ -41,6 +50,7 @@ type Props = {
 };
 
 export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
+    const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
@@ -54,7 +64,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         baseURL: window.location.origin,
     });
 
-    const vedtaksbrevMutation = useMutation({
+    const forhåndsvisningMutation = useMutation({
         mutationKey: ['lagPdf'],
         ...originalMutation,
         onSuccess: async data => {
@@ -72,21 +82,44 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         },
     });
 
-    const sendInnSkjemaData = (): void => {
-        vedtaksbrevMutation.mutate({
-            body: methods.getValues(),
+    const oppdaterVedtaksbrevMutation = useMutation({
+        mutationKey: ['oppdaterVedtaksbrev'],
+        ...behandlingOppdaterVedtaksbrevMutation(),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
+            });
+        },
+    });
+
+    const oppdaterVedtaksbrevDataOgForhåndsvisning = async (): Promise<void> => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { sistOppdatert: _, ...pdfData } = methods.getValues();
+        forhåndsvisningMutation.mutate({
+            body: pdfData satisfies VedtaksbrevDataWritable,
         });
+
+        const erGyldig = await methods.trigger();
+        if (erGyldig) {
+            const { hovedavsnitt, avsnitt } = pdfData;
+            oppdaterVedtaksbrevMutation.mutate({
+                path: { behandlingId },
+                body: { hovedavsnitt, avsnitt } satisfies VedtaksbrevRedigerbareDataUpdate,
+            });
+        }
     };
 
-    const debouncedUpdate = useDebounce(() => sendInnSkjemaData());
+    const debouncedUpdate = useDebounce(() => oppdaterVedtaksbrevDataOgForhåndsvisning());
     // eslint-disable-next-line react-hooks/incompatible-library
     methods.watch(() => debouncedUpdate());
 
-    const sendInnSkjemaVedFørsteRendering = useEffectEvent(() => sendInnSkjemaData());
+    const sendInnSkjemaVedFørsteRendering = useEffectEvent(() =>
+        oppdaterVedtaksbrevDataOgForhåndsvisning()
+    );
     useEffect(() => {
         sendInnSkjemaVedFørsteRendering();
     }, []);
-    const harDataEllerFeil = pdfSider.length > 0 || vedtaksbrevMutation.isError;
+    const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 
     return (
         <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
@@ -125,7 +158,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                             {
                                 /* Må trekke fra høyden på alt annet enn den hvite boksen for å gi den en korrekt høyde */
                                 'h-[calc(100vh-17.8rem)] overflow-hidden':
-                                    vedtaksbrevMutation.isError,
+                                    forhåndsvisningMutation.isError,
                             }
                         )}
                     >
@@ -146,14 +179,14 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                         <div
                             className={classNames(
                                 'flex-1 flex justify-center overflow-auto rounded-b-xl',
-                                vedtaksbrevMutation.isError ? 'items-center' : 'items-start',
+                                forhåndsvisningMutation.isError ? 'items-center' : 'items-start',
                                 {
                                     'border-t border-ax-border-neutral-subtle':
-                                        !vedtaksbrevMutation.isError,
+                                        !forhåndsvisningMutation.isError,
                                 }
                             )}
                         >
-                            {vedtaksbrevMutation.isError && (
+                            {forhåndsvisningMutation.isError && (
                                 <VStack
                                     gap="space-16"
                                     padding="space-16"
@@ -169,8 +202,8 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                                         variant="secondary"
                                         size="small"
                                         onClick={() => {
-                                            vedtaksbrevMutation.reset();
-                                            sendInnSkjemaData();
+                                            forhåndsvisningMutation.reset();
+                                            oppdaterVedtaksbrevDataOgForhåndsvisning();
                                         }}
                                     >
                                         Last inn på nytt
