@@ -5,6 +5,7 @@ import type { FieldPath } from 'react-hook-form';
 import type { RotElement } from '~/generated-new';
 
 import { Textarea } from '@navikt/ds-react';
+import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
@@ -31,8 +32,8 @@ const Avsnitt: FC<{
 }> = ({ avsnitt, avsnittIndex }) => {
     const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
     const { setValue } = useFormContext<VedtaksbrevFormData>();
-    const value = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
-    const rentekstTekst = elementArrayTilTekst(value);
+    const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
+    const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
 
     return (
         <>
@@ -40,10 +41,11 @@ const Avsnitt: FC<{
                 name={name}
                 label={avsnitt.tittel}
                 description={avsnitt.forklaring}
-                value={rentekstTekst}
+                value={localText}
                 onChange={e => {
+                    setLocalText(e.target.value);
                     const nyeRentekst = tekstTilElementArray(e.target.value);
-                    const andreElementer = value.filter(({ type }) => type !== 'rentekst');
+                    const andreElementer = elementValue.filter(({ type }) => type !== 'rentekst');
                     setValue(name, [...nyeRentekst, ...andreElementer]);
                 }}
                 size="small"
@@ -73,13 +75,18 @@ const ElementTextarea: FC<
     }
 > = ({ name, ...props }) => {
     const { setValue } = useFormContext<VedtaksbrevFormData>();
-    const value = useWatch<VedtaksbrevFormData>({ name });
+    const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
+    const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
+
     return (
         <Textarea
             {...props}
             name={name}
-            value={elementArrayTilTekst(value as RotElement[])}
-            onChange={e => setValue(name, tekstTilElementArray(e.target.value))}
+            value={localText}
+            onChange={e => {
+                setLocalText(e.target.value);
+                setValue(name, tekstTilElementArray(e.target.value));
+            }}
             size="small"
             maxLength={3000}
             minRows={3}
