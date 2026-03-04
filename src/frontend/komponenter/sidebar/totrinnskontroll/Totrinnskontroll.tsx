@@ -12,11 +12,11 @@ import {
     Textarea,
     RadioGroup,
 } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { BekreftelsesModal } from '~/komponenter/modal/bekreftelse/BekreftelsesModal';
+import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
 import { behandlingssteg } from '~/typer/behandling';
 import { RessursStatus } from '~/typer/ressurs';
@@ -49,7 +49,7 @@ export const Totrinnskontroll: FC = () => {
     } = useTotrinnskontroll();
     const { erNyModell } = useBehandling();
     const { aktivtSteg } = useBehandlingState();
-    const [visBekreftelsesmodal, settVisBekreftelsesmodal] = useState(false);
+    const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
         // console.log('bør no trigge re-rendring');
@@ -85,7 +85,7 @@ export const Totrinnskontroll: FC = () => {
                         infotekst="Kontroller endrede opplysninger og faglige vurderinger"
                     />
                 )}
-                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && !erNyModell && (
+                {aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK' && erLesevisning && (
                     <div>
                         <Button size="small" variant="secondary" onClick={angreSendTilBeslutter}>
                             Angre sendt til beslutter
@@ -169,7 +169,7 @@ export const Totrinnskontroll: FC = () => {
                     <div className="flex flex-row-reverse">
                         <Button
                             size="small"
-                            onClick={() => settVisBekreftelsesmodal(true)}
+                            onClick={() => bekreftelsesmodalRef.current?.showModal()}
                             loading={senderInn}
                             disabled={senderInn || disableBekreft || sendTilSaksbehandler}
                         >
@@ -185,13 +185,14 @@ export const Totrinnskontroll: FC = () => {
                         </Button>
                     </div>
                 )}
-                <BekreftelsesModal
-                    åpen={visBekreftelsesmodal}
-                    onLukk={() => settVisBekreftelsesmodal(false)}
-                    overskrift="Godkjenn vedtaket"
-                    brødtekst={erNyModell ? 'Denne handlingen kan ikke angres.' : undefined}
-                    bekreftTekst="Godkjenn vedtaket"
-                    onBekreft={() => sendInnSkjema(() => settVisBekreftelsesmodal(false))}
+                <Bekreftelsesmodal
+                    dialogRef={bekreftelsesmodalRef}
+                    tekster={{
+                        overskrift: 'Godkjenn vedtaket',
+                        brødtekst: erNyModell ? 'Denne handlingen kan ikke angres.' : undefined,
+                        bekreftTekst: 'Godkjenn vedtaket',
+                    }}
+                    onBekreft={() => sendInnSkjema(() => bekreftelsesmodalRef.current?.close())}
                     laster={senderInn}
                 />
             </div>

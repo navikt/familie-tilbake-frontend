@@ -214,7 +214,7 @@ describe('Forhåndsvarsel', () => {
                 renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
                 fireEvent.click(screen.getByText('Ja'));
-                fireEvent.click(screen.getByRole('button', { name: 'Send forhåndsvarsel' }));
+                fireEvent.click(screen.getByRole('button', { name: 'Send forhåndsvarselet' }));
 
                 expect(await screen.findByText('Du må fylle inn en verdi')).toBeInTheDocument();
             });
@@ -222,13 +222,13 @@ describe('Forhåndsvarsel', () => {
     });
 
     describe('Knappetekst i ActionBar', () => {
-        test('Viser "Send forhåndsvarsel" når Ja er valgt og varsel ikke er sendt', async () => {
+        test('Viser "Send forhåndsvarselet" når Ja er valgt og varsel ikke er sendt', async () => {
             renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
             fireEvent.click(screen.getByLabelText('Ja'));
 
             expect(
-                await screen.findByRole('button', { name: 'Send forhåndsvarsel' })
+                await screen.findByRole('button', { name: 'Send forhåndsvarselet' })
             ).toBeInTheDocument();
         });
 
@@ -732,7 +732,9 @@ describe('Forhåndsvarsel', () => {
             expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
 
             fireEvent.click(within(skalSendeFieldset).getByLabelText('Ja'));
-            expect(screen.getByRole('button', { name: 'Send forhåndsvarsel' })).toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: 'Send forhåndsvarselet' })
+            ).toBeInTheDocument();
 
             fireEvent.click(within(skalSendeFieldset).getByLabelText('Nei'));
             await waitFor(() => {
