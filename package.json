@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "2.2.4",
-    "@hey-api/openapi-ts": "0.93.1",
+    "@hey-api/openapi-ts": "0.94.0",
     "@hookform/resolvers": "5.2.2",
     "@navikt/aksel-icons": "8.6.0",
     "@navikt/ds-css": "8.6.0",
@@ -43,7 +43,7 @@
     "connect-redis": "9.0.0",
     "constate": "3.3.3",
     "cookie-parser": "1.4.7",
-    "countries-list": "3.2.2",
+    "countries-list": "3.3.0",
     "date-fns": "4.1.0",
     "deep-equal": "2.2.3",
     "dotenv": "17.3.1",
