@@ -1,5 +1,4 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
-import type { BehandlingstatusEnum } from '~/generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '~/typer/api';
 import type { ForeldelseResponse } from '~/typer/tilbakekrevingstyper';
 
@@ -17,22 +16,16 @@ import { sorterFeilutbetaltePerioder } from '~/utils';
 import { useStegNavigering } from '~/utils/sider';
 
 const utledValgtPeriode = (
-    skjemaPerioder: ForeldelsePeriodeSkjemeData[],
-    behandlingStatus: BehandlingstatusEnum
+    skjemaPerioder: ForeldelsePeriodeSkjemeData[]
 ): ForeldelsePeriodeSkjemeData | undefined => {
     const førsteUbehandletPeriode = skjemaPerioder.find(
         periode => !periode.foreldelsesvurderingstype
     );
-    const skalViseÅpentVurderingspanel =
-        skjemaPerioder.length > 0 &&
-        (behandlingStatus === 'FATTER_VEDTAK' || behandlingStatus === 'AVSLUTTET');
 
     if (førsteUbehandletPeriode) {
         return førsteUbehandletPeriode;
-    } else if (skalViseÅpentVurderingspanel) {
-        return skjemaPerioder[0];
     }
-    return undefined;
+    return skjemaPerioder[0];
 };
 
 export type ForeldelseHook = {
@@ -103,7 +96,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 };
                 return skjemaPeriode;
             });
-            const valgtForeldelsePeriode = utledValgtPeriode(skjemaPerioder, behandling.status);
+            const valgtForeldelsePeriode = utledValgtPeriode(skjemaPerioder);
 
             settSkjemaData(skjemaPerioder);
 
@@ -111,7 +104,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 settValgtPeriode(valgtForeldelsePeriode);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [foreldelse]);
 
     useEffect(() => {
