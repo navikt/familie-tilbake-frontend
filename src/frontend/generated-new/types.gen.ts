@@ -302,6 +302,36 @@ export type BehandlingOppdaterFaktaResponses = {
 export type BehandlingOppdaterFaktaResponse =
     BehandlingOppdaterFaktaResponses[keyof BehandlingOppdaterFaktaResponses];
 
+export type BehandlingForeslåVedtakData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/foreslå-vedtak';
+};
+
+export type BehandlingForeslåVedtakErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingForeslåVedtakError =
+    BehandlingForeslåVedtakErrors[keyof BehandlingForeslåVedtakErrors];
+
+export type BehandlingForeslåVedtakResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
 export type BehandlingHentVedtaksbrevData = {
     body?: never;
     path: {

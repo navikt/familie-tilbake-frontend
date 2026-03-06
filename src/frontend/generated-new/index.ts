@@ -2,6 +2,7 @@
 
 export {
     behandlingFakta,
+    behandlingForeslåVedtak,
     behandlingHentVedtaksbrev,
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
@@ -18,6 +19,10 @@ export type {
     BehandlingFaktaErrors,
     BehandlingFaktaResponse,
     BehandlingFaktaResponses,
+    BehandlingForeslåVedtakData,
+    BehandlingForeslåVedtakError,
+    BehandlingForeslåVedtakErrors,
+    BehandlingForeslåVedtakResponses,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevError,
     BehandlingHentVedtaksbrevErrors,
