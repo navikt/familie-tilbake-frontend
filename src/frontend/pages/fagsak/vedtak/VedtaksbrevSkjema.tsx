@@ -8,6 +8,8 @@ import { Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '~/context/BehandlingStateContext';
+
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
 
 export const VedtaksbrevSkjema: FC = () => {
@@ -30,11 +32,11 @@ const Avsnitt: FC<{
     avsnitt: VedtaksbrevFormData['avsnitt'][number];
     avsnittIndex: number;
 }> = ({ avsnitt, avsnittIndex }) => {
-    const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
+    const { behandlingILesemodus } = useBehandlingState();
     const { setValue } = useFormContext<VedtaksbrevFormData>();
+    const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
     const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
     const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
-
     return (
         <>
             <Textarea
@@ -52,6 +54,7 @@ const Avsnitt: FC<{
                 maxLength={3000}
                 minRows={3}
                 resize
+                readOnly={behandlingILesemodus}
             />
 
             {avsnitt.underavsnitt.map((element, elementIndex) => {
@@ -74,6 +77,7 @@ const ElementTextarea: FC<
         name: FieldPath<VedtaksbrevFormData>;
     }
 > = ({ name, ...props }) => {
+    const { behandlingILesemodus } = useBehandlingState();
     const { setValue } = useFormContext<VedtaksbrevFormData>();
     const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
     const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
@@ -91,6 +95,7 @@ const ElementTextarea: FC<
             maxLength={3000}
             minRows={3}
             resize
+            readOnly={behandlingILesemodus}
         />
     );
 };
