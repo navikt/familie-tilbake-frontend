@@ -18,11 +18,16 @@ import { useStegNavigering } from '~/utils/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],
-    behandlingStatus: BehandlingstatusEnum
+    behandlingStatus: BehandlingstatusEnum,
+    erNyModell: boolean
 ): ForeldelsePeriodeSkjemeData | undefined => {
-    const førsteUbehandletPeriode = skjemaPerioder.find(
-        periode => !periode.foreldelsesvurderingstype
-    );
+    const førsteUbehandletPeriode = skjemaPerioder.find(periode => {
+        if (erNyModell) {
+            return periode.foreldelsesvurderingstype === Foreldelsevurdering.IkkeVurdert;
+        } else {
+            return !periode.foreldelsesvurderingstype;
+        }
+    });
     const skalViseÅpentVurderingspanel =
         skjemaPerioder.length > 0 &&
         (behandlingStatus === 'FATTER_VEDTAK' || behandlingStatus === 'AVSLUTTET');
@@ -103,7 +108,11 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 };
                 return skjemaPeriode;
             });
-            const valgtForeldelsePeriode = utledValgtPeriode(skjemaPerioder, behandling.status);
+            const valgtForeldelsePeriode = utledValgtPeriode(
+                skjemaPerioder,
+                behandling.status,
+                behandling.erNyModell
+            );
 
             settSkjemaData(skjemaPerioder);
 
