@@ -17,7 +17,7 @@ import { Vedtaksbrev } from './Vedtaksbrev';
 
 export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();
-    const { actionBarStegtekst } = useBehandlingState();
+    const { actionBarStegtekst, behandlingILesemodus } = useBehandlingState();
     const navigerTilForrige = useStegNavigering('VILKÅRSVURDERING');
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
@@ -60,6 +60,7 @@ export const Vedtak: FC = () => {
                 forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
                 nesteAriaLabel="Send til godkjenning hos beslutter"
                 isLoading={foreslåVedtak.isPending}
+                skjulNeste={behandlingILesemodus}
                 onNeste={() => foreslåVedtak.mutate({ path: { behandlingId } })}
                 onForrige={navigerTilForrige}
             />
