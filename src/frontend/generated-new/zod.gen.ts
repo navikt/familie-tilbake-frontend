@@ -24,7 +24,7 @@ export const zMuligeRettsligGrunnlag = z.object({
 });
 
 export const zRentekstElement = z.object({
-    tekst: z.string(),
+    tekst: z.string().min(3).max(3000),
 });
 
 export const zElement = z
@@ -301,6 +301,14 @@ export const zBehandlingOppdaterFaktaData = z.object({
  * The request has succeeded.
  */
 export const zBehandlingOppdaterFaktaResponse = zFaktaOmFeilutbetaling;
+
+export const zBehandlingForeslaaVedtakData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        behandlingId: z.uuid(),
+    }),
+    query: z.optional(z.never()),
+});
 
 export const zBehandlingHentVedtaksbrevData = z.object({
     body: z.optional(z.never()),
