@@ -522,7 +522,7 @@ export const zForhåndsvarselUnntakDto = z.object({
 export const zForhåndsvarselDto = z.object({
     varselbrevDto: z.optional(zVarselbrevDto),
     brukeruttalelse: z.optional(zBrukeruttalelseDto),
-    utsettUttalelseFrist: z.array(zFristUtsettelseDto),
+    utsettUttalelseFrist: z.optional(zFristUtsettelseDto),
     forhåndsvarselUnntak: z.optional(zForhåndsvarselUnntakDto),
 });
 
