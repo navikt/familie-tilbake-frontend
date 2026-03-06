@@ -6,6 +6,9 @@ import type {
     BehandlingFaktaData,
     BehandlingFaktaErrors,
     BehandlingFaktaResponses,
+    BehandlingForeslåVedtakData,
+    BehandlingForeslåVedtakErrors,
+    BehandlingForeslåVedtakResponses,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevErrors,
     BehandlingHentVedtaksbrevResponses,
@@ -61,6 +64,15 @@ export const behandlingOppdaterFakta = <ThrowOnError extends boolean = false>(
             ...options.headers,
         },
     });
+
+export const behandlingForeslåVedtak = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingForeslåVedtakData, ThrowOnError>
+) =>
+    (options.client ?? client).post<
+        BehandlingForeslåVedtakResponses,
+        BehandlingForeslåVedtakErrors,
+        ThrowOnError
+    >({ url: '/api/v1/behandling/{behandlingId}/foreslå-vedtak', ...options });
 
 export const behandlingHentVedtaksbrev = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingHentVedtaksbrevData, ThrowOnError>
