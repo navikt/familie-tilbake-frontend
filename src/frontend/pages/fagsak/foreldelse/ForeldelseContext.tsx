@@ -1,4 +1,5 @@
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
+import type { BehandlingstatusEnum } from '~/generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '~/typer/api';
 import type { ForeldelseResponse } from '~/typer/tilbakekrevingstyper';
 
@@ -16,16 +17,27 @@ import { sorterFeilutbetaltePerioder } from '~/utils';
 import { useStegNavigering } from '~/utils/sider';
 
 const utledValgtPeriode = (
-    skjemaPerioder: ForeldelsePeriodeSkjemeData[]
+    skjemaPerioder: ForeldelsePeriodeSkjemeData[],
+    behandlingStatus: BehandlingstatusEnum,
+    erNyModell: boolean
 ): ForeldelsePeriodeSkjemeData | undefined => {
-    const førsteUbehandletPeriode = skjemaPerioder.find(
-        periode => !periode.foreldelsesvurderingstype
-    );
+    const førsteUbehandletPeriode = skjemaPerioder.find(periode => {
+        if (erNyModell) {
+            return periode.foreldelsesvurderingstype === Foreldelsevurdering.IkkeVurdert;
+        } else {
+            return !periode.foreldelsesvurderingstype;
+        }
+    });
+    const skalViseÅpentVurderingspanel =
+        skjemaPerioder.length > 0 &&
+        (behandlingStatus === 'FATTER_VEDTAK' || behandlingStatus === 'AVSLUTTET');
 
     if (førsteUbehandletPeriode) {
         return førsteUbehandletPeriode;
+    } else if (skalViseÅpentVurderingspanel) {
+        return skjemaPerioder[0];
     }
-    return skjemaPerioder[0];
+    return undefined;
 };
 
 export type ForeldelseHook = {
@@ -96,7 +108,11 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 };
                 return skjemaPeriode;
             });
-            const valgtForeldelsePeriode = utledValgtPeriode(skjemaPerioder);
+            const valgtForeldelsePeriode = utledValgtPeriode(
+                skjemaPerioder,
+                behandling.status,
+                behandling.erNyModell
+            );
 
             settSkjemaData(skjemaPerioder);
 
@@ -104,6 +120,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 settValgtPeriode(valgtForeldelsePeriode);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [foreldelse]);
 
     useEffect(() => {
