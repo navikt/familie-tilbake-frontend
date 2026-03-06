@@ -302,7 +302,7 @@ export const zBehandlingOppdaterFaktaData = z.object({
  */
 export const zBehandlingOppdaterFaktaResponse = zFaktaOmFeilutbetaling;
 
-export const zBehandlingForeslåVedtakData = z.object({
+export const zBehandlingForeslaaVedtakData = z.object({
     body: z.optional(z.never()),
     path: z.object({
         behandlingId: z.uuid(),
