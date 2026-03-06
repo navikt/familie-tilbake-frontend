@@ -1,19 +1,6 @@
 import type { FrontendBrukerDto } from '~/generated';
 
-import { differenceInMilliseconds } from 'date-fns';
-
-import { dagensDato, isoStringTilDate } from './dato';
-
-const millisekunderIEttÅr = 3.15576e10;
-
-const hentAlder = (fødselsdato: string | undefined): number => {
-    return fødselsdato
-        ? Math.floor(
-              differenceInMilliseconds(dagensDato, isoStringTilDate(fødselsdato)) /
-                  millisekunderIEttÅr
-          )
-        : 0;
-};
+import { hentAlder } from './dateUtils';
 
 const kunSiffer = (value: string): boolean => /^\d+$/.test(value);
 
@@ -40,8 +27,8 @@ export const formaterIdent = (personIdent: string, ukjentTekst = 'Ukjent id'): s
 };
 
 export const lagPersonLabel = (ident: string, bruker: FrontendBrukerDto): string => {
-    if (bruker) {
-        return `${bruker.navn} (${hentAlder(bruker.fødselsdato)} år) ${formaterIdent(
+    if (bruker && bruker.fødselsdato) {
+        return `${bruker.navn} (${hentAlder(bruker.fødselsdato, bruker.dødsdato)} år) ${formaterIdent(
             bruker.personIdent
         )}`;
     } else {
