@@ -40,14 +40,14 @@ Saksbehandlerapplikasjon for tilbakekreving etter folketrygdloven § 22-15. Appl
 | BFF | Node.js / Express |
 | Testing | Vitest + React Testing Library |
 | Monitorering | Sentry, Grafana Faro, Prometheus |
-| Container | Distroless Node.js 20 |
+| Container | Distroless Node.js 24 |
 | Pakkebehandler | pnpm |
 
 ## Forutsetninger
 
-- [Node.js](https://nodejs.org/) >= 20
+- [Node.js](https://nodejs.org/) >= 24 (LTS)
 - [pnpm](https://pnpm.io/installation) >= 10
-- [Docker](https://www.docker.com/) (for Redis, Wonderwall og Texas)
+- [Docker](https://www.docker.com/) eller [Colima](https://github.com/abiosoft/colima) (for Redis, Wonderwall og Texas)
 - Tilgang til NAVs GitHub Package Registry (`@navikt`-pakker)
 
 ## Kom i gang

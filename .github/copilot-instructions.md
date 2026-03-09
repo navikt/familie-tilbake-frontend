@@ -40,7 +40,7 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 - **API-generering**: @hey-api/openapi-ts (genererer TypeScript-typer, React Query hooks og Zod-schemas fra OpenAPI-spec)
 
 ### Backend (Node.js BFF - Backend for Frontend)
-- **Runtime**: Node.js 20 (Distroless container)
+- **Runtime**: Node.js 24 (Distroless container)
 - **Rammeverk**: Express
 - **Språk**: TypeScript (kompileres med ts-node)
 - **Sesjonshåndtering**: express-session med Redis (connect-redis)
@@ -49,7 +49,7 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 - **Sikkerhet**: CSRF-beskyttelse middleware
 
 ### DevOps & Infrastruktur
-- **Container**: Distroless Node.js 20 (Debian 12)
+- **Container**: Distroless Node.js 24 (Debian 12)
 - **Pakkebehandler**: pnpm
 - **Deployment**: NAVs interne plattform (GCP)
 - **Build**: Separate client (Vite) og server (tsc) builds
@@ -241,7 +241,7 @@ Komponent re-renderer
 #### Production
 1. **Server build**: `tsc` → `node_dist/`
 2. **Client build**: `vite build` → `dist/`
-3. **Docker image**: Distroless Node.js 20 med begge builds
+3. **Docker image**: Distroless Node.js 24 med begge builds
 4. **Sentry source maps**: Lastes opp under build via Vite plugin
 
 ### Miljøkonfigurasjon
