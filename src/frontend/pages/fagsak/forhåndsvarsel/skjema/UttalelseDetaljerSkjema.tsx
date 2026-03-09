@@ -1,16 +1,19 @@
 import type { FC } from 'react';
+import type { FieldArrayPath } from 'react-hook-form';
 import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { DatePicker, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { get, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { dateTilIsoDatoString } from '~/utils/dato';
 
+type UttalelseDetaljerFieldName = 'uttalelsesDetaljer' | 'uttalelsesDetaljerEtterUtsattFrist';
+
 type Props = {
-    fieldPrefix: `uttalelsesDetaljer.${number}`;
+    fieldPrefix: `${UttalelseDetaljerFieldName}.${number}`;
 };
 
 export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
@@ -19,14 +22,15 @@ export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
     const errors = methods.formState.errors;
 
+    const uttalelsesdatoVerdi = methods.getValues(
+        `${fieldPrefix}.uttalelsesdato` as 'uttalelsesDetaljer.0.uttalelsesdato'
+    );
     const {
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
         toDate: new Date(),
-        defaultSelected: methods.getValues(`${fieldPrefix}.uttalelsesdato`)
-            ? parseISO(methods.getValues(`${fieldPrefix}.uttalelsesdato`))
-            : undefined,
+        defaultSelected: uttalelsesdatoVerdi ? parseISO(uttalelsesdatoVerdi) : undefined,
         onDateChange: async date => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue(`${fieldPrefix}.uttalelsesdato`, dateString);
@@ -83,22 +87,32 @@ export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
     );
 };
 
-type UttalelseDetaljerListeProps = {
-    onFieldsInitialized?: () => void;
-};
-
-export const UttalelseDetaljerListe: FC<UttalelseDetaljerListeProps> = () => {
+export const UttalelseDetaljerListe: FC<{ fieldName?: UttalelseDetaljerFieldName }> = ({
+    fieldName = 'uttalelsesDetaljer',
+}) => {
     const methods = useFormContext<UttalelseFormData>();
-    const { fields } = useFieldArray({
+    const { fields, replace } = useFieldArray({
         control: methods.control,
-        name: 'uttalelsesDetaljer',
+        name: fieldName as FieldArrayPath<UttalelseFormData>,
     });
+
+    useEffect(() => {
+        if (fields.length === 0) {
+            replace([
+                {
+                    hvorBrukerenUttalteSeg: '',
+                    uttalelsesdato: '',
+                    uttalelseBeskrivelse: '',
+                },
+            ]);
+        }
+    }, [fields.length, replace]);
 
     return (
         <>
             {fields.map((fieldItem, index) => (
                 <Fragment key={fieldItem.id}>
-                    <UttalelseDetaljerSkjema fieldPrefix={`uttalelsesDetaljer.${index}`} />
+                    <UttalelseDetaljerSkjema fieldPrefix={`${fieldName}.${index}`} />
                 </Fragment>
             ))}
         </>

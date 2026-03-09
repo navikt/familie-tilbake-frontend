@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { DatePicker, Textarea, useDatepicker } from '@navikt/ds-react';
+import { parseISO } from 'date-fns';
 import { Controller, get, useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -11,12 +12,13 @@ export const UtsettFristSkjema: FC = () => {
     const methods = useFormContext<UttalelseFormData>();
     const { behandlingILesemodus } = useBehandlingState();
     const errors = methods.formState.errors;
-
+    const eksisterendeFrist = methods.getValues('utsettUttalelseFrist.nyFrist');
     const nyFristDatepicker = useDatepicker({
         fromDate: new Date(),
+        defaultSelected: eksisterendeFrist ? parseISO(eksisterendeFrist) : undefined,
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
-            methods.setValue('utsettUttalelseFrist.nyFrist', dateString);
+            methods.setValue('utsettUttalelseFrist.nyFrist', dateString, { shouldDirty: true });
             methods.trigger('utsettUttalelseFrist.nyFrist');
         },
     });

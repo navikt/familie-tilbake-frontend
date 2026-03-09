@@ -24,6 +24,12 @@ export enum HarUttaltSeg {
     IkkeValgt = '',
 }
 
+export enum HarUttaltSegEtterUtsattFrist {
+    Ja = 'ja',
+    Nei = 'nei',
+    IkkeValgt = '',
+}
+
 const fritekstSchema = z.string().trim().min(1).max(4000);
 
 const uttalelsesDetaljerSchema = z.object({
@@ -70,6 +76,39 @@ export const uttalelseSchema = uttalelseSchemaBase.refine(
         path: ['harUttaltSeg'],
     }
 );
+
+const harUttaltSegEtterUtsattFristJaSchema = z.object({
+    harUttaltSegEtterUtsattFrist: z.literal(HarUttaltSegEtterUtsattFrist.Ja),
+    uttalelsesDetaljerEtterUtsattFrist: z.array(uttalelsesDetaljerSchema),
+});
+
+const harUttaltSegEtterUtsattFristNeiSchema = z.object({
+    harUttaltSegEtterUtsattFrist: z.literal(HarUttaltSegEtterUtsattFrist.Nei),
+    kommentarEtterUtsattFrist: fritekstSchema,
+});
+
+const ikkeValgtUttalelseEtterUtsattFristSchema = z.object({
+    harUttaltSegEtterUtsattFrist: z.literal(HarUttaltSegEtterUtsattFrist.IkkeValgt),
+});
+
+const uttalelseEtterUtsattFristSchemaBase = z.discriminatedUnion('harUttaltSegEtterUtsattFrist', [
+    harUttaltSegEtterUtsattFristJaSchema,
+    harUttaltSegEtterUtsattFristNeiSchema,
+    ikkeValgtUttalelseEtterUtsattFristSchema,
+]);
+
+export const uttalelseEtterUtsattFristSchema = uttalelseEtterUtsattFristSchemaBase.refine(
+    data => data.harUttaltSegEtterUtsattFrist !== HarUttaltSegEtterUtsattFrist.IkkeValgt,
+    {
+        message: 'Du må velge om brukeren har uttalt seg etter utsatt frist',
+        path: ['harUttaltSegEtterUtsattFrist'],
+    }
+);
+
+export type UttalelseEtterUtsattFristFormData =
+    | z.infer<typeof harUttaltSegEtterUtsattFristJaSchema>
+    | z.infer<typeof harUttaltSegEtterUtsattFristNeiSchema>
+    | { harUttaltSegEtterUtsattFrist: HarUttaltSegEtterUtsattFrist.IkkeValgt };
 
 const getJaUttalelseValues = (uttalelse: BrukeruttalelseDto | undefined): UttalelseFormData => {
     return {
@@ -223,8 +262,16 @@ export type ForhåndsvarselFormData =
     | z.infer<typeof unntakSchema>
     | { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.IkkeValgt };
 
-export type UttalelseFormData =
+type UttalelseBase =
     | z.infer<typeof harIkkeUttaltSegSchema>
     | z.infer<typeof harUttaltSegSchema>
     | z.infer<typeof utsettFristSchema>
     | { harUttaltSeg: HarUttaltSeg.IkkeValgt };
+
+type UttalelseEtterUtsattFristFields = {
+    harUttaltSegEtterUtsattFrist?: HarUttaltSegEtterUtsattFrist;
+    uttalelsesDetaljerEtterUtsattFrist?: z.infer<typeof uttalelsesDetaljerSchema>[];
+    kommentarEtterUtsattFrist?: string;
+};
+
+export type UttalelseFormData = UttalelseBase & UttalelseEtterUtsattFristFields;

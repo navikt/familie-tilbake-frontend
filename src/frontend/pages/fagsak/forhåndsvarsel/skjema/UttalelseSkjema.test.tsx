@@ -55,9 +55,7 @@ describe('Brukeruttalelse', () => {
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: {
                     varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                    utsettUttalelseFrist: [
-                        // { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
-                    ],
+                    utsettUttalelseFrist: undefined,
                     brukeruttalelse: undefined,
                 },
             })
@@ -152,7 +150,7 @@ describe('Brukeruttalelse', () => {
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: {
                         varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                        utsettUttalelseFrist: [],
+                        utsettUttalelseFrist: undefined,
                         brukeruttalelse: {
                             harBrukerUttaltSeg: 'JA',
                             uttalelsesdetaljer: [
@@ -295,6 +293,95 @@ describe('Brukeruttalelse', () => {
                 });
                 expect(nesteMånedKnapp).toBeDisabled();
             });
+        });
+    });
+
+    describe('Knappetekst for utsett frist', () => {
+        const eksisterendeFrist = '2026-04-15';
+
+        beforeEach(() => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: {
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        utsettUttalelseFrist: {
+                            nyFrist: eksisterendeFrist,
+                            begrunnelse: 'Trenger mer tid',
+                        },
+                        brukeruttalelse: undefined,
+                    },
+                })
+            );
+        });
+
+        test('Viser "Neste" når frist allerede er satt og bruker ikke har endret datoen', async () => {
+            renderBrukeruttalelse();
+
+            fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+
+            await screen.findByLabelText('Sett ny dato for frist');
+
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
+        });
+
+        test('Viser "Utsett frist" når bruker endrer datoen', async () => {
+            renderBrukeruttalelse();
+
+            fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+
+            const datoInput = await screen.findByLabelText('Sett ny dato for frist');
+
+            fireEvent.change(datoInput, { target: { value: '20.05.2026' } });
+            fireEvent.blur(datoInput);
+
+            expect(await screen.findByRole('button', { name: 'Utsett frist' })).toBeInTheDocument();
+        });
+
+        test('Viser "Neste" igjen når bruker setter tilbake til opprinnelig dato', async () => {
+            renderBrukeruttalelse();
+
+            fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+
+            const datoInput = await screen.findByLabelText('Sett ny dato for frist');
+
+            // Endre til en annen dato
+            fireEvent.change(datoInput, { target: { value: '20.05.2026' } });
+            fireEvent.blur(datoInput);
+
+            expect(await screen.findByRole('button', { name: 'Utsett frist' })).toBeInTheDocument();
+
+            // Endre tilbake til opprinnelig dato
+            fireEvent.change(datoInput, { target: { value: '15.04.2026' } });
+            fireEvent.blur(datoInput);
+
+            expect(await screen.findByRole('button', { name: 'Neste' })).toBeInTheDocument();
+        });
+
+        test('Viser uttalelsefelter når bruker velger "Ja" etter å ha endret dato', async () => {
+            renderBrukeruttalelse();
+
+            fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+
+            const datoInput = await screen.findByLabelText('Sett ny dato for frist');
+
+            // Endre til en annen dato
+            fireEvent.change(datoInput, { target: { value: '20.05.2026' } });
+            fireEvent.blur(datoInput);
+
+            // Finn radiogruppen "Har brukeren uttalt seg etter utsatt frist?"
+            const uttalelseEtterFristGruppe = screen.getByRole('group', {
+                name: 'Har brukeren uttalt seg etter utsatt frist?',
+            });
+
+            // Velg "Ja" på "Har brukeren uttalt seg etter utsatt frist?"
+            const jaRadio = within(uttalelseEtterFristGruppe).getByLabelText('Ja');
+            fireEvent.click(jaRadio);
+
+            // Sjekk at radioknappen er valgt
+            expect(jaRadio).toBeChecked();
+
+            // Sjekk at uttalelsedetaljfeltene vises
+            expect(await screen.findByText('Når uttalte brukeren seg?')).toBeInTheDocument();
         });
     });
 });

@@ -158,6 +158,10 @@ export const formatterDatoDDMMYYYY = (dato: Date): string => {
     return format(new Date(dato), 'dd.MM.yyyy');
 };
 
+export const formatterDatoKortformat = (dato: string): string => {
+    return format(new Date(dato), 'dd.MM.yy');
+};
+
 export const formatterRelativTid = (dato: string): string => {
     const target = new Date(dato);
     const now = new Date();

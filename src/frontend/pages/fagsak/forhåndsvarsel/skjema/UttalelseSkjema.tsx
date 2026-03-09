@@ -3,8 +3,7 @@ import type { SubmitHandler } from 'react-hook-form';
 import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
-import { useEffect } from 'react';
-import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { get, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ToggleName } from '~/context/toggles';
@@ -20,7 +19,6 @@ type Props = {
     kanUtsetteFrist?: boolean;
     varselErSendt: boolean;
     fristErUtsatt?: boolean;
-    utsattFristDato?: string;
 };
 
 export const Uttalelse: FC<Props> = ({
@@ -28,7 +26,6 @@ export const Uttalelse: FC<Props> = ({
     kanUtsetteFrist = false,
     varselErSendt,
     fristErUtsatt = false,
-    utsattFristDato,
 }) => {
     const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
@@ -41,35 +38,14 @@ export const Uttalelse: FC<Props> = ({
     const { name, ...radioProps } = methods.register('harUttaltSeg');
     const errors = methods.formState.errors;
 
-    const { fields, replace } = useFieldArray({
-        control: methods.control,
-        name: 'uttalelsesDetaljer',
-    });
-
-    useEffect(() => {
-        if (harUttaltSeg === HarUttaltSeg.Ja && fields.length === 0) {
-            replace([
-                {
-                    hvorBrukerenUttalteSeg: '',
-                    uttalelsesdato: '',
-                    uttalelseBeskrivelse: '',
-                },
-            ]);
-        }
-    }, [harUttaltSeg, fields.length, replace]);
-
     const getLegendTekst = (): string => {
-        if (fristErUtsatt) {
-            return 'Har brukeren uttalt seg etter at fristen ble utsatt?';
-        }
         if (varselErSendt) {
             return 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?';
         }
         return 'Har brukeren uttalt seg?';
     };
 
-    const skalViseUtsettFristValg =
-        toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist;
+    const skalViseUtsettFristValg = toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist;
 
     return (
         <form
@@ -97,28 +73,26 @@ export const Uttalelse: FC<Props> = ({
                 )}
             </RadioGroup>
 
-            {fristErUtsatt ? (
-                <UttalelseEtterUtsattFristSkjema utsattFristDato={utsattFristDato} />
-            ) : (
-                <>
-                    {harUttaltSeg === HarUttaltSeg.Ja && <UttalelseDetaljerListe />}
+            {harUttaltSeg === HarUttaltSeg.Ja && <UttalelseDetaljerListe />}
 
-                    {harUttaltSeg === HarUttaltSeg.Nei && (
-                        <Textarea
-                            {...methods.register('kommentar')}
-                            size="small"
-                            readOnly={behandlingILesemodus}
-                            label="Kommentar til valget over"
-                            maxLength={4000}
-                            minRows={3}
-                            resize
-                            className="max-w-xl"
-                            error={get(errors, 'kommentar.message')}
-                        />
-                    )}
+            {harUttaltSeg === HarUttaltSeg.Nei && (
+                <Textarea
+                    {...methods.register('kommentar')}
+                    size="small"
+                    readOnly={behandlingILesemodus}
+                    label="Kommentar til valget over"
+                    maxLength={4000}
+                    minRows={3}
+                    resize
+                    className="max-w-xl"
+                    error={get(errors, 'kommentar.message')}
+                />
+            )}
 
-                    {harUttaltSeg === HarUttaltSeg.UtsettFrist && <UtsettFristSkjema />}
-                </>
+            {harUttaltSeg === HarUttaltSeg.UtsettFrist && <UtsettFristSkjema />}
+
+            {fristErUtsatt && harUttaltSeg === HarUttaltSeg.UtsettFrist && (
+                <UttalelseEtterUtsattFristSkjema />
             )}
         </form>
     );

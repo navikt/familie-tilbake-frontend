@@ -30,7 +30,7 @@ vi.mock('./useForhåndsvarselMutations', () => ({
 
 const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): ForhåndsvarselDto => ({
     varselbrevDto: { varselbrevSendtTid: undefined },
-    utsettUttalelseFrist: [],
+    utsettUttalelseFrist: undefined,
     brukeruttalelse: undefined,
     ...overrides,
 });
@@ -308,11 +308,11 @@ describe('Forhåndsvarsel', () => {
     });
 
     describe('formId - riktig skjema sendes inn', () => {
-        test('Bruker opprettForm når varsel ikke er sendt og unntak ikke finnes', async () => {
+        test('Bruker onClick-handler når varsel ikke er sendt og ingenting er valgt', async () => {
             renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
 
             const nesteKnapp = screen.getByRole('button', { name: 'Neste' });
-            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+            expect(nesteKnapp).not.toHaveAttribute('form');
         });
 
         test('Bruker uttalelseForm når varsel er sendt', async () => {
@@ -331,7 +331,7 @@ describe('Forhåndsvarsel', () => {
             expect(nesteKnapp).toHaveAttribute('form', 'uttalelseForm');
         });
 
-        test('Bruker opprettForm når bruker velger Nei og ÅPENBART_UNØDVENDIG', async () => {
+        test('Bruker unntakForm når bruker velger Nei og ÅPENBART_UNØDVENDIG', async () => {
             renderForhåndsvarsel();
 
             const neiRadio = screen.getByRole('radio', { name: 'Nei' });
@@ -343,10 +343,10 @@ describe('Forhåndsvarsel', () => {
             fireEvent.click(åpenbartUnødvendigRadio);
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
-            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+            expect(nesteKnapp).toHaveAttribute('form', 'unntakForm');
         });
 
-        test('Bruker opprettForm når unntak er lagret og bruker endrer til ÅPENBART_UNØDVENDIG', async () => {
+        test('Bruker unntakForm når unntak er lagret og bruker endrer til ÅPENBART_UNØDVENDIG', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
@@ -367,7 +367,7 @@ describe('Forhåndsvarsel', () => {
             fireEvent.click(åpenbartUnødvendigRadio);
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
-            expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');
+            expect(nesteKnapp).toHaveAttribute('form', 'unntakForm');
         });
 
         test('Neste-knapp har form-attributt når brukeruttalelse allerede er registrert (kan redigeres)', async () => {

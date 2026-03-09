@@ -1,4 +1,5 @@
 import type { ForhåndsvarselFormData, UttalelseFormData } from './schema';
+import type { UnntakFormData } from './skjema/UnntakMedUttalelseSkjema';
 import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import type {
@@ -63,7 +64,7 @@ export type UseForhåndsvarselMutationsReturn = {
     >;
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
     readonly sendBrukeruttalelse: (formData: UttalelseFormData, varselErSendt: boolean) => void;
-    readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
+    readonly sendUnntak: (formData: UnntakFormData) => void;
     readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
     readonly seForhåndsvisning: (fritekst: string) => void;
     readonly navigerTilNeste: () => void;
@@ -195,13 +196,7 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendUnntak: (formData: ForhåndsvarselFormData): void => {
-            if (
-                formData.skalSendesForhåndsvarsel !== SkalSendesForhåndsvarsel.Nei ||
-                formData.begrunnelseForUnntak === undefined
-            )
-                return;
-
+        sendUnntak: (formData: UnntakFormData): void => {
             const payload: ForhåndsvarselUnntakDto = {
                 begrunnelseForUnntak: formData.begrunnelseForUnntak,
                 beskrivelse: formData.beskrivelse,

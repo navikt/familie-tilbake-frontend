@@ -14,7 +14,7 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { formatterDatostring, formatterRelativTid } from '~/utils';
+import { formatterDatoKortformat, formatterDatostring, formatterRelativTid } from '~/utils';
 
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
 import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';
@@ -146,7 +146,7 @@ export const Forhåndsvarsel: FC = () => {
                     )}
                     {forhåndsvarselInfo?.utsettUttalelseFrist && (
                         <Tag variant="warning-moderate" icon={<TimerPauseIcon aria-hidden />}>
-                            {`Ny frist: ${formatterRelativTid(forhåndsvarselInfo.utsettUttalelseFrist.nyFrist)}`}
+                            {`Ny frist: ${formatterDatoKortformat(forhåndsvarselInfo.utsettUttalelseFrist.nyFrist)}`}
                         </Tag>
                     )}
                 </HStack>
@@ -154,7 +154,7 @@ export const Forhåndsvarsel: FC = () => {
             <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
                     forhåndsvarselInfo={forhåndsvarselInfo}
-                    skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
+                    initialSkalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
                 />
             </FormProvider>
             {showModal && pdfData && (
