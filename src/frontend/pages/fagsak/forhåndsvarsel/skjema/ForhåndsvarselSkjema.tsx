@@ -15,10 +15,10 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
-import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import {
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
+    HarUttaltSeg,
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
 } from '~/pages/fagsak/forhåndsvarsel/schema';
@@ -236,6 +236,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         }
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             sendUtsettUttalelseFrist(data);
+            return;
         }
         sendBrukeruttalelse(data, varselErSendt);
     };
@@ -252,6 +253,9 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
             begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
+    const fristErUtsatt = !!forhåndsvarselInfo?.utsettUttalelseFrist;
+    const utsattFristDato = forhåndsvarselInfo?.utsettUttalelseFrist?.nyFrist;
+
     return (
         <VStack gap="space-24">
             <SkalSendeSkjema
@@ -266,6 +270,8 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
                         handleUttalelseSubmit={handleUttalelseSubmit}
                         kanUtsetteFrist
                         varselErSendt={varselErSendt}
+                        fristErUtsatt={fristErUtsatt}
+                        utsattFristDato={utsattFristDato}
                     />
                 </FormProvider>
             )}

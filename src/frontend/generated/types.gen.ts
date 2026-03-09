@@ -560,7 +560,7 @@ export type Varselbrevtekst = {
 export type ForhåndsvarselDto = {
     varselbrevDto?: VarselbrevDto;
     brukeruttalelse?: BrukeruttalelseDto;
-    utsettUttalelseFrist: Array<FristUtsettelseDto>;
+    utsettUttalelseFrist?: FristUtsettelseDto;
     forhåndsvarselUnntak?: ForhåndsvarselUnntakDto;
 };
 

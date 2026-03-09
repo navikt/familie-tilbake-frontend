@@ -214,20 +214,17 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendUtsettUttalelseFrist: (/* formData: ForhåndsvarselFormData */): void => {
-            // if (
-            //     formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt &&
-            //     formData.harBrukerUttaltSeg.harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist
-            // ) {
-            //     const payload: FristUtsettelseDto = {
-            //         nyFrist: formData.harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist,
-            //         begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
-            //     };
-            //     sendUtsettUttalelseFristMutation.mutate({
-            //         path: { behandlingId: behandlingId },
-            //         body: payload,
-            //     });
-            // }
+        sendUtsettUttalelseFrist: (formData: UttalelseFormData): void => {
+            if (formData.harUttaltSeg !== HarUttaltSeg.UtsettFrist) return;
+            if (!('utsettUttalelseFrist' in formData)) return;
+
+            sendUtsettUttalelseFristMutation.mutate({
+                path: { behandlingId },
+                body: {
+                    nyFrist: formData.utsettUttalelseFrist.nyFrist,
+                    begrunnelse: formData.utsettUttalelseFrist.begrunnelse,
+                },
+            });
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({
