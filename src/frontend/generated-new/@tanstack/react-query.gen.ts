@@ -6,6 +6,7 @@ import type { AxiosError } from 'axios';
 import { client } from '../client.gen';
 import {
     behandlingFakta,
+    behandlingForeslaaVedtak,
     behandlingHentVedtaksbrev,
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
@@ -16,6 +17,8 @@ import type {
     BehandlingFaktaData,
     BehandlingFaktaError,
     BehandlingFaktaResponse,
+    BehandlingForeslaaVedtakData,
+    BehandlingForeslaaVedtakError,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevError,
     BehandlingHentVedtaksbrevResponse,
@@ -103,6 +106,30 @@ export const behandlingOppdaterFaktaMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await behandlingOppdaterFakta({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const behandlingForeslaaVedtakMutation = (
+    options?: Partial<Options<BehandlingForeslaaVedtakData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingForeslaaVedtakError>,
+    Options<BehandlingForeslaaVedtakData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingForeslaaVedtakError>,
+        Options<BehandlingForeslaaVedtakData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingForeslaaVedtak({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,

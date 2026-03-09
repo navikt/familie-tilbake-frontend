@@ -4,11 +4,11 @@ import type { FaktaPeriode } from '~/typer/tilbakekrevingstyper';
 
 import {
     add,
-    differenceInCalendarYears,
     differenceInDays,
     differenceInMilliseconds,
     differenceInMonths,
     differenceInWeeks,
+    differenceInYears,
     endOfDay,
     endOfMonth,
     format,
@@ -57,7 +57,7 @@ export const formatterDatoOgTidstring = (datoAsString: string): string => {
 export const hentAlder = (fødselsdato: string, dødsdato: string | undefined): number => {
     const dødsdatoEllerNå = dødsdato ? parseISO(dødsdato) : new Date();
     const fødselsdatoDate = parseISO(fødselsdato);
-    return differenceInCalendarYears(dødsdatoEllerNå, fødselsdatoDate);
+    return differenceInYears(dødsdatoEllerNå, fødselsdatoDate);
 };
 
 const finnDateRelativtTilNå = (config: Duration): Date => {
