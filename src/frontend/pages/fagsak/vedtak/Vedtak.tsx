@@ -2,7 +2,7 @@ import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { Vedtaksresultat } from '~/generated-new/types.gen';
 
-import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
+import { Heading, Tag, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '~/context/BehandlingContext';
