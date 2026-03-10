@@ -87,12 +87,12 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(3);
 
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         await waitFor(() => {
@@ -139,13 +139,13 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
 
         expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         await waitFor(() => {
@@ -208,13 +208,13 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
 
         expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         expect(
@@ -249,13 +249,13 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
 
         expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Tilbakekreving')).toBeInTheDocument();
+        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
         expect(getByText('Vedtak')).toBeInTheDocument();
 
         expect(
@@ -289,7 +289,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
         });
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
@@ -330,7 +330,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
+            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
         });
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));

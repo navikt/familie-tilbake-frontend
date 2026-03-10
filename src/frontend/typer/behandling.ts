@@ -21,6 +21,8 @@ export const behandlingsstatuser: Record<BehandlingstatusEnum, string> = {
     FATTER_VEDTAK: 'Fatter vedtak',
     IVERKSETTER_VEDTAK: 'Iverksetter vedtak',
     AVSLUTTET: 'Avsluttet',
+    JOURNALFØR_VEDTAK: 'Journalfører vedtak',
+    DISTRIUBER_VEDTAK: 'Distribuerer vedtak',
 };
 
 export const behandlingsresultater: Record<BehandlingsresultatstypeEnum, string> = {
@@ -42,9 +44,9 @@ export const behandlingssteg: Record<BehandlingsstegEnum, string> = {
     GRUNNLAG: 'Kravgrunnlag',
     VERGE: 'Verge',
     BREVMOTTAKER: 'Brevmottaker',
-    FAKTA: 'Fakta fra feilutbetalingssaken',
+    FAKTA: 'Fakta om feilutbetalingen',
     FORELDELSE: 'Foreldelse',
-    VILKÅRSVURDERING: 'Tilbakekreving',
+    VILKÅRSVURDERING: 'Vilkårsvurdering',
     FORESLÅ_VEDTAK: 'Vedtak',
     FATTE_VEDTAK: 'Fatte vedtak',
     IVERKSETT_VEDTAK: 'Iverksetter vedtak',
