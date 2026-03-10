@@ -8,7 +8,7 @@ import type {
     VilkårsvurderingPeriode,
 } from '~/typer/tilbakekrevingstyper';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
 
@@ -17,6 +17,7 @@ import { Feil } from '~/api/feil';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
+import { behandlingHentVedtaksresultatQueryKey } from '~/generated-new/@tanstack/react-query.gen';
 import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '~/utils';
@@ -78,6 +79,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const { ytelsestype } = useFagsak();
     const behandling = useBehandling();
     const { erStegAutoutført, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const queryClient = useQueryClient();
     const containerRef = useRef<HTMLDivElement>(null);
     const [vilkårsvurdering, setVilkårsvurdering] = useState<Ressurs<VilkårsvurderingResponse>>();
     const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
@@ -284,6 +286,13 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
                     : 'Ukjent feil ved innsending av vilkårsvurdering.',
                 finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
             );
+        },
+        onSettled: () => {
+            void queryClient.invalidateQueries({
+                queryKey: behandlingHentVedtaksresultatQueryKey({
+                    path: { behandlingId: behandling.behandlingId },
+                }),
+            });
         },
     });
 
