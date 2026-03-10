@@ -64,7 +64,7 @@ export const Vedtak: FC = () => {
 
     return (
         <VStack gap="space-24">
-            <HStack justify="space-between" align="center">
+            <section className="flex flex-row justify-between items-center">
                 <Heading size="medium">Vedtak</Heading>
                 <Tag
                     data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
@@ -73,7 +73,7 @@ export const Vedtak: FC = () => {
                 >
                     {vedtaksresultater[beregningsresultat.vedtaksresultat]}
                 </Tag>
-            </HStack>
+            </section>
 
             <Vedtakstabell beregningsresultat={beregningsresultat} />
 

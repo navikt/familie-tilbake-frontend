@@ -62,7 +62,7 @@ export const FaktaSkeleton: FC = () => {
                         Rettslig grunnlag
                     </Heading>
                     <div className="border rounded-xl border-ax-border-neutral-subtle">
-                        <Table>
+                        <Table zebraStripes>
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell scope="col">
@@ -71,7 +71,7 @@ export const FaktaSkeleton: FC = () => {
                                     <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
                                     <Table.HeaderCell scope="col">Grunnlag</Table.HeaderCell>
                                     <Table.HeaderCell scope="col" className="text-end">
-                                        Feilutbetalt beløp
+                                        Feilutbetalt
                                     </Table.HeaderCell>
                                     {/* <Table.HeaderCell scope="col" className="text-right">
                                         Valg
@@ -107,7 +107,7 @@ export const FaktaSkeleton: FC = () => {
                 </section>
                 <section
                     className="flex flex-col gap-6 w-100"
-                    aria-label="Rettslig grunnlag innhold"
+                    aria-label="Detaljer om feilutbetalingen innhold"
                 >
                     <Heading level="2" size="small">
                         Detaljer om feilutbetalingen
