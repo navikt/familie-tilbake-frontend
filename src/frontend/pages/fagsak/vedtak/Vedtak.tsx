@@ -1,4 +1,6 @@
+import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
+import type { Vedtaksresultat } from '~/generated-new/types.gen';
 
 import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
@@ -18,6 +20,12 @@ import { useStegNavigering } from '~/utils/sider';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 import { Vedtakstabell } from './Vedtakstabell';
+
+export const vedtaksresultatFarger: Record<Vedtaksresultat, TagProps['data-color']> = {
+    DELVIS_TILBAKEBETALING: 'meta-purple',
+    INGEN_TILBAKEBETALING: 'brand-beige',
+    FULL_TILBAKEBETALING: 'meta-lime',
+};
 
 export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();
@@ -58,7 +66,11 @@ export const Vedtak: FC = () => {
         <VStack gap="space-24">
             <HStack justify="space-between" align="center">
                 <Heading size="medium">Vedtak</Heading>
-                <Tag data-color="info" size="medium" variant="moderate">
+                <Tag
+                    data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
+                    size="medium"
+                    variant="moderate"
+                >
                     {vedtaksresultater[beregningsresultat.vedtaksresultat]}
                 </Tag>
             </HStack>
