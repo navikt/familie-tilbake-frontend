@@ -76,7 +76,10 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     </div>
                     <div>
                         <Detail weight="semibold">Feilutbetalt beløp totalt</Detail>
-                        <BodyShort size="small" className="text-ax-text-danger-subtle font-ax-bold">
+                        <BodyShort
+                            size="small"
+                            className="text-ax-text-brand-magenta-subtle font-ax-bold"
+                        >
                             {`${formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}`}
                         </BodyShort>
                     </div>

@@ -51,7 +51,7 @@ export const Fakta: FC = () => {
                             )}
                         >
                             <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
-                            <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
+                            <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">
                                 {faktaOmFeilutbetaling.feilutbetaling.beløp}
                             </dd>
                         </div>

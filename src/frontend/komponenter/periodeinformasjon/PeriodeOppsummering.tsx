@@ -28,7 +28,11 @@ export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype 
             <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="space-16">
                 <HStack gap="space-8">
                     <BodyShort size="small">Feilutbetaling:</BodyShort>
-                    <BodyShort className="text-ax-text-danger" weight="semibold" size="small">
+                    <BodyShort
+                        className="text-ax-text-brand-magenta"
+                        weight="semibold"
+                        size="small"
+                    >
                         {formatCurrencyNoKr(beløp)}
                     </BodyShort>
                 </HStack>

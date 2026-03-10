@@ -16,7 +16,7 @@ export const FaktaSkeleton: FC = () => {
                     <div className="grid grid-cols-4 md:grid-cols-2 gap-4 flex-1">
                         <div className="flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle col-span-2">
                             <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
-                            <dd className="text-ax-text-danger font-ax-bold text-ax-heading-medium">
+                            <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">
                                 <Skeleton variant="rounded" width="30%" />
                             </dd>
                         </div>
@@ -89,7 +89,7 @@ export const FaktaSkeleton: FC = () => {
                                     <Table.DataCell>
                                         <Skeleton variant="rounded" />
                                     </Table.DataCell>
-                                    <Table.DataCell className="text-end text-ax-text-danger-subtle">
+                                    <Table.DataCell className="text-end text-ax-text-brand-magenta-subtle">
                                         <Skeleton variant="rounded" />
                                     </Table.DataCell>
                                     {/* <Table.DataCell className="text-right">

@@ -139,7 +139,10 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
                         ))}
                 </VStack>
             </Table.DataCell>
-            <Table.DataCell align="right" className="text-ax-text-danger-subtle font-ax-bold">
+            <Table.DataCell
+                align="right"
+                className="text-ax-text-brand-magenta-subtle font-ax-bold"
+            >
                 <BodyShort size="small">{formatCurrencyNoKr(periode.feilutbetaltBeløp)}</BodyShort>
             </Table.DataCell>
         </Table.Row>

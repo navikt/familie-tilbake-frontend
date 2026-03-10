@@ -135,7 +135,7 @@ export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
                     </Select>
 
                     {feilmelding && feilmelding !== '' && (
-                        <BodyLong size="small" className="text-ax-text-danger">
+                        <BodyLong size="small" className="text-ax-text-brand-magenta">
                             {feilmelding}
                         </BodyLong>
                     )}
