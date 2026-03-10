@@ -2,6 +2,33 @@
 
 import * as z from 'zod';
 
+export const zBeregningsresultatVurdering = z.enum([
+    'GOD_TRO',
+    'FORSETT',
+    'UAKTSOMHET',
+    'GROV_UAKTSOMHET',
+]);
+
+export const zBeregningsresultatsperiode = z.object({
+    fom: z.iso.date(),
+    tom: z.iso.date(),
+    feilutbetaltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    vurdering: zBeregningsresultatVurdering,
+    andelAvBeløp: z.string(),
+    renteprosent: z.string(),
+    tilbakekrevingsbeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    tilbakekrevesBeløpEtterSkatt: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+});
+
 export const zBestemmelseEllerGrunnlag = z.object({
     nøkkel: z.string(),
     beskrivelse: z.string(),
@@ -158,6 +185,18 @@ export const zVedtaksbrevRedigerbareData = z.object({
 export const zVedtaksbrevRedigerbareDataUpdate = z.object({
     hovedavsnitt: zHovedavsnittUpdate,
     avsnitt: z.array(zAvsnittUpdateItem),
+});
+
+export const zVedtaksresultat = z.enum([
+    'INGEN_TILBAKEBETALING',
+    'DELVIS_TILBAKEBETALING',
+    'FULL_TILBAKEBETALING',
+]);
+
+export const zBeregningsresultat = z.object({
+    beregningsresultatsperioder: z.array(zBeregningsresultatsperiode),
+    vedtaksresultat: zVedtaksresultat,
+    harBrukerUttaltSeg: z.boolean(),
 });
 
 export const zYtelse = z.object({
@@ -335,6 +374,19 @@ export const zBehandlingOppdaterVedtaksbrevData = z.object({
  * The request has succeeded.
  */
 export const zBehandlingOppdaterVedtaksbrevResponse = zVedtaksbrevRedigerbareData;
+
+export const zBehandlingHentVedtaksresultatData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        behandlingId: z.uuid(),
+    }),
+    query: z.optional(z.never()),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
 
 export const zVedtaksbrevLagSvgVedtaksbrevData = z.object({
     body: zVedtaksbrevDataWritable,

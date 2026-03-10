@@ -17,6 +17,25 @@ export type AvsnittUpdateItem = {
     underavsnitt: Array<RotElementUpdateItem>;
 };
 
+export type Beregningsresultat = {
+    beregningsresultatsperioder: Array<Beregningsresultatsperiode>;
+    vedtaksresultat: Vedtaksresultat;
+    harBrukerUttaltSeg: boolean;
+};
+
+export type BeregningsresultatVurdering = 'GOD_TRO' | 'FORSETT' | 'UAKTSOMHET' | 'GROV_UAKTSOMHET';
+
+export type Beregningsresultatsperiode = {
+    fom: string;
+    tom: string;
+    feilutbetaltBeløp: number;
+    vurdering: BeregningsresultatVurdering;
+    andelAvBeløp: string;
+    renteprosent: string;
+    tilbakekrevingsbeløp: number;
+    tilbakekrevesBeløpEtterSkatt: number;
+};
+
 export type BestemmelseEllerGrunnlag = {
     nøkkel: string;
     beskrivelse: string;
@@ -180,6 +199,11 @@ export type VedtaksbrevRedigerbareDataUpdate = {
     hovedavsnitt: HovedavsnittUpdate;
     avsnitt: Array<AvsnittUpdateItem>;
 };
+
+export type Vedtaksresultat =
+    | 'INGEN_TILBAKEBETALING'
+    | 'DELVIS_TILBAKEBETALING'
+    | 'FULL_TILBAKEBETALING';
 
 export type Vurdering = {
     årsak: Fritekst | null;
@@ -397,6 +421,39 @@ export type BehandlingOppdaterVedtaksbrevResponses = {
 
 export type BehandlingOppdaterVedtaksbrevResponse =
     BehandlingOppdaterVedtaksbrevResponses[keyof BehandlingOppdaterVedtaksbrevResponses];
+
+export type BehandlingHentVedtaksresultatData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vedtak/resultat';
+};
+
+export type BehandlingHentVedtaksresultatErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentVedtaksresultatError =
+    BehandlingHentVedtaksresultatErrors[keyof BehandlingHentVedtaksresultatErrors];
+
+export type BehandlingHentVedtaksresultatResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Beregningsresultat;
+};
+
+export type BehandlingHentVedtaksresultatResponse =
+    BehandlingHentVedtaksresultatResponses[keyof BehandlingHentVedtaksresultatResponses];
 
 export type VedtaksbrevLagSvgVedtaksbrevData = {
     body: VedtaksbrevDataWritable;

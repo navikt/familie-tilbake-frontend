@@ -8,6 +8,7 @@ import {
     behandlingFakta,
     behandlingForeslaaVedtak,
     behandlingHentVedtaksbrev,
+    behandlingHentVedtaksresultat,
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
     type Options,
@@ -22,6 +23,9 @@ import type {
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevError,
     BehandlingHentVedtaksbrevResponse,
+    BehandlingHentVedtaksresultatData,
+    BehandlingHentVedtaksresultatError,
+    BehandlingHentVedtaksresultatResponse,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
     BehandlingOppdaterFaktaResponse,
@@ -186,6 +190,31 @@ export const behandlingOppdaterVedtaksbrevMutation = (
     };
     return mutationOptions;
 };
+
+export const behandlingHentVedtaksresultatQueryKey = (
+    options: Options<BehandlingHentVedtaksresultatData>
+) => createQueryKey('behandlingHentVedtaksresultat', options);
+
+export const behandlingHentVedtaksresultatOptions = (
+    options: Options<BehandlingHentVedtaksresultatData>
+) =>
+    queryOptions<
+        BehandlingHentVedtaksresultatResponse,
+        AxiosError<BehandlingHentVedtaksresultatError>,
+        BehandlingHentVedtaksresultatResponse,
+        ReturnType<typeof behandlingHentVedtaksresultatQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentVedtaksresultat({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentVedtaksresultatQueryKey(options),
+    });
 
 export const vedtaksbrevLagSvgVedtaksbrevMutation = (
     options?: Partial<Options<VedtaksbrevLagSvgVedtaksbrevData>>

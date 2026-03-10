@@ -12,6 +12,9 @@ import type {
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevErrors,
     BehandlingHentVedtaksbrevResponses,
+    BehandlingHentVedtaksresultatData,
+    BehandlingHentVedtaksresultatErrors,
+    BehandlingHentVedtaksresultatResponses,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaErrors,
     BehandlingOppdaterFaktaResponses,
@@ -102,6 +105,19 @@ export const behandlingOppdaterVedtaksbrev = <ThrowOnError extends boolean = fal
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+export const behandlingHentVedtaksresultat = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentVedtaksresultatData, ThrowOnError>
+) =>
+    (options.client ?? client).get<
+        BehandlingHentVedtaksresultatResponses,
+        BehandlingHentVedtaksresultatErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/vedtak/resultat',
+        ...options,
     });
 
 export const vedtaksbrevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(
