@@ -44,8 +44,8 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }) => {
                     Oppsummering av vedtaket
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
-            <ExpansionCard.Content>
-                <Table size="small">
+            <ExpansionCard.Content className="py-0">
+                <Table zebraStripes>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
@@ -97,19 +97,22 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }) => {
                             </Table.Row>
                         ))}
                         <Table.Row>
-                            <Table.DataCell>
+                            <Table.DataCell className="border-b-0">
                                 <strong>Sum</strong>
                             </Table.DataCell>
-                            <Table.DataCell align="right" className="text-ax-text-brand-magenta">
+                            <Table.DataCell
+                                align="right"
+                                className="text-ax-text-brand-magenta border-b-0"
+                            >
                                 <strong>{formatCurrencyNoKr(totalFeilutbetalt)}</strong>
                             </Table.DataCell>
-                            <Table.DataCell />
-                            <Table.DataCell />
-                            <Table.DataCell />
-                            <Table.DataCell align="right">
+                            <Table.DataCell className="border-b-0" />
+                            <Table.DataCell className="border-b-0" />
+                            <Table.DataCell className="border-b-0" />
+                            <Table.DataCell align="right" className="border-b-0">
                                 <strong>{formatCurrencyNoKr(totalBeløpFørSkatt)}</strong>
                             </Table.DataCell>
-                            <Table.DataCell align="right">
+                            <Table.DataCell align="right" className="border-b-0">
                                 <strong>{formatCurrencyNoKr(totalBeløpEtterSkatt)}</strong>
                             </Table.DataCell>
                         </Table.Row>

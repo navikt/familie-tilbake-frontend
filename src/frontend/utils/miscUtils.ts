@@ -11,7 +11,7 @@ export const formatCurrencyNoKr = (value?: number | string): string | undefined 
     if (Number.isNaN(newVal)) {
         return undefined;
     }
-    return parseStringToNumber(newVal).toLocaleString('nb-NO').replace(/,|\s/g, ' ');
+    return parseStringToNumber(newVal).toLocaleString('nb-NO').replace(/,|\s/g, '\u00A0');
 };
 
 export const isNumeric = (val: string): boolean => {

@@ -173,7 +173,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
                         Rettslig grunnlag
                     </Heading>
                     <div className="border rounded-xl border-ax-border-neutral-subtle">
-                        <Table>
+                        <Table zebraStripes>
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell scope="col">
@@ -182,7 +182,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
                                     <Table.HeaderCell scope="col">Bestemmelse</Table.HeaderCell>
                                     <Table.HeaderCell scope="col">Grunnlag</Table.HeaderCell>
                                     <Table.HeaderCell scope="col" className="text-end">
-                                        Feilutbetalt beløp
+                                        Feilutbetalt
                                     </Table.HeaderCell>
                                     {/* <Table.HeaderCell scope="col">Valg</Table.HeaderCell> */}
                                 </Table.Row>
@@ -206,7 +206,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
                 </section>
                 <section
                     className="flex flex-col gap-6 max-w-xl"
-                    aria-label="Rettslig grunnlag innhold"
+                    aria-label="Detaljer om feilutbetalingen innhold"
                 >
                     <Heading level="2" size="small">
                         Detaljer om feilutbetalingen
