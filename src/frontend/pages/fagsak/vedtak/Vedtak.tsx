@@ -2,7 +2,7 @@ import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { Vedtaksresultat } from '~/generated-new/types.gen';
 
-import { Heading, Tag, VStack } from '@navikt/ds-react';
+import { Heading, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -66,13 +66,17 @@ export const Vedtak: FC = () => {
         <VStack gap="space-24">
             <section className="flex flex-row justify-between items-center">
                 <Heading size="medium">Vedtak</Heading>
-                <Tag
-                    data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
-                    size="medium"
-                    variant="moderate"
+                <Tooltip
+                    content={`Resultat: ${vedtaksresultater[beregningsresultat.vedtaksresultat]}`}
                 >
-                    {vedtaksresultater[beregningsresultat.vedtaksresultat]}
-                </Tag>
+                    <Tag
+                        data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
+                        size="medium"
+                        variant="moderate"
+                    >
+                        {vedtaksresultater[beregningsresultat.vedtaksresultat]}
+                    </Tag>
+                </Tooltip>
             </section>
 
             <Vedtakstabell beregningsresultat={beregningsresultat} />

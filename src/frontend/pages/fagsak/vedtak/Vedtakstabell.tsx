@@ -96,24 +96,22 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }) => {
                                 </Table.DataCell>
                             </Table.Row>
                         ))}
-                        <Table.Row>
-                            <Table.DataCell className="border-b-0">
-                                <strong>Sum</strong>
-                            </Table.DataCell>
+                        <Table.Row className="border-t-2 border-ax-border-neutral-subtle">
+                            <Table.DataCell className="border-b-0 font-bold">Sum</Table.DataCell>
                             <Table.DataCell
                                 align="right"
-                                className="text-ax-text-brand-magenta border-b-0"
+                                className="text-ax-text-brand-magenta border-b-0 font-bold"
                             >
-                                <strong>{formatCurrencyNoKr(totalFeilutbetalt)}</strong>
+                                {formatCurrencyNoKr(totalFeilutbetalt)}
                             </Table.DataCell>
                             <Table.DataCell className="border-b-0" />
                             <Table.DataCell className="border-b-0" />
                             <Table.DataCell className="border-b-0" />
-                            <Table.DataCell align="right" className="border-b-0">
-                                <strong>{formatCurrencyNoKr(totalBeløpFørSkatt)}</strong>
+                            <Table.DataCell align="right" className="border-b-0 font-bold">
+                                {formatCurrencyNoKr(totalBeløpFørSkatt)}
                             </Table.DataCell>
-                            <Table.DataCell align="right" className="border-b-0">
-                                <strong>{formatCurrencyNoKr(totalBeløpEtterSkatt)}</strong>
+                            <Table.DataCell align="right" className="border-b-0 font-bold">
+                                {formatCurrencyNoKr(totalBeløpEtterSkatt)}
                             </Table.DataCell>
                         </Table.Row>
                     </Table.Body>
