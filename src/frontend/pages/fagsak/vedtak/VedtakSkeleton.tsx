@@ -4,9 +4,18 @@ import { Heading, HStack, Skeleton, VStack } from '@navikt/ds-react';
 
 import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 
+import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
+
 export const VedtakSkeleton: FC = () => {
     return (
-        <>
+        <VStack gap="space-24">
+            <HStack justify="space-between" align="center">
+                <Heading size="medium">Vedtak</Heading>
+                <Skeleton variant="rounded" width={160} height={24} />
+            </HStack>
+
+            <VedtakstabellSkeleton />
+
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
                 <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-6">
                     <HStack justify="space-between" align="center">
@@ -27,7 +36,7 @@ export const VedtakSkeleton: FC = () => {
                 </VStack>
             </div>
             <ActionBarSkeleton />
-        </>
+        </VStack>
     );
 };
 
