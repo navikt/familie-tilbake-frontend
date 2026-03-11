@@ -1,8 +1,8 @@
 import type { FC, ReactNode, RefObject } from 'react';
 import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
 
-import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, LocalAlert } from '@navikt/ds-react';
+import { BugIcon, SidebarRightIcon } from '@navikt/aksel-icons';
+import { BodyShort, Button, Link, LocalAlert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
@@ -394,6 +394,15 @@ export const BehandlingContainer: FC = () => {
                     onClose={() => lukkGlobalAlert(alert.id)}
                 >
                     {alert.message}
+                    {alert.visPortenLenke && (
+                        <Link
+                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                            target="_blank"
+                        >
+                            <BugIcon aria-hidden />
+                            Meld feil i porten
+                        </Link>
+                    )}
                 </FixedAlert>
             ))}
         </>

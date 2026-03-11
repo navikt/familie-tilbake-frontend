@@ -19,6 +19,7 @@ import { vedtaksresultater } from '~/kodeverk';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
+import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { RessursStatus } from '~/typer/ressurs';
 import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
 
@@ -46,6 +47,7 @@ export const VedtakContainer: FC = () => {
         useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
+    const visGlobalAlert = useVisGlobalAlert();
 
     const erRevurderingKlageKA = behandlingsårsakstype === 'REVURDERING_KLAGE_KA';
     const erRevurderingBortfaltBeløp =
@@ -97,6 +99,21 @@ export const VedtakContainer: FC = () => {
         (!behandlingILesemodus || (kanEndres && aktivtSteg?.behandlingssteg === 'FATTE_VEDTAK')) &&
         !erRevurderingKlageKA;
 
+    useEffect(() => {
+        if (
+            foreslåVedtakRespons?.status === RessursStatus.Feilet ||
+            foreslåVedtakRespons?.status === RessursStatus.FunksjonellFeil
+        ) {
+            bekreftelsesmodalRef.current?.close();
+            visGlobalAlert({
+                title: 'Kunne ikke sende til godkjenning',
+                message: foreslåVedtakRespons?.frontendFeilmelding,
+                status: 'error',
+                visPortenLenke: true,
+            });
+        }
+    }, [foreslåVedtakRespons, visGlobalAlert]);
+
     if (
         beregningsresultat?.status === RessursStatus.Suksess &&
         vedtaksbrevavsnitt?.status === RessursStatus.Suksess
@@ -142,18 +159,6 @@ export const VedtakContainer: FC = () => {
                         }
                     />
                 )}
-
-                {foreslåVedtakRespons &&
-                    (foreslåVedtakRespons.status === RessursStatus.Feilet ||
-                        foreslåVedtakRespons.status === RessursStatus.FunksjonellFeil) && (
-                        <LocalAlert status="error">
-                            <LocalAlert.Header>
-                                <LocalAlert.Title>
-                                    {foreslåVedtakRespons.frontendFeilmelding}
-                                </LocalAlert.Title>
-                            </LocalAlert.Header>
-                        </LocalAlert>
-                    )}
 
                 <div className="flex flex-row-reverse">
                     <HStack gap="space-4">

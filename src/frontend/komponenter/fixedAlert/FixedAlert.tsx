@@ -39,7 +39,7 @@ export const FixedAlert: FC<Props> = ({
 
     return (
         <LocalAlert
-            className="fixed left-6.5"
+            className="fixed left-6.5 z-50"
             style={{
                 width: alertWidth,
                 bottom: `${bottomPosition}px`,
@@ -51,7 +51,9 @@ export const FixedAlert: FC<Props> = ({
                 <LocalAlert.Title>{title}</LocalAlert.Title>
                 <LocalAlert.CloseButton onClick={handleClose} />
             </LocalAlert.Header>
-            {children && <LocalAlert.Content>{children}</LocalAlert.Content>}
+            {children && (
+                <LocalAlert.Content className="flex flex-col gap-2">{children}</LocalAlert.Content>
+            )}
         </LocalAlert>
     );
 };

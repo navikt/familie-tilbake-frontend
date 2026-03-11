@@ -5,8 +5,9 @@ import { create } from 'zustand';
 export type GlobalAlert = {
     id: string;
     title: string;
-    message?: string;
     status: LocalAlertProps['status'];
+    message?: string;
+    visPortenLenke?: boolean;
 };
 
 type GlobalAlertState = {
