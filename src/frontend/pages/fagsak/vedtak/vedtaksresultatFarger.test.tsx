@@ -2,7 +2,7 @@ import type { Vedtaksresultat } from '~/generated-new/types.gen';
 
 import { describe, expect, test } from 'vitest';
 
-import { vedtaksresultatFarger } from './Vedtak';
+import { vedtaksresultatFarger } from './vedtaksresultatFarger';
 
 describe('vedtaksresultatFarger', () => {
     test('delvis tilbakebetaling har farge meta-purple', () => {

@@ -1,9 +1,7 @@
-import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
-import type { Vedtaksresultat } from '~/generated-new/types.gen';
 
-import { Heading, Tag, Tooltip, VStack } from '@navikt/ds-react';
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { Heading, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -19,13 +17,10 @@ import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
+import { VedtakSkeleton } from './VedtakSkeleton';
 import { Vedtakstabell } from './Vedtakstabell';
-
-export const vedtaksresultatFarger: Record<Vedtaksresultat, TagProps['data-color']> = {
-    DelvisTilbakebetaling: 'meta-purple',
-    IngenTilbakebetaling: 'brand-beige',
-    FullTilbakebetaling: 'meta-lime',
-};
+import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
+import { vedtaksresultatFarger } from './vedtaksresultatFarger';
 
 export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();
@@ -34,13 +29,17 @@ export const Vedtak: FC = () => {
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
 
-    const { data: vedtaksbrevData } = useSuspenseQuery(
-        behandlingHentVedtaksbrevOptions({ path: { behandlingId } })
-    );
+    const {
+        data: vedtaksbrevData,
+        isError: erVedtaksbrevFeil,
+        isPending: lasterVedtaksbrev,
+    } = useQuery(behandlingHentVedtaksbrevOptions({ path: { behandlingId } }));
 
-    const { data: beregningsresultat } = useSuspenseQuery(
-        behandlingHentVedtaksresultatOptions({ path: { behandlingId } })
-    );
+    const {
+        data: beregningsresultat,
+        isError: erVedtaksresultatFeil,
+        isPending: lasterVedtaksresultat,
+    } = useQuery(behandlingHentVedtaksresultatOptions({ path: { behandlingId } }));
 
     const foreslåVedtak = useMutation({
         ...behandlingForeslaaVedtakMutation(),
@@ -66,22 +65,40 @@ export const Vedtak: FC = () => {
         <VStack gap="space-24">
             <section className="flex flex-row justify-between items-center">
                 <Heading size="medium">Vedtak</Heading>
-                <Tooltip
-                    content={`Resultat: ${vedtaksresultater[beregningsresultat.vedtaksresultat]}`}
-                >
-                    <Tag
-                        data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
-                        size="medium"
-                        variant="moderate"
+                {beregningsresultat && (
+                    <Tooltip
+                        content={`Resultat: ${vedtaksresultater[beregningsresultat.vedtaksresultat]}`}
                     >
-                        {vedtaksresultater[beregningsresultat.vedtaksresultat]}
-                    </Tag>
-                </Tooltip>
+                        <Tag
+                            data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
+                            size="medium"
+                            variant="moderate"
+                        >
+                            {vedtaksresultater[beregningsresultat.vedtaksresultat]}
+                        </Tag>
+                    </Tooltip>
+                )}
             </section>
 
-            <Vedtakstabell beregningsresultat={beregningsresultat} />
+            {erVedtaksresultatFeil ? (
+                <InlineMessage size="small" status="error">
+                    Kunne ikke hente vedtaksresultat. Prøv å laste siden på nytt.
+                </InlineMessage>
+            ) : lasterVedtaksresultat ? (
+                <VedtakstabellSkeleton />
+            ) : (
+                beregningsresultat && <Vedtakstabell beregningsresultat={beregningsresultat} />
+            )}
 
-            <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} />
+            {erVedtaksbrevFeil ? (
+                <InlineMessage size="small" status="error">
+                    Kunne ikke hente vedtaksbrevdata. Prøv å laste siden på nytt.
+                </InlineMessage>
+            ) : lasterVedtaksbrev ? (
+                <VedtakSkeleton />
+            ) : (
+                vedtaksbrevData && <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} />
+            )}
 
             <ActionBar
                 stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}

@@ -5,7 +5,7 @@ import * as z from 'zod';
 export const zBeregningsresultatVurdering = z.enum([
     'GodTro',
     'Forsett',
-    'SimpelUaktsomhet',
+    'Uaktsomhet',
     'GrovUaktsomhet',
 ]);
 
@@ -17,14 +17,20 @@ export const zBeregningsresultatsperiode = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     vurdering: zBeregningsresultatVurdering,
-    andelAvBeløp: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    renteprosent: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    andelAvBeløp: z.union([
+        z
+            .int()
+            .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+            .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+        z.null(),
+    ]),
+    renteprosent: z.union([
+        z
+            .int()
+            .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+            .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+        z.null(),
+    ]),
     tilbakekrevingsbeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })

@@ -22,19 +22,15 @@ export type Beregningsresultat = {
     vedtaksresultat: Vedtaksresultat;
 };
 
-export type BeregningsresultatVurdering =
-    | 'GodTro'
-    | 'Forsett'
-    | 'SimpelUaktsomhet'
-    | 'GrovUaktsomhet';
+export type BeregningsresultatVurdering = 'GodTro' | 'Forsett' | 'Uaktsomhet' | 'GrovUaktsomhet';
 
 export type Beregningsresultatsperiode = {
     fom: string;
     tom: string;
     feilutbetaltBeløp: number;
     vurdering: BeregningsresultatVurdering;
-    andelAvBeløp: number;
-    renteprosent: number;
+    andelAvBeløp: number | null;
+    renteprosent: number | null;
     tilbakekrevingsbeløp: number;
     tilbakekrevesBeløpEtterSkatt: number;
 };

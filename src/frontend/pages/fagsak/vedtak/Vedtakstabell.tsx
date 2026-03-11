@@ -6,10 +6,10 @@ import { ExpansionCard, Table } from '@navikt/ds-react';
 import { formatterDatostring, formatCurrencyNoKr } from '~/utils';
 
 const vurderingstekster: Record<BeregningsresultatVurdering, string> = {
-    FORSETT: 'Forsett',
-    GROV_UAKTSOMHET: 'Grov uaktsom',
-    UAKTSOMHET: 'Uaktsom',
-    GOD_TRO: 'God tro',
+    Forsett: 'Forsett',
+    GrovUaktsomhet: 'Grov uaktsom',
+    Uaktsomhet: 'Uaktsom',
+    GodTro: 'God tro',
 };
 
 type Props = {
@@ -83,10 +83,10 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }) => {
                                     {vurderingstekster[periode.vurdering]}
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
-                                    {`${periode.andelAvBeløp}`}
+                                    {periode.andelAvBeløp ? `${periode.andelAvBeløp}%` : 'Manuelt'}
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
-                                    {`${periode.renteprosent}`}
+                                    {periode.renteprosent ? `${periode.renteprosent}%` : 'Nei'}
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
                                     {formatCurrencyNoKr(periode.tilbakekrevingsbeløp)}

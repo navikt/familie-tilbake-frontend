@@ -37,7 +37,6 @@ import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
 import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
-import { VedtakSkeleton } from './vedtak/VedtakSkeleton';
 import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './vilkaarsvurdering/VilkårsvurderingContext';
@@ -263,9 +262,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             element={
                                 behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
-                                        <Suspense fallback={<VedtakSkeleton />}>
-                                            <Vedtak />
-                                        </Suspense>
+                                        <Vedtak />
                                     </StegErrorBoundary>
                                 ) : (
                                     <VedtakProvider>
