@@ -3,10 +3,10 @@
 import * as z from 'zod';
 
 export const zBeregningsresultatVurdering = z.enum([
-    'GOD_TRO',
-    'FORSETT',
-    'UAKTSOMHET',
-    'GROV_UAKTSOMHET',
+    'GodTro',
+    'Forsett',
+    'SimpelUaktsomhet',
+    'GrovUaktsomhet',
 ]);
 
 export const zBeregningsresultatsperiode = z.object({
@@ -17,8 +17,14 @@ export const zBeregningsresultatsperiode = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     vurdering: zBeregningsresultatVurdering,
-    andelAvBeløp: z.string(),
-    renteprosent: z.string(),
+    andelAvBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    renteprosent: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     tilbakekrevingsbeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
@@ -188,15 +194,14 @@ export const zVedtaksbrevRedigerbareDataUpdate = z.object({
 });
 
 export const zVedtaksresultat = z.enum([
-    'INGEN_TILBAKEBETALING',
-    'DELVIS_TILBAKEBETALING',
-    'FULL_TILBAKEBETALING',
+    'IngenTilbakebetaling',
+    'DelvisTilbakebetaling',
+    'FullTilbakebetaling',
 ]);
 
 export const zBeregningsresultat = z.object({
     beregningsresultatsperioder: z.array(zBeregningsresultatsperiode),
     vedtaksresultat: zVedtaksresultat,
-    harBrukerUttaltSeg: z.boolean(),
 });
 
 export const zYtelse = z.object({

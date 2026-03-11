@@ -22,9 +22,9 @@ import { Vedtaksbrev } from './Vedtaksbrev';
 import { Vedtakstabell } from './Vedtakstabell';
 
 export const vedtaksresultatFarger: Record<Vedtaksresultat, TagProps['data-color']> = {
-    DELVIS_TILBAKEBETALING: 'meta-purple',
-    INGEN_TILBAKEBETALING: 'brand-beige',
-    FULL_TILBAKEBETALING: 'meta-lime',
+    DelvisTilbakebetaling: 'meta-purple',
+    IngenTilbakebetaling: 'brand-beige',
+    FullTilbakebetaling: 'meta-lime',
 };
 
 export const Vedtak: FC = () => {

@@ -20,18 +20,21 @@ export type AvsnittUpdateItem = {
 export type Beregningsresultat = {
     beregningsresultatsperioder: Array<Beregningsresultatsperiode>;
     vedtaksresultat: Vedtaksresultat;
-    harBrukerUttaltSeg: boolean;
 };
 
-export type BeregningsresultatVurdering = 'GOD_TRO' | 'FORSETT' | 'UAKTSOMHET' | 'GROV_UAKTSOMHET';
+export type BeregningsresultatVurdering =
+    | 'GodTro'
+    | 'Forsett'
+    | 'SimpelUaktsomhet'
+    | 'GrovUaktsomhet';
 
 export type Beregningsresultatsperiode = {
     fom: string;
     tom: string;
     feilutbetaltBeløp: number;
     vurdering: BeregningsresultatVurdering;
-    andelAvBeløp: string;
-    renteprosent: string;
+    andelAvBeløp: number;
+    renteprosent: number;
     tilbakekrevingsbeløp: number;
     tilbakekrevesBeløpEtterSkatt: number;
 };
@@ -201,9 +204,9 @@ export type VedtaksbrevRedigerbareDataUpdate = {
 };
 
 export type Vedtaksresultat =
-    | 'INGEN_TILBAKEBETALING'
-    | 'DELVIS_TILBAKEBETALING'
-    | 'FULL_TILBAKEBETALING';
+    | 'IngenTilbakebetaling'
+    | 'DelvisTilbakebetaling'
+    | 'FullTilbakebetaling';
 
 export type Vurdering = {
     årsak: Fritekst | null;

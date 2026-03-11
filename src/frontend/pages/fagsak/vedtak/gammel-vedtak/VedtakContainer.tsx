@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import type { GamleVedtaksresultat } from '~/kodeverk';
 
 import {
     BodyLong,
@@ -15,7 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
-import { vedtaksresultater } from '~/kodeverk';
+import { gamleVedtaksresultater } from '~/kodeverk';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
@@ -143,7 +144,11 @@ export const VedtakContainer: FC = () => {
                 <HStack gap="space-4" align="center">
                     <Detail weight="semibold">Resultat</Detail>
                     <BodyLong size="small">
-                        {vedtaksresultater[beregningsresultat.data.vedtaksresultat]}
+                        {
+                            gamleVedtaksresultater[
+                                beregningsresultat.data.vedtaksresultat as GamleVedtaksresultat
+                            ]
+                        }
                     </BodyLong>
                 </HStack>
 

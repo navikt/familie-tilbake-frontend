@@ -1,13 +1,21 @@
-export enum Vedtaksresultat {
+import type { Vedtaksresultat } from '~/generated-new';
+
+export const vedtaksresultater: Record<Vedtaksresultat, string> = {
+    FullTilbakebetaling: 'Full tilbakebetaling',
+    DelvisTilbakebetaling: 'Delvis tilbakebetaling',
+    IngenTilbakebetaling: 'Ingen tilbakebetaling',
+};
+
+export enum GamleVedtaksresultat {
     FullTilbakebetaling = 'FULL_TILBAKEBETALING',
     DelvisTilbakebetaling = 'DELVIS_TILBAKEBETALING',
     IngenTilbakebetaling = 'INGEN_TILBAKEBETALING',
 }
 
-export const vedtaksresultater: Record<Vedtaksresultat, string> = {
-    [Vedtaksresultat.FullTilbakebetaling]: 'Full tilbakebetaling',
-    [Vedtaksresultat.DelvisTilbakebetaling]: 'Delvis tilbakebetaling',
-    [Vedtaksresultat.IngenTilbakebetaling]: 'Ingen tilbakebetaling',
+export const gamleVedtaksresultater: Record<GamleVedtaksresultat, string> = {
+    [GamleVedtaksresultat.FullTilbakebetaling]: 'Full tilbakebetaling',
+    [GamleVedtaksresultat.DelvisTilbakebetaling]: 'Delvis tilbakebetaling',
+    [GamleVedtaksresultat.IngenTilbakebetaling]: 'Ingen tilbakebetaling',
 };
 
 export enum Vurdering {
