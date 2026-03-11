@@ -18,9 +18,9 @@ import { useStegNavigering } from '~/utils/sider';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 import { VedtakSkeleton } from './VedtakSkeleton';
+import { vedtaksresultatFarger } from './vedtaksresultatFarger';
 import { Vedtakstabell } from './Vedtakstabell';
 import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
-import { vedtaksresultatFarger } from './vedtaksresultatFarger';
 
 export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();
