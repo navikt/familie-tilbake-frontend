@@ -87,7 +87,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(3);
@@ -139,7 +139,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
@@ -208,7 +208,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
@@ -249,7 +249,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         expect(getAllByRole('link')).toHaveLength(4);
@@ -289,7 +289,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
@@ -330,7 +330,7 @@ describe('Totrinnskontroll', () => {
         );
 
         await waitFor(() => {
-            expect(getByText('Fakta om feilutbetalingen')).toBeInTheDocument();
+            expect(getByText('Fakta')).toBeInTheDocument();
         });
 
         await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));

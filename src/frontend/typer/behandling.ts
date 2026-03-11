@@ -44,7 +44,7 @@ export const behandlingssteg: Record<BehandlingsstegEnum, string> = {
     GRUNNLAG: 'Kravgrunnlag',
     VERGE: 'Verge',
     BREVMOTTAKER: 'Brevmottaker',
-    FAKTA: 'Fakta om feilutbetalingen',
+    FAKTA: 'Fakta',
     FORELDELSE: 'Foreldelse',
     VILKÅRSVURDERING: 'Vilkårsvurdering',
     FORESLÅ_VEDTAK: 'Vedtak',
