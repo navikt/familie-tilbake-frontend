@@ -47,20 +47,20 @@ export const VedtakstabellSkeleton: FC = () => {
                         <Table.Row>
                             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
-                                Feilutbetalt beløp
+                                Feilutbetalt
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col">Vurdering</Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
-                                Andel av beløp
+                                Beløpsandel
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
                                 Renter
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
-                                Beløp før skatt
+                                Før skatt
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
-                                Beløp etter skatt
+                                Etter skatt
                             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
