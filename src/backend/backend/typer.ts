@@ -27,6 +27,7 @@ export type User = {
     enhet: string;
     identifier: string;
     navIdent: string;
+    tokenSubject: string;
 };
 
 declare module 'express-session' {

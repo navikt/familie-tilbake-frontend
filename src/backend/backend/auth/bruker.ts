@@ -12,16 +12,6 @@ import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';
 
-const hentSubjectFraToken = (token: string): string | null => {
-    try {
-        const payload = token.split('.')[1];
-        const decoded = JSON.parse(Buffer.from(payload, 'base64').toString());
-        return decoded.oid ?? decoded.sub ?? null;
-    } catch {
-        return null;
-    }
-};
-
 export const hentBrukerprofil = (texasClient: TexasClient) => {
     return async (req: Request, res: Response): Promise<void> => {
         const requestToken = utledAccessToken(req);
@@ -30,12 +20,15 @@ export const hentBrukerprofil = (texasClient: TexasClient) => {
             return;
         }
 
-        const tokenSubject = hentSubjectFraToken(requestToken);
-        const erAnnenBruker = tokenSubject && req.session.tokenSubject !== tokenSubject;
+        const tokenSubject = res.locals.tokenSubject as string;
 
-        if (!req.session.user || erAnnenBruker) {
-            req.session.user = await setBrukerprofilPåSesjon(texasClient, req, requestToken);
-            req.session.tokenSubject = tokenSubject;
+        if (!req.session.user) {
+            req.session.user = await setBrukerprofilPåSesjon(
+                texasClient,
+                req,
+                requestToken,
+                tokenSubject
+            );
         }
 
         res.status(200).send(req.session.user);
@@ -74,7 +67,8 @@ const hentBrukerdata = async (
 const setBrukerprofilPåSesjon = async (
     texasClient: TexasClient,
     req: Request,
-    requestToken: string
+    requestToken: string,
+    tokenSubject: string
 ): Promise<User | null> => {
     try {
         const accessToken = await texasClient.hentOnBehalfOfToken(
@@ -90,6 +84,7 @@ const setBrukerprofilPåSesjon = async (
             enhet: brukerdata.officeLocation.slice(0, 4),
             identifier: brukerdata.userPrincipalName,
             navIdent: brukerdata.onPremisesSamAccountName,
+            tokenSubject,
         };
     } catch (err: unknown) {
         logRequest(req, `Noe gikk galt: ${err}.`, LogLevel.Error);

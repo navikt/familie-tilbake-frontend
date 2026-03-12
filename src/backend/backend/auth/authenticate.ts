@@ -7,14 +7,14 @@ import { logRequest } from '../utils';
 export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: boolean) => {
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const token = utledAccessToken(req);
-        const validAccessToken = token && (await texasClient.validateLogin(token));
+        const introspection = token ? await texasClient.validateLogin(token) : null;
         logRequest(
             req,
-            `ensureAuthenticated. hasValidAccessToken=${validAccessToken}`,
+            `ensureAuthenticated. hasValidAccessToken=${!!introspection}`,
             LogLevel.Debug
         );
 
-        if (!validAccessToken) {
+        if (!introspection) {
             const pathname = req.originalUrl;
             if (sendUnauthorized) {
                 res.status(401).send('Unauthorized');
@@ -24,8 +24,37 @@ export const ensureAuthenticated = (texasClient: TexasClient, sendUnauthorized: 
             return;
         }
 
+        const tokenSubject = introspection.sub;
+        if (tokenSubject && req.session.user && req.session.user.tokenSubject !== tokenSubject) {
+            logRequest(
+                req,
+                'Token tilhører en annen bruker enn sesjonen. Invaliderer sesjon.',
+                LogLevel.Warning
+            );
+            try {
+                await gjenoppretterSesjon(req);
+            } catch (err) {
+                logRequest(req, `Feil ved gjenoppretting av sesjon: ${err}`, LogLevel.Error);
+                res.status(500).send('Intern feil ved sesjonsbehandling');
+                return;
+            }
+        }
+
+        res.locals.tokenSubject = tokenSubject;
         return next();
     };
+};
+
+const gjenoppretterSesjon = (req: Request): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        req.session.regenerate(err => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
 };
 
 export const utledAccessToken = (req: Request): string | false => {

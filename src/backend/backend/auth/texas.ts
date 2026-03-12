@@ -35,7 +35,7 @@ export class TexasClient {
         return exchangeResponse.access_token;
     };
 
-    validateLogin = async (token: string): Promise<boolean> => {
+    validateLogin = async (token: string): Promise<IntrospectResponse | null> => {
         try {
             const response = await axios.post<IntrospectResponse>(
                 this.config.tokenIntrospectionEndpoint,
@@ -47,7 +47,7 @@ export class TexasClient {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
-            return response.data.active;
+            return response.data.active ? response.data : null;
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -55,7 +55,7 @@ export class TexasClient {
                         `Feil validering av innlogging. Statuskode ${error.response.status}, body ${error.response.data}`,
                         error
                     );
-                    return false;
+                    return null;
                 }
             } else {
                 stdoutLogger.error('Feil ved validering av innlogging', error);
@@ -65,8 +65,9 @@ export class TexasClient {
     };
 }
 
-type IntrospectResponse = {
+export type IntrospectResponse = {
     active: boolean;
     error: string | null;
+    sub?: string;
     [claims: string]: unknown;
 };
