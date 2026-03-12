@@ -30,6 +30,7 @@ const validerTekst2000 = validerTekstMaksLengde(2000);
 
 const stegRekkefølge: BehandlingsstegEnum[] = [
     'FAKTA',
+    'FORHÅNDSVARSEL',
     'FORELDELSE',
     'VILKÅRSVURDERING',
     'FORESLÅ_VEDTAK',
