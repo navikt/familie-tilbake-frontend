@@ -6,11 +6,21 @@ import type { Request, Response } from 'express';
 
 import axios from 'axios';
 
+import { utledAccessToken } from './authenticate';
 import { appConfig } from '../../config';
 import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';
-import { utledAccessToken } from './authenticate';
+
+const hentSubjectFraToken = (token: string): string | null => {
+    try {
+        const payload = token.split('.')[1];
+        const decoded = JSON.parse(Buffer.from(payload, 'base64').toString());
+        return decoded.oid ?? decoded.sub ?? null;
+    } catch {
+        return null;
+    }
+};
 
 export const hentBrukerprofil = (texasClient: TexasClient) => {
     return async (req: Request, res: Response): Promise<void> => {
@@ -20,8 +30,12 @@ export const hentBrukerprofil = (texasClient: TexasClient) => {
             return;
         }
 
-        if (!req.session.user) {
+        const tokenSubject = hentSubjectFraToken(requestToken);
+        const erAnnenBruker = tokenSubject && req.session.tokenSubject !== tokenSubject;
+
+        if (!req.session.user || erAnnenBruker) {
             req.session.user = await setBrukerprofilPåSesjon(texasClient, req, requestToken);
+            req.session.tokenSubject = tokenSubject;
         }
 
         res.status(200).send(req.session.user);

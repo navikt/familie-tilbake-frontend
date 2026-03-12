@@ -32,5 +32,6 @@ export type User = {
 declare module 'express-session' {
     interface Session {
         user: User | null;
+        tokenSubject: string | null;
     }
 }
