@@ -1,7 +1,7 @@
 import type { FC, ReactNode, RefObject } from 'react';
 import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
 
-import { BugIcon, SidebarRightIcon } from '@navikt/aksel-icons';
+import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Link, LocalAlert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
@@ -399,8 +399,7 @@ export const BehandlingContainer: FC = () => {
                             href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
                             target="_blank"
                         >
-                            <BugIcon aria-hidden />
-                            Meld feil i porten
+                            Meld feilen i porten
                         </Link>
                     )}
                 </FixedAlert>
