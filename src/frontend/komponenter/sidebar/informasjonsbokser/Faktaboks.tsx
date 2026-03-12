@@ -115,6 +115,16 @@ const STATUS_META = {
         variant: 'moderate',
         icon: TasklistSendIcon,
     },
+    JOURNALFØR_VEDTAK: {
+        dataColor: 'neutral',
+        variant: 'moderate',
+        icon: FilePlusIcon,
+    },
+    DISTRIUBER_VEDTAK: {
+        dataColor: 'neutral',
+        variant: 'moderate',
+        icon: FilePlusIcon,
+    },
     AVSLUTTET: {
         dataColor: 'success',
         variant: 'moderate',
