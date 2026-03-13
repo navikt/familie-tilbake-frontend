@@ -9,6 +9,7 @@ import { useHttp, type FamilieRequest } from '~/api/http/HttpProvider';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { behandlingFaktaQueryKey } from '~/generated-new/@tanstack/react-query.gen';
 import { RessursStatus, type Ressurs } from '~/typer/ressurs';
 import { useStegNavigering } from '~/utils/sider';
 
@@ -61,7 +62,9 @@ export const useStartPåNytt = (): StartPåNyttHook => {
                 await queryClient.refetchQueries({
                     queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
                 });
-                await queryClient.refetchQueries({ queryKey: ['hentFaktaOmFeilutbetaling'] });
+                await queryClient.invalidateQueries({
+                    queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }),
+                });
                 navigerTilBehandling();
             }
         },
