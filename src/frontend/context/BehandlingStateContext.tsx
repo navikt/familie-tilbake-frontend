@@ -81,7 +81,11 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
 
     const actionBarStegtekst = (valgtSteg: BehandlingsstegEnum): string | undefined => {
         const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
-            if (steg === 'VERGE' || steg === 'BREVMOTTAKER' || steg === 'FORHÅNDSVARSEL') {
+            if (
+                steg === 'VERGE' ||
+                steg === 'BREVMOTTAKER' ||
+                (steg === 'FORHÅNDSVARSEL' && !behandling.erNyModell)
+            ) {
                 return behandling.behandlingsstegsinfo.some(
                     ({ behandlingssteg, behandlingsstegstatus }) =>
                         behandlingssteg === steg && behandlingsstegstatus !== 'TILBAKEFØRT'
