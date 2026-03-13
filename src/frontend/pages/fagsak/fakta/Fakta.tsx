@@ -117,7 +117,10 @@ export const Fakta: FC = () => {
                         </dl>
                     </VStack>
                 </section>
-                <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling} />
+                <FaktaSkjema
+                    key={String(faktaOmFeilutbetaling.ferdigvurdert)}
+                    faktaOmFeilutbetaling={faktaOmFeilutbetaling}
+                />
             </VStack>
         </>
     );

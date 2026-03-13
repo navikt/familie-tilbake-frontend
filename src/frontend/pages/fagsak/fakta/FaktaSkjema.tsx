@@ -76,7 +76,6 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
             vurdering: {
                 ...faktaOmFeilutbetaling.vurdering,
                 oppdaget: {
-                    ...faktaOmFeilutbetaling.vurdering.oppdaget,
                     dato: faktaOmFeilutbetaling.vurdering.oppdaget?.dato ?? undefined,
                     beskrivelse: faktaOmFeilutbetaling.vurdering.oppdaget?.beskrivelse ?? undefined,
                     av:

@@ -1,4 +1,5 @@
 import type { RenderResult } from '@testing-library/react';
+import type { JSX } from 'react';
 import type { FaktaOmFeilutbetaling, BehandlingOppdaterFaktaData } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -452,6 +453,78 @@ describe('Fakta om feilutbetaling', () => {
 
             expect(await datoSelector()).toHaveValue('01.01.2020');
             expect(await datoSelector()).not.toHaveAccessibleDescription();
+        });
+    });
+
+    describe('Start på nytt', () => {
+        test('Skjemadata nullstilles når faktaOmFeilutbetaling oppdateres med tomme verdier', async () => {
+            const utfyltFakta = faktaOmFeilutbetaling({
+                vurdering: {
+                    årsak: 'Svindel',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'Fant et dokument under bordet.',
+                    },
+                },
+                ferdigvurdert: true,
+            });
+
+            const nullstiltFakta = faktaOmFeilutbetaling({
+                vurdering: {
+                    årsak: null,
+                    oppdaget: undefined,
+                },
+                ferdigvurdert: false,
+            });
+
+            const client = createTestQueryClient();
+            client.setMutationDefaults(['oppdaterFakta'], {
+                mutationFn: async () => utfyltFakta,
+            });
+
+            const wrapMedProviders = (fakta: FaktaOmFeilutbetaling): JSX.Element => (
+                <FagsakContext.Provider value={lagFagsak()}>
+                    <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
+                        <QueryClientProvider client={client}>
+                            <FaktaSkjema
+                                key={String(fakta.ferdigvurdert)}
+                                faktaOmFeilutbetaling={fakta}
+                            />
+                        </QueryClientProvider>
+                    </TestBehandlingProvider>
+                </FagsakContext.Provider>
+            );
+
+            const { rerender, findByRole } = render(wrapMedProviders(utfyltFakta));
+
+            expect(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' })).toHaveValue(
+                'Svindel'
+            );
+            expect(await findByRole('radio', { name: 'Nav' })).toBeChecked();
+            expect(
+                await findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' })
+            ).toHaveValue('20.04.2020');
+            expect(
+                await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' })
+            ).toHaveValue('Fant et dokument under bordet.');
+
+            // Simulerer at faktaOmFeilutbetaling oppdateres med nullstilt data, slik det gjøres ved start på nytt
+            rerender(wrapMedProviders(nullstiltFakta));
+
+            await waitFor(async () => {
+                expect(
+                    await findByRole('textbox', { name: 'Årsak til feilutbetalingen' })
+                ).toHaveValue('');
+            });
+            expect(await findByRole('radio', { name: 'Nav' })).not.toBeChecked();
+            expect(await findByRole('radio', { name: 'Bruker' })).not.toBeChecked();
+            expect(
+                await findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' })
+            ).toHaveValue('');
+            expect(
+                await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' })
+            ).toHaveValue('');
         });
     });
 });
