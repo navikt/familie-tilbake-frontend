@@ -15,21 +15,25 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Menysider, MenySideInnhold } from './Menykontainer';
 
 export const HistorikkOgDokumenter: FC = () => {
-    const { erNyModell } = useBehandling();
+    const { erNyModell, status } = useBehandling();
     const { harVærtPåFatteVedtakSteget } = useBehandlingState();
-    const værtPåFatteVedtakSteget = harVærtPåFatteVedtakSteget();
 
-    const valgtSideGittModell = !erNyModell ? Menysider.Historikk : Menysider.Dokumenter;
-    const [valgtSide, setValgtSide] = useState(
-        værtPåFatteVedtakSteget ? Menysider.Totrinn : valgtSideGittModell
-    );
-    const skalViseToggleGroup = !erNyModell || værtPåFatteVedtakSteget;
+    const skalViseTotrinn = status === 'FATTER_VEDTAK' || harVærtPåFatteVedtakSteget();
+    const standardside = erNyModell ? Menysider.Dokumenter : Menysider.Historikk;
+    const defaultSide = skalViseTotrinn ? Menysider.Totrinn : standardside;
+
+    const [valgtSide, setValgtSide] = useState<Menysider | null>(null);
+    const erGyldigValg = valgtSide !== null && (valgtSide !== Menysider.Totrinn || skalViseTotrinn);
+    const aktivSide = erGyldigValg ? valgtSide : defaultSide;
+
+    const skalViseToggleGroup = !erNyModell || skalViseTotrinn;
+
     return (
         <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
             {skalViseToggleGroup && (
                 <ToggleGroup
                     data-color="neutral"
-                    value={valgtSide}
+                    value={aktivSide}
                     onChange={value => setValgtSide(value as Menysider)}
                     size="small"
                     fill
@@ -51,7 +55,7 @@ export const HistorikkOgDokumenter: FC = () => {
                             icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
                         />
                     )}
-                    {værtPåFatteVedtakSteget && (
+                    {skalViseTotrinn && (
                         <ToggleGroup.Item
                             value={Menysider.Totrinn}
                             icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
@@ -59,7 +63,7 @@ export const HistorikkOgDokumenter: FC = () => {
                     )}
                 </ToggleGroup>
             )}
-            <MenySideInnhold valgtMenyside={valgtSide} />
+            <MenySideInnhold valgtMenyside={aktivSide} />
         </div>
     );
 };
