@@ -26,8 +26,8 @@
     ]
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "2.2.4",
-    "@hey-api/openapi-ts": "0.94.0",
+    "@grafana/faro-web-sdk": "2.3.0",
+    "@hey-api/openapi-ts": "0.94.2",
     "@hookform/resolvers": "5.2.2",
     "@navikt/aksel-icons": "8.7.0",
     "@navikt/ds-css": "8.7.0",
@@ -60,7 +60,7 @@
     "tailwindcss": "4.2.1",
     "winston": "3.19.0",
     "zod": "4.3.6",
-    "zustand": "5.0.11"
+    "zustand": "5.0.12"
   },
   "devDependencies": {
     "@axe-core/react": "4.11.1",
@@ -77,7 +77,7 @@
     "@types/deep-equal": "1.0.4",
     "@types/express": "5.0.6",
     "@types/express-session": "1.18.2",
-    "@types/node": "25.4.0",
+    "@types/node": "25.5.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.4",
@@ -91,7 +91,7 @@
     "husky": "9.1.7",
     "identity-obj-proxy": "3.0.0",
     "jsdom": "28.1.0",
-    "lint-staged": "16.3.3",
+    "lint-staged": "16.4.0",
     "lodash": "4.17.23",
     "lodash.throttle": "4.1.1",
     "prettier": "3.8.1",
@@ -101,10 +101,10 @@
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.57.0",
+    "typescript-eslint": "8.57.1",
     "vite": "7.3.1",
     "vite-plugin-compression": "0.5.1",
-    "vitest": "4.0.18"
+    "vitest": "4.1.0"
   },
   "packageManager": "pnpm@10.28.0"
 }
