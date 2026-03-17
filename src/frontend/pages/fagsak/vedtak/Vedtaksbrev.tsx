@@ -85,10 +85,12 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const oppdaterVedtaksbrevMutation = useMutation({
         mutationKey: ['oppdaterVedtaksbrev'],
         ...behandlingOppdaterVedtaksbrevMutation(),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
-            });
+        onSuccess: oppdatertData => {
+            queryClient.setQueryData(
+                behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
+                (tidligereData: VedtaksbrevData | undefined) =>
+                    tidligereData ? { ...tidligereData, ...oppdatertData } : tidligereData
+            );
         },
     });
 
