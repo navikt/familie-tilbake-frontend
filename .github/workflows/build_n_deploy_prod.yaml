@@ -28,7 +28,7 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           package-manager-cache: false
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
