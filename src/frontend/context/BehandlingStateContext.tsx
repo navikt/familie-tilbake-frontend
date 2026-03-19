@@ -106,12 +106,15 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
     };
 
     const erBehandlingReturnertFraBeslutter = (): boolean => {
-        return behandling.behandlingsstegsinfo.some(
-            stegInfo =>
-                stegInfo.behandlingssteg === 'FATTE_VEDTAK' &&
-                (stegInfo.behandlingsstegstatus === 'AVBRUTT' ||
-                    stegInfo.behandlingsstegstatus === 'TILBAKEFØRT')
+        const harVærtPåFatteVedtak = behandling.behandlingsstegsinfo.some(
+            ({ behandlingssteg }) => behandlingssteg === 'FATTE_VEDTAK'
         );
+        const erNoenStegTilbakeført = behandling.behandlingsstegsinfo.some(
+            ({ behandlingsstegstatus }) =>
+                behandlingsstegstatus === 'AVBRUTT' || behandlingsstegstatus === 'TILBAKEFØRT'
+        );
+
+        return harVærtPåFatteVedtak && erNoenStegTilbakeført;
     };
 
     const erStegAutoutført = (steg: BehandlingsstegEnum): boolean => {
