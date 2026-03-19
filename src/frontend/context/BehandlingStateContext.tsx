@@ -40,6 +40,15 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
     const [innholdsbredde, settInnholdsbredde] = useState<number>(0);
 
     const behandlingILesemodus = useMemo((): boolean => {
+        const fatteVedtakErKlarUtenNoenTilbakeførteSteg = behandling.behandlingsstegsinfo.some(
+            stegInfo =>
+                stegInfo.behandlingssteg === 'FATTE_VEDTAK' &&
+                stegInfo.behandlingsstegstatus === 'KLAR' &&
+                behandling.behandlingsstegsinfo.every(
+                    info => info.behandlingsstegstatus !== 'TILBAKEFØRT'
+                )
+        );
+
         return (
             behandling.status === 'AVSLUTTET' ||
             behandling.erBehandlingPåVent ||
@@ -48,10 +57,9 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
                 stegInfo =>
                     stegInfo.behandlingssteg === 'AVSLUTTET' ||
                     (stegInfo.behandlingssteg === 'IVERKSETT_VEDTAK' &&
-                        stegInfo.behandlingsstegstatus !== 'TILBAKEFØRT') ||
-                    (stegInfo.behandlingssteg === 'FATTE_VEDTAK' &&
-                        stegInfo.behandlingsstegstatus === 'KLAR')
-            )
+                        stegInfo.behandlingsstegstatus !== 'TILBAKEFØRT')
+            ) ||
+            fatteVedtakErKlarUtenNoenTilbakeførteSteg
         );
     }, [behandling]);
 

@@ -1,9 +1,4 @@
-import type {
-    BehandlingDto,
-    BehandlingsstegEnum,
-    BehandlingsstegsinfoDto,
-    BehandlingsstegstatusEnum,
-} from '~/generated';
+import type { BehandlingDto, BehandlingsstegEnum, BehandlingsstegsinfoDto } from '~/generated';
 
 import { useNavigate } from 'react-router';
 
@@ -63,13 +58,6 @@ export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
     },
 };
 
-const aktiveBehandlingstegstatuser: BehandlingsstegstatusEnum[] = [
-    'UTFØRT',
-    'AUTOUTFØRT',
-    'KLAR',
-    'VENTER',
-];
-
 export const useStegNavigering = (steg?: SynligeStegType): (() => Promise<void> | void) => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const { eksternBrukId } = useBehandling();
@@ -82,9 +70,7 @@ const sjekkOmSidenErAktiv = (
     side: SynligSteg,
     behandlingsstegsinfo: BehandlingsstegsinfoDto[]
 ): boolean => {
-    return behandlingsstegsinfo
-        .filter(stegInfo => aktiveBehandlingstegstatuser.includes(stegInfo.behandlingsstegstatus))
-        .some(stegInfo => stegInfo.behandlingssteg === side.steg);
+    return behandlingsstegsinfo.some(({ behandlingssteg }) => behandlingssteg === side.steg);
 };
 
 export const erSidenAktiv = (synligSteg: SynligSteg, behandling: BehandlingDto): boolean => {
@@ -151,7 +137,7 @@ export const erØnsketSideTilgjengelig = (
         const steg = behandlingssteginfo.find(
             ({ behandlingssteg }) => behandlingssteg === funnetØnsketSide.steg
         );
-        return !!steg && aktiveBehandlingstegstatuser.includes(steg?.behandlingsstegstatus);
+        return !!steg;
     }
 
     return !!funnetØnsketSide;
