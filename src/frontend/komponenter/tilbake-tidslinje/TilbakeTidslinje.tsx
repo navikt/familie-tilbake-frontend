@@ -1,11 +1,56 @@
 import type { TimelinePeriodProps } from '@navikt/ds-react';
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
+import type { ForeldelsesvurderingstypeEnum } from '~/generated';
 
-import { CheckmarkCircleIcon, PencilIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
+import {
+    CheckmarkCircleFillIcon,
+    CheckmarkCircleIcon,
+    PencilFillIcon,
+    PencilIcon,
+    XMarkOctagonFillIcon,
+    XMarkOctagonIcon,
+} from '@navikt/aksel-icons';
 import { Timeline } from '@navikt/ds-react';
-import classNames from 'classnames';
 
-import { dateTilIsoDatoStringEllerUndefined } from '~/utils/dato';
+import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
+
+const ikon = (
+    status: TimelinePeriodProps['status'],
+    valgt: TimelinePeriodProps['isActive']
+): JSX.Element => {
+    switch (status) {
+        case 'warning':
+            return valgt ? <XMarkOctagonFillIcon aria-hidden /> : <XMarkOctagonIcon aria-hidden />;
+        case 'success':
+            return valgt ? (
+                <CheckmarkCircleFillIcon aria-hidden />
+            ) : (
+                <CheckmarkCircleIcon aria-hidden />
+            );
+        case 'neutral':
+        default:
+            return valgt ? <PencilFillIcon aria-hidden /> : <PencilIcon aria-hidden />;
+    }
+};
+
+const periodeStatus = (statusLabel: ForeldelsesvurderingstypeEnum | 'VURDERT'): string => {
+    switch (statusLabel) {
+        case 'FORELDET':
+            return 'Foreldet';
+        case 'IKKE_FORELDET':
+            return 'Ikke foreldet';
+        case 'TILLEGGSFRIST':
+            return 'Tilleggsfrist';
+        case 'VURDERT':
+            return 'Vurdert';
+        case 'IKKE_VURDERT':
+        default:
+            return 'Ikke vurdert';
+    }
+};
+
+const periodeTekst = (periode: TimelinePeriodProps): string =>
+    `${periodeStatus(periode.statusLabel as ForeldelsesvurderingstypeEnum)} periode fra ${formatterDatoDDMMYYYY(periode.start)} til ${formatterDatoDDMMYYYY(periode.end)}`;
 
 type Props = {
     rader: TimelinePeriodProps[][];
@@ -17,42 +62,20 @@ export const TilbakeTidslinje: FC<Props> = ({ rader, onSelectPeriode }) => {
         <Timeline>
             {rader.map(rad => (
                 <Timeline.Row label="" key={rad[0].id}>
-                    {rad.map(periode => {
-                        const handling =
-                            periode.status === 'success'
-                                ? 'Behandlet'
-                                : periode.status === 'warning'
-                                  ? 'Ubehandlet'
-                                  : 'Avvist';
-                        const varighetTekst = `${handling} periode fra ${dateTilIsoDatoStringEllerUndefined(new Date(periode.start))} til ${dateTilIsoDatoStringEllerUndefined(new Date(periode.end))}`;
-                        const ikon =
-                            periode.status === 'warning' ? (
-                                <PencilIcon aria-hidden />
-                            ) : periode.status === 'success' ? (
-                                <CheckmarkCircleIcon aria-hidden />
-                            ) : (
-                                <XMarkOctagonIcon aria-hidden />
-                            );
-
-                        return (
-                            <Timeline.Period
-                                key={periode.id}
-                                icon={ikon}
-                                start={periode.start}
-                                end={periode.end}
-                                status={periode.status}
-                                isActive={periode.isActive}
-                                className={classNames(
-                                    periode.className,
-                                    periode.isActive && 'aktivPeriode'
-                                )}
-                                aria-label={`${periode.status} ${varighetTekst}`}
-                                onClick={() => onSelectPeriode(periode)}
-                            >
-                                {varighetTekst}
-                            </Timeline.Period>
-                        );
-                    })}
+                    {rad.map(periode => (
+                        <Timeline.Period
+                            key={periode.id}
+                            icon={ikon(periode.status, !!periode.isActive)}
+                            start={periode.start}
+                            end={periode.end}
+                            status={periode.status}
+                            isActive={periode.isActive}
+                            aria-label={periodeTekst(periode)}
+                            onClick={() => onSelectPeriode(periode)}
+                        >
+                            {periodeTekst(periode)}
+                        </Timeline.Period>
+                    ))}
                 </Timeline.Row>
             ))}
         </Timeline>
