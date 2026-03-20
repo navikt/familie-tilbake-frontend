@@ -75,17 +75,17 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         }
         const steg = behandling.behandlingsstegsinfo.find(
             ({ behandlingsstegstatus }) =>
-                behandlingsstegstatus === 'KLAR' || behandlingsstegstatus === 'VENTER'
+                behandlingsstegstatus === 'KLAR' ||
+                behandlingsstegstatus === 'VENTER' ||
+                behandlingsstegstatus === 'TILBAKEFØRT'
         );
         return steg as BehandlingsstegsinfoDto | undefined;
     }, [behandling]);
 
     const ventegrunn = useMemo((): BehandlingsstegsinfoDto | undefined => {
-        const steg = behandling.behandlingsstegsinfo.find(
-            stegInfo => stegInfo.behandlingsstegstatus === 'VENTER'
-        );
-        return steg as BehandlingsstegsinfoDto | undefined;
-    }, [behandling]);
+        if (aktivtSteg?.behandlingsstegstatus === 'VENTER') return aktivtSteg;
+        return undefined;
+    }, [aktivtSteg]);
 
     const actionBarStegtekst = (valgtSteg: BehandlingsstegEnum): string | undefined => {
         const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
