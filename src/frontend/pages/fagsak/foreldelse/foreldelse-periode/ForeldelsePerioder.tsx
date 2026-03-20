@@ -3,51 +3,42 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { ForeldelsePeriode } from '~/typer/tilbakekrevingstyper';
 
-import classNames from 'classnames';
-
 import { Foreldelsevurdering } from '~/kodeverk';
 import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
 import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
-import { ClassNamePeriodeStatus } from '~/typer/periodeSkjemaData';
 
 import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 
-const finnClassNamePeriode = (periode: ForeldelsePeriode, aktivPeriode: boolean): string => {
-    const aktivPeriodeCss = aktivPeriode ? 'aktivPeriode' : '';
+const finnPeriodeStatus = (periode: ForeldelsePeriode): TimelinePeriodProps['status'] => {
     switch (periode.foreldelsesvurderingstype) {
         case Foreldelsevurdering.Foreldet:
-            return classNames(ClassNamePeriodeStatus.Avvist, aktivPeriodeCss);
+            return 'warning';
         case Foreldelsevurdering.Tilleggsfrist:
         case Foreldelsevurdering.IkkeForeldet:
-            return classNames(ClassNamePeriodeStatus.Behandlet, aktivPeriodeCss);
+            return 'success';
         case Foreldelsevurdering.IkkeVurdert:
         case Foreldelsevurdering.Udefinert:
         default:
-            return classNames(ClassNamePeriodeStatus.Ubehandlet, aktivPeriodeCss);
+            return 'neutral';
     }
 };
 
-const genererRader = (
+const lagTidslinjeRader = (
     perioder: ForeldelsePeriode[],
     valgtPeriode: ForeldelsePeriode | undefined
-): TimelinePeriodProps[][] => {
-    return [
-        perioder.map((periode, index): TimelinePeriodProps => {
-            const erAktivPeriode =
-                !!valgtPeriode &&
-                periode.periode.fom === valgtPeriode.periode.fom &&
-                periode.periode.tom === valgtPeriode.periode.tom;
-            return {
-                end: new Date(periode.periode.tom),
-                start: new Date(periode.periode.fom),
-                status: 'success',
-                isActive: erAktivPeriode,
-                id: `index_${index}`,
-                className: finnClassNamePeriode(periode, erAktivPeriode),
-            };
-        }),
-    ];
-};
+): TimelinePeriodProps[][] => [
+    perioder.map((periode): TimelinePeriodProps => {
+        const erAktivPeriode = !!valgtPeriode && periode.periode.fom === valgtPeriode.periode.fom;
+        return {
+            end: new Date(periode.periode.tom),
+            start: new Date(periode.periode.fom),
+            status: finnPeriodeStatus(periode),
+            isActive: erAktivPeriode,
+            id: periode.periode.fom,
+            statusLabel: periode.foreldelsesvurderingstype,
+        } satisfies TimelinePeriodProps;
+    }),
+];
 
 type Props = {
     perioder: ForeldelsePeriodeSkjemeData[];
@@ -55,7 +46,7 @@ type Props = {
 
 export const ForeldelsePerioder: FC<Props> = ({ perioder }) => {
     const { valgtPeriode, settValgtPeriode } = useForeldelse();
-    const tidslinjeRader = genererRader(perioder, valgtPeriode);
+    const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 
     const onSelectPeriode = (periode: TimelinePeriodProps): void => {
         const periodeFom = periode.start.toISOString().substring(0, 10);
