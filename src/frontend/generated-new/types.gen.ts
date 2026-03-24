@@ -50,7 +50,7 @@ export type Element = {
 } & RentekstElement;
 
 export type Error = {
-    message: string;
+    melding: string;
 };
 
 export type FaktaOmFeilutbetaling = {

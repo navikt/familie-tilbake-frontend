@@ -55,7 +55,7 @@ export const Vedtak: FC = () => {
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende til godkjenning',
-                message: error.response?.data?.message,
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },

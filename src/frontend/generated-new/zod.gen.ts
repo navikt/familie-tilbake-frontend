@@ -52,7 +52,7 @@ export const zBrevmottaker = z.object({
 });
 
 export const zError = z.object({
-    message: z.string(),
+    melding: z.string(),
 });
 
 export const zFritekst = z.string().min(3).max(3000);
