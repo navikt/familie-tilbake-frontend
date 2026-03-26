@@ -1,60 +1,57 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
+import type { ForeldelsesvurderingstypeEnum } from '~/generated';
 
 import { BodyShort, LocalAlert, type TimelinePeriodProps } from '@navikt/ds-react';
 import { useEffect, useState, type FC } from 'react';
 
 import { Vilkårsresultat } from '~/kodeverk';
 import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
-import { ClassNamePeriodeStatus } from '~/typer/periodeSkjemaData';
 
 import { VilkårsvurderingPeriodeSkjema } from './vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjema';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 
-const lagTidslinjeRader = (
-    perioder: VilkårsvurderingPeriodeSkjemaData[],
-    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined
-): TimelinePeriodProps[][] => {
-    return [
-        perioder.map((periode, index): TimelinePeriodProps => {
-            const erAktivPeriode =
-                !!valgtPeriode &&
-                periode.periode.fom === valgtPeriode.periode.fom &&
-                periode.periode.tom === valgtPeriode.periode.tom;
-            const classNamePeriodeStatus = finnClassNamePeriodeStatus(periode);
-            let periodeStatus: 'danger' | 'info' | 'neutral' | 'success' | 'warning' = 'warning';
-            if (classNamePeriodeStatus === ClassNamePeriodeStatus.Avvist) {
-                periodeStatus = 'danger';
-            } else if (classNamePeriodeStatus === ClassNamePeriodeStatus.Behandlet) {
-                periodeStatus = 'success';
-            }
-            return {
-                end: new Date(periode.periode.tom),
-                start: new Date(periode.periode.fom),
-                status: periodeStatus,
-                isActive: erAktivPeriode,
-                id: `index_${index}`,
-                className: classNamePeriodeStatus,
-            };
-        }),
-    ];
-};
-
-const finnClassNamePeriodeStatus = (
+const finnPeriodeStatus = (
     periode: VilkårsvurderingPeriodeSkjemaData
-): ClassNamePeriodeStatus => {
+): TimelinePeriodProps['status'] => {
+    if (periode.foreldet) {
+        return 'warning';
+    }
     const { vilkårsvurderingsresultatInfo } = periode;
     const { vilkårsvurderingsresultat } = vilkårsvurderingsresultatInfo || {};
-
-    if (periode.foreldet) {
-        return ClassNamePeriodeStatus.Avvist;
-    }
 
     const erBehandlet =
         !!vilkårsvurderingsresultat &&
         vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert &&
         !!periode.begrunnelse;
-    return erBehandlet ? ClassNamePeriodeStatus.Behandlet : ClassNamePeriodeStatus.Ubehandlet;
+    return erBehandlet ? 'success' : 'neutral';
 };
+
+const finnStatusLabel = (
+    periode: VilkårsvurderingPeriodeSkjemaData
+): ForeldelsesvurderingstypeEnum | 'VURDERT' => {
+    if (periode.foreldet) {
+        return 'FORELDET';
+    }
+    // Har ingen måte å identifisere TILLEGGSFRIST på, så VURDERT dekker det og IKKE_FORELDET
+    return periode.begrunnelse ? 'VURDERT' : 'IKKE_VURDERT';
+};
+
+const lagTidslinjeRader = (
+    perioder: VilkårsvurderingPeriodeSkjemaData[],
+    valgtPeriode: VilkårsvurderingPeriodeSkjemaData | undefined
+): TimelinePeriodProps[][] => [
+    perioder.map((periode): TimelinePeriodProps => {
+        const erAktivPeriode = !!valgtPeriode && periode.periode.fom === valgtPeriode.periode.fom;
+        return {
+            end: new Date(periode.periode.tom),
+            start: new Date(periode.periode.fom),
+            status: finnPeriodeStatus(periode),
+            isActive: erAktivPeriode,
+            id: periode.periode.fom,
+            statusLabel: finnStatusLabel(periode),
+        } satisfies TimelinePeriodProps;
+    }),
+];
 
 type Props = {
     perioder: VilkårsvurderingPeriodeSkjemaData[];
