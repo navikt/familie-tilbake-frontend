@@ -3,16 +3,27 @@ import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { DatePicker, Textarea, useDatepicker } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
-import { Controller, get, useFormContext } from 'react-hook-form';
+import { useEffect } from 'react';
+import { Controller, get, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { dateTilIsoDatoString } from '~/utils/dato';
 
-export const UtsettFristSkjema: FC = () => {
+type Props = {
+    onChange?: () => void;
+};
+
+export const UtsettFristSkjema: FC<Props> = ({ onChange }) => {
     const methods = useFormContext<UttalelseFormData>();
     const { behandlingILesemodus } = useBehandlingState();
     const errors = methods.formState.errors;
     const eksisterendeFrist = methods.getValues('utsettUttalelseFrist.nyFrist');
+
+    const nyFristVerdi = useWatch({
+        control: methods.control,
+        name: 'utsettUttalelseFrist.nyFrist',
+    });
+
     const nyFristDatepicker = useDatepicker({
         fromDate: new Date(),
         defaultSelected: eksisterendeFrist ? parseISO(eksisterendeFrist) : undefined,
@@ -20,8 +31,15 @@ export const UtsettFristSkjema: FC = () => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('utsettUttalelseFrist.nyFrist', dateString, { shouldDirty: true });
             methods.trigger('utsettUttalelseFrist.nyFrist');
+            onChange?.();
         },
     });
+
+    useEffect(() => {
+        if (!nyFristVerdi) {
+            nyFristDatepicker.reset();
+        }
+    }, [nyFristVerdi, nyFristDatepicker]);
 
     return (
         <>
@@ -42,7 +60,9 @@ export const UtsettFristSkjema: FC = () => {
                 )}
             />
             <Textarea
-                {...methods.register('utsettUttalelseFrist.begrunnelse')}
+                {...methods.register('utsettUttalelseFrist.begrunnelse', {
+                    onChange,
+                })}
                 size="small"
                 readOnly={behandlingILesemodus}
                 minRows={3}

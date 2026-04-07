@@ -30,7 +30,7 @@ import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 
 import { OpprettForhåndsvarsel } from './OpprettForhåndsvarselSkjema';
 import { UnntakMedUttalelse, type UnntakFormData } from './UnntakMedUttalelseSkjema';
-import { Uttalelse } from './UttalelseSkjema';
+import { UttalelseEtterVarsel } from './UttalelseEtterVarselSkjema';
 
 type Props = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
@@ -265,10 +265,8 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 
             {erJaFlyt && varselErSendt && (
                 <FormProvider {...uttalelseMethods}>
-                    <Uttalelse
+                    <UttalelseEtterVarsel
                         handleUttalelseSubmit={handleUttalelseSubmit}
-                        kanUtsetteFrist
-                        varselErSendt={varselErSendt}
                         fristErUtsatt={fristErUtsatt}
                     />
                 </FormProvider>

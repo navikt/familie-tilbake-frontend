@@ -14,9 +14,10 @@ type UttalelseDetaljerFieldName = 'uttalelsesDetaljer' | 'uttalelsesDetaljerEtte
 
 type Props = {
     fieldPrefix: `${UttalelseDetaljerFieldName}.${number}`;
+    onChange?: () => void;
 };
 
-export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
+export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix, onChange }) => {
     const methods = useFormContext<UttalelseFormData>();
     const { behandlingILesemodus } = useBehandlingState();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
@@ -35,6 +36,7 @@ export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue(`${fieldPrefix}.uttalelsesdato`, dateString);
             await methods.trigger(`${fieldPrefix}.uttalelsesdato`);
+            onChange?.();
         },
         onValidate: val => {
             if (val.isAfter) {
@@ -64,7 +66,9 @@ export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
                 />
             </DatePicker>
             <TextField
-                {...methods.register(`${fieldPrefix}.hvorBrukerenUttalteSeg`)}
+                {...methods.register(`${fieldPrefix}.hvorBrukerenUttalteSeg`, {
+                    onChange,
+                })}
                 size="small"
                 readOnly={behandlingILesemodus}
                 label="Hvordan uttalte brukeren seg?"
@@ -73,7 +77,9 @@ export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
                 error={get(errors, `${fieldPrefix}.hvorBrukerenUttalteSeg.message`)}
             />
             <Textarea
-                {...methods.register(`${fieldPrefix}.uttalelseBeskrivelse`)}
+                {...methods.register(`${fieldPrefix}.uttalelseBeskrivelse`, {
+                    onChange,
+                })}
                 size="small"
                 readOnly={behandlingILesemodus}
                 label="Beskriv hva brukeren har uttalt seg om"
@@ -87,9 +93,10 @@ export const UttalelseDetaljerSkjema: FC<Props> = ({ fieldPrefix }) => {
     );
 };
 
-export const UttalelseDetaljerListe: FC<{ fieldName?: UttalelseDetaljerFieldName }> = ({
-    fieldName = 'uttalelsesDetaljer',
-}) => {
+export const UttalelseDetaljerListe: FC<{
+    fieldName?: UttalelseDetaljerFieldName;
+    onChange?: () => void;
+}> = ({ fieldName = 'uttalelsesDetaljer', onChange }) => {
     const methods = useFormContext<UttalelseFormData>();
     const { fields, replace } = useFieldArray({
         control: methods.control,
@@ -112,7 +119,10 @@ export const UttalelseDetaljerListe: FC<{ fieldName?: UttalelseDetaljerFieldName
         <>
             {fields.map((fieldItem, index) => (
                 <Fragment key={fieldItem.id}>
-                    <UttalelseDetaljerSkjema fieldPrefix={`${fieldName}.${index}`} />
+                    <UttalelseDetaljerSkjema
+                        fieldPrefix={`${fieldName}.${index}`}
+                        onChange={onChange}
+                    />
                 </Fragment>
             ))}
         </>

@@ -9,12 +9,18 @@ import { HarUttaltSegEtterUtsattFrist } from '~/pages/fagsak/forhåndsvarsel/sch
 
 import { UttalelseDetaljerListe } from './UttalelseDetaljerSkjema';
 
-export const UttalelseEtterUtsattFristSkjema: FC = () => {
+type Props = {
+    onChange?: () => void;
+};
+
+export const UttalelseEtterUtsattFristSkjema: FC<Props> = ({ onChange }) => {
     const methods = useFormContext<UttalelseFormData>();
     const { behandlingILesemodus } = useBehandlingState();
     const errors = methods.formState.errors;
 
-    const { name, ...radioProps } = methods.register('harUttaltSegEtterUtsattFrist');
+    const { name, ...radioProps } = methods.register('harUttaltSegEtterUtsattFrist', {
+        onChange,
+    });
 
     const harUttaltSegEtterUtsattFrist = useWatch({
         control: methods.control,
@@ -39,12 +45,17 @@ export const UttalelseEtterUtsattFristSkjema: FC = () => {
             </RadioGroup>
 
             {harUttaltSegEtterUtsattFrist === HarUttaltSegEtterUtsattFrist.Ja && (
-                <UttalelseDetaljerListe fieldName="uttalelsesDetaljerEtterUtsattFrist" />
+                <UttalelseDetaljerListe
+                    fieldName="uttalelsesDetaljerEtterUtsattFrist"
+                    onChange={onChange}
+                />
             )}
 
             {harUttaltSegEtterUtsattFrist === HarUttaltSegEtterUtsattFrist.Nei && (
                 <Textarea
-                    {...methods.register('kommentarEtterUtsattFrist')}
+                    {...methods.register('kommentarEtterUtsattFrist', {
+                        onChange,
+                    })}
                     size="small"
                     readOnly={behandlingILesemodus}
                     label="Kommentar til valget over"

@@ -3,28 +3,25 @@ import type { SubmitHandler } from 'react-hook-form';
 import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
+import { useCallback } from 'react';
 import { get, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ToggleName } from '~/context/toggles';
 import { useToggles } from '~/context/TogglesContext';
-import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
+import { HarUttaltSeg, HarUttaltSegEtterUtsattFrist } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { UtsettFristSkjema } from './UtsettFristSkjema';
 import { UttalelseDetaljerListe } from './UttalelseDetaljerSkjema';
 import { UttalelseEtterUtsattFristSkjema } from './UttalelseEtterUtsattFristSkjema';
 
 type Props = {
-    handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
-    kanUtsetteFrist?: boolean;
-    varselErSendt: boolean;
     fristErUtsatt?: boolean;
+    handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
 };
 
-export const Uttalelse: FC<Props> = ({
+export const UttalelseEtterVarsel: FC<Props> = ({
     handleUttalelseSubmit,
-    kanUtsetteFrist = false,
-    varselErSendt,
     fristErUtsatt = false,
 }) => {
     const { toggles } = useToggles();
@@ -38,14 +35,28 @@ export const Uttalelse: FC<Props> = ({
     const { name, ...radioProps } = methods.register('harUttaltSeg');
     const errors = methods.formState.errors;
 
-    const getLegendTekst = (): string => {
-        if (varselErSendt) {
-            return 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?';
-        }
-        return 'Har brukeren uttalt seg?';
-    };
+    const skalViseUtsettFristValg = toggles[ToggleName.Forhåndsvarselsteg];
 
-    const skalViseUtsettFristValg = toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist;
+    const { defaultValues } = methods.formState;
+
+    const resetUttalelseEtterUtsattFrist = useCallback(() => {
+        methods.setValue(
+            'harUttaltSegEtterUtsattFrist',
+            defaultValues?.harUttaltSegEtterUtsattFrist ?? HarUttaltSegEtterUtsattFrist.IkkeValgt
+        );
+        methods.setValue(
+            'uttalelsesDetaljerEtterUtsattFrist',
+            defaultValues?.uttalelsesDetaljerEtterUtsattFrist
+        );
+        methods.setValue('kommentarEtterUtsattFrist', defaultValues?.kommentarEtterUtsattFrist);
+    }, [methods, defaultValues]);
+
+    const resetUtsettFrist = useCallback(() => {
+        methods.setValue(
+            'utsettUttalelseFrist',
+            defaultValues?.utsettUttalelseFrist ?? { nyFrist: '', begrunnelse: '' }
+        );
+    }, [methods, defaultValues]);
 
     return (
         <form
@@ -57,7 +68,7 @@ export const Uttalelse: FC<Props> = ({
                 name={name}
                 size="small"
                 readOnly={behandlingILesemodus}
-                legend={getLegendTekst()}
+                legend="Har brukeren uttalt seg etter forhåndsvarselet ble sendt?"
                 error={errors.harUttaltSeg?.message}
             >
                 <Radio value={HarUttaltSeg.Ja} {...radioProps}>
@@ -89,10 +100,12 @@ export const Uttalelse: FC<Props> = ({
                 />
             )}
 
-            {harUttaltSeg === HarUttaltSeg.UtsettFrist && <UtsettFristSkjema />}
+            {harUttaltSeg === HarUttaltSeg.UtsettFrist && (
+                <UtsettFristSkjema onChange={resetUttalelseEtterUtsattFrist} />
+            )}
 
             {fristErUtsatt && harUttaltSeg === HarUttaltSeg.UtsettFrist && (
-                <UttalelseEtterUtsattFristSkjema />
+                <UttalelseEtterUtsattFristSkjema onChange={resetUtsettFrist} />
             )}
         </form>
     );
