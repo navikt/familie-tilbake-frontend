@@ -222,7 +222,7 @@ describe('ForeldelseContainer', () => {
         await waitFor(() => {
             user.click(
                 getByRole('button', {
-                    name: 'Suksess fra 01.01.2020 til 31.03.2020',
+                    name: 'Advarsel fra 01.01.2020 til 31.03.2020',
                 })
             );
         });
@@ -325,7 +325,7 @@ describe('ForeldelseContainer', () => {
         // Alle tidslinje knappene skal alltid være synlige
         expect(
             getByRole('button', {
-                name: 'Suksess fra 01.01.2020 til 31.03.2020',
+                name: 'Advarsel fra 01.01.2020 til 31.03.2020',
             })
         ).toBeInTheDocument();
         expect(
@@ -380,7 +380,7 @@ describe('ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Suksess fra 01.01.2020 til 31.03.2020',
+                name: 'Advarsel fra 01.01.2020 til 31.03.2020',
             })
         ).toBeInTheDocument();
         expect(

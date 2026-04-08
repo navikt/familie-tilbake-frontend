@@ -554,7 +554,7 @@ describe('VilkårsvurderingContainer', () => {
         await waitFor(() => {
             expect(
                 getByRole('button', {
-                    name: 'Advarsel fra 01.01.2020 til 31.03.2020',
+                    name: 'Nøytral fra 01.01.2020 til 31.03.2020',
                 })
             ).toBeInTheDocument();
         });
