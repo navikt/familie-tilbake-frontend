@@ -3,6 +3,9 @@
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import type {
+    BehandlingBehandlingsloggData,
+    BehandlingBehandlingsloggErrors,
+    BehandlingBehandlingsloggResponses,
     BehandlingFaktaData,
     BehandlingFaktaErrors,
     BehandlingFaktaResponses,
@@ -41,6 +44,19 @@ export type Options<
      */
     meta?: Record<string, unknown>;
 };
+
+export const behandlingBehandlingslogg = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingBehandlingsloggData, ThrowOnError>
+) =>
+    (options.client ?? client).get<
+        BehandlingBehandlingsloggResponses,
+        BehandlingBehandlingsloggErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/behandlingslogg',
+        ...options,
+    });
 
 export const behandlingFakta = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingFaktaData, ThrowOnError>

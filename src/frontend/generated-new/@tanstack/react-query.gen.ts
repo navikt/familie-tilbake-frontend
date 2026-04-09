@@ -5,6 +5,7 @@ import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
 import {
+    behandlingBehandlingslogg,
     behandlingFakta,
     behandlingForeslaaVedtak,
     behandlingHentVedtaksbrev,
@@ -15,6 +16,9 @@ import {
     vedtaksbrevLagSvgVedtaksbrev,
 } from '../sdk.gen';
 import type {
+    BehandlingBehandlingsloggData,
+    BehandlingBehandlingsloggError,
+    BehandlingBehandlingsloggResponse,
     BehandlingFaktaData,
     BehandlingFaktaError,
     BehandlingFaktaResponse,
@@ -73,6 +77,29 @@ const createQueryKey = <TOptions extends Options>(
     }
     return [params];
 };
+
+export const behandlingBehandlingsloggQueryKey = (
+    options: Options<BehandlingBehandlingsloggData>
+) => createQueryKey('behandlingBehandlingslogg', options);
+
+export const behandlingBehandlingsloggOptions = (options: Options<BehandlingBehandlingsloggData>) =>
+    queryOptions<
+        BehandlingBehandlingsloggResponse,
+        AxiosError<BehandlingBehandlingsloggError>,
+        BehandlingBehandlingsloggResponse,
+        ReturnType<typeof behandlingBehandlingsloggQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingBehandlingslogg({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingBehandlingsloggQueryKey(options),
+    });
 
 export const behandlingFaktaQueryKey = (options: Options<BehandlingFaktaData>) =>
     createQueryKey('behandlingFakta', options);

@@ -30,7 +30,7 @@ vi.mock('./useForhåndsvarselMutations', () => ({
 
 const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): ForhåndsvarselDto => ({
     varselbrevDto: { varselbrevSendtTid: undefined },
-    utsettUttalelseFrist: [],
+    utsettUttalelseFrist: undefined,
     brukeruttalelse: undefined,
     ...overrides,
 });

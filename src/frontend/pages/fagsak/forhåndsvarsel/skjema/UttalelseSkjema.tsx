@@ -66,6 +66,9 @@ export const Uttalelse: FC<Props> = ({
     });
 
     const nyFristDatepicker = useDatepicker({
+        defaultSelected: methods.getValues('utsettUttalelseFrist.nyFrist')
+            ? parseISO(methods.getValues('utsettUttalelseFrist.nyFrist'))
+            : undefined,
         onDateChange: date => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('utsettUttalelseFrist.nyFrist', dateString);

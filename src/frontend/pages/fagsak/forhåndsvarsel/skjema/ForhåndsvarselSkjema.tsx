@@ -142,12 +142,14 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         }
 
         const uttalelseErLagret = !!forhåndsvarselInfo?.brukeruttalelse;
+
         const uttalelseMåSendes =
             uttalelseIsDirty ||
             (begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && !uttalelseErLagret);
 
         const erUnntakFlyt =
             !varselErSendt && skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei;
+
         if (erUnntakFlyt) {
             if (forhåndsvarselIsDirty && uttalelseMåSendes) {
                 return 'SEND_UNNTAK_OG_UTTALELSE';
@@ -236,6 +238,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         }
         if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
             sendUtsettUttalelseFrist(data);
+            return;
         }
         sendBrukeruttalelse(data, varselErSendt);
     };

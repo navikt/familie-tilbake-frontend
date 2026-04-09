@@ -57,6 +57,17 @@ export const zError = z.object({
 
 export const zFritekst = z.string().min(3).max(3000);
 
+export const zLogginnslag = z.object({
+    behandlingId: z.string(),
+    opprettetTid: z.iso.datetime(),
+    type: z.string(),
+    aktør: z.string(),
+    aktørIdent: z.string(),
+    tittel: z.string(),
+    tekst: z.union([z.string(), z.null()]),
+    steg: z.union([z.string(), z.null()]),
+});
+
 export const zMuligeRettsligGrunnlag = z.object({
     bestemmelse: zBestemmelseEllerGrunnlag,
     grunnlag: z.array(zBestemmelseEllerGrunnlag),
@@ -75,6 +86,7 @@ export const zElement = z
 export const zPakrevdBegrunnelse = z.object({
     tittel: z.string(),
     forklaring: z.string().readonly(),
+    meldingerTilSaksbehandler: z.array(z.string()).readonly(),
     begrunnelseType: z.string(),
     underavsnitt: z.array(zElement),
 });
@@ -149,6 +161,7 @@ export const zRotElement = z.union([
 export const zAvsnitt = z.object({
     tittel: z.string().min(3).max(300),
     forklaring: z.string().readonly(),
+    meldingerTilSaksbehandler: z.array(z.string()).readonly(),
     id: z.uuid(),
     underavsnitt: z.array(zRotElement),
 });
@@ -325,6 +338,19 @@ export const zVedtaksbrevRedigerbareDataWritable = z.object({
     hovedavsnitt: zHovedavsnittWritable,
     avsnitt: z.array(zAvsnittWritable),
 });
+
+export const zBehandlingBehandlingsloggData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        behandlingId: z.uuid(),
+    }),
+    query: z.optional(z.never()),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingBehandlingsloggResponse = z.array(zLogginnslag);
 
 export const zBehandlingFaktaData = z.object({
     body: z.optional(z.never()),

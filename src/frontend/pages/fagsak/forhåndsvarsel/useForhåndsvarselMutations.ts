@@ -5,6 +5,7 @@ import type {
     BestillBrevDto,
     BrukeruttalelseDto,
     BestillBrevData,
+    FristUtsettelseDto,
     Options,
     BestillBrevResponse,
     LagreBrukeruttalelseData,
@@ -214,20 +215,18 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendUtsettUttalelseFrist: (/* formData: ForhåndsvarselFormData */): void => {
-            // if (
-            //     formData.skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Sendt &&
-            //     formData.harBrukerUttaltSeg.harBrukerUttaltSeg === HarBrukerUttaltSeg.UtsettFrist
-            // ) {
-            //     const payload: FristUtsettelseDto = {
-            //         nyFrist: formData.harBrukerUttaltSeg.utsettUttalelseFrist.nyFrist,
-            //         begrunnelse: formData.harBrukerUttaltSeg.utsettUttalelseFrist.begrunnelse,
-            //     };
-            //     sendUtsettUttalelseFristMutation.mutate({
-            //         path: { behandlingId: behandlingId },
-            //         body: payload,
-            //     });
-            // }
+        sendUtsettUttalelseFrist: (formData: UttalelseFormData): void => {
+            if (formData.harUttaltSeg !== HarUttaltSeg.UtsettFrist) return;
+
+            const payload: FristUtsettelseDto = {
+                nyFrist: formData.utsettUttalelseFrist.nyFrist,
+                begrunnelse: formData.utsettUttalelseFrist.begrunnelse,
+            };
+
+            sendUtsettUttalelseFristMutation.mutate({
+                path: { behandlingId: behandlingId },
+                body: payload,
+            });
         },
         seForhåndsvisning: (fritekst: string): void => {
             seForhåndsvisningMutation.mutate({

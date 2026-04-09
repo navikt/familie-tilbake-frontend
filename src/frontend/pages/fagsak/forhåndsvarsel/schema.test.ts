@@ -41,4 +41,42 @@ describe('Overskriving av feilmeldinger i forhåndsvarsel-skjema', () => {
         const error = result.error?.issues.find(i => i.path.includes('harUttaltSeg'));
         expect(error?.message).toBe('Du må velge om brukeren har uttalt seg');
     });
+
+    test('utsettUttalelseFrist nyFrist', () => {
+        const result = uttalelseSchema.safeParse({
+            harUttaltSeg: HarUttaltSeg.UtsettFrist,
+            utsettUttalelseFrist: {
+                nyFrist: undefined,
+                begrunnelse: 'En begrunnelse',
+            },
+        });
+
+        const error = result.error?.issues.find(i => i.path.includes('nyFrist'));
+        expect(error?.message).toBe('Du må velge en ny frist');
+    });
+
+    test('utsettUttalelseFrist begrunnelse', () => {
+        const result = uttalelseSchema.safeParse({
+            harUttaltSeg: HarUttaltSeg.UtsettFrist,
+            utsettUttalelseFrist: {
+                nyFrist: '2025-06-01',
+                begrunnelse: '',
+            },
+        });
+
+        const error = result.error?.issues.find(i => i.path.includes('begrunnelse'));
+        expect(error).toBeDefined();
+    });
+
+    test('gyldig utsettUttalelseFrist', () => {
+        const result = uttalelseSchema.safeParse({
+            harUttaltSeg: HarUttaltSeg.UtsettFrist,
+            utsettUttalelseFrist: {
+                nyFrist: '2025-06-01',
+                begrunnelse: 'Brukeren trenger mer tid',
+            },
+        });
+
+        expect(result.success).toBe(true);
+    });
 });
