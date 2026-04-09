@@ -59,7 +59,7 @@ describe('Overskriving av feilmeldinger i forhåndsvarsel-skjema', () => {
         const result = uttalelseSchema.safeParse({
             harUttaltSeg: HarUttaltSeg.UtsettFrist,
             utsettUttalelseFrist: {
-                nyFrist: '2025-06-01',
+                nyFrist: '2099-06-01',
                 begrunnelse: '',
             },
         });
@@ -72,7 +72,7 @@ describe('Overskriving av feilmeldinger i forhåndsvarsel-skjema', () => {
         const result = uttalelseSchema.safeParse({
             harUttaltSeg: HarUttaltSeg.UtsettFrist,
             utsettUttalelseFrist: {
-                nyFrist: '2025-06-01',
+                nyFrist: '2099-06-01',
                 begrunnelse: 'Brukeren trenger mer tid',
             },
         });
