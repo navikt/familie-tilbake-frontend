@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import type { RessursByte } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FilePdfIcon, MegaphoneIcon } from '@navikt/aksel-icons';
+import { FilePdfIcon, MegaphoneIcon, TimerPauseIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
@@ -14,7 +14,7 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { formatterDatostring, formatterRelativTid } from '~/utils';
+import { formatterDatostring, formatterDatostringKortårstall, formatterRelativTid } from '~/utils';
 
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
 import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';
@@ -143,6 +143,11 @@ export const Forhåndsvarsel: FC = () => {
                                 {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
                             </Tag>
                         </Tooltip>
+                    )}
+                    {forhåndsvarselInfo?.utsettUttalelseFrist && (
+                        <Tag variant="warning-moderate" icon={<TimerPauseIcon aria-hidden />}>
+                            {`Ny frist: ${formatterDatostringKortårstall(forhåndsvarselInfo.utsettUttalelseFrist.nyFrist)}`}
+                        </Tag>
                     )}
                 </HStack>
             </HStack>
