@@ -43,7 +43,7 @@ const harIkkeUttaltSegSchema = z.object({
 });
 
 const utsettUttalelseFristSchema = z.object({
-    nyFrist: z.iso.date(),
+    nyFrist: z.iso.date({ message: 'Du må velge en ny frist' }),
     begrunnelse: fritekstSchema,
 });
 
