@@ -3,8 +3,6 @@ import { configureZod } from '~/utils/zodConfig';
 import {
     forhåndsvarselSchema,
     uttalelseSchema,
-    getUttalelseValues,
-    getUttalelseValuesBasertPåValg,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
 } from './schema';
