@@ -48,7 +48,7 @@ const Avsnitt: FC<{
                     setLocalText(e.target.value);
                     const nyeRentekst = tekstTilElementArray(e.target.value);
                     const andreElementer = elementValue.filter(({ type }) => type !== 'rentekst');
-                    setValue(name, [...nyeRentekst, ...andreElementer]);
+                    setValue(name, [...nyeRentekst, ...andreElementer], { shouldDirty: true });
                 }}
                 size="small"
                 maxLength={3000}

@@ -18,7 +18,7 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -54,7 +54,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
-        defaultValues: vedtaksbrevData,
+        values: vedtaksbrevData,
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -94,33 +94,32 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         },
     });
 
-    const oppdaterVedtaksbrevDataOgForhåndsvisning = async (): Promise<void> => {
+    const oppdaterForhåndsvisning = async (): Promise<void> => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { sistOppdatert: _, ...pdfData } = methods.getValues();
         forhåndsvisningMutation.mutate({
             body: pdfData satisfies VedtaksbrevDataWritable,
         });
+    };
+
+    const debouncedUpdate = useDebounce(async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { sistOppdatert: _, ...pdfData } = methods.getValues();
+        await oppdaterForhåndsvisning();
 
         const erGyldig = await methods.trigger();
-        if (erGyldig) {
+        if (methods.formState.isDirty && erGyldig) {
             const { hovedavsnitt, avsnitt } = pdfData;
             oppdaterVedtaksbrevMutation.mutate({
                 path: { behandlingId },
                 body: { hovedavsnitt, avsnitt } satisfies VedtaksbrevRedigerbareDataUpdate,
             });
         }
-    };
+    });
 
-    const debouncedUpdate = useDebounce(() => oppdaterVedtaksbrevDataOgForhåndsvisning());
     // eslint-disable-next-line react-hooks/incompatible-library
     methods.watch(() => debouncedUpdate());
 
-    const sendInnSkjemaVedFørsteRendering = useEffectEvent(() =>
-        oppdaterVedtaksbrevDataOgForhåndsvisning()
-    );
-    useEffect(() => {
-        sendInnSkjemaVedFørsteRendering();
-    }, []);
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 
     return (
@@ -205,7 +204,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                                         size="small"
                                         onClick={() => {
                                             forhåndsvisningMutation.reset();
-                                            oppdaterVedtaksbrevDataOgForhåndsvisning();
+                                            oppdaterForhåndsvisning();
                                         }}
                                     >
                                         Last inn på nytt
