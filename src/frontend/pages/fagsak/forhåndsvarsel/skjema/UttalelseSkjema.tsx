@@ -34,6 +34,7 @@ export const Uttalelse: FC<Props> = ({
     const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
+    const [nyFristFeil, setNyFristFeil] = useState<string | undefined>(undefined);
     const { behandlingILesemodus } = useBehandlingState();
     const harUttaltSeg = useWatch({
         control: methods.control,
@@ -66,6 +67,7 @@ export const Uttalelse: FC<Props> = ({
     });
 
     const nyFristDatepicker = useDatepicker({
+        fromDate: new Date(),
         defaultSelected: methods.getValues('utsettUttalelseFrist.nyFrist')
             ? parseISO(methods.getValues('utsettUttalelseFrist.nyFrist'))
             : undefined,
@@ -73,6 +75,13 @@ export const Uttalelse: FC<Props> = ({
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('utsettUttalelseFrist.nyFrist', dateString);
             methods.trigger('utsettUttalelseFrist.nyFrist');
+        },
+        onValidate: val => {
+            if (val.isBefore) {
+                setNyFristFeil('Fristen kan ikke være i fortiden');
+            } else {
+                setNyFristFeil(undefined);
+            }
         },
     });
     const { fields, replace } = useFieldArray({
@@ -205,7 +214,7 @@ export const Uttalelse: FC<Props> = ({
                                     readOnly={behandlingILesemodus}
                                     label="Sett ny dato for frist"
                                     name={field.name}
-                                    error={fieldState.error?.message}
+                                    error={nyFristFeil ?? fieldState.error?.message}
                                 />
                             </DatePicker>
                         )}
