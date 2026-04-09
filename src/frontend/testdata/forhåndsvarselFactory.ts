@@ -32,7 +32,7 @@ export const lagForhåndsvarselQueries = (
 ): UseForhåndsvarselQueriesReturn => ({
     forhåndsvarselInfo: {
         varselbrevDto: { varselbrevSendtTid: undefined },
-        utsettUttalelseFrist: [],
+        utsettUttalelseFrist: undefined,
         brukeruttalelse: undefined,
         forhåndsvarselUnntak: undefined,
     },
@@ -59,7 +59,7 @@ export const lagForhåndsvarselQueriesSendt = (
     lagForhåndsvarselQueries({
         forhåndsvarselInfo: {
             varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-            utsettUttalelseFrist: [],
+            utsettUttalelseFrist: undefined,
             brukeruttalelse: undefined,
         },
         ...overrides,

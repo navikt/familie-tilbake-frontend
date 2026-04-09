@@ -55,9 +55,7 @@ describe('Brukeruttalelse', () => {
             lagForhåndsvarselQueries({
                 forhåndsvarselInfo: {
                     varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                    utsettUttalelseFrist: [
-                        // { nyFrist: '2023-01-15', begrunnelse: 'Trenger mer tid' },
-                    ],
+                    utsettUttalelseFrist: undefined,
                     brukeruttalelse: undefined,
                 },
             })
@@ -152,7 +150,7 @@ describe('Brukeruttalelse', () => {
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: {
                         varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                        utsettUttalelseFrist: [],
+                        utsettUttalelseFrist: undefined,
                         brukeruttalelse: {
                             harBrukerUttaltSeg: 'JA',
                             uttalelsesdetaljer: [
@@ -181,6 +179,33 @@ describe('Brukeruttalelse', () => {
                 name: 'Beskriv hva brukeren har uttalt seg om',
             });
             expect(beskrivelse).toHaveValue('Brukeren forklarte situasjonen');
+        });
+
+        test('Viser utfylte verdier når utsettUttalelseFrist finnes', async () => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: {
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        utsettUttalelseFrist: {
+                            nyFrist: '2025-06-15',
+                            begrunnelse: 'Trenger mer tid',
+                        },
+                        brukeruttalelse: undefined,
+                    },
+                })
+            );
+
+            renderBrukeruttalelse();
+
+            const utsettFristRadio = screen.getByLabelText('Utsett frist for å uttale seg');
+            expect(utsettFristRadio).toBeChecked();
+
+            expect(await screen.findByLabelText('Sett ny dato for frist')).toHaveValue(
+                '15.06.2025'
+            );
+            expect(screen.getByLabelText('Begrunnelse for utsatt frist')).toHaveValue(
+                'Trenger mer tid'
+            );
         });
     });
 
@@ -294,6 +319,21 @@ describe('Brukeruttalelse', () => {
                     name: /gå til neste måned/i,
                 });
                 expect(nesteMånedKnapp).toBeDisabled();
+            });
+        });
+
+        describe('Når Utsett frist er valgt', () => {
+            test('skal vise feilmelding for manglende frist-dato', async () => {
+                renderBrukeruttalelse();
+
+                fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+
+                const nesteKnapp = await screen.findByRole('button', {
+                    name: 'Utsett frist',
+                });
+                fireEvent.click(nesteKnapp);
+
+                expect(await screen.findByText('Du må velge en ny frist')).toBeInTheDocument();
             });
         });
     });
