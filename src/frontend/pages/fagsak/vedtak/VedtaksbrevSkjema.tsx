@@ -89,7 +89,7 @@ const ElementTextarea: FC<
             value={localText}
             onChange={e => {
                 setLocalText(e.target.value);
-                setValue(name, tekstTilElementArray(e.target.value));
+                setValue(name, tekstTilElementArray(e.target.value), { shouldDirty: true });
             }}
             size="small"
             maxLength={3000}

@@ -18,12 +18,11 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import {
-    behandlingHentVedtaksbrevQueryKey,
     behandlingOppdaterVedtaksbrevMutation,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
@@ -54,7 +53,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
-        values: vedtaksbrevData,
+        values: { ...vedtaksbrevData },
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -85,30 +84,21 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const oppdaterVedtaksbrevMutation = useMutation({
         mutationKey: ['oppdaterVedtaksbrev'],
         ...behandlingOppdaterVedtaksbrevMutation(),
-        onSuccess: oppdatertData => {
-            queryClient.setQueryData(
-                behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
-                (tidligereData: VedtaksbrevData | undefined) =>
-                    tidligereData ? { ...tidligereData, ...oppdatertData } : tidligereData
-            );
-        },
     });
 
-    const oppdaterForhåndsvisning = async (): Promise<void> => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { sistOppdatert: _, ...pdfData } = methods.getValues();
+    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable) => {
         forhåndsvisningMutation.mutate({
-            body: pdfData satisfies VedtaksbrevDataWritable,
+            body: data,
         });
     };
 
     const debouncedUpdate = useDebounce(async () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { sistOppdatert: _, ...pdfData } = methods.getValues();
-        await oppdaterForhåndsvisning();
+        oppdaterForhåndsvisning(pdfData);
 
         const erGyldig = await methods.trigger();
-        if (methods.formState.isDirty && erGyldig) {
+        if (erGyldig) {
             const { hovedavsnitt, avsnitt } = pdfData;
             oppdaterVedtaksbrevMutation.mutate({
                 path: { behandlingId },
@@ -116,9 +106,20 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
             });
         }
     });
+    useEffect(() => {
+        return methods.subscribe({
+            formState: {
+                values: true,
+            },
+            callback: () => {
+                debouncedUpdate();
+            },
+        });
+    }, [debouncedUpdate, methods]);
 
-    // eslint-disable-next-line react-hooks/incompatible-library
-    methods.watch(() => debouncedUpdate());
+    useEffect(() => {
+        oppdaterForhåndsvisning(vedtaksbrevData);
+    }, [vedtaksbrevData]);
 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 
@@ -204,7 +205,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                                         size="small"
                                         onClick={() => {
                                             forhåndsvisningMutation.reset();
-                                            oppdaterForhåndsvisning();
+                                            debouncedUpdate();
                                         }}
                                     >
                                         Last inn på nytt
