@@ -18,12 +18,11 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import {
-    behandlingHentVedtaksbrevQueryKey,
     behandlingOppdaterVedtaksbrevMutation,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
@@ -54,7 +53,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
-        defaultValues: vedtaksbrevData,
+        values: { ...vedtaksbrevData },
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -85,21 +84,18 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const oppdaterVedtaksbrevMutation = useMutation({
         mutationKey: ['oppdaterVedtaksbrev'],
         ...behandlingOppdaterVedtaksbrevMutation(),
-        onSuccess: oppdatertData => {
-            queryClient.setQueryData(
-                behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
-                (tidligereData: VedtaksbrevData | undefined) =>
-                    tidligereData ? { ...tidligereData, ...oppdatertData } : tidligereData
-            );
-        },
     });
 
-    const oppdaterVedtaksbrevDataOgForhåndsvisning = async (): Promise<void> => {
+    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable) => {
+        forhåndsvisningMutation.mutate({
+            body: data,
+        });
+    };
+
+    const debouncedUpdate = useDebounce(async () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { sistOppdatert: _, ...pdfData } = methods.getValues();
-        forhåndsvisningMutation.mutate({
-            body: pdfData satisfies VedtaksbrevDataWritable,
-        });
+        oppdaterForhåndsvisning(pdfData);
 
         const erGyldig = await methods.trigger();
         if (erGyldig) {
@@ -109,18 +105,22 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                 body: { hovedavsnitt, avsnitt } satisfies VedtaksbrevRedigerbareDataUpdate,
             });
         }
-    };
-
-    const debouncedUpdate = useDebounce(() => oppdaterVedtaksbrevDataOgForhåndsvisning());
-    // eslint-disable-next-line react-hooks/incompatible-library
-    methods.watch(() => debouncedUpdate());
-
-    const sendInnSkjemaVedFørsteRendering = useEffectEvent(() =>
-        oppdaterVedtaksbrevDataOgForhåndsvisning()
-    );
+    });
     useEffect(() => {
-        sendInnSkjemaVedFørsteRendering();
-    }, []);
+        return methods.subscribe({
+            formState: {
+                values: true,
+            },
+            callback: () => {
+                debouncedUpdate();
+            },
+        });
+    }, [debouncedUpdate, methods]);
+
+    useEffect(() => {
+        oppdaterForhåndsvisning(vedtaksbrevData);
+    }, [vedtaksbrevData]);
+
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 
     return (
@@ -205,7 +205,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                                         size="small"
                                         onClick={() => {
                                             forhåndsvisningMutation.reset();
-                                            oppdaterVedtaksbrevDataOgForhåndsvisning();
+                                            debouncedUpdate();
                                         }}
                                     >
                                         Last inn på nytt

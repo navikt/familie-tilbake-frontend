@@ -48,7 +48,7 @@ const Avsnitt: FC<{
                     setLocalText(e.target.value);
                     const nyeRentekst = tekstTilElementArray(e.target.value);
                     const andreElementer = elementValue.filter(({ type }) => type !== 'rentekst');
-                    setValue(name, [...nyeRentekst, ...andreElementer]);
+                    setValue(name, [...nyeRentekst, ...andreElementer], { shouldDirty: true });
                 }}
                 size="small"
                 maxLength={3000}
@@ -89,7 +89,7 @@ const ElementTextarea: FC<
             value={localText}
             onChange={e => {
                 setLocalText(e.target.value);
-                setValue(name, tekstTilElementArray(e.target.value));
+                setValue(name, tekstTilElementArray(e.target.value), { shouldDirty: true });
             }}
             size="small"
             maxLength={3000}
