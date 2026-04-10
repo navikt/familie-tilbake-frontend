@@ -7,6 +7,7 @@ export type ClientOptions = {
 export type Avsnitt = {
     tittel: string;
     readonly forklaring: string;
+    readonly meldingerTilSaksbehandler: Array<string>;
     id: string;
     underavsnitt: Array<RotElement>;
 };
@@ -97,6 +98,17 @@ export type HovedavsnittUpdate = {
     underavsnitt: Array<RotElementUpdateItem>;
 };
 
+export type Logginnslag = {
+    behandlingId: string;
+    opprettetTid: string;
+    type: string;
+    aktør: string;
+    aktørIdent: string;
+    tittel: string;
+    tekst: string | null;
+    steg: string | null;
+};
+
 export type MuligeRettsligGrunnlag = {
     bestemmelse: BestemmelseEllerGrunnlag;
     grunnlag: Array<BestemmelseEllerGrunnlag>;
@@ -121,6 +133,7 @@ export type OppdaterFaktaPeriode = {
 export type PakrevdBegrunnelse = {
     tittel: string;
     readonly forklaring: string;
+    readonly meldingerTilSaksbehandler: Array<string>;
     begrunnelseType: string;
     underavsnitt: Array<Element>;
 };
@@ -260,6 +273,39 @@ export type VedtaksbrevRedigerbareDataWritable = {
     hovedavsnitt: HovedavsnittWritable;
     avsnitt: Array<AvsnittWritable>;
 };
+
+export type BehandlingBehandlingsloggData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/behandlingslogg';
+};
+
+export type BehandlingBehandlingsloggErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingBehandlingsloggError =
+    BehandlingBehandlingsloggErrors[keyof BehandlingBehandlingsloggErrors];
+
+export type BehandlingBehandlingsloggResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Array<Logginnslag>;
+};
+
+export type BehandlingBehandlingsloggResponse =
+    BehandlingBehandlingsloggResponses[keyof BehandlingBehandlingsloggResponses];
 
 export type BehandlingFaktaData = {
     body?: never;
