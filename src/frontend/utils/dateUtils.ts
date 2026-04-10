@@ -45,6 +45,15 @@ export const formatterDatostring = (datoAsString: string): string => {
     return dato.toLocaleDateString('no-NO', datoformat);
 };
 
+export const formatterDatostringKortårstall = (datoAsString: string): string => {
+    const dato = parseISO(datoAsString);
+    return dato.toLocaleDateString('no-NO', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    });
+};
+
 export const formatterDatoOgTidstring = (datoAsString: string): string => {
     const dato = parseISO(datoAsString);
     return `${dato.toLocaleDateString('no-NO', {

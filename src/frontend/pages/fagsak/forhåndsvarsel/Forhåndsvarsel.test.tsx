@@ -147,6 +147,40 @@ describe('Forhåndsvarsel', () => {
         expect(tag).toBeInTheDocument();
     });
 
+    test('Viser tag med ny frist når utsettUttalelseFrist finnes', async () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: lagForhåndsvarselInfo({
+                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                    utsettUttalelseFrist: {
+                        nyFrist: '2026-05-15',
+                        begrunnelse: 'Trenger mer tid',
+                    },
+                }),
+            })
+        );
+
+        renderForhåndsvarsel();
+
+        const fristTag = await screen.findByText(/Ny frist: 15\.05\.26/);
+        expect(fristTag).toBeInTheDocument();
+    });
+
+    test('Viser ikke tag med ny frist når utsettUttalelseFrist er undefined', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: lagForhåndsvarselInfo({
+                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                    utsettUttalelseFrist: undefined,
+                }),
+            })
+        );
+
+        renderForhåndsvarsel();
+
+        expect(screen.queryByText(/Ny frist/)).not.toBeInTheDocument();
+    });
+
     test('Låser valg når varsel er sendt', async () => {
         const mockQueries = vi.mocked(useForhåndsvarselQueries);
         mockQueries.mockReturnValue(
