@@ -30,8 +30,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          version: "10.28.0"
           run_install: |
-            args: [--frozen-lockfile, --prefer-offline]
+            - args: [--frozen-lockfile, --prefer-offline]
 
       - name: Build
         env:
