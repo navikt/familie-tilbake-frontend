@@ -85,7 +85,7 @@ const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (
 
 const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter): boolean =>
     avhengigheter?.unnlates4Rettsgebyr.valideringsstatus === Valideringsstatus.Ok &&
-    [SkalUnnlates.Nei, SkalUnnlates.Over4Rettsgebyr].some(
+    [SkalUnnlates.Tilbakekreves, SkalUnnlates.Over4Rettsgebyr].some(
         verdi => avhengigheter?.unnlates4Rettsgebyr.verdi === verdi
     );
 
@@ -411,7 +411,8 @@ const useVilkårsvurderingPeriodeSkjema = (
             skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
         const skalIkkeVurdereSærligeGrunner =
             skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ||
-            (skalVurderereSmåbeløp && skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Ja);
+            (skalVurderereSmåbeløp &&
+                skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Unnlates);
 
         const harGrunnerTilReduksjon =
             !skalIkkeVurdereSærligeGrunner &&

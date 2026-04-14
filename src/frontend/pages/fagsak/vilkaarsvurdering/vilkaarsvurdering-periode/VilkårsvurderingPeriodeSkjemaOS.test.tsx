@@ -1312,7 +1312,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                             aktsomhet: {
                                 begrunnelse: 'Vurdert aktsomhet til uaktsomt',
                                 aktsomhet: Aktsomhet.Uaktsomt,
-                                unnlates4Rettsgebyr: SkalUnnlates.Nei,
+                                unnlates4Rettsgebyr: SkalUnnlates.Tilbakekreves,
                                 særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
                                 særligeGrunner: [
                                     { særligGrunn: SærligeGrunner.GradAvUaktsomhet },

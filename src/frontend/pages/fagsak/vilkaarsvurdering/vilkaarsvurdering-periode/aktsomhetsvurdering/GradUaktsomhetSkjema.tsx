@@ -44,24 +44,24 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                             }}
                         >
                             <Radio
-                                key="Ja"
+                                key="Unnlates"
                                 name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                                value={SkalUnnlates.Ja}
+                                value={SkalUnnlates.Unnlates}
                                 data-testid="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Nei"
                             >
                                 Nei
                             </Radio>
                             <Radio
-                                key="Nei"
+                                key="Tilbakekreves"
                                 name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                                value={SkalUnnlates.Nei}
+                                value={SkalUnnlates.Tilbakekreves}
                                 data-testid="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja"
                             >
                                 Ja
                             </Radio>
                         </RadioGroup>
 
-                        {[SkalUnnlates.Nei, SkalUnnlates.Over4Rettsgebyr].some(
+                        {[SkalUnnlates.Tilbakekreves, SkalUnnlates.Over4Rettsgebyr].some(
                             value => value === skjema.felter.unnlates4Rettsgebyr.verdi
                         ) && (
                             <SærligeGrunnerSkjema
@@ -70,7 +70,7 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                                 aria-live="polite"
                             />
                         )}
-                        {skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Ja && (
+                        {skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Unnlates && (
                             <LocalAlert status="warning" aria-live="polite">
                                 <LocalAlert.Header>
                                     <LocalAlert.Title>

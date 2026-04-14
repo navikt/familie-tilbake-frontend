@@ -205,7 +205,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         const unnlates4RettsgebyrPerioder = filtrertePerioder.filter(
             ({ vilkårsvurderingsresultatInfo: resultatInfo }) =>
                 resultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.Uaktsomt &&
-                resultatInfo?.aktsomhet?.unnlates4Rettsgebyr == SkalUnnlates.Ja
+                resultatInfo?.aktsomhet?.unnlates4Rettsgebyr === SkalUnnlates.Unnlates
         );
         if (
             unnlates4RettsgebyrPerioder.length > 0 &&

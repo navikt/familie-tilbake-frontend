@@ -109,8 +109,8 @@ export type Aktsomhetsvurdering = {
 };
 
 export enum SkalUnnlates {
-    Ja = 'JA',
-    Nei = 'NEI',
+    Unnlates = 'UNNLATES',
+    Tilbakekreves = 'TILBAKEKREVES',
     Over4Rettsgebyr = 'OVER_4_RETTSGEBYR',
 }
 

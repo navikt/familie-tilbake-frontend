@@ -187,7 +187,8 @@ export const HistoriskVilkårsvurderingVisning: FC<Props> = ({ perioder }) => {
                                                     )}
                                                 />
                                             )}
-                                            {aktsomhet.unnlates4Rettsgebyr == SkalUnnlates.Ja && (
+                                            {aktsomhet.unnlates4Rettsgebyr ===
+                                                SkalUnnlates.Unnlates && (
                                                 <BodyShort>
                                                     Ikke tilbakekrev beløp (under 4 rettsgebyr)
                                                 </BodyShort>
