@@ -33,7 +33,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           run_install: |
-            - args: [--frozen-lockfile, --prefer-offline]
+            args: [--frozen-lockfile, --prefer-offline]
 
       - name: Build and test
         env:
