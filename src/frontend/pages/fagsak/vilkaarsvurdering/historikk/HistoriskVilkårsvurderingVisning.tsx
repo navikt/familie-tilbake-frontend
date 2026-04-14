@@ -10,6 +10,7 @@ import {
     Vilkårsresultat,
 } from '~/kodeverk';
 import { TilbakekrevingAktivitetTabell } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/TilbakekrevingAktivitetTabell';
+import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
 import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
 
 const vilkårsresultaterTekster: Record<Vilkårsresultat, string> = {
@@ -186,7 +187,7 @@ export const HistoriskVilkårsvurderingVisning: FC<Props> = ({ perioder }) => {
                                                     )}
                                                 />
                                             )}
-                                            {aktsomhet.tilbakekrevSmåbeløp === false && (
+                                            {aktsomhet.unnlates4Rettsgebyr == SkalUnnlates.Ja && (
                                                 <BodyShort>
                                                     Ikke tilbakekrev beløp (under 4 rettsgebyr)
                                                 </BodyShort>

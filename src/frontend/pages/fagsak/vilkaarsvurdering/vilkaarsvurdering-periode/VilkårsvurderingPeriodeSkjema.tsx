@@ -69,8 +69,8 @@ const settSkjemadataFraPeriode = (
     skjema.felter.forstoIlleggeRenter.onChange(
         !kanIlleggeRenter ? OptionNEI : finnJaNeiOption(vurdering?.aktsomhet?.ileggRenter) || ''
     );
-    skjema.felter.tilbakekrevSmåbeløp.onChange(
-        erSimpelUaktsomhet ? finnJaNeiOption(vurdering?.aktsomhet?.tilbakekrevSmåbeløp) || '' : ''
+    skjema.felter.unnlates4Rettsgebyr.onChange(
+        erSimpelUaktsomhet ? vurdering?.aktsomhet?.unnlates4Rettsgebyr || '' : ''
     );
     skjema.felter.særligeGrunnerBegrunnelse.onChange(
         !erForsett ? vurdering?.aktsomhet?.særligeGrunnerBegrunnelse || '' : ''

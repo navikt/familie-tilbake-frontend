@@ -101,12 +101,18 @@ export type Aktsomhetsvurdering = {
     aktsomhet: Aktsomhet;
     andelTilbakekreves?: number;
     ileggRenter?: boolean;
-    tilbakekrevSmåbeløp?: boolean;
+    unnlates4Rettsgebyr?: SkalUnnlates;
     særligeGrunnerBegrunnelse?: string;
     særligeGrunner?: SærligeGrunnerDto[];
     særligeGrunnerTilReduksjon?: boolean;
     beløpTilbakekreves?: number;
 };
+
+export enum SkalUnnlates {
+    Ja = 'JA',
+    Nei = 'NEI',
+    Over4Rettsgebyr = 'OVER_4_RETTSGEBYR',
+}
 
 type VilkårsresultatInfo = {
     vilkårsvurderingsresultat?: Vilkårsresultat;
@@ -131,6 +137,7 @@ export type VilkårsvurderingResponse = {
     perioder: VilkårsvurderingPeriode[];
     rettsgebyr: number;
     opprettetTid?: string;
+    kanUnnlates4xRettsgebyr: boolean;
 };
 
 export type BeregnSplittetPeriodeRespons = {

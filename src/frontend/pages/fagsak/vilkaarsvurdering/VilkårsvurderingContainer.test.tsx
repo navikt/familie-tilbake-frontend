@@ -104,7 +104,12 @@ describe('VilkårsvurderingContainer', () => {
     });
 
     test('Totalbeløp under 4 rettsgebyr - ingen perioder har brukt 6.ledd', async () => {
-        setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
+        setupUseBehandlingApiMock(
+            lagVilkårsvurderingResponse({
+                perioder,
+                kanUnnlates4xRettsgebyr: true,
+            })
+        );
 
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             renderVilkårsvurderingContainer(lagBehandling());

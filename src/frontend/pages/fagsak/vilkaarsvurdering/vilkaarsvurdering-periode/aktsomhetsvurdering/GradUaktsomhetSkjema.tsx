@@ -1,19 +1,12 @@
 import type { FC } from 'react';
-import type {
-    JaNeiOption,
-    VilkårsvurderingSkjemaDefinisjon,
-} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { LocalAlert, Radio, RadioGroup } from '@navikt/ds-react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
 import { Aktsomhet } from '~/kodeverk';
-import {
-    jaNeiOptions,
-    OptionJA,
-    OptionNEI,
-} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
 
 import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
 
@@ -26,7 +19,7 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
-        skjema.felter.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Feil;
+        skjema.felter.unnlates4Rettsgebyr.valideringsstatus === Valideringsstatus.Feil;
     const erTotalbeløpUnder4Rettsgebyr = skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
     return (
         <>
@@ -39,37 +32,45 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                             readOnly={erLesevisning}
                             aria-live="polite"
                             size="small"
-                            value={skjema.felter.tilbakekrevSmåbeløp.verdi}
+                            value={skjema.felter.unnlates4Rettsgebyr.verdi}
                             error={
                                 ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr
-                                    ? skjema.felter.tilbakekrevSmåbeløp.feilmelding?.toString()
+                                    ? skjema.felter.unnlates4Rettsgebyr.feilmelding?.toString()
                                     : ''
                             }
-                            onChange={(val: JaNeiOption) => {
-                                skjema.felter.tilbakekrevSmåbeløp.validerOgSettFelt(val);
+                            onChange={(val: SkalUnnlates) => {
+                                skjema.felter.unnlates4Rettsgebyr.validerOgSettFelt(val);
                                 settIkkePersistertKomponent(`vilkårsvurdering`);
                             }}
                         >
-                            {jaNeiOptions.map(opt => (
-                                <Radio
-                                    key={opt.label}
-                                    name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                                    value={opt}
-                                    data-testid={`tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_${opt.label}`}
-                                >
-                                    {opt.label}
-                                </Radio>
-                            ))}
+                            <Radio
+                                key="Ja"
+                                name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
+                                value={SkalUnnlates.Ja}
+                                data-testid="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Nei"
+                            >
+                                Nei
+                            </Radio>
+                            <Radio
+                                key="Nei"
+                                name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
+                                value={SkalUnnlates.Nei}
+                                data-testid="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja"
+                            >
+                                Ja
+                            </Radio>
                         </RadioGroup>
 
-                        {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA && (
+                        {[SkalUnnlates.Nei, SkalUnnlates.Over4Rettsgebyr].some(
+                            value => value === skjema.felter.unnlates4Rettsgebyr.verdi
+                        ) && (
                             <SærligeGrunnerSkjema
                                 skjema={skjema}
                                 erLesevisning={erLesevisning}
                                 aria-live="polite"
                             />
                         )}
-                        {skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI && (
+                        {skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Ja && (
                             <LocalAlert status="warning" aria-live="polite">
                                 <LocalAlert.Header>
                                     <LocalAlert.Title>

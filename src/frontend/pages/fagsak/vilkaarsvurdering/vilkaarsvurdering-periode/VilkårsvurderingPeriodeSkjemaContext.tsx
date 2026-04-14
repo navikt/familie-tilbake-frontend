@@ -12,6 +12,7 @@ import {
     Valideringsstatus,
 } from '~/hooks/skjema';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
+import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
 import {
     parseStringToNumber,
     erFeltetEmpty,
@@ -83,8 +84,10 @@ const avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr = (
     erBeløpUnder4RettsgebyrOppfylt(avhengigheter);
 
 const erTilbakekrevBeløpUnder4Rettsgebyr = (avhengigheter?: Avhengigheter): boolean =>
-    avhengigheter?.tilbakekrevSmåbeløp.valideringsstatus === Valideringsstatus.Ok &&
-    avhengigheter?.tilbakekrevSmåbeløp.verdi === OptionJA;
+    avhengigheter?.unnlates4Rettsgebyr.valideringsstatus === Valideringsstatus.Ok &&
+    [SkalUnnlates.Nei, SkalUnnlates.Over4Rettsgebyr].some(
+        verdi => avhengigheter?.unnlates4Rettsgebyr.verdi === verdi
+    );
 
 const avhengigheterOppfyltSærligeGrunnerFelter = (avhengigheter?: Avhengigheter): boolean =>
     (erAktsomhetsvurderingOppfylt(Aktsomhet.Uaktsomt, avhengigheter) &&
@@ -208,11 +211,14 @@ const useVilkårsvurderingPeriodeSkjema = (
         verdi: false,
     });
 
-    const tilbakekrevSmåbeløp = useFelt<JaNeiOption | ''>({
-        feltId: 'tilbakekrevSmåbeløp',
+    const unnlates4Rettsgebyr = useFelt<SkalUnnlates | ''>({
+        feltId: 'unnlates4Rettsgebyr',
         verdi: '',
         avhengigheter: { vilkårsresultatvurdering, aktsomhetVurdering, totalbeløpUnder4Rettsgebyr },
-        valideringsfunksjon: (felt: FeltState<JaNeiOption | ''>, avhengigheter?: Avhengigheter) => {
+        valideringsfunksjon: (
+            felt: FeltState<SkalUnnlates | ''>,
+            avhengigheter?: Avhengigheter
+        ) => {
             if (!avhengigheterOppfyltTilbakekrevesBeløpUnder4Rettsgebyr(avhengigheter))
                 return ok(felt);
             return erFeltetEmpty(felt);
@@ -227,7 +233,7 @@ const useVilkårsvurderingPeriodeSkjema = (
             vilkårsresultatvurdering,
             aktsomhetVurdering,
             totalbeløpUnder4Rettsgebyr,
-            tilbakekrevSmåbeløp,
+            unnlates4Rettsgebyr,
         },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter)) return ok(felt);
@@ -242,7 +248,7 @@ const useVilkårsvurderingPeriodeSkjema = (
             vilkårsresultatvurdering,
             aktsomhetVurdering,
             totalbeløpUnder4Rettsgebyr,
-            tilbakekrevSmåbeløp,
+            unnlates4Rettsgebyr,
         },
         valideringsfunksjon: (felt: FeltState<SærligeGrunner[]>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter)) return ok(felt);
@@ -261,7 +267,7 @@ const useVilkårsvurderingPeriodeSkjema = (
             vilkårsresultatvurdering,
             aktsomhetVurdering,
             totalbeløpUnder4Rettsgebyr,
-            tilbakekrevSmåbeløp,
+            unnlates4Rettsgebyr,
             særligeGrunner,
         },
         valideringsfunksjon: (felt: FeltState<string | ''>, avhengigheter?: Avhengigheter) => {
@@ -283,7 +289,7 @@ const useVilkårsvurderingPeriodeSkjema = (
             vilkårsresultatvurdering,
             aktsomhetVurdering,
             totalbeløpUnder4Rettsgebyr,
-            tilbakekrevSmåbeløp,
+            unnlates4Rettsgebyr,
         },
         valideringsfunksjon: (felt: FeltState<JaNeiOption | ''>, avhengigheter?: Avhengigheter) => {
             if (!avhengigheterOppfyltSærligeGrunnerFelter(avhengigheter)) return ok(felt);
@@ -365,7 +371,7 @@ const useVilkårsvurderingPeriodeSkjema = (
             aktsomhetVurdering,
             forstoIlleggeRenter,
             totalbeløpUnder4Rettsgebyr,
-            tilbakekrevSmåbeløp,
+            unnlates4Rettsgebyr,
             særligeGrunnerBegrunnelse,
             særligeGrunner,
             særligeGrunnerAnnetBegrunnelse,
@@ -405,7 +411,7 @@ const useVilkårsvurderingPeriodeSkjema = (
             skjema.felter.totalbeløpUnder4Rettsgebyr.verdi === true;
         const skalIkkeVurdereSærligeGrunner =
             skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ||
-            (skalVurderereSmåbeløp && skjema.felter.tilbakekrevSmåbeløp.verdi === OptionNEI);
+            (skalVurderereSmåbeløp && skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Ja);
 
         const harGrunnerTilReduksjon =
             !skalIkkeVurdereSærligeGrunner &&
@@ -422,8 +428,8 @@ const useVilkårsvurderingPeriodeSkjema = (
                     : erForstoForsett
                       ? skjema.felter.forstoIlleggeRenter.verdi === OptionJA
                       : skjema.felter.grovtUaktsomIlleggeRenter.verdi === OptionJA,
-            tilbakekrevSmåbeløp: skalVurderereSmåbeløp
-                ? skjema.felter.tilbakekrevSmåbeløp.verdi === OptionJA
+            unnlates4Rettsgebyr: skalVurderereSmåbeløp
+                ? skjema.felter.unnlates4Rettsgebyr.verdi || undefined
                 : undefined,
             særligeGrunnerBegrunnelse: !skalIkkeVurdereSærligeGrunner
                 ? skjema.felter.særligeGrunnerBegrunnelse.verdi
@@ -487,7 +493,7 @@ type VilkårsvurderingSkjemaDefinisjon = {
     aktsomhetVurdering: Aktsomhet | '';
     forstoIlleggeRenter: JaNeiOption | '';
     totalbeløpUnder4Rettsgebyr: boolean;
-    tilbakekrevSmåbeløp: JaNeiOption | '';
+    unnlates4Rettsgebyr: SkalUnnlates | '';
     særligeGrunnerBegrunnelse: string | '';
     særligeGrunner: SærligeGrunner[];
     særligeGrunnerAnnetBegrunnelse: string | '';

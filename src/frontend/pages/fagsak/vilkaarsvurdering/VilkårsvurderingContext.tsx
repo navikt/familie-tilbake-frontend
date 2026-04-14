@@ -3,10 +3,7 @@ import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurderi
 import type { AxiosError } from 'axios';
 import type { RefObject } from 'react';
 import type { VilkårdsvurderingStegPayload } from '~/typer/api';
-import type {
-    VilkårsvurderingResponse,
-    VilkårsvurderingPeriode,
-} from '~/typer/tilbakekrevingstyper';
+import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
@@ -23,6 +20,7 @@ import {
 } from '~/generated-new/@tanstack/react-query.gen';
 import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
 import { sorterFeilutbetaltePerioder } from '~/utils';
 import { useStegNavigering } from '~/utils/sider';
 
@@ -64,19 +62,6 @@ const utledValgtPeriode = (
     skjemaPerioder: VilkårsvurderingPeriodeSkjemaData[]
 ): VilkårsvurderingPeriodeSkjemaData | undefined =>
     skjemaPerioder.find(periode => !erBehandlet(periode)) || skjemaPerioder[0];
-
-const kalkulerTotalBeløp = (perioder: VilkårsvurderingPeriode[]): number => {
-    return perioder.reduce(
-        (acc: number, periode: VilkårsvurderingPeriode) =>
-            !periode.foreldet ? acc + periode.feilutbetaltBeløp : acc,
-        0
-    );
-};
-
-export const erTotalbeløpUnder4Rettsgebyr = (vurdering: VilkårsvurderingResponse): boolean => {
-    const totalbeløp = kalkulerTotalBeløp(vurdering.perioder);
-    return totalbeløp && vurdering.rettsgebyr ? totalbeløp < vurdering.rettsgebyr * 4 : false;
-};
 
 const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() => {
     const { ytelsestype } = useFagsak();
@@ -206,7 +191,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         if (vilkårsvurdering?.status !== RessursStatus.Suksess) {
             return false; // Skal ikke være mulig, så return false ok
         }
-        if (!erTotalbeløpUnder4Rettsgebyr(vilkårsvurdering.data)) {
+        if (!vilkårsvurdering.data.kanUnnlates4xRettsgebyr) {
             return true;
         }
 
@@ -217,14 +202,14 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
                     periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
                     Vilkårsresultat.GodTro
             );
-        const ikkeTilbakekrevSmåbeløpPerioder = filtrertePerioder.filter(
+        const unnlates4RettsgebyrPerioder = filtrertePerioder.filter(
             ({ vilkårsvurderingsresultatInfo: resultatInfo }) =>
                 resultatInfo?.aktsomhet?.aktsomhet === Aktsomhet.Uaktsomt &&
-                !resultatInfo?.aktsomhet?.tilbakekrevSmåbeløp
+                resultatInfo?.aktsomhet?.unnlates4Rettsgebyr == SkalUnnlates.Ja
         );
         if (
-            ikkeTilbakekrevSmåbeløpPerioder.length > 0 &&
-            ikkeTilbakekrevSmåbeløpPerioder.length !== filtrertePerioder.length
+            unnlates4RettsgebyrPerioder.length > 0 &&
+            unnlates4RettsgebyrPerioder.length !== filtrertePerioder.length
         ) {
             settValideringsFeilmelding(
                 'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'

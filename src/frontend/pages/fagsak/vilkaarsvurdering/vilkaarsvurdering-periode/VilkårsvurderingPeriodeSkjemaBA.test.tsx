@@ -13,6 +13,7 @@ import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '~/testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
 
 import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriodeSkjema';
 
@@ -1004,7 +1005,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                     aktsomhet: {
                         begrunnelse: 'Vurdert aktsomhet til uaktsomt',
                         aktsomhet: Aktsomhet.Uaktsomt,
-                        tilbakekrevSmåbeløp: true,
+                        unnlates4Rettsgebyr: SkalUnnlates.Nei,
                         særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
                         særligeGrunner: [
                             { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
