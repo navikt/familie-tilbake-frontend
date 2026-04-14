@@ -742,7 +742,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).not.toBeInTheDocument();
 
@@ -755,7 +755,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
 
@@ -853,7 +853,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         expect(
@@ -934,7 +934,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(
             queryByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         expect(
@@ -1044,7 +1044,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByLabelText('Uaktsomt')).toBeChecked();
         expect(
             getByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         expect(getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja')).toBeChecked();

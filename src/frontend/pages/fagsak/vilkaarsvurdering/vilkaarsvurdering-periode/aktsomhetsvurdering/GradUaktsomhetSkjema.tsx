@@ -13,9 +13,10 @@ import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    nyModell: boolean;
 };
 
-export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning, nyModell }) => {
     const { settIkkePersistertKomponent } = useBehandlingState();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
@@ -28,7 +29,7 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                     <>
                         <RadioGroup
                             id="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
-                            legend="Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?"
+                            legend="Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?"
                             readOnly={erLesevisning}
                             aria-live="polite"
                             size="small"
@@ -59,6 +60,16 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                             >
                                 Ja
                             </Radio>
+                            {nyModell && (
+                                <Radio
+                                    key="Over4Rettsgebyr"
+                                    name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
+                                    value={SkalUnnlates.Over4Rettsgebyr}
+                                    data-testid="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Over4Rettsgebyr"
+                                >
+                                    Beløp er over 4 rettsgebyr
+                                </Radio>
+                            )}
                         </RadioGroup>
 
                         {[SkalUnnlates.Tilbakekreves, SkalUnnlates.Over4Rettsgebyr].some(

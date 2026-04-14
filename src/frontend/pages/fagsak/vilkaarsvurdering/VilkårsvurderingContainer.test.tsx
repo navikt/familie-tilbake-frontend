@@ -164,7 +164,7 @@ describe('VilkårsvurderingContainer', () => {
 
         expect(
             getByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         expect(
@@ -221,7 +221,7 @@ describe('VilkårsvurderingContainer', () => {
         );
         expect(
             getByText(
-                'Totalbeløpet er under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         await user.click(
@@ -253,7 +253,7 @@ describe('VilkårsvurderingContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(
             queryByText(
-                'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
+                'Totalbeløpet kan være under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
             )
         ).toBeInTheDocument();
     });
