@@ -1,11 +1,8 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
-import type {
-    VedtaksbrevData,
-    VedtaksbrevDataWritable,
-    VedtaksbrevRedigerbareDataUpdate,
-} from '~/generated-new';
+import type { VedtaksbrevData, VedtaksbrevDataWritable } from '~/generated-new';
 
+// import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Button,
     Heading,
@@ -27,8 +24,10 @@ import {
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
 // import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
+// import { zVedtaksbrevRedigerbareDataUpdate } from '~/generated-new/zod.gen';
 import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 
+import { tilVedtaksbrevDataWritable } from './utils';
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
 
 const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) => {
@@ -53,7 +52,13 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
-        values: { ...vedtaksbrevData },
+        // resolver: zodResolver(zVedtaksbrevRedigerbareDataUpdate),
+        // reValidateMode: 'onChange',
+        // mode: 'onSubmit',
+        defaultValues: {
+            hovedavsnitt: vedtaksbrevData.hovedavsnitt,
+            avsnitt: vedtaksbrevData.avsnitt,
+        },
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -86,23 +91,20 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         ...behandlingOppdaterVedtaksbrevMutation(),
     });
 
-    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void => {
+    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void =>
         forhåndsvisningMutation.mutate({
             body: data,
         });
-    };
 
     const debouncedUpdate = useDebounce(async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { sistOppdatert: _, ...pdfData } = methods.getValues();
-        oppdaterForhåndsvisning(pdfData);
+        const formData = methods.getValues();
+        oppdaterForhåndsvisning(tilVedtaksbrevDataWritable(vedtaksbrevData, formData));
 
         const erGyldig = await methods.trigger();
         if (erGyldig) {
-            const { hovedavsnitt, avsnitt } = pdfData;
             oppdaterVedtaksbrevMutation.mutate({
                 path: { behandlingId },
-                body: { hovedavsnitt, avsnitt } satisfies VedtaksbrevRedigerbareDataUpdate,
+                body: formData,
             });
         }
     });
@@ -144,7 +146,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                 </HStack>
 
                 <FormProvider {...methods}>
-                    <VedtaksbrevSkjema />
+                    <VedtaksbrevSkjema vedtaksbrevData={vedtaksbrevData} />
                 </FormProvider>
             </section>
 
