@@ -18,7 +18,7 @@ import {
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -86,7 +86,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         ...behandlingOppdaterVedtaksbrevMutation(),
     });
 
-    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable) => {
+    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void => {
         forhåndsvisningMutation.mutate({
             body: data,
         });
@@ -117,8 +117,12 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         });
     }, [debouncedUpdate, methods]);
 
-    useEffect(() => {
+    const forhåndsvisBrev = useEffectEvent((vedtaksbrevData: VedtaksbrevData) => {
         oppdaterForhåndsvisning(vedtaksbrevData);
+    });
+
+    useEffect(() => {
+        forhåndsvisBrev(vedtaksbrevData);
     }, [vedtaksbrevData]);
 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
