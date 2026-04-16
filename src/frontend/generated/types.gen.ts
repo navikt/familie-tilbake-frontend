@@ -5,25 +5,25 @@ export type ClientOptions = {
 };
 
 export type RessursString = {
-    data?: string;
+    data?: string | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Brevmottaker = {
     type: TypeEnum;
     vergetype?: VergetypeEnum;
     navn: string;
-    organisasjonsnummer?: string;
-    personIdent?: string;
-    manuellAdresseInfo?: ManuellAdresseInfo;
+    organisasjonsnummer?: string | null;
+    personIdent?: string | null;
+    manuellAdresseInfo?: ManuellAdresseInfo | null;
 };
 
 export type ManuellAdresseInfo = {
     adresselinje1: string;
-    adresselinje2?: string;
+    adresselinje2?: string | null;
     postnummer: string;
     poststed: string;
     landkode: string;
@@ -32,13 +32,13 @@ export type ManuellAdresseInfo = {
 export type BehandlingPåVentDto = {
     venteårsak: VenteårsakEnum;
     tidsfrist: string;
-    begrunnelse?: string;
+    begrunnelse?: string | null;
 };
 
 export type HenleggelsesbrevFritekstDto = {
     behandlingsresultatstype: BehandlingsresultatstypeEnum;
     begrunnelse: string;
-    fritekst?: string;
+    fritekst?: string | null;
 };
 
 export type ByttEnhetDto = {
@@ -54,28 +54,28 @@ export type OppdaterBehandlendeEnhetRequest = {
 export type Datoperiode = {
     fom: string;
     tom: string;
-    fomMåned: string;
     tomMåned: string;
+    fomMåned: string;
 };
 
 export type FritekstavsnittDto = {
-    oppsummeringstekst?: string;
+    oppsummeringstekst?: string | null;
     perioderMedTekst: Array<PeriodeMedTekstDto>;
 };
 
 export type PeriodeMedTekstDto = {
     periode: Datoperiode;
-    faktaAvsnitt?: string;
-    foreldelseAvsnitt?: string;
-    vilkårAvsnitt?: string;
-    særligeGrunnerAvsnitt?: string;
-    særligeGrunnerAnnetAvsnitt?: string;
+    faktaAvsnitt?: string | null;
+    foreldelseAvsnitt?: string | null;
+    vilkårAvsnitt?: string | null;
+    særligeGrunnerAvsnitt?: string | null;
+    særligeGrunnerAnnetAvsnitt?: string | null;
 };
 
 export type BrukeruttalelseDto = {
     harBrukerUttaltSeg: HarBrukerUttaltSegEnum;
-    uttalelsesdetaljer?: Array<Uttalelsesdetaljer>;
-    kommentar?: string;
+    uttalelsesdetaljer?: Array<Uttalelsesdetaljer> | null;
+    kommentar?: string | null;
 };
 
 export type Uttalelsesdetaljer = {
@@ -85,11 +85,11 @@ export type Uttalelsesdetaljer = {
 };
 
 export type Ressurs = {
-    data?: unknown;
+    data?: null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type FristUtsettelseDto = {
@@ -109,16 +109,16 @@ export type BestillBrevDto = {
 };
 
 export type RessursByte = {
-    data?: string;
+    data?: string | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type HentForhåndvisningVedtaksbrevPdfDto = {
     behandlingId: string;
-    oppsummeringstekst?: string;
+    oppsummeringstekst?: string | null;
     perioderMedTekst: Array<PeriodeMedTekstDto>;
 };
 
@@ -128,20 +128,20 @@ export type FeilutbetaltePerioderDto = {
 };
 
 export type ForhåndsvisVarselbrevRequest = {
-    varseltekst?: string;
+    varseltekst?: string | null;
     ytelsestype: SchemaEnum4;
-    behandlendeEnhetId?: string;
+    behandlendeEnhetId?: string | null;
     behandlendeEnhetsNavn: string;
-    saksbehandlerIdent?: string;
+    saksbehandlerIdent?: string | null;
     språkkode: SpråkkodeEnum;
-    vedtaksdato?: string;
+    vedtaksdato?: string | null;
     feilutbetaltePerioderDto: FeilutbetaltePerioderDto;
     fagsystem: SchemaEnum2;
     eksternFagsakId: string;
     ident: string;
-    verge?: Verge;
-    fagsystemsbehandlingId?: string;
-    institusjon?: Institusjon;
+    verge?: Verge | null;
+    fagsystemsbehandlingId?: string | null;
+    institusjon?: Institusjon | null;
 };
 
 export type Institusjon = {
@@ -154,35 +154,35 @@ export type Periode = {
 };
 
 export type Verge = {
-    vergetype: VergetypeEnum;
+    vergetype: VergetypeEnum2;
     navn: string;
-    organisasjonsnummer?: string;
-    personIdent?: string;
+    organisasjonsnummer?: string | null;
+    personIdent?: string | null;
 };
 
 export type ForhåndsvisningHenleggelsesbrevDto = {
     behandlingId: string;
-    fritekst?: string;
+    fritekst?: string | null;
 };
 
 export type RessursUuid = {
-    data?: string;
+    data?: string | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type AktsomhetDto = {
     aktsomhet: AktsomhetEnum;
-    ileggRenter?: boolean;
-    andelTilbakekreves?: number;
-    beløpTilbakekreves?: number;
+    ileggRenter?: boolean | null;
+    andelTilbakekreves?: number | null;
+    beløpTilbakekreves?: number | null;
     begrunnelse: string;
-    særligeGrunner?: Array<SærligGrunnDto>;
+    særligeGrunner?: Array<SærligGrunnDto> | null;
     særligeGrunnerTilReduksjon: boolean;
-    tilbakekrevSmåbeløp: boolean;
-    særligeGrunnerBegrunnelse?: string;
+    unnlates4Rettsgebyr?: Unnlates4RettsgebyrEnum;
+    særligeGrunnerBegrunnelse?: string | null;
 };
 
 export type BehandlingsstegBrevmottakerDto = BehandlingsstegDto & {
@@ -196,7 +196,7 @@ export type BehandlingsstegDto = {
 export type BehandlingsstegFaktaDto = BehandlingsstegDto & {
     feilutbetaltePerioder: Array<FaktaFeilutbetalingsperiodeDto>;
     begrunnelse: string;
-    vurderingAvBrukersUttalelse?: VurderingAvBrukersUttalelseDto;
+    vurderingAvBrukersUttalelse?: VurderingAvBrukersUttalelseDto | null;
 };
 
 export type BehandlingsstegFatteVedtaksstegDto = BehandlingsstegDto & {
@@ -220,7 +220,7 @@ export type BehandlingsstegVilkårsvurderingDto = BehandlingsstegDto & {
 };
 
 export type BrevmottakerstegDto = {
-    begrunnelse?: string;
+    begrunnelse?: string | null;
 };
 
 export type FaktaFeilutbetalingsperiodeDto = {
@@ -233,46 +233,46 @@ export type ForeldelsesperiodeDto = {
     periode: Datoperiode;
     begrunnelse: string;
     foreldelsesvurderingstype: ForeldelsesvurderingstypeEnum;
-    foreldelsesfrist?: string;
-    oppdagelsesdato?: string;
+    foreldelsesfrist?: string | null;
+    oppdagelsesdato?: string | null;
 };
 
 export type GodTroDto = {
     beløpErIBehold: boolean;
-    beløpTilbakekreves?: number;
+    beløpTilbakekreves?: number | null;
     begrunnelse: string;
 };
 
 export type SærligGrunnDto = {
     særligGrunn: SærligGrunnEnum;
-    begrunnelse?: string;
+    begrunnelse?: string | null;
 };
 
 export type VergeDto = {
-    ident?: string;
-    orgNr?: string;
-    type: VergetypeEnum;
+    ident?: string | null;
+    orgNr?: string | null;
+    type: VergetypeEnum2;
     navn: string;
-    begrunnelse?: string;
+    begrunnelse?: string | null;
 };
 
 export type VilkårsvurderingsperiodeDto = {
     periode: Datoperiode;
     vilkårsvurderingsresultat: VilkårsvurderingsresultatEnum;
     begrunnelse: string;
-    godTroDto?: GodTroDto;
-    aktsomhetDto?: AktsomhetDto;
+    godTroDto?: GodTroDto | null;
+    aktsomhetDto?: AktsomhetDto | null;
 };
 
 export type VurderingAvBrukersUttalelseDto = {
     harBrukerUttaltSeg: HarBrukerUttaltSegEnum2;
-    beskrivelse?: string;
+    beskrivelse?: string | null;
 };
 
 export type VurdertTotrinnDto = {
     behandlingssteg: BehandlingsstegEnum;
     godkjent: boolean;
-    begrunnelse?: string;
+    begrunnelse?: string | null;
 };
 
 export type BeregnetPeriodeDto = {
@@ -285,11 +285,11 @@ export type BeregnetPerioderDto = {
 };
 
 export type RessursBeregnetPerioderDto = {
-    data?: BeregnetPerioderDto;
+    data?: BeregnetPerioderDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Faktainfo = {
@@ -312,13 +312,13 @@ export type OpprettTilbakekrevingRequest = {
     enhetId: string;
     enhetsnavn: string;
     saksbehandlerIdent: string;
-    varsel?: Varsel;
+    varsel?: Varsel | null;
     revurderingsvedtaksdato: string;
-    verge?: Verge;
+    verge?: Verge | null;
     faktainfo: Faktainfo;
-    institusjon?: Institusjon;
+    institusjon?: Institusjon | null;
     manuelleBrevmottakere: Array<Brevmottaker>;
-    begrunnelseForTilbakekreving?: string;
+    begrunnelseForTilbakekreving?: string | null;
 };
 
 export type Varsel = {
@@ -342,23 +342,23 @@ export type OpprettManueltTilbakekrevingRequest = {
 export type KanBehandlingOpprettesManueltRespons = {
     kanBehandlingOpprettes: boolean;
     melding: string;
-    kravgrunnlagsreferanse?: string;
+    kravgrunnlagsreferanse?: string | null;
 };
 
 export type RessursKanBehandlingOpprettesManueltRespons = {
-    data?: KanBehandlingOpprettesManueltRespons;
+    data?: KanBehandlingOpprettesManueltRespons | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursBoolean = {
-    data?: boolean;
+    data?: boolean | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Info = {
@@ -369,63 +369,63 @@ export type Info = {
 };
 
 export type RessursInfo = {
-    data?: Info;
+    data?: Info | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Behandlingsinfo = {
-    eksternKravgrunnlagId?: number;
-    kravgrunnlagId?: string;
-    kravgrunnlagKravstatuskode?: string;
+    eksternKravgrunnlagId?: number | null;
+    kravgrunnlagId?: string | null;
+    kravgrunnlagKravstatuskode?: string | null;
     eksternId: string;
     opprettetTid: string;
-    behandlingId?: string;
+    behandlingId?: string | null;
     behandlingstatus?: BehandlingstatusEnum;
 };
 
 export type RessursListBehandlingsinfo = {
-    data?: Array<Behandlingsinfo>;
+    data?: Array<Behandlingsinfo> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Kravgrunnlagsinfo = {
     eksternKravgrunnlagId: number;
     kravgrunnlagKravstatuskode: string;
-    mottattXmlId?: string;
+    mottattXmlId?: string | null;
     eksternId: string;
     opprettetTid: string;
 };
 
 export type RessursListKravgrunnlagsinfo = {
-    data?: Array<Kravgrunnlagsinfo>;
+    data?: Array<Kravgrunnlagsinfo> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursListString = {
-    data?: Array<string>;
+    data?: Array<string> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursMapStringBoolean = {
     data?: {
         [key: string]: boolean;
-    };
+    } | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type FagsystemVedtak = {
@@ -438,18 +438,18 @@ export type FagsystemVedtak = {
 };
 
 export type RessursListFagsystemVedtak = {
-    data?: Array<FagsystemVedtak>;
+    data?: Array<FagsystemVedtak> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type BehandlingsoppsummeringDto = {
     behandlingId: string;
     eksternBrukId: string;
-    type: BehandlingstypeEnum;
-    status: BehandlingstatusEnum;
+    type: TypeEnum2;
+    status: StatusEnum2;
 };
 
 export type FagsakDto = {
@@ -459,15 +459,15 @@ export type FagsakDto = {
     språkkode: SpråkkodeEnum;
     bruker: FrontendBrukerDto;
     behandlinger: Array<BehandlingsoppsummeringDto>;
-    institusjon?: InstitusjonDto;
+    institusjon?: InstitusjonDto | null;
 };
 
 export type FrontendBrukerDto = {
     personIdent: string;
     navn: string;
-    fødselsdato?: string;
+    fødselsdato?: string | null;
     kjønn: KjønnEnum;
-    dødsdato?: string;
+    dødsdato?: string | null;
 };
 
 export type InstitusjonDto = {
@@ -476,11 +476,11 @@ export type InstitusjonDto = {
 };
 
 export type RessursFagsakDto = {
-    data?: FagsakDto;
+    data?: FagsakDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type FinnesBehandlingResponse = {
@@ -488,11 +488,11 @@ export type FinnesBehandlingResponse = {
 };
 
 export type RessursFinnesBehandlingResponse = {
-    data?: FinnesBehandlingResponse;
+    data?: FinnesBehandlingResponse | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Behandling = {
@@ -500,51 +500,51 @@ export type Behandling = {
     opprettetTidspunkt: string;
     aktiv: boolean;
     getårsak?: GetårsakstypeEnum;
-    type: BehandlingstypeEnum;
-    status: StatusEnum2;
-    vedtaksdato?: string;
+    type: TypeEnum2;
+    status: StatusEnum3;
+    vedtaksdato?: string | null;
     resultat?: ResultatEnum;
 };
 
 export type RessursListBehandling = {
-    data?: Array<Behandling>;
+    data?: Array<Behandling> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Avsnitt = {
-    overskrift?: string;
+    overskrift?: string | null;
     underavsnittsliste: Array<Underavsnitt>;
     avsnittstype?: AvsnittstypeEnum;
-    fom?: string;
-    tom?: string;
+    fom?: string | null;
+    tom?: string | null;
 };
 
 export type RessursListAvsnitt = {
-    data?: Array<Avsnitt>;
+    data?: Array<Avsnitt> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Underavsnitt = {
-    overskrift?: string;
-    brødtekst?: string;
-    fritekst?: string;
+    overskrift?: string | null;
+    brødtekst?: string | null;
+    fritekst?: string | null;
     fritekstTillatt: boolean;
     fritekstPåkrevet: boolean;
     underavsnittstype?: UnderavsnittstypeEnum;
 };
 
 export type RessursVarselbrevtekst = {
-    data?: Varselbrevtekst;
+    data?: Varselbrevtekst | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Section = {
@@ -558,24 +558,24 @@ export type Varselbrevtekst = {
 };
 
 export type ForhåndsvarselDto = {
-    varselbrevDto?: VarselbrevDto;
-    brukeruttalelse?: BrukeruttalelseDto;
-    utsettUttalelseFrist?: FristUtsettelseDto;
-    forhåndsvarselUnntak?: ForhåndsvarselUnntakDto;
+    varselbrevDto?: VarselbrevDto | null;
+    brukeruttalelse?: BrukeruttalelseDto | null;
+    utsettUttalelseFrist?: FristUtsettelseDto | null;
+    forhåndsvarselUnntak?: ForhåndsvarselUnntakDto | null;
 };
 
 export type RessursForhåndsvarselDto = {
-    data?: ForhåndsvarselDto;
+    data?: ForhåndsvarselDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type VarselbrevDto = {
-    varselbrevSendtTid?: string;
-    opprinneligFristForUttalelse?: string;
-    tekstFraSaksbehandler?: string;
+    varselbrevSendtTid?: string | null;
+    opprinneligFristForUttalelse?: string | null;
+    tekstFraSaksbehandler?: string | null;
 };
 
 export type PersonIdent = {
@@ -587,11 +587,11 @@ export type BrukerlenkeDto = {
 };
 
 export type RessursBrukerlenkeDto = {
-    data?: BrukerlenkeDto;
+    data?: BrukerlenkeDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type ManuellBrevmottakerResponsDto = {
@@ -600,32 +600,32 @@ export type ManuellBrevmottakerResponsDto = {
 };
 
 export type RessursListManuellBrevmottakerResponsDto = {
-    data?: Array<ManuellBrevmottakerResponsDto>;
+    data?: Array<ManuellBrevmottakerResponsDto> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type HistorikkinnslagDto = {
     behandlingId: string;
-    type: TypeEnum2;
+    type: TypeEnum3;
     aktør: AktørEnum;
     aktørIdent: string;
     tittel: string;
-    tekst?: string;
-    steg?: string;
-    journalpostId?: string;
-    dokumentId?: string;
+    tekst?: string | null;
+    steg?: string | null;
+    journalpostId?: string | null;
+    dokumentId?: string | null;
     opprettetTid: string;
 };
 
 export type RessursListHistorikkinnslagDto = {
-    data?: Array<HistorikkinnslagDto>;
+    data?: Array<HistorikkinnslagDto> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type AktivitetDto = {
@@ -639,40 +639,42 @@ export type RedusertBeløpDto = {
 };
 
 export type RessursVurdertVilkårsvurderingDto = {
-    data?: VurdertVilkårsvurderingDto;
+    data?: VurdertVilkårsvurderingDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type VurdertAktsomhetDto = {
     aktsomhet: AktsomhetEnum;
-    ileggRenter?: boolean;
-    andelTilbakekreves?: number;
-    beløpTilbakekreves?: number;
+    ileggRenter?: boolean | null;
+    andelTilbakekreves?: number | null;
+    beløpTilbakekreves?: number | null;
     begrunnelse: string;
-    særligeGrunner?: Array<VurdertSærligGrunnDto>;
+    særligeGrunner?: Array<VurdertSærligGrunnDto> | null;
     særligeGrunnerTilReduksjon: boolean;
     tilbakekrevSmåbeløp: boolean;
-    særligeGrunnerBegrunnelse?: string;
+    unnlates4Rettsgebyr: Unnlates4RettsgebyrEnum2;
+    særligeGrunnerBegrunnelse?: string | null;
 };
 
 export type VurdertGodTroDto = {
     beløpErIBehold: boolean;
-    beløpTilbakekreves?: number;
+    beløpTilbakekreves?: number | null;
     begrunnelse: string;
 };
 
 export type VurdertSærligGrunnDto = {
     særligGrunn: SærligGrunnEnum;
-    begrunnelse?: string;
+    begrunnelse?: string | null;
 };
 
 export type VurdertVilkårsvurderingDto = {
     perioder: Array<VurdertVilkårsvurderingsperiodeDto>;
     rettsgebyr: number;
-    opprettetTid?: string;
+    kanUnnlates4xRettsgebyr: boolean;
+    opprettetTid?: string | null;
 };
 
 export type VurdertVilkårsvurderingsperiodeDto = {
@@ -681,37 +683,37 @@ export type VurdertVilkårsvurderingsperiodeDto = {
     hendelsestype: HendelsestypeEnum;
     reduserteBeløper: Array<RedusertBeløpDto>;
     aktiviteter: Array<AktivitetDto>;
-    vilkårsvurderingsresultatInfo?: VurdertVilkårsvurderingsresultatDto;
-    begrunnelse?: string;
+    vilkårsvurderingsresultatInfo?: VurdertVilkårsvurderingsresultatDto | null;
+    begrunnelse?: string | null;
     foreldet: boolean;
 };
 
 export type VurdertVilkårsvurderingsresultatDto = {
-    vilkårsvurderingsresultat?: VilkårsvurderingsresultatEnum;
-    godTro?: VurdertGodTroDto;
-    aktsomhet?: VurdertAktsomhetDto;
+    vilkårsvurderingsresultat?: VilkårsvurderingsresultatEnum2;
+    godTro?: VurdertGodTroDto | null;
+    aktsomhet?: VurdertAktsomhetDto | null;
 };
 
 export type RessursListVurdertVilkårsvurderingDto = {
-    data?: Array<VurdertVilkårsvurderingDto>;
+    data?: Array<VurdertVilkårsvurderingDto> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursTotrinnsvurderingDto = {
-    data?: TotrinnsvurderingDto;
+    data?: TotrinnsvurderingDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Totrinnsstegsinfo = {
     behandlingssteg: BehandlingsstegEnum;
-    godkjent?: boolean;
-    begrunnelse?: string;
+    godkjent?: boolean | null;
+    begrunnelse?: string | null;
 };
 
 export type TotrinnsvurderingDto = {
@@ -720,21 +722,21 @@ export type TotrinnsvurderingDto = {
 
 export type DokumentInfo = {
     dokumentInfoId: string;
-    tittel?: string;
-    brevkode?: string;
-    logiskeVedlegg?: Array<LogiskVedlegg>;
+    tittel?: string | null;
+    brevkode?: string | null;
+    logiskeVedlegg?: Array<LogiskVedlegg> | null;
 };
 
 export type Journalpost = {
     journalpostId: string;
     journalposttype: JournalposttypeEnum;
     journalstatus: JournalstatusEnum;
-    tema?: string;
-    tittel?: string;
-    sak?: Sak;
-    dokumenter?: Array<DokumentInfo>;
-    relevanteDatoer?: Array<RelevantDato>;
-    eksternReferanseId?: string;
+    tema?: string | null;
+    tittel?: string | null;
+    sak?: Sak | null;
+    dokumenter?: Array<DokumentInfo> | null;
+    relevanteDatoer?: Array<RelevantDato> | null;
+    eksternReferanseId?: string | null;
 };
 
 export type LogiskVedlegg = {
@@ -748,27 +750,27 @@ export type RelevantDato = {
 };
 
 export type RessursListJournalpost = {
-    data?: Array<Journalpost>;
+    data?: Array<Journalpost> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Sak = {
-    arkivsaksnummer?: string;
-    arkivsaksystem?: string;
-    fagsakId?: string;
-    sakstype?: string;
-    fagsaksystem?: string;
+    arkivsaksnummer?: string | null;
+    arkivsaksystem?: string | null;
+    fagsakId?: string | null;
+    sakstype?: string | null;
+    fagsaksystem?: string | null;
 };
 
 export type RessursVurdertForeldelseDto = {
-    data?: VurdertForeldelseDto;
+    data?: VurdertForeldelseDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type VurdertForeldelseDto = {
@@ -778,14 +780,14 @@ export type VurdertForeldelseDto = {
 export type VurdertForeldelsesperiodeDto = {
     periode: Datoperiode;
     feilutbetaltBeløp: number;
-    begrunnelse?: string;
-    foreldelsesvurderingstype?: ForeldelsesvurderingstypeEnum;
-    foreldelsesfrist?: string;
-    oppdagelsesdato?: string;
+    begrunnelse?: string | null;
+    foreldelsesvurderingstype?: ForeldelsesvurderingstypeEnum2;
+    foreldelsesfrist?: string | null;
+    oppdagelsesdato?: string | null;
 };
 
 export type FaktaFeilutbetalingDto = {
-    varsletBeløp?: number;
+    varsletBeløp?: number | null;
     totalFeilutbetaltPeriode: Datoperiode;
     feilutbetaltePerioder: Array<FeilutbetalingsperiodeDto>;
     totaltFeilutbetaltBeløp: number;
@@ -794,31 +796,31 @@ export type FaktaFeilutbetalingDto = {
     faktainfo: Faktainfo;
     kravgrunnlagReferanse: string;
     vurderingAvBrukersUttalelse: VurderingAvBrukersUttalelseDto;
-    opprettetTid?: string;
+    opprettetTid?: string | null;
     gjelderDødsfall: boolean;
 };
 
 export type FeilutbetalingsperiodeDto = {
     periode: Datoperiode;
     feilutbetaltBeløp: number;
-    hendelsestype?: HendelsestypeEnum;
-    hendelsesundertype?: HendelsesundertypeEnum;
+    hendelsestype?: HendelsestypeEnum2;
+    hendelsesundertype?: HendelsesundertypeEnum2;
 };
 
 export type RessursFaktaFeilutbetalingDto = {
-    data?: FaktaFeilutbetalingDto;
+    data?: FaktaFeilutbetalingDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursListFaktaFeilutbetalingDto = {
-    data?: Array<FaktaFeilutbetalingDto>;
+    data?: Array<FaktaFeilutbetalingDto> | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type BeregningsresultatDto = {
@@ -829,20 +831,20 @@ export type BeregningsresultatDto = {
 
 export type BeregningsresultatsperiodeDto = {
     periode: Datoperiode;
-    vurdering?: Vurdering;
+    vurdering?: Vurdering | null;
     feilutbetaltBeløp: number;
-    andelAvBeløp?: number;
-    renteprosent?: number;
-    tilbakekrevingsbeløp?: number;
-    tilbakekrevesBeløpEtterSkatt?: number;
+    andelAvBeløp?: number | null;
+    renteprosent?: number | null;
+    tilbakekrevingsbeløp?: number | null;
+    tilbakekrevesBeløpEtterSkatt?: number | null;
 };
 
 export type RessursBeregningsresultatDto = {
-    data?: BeregningsresultatDto;
+    data?: BeregningsresultatDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type Vurdering = {
@@ -853,17 +855,17 @@ export type BehandlingDto = {
     eksternBrukId: string;
     behandlingId: string;
     erBehandlingHenlagt: boolean;
-    type: BehandlingstypeEnum;
-    status: BehandlingstatusEnum;
+    type: TypeEnum2;
+    status: StatusEnum2;
     opprettetDato: string;
-    avsluttetDato?: string;
+    avsluttetDato?: string | null;
     endretTidspunkt: string;
-    vedtaksdato?: string;
+    vedtaksdato?: string | null;
     enhetskode: string;
     enhetsnavn: string;
-    resultatstype?: BehandlingsresultatstypeEnum;
+    resultatstype?: ResultatstypeEnum;
     ansvarligSaksbehandler: string;
-    ansvarligBeslutter?: string;
+    ansvarligBeslutter?: string | null;
     erBehandlingPåVent: boolean;
     kanHenleggeBehandling: boolean;
     kanRevurderingOpprettes: boolean;
@@ -874,11 +876,11 @@ export type BehandlingDto = {
     behandlingsstegsinfo: Array<BehandlingsstegsinfoDto>;
     fagsystemsbehandlingId: string;
     eksternFagsakId: string;
-    behandlingsårsakstype?: GetårsakstypeEnum;
+    behandlingsårsakstype?: BehandlingsårsakstypeEnum;
     støtterManuelleBrevmottakere: boolean;
     harManuelleBrevmottakere: boolean;
     manuelleBrevmottakere: Array<ManuellBrevmottakerResponsDto>;
-    begrunnelseForTilbakekreving?: string;
+    begrunnelseForTilbakekreving?: string | null;
     saksbehandlingstype: SaksbehandlingstypeEnum;
     erNyModell: boolean;
 };
@@ -886,24 +888,24 @@ export type BehandlingDto = {
 export type BehandlingsstegsinfoDto = {
     behandlingssteg: BehandlingsstegEnum;
     behandlingsstegstatus: BehandlingsstegstatusEnum;
-    venteårsak?: VenteårsakEnum;
-    tidsfrist?: string;
+    venteårsak?: VenteårsakEnum2;
+    tidsfrist?: string | null;
 };
 
 export type RessursBehandlingDto = {
-    data?: BehandlingDto;
+    data?: BehandlingDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursVergeDto = {
-    data?: VergeDto;
+    data?: VergeDto | null;
     status: StatusEnum;
     melding: string;
-    frontendFeilmelding?: string;
-    stacktrace?: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type SchemaEnum =
@@ -994,7 +996,17 @@ export type BrevmalkodeEnum =
 
 export type SpråkkodeEnum = 'NB' | 'NN';
 
+export type VergetypeEnum2 =
+    | 'VERGE_FOR_BARN'
+    | 'VERGE_FOR_FORELDRELØST_BARN'
+    | 'VERGE_FOR_VOKSEN'
+    | 'ADVOKAT'
+    | 'ANNEN_FULLMEKTIG'
+    | 'UDEFINERT';
+
 export type AktsomhetEnum = 'FORSETT' | 'GROV_UAKTSOMHET' | 'SIMPEL_UAKTSOMHET';
+
+export type Unnlates4RettsgebyrEnum = 'UNNLATES' | 'TILBAKEKREVES' | 'OVER_4_RETTSGEBYR';
 
 export type HendelsestypeEnum =
     | 'ANNET'
@@ -1204,9 +1216,20 @@ export type BehandlingstatusEnum =
 
 export type FagsystemTypeEnum = 'TILBAKEKREVING';
 
-export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
+export type TypeEnum2 = 'TILBAKEKREVING' | 'REVURDERING_TILBAKEKREVING';
 
 export type StatusEnum2 =
+    | 'AVSLUTTET'
+    | 'FATTER_VEDTAK'
+    | 'IVERKSETTER_VEDTAK'
+    | 'OPPRETTET'
+    | 'UTREDES'
+    | 'JOURNALFØR_VEDTAK'
+    | 'DISTRIUBER_VEDTAK';
+
+export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
+
+export type StatusEnum3 =
     | 'AVSLUTTET'
     | 'FATTER_VEDTAK'
     | 'IVERKSETTER_VEDTAK'
@@ -1232,9 +1255,18 @@ export type UnderavsnittstypeEnum =
     | 'SÆRLIGEGRUNNER'
     | 'SÆRLIGEGRUNNER_ANNET';
 
-export type TypeEnum2 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV';
+export type TypeEnum3 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV';
 
 export type AktørEnum = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
+
+export type Unnlates4RettsgebyrEnum2 = 'UNNLATES' | 'TILBAKEKREVES' | 'OVER_4_RETTSGEBYR';
+
+export type VilkårsvurderingsresultatEnum2 =
+    | 'FORSTO_BURDE_FORSTÅTT'
+    | 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER'
+    | 'FEIL_OPPLYSNINGER_FRA_BRUKER'
+    | 'GOD_TRO'
+    | 'UDEFINERT';
 
 export type JournalposttypeEnum = 'I' | 'U' | 'N';
 
@@ -1252,10 +1284,180 @@ export type JournalstatusEnum =
     | 'OPPLASTING_DOKUMENT'
     | 'UKJENT';
 
+export type ForeldelsesvurderingstypeEnum2 =
+    | 'IKKE_VURDERT'
+    | 'FORELDET'
+    | 'IKKE_FORELDET'
+    | 'TILLEGGSFRIST';
+
+export type HendelsestypeEnum2 =
+    | 'ANNET'
+    | 'BOR_MED_SØKER'
+    | 'BOSATT_I_RIKET'
+    | 'LOVLIG_OPPHOLD'
+    | 'DØDSFALL'
+    | 'DELT_BOSTED'
+    | 'BARNS_ALDER'
+    | 'MEDLEMSKAP'
+    | 'OPPHOLD_I_NORGE'
+    | 'ENSLIG_FORSØRGER'
+    | 'OVERGANGSSTØNAD'
+    | 'YRKESRETTET_AKTIVITET'
+    | 'STØNADSPERIODE'
+    | 'INNTEKT'
+    | 'PENSJONSYTELSER'
+    | 'STØNAD_TIL_BARNETILSYN'
+    | 'SKOLEPENGER'
+    | 'SATSER'
+    | 'SMÅBARNSTILLEGG'
+    | 'MEDLEMSKAP_BA'
+    | 'UTVIDET'
+    | 'VILKÅR_BARN'
+    | 'VILKÅR_SØKER'
+    | 'BARN_I_FOSTERHJEM_ELLER_INSTITUSJON'
+    | 'KONTANTSTØTTENS_STØRRELSE'
+    | 'STØTTEPERIODE'
+    | 'UTBETALING'
+    | 'KONTANTSTØTTE_FOR_ADOPTERTE_BARN'
+    | 'ANNET_KS';
+
+export type HendelsesundertypeEnum2 =
+    | 'ANNET_FRITEKST'
+    | 'BOR_IKKE_MED_BARN'
+    | 'BARN_FLYTTET_FRA_NORGE'
+    | 'BRUKER_FLYTTET_FRA_NORGE'
+    | 'BARN_BOR_IKKE_I_NORGE'
+    | 'BRUKER_BOR_IKKE_I_NORGE'
+    | 'UTEN_OPPHOLDSTILLATELSE'
+    | 'BARN_DØD'
+    | 'BRUKER_DØD'
+    | 'ENIGHET_OM_OPPHØR_DELT_BOSTED'
+    | 'UENIGHET_OM_OPPHØR_DELT_BOSTED'
+    | 'BARN_OVER_18_ÅR'
+    | 'BARN_OVER_6_ÅR'
+    | 'MEDLEM_SISTE_5_ÅR'
+    | 'LOVLIG_OPPHOLD'
+    | 'BRUKER_IKKE_OPPHOLD_I_NORGE'
+    | 'BARN_IKKE_OPPHOLD_I_NORGE'
+    | 'OPPHOLD_UTLAND_6_UKER_ELLER_MER'
+    | 'UGIFT'
+    | 'SEPARERT_SKILT'
+    | 'SAMBOER'
+    | 'NYTT_BARN_SAMME_PARTNER'
+    | 'ENDRET_SAMVÆRSORDNING'
+    | 'BARN_FLYTTET'
+    | 'NÆRE_BOFORHOLD'
+    | 'FORELDRE_LEVER_SAMMEN'
+    | 'BARN_8_ÅR'
+    | 'BARN_FYLT_1_ÅR'
+    | 'UTDANNING'
+    | 'ETABLERER_EGEN_VIRKSOMHET'
+    | 'HOVEDPERIODE_3_ÅR'
+    | 'UTVIDELSE_UTDANNING'
+    | 'UTVIDELSE_SÆRLIG_TILSYNSKREVENDE_BARN'
+    | 'UTVIDELSE_FORBIGÅENDE_SYKDOM'
+    | 'PÅVENTE_AV_SKOLESTART_STARTET_IKKE'
+    | 'PÅVENTE_SKOLESTART_STARTET_TIDLIGERE'
+    | 'PÅVENTE_ARBEIDSTILBUD_STARTET_IKKE'
+    | 'PÅVENTE_ARBEIDSTILBUD_STARTET_TIDLIGERE'
+    | 'PÅVENTE_BARNETILSYN_IKKE_HA_TILSYN'
+    | 'PÅVENTE_BARNETILSYN_STARTET_TIDLIGERE'
+    | 'ARBEIDSSØKER'
+    | 'REELL_ARBEIDSSØKER'
+    | 'ARBEIDSINNTEKT_FÅTT_INNTEKT'
+    | 'ARBEIDSINNTEKT_ENDRET_INNTEKT'
+    | 'ANDRE_FOLKETRYGDYTELSER'
+    | 'SELVSTENDIG_NÆRINGSDRIVENDE_FÅTT_INNTEKT'
+    | 'SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT'
+    | 'UFØRETRYGD'
+    | 'GJENLEVENDE_EKTEFELLE'
+    | 'ARBEID'
+    | 'EGEN_VIRKSOMHET'
+    | 'TILSYNSUTGIFTER_OPPHØRT'
+    | 'TILSYNSUTGIFTER_ENDRET'
+    | 'FORBIGÅENDE_SYKDOM'
+    | 'ETTER_4_SKOLEÅR_UTGIFTENE_OPPHØRT'
+    | 'ETTER_4_SKOLEÅR_ENDRET_ARBEIDSTID'
+    | 'INNTEKT_OVER_6G'
+    | 'KONTANTSTØTTE'
+    | 'ØKT_KONTANTSTØTTE'
+    | 'IKKE_RETT_TIL_OVERGANGSSTØNAD'
+    | 'SLUTTET_I_UTDANNING'
+    | 'IKKE_ARBEID'
+    | 'SMÅBARNSTILLEGG_OVERGANGSSTØNAD'
+    | 'SATSENDRING'
+    | 'SMÅBARNSTILLEGG_3_ÅR'
+    | 'BRUKER_OG_BARN_FLYTTET_FRA_NORGE'
+    | 'BRUKER_OG_BARN_BOR_IKKE_I_NORGE'
+    | 'FLYTTET_SAMMEN'
+    | 'UTENLANDS_IKKE_MEDLEM'
+    | 'MEDLEMSKAP_OPPHØRT'
+    | 'ANNEN_FORELDER_IKKE_MEDLEM'
+    | 'ANNEN_FORELDER_OPPHØRT_MEDLEMSKAP'
+    | 'FLERE_UTENLANDSOPPHOLD'
+    | 'BOSATT_IKKE_MEDLEM'
+    | 'GIFT'
+    | 'NYTT_BARN'
+    | 'SAMBOER_12_MÅNEDER'
+    | 'FLYTTET_SAMMEN_ANNEN_FORELDER'
+    | 'FLYTTET_SAMMEN_EKTEFELLE'
+    | 'FLYTTET_SAMMEN_SAMBOER'
+    | 'GIFT_IKKE_EGEN_HUSHOLDNING'
+    | 'SAMBOER_IKKE_EGEN_HUSHOLDNING'
+    | 'EKTEFELLE_AVSLUTTET_SONING'
+    | 'SAMBOER_AVSLUTTET_SONING'
+    | 'EKTEFELLE_INSTITUSJON'
+    | 'SAMBOER_INSTITUSJON'
+    | 'BARN_IKKE_BOSATT'
+    | 'BARN_IKKE_OPPHOLDSTILLATELSE'
+    | 'BARN_OVER_2_ÅR'
+    | 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN'
+    | 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
+    | 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN'
+    | 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
+    | 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN'
+    | 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
+    | 'BARN_BOR_IKKE_HOS_SØKER'
+    | 'UTENLANDSOPPHOLD_OVER_3_MÅNEDER'
+    | 'SØKER_FLYTTET_FRA_NORGE'
+    | 'SØKER_IKKE_BOSATT'
+    | 'SØKER_IKKE_OPPHOLDSTILLATELSE'
+    | 'SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER'
+    | 'BARN_I_FOSTERHJEM'
+    | 'BARN_I_INSTITUSJON'
+    | 'FULLTIDSPLASS_BARNEHAGE'
+    | 'DELTIDSPLASS_BARNEHAGEPLASS'
+    | 'ØKT_TIMEANTALL_I_BARNEHAGE'
+    | 'BARN_2_ÅR'
+    | 'DELT_BOSTED_AVTALE_OPPHØRT'
+    | 'DOBBELUTBETALING'
+    | 'MER_ENN_11_MÅNEDER'
+    | 'BARN_STARTET_PÅ_SKOLEN';
+
 export type VedtaksresultatEnum =
     | 'FULL_TILBAKEBETALING'
     | 'DELVIS_TILBAKEBETALING'
     | 'INGEN_TILBAKEBETALING';
+
+export type ResultatstypeEnum =
+    | 'IKKE_FASTSATT'
+    | 'HENLAGT_FEILOPPRETTET'
+    | 'HENLAGT_FEILOPPRETTET_MED_BREV'
+    | 'HENLAGT_FEILOPPRETTET_UTEN_BREV'
+    | 'HENLAGT_KRAVGRUNNLAG_NULLSTILT'
+    | 'HENLAGT_TEKNISK_VEDLIKEHOLD'
+    | 'HENLAGT_MANGLENDE_KRAVGRUNNLAG'
+    | 'HENLAGT'
+    | 'INGEN_TILBAKEBETALING'
+    | 'DELVIS_TILBAKEBETALING'
+    | 'FULL_TILBAKEBETALING';
+
+export type BehandlingsårsakstypeEnum =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
 
 export type SaksbehandlingstypeEnum =
     | 'ORDINÆR'
@@ -1269,6 +1471,15 @@ export type BehandlingsstegstatusEnum =
     | 'AUTOUTFØRT'
     | 'TILBAKEFØRT'
     | 'AVBRUTT';
+
+export type VenteårsakEnum2 =
+    | 'VENT_PÅ_BRUKERTILBAKEMELDING'
+    | 'VENT_PÅ_TILBAKEKREVINGSGRUNNLAG'
+    | 'AVVENTER_DOKUMENTASJON'
+    | 'UTVIDET_TILSVAR_FRIST'
+    | 'ENDRE_TILKJENT_YTELSE'
+    | 'VENT_PÅ_MULIG_MOTREGNING'
+    | 'MANGLER_STØTTE';
 
 export type TvingHenleggBehandlingData = {
     body?: never;

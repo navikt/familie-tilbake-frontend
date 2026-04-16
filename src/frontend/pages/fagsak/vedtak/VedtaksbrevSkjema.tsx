@@ -2,7 +2,7 @@ import type { VedtaksbrevFormData } from './schema';
 import type { TextareaProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { FieldPath } from 'react-hook-form';
-import type { RotElement } from '~/generated-new';
+import type { Avsnitt, RotElement, VedtaksbrevData } from '~/generated-new';
 
 import { Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
@@ -12,16 +12,19 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 
 import { elementArrayTilTekst, tekstTilElementArray } from './utils';
 
-export const VedtaksbrevSkjema: FC = () => {
-    const methods = useFormContext<VedtaksbrevFormData>();
+type Props = {
+    vedtaksbrevData: VedtaksbrevData;
+};
+
+export const VedtaksbrevSkjema: FC<Props> = ({ vedtaksbrevData }) => {
     return (
         <>
             <ElementTextarea
                 name="hovedavsnitt.underavsnitt"
-                description={methods.getValues('hovedavsnitt').forklaring}
-                label={methods.getValues('hovedavsnitt').tittel}
+                description={vedtaksbrevData.hovedavsnitt.forklaring}
+                label={vedtaksbrevData.hovedavsnitt.tittel}
             />
-            {methods.getValues('avsnitt').map((avsnitt, index) => (
+            {vedtaksbrevData.avsnitt.map((avsnitt, index) => (
                 <Avsnitt key={avsnitt.id} avsnitt={avsnitt} avsnittIndex={index} />
             ))}
         </>
@@ -29,7 +32,7 @@ export const VedtaksbrevSkjema: FC = () => {
 };
 
 const Avsnitt: FC<{
-    avsnitt: VedtaksbrevFormData['avsnitt'][number];
+    avsnitt: Avsnitt;
     avsnittIndex: number;
 }> = ({ avsnitt, avsnittIndex }) => {
     const { behandlingILesemodus } = useBehandlingState();
