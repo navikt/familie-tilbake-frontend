@@ -9,14 +9,17 @@ import type {
 
 const tilRotElementWritable = (
     oppdatert: RotElementUpdateItem,
-    opprinnelig: RotElement
+    opprinneligeElementer: RotElement[]
 ): RotElementWritable => {
     if (oppdatert.type !== 'påkrevd_begrunnelse') {
         return oppdatert satisfies RotElementWritable;
     }
-    if (opprinnelig.type !== 'påkrevd_begrunnelse') {
+    const opprinnelig = opprinneligeElementer.find(
+        e => e.type === 'påkrevd_begrunnelse' && e.begrunnelseType === oppdatert.begrunnelseType
+    );
+    if (!opprinnelig || opprinnelig.type !== 'påkrevd_begrunnelse') {
         throw new Error(
-            `Forventet 'påkrevd_begrunnelse' i opprinneligdata, men fikk '${opprinnelig.type}'`
+            `Fant ikke matchende 'påkrevd_begrunnelse' med begrunnelseType '${oppdatert.begrunnelseType}' i opprinneligdata`
         );
     }
     return { ...oppdatert, tittel: opprinnelig.tittel } satisfies RotElementWritable;
@@ -32,15 +35,15 @@ export const tilVedtaksbrevDataWritable = (
         ...statiskeData,
         hovedavsnitt: {
             tittel: formData.hovedavsnitt.tittel,
-            underavsnitt: formData.hovedavsnitt.underavsnitt.map((el, i) =>
-                tilRotElementWritable(el, hovedavsnitt.underavsnitt[i])
+            underavsnitt: formData.hovedavsnitt.underavsnitt.map(el =>
+                tilRotElementWritable(el, hovedavsnitt.underavsnitt)
             ),
         },
         avsnitt: formData.avsnitt.map((formAvsnitt, i) => ({
             tittel: formAvsnitt.tittel,
             id: formAvsnitt.id,
-            underavsnitt: formAvsnitt.underavsnitt.map((el, j) =>
-                tilRotElementWritable(el, avsnitt[i].underavsnitt[j])
+            underavsnitt: formAvsnitt.underavsnitt.map(el =>
+                tilRotElementWritable(el, avsnitt[i].underavsnitt)
             ),
         })),
     };
