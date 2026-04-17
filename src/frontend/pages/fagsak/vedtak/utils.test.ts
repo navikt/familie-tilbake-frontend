@@ -175,7 +175,10 @@ describe('vedtaksbrevResolver', () => {
     const lagOptions = (names: string[]): never =>
         ({ names, fields: {}, shouldUseNativeValidation: false }) as never;
 
-    const kjørResolver = async (data: VedtaksbrevFormData, registrerteNavn: string[] = []) =>
+    const kjørResolver = async (
+        data: VedtaksbrevFormData,
+        registrerteNavn: string[] = []
+    ): Promise<ReturnType<typeof vedtaksbrevResolver>> =>
         vedtaksbrevResolver(data, {}, lagOptions(registrerteNavn));
 
     const hentFeilstier = (errors: Record<string, unknown>, prefix = ''): string[] => {
