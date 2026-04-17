@@ -1,4 +1,6 @@
+import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 
 import { Heading, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,7 +18,7 @@ import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
-import { Vedtaksbrev } from './Vedtaksbrev';
+import { Vedtaksbrev, VEDTAKSBREV_FORM_ID } from './Vedtaksbrev';
 import { VedtakSkeleton } from './VedtakSkeleton';
 import { vedtaksresultatFarger } from './vedtaksresultatFarger';
 import { Vedtakstabell } from './Vedtakstabell';
@@ -61,6 +63,10 @@ export const Vedtak: FC = () => {
         },
     });
 
+    const onSubmit: SubmitHandler<VedtaksbrevFormData> = () => {
+        foreslåVedtak.mutate({ path: { behandlingId } });
+    };
+
     return (
         <VStack gap="space-24">
             <section className="flex flex-row justify-between items-center">
@@ -97,7 +103,9 @@ export const Vedtak: FC = () => {
             ) : lasterVedtaksbrev ? (
                 <VedtakSkeleton />
             ) : (
-                vedtaksbrevData && <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} />
+                vedtaksbrevData && (
+                    <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={onSubmit} />
+                )
             )}
 
             <ActionBar
@@ -107,7 +115,8 @@ export const Vedtak: FC = () => {
                 nesteAriaLabel="Send til godkjenning hos beslutter"
                 isLoading={foreslåVedtak.isPending}
                 skjulNeste={behandlingILesemodus}
-                onNeste={() => foreslåVedtak.mutate({ path: { behandlingId } })}
+                type="submit"
+                formId={VEDTAKSBREV_FORM_ID}
                 onForrige={navigerTilForrige}
             />
         </VStack>

@@ -1,8 +1,8 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import type { VedtaksbrevData, VedtaksbrevDataWritable } from '~/generated-new';
 
-// import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Button,
     Heading,
@@ -23,10 +23,9 @@ import {
     behandlingOppdaterVedtaksbrevMutation,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
-// import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
-// import { zVedtaksbrevRedigerbareDataUpdate } from '~/generated-new/zod.gen';
 import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 
+import { vedtaksbrevResolver } from './schema';
 import { tilVedtaksbrevDataWritable } from './utils';
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
 
@@ -45,16 +44,18 @@ const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) =
 
 type Props = {
     vedtaksbrevData: VedtaksbrevData;
+    onSubmit: SubmitHandler<VedtaksbrevFormData>;
 };
 
-export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
+export const VEDTAKSBREV_FORM_ID = 'vedtaksbrev-skjema';
+
+export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
-        // resolver: zodResolver(zVedtaksbrevRedigerbareDataUpdate),
-        // reValidateMode: 'onChange',
-        // mode: 'onSubmit',
+        resolver: vedtaksbrevResolver,
+        mode: 'onSubmit',
         defaultValues: {
             hovedavsnitt: vedtaksbrevData.hovedavsnitt,
             avsnitt: vedtaksbrevData.avsnitt,
@@ -96,17 +97,13 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
             body: data,
         });
 
-    const debouncedUpdate = useDebounce(async () => {
+    const debouncedUpdate = useDebounce(() => {
         const formData = methods.getValues();
         oppdaterForhåndsvisning(tilVedtaksbrevDataWritable(vedtaksbrevData, formData));
-
-        const erGyldig = await methods.trigger();
-        if (erGyldig) {
-            oppdaterVedtaksbrevMutation.mutate({
-                path: { behandlingId },
-                body: formData,
-            });
-        }
+        oppdaterVedtaksbrevMutation.mutate({
+            path: { behandlingId },
+            body: formData,
+        });
     });
     useEffect(() => {
         return methods.subscribe({
@@ -146,7 +143,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                 </HStack>
 
                 <FormProvider {...methods}>
-                    <VedtaksbrevSkjema vedtaksbrevData={vedtaksbrevData} />
+                    <VedtaksbrevSkjema vedtaksbrevData={vedtaksbrevData} onSubmit={onSubmit} />
                 </FormProvider>
             </section>
 
