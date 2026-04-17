@@ -31,11 +31,7 @@ export const VedtaksbrevSkjema: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     const { handleSubmit } = useFormContext<VedtaksbrevFormData>();
 
     return (
-        <form
-            id={VEDTAKSBREV_FORM_ID}
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-6"
-        >
+        <form id={VEDTAKSBREV_FORM_ID} onSubmit={handleSubmit(onSubmit)} className="contents">
             <ElementTextarea
                 name="hovedavsnitt.underavsnitt"
                 description={vedtaksbrevData.hovedavsnitt.forklaring}
