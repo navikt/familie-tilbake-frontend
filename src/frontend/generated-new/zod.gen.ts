@@ -17,20 +17,16 @@ export const zBeregningsresultatsperiode = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     vurdering: zBeregningsresultatVurdering,
-    andelAvBeløp: z.union([
-        z
-            .int()
-            .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-            .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-        z.null(),
-    ]),
-    renteprosent: z.union([
-        z
-            .int()
-            .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-            .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-        z.null(),
-    ]),
+    andelAvBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
+    renteprosent: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
     tilbakekrevingsbeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
@@ -64,13 +60,24 @@ export const zLogginnslag = z.object({
     aktør: z.string(),
     aktørIdent: z.string(),
     tittel: z.string(),
-    tekst: z.union([z.string(), z.null()]),
-    steg: z.union([z.string(), z.null()]),
+    tekst: z.string().nullable(),
+    steg: z.string().nullable(),
 });
 
 export const zMuligeRettsligGrunnlag = z.object({
     bestemmelse: zBestemmelseEllerGrunnlag,
     grunnlag: z.array(zBestemmelseEllerGrunnlag),
+});
+
+export const zOppsummeringsdata = z.object({
+    fom: z.string(),
+    tom: z.string(),
+    feilutbetaltBeløp: z.string(),
+    vurdering: z.string(),
+    andelAvBeløp: z.string(),
+    renteprosent: z.string(),
+    tilbakekrevingsbeløp: z.string(),
+    tilbakekrevesBeløpEtterSkatt: z.string(),
 });
 
 export const zRentekstElement = z.object({
@@ -132,7 +139,12 @@ export const zOppdaterFaktaPeriode = z.object({
 export const zSignatur = z.object({
     enhetNavn: z.string(),
     ansvarligSaksbehandler: z.string(),
-    besluttendeSaksbehandler: z.union([z.string(), z.null()]),
+    besluttendeSaksbehandler: z.string().nullable(),
+});
+
+export const zStandardtekst = z.object({
+    tittel: z.string(),
+    underavsnitt: z.array(zElement),
 });
 
 export const zUnderavsnittElement = z.object({
@@ -237,24 +249,27 @@ export const zVedtaksbrevData = z.object({
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
+    oppsummeringstabell: z.array(zOppsummeringsdata),
+    bunntekster: z.array(zStandardtekst),
+    saksnummer: z.string(),
 });
 
 export const zAvEnum = z.enum(['NAV', 'BRUKER', 'IKKE_VURDERT']);
 
 export const zOppdaget = z.object({
-    dato: z.union([z.iso.date(), z.null()]),
+    dato: z.iso.date().nullable(),
     av: zAvEnum,
-    beskrivelse: z.union([zFritekst, z.null()]),
+    beskrivelse: zFritekst.nullable(),
 });
 
 export const zVurdering = z.object({
-    årsak: z.union([zFritekst, z.null()]),
-    oppdaget: z.optional(zOppdaget),
+    årsak: zFritekst.nullable(),
+    oppdaget: zOppdaget.optional(),
 });
 
 export const zOppdaterFaktaOmFeilutbetaling = z.object({
-    perioder: z.optional(z.array(zOppdaterFaktaPeriode)),
-    vurdering: z.optional(zVurdering),
+    perioder: z.array(zOppdaterFaktaPeriode).optional(),
+    vurdering: zVurdering.optional(),
 });
 
 export const zResultatEnum = z.enum(['INNVILGET', 'OPPHØRT']);
@@ -277,13 +292,11 @@ export const zFeilutbetaling = z.object({
 
 export const zFaktaOmFeilutbetaling = z.object({
     feilutbetaling: zFeilutbetaling,
-    tidligereVarsletBeløp: z.union([
-        z
-            .int()
-            .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-            .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-        z.null(),
-    ]),
+    tidligereVarsletBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
     perioder: z.array(zFaktaPeriode),
     vurdering: zVurdering,
@@ -332,6 +345,9 @@ export const zVedtaksbrevDataWritable = z.object({
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
+    oppsummeringstabell: z.array(zOppsummeringsdata),
+    bunntekster: z.array(zStandardtekst),
+    saksnummer: z.string(),
 });
 
 export const zVedtaksbrevRedigerbareDataWritable = z.object({
@@ -340,11 +356,11 @@ export const zVedtaksbrevRedigerbareDataWritable = z.object({
 });
 
 export const zBehandlingBehandlingsloggData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -353,11 +369,11 @@ export const zBehandlingBehandlingsloggData = z.object({
 export const zBehandlingBehandlingsloggResponse = z.array(zLogginnslag);
 
 export const zBehandlingFaktaData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -370,7 +386,7 @@ export const zBehandlingOppdaterFaktaData = z.object({
     path: z.object({
         behandlingId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -379,19 +395,19 @@ export const zBehandlingOppdaterFaktaData = z.object({
 export const zBehandlingOppdaterFaktaResponse = zFaktaOmFeilutbetaling;
 
 export const zBehandlingForeslaaVedtakData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 export const zBehandlingHentVedtaksbrevData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -404,7 +420,7 @@ export const zBehandlingOppdaterVedtaksbrevData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -413,11 +429,11 @@ export const zBehandlingOppdaterVedtaksbrevData = z.object({
 export const zBehandlingOppdaterVedtaksbrevResponse = zVedtaksbrevRedigerbareData;
 
 export const zBehandlingHentVedtaksresultatData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -427,6 +443,11 @@ export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
 
 export const zVedtaksbrevLagSvgVedtaksbrevData = z.object({
     body: zVedtaksbrevDataWritable,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
+
+/**
+ * The request has succeeded.
+ */
+export const zVedtaksbrevLagSvgVedtaksbrevResponse = z.string();

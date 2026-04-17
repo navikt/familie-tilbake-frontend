@@ -4,7 +4,10 @@ import * as z from 'zod';
 
 export const zManuellAdresseInfo = z.object({
     adresselinje1: z.string().regex(/^(.{1,80})$/),
-    adresselinje2: z.optional(z.string().regex(/^(.{0,80})$/)),
+    adresselinje2: z
+        .string()
+        .regex(/^(.{0,80})$/)
+        .nullish(),
     postnummer: z.string().regex(/^(.{0,10})$/),
     poststed: z.string().regex(/^(.{0,50})$/),
     landkode: z.string().regex(/^[a-zA-Z]{2}$/),
@@ -23,21 +26,21 @@ export const zOppdaterBehandlendeEnhetRequest = z.object({
 export const zDatoperiode = z.object({
     fom: z.iso.date(),
     tom: z.iso.date(),
-    fomMåned: z.string(),
     tomMåned: z.string(),
+    fomMåned: z.string(),
 });
 
 export const zPeriodeMedTekstDto = z.object({
     periode: zDatoperiode,
-    faktaAvsnitt: z.optional(z.string().min(0).max(4000)),
-    foreldelseAvsnitt: z.optional(z.string().min(0).max(4000)),
-    vilkårAvsnitt: z.optional(z.string().min(0).max(4000)),
-    særligeGrunnerAvsnitt: z.optional(z.string().min(0).max(4000)),
-    særligeGrunnerAnnetAvsnitt: z.optional(z.string().min(0).max(4000)),
+    faktaAvsnitt: z.string().min(0).max(4000).nullish(),
+    foreldelseAvsnitt: z.string().min(0).max(4000).nullish(),
+    vilkårAvsnitt: z.string().min(0).max(4000).nullish(),
+    særligeGrunnerAvsnitt: z.string().min(0).max(4000).nullish(),
+    særligeGrunnerAnnetAvsnitt: z.string().min(0).max(4000).nullish(),
 });
 
 export const zFritekstavsnittDto = z.object({
-    oppsummeringstekst: z.optional(z.string().min(0).max(10000)),
+    oppsummeringstekst: z.string().min(0).max(10000).nullish(),
     perioderMedTekst: z.array(zPeriodeMedTekstDto).min(0).max(100),
 });
 
@@ -54,7 +57,7 @@ export const zFristUtsettelseDto = z.object({
 
 export const zHentForhåndvisningVedtaksbrevPdfDto = z.object({
     behandlingId: z.uuid(),
-    oppsummeringstekst: z.optional(z.string().min(0).max(10000)),
+    oppsummeringstekst: z.string().min(0).max(10000).nullish(),
     perioderMedTekst: z.array(zPeriodeMedTekstDto).min(0).max(100),
 });
 
@@ -81,7 +84,7 @@ export const zFeilutbetaltePerioderDto = z.object({
 
 export const zForhåndsvisningHenleggelsesbrevDto = z.object({
     behandlingId: z.uuid(),
-    fritekst: z.optional(z.string().min(0).max(1500)),
+    fritekst: z.string().min(0).max(1500).nullish(),
 });
 
 export const zBehandlingsstegDto = z.object({
@@ -95,7 +98,7 @@ export const zBehandlingsstegForeslåVedtaksstegDto = zBehandlingsstegDto.and(
 );
 
 export const zBrevmottakerstegDto = z.object({
-    begrunnelse: z.optional(z.string().min(0).max(4000)),
+    begrunnelse: z.string().min(0).max(4000).nullish(),
 });
 
 export const zBehandlingsstegBrevmottakerDto = zBehandlingsstegDto.and(
@@ -106,7 +109,7 @@ export const zBehandlingsstegBrevmottakerDto = zBehandlingsstegDto.and(
 
 export const zGodTroDto = z.object({
     beløpErIBehold: z.boolean(),
-    beløpTilbakekreves: z.optional(z.number()),
+    beløpTilbakekreves: z.number().nullish(),
     begrunnelse: z.string().min(0).max(1500),
 });
 
@@ -128,7 +131,7 @@ export const zVarsel = z.object({
 export const zKanBehandlingOpprettesManueltRespons = z.object({
     kanBehandlingOpprettes: z.boolean(),
     melding: z.string(),
-    kravgrunnlagsreferanse: z.optional(z.string()),
+    kravgrunnlagsreferanse: z.string().nullish(),
 });
 
 export const zInfo = z.object({
@@ -141,7 +144,7 @@ export const zInfo = z.object({
 export const zKravgrunnlagsinfo = z.object({
     eksternKravgrunnlagId: z.int(),
     kravgrunnlagKravstatuskode: z.string(),
-    mottattXmlId: z.optional(z.uuid()),
+    mottattXmlId: z.uuid().nullish(),
     eksternId: z.string(),
     opprettetTid: z.iso.datetime(),
 });
@@ -166,9 +169,9 @@ export const zVarselbrevtekst = z.object({
 });
 
 export const zVarselbrevDto = z.object({
-    varselbrevSendtTid: z.optional(z.iso.date()),
-    opprinneligFristForUttalelse: z.optional(z.iso.date()),
-    tekstFraSaksbehandler: z.optional(z.string()),
+    varselbrevSendtTid: z.iso.date().nullish(),
+    opprinneligFristForUttalelse: z.iso.date().nullish(),
+    tekstFraSaksbehandler: z.string().nullish(),
 });
 
 export const zPersonIdent = z.object({
@@ -191,7 +194,7 @@ export const zRedusertBeløpDto = z.object({
 
 export const zVurdertGodTroDto = z.object({
     beløpErIBehold: z.boolean(),
-    beløpTilbakekreves: z.optional(z.number()),
+    beløpTilbakekreves: z.number().nullish(),
     begrunnelse: z.string(),
 });
 
@@ -202,9 +205,9 @@ export const zLogiskVedlegg = z.object({
 
 export const zDokumentInfo = z.object({
     dokumentInfoId: z.string(),
-    tittel: z.optional(z.string()),
-    brevkode: z.optional(z.string()),
-    logiskeVedlegg: z.optional(z.array(zLogiskVedlegg)),
+    tittel: z.string().nullish(),
+    brevkode: z.string().nullish(),
+    logiskeVedlegg: z.array(zLogiskVedlegg).nullish(),
 });
 
 export const zRelevantDato = z.object({
@@ -213,11 +216,11 @@ export const zRelevantDato = z.object({
 });
 
 export const zSak = z.object({
-    arkivsaksnummer: z.optional(z.string()),
-    arkivsaksystem: z.optional(z.string()),
-    fagsakId: z.optional(z.string()),
-    sakstype: z.optional(z.string()),
-    fagsaksystem: z.optional(z.string()),
+    arkivsaksnummer: z.string().nullish(),
+    arkivsaksystem: z.string().nullish(),
+    fagsakId: z.string().nullish(),
+    sakstype: z.string().nullish(),
+    fagsaksystem: z.string().nullish(),
 });
 
 export const zVurdering = z.object({
@@ -226,12 +229,12 @@ export const zVurdering = z.object({
 
 export const zBeregningsresultatsperiodeDto = z.object({
     periode: zDatoperiode,
-    vurdering: z.optional(zVurdering),
+    vurdering: zVurdering.nullish(),
     feilutbetaltBeløp: z.number(),
-    andelAvBeløp: z.optional(z.number()),
-    renteprosent: z.optional(z.number()),
-    tilbakekrevingsbeløp: z.optional(z.number()),
-    tilbakekrevesBeløpEtterSkatt: z.optional(z.number()),
+    andelAvBeløp: z.number().nullish(),
+    renteprosent: z.number().nullish(),
+    tilbakekrevingsbeløp: z.number().nullish(),
+    tilbakekrevesBeløpEtterSkatt: z.number().nullish(),
 });
 
 export const zSchemaEnum = z.enum([
@@ -285,115 +288,115 @@ export const zStatusEnum = z.enum([
 ]);
 
 export const zRessursString = z.object({
-    data: z.optional(z.string()),
+    data: z.string().nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessurs = z.object({
-    data: z.optional(z.unknown()),
+    data: z.null().optional(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursByte = z.object({
-    data: z.optional(z.string()),
+    data: z.string().nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursUuid = z.object({
-    data: z.optional(z.uuid()),
+    data: z.uuid().nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursBeregnetPerioderDto = z.object({
-    data: z.optional(zBeregnetPerioderDto),
+    data: zBeregnetPerioderDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursKanBehandlingOpprettesManueltRespons = z.object({
-    data: z.optional(zKanBehandlingOpprettesManueltRespons),
+    data: zKanBehandlingOpprettesManueltRespons.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursBoolean = z.object({
-    data: z.optional(z.boolean()),
+    data: z.boolean().nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursInfo = z.object({
-    data: z.optional(zInfo),
+    data: zInfo.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursListKravgrunnlagsinfo = z.object({
-    data: z.optional(z.array(zKravgrunnlagsinfo)),
+    data: z.array(zKravgrunnlagsinfo).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursListString = z.object({
-    data: z.optional(z.array(z.string())),
+    data: z.array(z.string()).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursMapStringBoolean = z.object({
-    data: z.optional(z.record(z.string(), z.boolean())),
+    data: z.record(z.string(), z.boolean()).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursFinnesBehandlingResponse = z.object({
-    data: z.optional(zFinnesBehandlingResponse),
+    data: zFinnesBehandlingResponse.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursVarselbrevtekst = z.object({
-    data: z.optional(zVarselbrevtekst),
+    data: zVarselbrevtekst.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zRessursBrukerlenkeDto = z.object({
-    data: z.optional(zBrukerlenkeDto),
+    data: zBrukerlenkeDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zTypeEnum = z.enum(['BRUKER_MED_UTENLANDSK_ADRESSE', 'FULLMEKTIG', 'VERGE', 'DØDSBO']);
@@ -409,33 +412,18 @@ export const zVergetypeEnum = z.enum([
 
 export const zBrevmottaker = z.object({
     type: zTypeEnum,
-    vergetype: z.optional(zVergetypeEnum),
+    vergetype: zVergetypeEnum.optional(),
     navn: z.string().regex(/^(.{1,80})$/),
-    organisasjonsnummer: z.optional(z.string().regex(/(^$|.{9})/)),
-    personIdent: z.optional(z.string().regex(/(^$|.{11})/)),
-    manuellAdresseInfo: z.optional(zManuellAdresseInfo),
+    organisasjonsnummer: z
+        .string()
+        .regex(/(^$|.{9})/)
+        .nullish(),
+    personIdent: z
+        .string()
+        .regex(/(^$|.{11})/)
+        .nullish(),
+    manuellAdresseInfo: zManuellAdresseInfo.nullish(),
 });
-
-export const zVerge = z.object({
-    vergetype: zVergetypeEnum,
-    navn: z.string(),
-    organisasjonsnummer: z.optional(z.string().regex(/(^$|.{9})/)),
-    personIdent: z.optional(z.string().regex(/(^$|.{11})/)),
-});
-
-export const zVergeDto = z.object({
-    ident: z.optional(z.string()),
-    orgNr: z.optional(z.string()),
-    type: zVergetypeEnum,
-    navn: z.string(),
-    begrunnelse: z.optional(z.string().min(0).max(4000)),
-});
-
-export const zBehandlingsstegVergeDto = zBehandlingsstegDto.and(
-    z.object({
-        verge: zVergeDto,
-    })
-);
 
 export const zManuellBrevmottakerResponsDto = z.object({
     id: z.uuid(),
@@ -443,19 +431,11 @@ export const zManuellBrevmottakerResponsDto = z.object({
 });
 
 export const zRessursListManuellBrevmottakerResponsDto = z.object({
-    data: z.optional(z.array(zManuellBrevmottakerResponsDto)),
+    data: z.array(zManuellBrevmottakerResponsDto).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
-});
-
-export const zRessursVergeDto = z.object({
-    data: z.optional(zVergeDto),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zVenteårsakEnum = z.enum([
@@ -471,7 +451,7 @@ export const zVenteårsakEnum = z.enum([
 export const zBehandlingPåVentDto = z.object({
     venteårsak: zVenteårsakEnum,
     tidsfrist: z.iso.date(),
-    begrunnelse: z.optional(z.string()),
+    begrunnelse: z.string().nullish(),
 });
 
 export const zBehandlingsresultatstypeEnum = z.enum([
@@ -491,7 +471,7 @@ export const zBehandlingsresultatstypeEnum = z.enum([
 export const zHenleggelsesbrevFritekstDto = z.object({
     behandlingsresultatstype: zBehandlingsresultatstypeEnum,
     begrunnelse: z.string(),
-    fritekst: z.optional(z.string().min(0).max(1500)),
+    fritekst: z.string().min(0).max(1500).nullish(),
 });
 
 export const zHarBrukerUttaltSegEnum = z.enum([
@@ -505,8 +485,8 @@ export const zHarBrukerUttaltSegEnum = z.enum([
 
 export const zBrukeruttalelseDto = z.object({
     harBrukerUttaltSeg: zHarBrukerUttaltSegEnum,
-    uttalelsesdetaljer: z.optional(z.array(zUttalelsesdetaljer)),
-    kommentar: z.optional(z.string()),
+    uttalelsesdetaljer: z.array(zUttalelsesdetaljer).nullish(),
+    kommentar: z.string().nullish(),
 });
 
 export const zBegrunnelseForUnntakEnum = z.enum([
@@ -521,18 +501,18 @@ export const zForhåndsvarselUnntakDto = z.object({
 });
 
 export const zForhåndsvarselDto = z.object({
-    varselbrevDto: z.optional(zVarselbrevDto),
-    brukeruttalelse: z.optional(zBrukeruttalelseDto),
-    utsettUttalelseFrist: z.optional(zFristUtsettelseDto),
-    forhåndsvarselUnntak: z.optional(zForhåndsvarselUnntakDto),
+    varselbrevDto: zVarselbrevDto.nullish(),
+    brukeruttalelse: zBrukeruttalelseDto.nullish(),
+    utsettUttalelseFrist: zFristUtsettelseDto.nullish(),
+    forhåndsvarselUnntak: zForhåndsvarselUnntakDto.nullish(),
 });
 
 export const zRessursForhåndsvarselDto = z.object({
-    data: z.optional(zForhåndsvarselDto),
+    data: zForhåndsvarselDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zBrevmalkodeEnum = z.enum([
@@ -550,24 +530,70 @@ export const zBestillBrevDto = z.object({
 
 export const zSpråkkodeEnum = z.enum(['NB', 'NN']);
 
+export const zVergetypeEnum2 = z.enum([
+    'VERGE_FOR_BARN',
+    'VERGE_FOR_FORELDRELØST_BARN',
+    'VERGE_FOR_VOKSEN',
+    'ADVOKAT',
+    'ANNEN_FULLMEKTIG',
+    'UDEFINERT',
+]);
+
+export const zVerge = z.object({
+    vergetype: zVergetypeEnum2,
+    navn: z.string(),
+    organisasjonsnummer: z
+        .string()
+        .regex(/(^$|.{9})/)
+        .nullish(),
+    personIdent: z
+        .string()
+        .regex(/(^$|.{11})/)
+        .nullish(),
+});
+
 export const zForhåndsvisVarselbrevRequest = z.object({
-    varseltekst: z.optional(z.string().min(0).max(1500)),
+    varseltekst: z.string().min(0).max(1500).nullish(),
     ytelsestype: zSchemaEnum4,
-    behandlendeEnhetId: z.optional(z.string()),
+    behandlendeEnhetId: z.string().nullish(),
     behandlendeEnhetsNavn: z.string(),
-    saksbehandlerIdent: z.optional(z.string()),
+    saksbehandlerIdent: z.string().nullish(),
     språkkode: zSpråkkodeEnum,
-    vedtaksdato: z.optional(z.iso.date()),
+    vedtaksdato: z.iso.date().nullish(),
     feilutbetaltePerioderDto: zFeilutbetaltePerioderDto,
     fagsystem: zSchemaEnum2,
     eksternFagsakId: z.string(),
     ident: z.string(),
-    verge: z.optional(zVerge),
-    fagsystemsbehandlingId: z.optional(z.string()),
-    institusjon: z.optional(zInstitusjon),
+    verge: zVerge.nullish(),
+    fagsystemsbehandlingId: z.string().nullish(),
+    institusjon: zInstitusjon.nullish(),
+});
+
+export const zVergeDto = z.object({
+    ident: z.string().nullish(),
+    orgNr: z.string().nullish(),
+    type: zVergetypeEnum2,
+    navn: z.string(),
+    begrunnelse: z.string().min(0).max(4000).nullish(),
+});
+
+export const zBehandlingsstegVergeDto = zBehandlingsstegDto.and(
+    z.object({
+        verge: zVergeDto,
+    })
+);
+
+export const zRessursVergeDto = z.object({
+    data: zVergeDto.nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zAktsomhetEnum = z.enum(['FORSETT', 'GROV_UAKTSOMHET', 'SIMPEL_UAKTSOMHET']);
+
+export const zUnnlates4RettsgebyrEnum = z.enum(['UNNLATES', 'TILBAKEKREVES', 'OVER_4_RETTSGEBYR']);
 
 export const zHendelsestypeEnum = z.enum([
     'ANNET',
@@ -721,13 +747,6 @@ export const zFaktaFeilutbetalingsperiodeDto = z.object({
     hendelsesundertype: zHendelsesundertypeEnum,
 });
 
-export const zFeilutbetalingsperiodeDto = z.object({
-    periode: zDatoperiode,
-    feilutbetaltBeløp: z.number(),
-    hendelsestype: z.optional(zHendelsestypeEnum),
-    hendelsesundertype: z.optional(zHendelsesundertypeEnum),
-});
-
 export const zForeldelsesvurderingstypeEnum = z.enum([
     'IKKE_VURDERT',
     'FORELDET',
@@ -739,8 +758,8 @@ export const zForeldelsesperiodeDto = z.object({
     periode: zDatoperiode,
     begrunnelse: z.string().min(0).max(1500),
     foreldelsesvurderingstype: zForeldelsesvurderingstypeEnum,
-    foreldelsesfrist: z.optional(z.iso.date()),
-    oppdagelsesdato: z.optional(z.iso.date()),
+    foreldelsesfrist: z.iso.date().nullish(),
+    oppdagelsesdato: z.iso.date().nullish(),
 });
 
 export const zBehandlingsstegForeldelseDto = zBehandlingsstegDto.and(
@@ -748,27 +767,6 @@ export const zBehandlingsstegForeldelseDto = zBehandlingsstegDto.and(
         foreldetPerioder: z.array(zForeldelsesperiodeDto),
     })
 );
-
-export const zVurdertForeldelsesperiodeDto = z.object({
-    periode: zDatoperiode,
-    feilutbetaltBeløp: z.number(),
-    begrunnelse: z.optional(z.string()),
-    foreldelsesvurderingstype: z.optional(zForeldelsesvurderingstypeEnum),
-    foreldelsesfrist: z.optional(z.iso.date()),
-    oppdagelsesdato: z.optional(z.iso.date()),
-});
-
-export const zVurdertForeldelseDto = z.object({
-    foreldetPerioder: z.array(zVurdertForeldelsesperiodeDto),
-});
-
-export const zRessursVurdertForeldelseDto = z.object({
-    data: z.optional(zVurdertForeldelseDto),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
-});
 
 export const zSærligGrunnEnum = z.enum([
     'GRAD_AV_UAKTSOMHET',
@@ -780,36 +778,24 @@ export const zSærligGrunnEnum = z.enum([
 
 export const zSærligGrunnDto = z.object({
     særligGrunn: zSærligGrunnEnum,
-    begrunnelse: z.optional(z.string().min(0).max(1500)),
+    begrunnelse: z.string().min(0).max(1500).nullish(),
 });
 
 export const zAktsomhetDto = z.object({
     aktsomhet: zAktsomhetEnum,
-    ileggRenter: z.optional(z.boolean()),
-    andelTilbakekreves: z.optional(z.number()),
-    beløpTilbakekreves: z.optional(z.number()),
+    ileggRenter: z.boolean().nullish(),
+    andelTilbakekreves: z.number().nullish(),
+    beløpTilbakekreves: z.number().nullish(),
     begrunnelse: z.string().min(0).max(1500),
-    særligeGrunner: z.optional(z.array(zSærligGrunnDto)),
+    særligeGrunner: z.array(zSærligGrunnDto).nullish(),
     særligeGrunnerTilReduksjon: z.boolean(),
-    tilbakekrevSmåbeløp: z.boolean(),
-    særligeGrunnerBegrunnelse: z.optional(z.string()),
+    unnlates4Rettsgebyr: zUnnlates4RettsgebyrEnum.optional(),
+    særligeGrunnerBegrunnelse: z.string().nullish(),
 });
 
 export const zVurdertSærligGrunnDto = z.object({
     særligGrunn: zSærligGrunnEnum,
-    begrunnelse: z.optional(z.string()),
-});
-
-export const zVurdertAktsomhetDto = z.object({
-    aktsomhet: zAktsomhetEnum,
-    ileggRenter: z.optional(z.boolean()),
-    andelTilbakekreves: z.optional(z.number()),
-    beløpTilbakekreves: z.optional(z.number()),
-    begrunnelse: z.string(),
-    særligeGrunner: z.optional(z.array(zVurdertSærligGrunnDto)),
-    særligeGrunnerTilReduksjon: z.boolean(),
-    tilbakekrevSmåbeløp: z.boolean(),
-    særligeGrunnerBegrunnelse: z.optional(z.string()),
+    begrunnelse: z.string().nullish(),
 });
 
 export const zVilkårsvurderingsresultatEnum = z.enum([
@@ -824,8 +810,8 @@ export const zVilkårsvurderingsperiodeDto = z.object({
     periode: zDatoperiode,
     vilkårsvurderingsresultat: zVilkårsvurderingsresultatEnum,
     begrunnelse: z.string().min(0).max(1500),
-    godTroDto: z.optional(zGodTroDto),
-    aktsomhetDto: z.optional(zAktsomhetDto),
+    godTroDto: zGodTroDto.nullish(),
+    aktsomhetDto: zAktsomhetDto.nullish(),
 });
 
 export const zBehandlingsstegVilkårsvurderingDto = zBehandlingsstegDto.and(
@@ -834,64 +820,18 @@ export const zBehandlingsstegVilkårsvurderingDto = zBehandlingsstegDto.and(
     })
 );
 
-export const zVurdertVilkårsvurderingsresultatDto = z.object({
-    vilkårsvurderingsresultat: z.optional(zVilkårsvurderingsresultatEnum),
-    godTro: z.optional(zVurdertGodTroDto),
-    aktsomhet: z.optional(zVurdertAktsomhetDto),
-});
-
-export const zVurdertVilkårsvurderingsperiodeDto = z.object({
-    periode: zDatoperiode,
-    feilutbetaltBeløp: z.number(),
-    hendelsestype: zHendelsestypeEnum,
-    reduserteBeløper: z.array(zRedusertBeløpDto),
-    aktiviteter: z.array(zAktivitetDto),
-    vilkårsvurderingsresultatInfo: z.optional(zVurdertVilkårsvurderingsresultatDto),
-    begrunnelse: z.optional(z.string()),
-    foreldet: z.boolean(),
-});
-
-export const zVurdertVilkårsvurderingDto = z.object({
-    perioder: z.array(zVurdertVilkårsvurderingsperiodeDto),
-    rettsgebyr: z.coerce
-        .bigint()
-        .min(BigInt('-9223372036854775808'), {
-            error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
-        })
-        .max(BigInt('9223372036854775807'), {
-            error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
-        }),
-    opprettetTid: z.optional(z.iso.datetime()),
-});
-
-export const zRessursVurdertVilkårsvurderingDto = z.object({
-    data: z.optional(zVurdertVilkårsvurderingDto),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
-});
-
-export const zRessursListVurdertVilkårsvurderingDto = z.object({
-    data: z.optional(z.array(zVurdertVilkårsvurderingDto)),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
-});
-
 export const zHarBrukerUttaltSegEnum2 = z.enum(['JA', 'NEI', 'IKKE_AKTUELT', 'IKKE_VURDERT']);
 
 export const zVurderingAvBrukersUttalelseDto = z.object({
     harBrukerUttaltSeg: zHarBrukerUttaltSegEnum2,
-    beskrivelse: z.optional(z.string()),
+    beskrivelse: z.string().nullish(),
 });
 
 export const zBehandlingsstegFaktaDto = zBehandlingsstegDto.and(
     z.object({
         feilutbetaltePerioder: z.array(zFaktaFeilutbetalingsperiodeDto),
         begrunnelse: z.string().min(0).max(1500),
-        vurderingAvBrukersUttalelse: z.optional(zVurderingAvBrukersUttalelseDto),
+        vurderingAvBrukersUttalelse: zVurderingAvBrukersUttalelseDto.nullish(),
     })
 );
 
@@ -913,7 +853,7 @@ export const zBehandlingsstegEnum = z.enum([
 export const zVurdertTotrinnDto = z.object({
     behandlingssteg: zBehandlingsstegEnum,
     godkjent: z.boolean(),
-    begrunnelse: z.optional(z.string().min(0).max(2000)),
+    begrunnelse: z.string().min(0).max(2000).nullish(),
 });
 
 export const zBehandlingsstegFatteVedtaksstegDto = zBehandlingsstegDto.and(
@@ -924,8 +864,8 @@ export const zBehandlingsstegFatteVedtaksstegDto = zBehandlingsstegDto.and(
 
 export const zTotrinnsstegsinfo = z.object({
     behandlingssteg: zBehandlingsstegEnum,
-    godkjent: z.optional(z.boolean()),
-    begrunnelse: z.optional(z.string()),
+    godkjent: z.boolean().nullish(),
+    begrunnelse: z.string().nullish(),
 });
 
 export const zTotrinnsvurderingDto = z.object({
@@ -933,11 +873,11 @@ export const zTotrinnsvurderingDto = z.object({
 });
 
 export const zRessursTotrinnsvurderingDto = z.object({
-    data: z.optional(zTotrinnsvurderingDto),
+    data: zTotrinnsvurderingDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zTilbakekrevingsvalgEnum = z.enum([
@@ -950,47 +890,8 @@ export const zTilbakekrevingsvalgEnum = z.enum([
 export const zFaktainfo = z.object({
     revurderingsårsak: z.string(),
     revurderingsresultat: z.string(),
-    tilbakekrevingsvalg: z.optional(zTilbakekrevingsvalgEnum),
+    tilbakekrevingsvalg: zTilbakekrevingsvalgEnum.optional(),
     konsekvensForYtelser: z.array(z.string()),
-});
-
-export const zFaktaFeilutbetalingDto = z.object({
-    varsletBeløp: z.optional(
-        z.coerce
-            .bigint()
-            .min(BigInt('-9223372036854775808'), {
-                error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
-            })
-            .max(BigInt('9223372036854775807'), {
-                error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
-            })
-    ),
-    totalFeilutbetaltPeriode: zDatoperiode,
-    feilutbetaltePerioder: z.array(zFeilutbetalingsperiodeDto),
-    totaltFeilutbetaltBeløp: z.number(),
-    revurderingsvedtaksdato: z.iso.date(),
-    begrunnelse: z.string(),
-    faktainfo: zFaktainfo,
-    kravgrunnlagReferanse: z.string(),
-    vurderingAvBrukersUttalelse: zVurderingAvBrukersUttalelseDto,
-    opprettetTid: z.optional(z.iso.datetime()),
-    gjelderDødsfall: z.boolean(),
-});
-
-export const zRessursFaktaFeilutbetalingDto = z.object({
-    data: z.optional(zFaktaFeilutbetalingDto),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
-});
-
-export const zRessursListFaktaFeilutbetalingDto = z.object({
-    data: z.optional(z.array(zFaktaFeilutbetalingDto)),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
 });
 
 export const zRegelverkEnum = z.enum(['NASJONAL', 'EØS']);
@@ -999,24 +900,24 @@ export const zBehandlingstypeEnum = z.enum(['TILBAKEKREVING', 'REVURDERING_TILBA
 
 export const zOpprettTilbakekrevingRequest = z.object({
     fagsystem: zSchemaEnum2,
-    regelverk: z.optional(zRegelverkEnum),
+    regelverk: zRegelverkEnum.optional(),
     ytelsestype: zSchemaEnum4,
     eksternFagsakId: z.string(),
     personIdent: z.string().regex(/(^$|.{11})/),
     eksternId: z.string(),
-    behandlingstype: z.optional(zBehandlingstypeEnum),
+    behandlingstype: zBehandlingstypeEnum.optional(),
     manueltOpprettet: z.boolean(),
     språkkode: zSpråkkodeEnum,
     enhetId: z.string(),
     enhetsnavn: z.string(),
     saksbehandlerIdent: z.string(),
-    varsel: z.optional(zVarsel),
+    varsel: zVarsel.nullish(),
     revurderingsvedtaksdato: z.iso.date(),
-    verge: z.optional(zVerge),
+    verge: zVerge.nullish(),
     faktainfo: zFaktainfo,
-    institusjon: z.optional(zInstitusjon),
+    institusjon: zInstitusjon.nullish(),
     manuelleBrevmottakere: z.array(zBrevmottaker),
-    begrunnelseForTilbakekreving: z.optional(z.string()),
+    begrunnelseForTilbakekreving: z.string().nullish(),
 });
 
 export const zGetårsakstypeEnum = z.enum([
@@ -1044,28 +945,21 @@ export const zBehandlingstatusEnum = z.enum([
 ]);
 
 export const zBehandlingsinfo = z.object({
-    eksternKravgrunnlagId: z.optional(z.int()),
-    kravgrunnlagId: z.optional(z.uuid()),
-    kravgrunnlagKravstatuskode: z.optional(z.string()),
+    eksternKravgrunnlagId: z.int().nullish(),
+    kravgrunnlagId: z.uuid().nullish(),
+    kravgrunnlagKravstatuskode: z.string().nullish(),
     eksternId: z.string(),
     opprettetTid: z.iso.datetime(),
-    behandlingId: z.optional(z.uuid()),
-    behandlingstatus: z.optional(zBehandlingstatusEnum),
+    behandlingId: z.uuid().nullish(),
+    behandlingstatus: zBehandlingstatusEnum.optional(),
 });
 
 export const zRessursListBehandlingsinfo = z.object({
-    data: z.optional(z.array(zBehandlingsinfo)),
+    data: z.array(zBehandlingsinfo).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
-});
-
-export const zBehandlingsoppsummeringDto = z.object({
-    behandlingId: z.uuid(),
-    eksternBrukId: z.uuid(),
-    type: zBehandlingstypeEnum,
-    status: zBehandlingstatusEnum,
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zFagsystemTypeEnum = z.enum(['TILBAKEKREVING']);
@@ -1076,15 +970,34 @@ export const zFagsystemVedtak = z.object({
     resultat: z.string(),
     vedtakstidspunkt: z.iso.datetime(),
     fagsystemType: zFagsystemTypeEnum,
-    regelverk: z.optional(zRegelverkEnum),
+    regelverk: zRegelverkEnum.optional(),
 });
 
 export const zRessursListFagsystemVedtak = z.object({
-    data: z.optional(z.array(zFagsystemVedtak)),
+    data: z.array(zFagsystemVedtak).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zTypeEnum2 = z.enum(['TILBAKEKREVING', 'REVURDERING_TILBAKEKREVING']);
+
+export const zStatusEnum2 = z.enum([
+    'AVSLUTTET',
+    'FATTER_VEDTAK',
+    'IVERKSETTER_VEDTAK',
+    'OPPRETTET',
+    'UTREDES',
+    'JOURNALFØR_VEDTAK',
+    'DISTRIUBER_VEDTAK',
+]);
+
+export const zBehandlingsoppsummeringDto = z.object({
+    behandlingId: z.uuid(),
+    eksternBrukId: z.uuid(),
+    type: zTypeEnum2,
+    status: zStatusEnum2,
 });
 
 export const zKjønnEnum = z.enum(['MANN', 'KVINNE', 'UKJENT']);
@@ -1092,9 +1005,9 @@ export const zKjønnEnum = z.enum(['MANN', 'KVINNE', 'UKJENT']);
 export const zFrontendBrukerDto = z.object({
     personIdent: z.string(),
     navn: z.string(),
-    fødselsdato: z.optional(z.iso.date()),
+    fødselsdato: z.iso.date().nullish(),
     kjønn: zKjønnEnum,
-    dødsdato: z.optional(z.iso.date()),
+    dødsdato: z.iso.date().nullish(),
 });
 
 export const zFagsakDto = z.object({
@@ -1104,18 +1017,18 @@ export const zFagsakDto = z.object({
     språkkode: zSpråkkodeEnum,
     bruker: zFrontendBrukerDto,
     behandlinger: z.array(zBehandlingsoppsummeringDto),
-    institusjon: z.optional(zInstitusjonDto),
+    institusjon: zInstitusjonDto.nullish(),
 });
 
 export const zRessursFagsakDto = z.object({
-    data: z.optional(zFagsakDto),
+    data: zFagsakDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
-export const zStatusEnum2 = z.enum([
+export const zStatusEnum3 = z.enum([
     'AVSLUTTET',
     'FATTER_VEDTAK',
     'IVERKSETTER_VEDTAK',
@@ -1134,19 +1047,19 @@ export const zBehandling = z.object({
     behandlingId: z.uuid(),
     opprettetTidspunkt: z.iso.datetime(),
     aktiv: z.boolean(),
-    getårsak: z.optional(zGetårsakstypeEnum),
-    type: zBehandlingstypeEnum,
-    status: zStatusEnum2,
-    vedtaksdato: z.optional(z.iso.datetime()),
-    resultat: z.optional(zResultatEnum),
+    getårsak: zGetårsakstypeEnum.optional(),
+    type: zTypeEnum2,
+    status: zStatusEnum3,
+    vedtaksdato: z.iso.datetime().nullish(),
+    resultat: zResultatEnum.optional(),
 });
 
 export const zRessursListBehandling = z.object({
-    data: z.optional(z.array(zBehandling)),
+    data: z.array(zBehandling).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zAvsnittstypeEnum = z.enum([
@@ -1165,53 +1078,123 @@ export const zUnderavsnittstypeEnum = z.enum([
 ]);
 
 export const zUnderavsnitt = z.object({
-    overskrift: z.optional(z.string()),
-    brødtekst: z.optional(z.string()),
-    fritekst: z.optional(z.string()),
+    overskrift: z.string().nullish(),
+    brødtekst: z.string().nullish(),
+    fritekst: z.string().nullish(),
     fritekstTillatt: z.boolean(),
     fritekstPåkrevet: z.boolean(),
-    underavsnittstype: z.optional(zUnderavsnittstypeEnum),
+    underavsnittstype: zUnderavsnittstypeEnum.optional(),
 });
 
 export const zAvsnitt = z.object({
-    overskrift: z.optional(z.string()),
+    overskrift: z.string().nullish(),
     underavsnittsliste: z.array(zUnderavsnitt),
-    avsnittstype: z.optional(zAvsnittstypeEnum),
-    fom: z.optional(z.iso.date()),
-    tom: z.optional(z.iso.date()),
+    avsnittstype: zAvsnittstypeEnum.optional(),
+    fom: z.iso.date().nullish(),
+    tom: z.iso.date().nullish(),
 });
 
 export const zRessursListAvsnitt = z.object({
-    data: z.optional(z.array(zAvsnitt)),
+    data: z.array(zAvsnitt).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
-export const zTypeEnum2 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV']);
+export const zTypeEnum3 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV']);
 
 export const zAktørEnum = z.enum(['SAKSBEHANDLER', 'BESLUTTER', 'VEDTAKSLØSNING']);
 
 export const zHistorikkinnslagDto = z.object({
     behandlingId: z.string(),
-    type: zTypeEnum2,
+    type: zTypeEnum3,
     aktør: zAktørEnum,
     aktørIdent: z.string(),
     tittel: z.string(),
-    tekst: z.optional(z.string()),
-    steg: z.optional(z.string()),
-    journalpostId: z.optional(z.string()),
-    dokumentId: z.optional(z.string()),
+    tekst: z.string().nullish(),
+    steg: z.string().nullish(),
+    journalpostId: z.string().nullish(),
+    dokumentId: z.string().nullish(),
     opprettetTid: z.iso.datetime(),
 });
 
 export const zRessursListHistorikkinnslagDto = z.object({
-    data: z.optional(z.array(zHistorikkinnslagDto)),
+    data: z.array(zHistorikkinnslagDto).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zUnnlates4RettsgebyrEnum2 = z.enum(['UNNLATES', 'TILBAKEKREVES', 'OVER_4_RETTSGEBYR']);
+
+export const zVurdertAktsomhetDto = z.object({
+    aktsomhet: zAktsomhetEnum,
+    ileggRenter: z.boolean().nullish(),
+    andelTilbakekreves: z.number().nullish(),
+    beløpTilbakekreves: z.number().nullish(),
+    begrunnelse: z.string(),
+    særligeGrunner: z.array(zVurdertSærligGrunnDto).nullish(),
+    særligeGrunnerTilReduksjon: z.boolean(),
+    tilbakekrevSmåbeløp: z.boolean(),
+    unnlates4Rettsgebyr: zUnnlates4RettsgebyrEnum2,
+    særligeGrunnerBegrunnelse: z.string().nullish(),
+});
+
+export const zVilkårsvurderingsresultatEnum2 = z.enum([
+    'FORSTO_BURDE_FORSTÅTT',
+    'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER',
+    'FEIL_OPPLYSNINGER_FRA_BRUKER',
+    'GOD_TRO',
+    'UDEFINERT',
+]);
+
+export const zVurdertVilkårsvurderingsresultatDto = z.object({
+    vilkårsvurderingsresultat: zVilkårsvurderingsresultatEnum2.optional(),
+    godTro: zVurdertGodTroDto.nullish(),
+    aktsomhet: zVurdertAktsomhetDto.nullish(),
+});
+
+export const zVurdertVilkårsvurderingsperiodeDto = z.object({
+    periode: zDatoperiode,
+    feilutbetaltBeløp: z.number(),
+    hendelsestype: zHendelsestypeEnum,
+    reduserteBeløper: z.array(zRedusertBeløpDto),
+    aktiviteter: z.array(zAktivitetDto),
+    vilkårsvurderingsresultatInfo: zVurdertVilkårsvurderingsresultatDto.nullish(),
+    begrunnelse: z.string().nullish(),
+    foreldet: z.boolean(),
+});
+
+export const zVurdertVilkårsvurderingDto = z.object({
+    perioder: z.array(zVurdertVilkårsvurderingsperiodeDto),
+    rettsgebyr: z.coerce
+        .bigint()
+        .min(BigInt('-9223372036854775808'), {
+            error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+        })
+        .max(BigInt('9223372036854775807'), {
+            error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+        }),
+    kanUnnlates4xRettsgebyr: z.boolean(),
+    opprettetTid: z.iso.datetime().nullish(),
+});
+
+export const zRessursVurdertVilkårsvurderingDto = z.object({
+    data: zVurdertVilkårsvurderingDto.nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zRessursListVurdertVilkårsvurderingDto = z.object({
+    data: z.array(zVurdertVilkårsvurderingDto).nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zJournalposttypeEnum = z.enum(['I', 'U', 'N']);
@@ -1235,20 +1218,239 @@ export const zJournalpost = z.object({
     journalpostId: z.string(),
     journalposttype: zJournalposttypeEnum,
     journalstatus: zJournalstatusEnum,
-    tema: z.optional(z.string()),
-    tittel: z.optional(z.string()),
-    sak: z.optional(zSak),
-    dokumenter: z.optional(z.array(zDokumentInfo)),
-    relevanteDatoer: z.optional(z.array(zRelevantDato)),
-    eksternReferanseId: z.optional(z.string()),
+    tema: z.string().nullish(),
+    tittel: z.string().nullish(),
+    sak: zSak.nullish(),
+    dokumenter: z.array(zDokumentInfo).nullish(),
+    relevanteDatoer: z.array(zRelevantDato).nullish(),
+    eksternReferanseId: z.string().nullish(),
 });
 
 export const zRessursListJournalpost = z.object({
-    data: z.optional(z.array(zJournalpost)),
+    data: z.array(zJournalpost).nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zForeldelsesvurderingstypeEnum2 = z.enum([
+    'IKKE_VURDERT',
+    'FORELDET',
+    'IKKE_FORELDET',
+    'TILLEGGSFRIST',
+]);
+
+export const zVurdertForeldelsesperiodeDto = z.object({
+    periode: zDatoperiode,
+    feilutbetaltBeløp: z.number(),
+    begrunnelse: z.string().nullish(),
+    foreldelsesvurderingstype: zForeldelsesvurderingstypeEnum2.optional(),
+    foreldelsesfrist: z.iso.date().nullish(),
+    oppdagelsesdato: z.iso.date().nullish(),
+});
+
+export const zVurdertForeldelseDto = z.object({
+    foreldetPerioder: z.array(zVurdertForeldelsesperiodeDto),
+});
+
+export const zRessursVurdertForeldelseDto = z.object({
+    data: zVurdertForeldelseDto.nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zHendelsestypeEnum2 = z.enum([
+    'ANNET',
+    'BOR_MED_SØKER',
+    'BOSATT_I_RIKET',
+    'LOVLIG_OPPHOLD',
+    'DØDSFALL',
+    'DELT_BOSTED',
+    'BARNS_ALDER',
+    'MEDLEMSKAP',
+    'OPPHOLD_I_NORGE',
+    'ENSLIG_FORSØRGER',
+    'OVERGANGSSTØNAD',
+    'YRKESRETTET_AKTIVITET',
+    'STØNADSPERIODE',
+    'INNTEKT',
+    'PENSJONSYTELSER',
+    'STØNAD_TIL_BARNETILSYN',
+    'SKOLEPENGER',
+    'SATSER',
+    'SMÅBARNSTILLEGG',
+    'MEDLEMSKAP_BA',
+    'UTVIDET',
+    'VILKÅR_BARN',
+    'VILKÅR_SØKER',
+    'BARN_I_FOSTERHJEM_ELLER_INSTITUSJON',
+    'KONTANTSTØTTENS_STØRRELSE',
+    'STØTTEPERIODE',
+    'UTBETALING',
+    'KONTANTSTØTTE_FOR_ADOPTERTE_BARN',
+    'ANNET_KS',
+]);
+
+export const zHendelsesundertypeEnum2 = z.enum([
+    'ANNET_FRITEKST',
+    'BOR_IKKE_MED_BARN',
+    'BARN_FLYTTET_FRA_NORGE',
+    'BRUKER_FLYTTET_FRA_NORGE',
+    'BARN_BOR_IKKE_I_NORGE',
+    'BRUKER_BOR_IKKE_I_NORGE',
+    'UTEN_OPPHOLDSTILLATELSE',
+    'BARN_DØD',
+    'BRUKER_DØD',
+    'ENIGHET_OM_OPPHØR_DELT_BOSTED',
+    'UENIGHET_OM_OPPHØR_DELT_BOSTED',
+    'BARN_OVER_18_ÅR',
+    'BARN_OVER_6_ÅR',
+    'MEDLEM_SISTE_5_ÅR',
+    'LOVLIG_OPPHOLD',
+    'BRUKER_IKKE_OPPHOLD_I_NORGE',
+    'BARN_IKKE_OPPHOLD_I_NORGE',
+    'OPPHOLD_UTLAND_6_UKER_ELLER_MER',
+    'UGIFT',
+    'SEPARERT_SKILT',
+    'SAMBOER',
+    'NYTT_BARN_SAMME_PARTNER',
+    'ENDRET_SAMVÆRSORDNING',
+    'BARN_FLYTTET',
+    'NÆRE_BOFORHOLD',
+    'FORELDRE_LEVER_SAMMEN',
+    'BARN_8_ÅR',
+    'BARN_FYLT_1_ÅR',
+    'UTDANNING',
+    'ETABLERER_EGEN_VIRKSOMHET',
+    'HOVEDPERIODE_3_ÅR',
+    'UTVIDELSE_UTDANNING',
+    'UTVIDELSE_SÆRLIG_TILSYNSKREVENDE_BARN',
+    'UTVIDELSE_FORBIGÅENDE_SYKDOM',
+    'PÅVENTE_AV_SKOLESTART_STARTET_IKKE',
+    'PÅVENTE_SKOLESTART_STARTET_TIDLIGERE',
+    'PÅVENTE_ARBEIDSTILBUD_STARTET_IKKE',
+    'PÅVENTE_ARBEIDSTILBUD_STARTET_TIDLIGERE',
+    'PÅVENTE_BARNETILSYN_IKKE_HA_TILSYN',
+    'PÅVENTE_BARNETILSYN_STARTET_TIDLIGERE',
+    'ARBEIDSSØKER',
+    'REELL_ARBEIDSSØKER',
+    'ARBEIDSINNTEKT_FÅTT_INNTEKT',
+    'ARBEIDSINNTEKT_ENDRET_INNTEKT',
+    'ANDRE_FOLKETRYGDYTELSER',
+    'SELVSTENDIG_NÆRINGSDRIVENDE_FÅTT_INNTEKT',
+    'SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT',
+    'UFØRETRYGD',
+    'GJENLEVENDE_EKTEFELLE',
+    'ARBEID',
+    'EGEN_VIRKSOMHET',
+    'TILSYNSUTGIFTER_OPPHØRT',
+    'TILSYNSUTGIFTER_ENDRET',
+    'FORBIGÅENDE_SYKDOM',
+    'ETTER_4_SKOLEÅR_UTGIFTENE_OPPHØRT',
+    'ETTER_4_SKOLEÅR_ENDRET_ARBEIDSTID',
+    'INNTEKT_OVER_6G',
+    'KONTANTSTØTTE',
+    'ØKT_KONTANTSTØTTE',
+    'IKKE_RETT_TIL_OVERGANGSSTØNAD',
+    'SLUTTET_I_UTDANNING',
+    'IKKE_ARBEID',
+    'SMÅBARNSTILLEGG_OVERGANGSSTØNAD',
+    'SATSENDRING',
+    'SMÅBARNSTILLEGG_3_ÅR',
+    'BRUKER_OG_BARN_FLYTTET_FRA_NORGE',
+    'BRUKER_OG_BARN_BOR_IKKE_I_NORGE',
+    'FLYTTET_SAMMEN',
+    'UTENLANDS_IKKE_MEDLEM',
+    'MEDLEMSKAP_OPPHØRT',
+    'ANNEN_FORELDER_IKKE_MEDLEM',
+    'ANNEN_FORELDER_OPPHØRT_MEDLEMSKAP',
+    'FLERE_UTENLANDSOPPHOLD',
+    'BOSATT_IKKE_MEDLEM',
+    'GIFT',
+    'NYTT_BARN',
+    'SAMBOER_12_MÅNEDER',
+    'FLYTTET_SAMMEN_ANNEN_FORELDER',
+    'FLYTTET_SAMMEN_EKTEFELLE',
+    'FLYTTET_SAMMEN_SAMBOER',
+    'GIFT_IKKE_EGEN_HUSHOLDNING',
+    'SAMBOER_IKKE_EGEN_HUSHOLDNING',
+    'EKTEFELLE_AVSLUTTET_SONING',
+    'SAMBOER_AVSLUTTET_SONING',
+    'EKTEFELLE_INSTITUSJON',
+    'SAMBOER_INSTITUSJON',
+    'BARN_IKKE_BOSATT',
+    'BARN_IKKE_OPPHOLDSTILLATELSE',
+    'BARN_OVER_2_ÅR',
+    'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN',
+    'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS',
+    'SØKER_IKKE_MEDLEM_FOLKETRYGDEN',
+    'SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS',
+    'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN',
+    'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS',
+    'BARN_BOR_IKKE_HOS_SØKER',
+    'UTENLANDSOPPHOLD_OVER_3_MÅNEDER',
+    'SØKER_FLYTTET_FRA_NORGE',
+    'SØKER_IKKE_BOSATT',
+    'SØKER_IKKE_OPPHOLDSTILLATELSE',
+    'SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER',
+    'BARN_I_FOSTERHJEM',
+    'BARN_I_INSTITUSJON',
+    'FULLTIDSPLASS_BARNEHAGE',
+    'DELTIDSPLASS_BARNEHAGEPLASS',
+    'ØKT_TIMEANTALL_I_BARNEHAGE',
+    'BARN_2_ÅR',
+    'DELT_BOSTED_AVTALE_OPPHØRT',
+    'DOBBELUTBETALING',
+    'MER_ENN_11_MÅNEDER',
+    'BARN_STARTET_PÅ_SKOLEN',
+]);
+
+export const zFeilutbetalingsperiodeDto = z.object({
+    periode: zDatoperiode,
+    feilutbetaltBeløp: z.number(),
+    hendelsestype: zHendelsestypeEnum2.optional(),
+    hendelsesundertype: zHendelsesundertypeEnum2.optional(),
+});
+
+export const zFaktaFeilutbetalingDto = z.object({
+    varsletBeløp: z.coerce
+        .bigint()
+        .min(BigInt('-9223372036854775808'), {
+            error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+        })
+        .max(BigInt('9223372036854775807'), {
+            error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+        })
+        .nullish(),
+    totalFeilutbetaltPeriode: zDatoperiode,
+    feilutbetaltePerioder: z.array(zFeilutbetalingsperiodeDto),
+    totaltFeilutbetaltBeløp: z.number(),
+    revurderingsvedtaksdato: z.iso.date(),
+    begrunnelse: z.string(),
+    faktainfo: zFaktainfo,
+    kravgrunnlagReferanse: z.string(),
+    vurderingAvBrukersUttalelse: zVurderingAvBrukersUttalelseDto,
+    opprettetTid: z.iso.datetime().nullish(),
+    gjelderDødsfall: z.boolean(),
+});
+
+export const zRessursFaktaFeilutbetalingDto = z.object({
+    data: zFaktaFeilutbetalingDto.nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zRessursListFaktaFeilutbetalingDto = z.object({
+    data: z.array(zFaktaFeilutbetalingDto).nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zVedtaksresultatEnum = z.enum([
@@ -1264,12 +1466,34 @@ export const zBeregningsresultatDto = z.object({
 });
 
 export const zRessursBeregningsresultatDto = z.object({
-    data: z.optional(zBeregningsresultatDto),
+    data: zBeregningsresultatDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
+
+export const zResultatstypeEnum = z.enum([
+    'IKKE_FASTSATT',
+    'HENLAGT_FEILOPPRETTET',
+    'HENLAGT_FEILOPPRETTET_MED_BREV',
+    'HENLAGT_FEILOPPRETTET_UTEN_BREV',
+    'HENLAGT_KRAVGRUNNLAG_NULLSTILT',
+    'HENLAGT_TEKNISK_VEDLIKEHOLD',
+    'HENLAGT_MANGLENDE_KRAVGRUNNLAG',
+    'HENLAGT',
+    'INGEN_TILBAKEBETALING',
+    'DELVIS_TILBAKEBETALING',
+    'FULL_TILBAKEBETALING',
+]);
+
+export const zBehandlingsårsakstypeEnum = z.enum([
+    'REVURDERING_KLAGE_NFP',
+    'REVURDERING_KLAGE_KA',
+    'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+]);
 
 export const zSaksbehandlingstypeEnum = z.enum([
     'ORDINÆR',
@@ -1286,28 +1510,38 @@ export const zBehandlingsstegstatusEnum = z.enum([
     'AVBRUTT',
 ]);
 
+export const zVenteårsakEnum2 = z.enum([
+    'VENT_PÅ_BRUKERTILBAKEMELDING',
+    'VENT_PÅ_TILBAKEKREVINGSGRUNNLAG',
+    'AVVENTER_DOKUMENTASJON',
+    'UTVIDET_TILSVAR_FRIST',
+    'ENDRE_TILKJENT_YTELSE',
+    'VENT_PÅ_MULIG_MOTREGNING',
+    'MANGLER_STØTTE',
+]);
+
 export const zBehandlingsstegsinfoDto = z.object({
     behandlingssteg: zBehandlingsstegEnum,
     behandlingsstegstatus: zBehandlingsstegstatusEnum,
-    venteårsak: z.optional(zVenteårsakEnum),
-    tidsfrist: z.optional(z.iso.date()),
+    venteårsak: zVenteårsakEnum2.optional(),
+    tidsfrist: z.iso.date().nullish(),
 });
 
 export const zBehandlingDto = z.object({
     eksternBrukId: z.uuid(),
     behandlingId: z.uuid(),
     erBehandlingHenlagt: z.boolean(),
-    type: zBehandlingstypeEnum,
-    status: zBehandlingstatusEnum,
+    type: zTypeEnum2,
+    status: zStatusEnum2,
     opprettetDato: z.iso.date(),
-    avsluttetDato: z.optional(z.iso.date()),
+    avsluttetDato: z.iso.date().nullish(),
     endretTidspunkt: z.iso.datetime(),
-    vedtaksdato: z.optional(z.iso.date()),
+    vedtaksdato: z.iso.date().nullish(),
     enhetskode: z.string(),
     enhetsnavn: z.string(),
-    resultatstype: z.optional(zBehandlingsresultatstypeEnum),
+    resultatstype: zResultatstypeEnum.optional(),
     ansvarligSaksbehandler: z.string(),
-    ansvarligBeslutter: z.optional(z.string()),
+    ansvarligBeslutter: z.string().nullish(),
     erBehandlingPåVent: z.boolean(),
     kanHenleggeBehandling: z.boolean(),
     kanRevurderingOpprettes: z.boolean(),
@@ -1318,29 +1552,29 @@ export const zBehandlingDto = z.object({
     behandlingsstegsinfo: z.array(zBehandlingsstegsinfoDto),
     fagsystemsbehandlingId: z.string(),
     eksternFagsakId: z.string(),
-    behandlingsårsakstype: z.optional(zGetårsakstypeEnum),
+    behandlingsårsakstype: zBehandlingsårsakstypeEnum.optional(),
     støtterManuelleBrevmottakere: z.boolean(),
     harManuelleBrevmottakere: z.boolean(),
     manuelleBrevmottakere: z.array(zManuellBrevmottakerResponsDto),
-    begrunnelseForTilbakekreving: z.optional(z.string()),
+    begrunnelseForTilbakekreving: z.string().nullish(),
     saksbehandlingstype: zSaksbehandlingstypeEnum,
     erNyModell: z.boolean(),
 });
 
 export const zRessursBehandlingDto = z.object({
-    data: z.optional(zBehandlingDto),
+    data: zBehandlingDto.nullish(),
     status: zStatusEnum,
     melding: z.string(),
-    frontendFeilmelding: z.optional(z.string()),
-    stacktrace: z.optional(z.string()),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
 });
 
 export const zTvingHenleggBehandlingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1349,12 +1583,12 @@ export const zTvingHenleggBehandlingData = z.object({
 export const zTvingHenleggBehandlingResponse = zRessursString;
 
 export const zKorrigerKravgrunnlagData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
         eksternKravgrunnlagId: z.int(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1363,11 +1597,11 @@ export const zKorrigerKravgrunnlagData = z.object({
 export const zKorrigerKravgrunnlagResponse = zRessursString;
 
 export const zKorrigerKravgrunnlag1Data = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1376,11 +1610,11 @@ export const zKorrigerKravgrunnlag1Data = z.object({
 export const zKorrigerKravgrunnlag1Response = zRessursString;
 
 export const zFlyttBehandlingTilFaktaData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1389,11 +1623,11 @@ export const zFlyttBehandlingTilFaktaData = z.object({
 export const zFlyttBehandlingTilFaktaResponse = zRessursString;
 
 export const zArkiverMottattKravgrunnlagData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         mottattXmlId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1402,11 +1636,11 @@ export const zArkiverMottattKravgrunnlagData = z.object({
 export const zArkiverMottattKravgrunnlagResponse = zRessursString;
 
 export const zAnnulerKravgrunnlagData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         eksternKravgrunnlagId: z.int(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1415,12 +1649,12 @@ export const zAnnulerKravgrunnlagData = z.object({
 export const zAnnulerKravgrunnlagResponse = zRessursString;
 
 export const zFjernManuellBrevmottakerData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
         manuellBrevmottakerId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1434,7 +1668,7 @@ export const zOppdaterManuellBrevmottakerData = z.object({
         behandlingId: z.uuid(),
         manuellBrevmottakerId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1443,11 +1677,11 @@ export const zOppdaterManuellBrevmottakerData = z.object({
 export const zOppdaterManuellBrevmottakerResponse = zRessursString;
 
 export const zFjernBrevmottakerStegData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1460,7 +1694,7 @@ export const zSettBehandlingPåVentData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1473,7 +1707,7 @@ export const zHenleggBehandlingData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1482,11 +1716,11 @@ export const zHenleggBehandlingData = z.object({
 export const zHenleggBehandlingResponse = zRessursString;
 
 export const zTaBehandlingAvVentData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1495,11 +1729,11 @@ export const zTaBehandlingAvVentData = z.object({
 export const zTaBehandlingAvVentResponse = zRessursString;
 
 export const zFlyttBehandlingTilFakta1Data = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1512,7 +1746,7 @@ export const zByttEnhetData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1521,11 +1755,11 @@ export const zByttEnhetData = z.object({
 export const zByttEnhetResponse = zRessursString;
 
 export const zAngreSendTilBeslutterData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1534,11 +1768,11 @@ export const zAngreSendTilBeslutterData = z.object({
 export const zAngreSendTilBeslutterResponse = zRessursString;
 
 export const zHentVergeData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1547,11 +1781,11 @@ export const zHentVergeData = z.object({
 export const zHentVergeResponse = zRessursVergeDto;
 
 export const zOpprettVergeStegData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1560,11 +1794,11 @@ export const zOpprettVergeStegData = z.object({
 export const zOpprettVergeStegResponse = zRessursString;
 
 export const zFjernVergeData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1574,8 +1808,8 @@ export const zFjernVergeResponse = zRessursString;
 
 export const zOppdaterBehandlendeEnhetPåBehandlingData = z.object({
     body: zOppdaterBehandlendeEnhetRequest,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1584,11 +1818,11 @@ export const zOppdaterBehandlendeEnhetPåBehandlingData = z.object({
 export const zOppdaterBehandlendeEnhetPåBehandlingResponse = zRessursString;
 
 export const zSammenslåData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1597,11 +1831,11 @@ export const zSammenslåData = z.object({
 export const zSammenslåResponse = zRessursString;
 
 export const zAngreSammenslåingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1610,7 +1844,7 @@ export const zAngreSammenslåingData = z.object({
 export const zAngreSammenslåingResponse = zRessursString;
 
 export const zSettIverksettStegTilUtførtOgFortsettData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         taskId: z.coerce
             .bigint()
@@ -1622,64 +1856,64 @@ export const zSettIverksettStegTilUtførtOgFortsettData = z.object({
             }),
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 export const zSendSisteTilstandForBehandlingerTilDvhData = z.object({
     body: z.array(z.uuid()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 export const zSendPåminnelseTilAlleSakerITilstandData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
+    body: z.never().optional(),
+    path: z.never().optional(),
     query: z.object({
         tilstand: zSchemaEnum,
     }),
 });
 
 export const zOppdaterFagsysteminfoData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 export const zMigrerAlleSakerData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 export const zLagOppdaterOppgaveTaskForBehandlingData = z.object({
     body: z.array(z.uuid()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 export const zFinnGamleÅpneBehandlingerUtenOppgaveData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         fagsystem: zSchemaEnum2,
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 export const zFerdigstillOppgaverForBehandlingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
         oppgaveType: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 export const zFerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData = z.object({
     body: z.array(z.uuid()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 export const zSimulerMottakAvKravgrunnlagData = z.object({
@@ -1687,7 +1921,7 @@ export const zSimulerMottakAvKravgrunnlagData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1700,7 +1934,7 @@ export const zLagreUtkastVedtaksbrevData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1713,7 +1947,7 @@ export const zLagreBrukeruttalelseData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1726,7 +1960,7 @@ export const zUtsettUttalelseFristData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1739,7 +1973,7 @@ export const zForhåndsvarselUnntakData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1752,7 +1986,7 @@ export const zForhåndsvisBrevData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1762,8 +1996,8 @@ export const zForhåndsvisBrevResponse = zRessursByte;
 
 export const zHentForhåndsvisningVedtaksbrevData = z.object({
     body: zHentForhåndvisningVedtaksbrevPdfDto,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1773,8 +2007,8 @@ export const zHentForhåndsvisningVedtaksbrevResponse = zRessursByte;
 
 export const zHentForhåndsvisningVarselbrevData = z.object({
     body: zForhåndsvisVarselbrevRequest,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1784,8 +2018,8 @@ export const zHentForhåndsvisningVarselbrevResponse = z.string();
 
 export const zHentForhåndsvisningHenleggelsesbrevData = z.object({
     body: zForhåndsvisningHenleggelsesbrevDto,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1795,8 +2029,8 @@ export const zHentForhåndsvisningHenleggelsesbrevResponse = zRessursByte;
 
 export const zBestillBrevData = z.object({
     body: zBestillBrevDto,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1805,11 +2039,11 @@ export const zBestillBrevData = z.object({
 export const zBestillBrevResponse = zRessurs;
 
 export const zHentManuellBrevmottakereData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1822,7 +2056,7 @@ export const zLeggTilBrevmottakerData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1831,11 +2065,11 @@ export const zLeggTilBrevmottakerData = z.object({
 export const zLeggTilBrevmottakerResponse = zRessursUuid;
 
 export const zOpprettBrevmottakerStegData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1856,7 +2090,7 @@ export const zUtførBehandlingsstegData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1869,7 +2103,7 @@ export const zBeregnBeløpData = z.object({
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1879,8 +2113,8 @@ export const zBeregnBeløpResponse = zRessursBeregnetPerioderDto;
 
 export const zOpprettBehandlingData = z.object({
     body: zOpprettTilbakekrevingRequest,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1890,8 +2124,8 @@ export const zOpprettBehandlingResponse = zRessursString;
 
 export const zOpprettRevurderingData = z.object({
     body: zOpprettRevurderingDto,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1901,8 +2135,8 @@ export const zOpprettRevurderingResponse = zRessursString;
 
 export const zOpprettBehandlingManuellTaskData = z.object({
     body: zOpprettManueltTilbakekrevingRequest,
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1911,12 +2145,12 @@ export const zOpprettBehandlingManuellTaskData = z.object({
 export const zOpprettBehandlingManuellTaskResponse = zRessursString;
 
 export const zKanBehandlingOpprettesManueltData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         ytelsestype: zSchemaEnum3,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1925,11 +2159,11 @@ export const zKanBehandlingOpprettesManueltData = z.object({
 export const zKanBehandlingOpprettesManueltResponse = zRessursKanBehandlingOpprettesManueltRespons;
 
 export const zErPerioderLikeData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1938,11 +2172,11 @@ export const zErPerioderLikeData = z.object({
 export const zErPerioderLikeResponse = zRessursBoolean;
 
 export const zErPerioderSammenslåttData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1951,9 +2185,9 @@ export const zErPerioderSammenslåttData = z.object({
 export const zErPerioderSammenslåttResponse = zRessursBoolean;
 
 export const zHentInfoData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -1962,12 +2196,12 @@ export const zHentInfoData = z.object({
 export const zHentInfoResponse = zRessursInfo;
 
 export const zHentForvaltningsinfoData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         ytelsestype: zSchemaEnum4,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1976,12 +2210,12 @@ export const zHentForvaltningsinfoData = z.object({
 export const zHentForvaltningsinfoResponse = zRessursListBehandlingsinfo;
 
 export const zHentKravgrunnlagsinfoData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         ytelsestype: zSchemaEnum3,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -1991,17 +2225,17 @@ export const zHentKravgrunnlagsinfoResponse = zRessursListKravgrunnlagsinfo;
 
 export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData =
     z.object({
-        body: z.optional(z.never()),
+        body: z.never().optional(),
         path: z.object({
             fagsystem: zSchemaEnum2,
         }),
-        query: z.optional(z.never()),
+        query: z.never().optional(),
     });
 
 export const zAlleSakerOver4RettsgebyrData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -2010,9 +2244,9 @@ export const zAlleSakerOver4RettsgebyrData = z.object({
 export const zAlleSakerOver4RettsgebyrResponse = zRessursListString;
 
 export const zFeatureTogglesData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional(),
 });
 
 /**
@@ -2021,12 +2255,12 @@ export const zFeatureTogglesData = z.object({
 export const zFeatureTogglesResponse = zRessursMapStringBoolean;
 
 export const zHentVedtakForFagsystemData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2035,12 +2269,12 @@ export const zHentVedtakForFagsystemData = z.object({
 export const zHentVedtakForFagsystemResponse = zRessursListFagsystemVedtak;
 
 export const zHentFagsakData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2049,12 +2283,12 @@ export const zHentFagsakData = z.object({
 export const zHentFagsakResponse = zRessursFagsakDto;
 
 export const zFinnesÅpenTilbakekrevingsbehandlingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2063,12 +2297,12 @@ export const zFinnesÅpenTilbakekrevingsbehandlingData = z.object({
 export const zFinnesÅpenTilbakekrevingsbehandlingResponse = zRessursFinnesBehandlingResponse;
 
 export const zHentBehandlingerForFagsystemData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         fagsystem: zSchemaEnum2,
         eksternFagsakId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2077,11 +2311,11 @@ export const zHentBehandlingerForFagsystemData = z.object({
 export const zHentBehandlingerForFagsystemResponse = zRessursListBehandling;
 
 export const zHentVedtaksbrevtekstData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2090,11 +2324,11 @@ export const zHentVedtaksbrevtekstData = z.object({
 export const zHentVedtaksbrevtekstResponse = zRessursListAvsnitt;
 
 export const zHentForhåndsvarselTekstData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2103,11 +2337,11 @@ export const zHentForhåndsvarselTekstData = z.object({
 export const zHentForhåndsvarselTekstResponse = zRessursVarselbrevtekst;
 
 export const zHentForhåndsvarselinfoData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2116,13 +2350,13 @@ export const zHentForhåndsvarselinfoData = z.object({
 export const zHentForhåndsvarselinfoResponse = zRessursForhåndsvarselDto;
 
 export const zHentUrlTilArbeidOgInntektData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional(),
     headers: z.object({
         'x-person-ident': zPersonIdent,
-        'x-fagsak-id': z.optional(z.string()),
-        'x-behandling-id': z.optional(z.string()),
+        'x-fagsak-id': z.string().optional(),
+        'x-behandling-id': z.string().optional(),
     }),
 });
 
@@ -2132,11 +2366,11 @@ export const zHentUrlTilArbeidOgInntektData = z.object({
 export const zHentUrlTilArbeidOgInntektResponse = zRessursBrukerlenkeDto;
 
 export const zHentHistorikkinnslagData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2145,11 +2379,11 @@ export const zHentHistorikkinnslagData = z.object({
 export const zHentHistorikkinnslagResponse = zRessursListHistorikkinnslagDto;
 
 export const zHentVurdertVilkårsvurderingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2158,11 +2392,11 @@ export const zHentVurdertVilkårsvurderingData = z.object({
 export const zHentVurdertVilkårsvurderingResponse = zRessursVurdertVilkårsvurderingDto;
 
 export const zHentInaktivVilkårsvurderingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2171,11 +2405,11 @@ export const zHentInaktivVilkårsvurderingData = z.object({
 export const zHentInaktivVilkårsvurderingResponse = zRessursListVurdertVilkårsvurderingDto;
 
 export const zHentTotrinnsvurderingerData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2184,11 +2418,11 @@ export const zHentTotrinnsvurderingerData = z.object({
 export const zHentTotrinnsvurderingerResponse = zRessursTotrinnsvurderingDto;
 
 export const zHentJournalposterData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2197,13 +2431,13 @@ export const zHentJournalposterData = z.object({
 export const zHentJournalposterResponse = zRessursListJournalpost;
 
 export const zHentDokumentData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
         journalpostId: z.string(),
         dokumentInfoId: z.string(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2212,11 +2446,11 @@ export const zHentDokumentData = z.object({
 export const zHentDokumentResponse = zRessursByte;
 
 export const zHentVurdertForeldelseData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2225,11 +2459,11 @@ export const zHentVurdertForeldelseData = z.object({
 export const zHentVurdertForeldelseResponse = zRessursVurdertForeldelseDto;
 
 export const zHentFaktaomfeilutbetalingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2238,11 +2472,11 @@ export const zHentFaktaomfeilutbetalingData = z.object({
 export const zHentFaktaomfeilutbetalingResponse = zRessursFaktaFeilutbetalingDto;
 
 export const zHentInaktivFaktaomfeilutbetalingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2251,11 +2485,11 @@ export const zHentInaktivFaktaomfeilutbetalingData = z.object({
 export const zHentInaktivFaktaomfeilutbetalingResponse = zRessursListFaktaFeilutbetalingDto;
 
 export const zHentBeregningsresultatData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**
@@ -2264,11 +2498,11 @@ export const zHentBeregningsresultatData = z.object({
 export const zHentBeregningsresultatResponse = zRessursBeregningsresultatDto;
 
 export const zHentBehandlingData = z.object({
-    body: z.optional(z.never()),
+    body: z.never().optional(),
     path: z.object({
         behandlingId: z.uuid(),
     }),
-    query: z.optional(z.never()),
+    query: z.never().optional(),
 });
 
 /**

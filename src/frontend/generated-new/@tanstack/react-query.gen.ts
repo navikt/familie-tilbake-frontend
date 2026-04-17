@@ -37,6 +37,7 @@ import type {
     BehandlingOppdaterVedtaksbrevError,
     BehandlingOppdaterVedtaksbrevResponse,
     VedtaksbrevLagSvgVedtaksbrevData,
+    VedtaksbrevLagSvgVedtaksbrevResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -246,12 +247,12 @@ export const behandlingHentVedtaksresultatOptions = (
 export const vedtaksbrevLagSvgVedtaksbrevMutation = (
     options?: Partial<Options<VedtaksbrevLagSvgVedtaksbrevData>>
 ): UseMutationOptions<
-    unknown,
+    VedtaksbrevLagSvgVedtaksbrevResponse,
     AxiosError<DefaultError>,
     Options<VedtaksbrevLagSvgVedtaksbrevData>
 > => {
     const mutationOptions: UseMutationOptions<
-        unknown,
+        VedtaksbrevLagSvgVedtaksbrevResponse,
         AxiosError<DefaultError>,
         Options<VedtaksbrevLagSvgVedtaksbrevData>
     > = {
