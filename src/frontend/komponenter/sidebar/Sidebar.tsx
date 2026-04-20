@@ -2,9 +2,10 @@ import type { FC, MouseEventHandler, RefObject } from 'react';
 
 import { Modal } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useLavViewportHøyde } from '~/hooks/useLavViewportHøyde';
 
 import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
@@ -16,6 +17,21 @@ type Props = {
 
 export const Sidebar: FC<Props> = ({ dialogRef }) => {
     const { ventegrunn } = useBehandlingState();
+    const erLavHøyde = useLavViewportHøyde();
+
+    const [kortTilstand, setKortTilstand] = useState({
+        faktaboksÅpen: !erLavHøyde,
+        brukerInfoÅpen: !erLavHøyde,
+        forrigeErLavHøyde: erLavHøyde,
+    });
+
+    if (erLavHøyde !== kortTilstand.forrigeErLavHøyde) {
+        setKortTilstand({
+            faktaboksÅpen: !erLavHøyde,
+            brukerInfoÅpen: !erLavHøyde,
+            forrigeErLavHøyde: erLavHøyde,
+        });
+    }
 
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 1024px)');
@@ -44,8 +60,14 @@ export const Sidebar: FC<Props> = ({ dialogRef }) => {
                     'max-h-[calc(100vh-142px)]': !!ventegrunn,
                 })}
             >
-                <Faktaboks />
-                <BrukerInformasjon />
+                <Faktaboks
+                    open={kortTilstand.faktaboksÅpen}
+                    onToggle={åpen => setKortTilstand(prev => ({ ...prev, faktaboksÅpen: åpen }))}
+                />
+                <BrukerInformasjon
+                    open={kortTilstand.brukerInfoÅpen}
+                    onToggle={åpen => setKortTilstand(prev => ({ ...prev, brukerInfoÅpen: åpen }))}
+                />
                 <HistorikkOgDokumenter />
             </aside>
 

@@ -23,14 +23,21 @@ import { formatterDatostring } from '~/utils';
 
 import { ICON_PROPS } from '../utils';
 
-export const Faktaboks: FC = () => {
+type Props = {
+    open?: boolean;
+    onToggle?: (open: boolean) => void;
+};
+
+export const Faktaboks: FC<Props> = ({ open, onToggle }) => {
     const behandling = useBehandling();
     const { ytelsestype } = useFagsak();
+
+    const erKontrollert = open !== undefined;
 
     return (
         <ExpansionCard
             size="small"
-            defaultOpen
+            {...(erKontrollert ? { open, onToggle } : { defaultOpen: true })}
             aria-label="Tilbakekrevingsinformasjon"
             className="border-ax-border-neutral-subtle"
         >
