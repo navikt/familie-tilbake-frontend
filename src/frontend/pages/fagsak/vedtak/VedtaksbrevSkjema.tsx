@@ -50,12 +50,10 @@ const Avsnitt: FC<{
 }> = ({ avsnitt, avsnittIndex }) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
-        register,
         setValue,
         formState: { errors, isSubmitted },
     } = useFormContext<VedtaksbrevFormData>();
     const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
-    const { ref } = register(name);
     const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
     const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
 
@@ -67,7 +65,6 @@ const Avsnitt: FC<{
     return (
         <>
             <Textarea
-                ref={ref}
                 name={name}
                 label={avsnitt.tittel}
                 description={avsnitt.forklaring}
