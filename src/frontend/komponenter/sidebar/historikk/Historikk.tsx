@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 
-import { Heading } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
@@ -24,15 +23,10 @@ export const Historikk: FC = () => {
     const innslag = historikkInnslag.data;
     innslag.sort((a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime());
     return (
-        <>
-            <Heading size="small" level="2">
-                Historikk
-            </Heading>
-            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
-                {innslag.map((hi, index) => (
-                    <HistorikkInnslag key={`${hi.tittel}_${index}`} innslag={hi} />
-                ))}
-            </div>
-        </>
+        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+            {innslag.map((hi, index) => (
+                <HistorikkInnslag key={`${hi.tittel}_${index}`} innslag={hi} />
+            ))}
+        </div>
     );
 };

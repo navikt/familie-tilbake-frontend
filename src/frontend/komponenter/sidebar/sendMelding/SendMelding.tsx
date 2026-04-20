@@ -30,66 +30,58 @@ export const SendMelding: FC = () => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <>
-            <Heading size="small" level="2">
-                Send brev
+        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+            <Heading size="xsmall" level="3">
+                {manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
             </Heading>
+            <div className="gap-5 flex flex-col">
+                <BrevmottakerListe />
 
-            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
-                <Heading size="xsmall" level="3">
-                    {manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
-                </Heading>
-                <div className="gap-5 flex flex-col">
-                    <BrevmottakerListe />
-
-                    <Select
-                        {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
-                        id="dokumentMal"
-                        label="Mal"
-                        readOnly={behandlingILesemodus}
-                        value={skjema.felter.maltype.verdi}
-                        onChange={event => onChangeMal(event)}
-                    >
-                        <option disabled value="">
-                            Velg brev
+                <Select
+                    {...skjema.felter.maltype.hentNavInputProps(skjema.visFeilmeldinger)}
+                    id="dokumentMal"
+                    label="Mal"
+                    readOnly={behandlingILesemodus}
+                    value={skjema.felter.maltype.verdi}
+                    onChange={event => onChangeMal(event)}
+                >
+                    <option disabled value="">
+                        Velg brev
+                    </option>
+                    {maler.map(mal => (
+                        <option key={mal} value={mal}>
+                            {dokumentMaler[mal]}
                         </option>
-                        {maler.map(mal => (
-                            <option key={mal} value={mal}>
-                                {dokumentMaler[mal]}
-                            </option>
-                        ))}
-                    </Select>
-                    {!!skjema.felter.maltype.verdi && (
-                        <Textarea
-                            {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
-                            label={
-                                <LabelMedSpråk
-                                    label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                                />
-                            }
-                            aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
-                            readOnly={behandlingILesemodus}
-                            value={skjema.felter.fritekst.verdi}
-                            onChange={event =>
-                                skjema.felter.fritekst.validerOgSettFelt(event.target.value)
-                            }
-                            maxLength={3000}
-                        />
-                    )}
-                    <div className="flex flex-row-reverse gap-2">
-                        <Button
-                            size="small"
-                            onClick={() => sendBrev()}
-                            loading={senderInn}
-                            disabled={!kanSende}
-                        >
-                            Send brev
-                        </Button>
-                        {kanSende && <ForhåndsvisBrev />}
-                    </div>
-                    {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
+                    ))}
+                </Select>
+                {!!skjema.felter.maltype.verdi && (
+                    <Textarea
+                        {...skjema.felter.fritekst.hentNavInputProps(skjema.visFeilmeldinger)}
+                        label={
+                            <LabelMedSpråk label={tekstfeltLabel(skjema.felter.maltype.verdi)} />
+                        }
+                        aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
+                        readOnly={behandlingILesemodus}
+                        value={skjema.felter.fritekst.verdi}
+                        onChange={event =>
+                            skjema.felter.fritekst.validerOgSettFelt(event.target.value)
+                        }
+                        maxLength={3000}
+                    />
+                )}
+                <div className="flex flex-row-reverse gap-2">
+                    <Button
+                        size="small"
+                        onClick={() => sendBrev()}
+                        loading={senderInn}
+                        disabled={!kanSende}
+                    >
+                        Send brev
+                    </Button>
+                    {kanSende && <ForhåndsvisBrev />}
                 </div>
+                {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
             </div>
-        </>
+        </div>
     );
 };

@@ -1,7 +1,5 @@
 import type { FC } from 'react';
 
-import { Heading } from '@navikt/ds-react';
-
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { HenterData } from '~/komponenter/datalast/HenterData';
 import { RessursStatus } from '~/typer/ressurs';
@@ -11,17 +9,6 @@ import { useDokumentlisting } from './DokumentlistingContext';
 import { JournalpostVisning } from './Journalpostvisning';
 
 export const Dokumentlisting: FC = () => {
-    return (
-        <>
-            <Heading size="small" level="2">
-                Dokumenter
-            </Heading>
-            <DokumentInnhold />
-        </>
-    );
-};
-
-const DokumentInnhold: FC = () => {
     const { journalposter } = useDokumentlisting();
 
     if (journalposter?.status === RessursStatus.Henter) {
