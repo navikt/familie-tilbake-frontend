@@ -19,7 +19,7 @@ export const Landingsside: FC = () => (
 
                 <span>
                     Dette gjelder ytelsene barnetrygd, kontantstøtte, enslig forsørger,
-                    tilleggsstønader og arbeidsavklaringspenger.
+                    tilleggsstønader, tiltakspenger og arbeidsavklaringspenger.
                 </span>
 
                 <span>Arbeidet med å utvide løsningen pågår, og flere ytelser vil kobles på.</span>
