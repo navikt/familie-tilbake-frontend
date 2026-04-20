@@ -4,8 +4,8 @@ import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Link, LocalAlert } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { Suspense, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { Suspense, useLayoutEffect, useRef, useState } from 'react';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -26,7 +26,6 @@ import {
     erHistoriskSide,
     erØnsketSideTilgjengelig,
     SYNLIGE_STEG,
-    useStegNavigering,
     utledBehandlingSide,
 } from '~/utils/sider';
 
@@ -299,36 +298,12 @@ const Behandling: FC = () => {
     const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
     const location = useLocation();
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const navigate = useNavigate();
-    const navigerTilBehandling = useStegNavigering();
-    const navigerTilVedtak = useStegNavigering('FORESLÅ_VEDTAK');
 
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     const erØnsketSideGyldig =
         !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
-
-    const navigerHvisUgyldigSide = useEffectEvent(
-        (erØnsketSideGyldig: boolean, aktivtSteg: BehandlingsstegsinfoDto | undefined) => {
-            if (!erØnsketSideGyldig && aktivtSteg) {
-                const aktivSide = utledBehandlingSide(aktivtSteg.behandlingssteg);
-                if (aktivSide) {
-                    navigate(`${behandlingUrl}/${aktivSide.href}`);
-                }
-            } else if (!erØnsketSideGyldig) {
-                if (behandling.status === 'AVSLUTTET') {
-                    navigerTilVedtak();
-                } else {
-                    navigerTilBehandling();
-                }
-            }
-        }
-    );
-
-    useEffect(() => {
-        navigerHvisUgyldigSide(erØnsketSideGyldig, aktivtSteg);
-    }, [erØnsketSideGyldig, aktivtSteg]);
 
     if (behandling.erBehandlingHenlagt) {
         return <HenlagtBehandling dialogRef={dialogRef} />;
@@ -340,6 +315,16 @@ const Behandling: FC = () => {
 
     if (erHistoriskeVerdier) {
         return <HistoriskBehandling dialogRef={dialogRef} />;
+    }
+
+    if (!erØnsketSideGyldig) {
+        const aktivSide = aktivtSteg
+            ? utledBehandlingSide(aktivtSteg.behandlingssteg)
+            : behandling.status === 'AVSLUTTET'
+              ? SYNLIGE_STEG.FORESLÅ_VEDTAK
+              : SYNLIGE_STEG.FAKTA;
+
+        return <Navigate to={`${behandlingUrl}/${aktivSide?.href ?? 'fakta'}`} replace />;
     }
 
     return <AktivBehandling dialogRef={dialogRef} />;
