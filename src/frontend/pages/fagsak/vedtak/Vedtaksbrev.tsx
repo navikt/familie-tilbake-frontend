@@ -56,7 +56,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     const methods = useForm<VedtaksbrevFormData>({
         resolver: vedtaksbrevResolver,
         mode: 'onSubmit',
-        defaultValues: {
+        values: {
             hovedavsnitt: vedtaksbrevData.hovedavsnitt,
             avsnitt: vedtaksbrevData.avsnitt,
         },
