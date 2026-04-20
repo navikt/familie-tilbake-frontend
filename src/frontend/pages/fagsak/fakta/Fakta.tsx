@@ -10,7 +10,7 @@ import {
     behandlingFaktaQueryKey,
     behandlingOppdaterFaktaMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
-import { formatterDatostring } from '~/utils';
+import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
 
 import { FaktaSkjema } from './FaktaSkjema';
 
@@ -52,7 +52,7 @@ export const Fakta: FC = () => {
                         >
                             <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
                             <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">
-                                {faktaOmFeilutbetaling.feilutbetaling.beløp}
+                                {formatCurrencyNoKr(faktaOmFeilutbetaling.feilutbetaling.beløp)}
                             </dd>
                         </div>
                         {faktaOmFeilutbetaling.tidligereVarsletBeløp && (
@@ -61,7 +61,9 @@ export const Fakta: FC = () => {
                                     Tidligere varslet beløp
                                 </dt>
                                 <dd className="font-ax-bold text-ax-heading-medium">
-                                    {faktaOmFeilutbetaling.tidligereVarsletBeløp}
+                                    {formatCurrencyNoKr(
+                                        faktaOmFeilutbetaling.tidligereVarsletBeløp
+                                    )}
                                 </dd>
                             </div>
                         )}
