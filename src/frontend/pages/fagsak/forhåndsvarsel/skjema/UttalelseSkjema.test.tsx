@@ -93,7 +93,7 @@ describe('Brukeruttalelse', () => {
             screen.queryByLabelText('Beskriv hva brukeren har uttalt seg om')
         ).not.toBeInTheDocument();
 
-        const brukeruttalelseFieldset = screen.getByRole('group', {
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
             name: /har brukeren uttalt seg etter forhåndsvarselet/i,
         });
         const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
@@ -107,7 +107,7 @@ describe('Brukeruttalelse', () => {
     test('Viser beskrivelse for "Hvordan uttalte brukeren seg?" feltet', async () => {
         renderBrukeruttalelse();
 
-        const brukeruttalelseFieldset = screen.getByRole('group', {
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
             name: /har brukeren uttalt seg etter forhåndsvarselet/i,
         });
         const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
@@ -123,7 +123,7 @@ describe('Brukeruttalelse', () => {
 
         expect(screen.queryByLabelText('Kommentar til valget over')).not.toBeInTheDocument();
 
-        const brukeruttalelseFieldset = screen.getByRole('group', {
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
             name: /har brukeren uttalt seg etter forhåndsvarselet/i,
         });
         const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
@@ -216,7 +216,7 @@ describe('Brukeruttalelse', () => {
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
             fireEvent.click(nesteKnapp);
 
-            const brukeruttalelseFieldset = screen.getByRole('group', {
+            const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
                 name: /har brukeren uttalt seg etter forhåndsvarselet/i,
             });
 
@@ -231,7 +231,7 @@ describe('Brukeruttalelse', () => {
             test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt', async () => {
                 renderBrukeruttalelse();
 
-                const brukeruttalelseFieldset = screen.getByRole('group', {
+                const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
                     name: /har brukeren uttalt seg etter forhåndsvarselet/i,
                 });
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
@@ -250,7 +250,7 @@ describe('Brukeruttalelse', () => {
             test('skal vise dato-feilmelding når Ja er valgt uten fylt dato-felt på blur', async () => {
                 renderBrukeruttalelse();
 
-                const brukeruttalelseFieldset = screen.getByRole('group', {
+                const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
                     name: /har brukeren uttalt seg etter forhåndsvarselet/i,
                 });
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
@@ -267,7 +267,7 @@ describe('Brukeruttalelse', () => {
             test('skal vise riktig hvorUttalteBrukerenSeg og beskrivelse feilmelding ved tomme felt', async () => {
                 renderBrukeruttalelse();
 
-                const brukeruttalelseFieldset = screen.getByRole('group', {
+                const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
                     name: /har brukeren uttalt seg etter forhåndsvarselet/i,
                 });
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
@@ -284,7 +284,7 @@ describe('Brukeruttalelse', () => {
             test('skal vise feilmelding når dato er i fremtiden', async () => {
                 renderBrukeruttalelse();
 
-                const brukeruttalelseFieldset = screen.getByRole('group', {
+                const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
                     name: /har brukeren uttalt seg etter forhåndsvarselet/i,
                 });
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
@@ -303,7 +303,7 @@ describe('Brukeruttalelse', () => {
                 const user = userEvent.setup();
                 renderBrukeruttalelse();
 
-                const brukeruttalelseFieldset = screen.getByRole('group', {
+                const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
                     name: /har brukeren uttalt seg etter forhåndsvarselet/i,
                 });
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
