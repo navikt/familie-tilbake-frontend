@@ -38,7 +38,7 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
-import { formatterDatostring } from '~/utils';
+import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
 import { dateTilIsoDatoString } from '~/utils/dato';
 import { useStegNavigering } from '~/utils/sider';
 
@@ -377,7 +377,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
             <Table.DataCell
                 className={`text-end text-ax-text-brand-magenta ${erSiste ? 'border-b-0 rounded-br-xl' : ''}`}
             >
-                {periodeInfo.feilutbetaltBeløp}
+                {formatCurrencyNoKr(periodeInfo.feilutbetaltBeløp)}
             </Table.DataCell>
             {/* <Table.DataCell className="text-center">
                 <Button
