@@ -33,13 +33,13 @@ beforeAll(() => {
 const renderUnntak = (): RenderResult => {
     const behandling = lagBehandlingDto();
     const result = render(
-        <FagsakContext.Provider value={lagFagsak()}>
+        <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 
     fireEvent.click(screen.getByLabelText('Nei'));

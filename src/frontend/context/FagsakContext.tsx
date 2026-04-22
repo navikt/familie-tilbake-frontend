@@ -51,7 +51,7 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
         },
     });
 
-    return <FagsakContext.Provider value={fagsak}>{children}</FagsakContext.Provider>;
+    return <FagsakContext value={fagsak}>{children}</FagsakContext>;
 };
 
 export const useFagsak = (): FagsakDto => {

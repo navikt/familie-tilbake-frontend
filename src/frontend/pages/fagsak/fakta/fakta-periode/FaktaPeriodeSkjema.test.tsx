@@ -46,7 +46,7 @@ const renderComponent = (
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
                     <FaktaProvider>
                         <table>
@@ -60,7 +60,7 @@ const renderComponent = (
                         </table>
                     </FaktaProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

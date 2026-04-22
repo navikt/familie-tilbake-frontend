@@ -36,7 +36,7 @@ const renderForeldelseContainer = (
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider
                     behandling={behandling}
                     stateOverrides={{
@@ -49,7 +49,7 @@ const renderForeldelseContainer = (
                         <ForeldelseContainer />
                     </ForeldelseProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

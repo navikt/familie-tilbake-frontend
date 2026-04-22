@@ -43,7 +43,7 @@ const renderVilkårsvurderingPeriodeSkjema = (
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider>
                     <VilkårsvurderingPeriodeSkjema
                         periode={periode}
@@ -54,7 +54,7 @@ const renderVilkårsvurderingPeriodeSkjema = (
                         settPendingPeriode={vi.fn()}
                     />
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

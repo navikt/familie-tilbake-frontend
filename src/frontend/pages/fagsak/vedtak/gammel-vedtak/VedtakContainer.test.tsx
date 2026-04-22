@@ -52,7 +52,7 @@ const renderVedtakContainer = (
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider
                     behandling={behandling}
                     stateOverrides={{
@@ -64,7 +64,7 @@ const renderVedtakContainer = (
                         <VedtakContainer />
                     </VedtakProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

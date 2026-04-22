@@ -43,7 +43,7 @@ const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): Ren
 
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider
+            <FagsakContext
                 value={lagFagsak({
                     eksternFagsakId: '123',
                     fagsystem: Fagsystem.BA,
@@ -54,7 +54,7 @@ const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): Ren
                         <Stegflyt />
                     </BehandlingProvider>
                 </Suspense>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

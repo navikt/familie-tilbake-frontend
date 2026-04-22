@@ -74,10 +74,8 @@ export const TestBehandlingProvider: FC<{
     const stateValue = lagBehandlingStateContext(stateOverrides, ulagretEndringer);
 
     return (
-        <BehandlingContext.Provider value={behandlingValue}>
-            <BehandlingStateContext.Provider value={stateValue}>
-                {children}
-            </BehandlingStateContext.Provider>
-        </BehandlingContext.Provider>
+        <BehandlingContext value={behandlingValue}>
+            <BehandlingStateContext value={stateValue}>{children}</BehandlingStateContext>
+        </BehandlingContext>
     );
 };

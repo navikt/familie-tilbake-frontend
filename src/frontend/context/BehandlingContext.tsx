@@ -37,7 +37,7 @@ export const BehandlingProvider = ({ behandlingId, children }: Props): ReactElem
         return behandlingResponse.data;
     }, [behandlingResponse]);
 
-    return <BehandlingContext.Provider value={behandling}>{children}</BehandlingContext.Provider>;
+    return <BehandlingContext value={behandling}>{children}</BehandlingContext>;
 };
 
 export const useBehandling = (): BehandlingDto => {
