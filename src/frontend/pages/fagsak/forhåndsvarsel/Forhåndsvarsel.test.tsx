@@ -68,7 +68,7 @@ describe('Forhåndsvarsel', () => {
         renderForhåndsvarsel();
 
         expect(
-            screen.getByRole('group', {
+            screen.getByRole('radiogroup', {
                 name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
             })
         ).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe('Forhåndsvarsel', () => {
         fireEvent.click(screen.getByLabelText('Nei'));
 
         expect(
-            screen.getByRole('group', {
+            screen.getByRole('radiogroup', {
                 name: /Velg begrunnelse for unntak fra forhåndsvarsel/,
             })
         ).toBeInTheDocument();
@@ -193,7 +193,7 @@ describe('Forhåndsvarsel', () => {
 
         renderForhåndsvarsel();
 
-        const radioGroup = await screen.findByRole('group', {
+        const radioGroup = await screen.findByRole('radiogroup', {
             name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
         });
         expect(radioGroup).toHaveClass('aksel-fieldset--readonly');
@@ -215,7 +215,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const forhåndsvarselRadioGroup = await screen.findByRole('group', {
+            const forhåndsvarselRadioGroup = await screen.findByRole('radiogroup', {
                 name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
             });
             expect(
@@ -330,7 +330,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const brukeruttalelseFieldset = await screen.findByRole('group', {
+            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
                 name: /har brukeren uttalt seg/i,
             });
             fireEvent.click(
@@ -584,7 +584,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const brukeruttalelseFieldset = await screen.findByRole('group', {
+            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
                 name: /har brukeren uttalt seg/i,
             });
             fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Ja'));
@@ -615,7 +615,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const brukeruttalelseFieldset = await screen.findByRole('group', {
+            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
                 name: /har brukeren uttalt seg/i,
             });
             expect(brukeruttalelseFieldset).toBeInTheDocument();
@@ -647,11 +647,11 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const begrunnelseFieldset = await screen.findByRole('group', {
+            const begrunnelseFieldset = await screen.findByRole('radiogroup', {
                 name: /velg begrunnelse for unntak/i,
             });
             fireEvent.click(within(begrunnelseFieldset).getByLabelText(/forvaltningsloven §16c/i));
-            const brukeruttalelseFieldset = await screen.findByRole('group', {
+            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
                 name: /har brukeren uttalt seg/i,
             });
             expect(brukeruttalelseFieldset).toBeInTheDocument();
@@ -683,7 +683,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const brukeruttalelseFieldset = await screen.findByRole('group', {
+            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
                 name: /har brukeren uttalt seg/i,
             });
 
@@ -723,7 +723,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const brukeruttalelseFieldset = await screen.findByRole('group', {
+            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
                 name: /har brukeren uttalt seg/i,
             });
 
@@ -759,7 +759,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const skalSendeFieldset = await screen.findByRole('group', {
+            const skalSendeFieldset = await screen.findByRole('radiogroup', {
                 name: /skal det sendes forhåndsvarsel/i,
             });
 
@@ -795,7 +795,7 @@ describe('Forhåndsvarsel', () => {
 
             renderForhåndsvarsel();
 
-            const begrunnelseFieldset = await screen.findByRole('group', {
+            const begrunnelseFieldset = await screen.findByRole('radiogroup', {
                 name: /velg begrunnelse for unntak/i,
             });
 

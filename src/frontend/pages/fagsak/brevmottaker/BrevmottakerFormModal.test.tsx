@@ -195,7 +195,9 @@ describe('BrevmottakerFormModal', () => {
                 mottakerType === MottakerType.Fullmektig ||
                 mottakerType === MottakerType.Verge
             ) {
-                expect(screen.getByRole('group', { name: /adresse|verge/i })).toBeInTheDocument();
+                expect(
+                    screen.getByRole('radiogroup', { name: /adresse|verge/i })
+                ).toBeInTheDocument();
             } else if (mottakerType === MottakerType.Dødsbo) {
                 expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
             }
@@ -204,7 +206,7 @@ describe('BrevmottakerFormModal', () => {
 
     const expectFullmektigRadiogruppe = async (): Promise<void> => {
         await waitFor(() => {
-            expect(screen.getByRole('group', { name: /adresse/i })).toBeInTheDocument();
+            expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
             expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
             expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
             expect(screen.getByText('Oppslag i organisasjonsregister')).toBeInTheDocument();
@@ -223,7 +225,7 @@ describe('BrevmottakerFormModal', () => {
 
     const expectVergeRadiogruppe = async (): Promise<void> => {
         await waitFor(() => {
-            expect(screen.getByRole('group', { name: /adresse/i })).toBeInTheDocument();
+            expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
             expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
             expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
             expect(screen.queryByText('Oppslag i organisasjonsregister')).not.toBeInTheDocument();
