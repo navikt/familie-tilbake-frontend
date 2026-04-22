@@ -22,14 +22,15 @@ type Props = {
 };
 
 export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
-    const [hentetDokument, settHentetDokument] = useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = useState<boolean>(false);
+    const tomRessurs = byggTomRessurs<string>();
+    const [hentetDokument, setHentetDokument] = useState<Ressurs<string>>(tomRessurs);
+    const [visModal, setVisModal] = useState(false);
     const { behandlingId } = useBehandling();
     const { request } = useHttp();
 
     useEffect(() => {
-        settVisModal(true);
-        settHentetDokument(byggHenterRessurs());
+        setVisModal(true);
+        setHentetDokument(byggHenterRessurs());
         request<void, string>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandlingId}/journalpost/${journalpostId}/dokument/${dokumentId}`,
@@ -38,15 +39,15 @@ export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) 
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
                     type: 'application/pdf',
                 });
-                settHentetDokument(byggDataRessurs(window.URL.createObjectURL(blob)));
+                setHentetDokument(byggDataRessurs(window.URL.createObjectURL(blob)));
             } else if (
                 response.status === RessursStatus.Feilet ||
                 response.status === RessursStatus.FunksjonellFeil ||
                 response.status === RessursStatus.IkkeTilgang
             ) {
-                settHentetDokument(response);
+                setHentetDokument(response);
             } else {
-                settHentetDokument(
+                setHentetDokument(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                 );
             }
@@ -59,8 +60,8 @@ export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) 
             åpen={visModal}
             pdfdata={hentetDokument}
             onRequestClose={() => {
-                settHentetDokument(byggTomRessurs);
-                settVisModal(false);
+                setHentetDokument(byggTomRessurs);
+                setVisModal(false);
                 onClose();
             }}
         />

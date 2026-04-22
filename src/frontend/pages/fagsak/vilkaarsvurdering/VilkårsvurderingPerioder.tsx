@@ -61,7 +61,7 @@ type Props = {
 export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUnder4Rettsgebyr }) => {
     const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
         useVilkårsvurdering();
-    const [pendingPeriode, settPendingPeriode] = useState<
+    const [pendingPeriode, setPendingPeriode] = useState<
         VilkårsvurderingPeriodeSkjemaData | undefined
     >();
 
@@ -80,7 +80,7 @@ export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUn
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
 
-        settPendingPeriode(vilkårsvurderingPeriode);
+        setPendingPeriode(vilkårsvurderingPeriode);
     };
 
     return perioder && tidslinjeRader ? (
@@ -102,7 +102,7 @@ export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUn
                     behandletPerioder={behandletPerioder}
                     erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr}
                     pendingPeriode={pendingPeriode}
-                    settPendingPeriode={settPendingPeriode}
+                    settPendingPeriode={setPendingPeriode}
                     perioder={perioder}
                 />
             )}

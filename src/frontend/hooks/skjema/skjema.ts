@@ -1,11 +1,4 @@
-import type {
-    FeiloppsummeringFeil,
-    Felt,
-    FeltState,
-    FieldDictionary,
-    Skjema,
-    UseSkjemaVerdi,
-} from './typer';
+import type { Felt, FeltState, FieldDictionary, Skjema, UseSkjemaVerdi } from './typer';
 import type { FamilieRequestConfig } from '~/api/http/HttpProvider';
 
 import { useState } from 'react';
@@ -23,8 +16,9 @@ export const useSkjema = <Felter, SkjemaRespons>({
     skjemanavn: string;
 }): UseSkjemaVerdi<Felter, SkjemaRespons> => {
     const { request } = useHttp();
-    const [visFeilmeldinger, settVisfeilmeldinger] = useState(false);
-    const [submitRessurs, settSubmitRessurs] = useState(byggTomRessurs<SkjemaRespons>());
+    const [visFeilmeldinger, setVisFeilmeldinger] = useState(false);
+    const tomRessurs = byggTomRessurs<SkjemaRespons>();
+    const [submitRessurs, setSubmitRessurs] = useState(tomRessurs);
 
     const alleSynligeFelter = (): unknown[] => {
         return Object.values(felter).filter(felt => (felt as Felt<unknown>).erSynlig);
@@ -53,18 +47,9 @@ export const useSkjema = <Felter, SkjemaRespons>({
         ];
     };
 
-    const valideringErOk = (): boolean => {
-        return (
-            alleSynligeFelter().filter(felt => {
-                const unknownFelt = felt as Felt<unknown>;
-                return unknownFelt.valideringsstatus !== Valideringsstatus.Ok;
-            }).length === 0 && skjema.submitRessurs.status !== RessursStatus.Henter
-        );
-    };
-
     const kanSendeSkjema = (): boolean => {
         const validerteSynligeFelter = validerAlleSynligeFelter();
-        settVisfeilmeldinger(true);
+        setVisFeilmeldinger(true);
 
         return (
             validerteSynligeFelter.filter(felt => {
@@ -76,7 +61,7 @@ export const useSkjema = <Felter, SkjemaRespons>({
 
     const nullstillSkjema = (): void => {
         alleSynligeFelter().forEach((felt: unknown) => (felt as Felt<unknown>).nullstill());
-        settVisfeilmeldinger(false);
+        setVisFeilmeldinger(false);
     };
 
     const onSubmit = <SkjemaData>(
@@ -85,11 +70,11 @@ export const useSkjema = <Felter, SkjemaRespons>({
         onError?: (ressurs: Ressurs<SkjemaRespons>) => void
     ): void => {
         if (kanSendeSkjema()) {
-            settSubmitRessurs(byggHenterRessurs());
+            setSubmitRessurs(byggHenterRessurs());
 
             request<SkjemaData, SkjemaRespons>(familieAxiosRequestConfig).then(
                 (response: Ressurs<SkjemaRespons>) => {
-                    settSubmitRessurs(response);
+                    setSubmitRessurs(response);
                     if (response.status === RessursStatus.Suksess) {
                         nullstillSkjema();
                         onSuccess(response);
@@ -101,20 +86,6 @@ export const useSkjema = <Felter, SkjemaRespons>({
         }
     };
 
-    const hentFeilTilOppsummering = (): FeiloppsummeringFeil[] => {
-        return Object.values(alleSynligeFelter())
-            .filter(felt => (felt as Felt<unknown>).valideringsstatus === Valideringsstatus.Feil)
-            .map(felt => {
-                const typetFelt = felt as Felt<unknown>;
-
-                return {
-                    skjemaelementId: typetFelt.id,
-                    feilmelding:
-                        typeof typetFelt.feilmelding === 'string' ? typetFelt.feilmelding : '',
-                };
-            });
-    };
-
     const skjema: Skjema<Felter, SkjemaRespons> = {
         felter,
         visFeilmeldinger,
@@ -123,14 +94,10 @@ export const useSkjema = <Felter, SkjemaRespons>({
     };
 
     return {
-        hentFeilTilOppsummering,
         kanSendeSkjema,
         nullstillSkjema,
         onSubmit,
-        settSubmitRessurs,
-        settVisfeilmeldinger,
         skjema,
         validerAlleSynligeFelter,
-        valideringErOk,
     };
 };

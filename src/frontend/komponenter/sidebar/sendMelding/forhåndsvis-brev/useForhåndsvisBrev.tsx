@@ -16,41 +16,41 @@ import { base64ToArrayBuffer } from '~/utils';
 
 type ForhåndsvisBrevHook = {
     visModal: boolean;
-    settVisModal: Dispatch<SetStateAction<boolean>>;
+    setVisModal: Dispatch<SetStateAction<boolean>>;
     hentetForhåndsvisning: Ressurs<string>;
     hentBrev: () => void;
     nullstillHentetForhåndsvisning: () => void;
 };
 
 const useForhåndsvisBrev = (): ForhåndsvisBrevHook => {
-    const [hentetForhåndsvisning, settHentetForhåndsvisning] =
-        useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = useState<boolean>(false);
+    const tomRessurs = byggTomRessurs<string>();
+    const [hentetForhåndsvisning, setHentetForhåndsvisning] = useState<Ressurs<string>>(tomRessurs);
+    const [visModal, setVisModal] = useState(false);
     const { hentBrevdata } = useSendMelding();
     const { forhåndsvisBrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = (): void => {
-        settHentetForhåndsvisning(byggTomRessurs);
+        setHentetForhåndsvisning(byggTomRessurs);
     };
 
     const hentBrev = (): void => {
-        settHentetForhåndsvisning(byggHenterRessurs());
+        setHentetForhåndsvisning(byggHenterRessurs());
         const payload = hentBrevdata();
         forhåndsvisBrev(payload).then((response: Ressurs<string>) => {
-            settVisModal(true);
+            setVisModal(true);
             if (response.status === RessursStatus.Suksess) {
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
                     type: 'application/pdf',
                 });
-                settHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
+                setHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
             } else if (
                 response.status === RessursStatus.Feilet ||
                 response.status === RessursStatus.FunksjonellFeil ||
                 response.status === RessursStatus.IkkeTilgang
             ) {
-                settHentetForhåndsvisning(response);
+                setHentetForhåndsvisning(response);
             } else {
-                settHentetForhåndsvisning(
+                setHentetForhåndsvisning(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                 );
             }
@@ -59,7 +59,7 @@ const useForhåndsvisBrev = (): ForhåndsvisBrevHook => {
 
     return {
         visModal,
-        settVisModal,
+        setVisModal,
         hentetForhåndsvisning,
         hentBrev,
         nullstillHentetForhåndsvisning,

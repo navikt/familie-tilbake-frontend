@@ -11,19 +11,19 @@ export type UseUlagretEndringerReturn = {
  * Kan brukes globalt eller lokalt i komponenter.
  */
 export const useUlagretEndringer = (): UseUlagretEndringerReturn => {
-    const [ikkePersisterteKomponenter, settIkkePersisterteKomponenter] = useState<Set<string>>(
-        new Set()
-    );
+    const tomtSet = new Set<string>();
+    const [ikkePersisterteKomponenter, setIkkePersisterteKomponenter] =
+        useState<Set<string>>(tomtSet);
     const harUlagredeData = ikkePersisterteKomponenter.size > 0;
 
     const settIkkePersistertKomponent = (komponentId: string): void => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
-        settIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
+        setIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
     };
 
     const nullstillIkkePersisterteKomponenter = (): void => {
         if (ikkePersisterteKomponenter.size > 0) {
-            settIkkePersisterteKomponenter(new Set());
+            setIkkePersisterteKomponenter(tomtSet);
         }
     };
 

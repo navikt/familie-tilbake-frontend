@@ -31,7 +31,7 @@ export const usePåVentBehandling = (
     lukkModal: () => void,
     ventegrunn?: BehandlingsstegsinfoDto | undefined
 ): PåVentBehandlingHook => {
-    const [feilmelding, settFeilmelding] = useState<string>();
+    const [feilmelding, setFeilmelding] = useState<string>();
     const { request } = useHttp();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
 
@@ -60,12 +60,12 @@ export const usePåVentBehandling = (
         skjemanavn: 'påventbehandling',
     });
 
-    const [forrigeVentegrunn, settForrigeVentegrunn] = useState<
+    const [forrigeVentegrunn, setForrigeVentegrunn] = useState<
         BehandlingsstegsinfoDto | undefined
     >();
 
     if (ventegrunn !== forrigeVentegrunn) {
-        settForrigeVentegrunn(ventegrunn);
+        setForrigeVentegrunn(ventegrunn);
         skjema.felter.tidsfrist.validerOgSettFelt(
             ventegrunn?.tidsfrist ? isoStringTilDate(ventegrunn.tidsfrist) : undefined
         );
@@ -102,7 +102,7 @@ export const usePåVentBehandling = (
                         response.status === RessursStatus.Feilet ||
                         response.status === RessursStatus.FunksjonellFeil
                     ) {
-                        settFeilmelding(response.frontendFeilmelding);
+                        setFeilmelding(response.frontendFeilmelding);
                     }
                 }
             );
@@ -122,7 +122,7 @@ export const usePåVentBehandling = (
                     response.status === RessursStatus.Feilet ||
                     response.status === RessursStatus.FunksjonellFeil
                 ) {
-                    settFeilmelding(response.frontendFeilmelding);
+                    setFeilmelding(response.frontendFeilmelding);
                 }
             }
         });

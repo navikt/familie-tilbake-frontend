@@ -79,14 +79,14 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const [vedtaksbrevavsnitt, setVedtaksbrevavsnitt] = useState<Ressurs<VedtaksbrevAvsnitt[]>>();
-    const [beregningsresultat, settBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
-    const [skjemaData, settSkjemaData] = useState<AvsnittSkjemaData[]>([]);
-    const [harPåkrevetFritekstMenIkkeUtfylt, settHarPåkrevetFritekstMenIkkeUtfylt] =
+    const [beregningsresultat, setBeregningsresultat] = useState<Ressurs<Beregningsresultat>>();
+    const [skjemaData, setSkjemaData] = useState<AvsnittSkjemaData[]>([]);
+    const [harPåkrevetFritekstMenIkkeUtfylt, setHarPåkrevetFritekstMenIkkeUtfylt] =
         useState<boolean>(false);
-    const [disableBekreft, settDisableBekreft] = useState<boolean>(true);
-    const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
-    const [senderInn, settSenderInn] = useState<boolean>(false);
-    const [foreslåVedtakRespons, settForeslåVedtakRespons] = useState<Ressurs<string>>();
+    const [disableBekreft, setDisableBekreft] = useState<boolean>(true);
+    const [nonUsedKey, setNonUsedKey] = useState<string>(Date.now().toString());
+    const [senderInn, setSenderInn] = useState<boolean>(false);
+    const [foreslåVedtakRespons, setForeslåVedtakRespons] = useState<Ressurs<string>>();
     const queryClient = useQueryClient();
     const { gjerVedtaksbrevteksterKall, gjerBeregningsresultatKall, sendInnForeslåVedtak } =
         useBehandlingApi();
@@ -119,7 +119,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                 };
                 return skjemaAvsnitt;
             });
-            settSkjemaData(skjemaAvsnitter);
+            setSkjemaData(skjemaAvsnitter);
         }
     }, [vedtaksbrevavsnitt]);
 
@@ -127,8 +127,8 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         const påkrevetIkkeUtfylt = skjemaData.some(avs =>
             avs.underavsnittsliste.some(uavs => !!uavs.fritekstPåkrevet && isEmpty(uavs.fritekst))
         );
-        settHarPåkrevetFritekstMenIkkeUtfylt(påkrevetIkkeUtfylt);
-        settDisableBekreft(påkrevetIkkeUtfylt);
+        setHarPåkrevetFritekstMenIkkeUtfylt(påkrevetIkkeUtfylt);
+        setDisableBekreft(påkrevetIkkeUtfylt);
     }, [skjemaData, nonUsedKey]);
 
     const hentVedtaksbrevtekster = (): void => {
@@ -147,13 +147,13 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     };
 
     const hentBeregningsresultat = (): void => {
-        settBeregningsresultat(byggHenterRessurs());
+        setBeregningsresultat(byggHenterRessurs());
         gjerBeregningsresultatKall(behandling.behandlingId)
             .then((hentetBeregningsresultat: Ressurs<Beregningsresultat>) => {
-                settBeregningsresultat(hentetBeregningsresultat);
+                setBeregningsresultat(hentetBeregningsresultat);
             })
             .catch(() => {
-                settBeregningsresultat(
+                setBeregningsresultat(
                     byggFeiletRessurs(
                         'Ukjent feil ved henting av beregningsresultat for behandling'
                     )
@@ -178,8 +178,8 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
             underavsnitter.splice(uavsIndex, 1, oppdatertUnderavsnitt);
             avsnitt.underavsnittsliste = underavsnitter;
             avsnitter.splice(avsIndex, 1, avsnitt);
-            settSkjemaData(avsnitter);
-            settNonUsedKey(Date.now().toString());
+            setSkjemaData(avsnitter);
+            setNonUsedKey(Date.now().toString());
         }
     };
 
@@ -235,8 +235,8 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
 
     const sendInnSkjema = async (onSuccess?: () => void): Promise<void> => {
         if (!harPåkrevetFritekstMenIkkeUtfylt && validerAlleAvsnittOk(true)) {
-            settSenderInn(true);
-            settForeslåVedtakRespons(undefined);
+            setSenderInn(true);
+            setForeslåVedtakRespons(undefined);
             nullstillIkkePersisterteKomponenter();
             const payload: ForeslåVedtakStegPayload = {
                 '@type': 'FORESLÅ_VEDTAK',
@@ -244,7 +244,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
             };
             try {
                 const respons = await sendInnForeslåVedtak(behandling.behandlingId, payload);
-                settSenderInn(false);
+                setSenderInn(false);
                 if (respons.status === RessursStatus.Suksess) {
                     await queryClient.invalidateQueries({
                         queryKey: hentBehandlingQueryKey({
@@ -260,23 +260,23 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                     respons.status === RessursStatus.Feilet ||
                     respons.status === RessursStatus.FunksjonellFeil
                 ) {
-                    settForeslåVedtakRespons(respons);
+                    setForeslåVedtakRespons(respons);
                 }
             } catch {
-                settSenderInn(false);
-                settForeslåVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
+                setSenderInn(false);
+                setForeslåVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
             }
         }
     };
 
     const lagreUtkast = (): void => {
         if (validerAlleAvsnittOk(false)) {
-            settSenderInn(true);
-            settForeslåVedtakRespons(undefined);
+            setSenderInn(true);
+            setForeslåVedtakRespons(undefined);
             nullstillIkkePersisterteKomponenter();
             lagreUtkastVedtaksbrev(behandling.behandlingId, lagFritekstavsnitt())
                 .then(async (respons: Ressurs<string>) => {
-                    settSenderInn(false);
+                    setSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         await queryClient.invalidateQueries({
                             queryKey: hentBehandlingQueryKey({
@@ -288,12 +288,12 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                         respons.status === RessursStatus.Feilet ||
                         respons.status === RessursStatus.FunksjonellFeil
                     ) {
-                        settForeslåVedtakRespons(respons);
+                        setForeslåVedtakRespons(respons);
                     }
                 })
                 .catch(() => {
-                    settSenderInn(false);
-                    settForeslåVedtakRespons(
+                    setSenderInn(false);
+                    setForeslåVedtakRespons(
                         byggFeiletRessurs('Ukjent feil ved mellomlagring av vedtak')
                     );
                 });

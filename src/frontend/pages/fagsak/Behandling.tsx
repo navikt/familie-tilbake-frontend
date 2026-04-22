@@ -340,7 +340,7 @@ export const BehandlingContainer: FC = () => {
     const { ventegrunn, innholdsbredde } = useBehandlingState();
     const globalAlerts = useGlobalAlerts();
     const lukkGlobalAlert = useLukkGlobalAlert();
-    const [visVenteModal, settVisVenteModal] = useState(false);
+    const [visVenteModal, setVisVenteModal] = useState(false);
 
     return (
         <>
@@ -352,7 +352,7 @@ export const BehandlingContainer: FC = () => {
                 </LocalAlert>
             )}
             {ventegrunn && !visVenteModal && (
-                <PåVentModal ventegrunn={ventegrunn} onClose={() => settVisVenteModal(true)} />
+                <PåVentModal ventegrunn={ventegrunn} onClose={() => setVisVenteModal(true)} />
             )}
             <div
                 className={classNames(
