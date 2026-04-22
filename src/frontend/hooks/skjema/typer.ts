@@ -1,6 +1,5 @@
-import type { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 import type { FamilieRequestConfig } from '~/api/http/HttpProvider';
-import type { RessursStatus } from '~/typer/ressurs';
 
 import { type Ressurs } from '~/typer/ressurs';
 
@@ -45,18 +44,6 @@ export interface NavInputProps<Verdi> extends NavBaseSkjemaProps<Verdi> {
     onChange: FeltOnChange<Verdi>;
 }
 
-// Kopiert fra feiloppsummering, men ønsker ikke å trekke inn dette som dependency
-export type FeiloppsummeringFeil = {
-    /**
-     * ID til skjemaelementet som feilmeldingen tilhører.
-     */
-    skjemaelementId: string;
-    /**
-     * Selve feilmeldingen.
-     */
-    feilmelding: string;
-};
-
 export enum Valideringsstatus {
     Feil = 'FEIL',
     Advarsel = 'ADVARSEL',
@@ -90,7 +77,6 @@ export type Skjema<Felter, SkjemaRespons> = {
 };
 
 export type UseSkjemaVerdi<Felter, SkjemaRespons> = {
-    hentFeilTilOppsummering: () => FeiloppsummeringFeil[];
     kanSendeSkjema: () => boolean;
     nullstillSkjema: () => void;
     onSubmit: <SkjemaData>(
@@ -98,38 +84,6 @@ export type UseSkjemaVerdi<Felter, SkjemaRespons> = {
         onSuccess: (ressurs: Ressurs<SkjemaRespons>) => void,
         onError?: ((ressurs: Ressurs<SkjemaRespons>) => void) | undefined
     ) => void;
-    settSubmitRessurs: Dispatch<
-        SetStateAction<
-            | {
-                  data: SkjemaRespons;
-                  status: RessursStatus.Suksess;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.Feilet;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.FunksjonellFeil;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.IkkeTilgang;
-              }
-            | {
-                  frontendFeilmelding: string;
-                  status: RessursStatus.ServerFeil;
-              }
-            | {
-                  status: RessursStatus.Henter;
-              }
-            | {
-                  status: RessursStatus.IkkeHentet;
-              }
-        >
-    >;
-    settVisfeilmeldinger: Dispatch<SetStateAction<boolean>>;
     skjema: Skjema<Felter, SkjemaRespons>;
     validerAlleSynligeFelter: () => FeltState<unknown>[];
-    valideringErOk: () => boolean;
 };

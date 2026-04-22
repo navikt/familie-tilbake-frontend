@@ -46,7 +46,7 @@ type Props = {
 
 export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp }) => {
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);
-    const [erEkspandert, settErEkspandert] = useState(harPåkrevetFritekstMenIkkeUtfylt);
+    const [erEkspandert, setErEkspandert] = useState(harPåkrevetFritekstMenIkkeUtfylt);
     const { behandlingILesemodus } = useBehandlingState();
 
     const finnBulletpointsFraListe = (
@@ -79,7 +79,7 @@ export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp 
     return (
         <ExpansionCard
             open={erEkspandert}
-            onToggle={() => settErEkspandert(prevState => !prevState)}
+            onToggle={() => setErEkspandert(prevState => !prevState)}
             aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
             size="small"
         >

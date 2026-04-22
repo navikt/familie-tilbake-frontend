@@ -16,7 +16,7 @@ export type RedirectEtterLagringHook = {
 export const useRedirectEtterLagring = (): RedirectEtterLagringHook => {
     const navigate = useNavigate();
     const { harUlagredeData } = useBehandlingState();
-    const [url, settUrl] = useState<string>();
+    const [url, setUrl] = useState<string>();
 
     useEffect(() => {
         if (url && !harUlagredeData) {
@@ -26,7 +26,7 @@ export const useRedirectEtterLagring = (): RedirectEtterLagringHook => {
 
     return {
         utførRedirect: (url: string): void => {
-            settUrl(url);
+            setUrl(url);
         },
     };
 };

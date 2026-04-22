@@ -58,7 +58,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
-    const [gjeldendeSide, settGjeldendeSide] = useState(1);
+    const [gjeldendeSide, setGjeldendeSide] = useState(1);
 
     const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
         baseURL: window.location.origin,
@@ -186,7 +186,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                                     page={gjeldendeSide}
                                     count={pdfSider.length}
                                     size="small"
-                                    onPageChange={settGjeldendeSide}
+                                    onPageChange={setGjeldendeSide}
                                 />
                             </HStack>
                         )}

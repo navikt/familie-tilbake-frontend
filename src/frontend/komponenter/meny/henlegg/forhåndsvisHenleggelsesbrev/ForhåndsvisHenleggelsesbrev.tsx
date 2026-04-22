@@ -20,7 +20,7 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
         hentetForhåndsvisning,
         hentBrev,
         visModal,
-        settVisModal,
+        setVisModal: settVisModal,
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisHenleggelsesbrev({ skjema });
 

@@ -13,8 +13,8 @@ export type TogglesHook = {
 };
 
 const [TogglesProvider, useToggles] = createUseContext(() => {
-    const [toggles, settToggles] = useState<Toggles>({});
-    const [feilmelding, settFeilmelding] = useState<string>('');
+    const [toggles, setToggles] = useState<Toggles>({});
+    const [feilmelding, setFeilmelding] = useState<string>('');
     const { request } = useHttp();
     TogglesProvider.displayName = 'TOGGLES_PROVIDER';
 
@@ -28,15 +28,15 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
 
         hentToggles()
             .then((resp: Ressurs<Toggles>) => {
-                settFeilmelding('');
+                setFeilmelding('');
                 if (resp.status === RessursStatus.Suksess) {
-                    settToggles(resp.data);
+                    setToggles(resp.data);
                 } else if (hentFrontendFeilmelding(resp)) {
-                    settFeilmelding('Kunne ikke hente toggles');
+                    setFeilmelding('Kunne ikke hente toggles');
                 }
             })
             .catch(() => {
-                settFeilmelding('Kunne ikke hente toggles');
+                setFeilmelding('Kunne ikke hente toggles');
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

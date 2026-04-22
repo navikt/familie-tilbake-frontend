@@ -82,7 +82,7 @@ const router = createBrowserRouter(
 );
 
 export const App: FC = () => {
-    const [autentisertSaksbehandler, settAutentisertSaksbehandler] = useState<
+    const [autentisertSaksbehandler, setAutentisertSaksbehandler] = useState<
         Saksbehandler | undefined
     >(undefined);
     const queryClient = new QueryClient({
@@ -97,7 +97,7 @@ export const App: FC = () => {
 
     useEffect(() => {
         hentInnloggetBruker().then((innhentetInnloggetSaksbehandler: Saksbehandler) => {
-            settAutentisertSaksbehandler(innhentetInnloggetSaksbehandler);
+            setAutentisertSaksbehandler(innhentetInnloggetSaksbehandler);
         });
     }, []);
 

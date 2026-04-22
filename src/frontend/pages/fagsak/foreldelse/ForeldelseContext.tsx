@@ -68,12 +68,12 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         useBehandlingState();
     const queryClient = useQueryClient();
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
-    const [skjemaData, settSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
-    const [erAutoutført, settErAutoutført] = useState<boolean>();
-    const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
-    const [valgtPeriode, settValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
-    const [allePerioderBehandlet, settAllePerioderBehandlet] = useState<boolean>(false);
-    const [senderInn, settSenderInn] = useState<boolean>(false);
+    const [skjemaData, setSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
+    const [erAutoutført, setErAutoutført] = useState<boolean>();
+    const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
+    const [valgtPeriode, setValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
+    const [allePerioderBehandlet, setAllePerioderBehandlet] = useState<boolean>(false);
+    const [senderInn, setSenderInn] = useState<boolean>(false);
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
 
     const navigerTilNeste = useStegNavigering('VILKÅRSVURDERING');
@@ -84,9 +84,9 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     );
 
     useEffect(() => {
-        settStegErBehandlet(erStegBehandlet('FORELDELSE'));
+        setStegErBehandlet(erStegBehandlet('FORELDELSE'));
         const autoutført = erStegAutoutført('FORELDELSE');
-        settErAutoutført(autoutført);
+        setErAutoutført(autoutført);
         if (!autoutført) {
             hentForeldelse();
         }
@@ -115,10 +115,10 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 behandling.erNyModell
             );
 
-            settSkjemaData(skjemaPerioder);
+            setSkjemaData(skjemaPerioder);
 
             if (valgtForeldelsePeriode) {
-                settValgtPeriode(valgtForeldelsePeriode);
+                setValgtPeriode(valgtForeldelsePeriode);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,7 +129,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             const nokonUbehandlet = skjemaData.some(
                 per => !per.begrunnelse || !per.foreldelsesvurderingstype
             );
-            settAllePerioderBehandlet(!nokonUbehandlet);
+            setAllePerioderBehandlet(!nokonUbehandlet);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valgtPeriode]);
@@ -153,11 +153,11 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         const perioder = skjemaData;
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
         perioder.splice(index, 1, periode);
-        settSkjemaData(perioder);
+        setSkjemaData(perioder);
         const førsteUbehandletPeriode = perioder.find(
             per => !per.begrunnelse || !per.foreldelsesvurderingstype
         );
-        settValgtPeriode(førsteUbehandletPeriode);
+        setValgtPeriode(førsteUbehandletPeriode);
     };
 
     const onSplitPeriode = (
@@ -167,8 +167,8 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         const perioder = skjemaData;
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
         perioder.splice(index, 1, ...nyePerioder);
-        settSkjemaData(perioder);
-        settValgtPeriode(nyePerioder[0]);
+        setSkjemaData(perioder);
+        setValgtPeriode(nyePerioder[0]);
     };
 
     const harEndretOpplysninger = (): boolean | undefined => {
@@ -197,7 +197,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         if (stegErBehandlet && !harEndretOpplysninger()) {
             navigerTilNeste();
         } else {
-            settSenderInn(true);
+            setSenderInn(true);
             const payload: ForeldelseStegPayload = {
                 '@type': 'FORELDELSE',
                 foreldetPerioder: skjemaData.map<PeriodeForeldelseStegPayload>(per => {
@@ -217,7 +217,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             };
             sendInnForeldelse(behandling.behandlingId, payload).then(
                 async (respons: Ressurs<string>) => {
-                    settSenderInn(false);
+                    setSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         await queryClient.refetchQueries({
                             queryKey: hentBehandlingQueryKey({
@@ -243,7 +243,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         skjemaData,
         oppdaterPeriode,
         valgtPeriode,
-        settValgtPeriode,
+        settValgtPeriode: setValgtPeriode,
         allePerioderBehandlet,
         navigerTilNeste,
         navigerTilForrige,

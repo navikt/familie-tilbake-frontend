@@ -6,7 +6,7 @@ import { BodyShort, Link, Textarea, VStack } from '@navikt/ds-react';
 import { useState } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { harVerdi, isEmpty, validerTekstMaksLengde } from '~/utils';
+import { isEmpty, validerTekstMaksLengde } from '~/utils';
 
 import { useVedtak } from './VedtakContext';
 
@@ -24,8 +24,8 @@ export const VedtakFritekstSkjema: FC<Props> = ({
     const { oppdaterUnderavsnitt } = useVedtak();
     const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
-    const [fritekstfeltErSynlig, settFritekstfeltErSynlig] = useState<boolean>(
-        harVerdi(fritekst) || fritekstPåkrevet
+    const [fritekstfeltErSynlig, setFritekstfeltErSynlig] = useState(
+        !!fritekst || fritekstPåkrevet
     );
 
     const lenkeKnappErSynlig = !fritekstfeltErSynlig && !behandlingILesemodus;
@@ -53,12 +53,12 @@ export const VedtakFritekstSkjema: FC<Props> = ({
                     data-testid={`legg-til-fritekst-${avsnittIndex}-${index}`}
                     onClick={e => {
                         e.preventDefault();
-                        settFritekstfeltErSynlig(true);
+                        setFritekstfeltErSynlig(true);
                     }}
                     onKeyUp={e => {
                         const key = e.code || e.keyCode;
                         if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
-                            settFritekstfeltErSynlig(true);
+                            setFritekstfeltErSynlig(true);
                         }
                     }}
                     href="#"
