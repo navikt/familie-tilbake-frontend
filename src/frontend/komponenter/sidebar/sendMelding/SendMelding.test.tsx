@@ -31,7 +31,7 @@ const renderSendMelding = (
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak({ språkkode })}>
+            <FagsakContext value={lagFagsak({ språkkode })}>
                 <TestBehandlingProvider
                     behandling={behandling}
                     stateOverrides={{ behandlingILesemodus }}
@@ -40,7 +40,7 @@ const renderSendMelding = (
                         <SendMelding />
                     </SendMeldingProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

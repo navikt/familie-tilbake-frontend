@@ -49,7 +49,7 @@ describe('VilkårsvurderingContainer', () => {
         const behandling = lagBehandling();
 
         const { getByText } = render(
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <QueryClientProvider client={queryClient}>
                     <TestBehandlingProvider
                         behandling={behandling}
@@ -62,7 +62,7 @@ describe('VilkårsvurderingContainer', () => {
                         </VilkårsvurderingProvider>
                     </TestBehandlingProvider>
                 </QueryClientProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         );
 
         await waitFor(() => {

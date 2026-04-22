@@ -83,13 +83,13 @@ const renderFakta = (
 
     return {
         result: render(
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
                     <QueryClientProvider client={client}>
                         <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)} />
                     </QueryClientProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         ),
         mutationBody,
     };
@@ -484,7 +484,7 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             const wrapMedProviders = (fakta: FaktaOmFeilutbetaling): JSX.Element => (
-                <FagsakContext.Provider value={lagFagsak()}>
+                <FagsakContext value={lagFagsak()}>
                     <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
                         <QueryClientProvider client={client}>
                             <FaktaSkjema
@@ -493,7 +493,7 @@ describe('Fakta om feilutbetaling', () => {
                             />
                         </QueryClientProvider>
                     </TestBehandlingProvider>
-                </FagsakContext.Provider>
+                </FagsakContext>
             );
 
             const { rerender, findByRole } = render(wrapMedProviders(utfyltFakta));

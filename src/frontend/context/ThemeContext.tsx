@@ -64,8 +64,8 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({
     }, [theme]);
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext value={{ theme, toggleTheme }}>
             <Theme theme={theme}>{children}</Theme>
-        </ThemeContext.Provider>
+        </ThemeContext>
     );
 };

@@ -152,11 +152,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         ...ulagretEndringer,
     };
 
-    return (
-        <BehandlingStateContext.Provider value={contextValue}>
-            {children}
-        </BehandlingStateContext.Provider>
-    );
+    return <BehandlingStateContext value={contextValue}>{children}</BehandlingStateContext>;
 };
 
 export const useBehandlingState = (): BehandlingStateContextType => {

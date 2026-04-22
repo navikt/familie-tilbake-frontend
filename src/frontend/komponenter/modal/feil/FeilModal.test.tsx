@@ -19,11 +19,11 @@ const renderFeilModal = (
 ): RenderResult => {
     const behandling = behandlingId ? lagBehandling({ behandlingId }) : lagBehandling();
     return render(
-        <FagsakContext.Provider value={fagsakOverride ?? lagFagsak()}>
+        <FagsakContext value={fagsakOverride ?? lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <FeilModal feil={feil} lukkFeilModal={mockSetVisFeilModal} />
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 };
 

@@ -22,11 +22,11 @@ const renderFaktaboks = (
 ): RenderResult => {
     const behandling = lagBehandling(delvisBehandling);
     return render(
-        <FagsakContext.Provider value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
+        <FagsakContext value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
             <TestBehandlingProvider behandling={behandling}>
                 <Faktaboks />
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 };
 

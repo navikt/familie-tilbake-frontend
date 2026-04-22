@@ -42,9 +42,9 @@ const TestWrapper = ({ children }: { children: ReactNode }): ReactElement => {
     const queryClient = createTestQueryClient();
     return (
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider>{children}</TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

@@ -37,7 +37,7 @@ const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): Forhå
 
 const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
+        <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider
                 behandling={behandling}
                 stateOverrides={{
@@ -48,7 +48,7 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
                     <Forhåndsvarsel />
                 </QueryClientProvider>
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 };
 

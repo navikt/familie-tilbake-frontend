@@ -55,11 +55,11 @@ const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
                     <Brevmottakere />
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

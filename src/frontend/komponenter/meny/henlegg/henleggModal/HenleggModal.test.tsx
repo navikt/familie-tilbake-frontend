@@ -32,11 +32,11 @@ const renderHenleggModal = (
     const mockDialogRef = createRef<HTMLDialogElement | null>();
     const renderModal = render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
                     <HenleggModal dialogRef={mockDialogRef} årsaker={årsaker} />
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
     mockDialogRef.current?.showModal();
