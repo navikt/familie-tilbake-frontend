@@ -20,8 +20,8 @@ export const LeggTilFjernBrevmottakere: FC = () => {
     const { behandlingId, manuelleBrevmottakere, behandlingsstegsinfo } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const [senderInn, settSenderInn] = useState(false);
-    const [feilmelding, settFeilmelding] = useState('');
+    const [senderInn, setSenderInn] = useState(false);
+    const [feilmelding, setFeilmelding] = useState('');
     const navigerTilBrevmottakerSteg = useStegNavigering('BREVMOTTAKER');
     const navigerTilBehandling = useStegNavigering();
     const queryClient = useQueryClient();
@@ -38,12 +38,12 @@ export const LeggTilFjernBrevmottakere: FC = () => {
 
     const opprettBrevmottakerSteg = (): void => {
         nullstillIkkePersisterteKomponenter();
-        settSenderInn(true);
+        setSenderInn(true);
         request<void, string>({
             method: 'POST',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/aktiver`,
         }).then(async (respons: Ressurs<string>) => {
-            settSenderInn(false);
+            setSenderInn(false);
             if (respons.status === RessursStatus.Suksess) {
                 await queryClient.invalidateQueries({
                     queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
@@ -54,19 +54,19 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                 respons.status === RessursStatus.FunksjonellFeil ||
                 respons.status === RessursStatus.IkkeTilgang
             ) {
-                settFeilmelding(respons.frontendFeilmelding);
+                setFeilmelding(respons.frontendFeilmelding);
             }
         });
     };
 
     const fjernBrevmottakerSteg = (): void => {
         nullstillIkkePersisterteKomponenter();
-        settSenderInn(true);
+        setSenderInn(true);
         request<void, string>({
             method: 'PUT',
             url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}/deaktiver`,
         }).then(async (respons: Ressurs<string>) => {
-            settSenderInn(false);
+            setSenderInn(false);
             if (respons.status === RessursStatus.Suksess) {
                 dialogRef.current?.close();
                 await queryClient.refetchQueries({
@@ -78,7 +78,7 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                 respons.status === RessursStatus.FunksjonellFeil ||
                 respons.status === RessursStatus.IkkeTilgang
             ) {
-                settFeilmelding(respons.frontendFeilmelding);
+                setFeilmelding(respons.frontendFeilmelding);
             }
         });
     };
@@ -97,7 +97,7 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                 alertType: AlertType.Warning,
                 tekst: feilmelding,
             });
-            settFeilmelding('');
+            setFeilmelding('');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [feilmelding]);

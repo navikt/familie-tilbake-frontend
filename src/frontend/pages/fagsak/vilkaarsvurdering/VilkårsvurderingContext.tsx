@@ -70,14 +70,14 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const queryClient = useQueryClient();
     const containerRef = useRef<HTMLDivElement>(null);
     const [vilkårsvurdering, setVilkårsvurdering] = useState<Ressurs<VilkårsvurderingResponse>>();
-    const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
-    const [erAutoutført, settErAutoutført] = useState<boolean>();
-    const [valgtPeriode, settValgtPeriode] = useState<VilkårsvurderingPeriodeSkjemaData>();
-    const [kanIlleggeRenter, settKanIlleggeRenter] = useState(true);
-    const [behandletPerioder, settBehandletPerioder] = useState<
-        VilkårsvurderingPeriodeSkjemaData[]
-    >([]);
-    const [valideringsFeilmelding, settValideringsFeilmelding] = useState<string>();
+    const [skjemaData, setSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
+    const [erAutoutført, setErAutoutført] = useState<boolean>();
+    const [valgtPeriode, setValgtPeriode] = useState<VilkårsvurderingPeriodeSkjemaData>();
+    const [kanIlleggeRenter, setKanIlleggeRenter] = useState(true);
+    const [behandletPerioder, setBehandletPerioder] = useState<VilkårsvurderingPeriodeSkjemaData[]>(
+        []
+    );
+    const [valideringsFeilmelding, setValideringsFeilmelding] = useState<string>();
     const { gjerVilkårsvurderingKall, sendInnVilkårsvurdering } = useBehandlingApi();
     const kanIleggeRenter = !['BARNETRYGD', 'KONTANTSTØTTE'].includes(ytelsestype);
 
@@ -85,9 +85,9 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const navigerTilForrige = useStegNavigering('FORELDELSE');
 
     useEffect(() => {
-        settErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
+        setErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
-        settKanIlleggeRenter(kanIleggeRenter);
+        setKanIlleggeRenter(kanIleggeRenter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
 
@@ -103,11 +103,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
                 return skjemaPeriode;
             });
 
-            settSkjemaData(skjemaPerioder);
+            setSkjemaData(skjemaPerioder);
 
             const valgtVilkårsperiode = utledValgtPeriode(skjemaPerioder);
             if (valgtVilkårsperiode) {
-                settValgtPeriode(valgtVilkårsperiode);
+                setValgtPeriode(valgtVilkårsperiode);
             }
         }
     }, [vilkårsvurdering]);
@@ -121,7 +121,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
                     periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat !==
                         Vilkårsresultat.Udefinert
             );
-            settBehandletPerioder(behandletPerioder);
+            setBehandletPerioder(behandletPerioder);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valgtPeriode]);
@@ -145,9 +145,9 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         const perioder = skjemaData;
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
         perioder.splice(index, 1, periode);
-        settSkjemaData(perioder);
+        setSkjemaData(perioder);
         const førsteUbehandletPeriode = perioder.find(periode => !erBehandlet(periode));
-        førsteUbehandletPeriode !== undefined && settValgtPeriode(førsteUbehandletPeriode);
+        førsteUbehandletPeriode !== undefined && setValgtPeriode(førsteUbehandletPeriode);
     };
 
     const scrollTilToppen = (): void => {
@@ -161,7 +161,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const nestePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
         const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
         if (index < skjemaData.length - 1) {
-            settValgtPeriode(skjemaData[index + 1]);
+            setValgtPeriode(skjemaData[index + 1]);
         }
         scrollTilToppen();
     };
@@ -169,7 +169,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const forrigePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): void => {
         const index = skjemaData.findIndex(bfp => bfp.index === periode.index);
         if (index > 0) {
-            settValgtPeriode(skjemaData[index - 1]);
+            setValgtPeriode(skjemaData[index - 1]);
         }
         scrollTilToppen();
     };
@@ -181,8 +181,8 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         const perioder = skjemaData;
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
         perioder.splice(index, 1, ...nyePerioder);
-        settSkjemaData(perioder);
-        settValgtPeriode(nyePerioder[0]);
+        setSkjemaData(perioder);
+        setValgtPeriode(nyePerioder[0]);
     };
 
     const erAllePerioderBehandlet = skjemaData.every(periode => erBehandlet(periode));
@@ -211,7 +211,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             unnlates4RettsgebyrPerioder.length > 0 &&
             unnlates4RettsgebyrPerioder.length !== filtrertePerioder.length
         ) {
-            settValideringsFeilmelding(
+            setValideringsFeilmelding(
                 'Totalbeløpet er under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
             );
             return false;
@@ -254,7 +254,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     >({
         mutationKey: ['sendInnVilkårsvurdering'],
         mutationFn: async ({ payload, handling }) => {
-            settValideringsFeilmelding(undefined);
+            setValideringsFeilmelding(undefined);
             if (!validererTotaltBeløpMot4Rettsgebyr()) {
                 return undefined;
             }
@@ -306,7 +306,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         skjemaData,
         oppdaterPeriode,
         valgtPeriode,
-        settValgtPeriode,
+        settValgtPeriode: setValgtPeriode,
         behandletPerioder,
         navigerTilNeste,
         navigerTilForrige,

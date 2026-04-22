@@ -54,7 +54,7 @@ export const VedtakContainer: FC = () => {
     const erRevurderingBortfaltBeløp =
         type === 'REVURDERING_TILBAKEKREVING' &&
         behandlingsårsakstype === 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
-    const [erPerioderSammenslått, settErPerioderSammenslått] = useState<boolean>(false);
+    const [erPerioderSammenslått, setErPerioderSammenslått] = useState<boolean>(false);
 
     const {
         sammenslåPerioder,
@@ -68,7 +68,7 @@ export const VedtakContainer: FC = () => {
 
     const handleKnappTrykk = async (): Promise<void> => {
         const oppdaterErPerioderSammenslått = !erPerioderSammenslått;
-        settErPerioderSammenslått(oppdaterErPerioderSammenslått);
+        setErPerioderSammenslått(oppdaterErPerioderSammenslått);
         if (!oppdaterErPerioderSammenslått) {
             await angreSammenslåingAvPerioder();
         } else {
@@ -82,7 +82,7 @@ export const VedtakContainer: FC = () => {
             await hentErPerioderLike();
 
             const sammenslåttResponse = await hentErPerioderSammenslått();
-            settErPerioderSammenslått(!!sammenslåttResponse);
+            setErPerioderSammenslått(!!sammenslåttResponse);
         };
         fetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps

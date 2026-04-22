@@ -43,8 +43,8 @@ const erAvhengigheterOppfyltFritekst = (avhengigheter?: Avhengigheter): boolean 
 const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
     const { behandlingId, varselSendt } = useBehandling();
     const queryClient = useQueryClient();
-    const [senderInn, settSenderInn] = useState<boolean>(false);
-    const [feilmelding, settFeilmelding] = useState<string | undefined>();
+    const [senderInn, setSenderInn] = useState<boolean>(false);
+    const [feilmelding, setFeilmelding] = useState<string | undefined>();
     const { bestillBrev } = useDokumentApi();
 
     const maler = [
@@ -94,21 +94,21 @@ const [SendMeldingProvider, useSendMelding] = createUseContext(() => {
     const sendBrev = (): void => {
         validerAlleSynligeFelter();
         if (kanSendeSkjema()) {
-            settSenderInn(true);
+            setSenderInn(true);
             bestillBrev(hentBrevdata()).then(async (respons: Ressurs<void>) => {
-                settSenderInn(false);
-                settFeilmelding(undefined);
+                setSenderInn(false);
+                setFeilmelding(undefined);
                 if (respons.status === RessursStatus.Suksess) {
                     nullstillSkjema();
                     await queryClient.invalidateQueries({
                         queryKey: hentBehandlingQueryKey({ path: { behandlingId: behandlingId } }),
                     });
                 } else {
-                    settFeilmelding(hentFrontendFeilmelding(respons));
+                    setFeilmelding(hentFrontendFeilmelding(respons));
                 }
             });
         } else {
-            settSenderInn(false);
+            setSenderInn(false);
         }
     };
 

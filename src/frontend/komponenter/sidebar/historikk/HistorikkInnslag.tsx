@@ -20,7 +20,7 @@ type Props = {
 
 export const HistorikkInnslag: FC<Props> = ({ innslag }) => {
     const { navigerTilSide } = useHistorikk();
-    const [visDokument, settVisDokument] = useState<boolean>(false);
+    const [visDokument, setVisDokument] = useState<boolean>(false);
 
     const lagTittel = (): ReactNode => {
         if (innslag.type === Historikkinnslagstype.Skjermlenke && innslag.steg) {
@@ -64,7 +64,7 @@ export const HistorikkInnslag: FC<Props> = ({ innslag }) => {
                     href="#"
                     onClick={(e: MouseEvent) => {
                         e.preventDefault();
-                        settVisDokument(true);
+                        setVisDokument(true);
                     }}
                 >
                     {innslag.tekst}
@@ -98,7 +98,7 @@ export const HistorikkInnslag: FC<Props> = ({ innslag }) => {
                     <HentDokument
                         journalpostId={innslag.journalpostId}
                         dokumentId={innslag.dokumentId}
-                        onClose={() => settVisDokument(false)}
+                        onClose={() => setVisDokument(false)}
                     />
                 )}
             </div>

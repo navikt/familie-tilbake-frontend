@@ -30,21 +30,21 @@ type AuthProviderExports = {
 
 const [AuthProvider, useAuth] = createUseContext(
     ({ autentisertSaksbehandler }: AppProps): AuthProviderExports => {
-        const [autentisert, settAutentisert] = useState(true);
-        const [innloggetSaksbehandler, settInnloggetSaksbehandler] =
+        const [autentisert, setAutentisert] = useState(true);
+        const [innloggetSaksbehandler, setInnloggetSaksbehandler] =
             useState(autentisertSaksbehandler);
 
         useEffect(() => {
             if (autentisertSaksbehandler) {
-                settAutentisert(true);
-                settInnloggetSaksbehandler(autentisertSaksbehandler);
+                setAutentisert(true);
+                setInnloggetSaksbehandler(autentisertSaksbehandler);
             }
         }, [autentisertSaksbehandler]);
 
         return {
             autentisert,
             innloggetSaksbehandler,
-            settAutentisert,
+            settAutentisert: setAutentisert,
         };
     }
 );
@@ -52,7 +52,7 @@ const [AuthProvider, useAuth] = createUseContext(
 const [AppContentProvider, useApp] = createUseContext(() => {
     const { autentisert, innloggetSaksbehandler } = useAuth();
     const { request } = useHttp();
-    const [toasts, settToasts] = useState<{ [toastId: string]: Toast }>({});
+    const [toasts, setToasts] = useState<{ [toastId: string]: Toast }>({});
 
     const hentTilbakeInfo = (): void => {
         request<void, Info>({
@@ -72,11 +72,11 @@ const [AppContentProvider, useApp] = createUseContext(() => {
         innloggetSaksbehandler,
         hentTilbakeInfo,
         settToast: (toastId: ToastTyper, toast: Toast): void =>
-            settToasts({
+            setToasts({
                 ...toasts,
                 [toastId]: toast,
             }),
-        settToasts,
+        settToasts: setToasts,
         toasts,
     };
 });

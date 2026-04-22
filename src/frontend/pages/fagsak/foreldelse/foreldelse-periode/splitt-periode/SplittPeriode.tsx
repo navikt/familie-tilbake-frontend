@@ -30,14 +30,14 @@ type Props = {
 };
 
 export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
-    const [splittetPerioder, settSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
+    const [splittetPerioder, setSplittetPerioder] = useState<ForeldelsePeriodeSkjemeData[]>();
     const {
         visModal,
-        settVisModal,
+        setVisModal,
         splittDato,
-        settSplittDato,
+        setSplittDato,
         tidslinjeRader,
-        settTidslinjeRader,
+        setTidslinjeRader,
         feilmelding,
         vedDatoEndring,
         sendInnSkjema,
@@ -75,17 +75,17 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
                             erSplittet: true,
                         },
                     ];
-                    settSplittetPerioder(nyePerioder);
-                    settTidslinjeRader([
+                    setSplittetPerioder(nyePerioder);
+                    setTidslinjeRader([
                         [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
                     ]);
                 } else {
-                    settSplittetPerioder([periode]);
-                    settSplittDato(periode.periode.tom);
+                    setSplittetPerioder([periode]);
+                    setSplittDato(periode.periode.tom);
                 }
             }, nyVerdi);
         },
-        [periode, settSplittDato, settTidslinjeRader, validateNyPeriode, vedDatoEndring]
+        [periode, setSplittDato, setTidslinjeRader, validateNyPeriode, vedDatoEndring]
     );
 
     const onSubmit = (): void => {
@@ -107,7 +107,7 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
                             feilutbetaltBeløp: beregnetperioder[1].feilutbetaltBeløp,
                         },
                     ];
-                    settSplittetPerioder([]);
+                    setSplittetPerioder([]);
                     onBekreft(periode, beregnetNyePerioder);
                 }
             );
@@ -126,11 +126,11 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
             <Link
                 href="#"
                 role="button"
-                onClick={() => settVisModal(true)}
+                onClick={() => setVisModal(true)}
                 onKeyUp={e => {
                     if (e.code === 'Space' || e.code === 'Enter') {
                         e.preventDefault();
-                        settVisModal(true);
+                        setVisModal(true);
                     }
                 }}
                 aria-label="Del opp perioden"
@@ -149,7 +149,7 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
                     tidslinjeRader={tidslinjeRader}
                     splittDato={splittDato}
                     visModal={visModal}
-                    settVisModal={settVisModal}
+                    settVisModal={setVisModal}
                     onChangeDato={onChangeDato}
                     onSubmit={onSubmit}
                     feilmelding={feilmelding}

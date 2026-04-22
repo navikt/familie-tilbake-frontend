@@ -18,8 +18,8 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
     const behandling = useBehandling();
     const [inaktiveFakta, setInaktiveFakta] = useState<Ressurs<FaktaResponse[]>>(byggTomRessurs);
 
-    const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>();
-    const [fakta, settFakta] = useState<FaktaResponse>();
+    const [skjemaData, setSkjemaData] = useState<FaktaSkjemaData>();
+    const [fakta, setFakta] = useState<FaktaResponse>();
 
     useEffect(() => {
         hentFakta();
@@ -47,8 +47,8 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
                 perioder: behandletPerioder,
                 vurderingAvBrukersUttalelse: inaktivFakta.vurderingAvBrukersUttalelse,
             };
-            settSkjemaData(data);
-            settFakta(inaktivFakta);
+            setSkjemaData(data);
+            setFakta(inaktivFakta);
         }
     };
 

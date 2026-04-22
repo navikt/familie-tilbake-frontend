@@ -15,7 +15,7 @@ type Props = {
 const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
     ({ valgtMenyside }: Props) => {
         const { behandlingId } = useBehandling();
-        const [journalposter, settJournalposter] = useState<Ressurs<Journalpost[]>>();
+        const [journalposter, setJournalposter] = useState<Ressurs<Journalpost[]>>();
         const { request } = useHttp();
 
         useEffect(() => {
@@ -26,16 +26,16 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
         }, [behandlingId, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {
-            settJournalposter(byggHenterRessurs());
+            setJournalposter(byggHenterRessurs());
             request<void, Journalpost[]>({
                 method: 'GET',
                 url: `/familie-tilbake/api/behandling/${behandlingId}/journalposter`,
             })
                 .then((hentetDokumenter: Ressurs<Journalpost[]>) => {
-                    settJournalposter(hentetDokumenter);
+                    setJournalposter(hentetDokumenter);
                 })
                 .catch(() => {
-                    settJournalposter(
+                    setJournalposter(
                         byggFeiletRessurs(
                             'Ukjent feil ved henting av dokumentlisting for behandling'
                         )

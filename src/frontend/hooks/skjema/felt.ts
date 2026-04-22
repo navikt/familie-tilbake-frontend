@@ -48,13 +48,12 @@ export const useFelt = <Verdi = string>({
         verdi,
     };
 
-    const [feltState, settFeltState] = useState<FeltState<Verdi>>(initialFeltState);
-    const [erSynlig, settErSynlig] = useState(
-        skalFeltetVises ? skalFeltetVises(avhengigheter) : true
-    );
+    const [feltState, setFeltState] = useState<FeltState<Verdi>>(initialFeltState);
+    const skalAvhengigheterVises = skalFeltetVises ? skalFeltetVises(avhengigheter) : true;
+    const [erSynlig, setErSynlig] = useState(skalAvhengigheterVises);
 
     const nullstill = (): void => {
-        settFeltState(initialFeltState);
+        setFeltState(initialFeltState);
     };
 
     // tslint:disable-next-line:no-shadowed-variable
@@ -68,7 +67,7 @@ export const useFelt = <Verdi = string>({
         );
 
         if (!deepEqual(feltState, validertFelt)) {
-            settFeltState(validertFelt);
+            setFeltState(validertFelt);
         }
 
         return validertFelt;
@@ -99,7 +98,7 @@ export const useFelt = <Verdi = string>({
                 nullstill();
             }
 
-            settErSynlig(skalFeltetVises(avhengigheter));
+            setErSynlig(skalFeltetVises(avhengigheter));
         } else {
             validerOgSettFelt();
         }
@@ -114,7 +113,7 @@ export const useFelt = <Verdi = string>({
             validerOgSettFelt(normalisertVerdi as Verdi);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, settFeltState]
+        [validerOgSettFelt, setFeltState]
     );
 
     const hentNavInputProps = useCallback(
@@ -126,7 +125,7 @@ export const useFelt = <Verdi = string>({
             value: feltState.verdi,
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, settFeltState]
+        [validerOgSettFelt, setFeltState]
     );
 
     const hentNavBaseSkjemaProps = useCallback(
@@ -137,7 +136,7 @@ export const useFelt = <Verdi = string>({
             value: feltState.verdi,
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, settFeltState]
+        [validerOgSettFelt, setFeltState]
     );
 
     return useMemo(

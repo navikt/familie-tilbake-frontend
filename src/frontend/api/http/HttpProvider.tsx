@@ -31,11 +31,11 @@ type Props = {
 
 export const [HttpProvider, useHttp] = constate(
     ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
-        const [ressurserSomLaster, settRessurserSomLaster] = useState<string[]>([]);
+        const [ressurserSomLaster, setRessurserSomLaster] = useState<string[]>([]);
 
         const fjernRessursSomLaster = (ressursId: string): void => {
             setTimeout(() => {
-                settRessurserSomLaster((prevState: string[]) => {
+                setRessurserSomLaster((prevState: string[]) => {
                     return prevState.filter((ressurs: string) => ressurs !== ressursId);
                 });
             }, fjernRessursSomLasterTimeout);
@@ -50,7 +50,7 @@ export const [HttpProvider, useHttp] = constate(
         ): Promise<Ressurs<SkjemaRespons>> => {
             const ressursId = `${config.method}_${config.url}`;
             config.påvirkerSystemLaster &&
-                settRessurserSomLaster([...ressurserSomLaster, ressursId]);
+                setRessurserSomLaster([...ressurserSomLaster, ressursId]);
 
             return preferredAxios
                 .request(config)

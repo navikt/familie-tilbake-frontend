@@ -41,25 +41,25 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const visGlobalAlert = useVisGlobalAlert();
     const queryClient = useQueryClient();
-    const [totrinnkontroll, settTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
-    const [skjemaData, settSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
-    const [erLesevisning, settErLesevisning] = useState<boolean>(false);
-    const [nonUsedKey, settNonUsedKey] = useState<string>(Date.now().toString());
-    const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
-    const [senderInn, settSenderInn] = useState<boolean>(false);
-    const [fatteVedtakRespons, settFatteVedtakRespons] = useState<Ressurs<string>>();
-    const [disableBekreft, settDisableBekreft] = useState<boolean>(true);
-    const [sendTilSaksbehandler, settSendTilSaksbehandler] = useState<boolean>(true);
+    const [totrinnkontroll, setTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
+    const [skjemaData, setSkjemaData] = useState<TotrinnStegSkjemaData[]>([]);
+    const [erLesevisning, setErLesevisning] = useState<boolean>(false);
+    const [nonUsedKey, setNonUsedKey] = useState<string>(Date.now().toString());
+    const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
+    const [senderInn, setSenderInn] = useState<boolean>(false);
+    const [fatteVedtakRespons, setFatteVedtakRespons] = useState<Ressurs<string>>();
+    const [disableBekreft, setDisableBekreft] = useState<boolean>(true);
+    const [sendTilSaksbehandler, setSendTilSaksbehandler] = useState<boolean>(true);
     const { erStegBehandlet, erBehandlingReturnertFraBeslutter } = useBehandlingState();
     const { gjerTotrinnkontrollKall, sendInnFatteVedtak, kallAngreSendTilBeslutter } =
         useBehandlingApi();
     const navigate = useNavigate();
-    const [feilmelding, settFeilmelding] = useState<string>('');
-    const [laster, settLaster] = useState(false);
+    const [feilmelding, setFeilmelding] = useState<string>('');
+    const [laster, setLaster] = useState(false);
 
     useEffect(() => {
-        settStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
-        settErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
+        setStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
+        setErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
         hentTotrinnkontroll();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
@@ -67,7 +67,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     useEffect(() => {
         if (totrinnkontroll?.status === RessursStatus.Suksess) {
             const totrinn = totrinnkontroll.data.totrinnsstegsinfo;
-            settSkjemaData(
+            setSkjemaData(
                 stegRekkefølge
                     .filter(steg => totrinn.some(tt => tt.behandlingssteg === steg))
                     .map((steg, index) => {
@@ -95,18 +95,18 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                     totrinn.harFeilIBegrunnelse ||
                     (totrinn.godkjent === OptionIkkeGodkjent && !totrinn.begrunnelse)
             );
-        settDisableBekreft(stegIkkeVurdert || harValideringsFeil);
-        settSendTilSaksbehandler(!stegIkkeVurdert && !harValideringsFeil && !alleGodkjent);
+        setDisableBekreft(stegIkkeVurdert || harValideringsFeil);
+        setSendTilSaksbehandler(!stegIkkeVurdert && !harValideringsFeil && !alleGodkjent);
     }, [skjemaData, nonUsedKey]);
 
     const hentTotrinnkontroll = (): void => {
-        settTotrinnkontroll(byggHenterRessurs());
+        setTotrinnkontroll(byggHenterRessurs());
         gjerTotrinnkontrollKall(behandling.behandlingId)
             .then((hentetTotrinnkontroll: Ressurs<Totrinnkontroll>) => {
-                settTotrinnkontroll(hentetTotrinnkontroll);
+                setTotrinnkontroll(hentetTotrinnkontroll);
             })
             .catch(() => {
-                settTotrinnkontroll(
+                setTotrinnkontroll(
                     byggFeiletRessurs('Ukjent feil ved henting av to-trinnskontroll for behandling')
                 );
             });
@@ -121,8 +121,8 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                 ...steg,
                 godkjent: verdi,
             });
-            settSkjemaData(totrinnsSteg);
-            settNonUsedKey(Date.now().toString());
+            setSkjemaData(totrinnsSteg);
+            setNonUsedKey(Date.now().toString());
         }
     };
 
@@ -138,8 +138,8 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                 harFeilIBegrunnelse: !!feilmelding,
                 begrunnelseFeilmelding: feilmelding || undefined,
             });
-            settSkjemaData(totrinnsSteg);
-            settNonUsedKey(Date.now().toString());
+            setSkjemaData(totrinnsSteg);
+            setNonUsedKey(Date.now().toString());
         }
     };
 
@@ -164,8 +164,8 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                 begrunnelseFeilmelding: begrunnelseFeilmelding || undefined,
             };
         });
-        settSkjemaData(nySkjemaData);
-        settNonUsedKey(Date.now().toString());
+        setSkjemaData(nySkjemaData);
+        setNonUsedKey(Date.now().toString());
         return !harFeil;
     };
 
@@ -173,8 +173,8 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         if (laster) {
             return;
         }
-        settLaster(true);
-        settFeilmelding('');
+        setLaster(true);
+        setFeilmelding('');
         kallAngreSendTilBeslutter(behandling.behandlingId)
             .then(async (res: Ressurs<string>) => {
                 if (res.status === RessursStatus.Suksess) {
@@ -190,13 +190,13 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                         status: 'success',
                     });
                 } else {
-                    settFeilmelding(
+                    setFeilmelding(
                         hentFrontendFeilmelding(res) ?? 'Ukjent feil ved angre send til beslutter'
                     );
                 }
             })
             .finally(() => {
-                settLaster(false);
+                setLaster(false);
             });
     };
 
@@ -205,7 +205,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
             if (senderInn) {
                 return;
             }
-            settSenderInn(true);
+            setSenderInn(true);
             const payload: FatteVedtakStegPayload = {
                 '@type': 'FATTE_VEDTAK',
                 // @ts-expect-error har verdi her
@@ -247,12 +247,12 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                     respons.status === RessursStatus.Feilet ||
                     respons.status === RessursStatus.FunksjonellFeil
                 ) {
-                    settFatteVedtakRespons(respons);
+                    setFatteVedtakRespons(respons);
                 }
             } catch {
-                settFatteVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
+                setFatteVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
             } finally {
-                settSenderInn(false);
+                setSenderInn(false);
             }
         }
     };

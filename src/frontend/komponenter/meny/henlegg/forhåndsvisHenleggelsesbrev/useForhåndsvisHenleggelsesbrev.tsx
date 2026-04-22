@@ -17,7 +17,7 @@ import { base64ToArrayBuffer } from '~/utils';
 
 type ForhåndsvisHenleggelsesbrevHook = {
     visModal: boolean;
-    settVisModal: Dispatch<SetStateAction<boolean>>;
+    setVisModal: Dispatch<SetStateAction<boolean>>;
     hentetForhåndsvisning: Ressurs<string>;
     hentBrev: () => void;
     nullstillHentetForhåndsvisning: () => void;
@@ -31,43 +31,43 @@ export const useForhåndsvisHenleggelsesbrev = ({
     skjema,
 }: Props): ForhåndsvisHenleggelsesbrevHook => {
     const { behandlingId } = useBehandling();
-    const [hentetForhåndsvisning, settHentetForhåndsvisning] =
-        useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = useState<boolean>(false);
+    const tomRessurs = byggTomRessurs<string>();
+    const [hentetForhåndsvisning, setHentetForhåndsvisning] = useState<Ressurs<string>>(tomRessurs);
+    const [visModal, setVisModal] = useState(false);
     const { forhåndsvisHenleggelsesbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = (): void => {
-        settHentetForhåndsvisning(byggTomRessurs);
+        setHentetForhåndsvisning(byggTomRessurs);
     };
 
     const hentBrev = (): void => {
-        settHentetForhåndsvisning(byggHenterRessurs());
+        setHentetForhåndsvisning(byggHenterRessurs());
 
         forhåndsvisHenleggelsesbrev({
             behandlingId: behandlingId,
             fritekst: skjema.felter.fritekst.verdi,
         })
             .then((response: Ressurs<string>) => {
-                settVisModal(true);
+                setVisModal(true);
                 if (response.status === RessursStatus.Suksess) {
                     const blob = new Blob([base64ToArrayBuffer(response.data)], {
                         type: 'application/pdf',
                     });
-                    settHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
+                    setHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
                 } else if (
                     response.status === RessursStatus.Feilet ||
                     response.status === RessursStatus.FunksjonellFeil ||
                     response.status === RessursStatus.IkkeTilgang
                 ) {
-                    settHentetForhåndsvisning(response);
+                    setHentetForhåndsvisning(response);
                 } else {
-                    settHentetForhåndsvisning(
+                    setHentetForhåndsvisning(
                         byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                     );
                 }
             })
             .catch(() => {
-                settHentetForhåndsvisning(
+                setHentetForhåndsvisning(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                 );
             });
@@ -75,7 +75,7 @@ export const useForhåndsvisHenleggelsesbrev = ({
 
     return {
         visModal,
-        settVisModal,
+        setVisModal,
         hentetForhåndsvisning,
         hentBrev,
         nullstillHentetForhåndsvisning,

@@ -17,7 +17,7 @@ export const ForhåndsvisBrev: FC<Props> = () => {
         hentetForhåndsvisning,
         hentBrev,
         visModal,
-        settVisModal,
+        setVisModal,
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisBrev();
     const { kanSendeSkjema } = useSendMelding();
@@ -36,7 +36,7 @@ export const ForhåndsvisBrev: FC<Props> = () => {
                 variant="tertiary"
                 onClick={() => {
                     if (kanSendeSkjema()) {
-                        settVisModal(true);
+                        setVisModal(true);
                     }
                 }}
             >
@@ -48,7 +48,7 @@ export const ForhåndsvisBrev: FC<Props> = () => {
                     pdfdata={hentetForhåndsvisning}
                     onRequestClose={() => {
                         nullstillHentetForhåndsvisning();
-                        settVisModal(false);
+                        setVisModal(false);
                     }}
                 />
             )}
