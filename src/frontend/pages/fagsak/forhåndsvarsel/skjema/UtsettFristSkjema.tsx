@@ -4,7 +4,7 @@ import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 import { DatePicker, Textarea, useDatepicker } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
 import { useState } from 'react';
-import { Controller, get, useFormContext } from 'react-hook-form';
+import { get, useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { dateTilIsoDatoString } from '~/utils/dato';
@@ -15,7 +15,10 @@ export const UtsettFristSkjema: FC = () => {
     const { behandlingILesemodus } = useBehandlingState();
     const errors = methods.formState.errors;
 
-    const nyFristDatepicker = useDatepicker({
+    const {
+        datepickerProps: nyFristDatepickerProps,
+        inputProps: { onBlur: nyFristOnBlur, ...nyFristInputProps },
+    } = useDatepicker({
         fromDate: new Date(),
         defaultSelected: methods.getValues('utsettUttalelseFrist.nyFrist')
             ? parseISO(methods.getValues('utsettUttalelseFrist.nyFrist'))
@@ -36,22 +39,20 @@ export const UtsettFristSkjema: FC = () => {
 
     return (
         <>
-            <Controller
-                name="utsettUttalelseFrist.nyFrist"
-                control={methods.control}
-                render={({ field, fieldState }) => (
-                    <DatePicker {...nyFristDatepicker.datepickerProps}>
-                        <DatePicker.Input
-                            {...nyFristDatepicker.inputProps}
-                            size="small"
-                            readOnly={behandlingILesemodus}
-                            label="Sett ny dato for frist"
-                            name={field.name}
-                            error={nyFristFeil ?? fieldState.error?.message}
-                        />
-                    </DatePicker>
-                )}
-            />
+            <DatePicker {...nyFristDatepickerProps}>
+                <DatePicker.Input
+                    size="small"
+                    {...nyFristInputProps}
+                    onBlur={async event => {
+                        nyFristOnBlur?.(event);
+                        await methods.trigger('utsettUttalelseFrist.nyFrist');
+                    }}
+                    name="utsettUttalelseFrist.nyFrist"
+                    readOnly={behandlingILesemodus}
+                    label="Sett ny dato for frist"
+                    error={nyFristFeil ?? get(errors, 'utsettUttalelseFrist.nyFrist.message')}
+                />
+            </DatePicker>
             <Textarea
                 {...methods.register('utsettUttalelseFrist.begrunnelse')}
                 size="small"
