@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router';
 import { useHttp } from '~/api/http/HttpProvider';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useFagsak } from '~/context/FagsakContext';
-import { Menysider } from '~/komponenter/sidebar/Menykontainer';
+import { Menysider } from '~/komponenter/sidebar/OversiktOgHandlingerInnhold';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '~/typer/ressurs';
 
 type Props = {

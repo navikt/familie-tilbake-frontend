@@ -36,12 +36,20 @@ const kjønnIkon = (kjønn: KjønnEnum): ReactNode => {
     }
 };
 
-export const BrukerInformasjon: FC = () => {
+type Props = {
+    open?: boolean;
+    onToggle?: (open: boolean) => void;
+};
+
+export const BrukerInformasjon: FC<Props> = ({ open, onToggle }) => {
     const { bruker, institusjon } = useFagsak();
+
+    const erKontrollert = open !== undefined;
+
     return (
         <ExpansionCard
             size="small"
-            defaultOpen
+            {...(erKontrollert ? { open, onToggle } : { defaultOpen: true })}
             aria-label="Brukers informasjon"
             className="border-ax-border-neutral-subtle"
         >

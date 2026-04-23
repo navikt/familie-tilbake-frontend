@@ -2,16 +2,7 @@ import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 import type { FC, MouseEvent } from 'react';
 import type { SynligSteg } from '~/utils/sider';
 
-import {
-    BodyShort,
-    Button,
-    Heading,
-    Link,
-    LocalAlert,
-    Radio,
-    Textarea,
-    RadioGroup,
-} from '@navikt/ds-react';
+import { BodyShort, Button, Link, LocalAlert, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -65,9 +56,6 @@ export const Totrinnskontroll: FC = () => {
 
     return (
         <>
-            <Heading size="small" level="2">
-                Fatte vedtak
-            </Heading>
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable flex flex-col gap-2">
                 {skalViseFeilmelding && (
                     <LocalAlert status="error">

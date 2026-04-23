@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 
-import { Menysider, MenySideInnhold } from './Menykontainer';
+import { Menysider, OversiktOgHandlingerInnhold } from './OversiktOgHandlingerInnhold';
 
 export const HistorikkOgDokumenter: FC = () => {
     const { erNyModell, status } = useBehandling();
@@ -27,7 +27,10 @@ export const HistorikkOgDokumenter: FC = () => {
     const aktivSide = erGyldigValg ? valgtSide : defaultSide;
 
     return (
-        <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
+        <div
+            className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"
+            aria-label="Oversikt og handlinger over historikk, dokumenter, sending av brev og fatte vedtak."
+        >
             <ToggleGroup
                 data-color="neutral"
                 value={aktivSide}
@@ -38,26 +41,30 @@ export const HistorikkOgDokumenter: FC = () => {
             >
                 <ToggleGroup.Item
                     value={Menysider.Historikk}
-                    icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
+                    {...(aktivSide === Menysider.Historikk && { label: 'Historikk' })}
+                    icon={<ClockDashedIcon fontSize="1.25rem" aria-hidden />}
                 />
                 <ToggleGroup.Item
                     value={Menysider.Dokumenter}
-                    icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
+                    {...(aktivSide === Menysider.Dokumenter && { label: 'Dokumenter' })}
+                    icon={<FolderFileIcon fontSize="1.25rem" aria-hidden />}
                 />
                 {!erNyModell && (
                     <ToggleGroup.Item
                         value={Menysider.SendBrev}
-                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
+                        {...(aktivSide === Menysider.SendBrev && { label: 'Send brev' })}
+                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-hidden />}
                     />
                 )}
                 {skalViseTotrinn && (
                     <ToggleGroup.Item
                         value={Menysider.Totrinn}
-                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
+                        {...(aktivSide === Menysider.Totrinn && { label: 'Fatte vedtak' })}
+                        icon={<PersonGavelIcon fontSize="1.25rem" aria-hidden />}
                     />
                 )}
             </ToggleGroup>
-            <MenySideInnhold valgtMenyside={aktivSide} />
+            <OversiktOgHandlingerInnhold valgtMenyside={aktivSide} />
         </div>
     );
 };
