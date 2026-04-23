@@ -12,13 +12,15 @@ import {
 } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
 import { Fragment, useEffect, useState } from 'react';
-import { Controller, get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ToggleName } from '~/context/toggles';
 import { useToggles } from '~/context/TogglesContext';
 import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import { dateTilIsoDatoString } from '~/utils/dato';
+
+import { UtsettFristSkjema } from './UtsettFristSkjema';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
@@ -34,7 +36,6 @@ export const Uttalelse: FC<Props> = ({
     const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
-    const [nyFristFeil, setNyFristFeil] = useState<string | undefined>(undefined);
     const { behandlingILesemodus } = useBehandlingState();
     const harUttaltSeg = useWatch({
         control: methods.control,
@@ -66,24 +67,6 @@ export const Uttalelse: FC<Props> = ({
         },
     });
 
-    const nyFristDatepicker = useDatepicker({
-        fromDate: new Date(),
-        defaultSelected: methods.getValues('utsettUttalelseFrist.nyFrist')
-            ? parseISO(methods.getValues('utsettUttalelseFrist.nyFrist'))
-            : undefined,
-        onDateChange: date => {
-            const dateString = dateTilIsoDatoString(date);
-            methods.setValue('utsettUttalelseFrist.nyFrist', dateString);
-            methods.trigger('utsettUttalelseFrist.nyFrist');
-        },
-        onValidate: val => {
-            if (val.isBefore) {
-                setNyFristFeil('Fristen kan ikke være i fortiden');
-            } else {
-                setNyFristFeil(undefined);
-            }
-        },
-    });
     const { fields, replace } = useFieldArray({
         control: methods.control,
         name: 'uttalelsesDetaljer',
@@ -200,38 +183,7 @@ export const Uttalelse: FC<Props> = ({
                     error={get(errors, 'kommentar.message')}
                 />
             )}
-            {harUttaltSeg === HarUttaltSeg.UtsettFrist && (
-                <>
-                    {/* Husk at denne skal ha focus hvis utsatt frist velges og det ikke er valgt frist */}
-                    <Controller
-                        name="utsettUttalelseFrist.nyFrist"
-                        control={methods.control}
-                        render={({ field, fieldState }) => (
-                            <DatePicker {...nyFristDatepicker.datepickerProps}>
-                                <DatePicker.Input
-                                    {...nyFristDatepicker.inputProps}
-                                    size="small"
-                                    readOnly={behandlingILesemodus}
-                                    label="Sett ny dato for frist"
-                                    name={field.name}
-                                    error={nyFristFeil ?? fieldState.error?.message}
-                                />
-                            </DatePicker>
-                        )}
-                    />
-                    <Textarea
-                        {...methods.register('utsettUttalelseFrist.begrunnelse')}
-                        size="small"
-                        readOnly={behandlingILesemodus}
-                        minRows={3}
-                        label="Begrunnelse for utsatt frist"
-                        maxLength={4000}
-                        resize
-                        className="max-w-xl"
-                        error={get(errors, 'utsettUttalelseFrist.begrunnelse.message')}
-                    />
-                </>
-            )}
+            {harUttaltSeg === HarUttaltSeg.UtsettFrist && <UtsettFristSkjema />}
         </form>
     );
 };
