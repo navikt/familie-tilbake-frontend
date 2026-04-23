@@ -11,8 +11,8 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
-import { Fragment, useEffect, useState } from 'react';
 import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ToggleName } from '~/context/toggles';
@@ -45,11 +45,13 @@ export const Uttalelse: FC<Props> = ({
     const { name, ...radioProps } = methods.register('harUttaltSeg');
     const errors = methods.formState.errors;
 
+    const iDag = useMemo(() => new Date(), []);
+
     const {
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
-        toDate: new Date(),
+        toDate: iDag,
         defaultSelected: methods.getValues('uttalelsesDetaljer.0.uttalelsesdato')
             ? parseISO(methods.getValues('uttalelsesDetaljer.0.uttalelsesdato'))
             : undefined,

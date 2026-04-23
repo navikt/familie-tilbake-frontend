@@ -22,7 +22,7 @@ export const VedtakFritekstSkjema: FC<Props> = ({
     maximumLength = 4000,
 }) => {
     const { oppdaterUnderavsnitt } = useVedtak();
-    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
     const [fritekstfeltErSynlig, setFritekstfeltErSynlig] = useState(
         !!fritekst || fritekstPåkrevet
@@ -36,7 +36,7 @@ export const VedtakFritekstSkjema: FC<Props> = ({
             isEmpty(nyVerdi) && !fritekstPåkrevet
                 ? undefined
                 : validerTekstMaksLengde(maximumLength)(nyVerdi);
-        settIkkePersistertKomponent('vedtak');
+        setIkkePersistertKomponent('vedtak');
         oppdaterUnderavsnitt(avsnittIndex, {
             ...underavsnitt,
             fritekst: nyVerdi,

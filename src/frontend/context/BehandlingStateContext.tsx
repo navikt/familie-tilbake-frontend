@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '~/generated/types.gen';
 
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, use, useMemo, useState } from 'react';
 
 import { useUlagretEndringer, type UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
 import { SYNLIGE_STEG } from '~/utils/sider';
@@ -23,7 +23,7 @@ export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
     innholdsbredde: number;
-    settInnholdsbredde: (bredde: number) => void;
+    setInnholdsbredde: (bredde: number) => void;
 };
 
 export const BehandlingStateContext = createContext<BehandlingStateContextType | undefined>(
@@ -148,7 +148,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
         innholdsbredde,
-        settInnholdsbredde: setInnholdsbredde,
+        setInnholdsbredde,
         ...ulagretEndringer,
     };
 
@@ -156,7 +156,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
 };
 
 export const useBehandlingState = (): BehandlingStateContextType => {
-    const context = useContext(BehandlingStateContext);
+    const context = use(BehandlingStateContext);
     if (!context) {
         throw new Error('useBehandlingState må brukes innenfor BehandlingStateProvider');
     }

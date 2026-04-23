@@ -21,14 +21,14 @@ type Props = {
 };
 
 export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { setIkkePersistertKomponent } = useBehandlingState();
 
     const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);
         if (val.indexOf(SærligeGrunner.Annet) > -1) {
             skjema.felter.særligeGrunnerAnnetBegrunnelse.nullstill();
         }
-        settIkkePersistertKomponent(`vilkårsvurdering`);
+        setIkkePersistertKomponent(`vilkårsvurdering`);
     };
     const ugyldigHarGrunnertilReduksjonValgt =
         skjema.visFeilmeldinger &&
@@ -69,7 +69,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                         skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
                             event.target.value
                         );
-                        settIkkePersistertKomponent(`vilkårsvurdering`);
+                        setIkkePersistertKomponent(`vilkårsvurdering`);
                     }}
                     data-testid="annetBegrunnelse"
                 />
@@ -89,7 +89,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                 }
                 onChange={(val: JaNeiOption) => {
                     skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
-                    settIkkePersistertKomponent('vilkårsvurdering');
+                    setIkkePersistertKomponent('vilkårsvurdering');
                     return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
                 }}
             >
@@ -118,7 +118,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
                 onChange={event => {
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
-                    settIkkePersistertKomponent(`vilkårsvurdering`);
+                    setIkkePersistertKomponent(`vilkårsvurdering`);
                 }}
                 minRows={3}
             />

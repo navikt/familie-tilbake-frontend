@@ -40,7 +40,7 @@ export const useFelt = <Verdi = string>({
     verdi,
     nullstillVedAvhengighetEndring = true,
 }: FeltConfig<Verdi>): Felt<Verdi> => {
-    const [id] = useState(feltId ? feltId : crypto.randomUUID());
+    const [id] = useState(() => feltId ?? crypto.randomUUID());
     const initialFeltState = {
         feilmelding: '',
         valider: valideringsfunksjon,

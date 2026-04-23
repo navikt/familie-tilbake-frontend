@@ -3,7 +3,7 @@ import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { DatePicker, Textarea, useDatepicker } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { get, useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -14,12 +14,13 @@ export const UtsettFristSkjema: FC = () => {
     const [nyFristFeil, setNyFristFeil] = useState<string | undefined>(undefined);
     const { behandlingILesemodus } = useBehandlingState();
     const errors = methods.formState.errors;
+    const iDag = useMemo(() => new Date(), []);
 
     const {
         datepickerProps: nyFristDatepickerProps,
         inputProps: { onBlur: nyFristOnBlur, ...nyFristInputProps },
     } = useDatepicker({
-        fromDate: new Date(),
+        fromDate: iDag,
         defaultSelected: methods.getValues('utsettUttalelseFrist.nyFrist')
             ? parseISO(methods.getValues('utsettUttalelseFrist.nyFrist'))
             : undefined,

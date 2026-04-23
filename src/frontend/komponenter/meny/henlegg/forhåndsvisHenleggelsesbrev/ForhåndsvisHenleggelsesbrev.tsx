@@ -20,7 +20,7 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
         hentetForhåndsvisning,
         hentBrev,
         visModal,
-        setVisModal: settVisModal,
+        setVisModal,
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisHenleggelsesbrev({ skjema });
 
@@ -39,7 +39,7 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
                 onMouseDown={e => e.preventDefault()}
                 onClick={e => {
                     e.preventDefault();
-                    settVisModal(true);
+                    setVisModal(true);
                 }}
             >
                 Forhåndsvis brev
@@ -51,7 +51,7 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
                     pdfdata={hentetForhåndsvisning}
                     onRequestClose={() => {
                         nullstillHentetForhåndsvisning();
-                        settVisModal(false);
+                        setVisModal(false);
                     }}
                 />
             )}

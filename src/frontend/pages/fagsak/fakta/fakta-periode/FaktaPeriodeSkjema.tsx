@@ -25,13 +25,13 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
 }) => {
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFakta();
-    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
 
     useEffect(() => {
         const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelseTyper?.length === 1;
         if (skalAutoVelgeHendelsestype) {
             oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
-            settIkkePersistertKomponent('fakta');
+            setIkkePersistertKomponent('fakta');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hendelseTyper]);
@@ -47,7 +47,7 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             !!periode.hendelsestype;
         if (skalAutoVelgeUnderType) {
             oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
-            settIkkePersistertKomponent('fakta');
+            setIkkePersistertKomponent('fakta');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hendelseUnderTyper]);
@@ -55,14 +55,14 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
     const onChangeÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {
         const årsak = e.target.value === '-' ? undefined : (e.target.value as HendelseType);
         oppdaterÅrsakPåPeriode(periode, årsak);
-        settIkkePersistertKomponent('fakta');
+        setIkkePersistertKomponent('fakta');
     };
 
     const onChangeUnderÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {
         const underÅrsak =
             e.target.value === '-' ? undefined : (e.target.value as HendelseUndertype);
         oppdaterUnderårsakPåPeriode(periode, underÅrsak);
-        settIkkePersistertKomponent('fakta');
+        setIkkePersistertKomponent('fakta');
     };
     return (
         <Table.Row>

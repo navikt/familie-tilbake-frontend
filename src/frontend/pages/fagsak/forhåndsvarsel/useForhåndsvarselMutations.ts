@@ -66,7 +66,6 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly sendBrukeruttalelse: (formData: UttalelseFormData, varselErSendt: boolean) => void;
     readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
     readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
-    readonly seForhåndsvisning: (fritekst: string) => void;
     readonly navigerTilNeste: () => void;
     readonly navigerTilForrige: () => void;
 };
@@ -226,18 +225,6 @@ export const useForhåndsvarselMutations = (
             sendUtsettUttalelseFristMutation.mutate({
                 path: { behandlingId: behandlingId },
                 body: payload,
-            });
-        },
-        seForhåndsvisning: (fritekst: string): void => {
-            seForhåndsvisningMutation.mutate({
-                path: {
-                    behandlingId: behandlingId,
-                },
-                body: {
-                    behandlingId: behandlingId,
-                    brevmalkode: 'VARSEL',
-                    fritekst: fritekst || '',
-                },
             });
         },
         navigerTilNeste,

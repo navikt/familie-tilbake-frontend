@@ -41,7 +41,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
         visFeilmeldinger,
         feilmeldinger,
     } = useFakta();
-    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
     const erKravgrunnlagKnyttetTilEnEnEldreRevurdering =
         behandling.fagsystemsbehandlingId !== fakta.kravgrunnlagReferanse;
 
@@ -96,7 +96,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                             size="small"
                             checked={behandlePerioderSamlet === true}
                             onChange={() => {
-                                settIkkePersistertKomponent('fakta');
+                                setIkkePersistertKomponent('fakta');
                                 settBehandlePerioderSamlet(!behandlePerioderSamlet);
                             }}
                         >
@@ -122,7 +122,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     readOnly={behandlingILesemodus}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
                     onChange={e => {
-                        settIkkePersistertKomponent('fakta');
+                        setIkkePersistertKomponent('fakta');
                         oppdaterBegrunnelse(e.target.value);
                     }}
                     maxLength={3000}
@@ -143,7 +143,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                             feilmeldinger?.find(meld => meld.gjelderBrukerHarUttaltSeg)?.melding
                         }
                         onChange={(val: HarBrukerUttaltSegValg) => {
-                            settIkkePersistertKomponent('fakta');
+                            setIkkePersistertKomponent('fakta');
                             oppdaterBrukerHarUttaltSeg(val);
                         }}
                     >
@@ -184,7 +184,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                                     : ''
                             }
                             onChange={e => {
-                                settIkkePersistertKomponent('fakta');
+                                setIkkePersistertKomponent('fakta');
                                 oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
                             }}
                             maxLength={3000}

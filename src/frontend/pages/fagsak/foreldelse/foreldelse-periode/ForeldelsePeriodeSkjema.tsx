@@ -35,7 +35,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
     );
-    const { behandlingILesemodus, settIkkePersistertKomponent } = useBehandlingState();
+    const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
     const erLesevisning = behandlingILesemodus || !!erAutoutført;
 
     useEffect(() => {
@@ -144,7 +144,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                 value={skjema.felter.begrunnelse.verdi}
                 onChange={event => {
                     skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
-                    settIkkePersistertKomponent('foreldelse');
+                    setIkkePersistertKomponent('foreldelse');
                 }}
             />
 
@@ -161,7 +161,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                 }
                 onChange={(val: Foreldelsevurdering) => {
                     skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val);
-                    settIkkePersistertKomponent('foreldelse');
+                    setIkkePersistertKomponent('foreldelse');
                 }}
             >
                 {foreldelseVurderingTyper.map(type => (
@@ -179,9 +179,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                         visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
                         readOnly={erLesevisning}
                         kanKunVelgeFortid
-                        settIkkePersistertKomponent={() =>
-                            settIkkePersistertKomponent('foreldelse')
-                        }
+                        settIkkePersistertKomponent={() => setIkkePersistertKomponent('foreldelse')}
                     />
                 )}
                 {(erForeldet || erMedTilleggsfrist) && (
@@ -197,7 +195,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                             visFeilmeldinger={ugyldigForeldelsesfristValgt}
                             readOnly={erLesevisning}
                             settIkkePersistertKomponent={() =>
-                                settIkkePersistertKomponent('foreldelse')
+                                setIkkePersistertKomponent('foreldelse')
                             }
                         />
                         {!erLesevisning && <>{lagForeldelsesfristHjelpetekst()}</>}

@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { setIkkePersistertKomponent } = useBehandlingState();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
         skjema.felter.unnlates4Rettsgebyr.valideringsstatus === Valideringsstatus.Feil;
@@ -40,7 +40,7 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                             }
                             onChange={(val: SkalUnnlates) => {
                                 skjema.felter.unnlates4Rettsgebyr.validerOgSettFelt(val);
-                                settIkkePersistertKomponent(`vilkårsvurdering`);
+                                setIkkePersistertKomponent(`vilkårsvurdering`);
                             }}
                         >
                             <Radio

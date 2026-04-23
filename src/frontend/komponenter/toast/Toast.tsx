@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 import { useApp } from '~/context/AppContext';
 
 export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
-    const { toasts, settToasts } = useApp();
+    const { toasts, setToasts } = useApp();
     const toastRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }
             () => {
                 // eslint-disable-next-line
                 const { [toastId]: fjernetToast, ...resterendeToast } = toasts;
-                settToasts(resterendeToast);
+                setToasts(resterendeToast);
             },
             Math.max(...[toast.tekst.length * 50, 7000])
         );

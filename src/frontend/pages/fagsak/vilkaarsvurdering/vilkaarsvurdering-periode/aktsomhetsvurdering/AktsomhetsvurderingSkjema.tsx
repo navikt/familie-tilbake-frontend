@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { setIkkePersistertKomponent } = useBehandlingState();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldigAktsomhetvurderingValgt =
@@ -51,7 +51,7 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) 
                     if (skalPreutfylleUtenRenter) {
                         skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
                     }
-                    settIkkePersistertKomponent(`vilkårsvurdering`);
+                    setIkkePersistertKomponent(`vilkårsvurdering`);
                     return skjema.felter.aktsomhetVurdering.validerOgSettFelt(val);
                 }}
             >
@@ -117,7 +117,7 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) 
                 }
                 onChange={(event: { target: { value: string } }) => {
                     skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
-                    settIkkePersistertKomponent('vilkårsvurdering');
+                    setIkkePersistertKomponent('vilkårsvurdering');
                 }}
                 maxLength={3000}
             />

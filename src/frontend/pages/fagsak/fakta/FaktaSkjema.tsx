@@ -31,7 +31,7 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -51,7 +51,7 @@ type Props = {
 export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
     const { behandlingId } = useBehandling();
     const { behandlingILesemodus } = useBehandlingState();
-    const { actionBarStegtekst, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+    const { actionBarStegtekst, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const queryClient = useQueryClient();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
@@ -95,11 +95,13 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
         name: 'perioder',
     }).fields;
 
+    const iDag = useMemo(() => new Date(), []);
+
     const {
         datepickerProps,
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
-        toDate: new Date(),
+        toDate: iDag,
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
             : undefined,
@@ -128,14 +130,14 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
             formState: { isDirty: true },
             callback: data => {
                 if (data.isDirty) {
-                    settIkkePersistertKomponent('fakta');
+                    setIkkePersistertKomponent('fakta');
                 } else {
                     nullstillIkkePersisterteKomponenter();
                 }
             },
         });
         return unsubscribe;
-    }, [methods, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter]);
+    }, [methods, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter]);
 
     const dataForPeriode = (id: string): FaktaPeriode =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar

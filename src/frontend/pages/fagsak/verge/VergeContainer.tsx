@@ -23,13 +23,13 @@ import { useVerge } from './VergeContext';
 export const VergeContainer: FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
         useVerge();
-    const { behandlingILesemodus, settIkkePersistertKomponent, actionBarStegtekst } =
+    const { behandlingILesemodus, setIkkePersistertKomponent, actionBarStegtekst } =
         useBehandlingState();
 
     const onChangeVergeType = (e: ChangeEvent<HTMLSelectElement>): void => {
         const nyVergetype = e.target.value as Vergetype;
         skjema.felter.vergetype.validerOgSettFelt(nyVergetype);
-        settIkkePersistertKomponent('verge');
+        setIkkePersistertKomponent('verge');
     };
 
     const vergetypeValgt = !!skjema.felter.vergetype.verdi;
@@ -82,7 +82,7 @@ export const VergeContainer: FC = () => {
                                 value={skjema.felter.navn.verdi}
                                 onChange={event => {
                                     skjema.felter.navn.validerOgSettFelt(event.target.value);
-                                    settIkkePersistertKomponent('verge');
+                                    setIkkePersistertKomponent('verge');
                                 }}
                             />
                             {skjema.felter.vergetype.verdi === Vergetype.Advokat ? (
@@ -97,7 +97,7 @@ export const VergeContainer: FC = () => {
                                         skjema.felter.organisasjonsnummer.validerOgSettFelt(
                                             event.target.value
                                         );
-                                        settIkkePersistertKomponent('verge');
+                                        setIkkePersistertKomponent('verge');
                                     }}
                                 />
                             ) : (
@@ -112,7 +112,7 @@ export const VergeContainer: FC = () => {
                                         skjema.felter.fødselsnummer.validerOgSettFelt(
                                             event.target.value
                                         );
-                                        settIkkePersistertKomponent('verge');
+                                        setIkkePersistertKomponent('verge');
                                     }}
                                 />
                             )}
@@ -125,7 +125,7 @@ export const VergeContainer: FC = () => {
                         readOnly={behandlingILesemodus}
                         onChange={event => {
                             skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
-                            settIkkePersistertKomponent('verge');
+                            setIkkePersistertKomponent('verge');
                         }}
                         maxLength={400}
                     />

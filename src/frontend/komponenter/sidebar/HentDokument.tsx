@@ -22,15 +22,14 @@ type Props = {
 };
 
 export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
-    const tomRessurs = byggTomRessurs<string>();
-    const [hentetDokument, setHentetDokument] = useState<Ressurs<string>>(tomRessurs);
-    const [visModal, setVisModal] = useState(false);
+    const [hentetDokument, setHentetDokument] = useState<Ressurs<string>>(() =>
+        byggHenterRessurs()
+    );
+    const [visModal, setVisModal] = useState(true);
     const { behandlingId } = useBehandling();
     const { request } = useHttp();
 
     useEffect(() => {
-        setVisModal(true);
-        setHentetDokument(byggHenterRessurs());
         request<void, string>({
             method: 'GET',
             url: `/familie-tilbake/api/behandling/${behandlingId}/journalpost/${journalpostId}/dokument/${dokumentId}`,
@@ -60,7 +59,7 @@ export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) 
             åpen={visModal}
             pdfdata={hentetDokument}
             onRequestClose={() => {
-                setHentetDokument(byggTomRessurs);
+                setHentetDokument(byggTomRessurs());
                 setVisModal(false);
                 onClose();
             }}

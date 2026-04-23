@@ -27,7 +27,7 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
     feilaktigForsett,
     visFeilmeldingerForSkjema,
 }) => {
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { setIkkePersistertKomponent } = useBehandlingState();
     const value = !feilaktigForsett ? felt.verdi : kanIlleggeRenter ? OptionJA : OptionNEI;
     return (
         <RadioGroup
@@ -44,7 +44,7 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
             }
             onChange={(val: JaNeiOption) => {
                 felt.validerOgSettFelt(val);
-                settIkkePersistertKomponent(`vilkårsvurdering`);
+                setIkkePersistertKomponent(`vilkårsvurdering`);
             }}
         >
             <Stack gap="space-0 space-24" direction={{ xs: 'column', sm: 'row' }} wrap={false}>

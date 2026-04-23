@@ -33,14 +33,14 @@ import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
 
 const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) => {
-    const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     return (): void => {
-        if (timeoutId.current) {
-            clearTimeout(timeoutId.current);
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
         }
-        timeoutId.current = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             updateFunction();
-            timeoutId.current = null;
+            timeoutRef.current = null;
         }, 500);
     };
 };

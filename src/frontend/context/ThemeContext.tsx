@@ -1,7 +1,7 @@
 import type { ComponentProps, FC, ReactNode } from 'react';
 
 import { Theme } from '@navikt/ds-react';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useState } from 'react';
 
 const COOKIE_NAVN = 'app-theme';
 const COOKIE_MAKS_ALDER_DAGER = 365;
@@ -31,7 +31,7 @@ const ThemeContext = createContext<ThemeContextValue>({
 });
 
 export const useTheme = (): ThemeContextValue => {
-    const context = useContext(ThemeContext);
+    const context = use(ThemeContext);
     if (!context) {
         throw new Error('useTheme må være inne i en ThemeProvider');
     }

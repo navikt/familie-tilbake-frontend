@@ -18,7 +18,7 @@ import {
 } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -147,14 +147,14 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     );
     const { behandlingId, behandlingsstegsinfo } = useBehandling();
     const {
-        settIkkePersistertKomponent,
+        setIkkePersistertKomponent,
         harUlagredeData,
         nullstillIkkePersisterteKomponenter,
         actionBarStegtekst,
     } = useBehandlingState();
     const queryClient = useQueryClient();
 
-    const [visUlagretDataModal, setVisUlagretDataModal] = useState(false);
+    const visUlagretDataModal = !!pendingPeriode && harUlagredeData;
 
     // Sjekk om ForeslåVedtak-steget har status tilbakeført
     const erVedtakTilbakeført = behandlingsstegsinfo.some(
@@ -165,17 +165,13 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     // Hvis vedtak er tilbakeført, marker vilkårsvurdering som "har ulagrede endringer"
     if (erVedtakTilbakeført && !erLesevisning) {
-        settIkkePersistertKomponent('vilkårsvurdering');
+        setIkkePersistertKomponent('vilkårsvurdering');
     }
 
     useEffect(() => {
-        if (pendingPeriode && harUlagredeData) {
-            setVisUlagretDataModal(true);
-        } else if (pendingPeriode && !harUlagredeData) {
+        if (pendingPeriode && !harUlagredeData) {
             settValgtPeriode(pendingPeriode);
             settPendingPeriode(undefined);
-        } else {
-            setVisUlagretDataModal(false);
         }
     }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
 
@@ -195,7 +191,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
             settSkjemadataFraPeriode(skjema, pendingPeriode, kanIlleggeRenter);
         }
-        setVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 
@@ -209,12 +204,10 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
 
         settValgtPeriode(pendingPeriode);
-        setVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 
     const handleAvbryt = (): void => {
-        setVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 
@@ -222,7 +215,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         const valgtPeriodeIndex = event.target.value;
         if (valgtPeriodeIndex !== '-') {
             const per = behandletPerioder.find(per => per.index === valgtPeriodeIndex);
-            settIkkePersistertKomponent('vilkårsvurdering');
+            setIkkePersistertKomponent('vilkårsvurdering');
             if (per) {
                 settSkjemadataFraPeriode(skjema, per, kanIlleggeRenter);
                 event.target.value = '-';
@@ -367,7 +360,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         }
                         onChange={(val: Vilkårsresultat) => {
                             skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val);
-                            settIkkePersistertKomponent('vilkårsvurdering');
+                            setIkkePersistertKomponent('vilkårsvurdering');
                         }}
                     >
                         <Radio
@@ -412,7 +405,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
                                 event.target.value
                             );
-                            settIkkePersistertKomponent('vilkårsvurdering');
+                            setIkkePersistertKomponent('vilkårsvurdering');
                         }}
                     />
                     {vilkårsresultatVurderingGjort && (

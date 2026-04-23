@@ -57,7 +57,7 @@ const renderVedtakContainer = (
                     behandling={behandling}
                     stateOverrides={{
                         behandlingILesemodus: lesemodus,
-                        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+                        setIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
                     }}
                 >
                     <VedtakProvider>

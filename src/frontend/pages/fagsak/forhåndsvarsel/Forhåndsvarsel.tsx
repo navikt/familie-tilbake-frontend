@@ -1,13 +1,12 @@
 import type { ForhåndsvarselFormData } from './schema';
 import type { FC } from 'react';
-import type { RessursByte } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePdfIcon, MegaphoneIcon, TimerPauseIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -30,11 +29,11 @@ const getTagVariant = (sendtTid: string): TagVariant => {
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
-    const { settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+    const { setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
-    const { seForhåndsvisning, forhåndsvisning } = useForhåndsvarselMutations();
+    const { forhåndsvisning } = useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
     const queryClient = useQueryClient();
 
@@ -52,7 +51,7 @@ export const Forhåndsvarsel: FC = () => {
         formState: { isDirty: true },
         callback: data => {
             if (data.isDirty) {
-                settIkkePersistertKomponent('forhåndsvarsel');
+                setIkkePersistertKomponent('forhåndsvarsel');
             } else {
                 nullstillIkkePersisterteKomponenter();
             }
@@ -69,19 +68,32 @@ export const Forhåndsvarsel: FC = () => {
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const handleMutationSuccess = useEffectEvent(
-        (isSuccess: boolean, data: RessursByte | undefined) => {
-            if (isSuccess && data) {
-                const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
-                queryClient.setQueryData(currentQueryKey, data);
-                setShowModal(true);
-            }
-        }
-    );
+    const seForhåndsvisningWithModal = (): void => {
+        const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
 
-    useEffect(() => {
-        handleMutationSuccess(forhåndsvisning.isSuccess, forhåndsvisning.data);
-    }, [forhåndsvisning.isSuccess, forhåndsvisning.data]);
+        const cachedData = queryClient.getQueryData(currentQueryKey);
+
+        if (cachedData) {
+            setShowModal(true);
+        } else {
+            forhåndsvisning.mutate(
+                {
+                    path: { behandlingId },
+                    body: {
+                        behandlingId,
+                        brevmalkode: 'VARSEL',
+                        fritekst: fritekst || '',
+                    },
+                },
+                {
+                    onSuccess: data => {
+                        queryClient.setQueryData(currentQueryKey, data);
+                        setShowModal(true);
+                    },
+                }
+            );
+        }
+    };
 
     useEffect(() => {
         if (forhåndsvisning.error) {
@@ -92,18 +104,6 @@ export const Forhåndsvarsel: FC = () => {
             });
         }
     }, [forhåndsvisning.error, visGlobalAlert]);
-
-    const seForhåndsvisningWithModal = (): void => {
-        const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
-
-        const cachedData = queryClient.getQueryData(currentQueryKey);
-
-        if (cachedData) {
-            setShowModal(true);
-        } else {
-            seForhåndsvisning(fritekst);
-        }
-    };
 
     const pdfData =
         forhåndsvisning.data ||

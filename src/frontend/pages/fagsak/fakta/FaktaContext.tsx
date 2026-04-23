@@ -51,7 +51,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     const [visFeilmeldinger, setVisFeilmeldinger] = useState<boolean>(false);
     const [senderInn, setSenderInn] = useState<boolean>(false);
     const [feilmeldinger, setFeilmeldinger] = useState<Feilmelding[]>();
-    const { erStegBehandlet, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
+    const { erStegBehandlet, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
 
@@ -138,7 +138,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         } else {
             oppdaterÅrsak(periode, nyÅrsak);
         }
-        settIkkePersistertKomponent('fakta');
+        setIkkePersistertKomponent('fakta');
     };
 
     const oppdaterUnderårsakPåPeriode = (
@@ -150,7 +150,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         } else {
             oppdaterUnderårsak(periode, nyUnderårsak);
         }
-        settIkkePersistertKomponent('fakta');
+        setIkkePersistertKomponent('fakta');
     };
 
     const oppdaterÅrsaker = (nyÅrsak: HendelseType | undefined): void => {

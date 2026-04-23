@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export type UseUlagretEndringerReturn = {
     harUlagredeData: boolean;
-    settIkkePersistertKomponent: (komponentId: string) => void;
+    setIkkePersistertKomponent: (komponentId: string) => void;
     nullstillIkkePersisterteKomponenter: () => void;
 };
 
@@ -16,7 +16,7 @@ export const useUlagretEndringer = (): UseUlagretEndringerReturn => {
         useState<Set<string>>(tomtSet);
     const harUlagredeData = ikkePersisterteKomponenter.size > 0;
 
-    const settIkkePersistertKomponent = (komponentId: string): void => {
+    const setIkkePersistertKomponent = (komponentId: string): void => {
         if (ikkePersisterteKomponenter.has(komponentId)) return;
         setIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
     };
@@ -29,7 +29,7 @@ export const useUlagretEndringer = (): UseUlagretEndringerReturn => {
 
     return {
         harUlagredeData,
-        settIkkePersistertKomponent,
+        setIkkePersistertKomponent,
         nullstillIkkePersisterteKomponenter,
     };
 };

@@ -20,10 +20,10 @@ export type BehandlingStateContextOverrides = {
     erBehandlingReturnertFraBeslutter?: BehandlingStateContextType['erBehandlingReturnertFraBeslutter'];
     harVærtPåFatteVedtakSteget?: BehandlingStateContextType['harVærtPåFatteVedtakSteget'];
     harUlagredeData?: boolean;
-    settIkkePersistertKomponent?: BehandlingStateContextType['settIkkePersistertKomponent'];
+    setIkkePersistertKomponent?: BehandlingStateContextType['setIkkePersistertKomponent'];
     nullstillIkkePersisterteKomponenter?: BehandlingStateContextType['nullstillIkkePersisterteKomponenter'];
     innholdsbredde?: BehandlingStateContextType['innholdsbredde'];
-    settInnholdsbredde?: BehandlingStateContextType['settInnholdsbredde'];
+    setInnholdsbredde?: BehandlingStateContextType['setInnholdsbredde'];
 };
 
 export type BehandlingContextOverrides = BehandlingStateContextOverrides & {
@@ -47,16 +47,16 @@ export const lagBehandlingStateContext = (
             overrides.erBehandlingReturnertFraBeslutter ?? ((): boolean => false),
         harVærtPåFatteVedtakSteget: overrides.harVærtPåFatteVedtakSteget ?? ((): boolean => false),
         harUlagredeData: overrides.harUlagredeData ?? ulagretEndringer?.harUlagredeData ?? false,
-        settIkkePersistertKomponent:
-            overrides.settIkkePersistertKomponent ??
-            ulagretEndringer?.settIkkePersistertKomponent ??
+        setIkkePersistertKomponent:
+            overrides.setIkkePersistertKomponent ??
+            ulagretEndringer?.setIkkePersistertKomponent ??
             ((): void => {}),
         nullstillIkkePersisterteKomponenter:
             overrides.nullstillIkkePersisterteKomponenter ??
             ulagretEndringer?.nullstillIkkePersisterteKomponenter ??
             ((): void => {}),
         innholdsbredde: overrides.innholdsbredde ?? 800,
-        settInnholdsbredde: overrides.settInnholdsbredde ?? ((): void => {}),
+        setInnholdsbredde: overrides.setInnholdsbredde ?? ((): void => {}),
     };
 };
 

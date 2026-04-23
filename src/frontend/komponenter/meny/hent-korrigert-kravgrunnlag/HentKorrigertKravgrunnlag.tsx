@@ -17,7 +17,7 @@ export const HentKorrigertKravgrunnlag: FC = () => {
     const { behandlingId } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const { request } = useHttp();
-    const { settToast } = useApp();
+    const { setToast } = useApp();
     const queryClient = useQueryClient();
     const navigerTilBehandling = useStegNavigering();
     const hentKorrigertKravgrunnlag = (): void => {
@@ -27,7 +27,7 @@ export const HentKorrigertKravgrunnlag: FC = () => {
             url: `/familie-tilbake/api/forvaltning/behandling/${behandlingId}/kravgrunnlag/v1`,
         }).then(async (respons: Ressurs<string>) => {
             if (respons.status === RessursStatus.Suksess) {
-                settToast(ToastTyper.KravgrunnlaHentet, {
+                setToast(ToastTyper.KravgrunnlaHentet, {
                     alertType: AlertType.Announcement,
                     tekst: 'Hentet korrigert kravgrunnlag',
                 });
@@ -41,7 +41,7 @@ export const HentKorrigertKravgrunnlag: FC = () => {
                 respons.status === RessursStatus.FunksjonellFeil ||
                 respons.status === RessursStatus.IkkeTilgang
             ) {
-                settToast(ToastTyper.KravgrunnlaHentet, {
+                setToast(ToastTyper.KravgrunnlaHentet, {
                     alertType: AlertType.Warning,
                     tekst: 'Henting av korrigert kravgrunnlag feilet',
                 });

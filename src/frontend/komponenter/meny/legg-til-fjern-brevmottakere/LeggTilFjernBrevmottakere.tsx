@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { PersonPlusIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { useApp } from '~/context/AppContext';
@@ -26,7 +26,7 @@ export const LeggTilFjernBrevmottakere: FC = () => {
     const navigerTilBehandling = useStegNavigering();
     const queryClient = useQueryClient();
     const { request } = useHttp();
-    const { settToast } = useApp();
+    const { setToast } = useApp();
 
     const kanFjerneManuelleBrevmottakere =
         manuelleBrevmottakere.length ||
@@ -55,6 +55,10 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                 respons.status === RessursStatus.IkkeTilgang
             ) {
                 setFeilmelding(respons.frontendFeilmelding);
+                setToast(ToastTyper.BrevmottakerIkkeTillat, {
+                    alertType: AlertType.Warning,
+                    tekst: respons.frontendFeilmelding,
+                });
             }
         });
     };
@@ -79,6 +83,10 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                 respons.status === RessursStatus.IkkeTilgang
             ) {
                 setFeilmelding(respons.frontendFeilmelding);
+                setToast(ToastTyper.BrevmottakerIkkeTillat, {
+                    alertType: AlertType.Warning,
+                    tekst: respons.frontendFeilmelding,
+                });
             }
         });
     };
@@ -90,17 +98,6 @@ export const LeggTilFjernBrevmottakere: FC = () => {
             opprettBrevmottakerSteg();
         }
     };
-
-    useEffect(() => {
-        if (feilmelding !== '') {
-            settToast(ToastTyper.BrevmottakerIkkeTillat, {
-                alertType: AlertType.Warning,
-                tekst: feilmelding,
-            });
-            setFeilmelding('');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [feilmelding]);
 
     return (
         <>

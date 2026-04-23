@@ -44,7 +44,7 @@ const renderFaktaContainer = (
                     stateOverrides={{
                         behandlingILesemodus: lesemodus,
                         erStegBehandlet: (): boolean => behandlet,
-                        settIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
+                        setIkkePersistertKomponent: mockedSettIkkePersistertKomponent,
                     }}
                 >
                     <FaktaProvider>

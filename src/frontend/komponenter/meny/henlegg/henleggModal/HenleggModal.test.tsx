@@ -1,5 +1,6 @@
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
+import type { RefObject } from 'react';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { BehandlingDto, BehandlingsresultatstypeEnum } from '~/generated';
 import type { Ressurs } from '~/typer/ressurs';
@@ -7,7 +8,6 @@ import type { Ressurs } from '~/typer/ressurs';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createRef } from 'react';
 import { vi } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -29,7 +29,7 @@ const renderHenleggModal = (
     årsaker: BehandlingsresultatstypeEnum[]
 ): RenderResult => {
     const queryClient = createTestQueryClient();
-    const mockDialogRef = createRef<HTMLDialogElement | null>();
+    const mockDialogRef: RefObject<HTMLDialogElement | null> = { current: null };
     const renderModal = render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>

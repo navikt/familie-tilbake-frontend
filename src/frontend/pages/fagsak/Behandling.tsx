@@ -170,20 +170,20 @@ type AktivBehandlingProps = {
 const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
-    const { ventegrunn, settInnholdsbredde } = useBehandlingState();
+    const { ventegrunn, setInnholdsbredde } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
         const oppdaterBredde = (): void => {
             if (contentRef.current) {
                 const rect = contentRef.current.getBoundingClientRect();
-                settInnholdsbredde(rect.width);
+                setInnholdsbredde(rect.width);
             }
         };
         oppdaterBredde();
         window.addEventListener('resize', oppdaterBredde);
         return (): void => window.removeEventListener('resize', oppdaterBredde);
-    }, [settInnholdsbredde]);
+    }, [setInnholdsbredde]);
 
     return (
         <>

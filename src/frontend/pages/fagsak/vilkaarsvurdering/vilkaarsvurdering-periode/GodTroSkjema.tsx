@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { setIkkePersistertKomponent } = useBehandlingState();
 
     const ugyldigErBeløpetIBeholdValgt =
         skjema.visFeilmeldinger &&
@@ -42,7 +42,7 @@ export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                 }
                 onChange={(val: JaNeiOption) => {
                     skjema.felter.erBeløpetIBehold.validerOgSettFelt(val);
-                    settIkkePersistertKomponent(`vilkårsvurdering`);
+                    setIkkePersistertKomponent(`vilkårsvurdering`);
                 }}
             >
                 {jaNeiOptions.map(opt => (
@@ -74,7 +74,7 @@ export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                     }
                     onChange={(event: { target: { value: string } }) => {
                         skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
-                        settIkkePersistertKomponent('vilkårsvurdering');
+                        setIkkePersistertKomponent('vilkårsvurdering');
                     }}
                     maxLength={3000}
                 />
@@ -93,7 +93,7 @@ export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                         skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
                             event.target.value
                         );
-                        settIkkePersistertKomponent(`vilkårsvurdering`);
+                        setIkkePersistertKomponent(`vilkårsvurdering`);
                     }}
                     value={skjema.felter.godTroTilbakekrevesBeløp.verdi}
                     style={{ width: '6rem' }}

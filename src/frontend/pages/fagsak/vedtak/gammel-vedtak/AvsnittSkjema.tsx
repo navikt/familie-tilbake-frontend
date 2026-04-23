@@ -63,7 +63,6 @@ export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp 
                 erBulletpoints = true;
             }
             if (underavsnitt.brødtekst?.endsWith('-*')) {
-                erBulletpoints = false;
                 break;
             }
         }

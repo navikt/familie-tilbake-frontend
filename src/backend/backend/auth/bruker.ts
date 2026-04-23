@@ -59,7 +59,8 @@ const hentBrukerdata = async (
             LogLevel.Error
         );
         throw new Error(
-            'Kunne ikke hente dine brukeropplysninger. Vennligst logg ut og inn på nytt'
+            'Kunne ikke hente dine brukeropplysninger. Vennligst logg ut og inn på nytt',
+            { cause: e }
         );
     }
 };

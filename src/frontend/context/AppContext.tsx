@@ -71,12 +71,12 @@ const [AppContentProvider, useApp] = createUseContext(() => {
         autentisert,
         innloggetSaksbehandler,
         hentTilbakeInfo,
-        settToast: (toastId: ToastTyper, toast: Toast): void =>
+        setToast: (toastId: ToastTyper, toast: Toast): void =>
             setToasts({
                 ...toasts,
                 [toastId]: toast,
             }),
-        settToasts: setToasts,
+        setToasts,
         toasts,
     };
 });

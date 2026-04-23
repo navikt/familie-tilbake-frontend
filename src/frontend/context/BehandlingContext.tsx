@@ -2,7 +2,7 @@ import type { ReactElement, ReactNode } from 'react';
 import type { BehandlingsoppsummeringDto, BehandlingDto } from '~/generated/types.gen';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, use, useMemo } from 'react';
 
 import { hentBehandlingOptions } from '~/generated/@tanstack/react-query.gen';
 
@@ -41,7 +41,7 @@ export const BehandlingProvider = ({ behandlingId, children }: Props): ReactElem
 };
 
 export const useBehandling = (): BehandlingDto => {
-    const context = useContext(BehandlingContext);
+    const context = use(BehandlingContext);
     if (!context) {
         throw new Error('useBehandling må brukes innenfor BehandlingProvider');
     }

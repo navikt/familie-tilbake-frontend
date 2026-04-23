@@ -2,7 +2,7 @@ import type { ReactElement, ReactNode } from 'react';
 import type { FagsakDto } from '~/generated';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createContext, useContext } from 'react';
+import { createContext, use } from 'react';
 import { useParams } from 'react-router';
 
 import { hentFagsak } from '~/generated/sdk.gen';
@@ -45,7 +45,8 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
                     throw error;
                 }
                 throw new Error(
-                    `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`
+                    `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`,
+                    { cause: error }
                 );
             }
         },
@@ -55,7 +56,7 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
 };
 
 export const useFagsak = (): FagsakDto => {
-    const context = useContext(FagsakContext);
+    const context = use(FagsakContext);
     if (!context) {
         throw new Error('useFagsak må brukes innenfor FagsakProvider');
     }

@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
-    const { settIkkePersistertKomponent } = useBehandlingState();
+    const { setIkkePersistertKomponent } = useBehandlingState();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
     const erEgendefinert =
@@ -54,7 +54,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                                     skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
                                         event.target.value
                                     );
-                                    settIkkePersistertKomponent('vilkårsvurdering');
+                                    setIkkePersistertKomponent('vilkårsvurdering');
                                 }}
                                 value={skjema.felter.uaktsomAndelTilbakekreves.verdi ?? ''}
                                 style={{ width: '100px' }}
@@ -84,7 +84,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                                     skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
                                         event.target.value
                                     );
-                                    settIkkePersistertKomponent('vilkårsvurdering');
+                                    setIkkePersistertKomponent('vilkårsvurdering');
                                 }}
                                 value={skjema.felter.uaktsomAndelTilbakekrevesManuelt.verdi}
                                 data-testid="andelSomTilbakekrevesManuell"
@@ -107,7 +107,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                                 skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(
                                     event.target.value
                                 );
-                                settIkkePersistertKomponent('vilkårsvurdering');
+                                setIkkePersistertKomponent('vilkårsvurdering');
                             }}
                             style={{ width: '100px' }}
                         />
