@@ -23,7 +23,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import {
-    behandlingHentVedtaksbrevQueryKey,
     behandlingOppdaterVedtaksbrevMutation,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
@@ -85,13 +84,6 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
     const oppdaterVedtaksbrevMutation = useMutation({
         mutationKey: ['oppdaterVedtaksbrev'],
         ...behandlingOppdaterVedtaksbrevMutation(),
-        onSuccess: oppdatertData => {
-            queryClient.setQueryData(
-                behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
-                (gammelData: VedtaksbrevData | undefined) =>
-                    gammelData ? { ...gammelData, ...oppdatertData } : gammelData
-            );
-        },
     });
 
     const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void => {
