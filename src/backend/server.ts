@@ -45,7 +45,14 @@ import setupRouter from './router';
     app.use(urlencoded({ limit: '200mb', extended: true }));
     app.use('/', await setupRouter(texasClient, router));
 
-    app.listen(port, '0.0.0.0', () => {
+    const server = app.listen(port, '0.0.0.0', () => {
         logInfo(`Server startet på port ${port}. Build version: ${appConfig.version}.`);
+    });
+
+    process.on('SIGTERM', () => {
+        logInfo('SIGTERM signal received: closing HTTP server');
+        server.close(() => {
+            logInfo('HTTP server closed');
+        });
     });
 })();
