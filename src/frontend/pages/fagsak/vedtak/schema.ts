@@ -13,18 +13,20 @@ const samletRentekstLengde = (elementer: { type: string; tekst?: string }[]): nu
         .filter(el => el.type === 'rentekst')
         .reduce((acc, el) => acc + (el.tekst?.length ?? 0), 0);
 
+const harForLiteRentekst = (elementer: { type: string; tekst?: string }[]): boolean =>
+    samletRentekstLengde(elementer) < MINIMUM_TEKST_LENGDE;
+
 const validerUnderavsnitt = z.array(z.any()).superRefine((arr, ctx) => {
-    if (samletRentekstLengde(arr) < MINIMUM_TEKST_LENGDE) {
+    if (harForLiteRentekst(arr)) {
         ctx.addIssue({ code: 'custom', message: FEILMELDING });
     }
-    for (const [j, element] of arr.entries()) {
-        if (
-            element.type === 'påkrevd_begrunnelse' &&
-            samletRentekstLengde(element.underavsnitt ?? []) < MINIMUM_TEKST_LENGDE
-        ) {
-            ctx.addIssue({ code: 'custom', message: FEILMELDING, path: [j, 'underavsnitt'] });
+
+    arr.forEach((element, index) => {
+        if (element.type !== 'påkrevd_begrunnelse') return;
+        if (harForLiteRentekst(element.underavsnitt ?? [])) {
+            ctx.addIssue({ code: 'custom', message: FEILMELDING, path: [index, 'underavsnitt'] });
         }
-    }
+    });
 });
 
 const vedtaksbrevSchema = z.object({
