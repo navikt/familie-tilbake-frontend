@@ -181,25 +181,10 @@ describe('vedtaksbrevResolver', () => {
     ): Promise<ReturnType<typeof vedtaksbrevResolver>> =>
         vedtaksbrevResolver(data, {}, lagOptions(registrerteNavn));
 
-    const hentFeilstier = (errors: Record<string, unknown>, prefix = ''): string[] => {
-        const stier: string[] = [];
-        for (const [key, value] of Object.entries(errors)) {
-            if (key === 'root') continue;
-            const sti = prefix ? `${prefix}.${key}` : key;
-            if (value && typeof value === 'object') {
-                const obj = value as Record<string, unknown>;
-                if ('message' in obj || 'root' in obj) {
-                    stier.push(sti);
-                }
-                // Rekursér videre for å finne barnefeil
-                stier.push(...hentFeilstier(obj, sti));
-            }
-        }
-        return stier;
-    };
+    const FORVENTET_FEILMELDING = 'Du må fylle inn minst 3 tegn';
 
     test('gir feil for tom påkrevd_begrunnelse underavsnitt', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
@@ -220,13 +205,14 @@ describe('vedtaksbrevResolver', () => {
             ],
         });
 
-        expect(Object.keys(result.errors).length).toBeGreaterThan(0);
-        const stier = hentFeilstier(result.errors as Record<string, unknown>);
-        expect(stier).toContain('avsnitt.0.underavsnitt.1.underavsnitt');
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 1, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
     });
 
     test('gir feil for tom påkrevd_begrunnelse når den er eneste element', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
@@ -246,13 +232,14 @@ describe('vedtaksbrevResolver', () => {
             ],
         });
 
-        expect(Object.keys(result.errors).length).toBeGreaterThan(0);
-        const stier = hentFeilstier(result.errors as Record<string, unknown>);
-        expect(stier).toContain('avsnitt.0.underavsnitt.0.underavsnitt');
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 0, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
     });
 
     test('gir feil for avsnitt uten rentekst-elementer', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
@@ -272,13 +259,14 @@ describe('vedtaksbrevResolver', () => {
             ],
         });
 
-        expect(Object.keys(result.errors).length).toBeGreaterThan(0);
-        const stier = hentFeilstier(result.errors as Record<string, unknown>);
-        expect(stier).toContain('avsnitt.0.underavsnitt');
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
     });
 
     test('passerer for gyldig data', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
@@ -299,11 +287,11 @@ describe('vedtaksbrevResolver', () => {
             ],
         });
 
-        expect(Object.keys(result.errors).length).toBe(0);
+        expect(errors).toEqual({});
     });
 
     test('gir feil på alle tre stier når alle textareaer er tomme', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [],
@@ -323,14 +311,22 @@ describe('vedtaksbrevResolver', () => {
             ],
         });
 
-        const stier = hentFeilstier(result.errors as Record<string, unknown>);
-        expect(stier).toContain('hovedavsnitt.underavsnitt');
-        expect(stier).toContain('avsnitt.0.underavsnitt');
-        expect(stier).toContain('avsnitt.0.underavsnitt.0.underavsnitt');
+        expect(errors).toHaveProperty(
+            ['hovedavsnitt', 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 0, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
     });
 
     test('gir kun feil på hovedavsnitt og påkrevd_begrunnelse når avsnitt har rentekst', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [],
@@ -351,15 +347,20 @@ describe('vedtaksbrevResolver', () => {
             ],
         });
 
-        const stier = hentFeilstier(result.errors as Record<string, unknown>);
-        expect(stier).toContain('hovedavsnitt.underavsnitt');
-        expect(stier).not.toContain('avsnitt.0.underavsnitt');
-        expect(stier).toContain('avsnitt.0.underavsnitt.1.underavsnitt');
+        expect(errors).toHaveProperty(
+            ['hovedavsnitt', 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
+        expect(errors).not.toHaveProperty(['avsnitt', 0, 'underavsnitt', 'message']);
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 1, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
     });
 
     test('overlappende feilstier → foreldresti wrappet i .root med registrerte felt', async () => {
         const registrerteNavn = ['avsnitt.0.underavsnitt', 'avsnitt.0.underavsnitt.0.underavsnitt'];
-        const result = await kjørResolver(
+        const { errors } = await kjørResolver(
             {
                 hovedavsnitt: {
                     tittel: 'Hovedtittel',
@@ -382,22 +383,17 @@ describe('vedtaksbrevResolver', () => {
             registrerteNavn
         );
 
-        const avsnittErrors = result.errors as Record<string, unknown>;
-        const avsnittUnderavsnitt = (
-            (avsnittErrors.avsnitt as Record<string, unknown>)['0'] as Record<string, unknown>
-        ).underavsnitt as Record<string, unknown>;
-
         // Forelder har .root fordi register() gir zodResolver feltnavn
-        expect(avsnittUnderavsnitt).toHaveProperty('root');
-        expect((avsnittUnderavsnitt.root as { message: string }).message).toBe(
-            'Du må fylle inn minst 3 tegn'
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 'root', 'message'],
+            FORVENTET_FEILMELDING
         );
         // Barn har direkte feil
-        expect(avsnittUnderavsnitt['0']).toHaveProperty('underavsnitt');
+        expect(errors).toHaveProperty(['avsnitt', 0, 'underavsnitt', 0, 'underavsnitt']);
     });
 
     test('1-2 tegn → feil vises med riktig melding', async () => {
-        const result = await kjørResolver({
+        const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
                 underavsnitt: [{ type: 'rentekst', tekst: 'ab' }],
@@ -405,10 +401,9 @@ describe('vedtaksbrevResolver', () => {
             avsnitt: [],
         });
 
-        expect(Object.keys(result.errors).length).toBeGreaterThan(0);
-        const hovedavsnittErrors = (result.errors as Record<string, unknown>)
-            .hovedavsnitt as Record<string, unknown>;
-        const underavsnittError = hovedavsnittErrors.underavsnitt as { message: string };
-        expect(underavsnittError.message).toBe('Du må fylle inn minst 3 tegn');
+        expect(errors).toHaveProperty(
+            ['hovedavsnitt', 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
     });
 });
