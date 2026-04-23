@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { useBehandling } from '~/context/BehandlingContext';
-import { Menysider } from '~/komponenter/sidebar/Menykontainer';
+import { Menysider } from '~/komponenter/sidebar/OversiktOgHandlingerInnhold';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '~/typer/ressurs';
 
 type Props = {

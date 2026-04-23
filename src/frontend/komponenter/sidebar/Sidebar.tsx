@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useLavViewportHøyde } from '~/hooks/useLavViewportHøyde';
 
-import { HistorikkOgDokumenter } from './HistorikkOgDokumenter';
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './informasjonsbokser/Faktaboks';
+import { HistorikkOgDokumenter } from './OversiktOgHandlinger';
 
 type Props = {
     dialogRef: RefObject<HTMLDialogElement | null>;

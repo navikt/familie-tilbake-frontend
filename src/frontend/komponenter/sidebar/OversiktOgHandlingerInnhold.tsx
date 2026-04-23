@@ -20,7 +20,7 @@ type Props = {
     valgtMenyside: Menysider;
 };
 
-export const MenySideInnhold: FC<Props> = ({ valgtMenyside }) => {
+export const OversiktOgHandlingerInnhold: FC<Props> = ({ valgtMenyside }) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (

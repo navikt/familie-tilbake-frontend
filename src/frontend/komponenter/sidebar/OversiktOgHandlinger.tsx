@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 
-import { Menysider, MenySideInnhold } from './Menykontainer';
+import { Menysider, OversiktOgHandlingerInnhold } from './OversiktOgHandlingerInnhold';
 
 export const HistorikkOgDokumenter: FC = () => {
     const { erNyModell, status } = useBehandling();
@@ -27,7 +27,10 @@ export const HistorikkOgDokumenter: FC = () => {
     const aktivSide = erGyldigValg ? valgtSide : defaultSide;
 
     return (
-        <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4">
+        <div
+            className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"
+            aria-label="Oversikt og handlinger over historikk, dokumenter, sending av brev og fatte vedtak."
+        >
             <ToggleGroup
                 data-color="neutral"
                 value={aktivSide}
@@ -61,7 +64,7 @@ export const HistorikkOgDokumenter: FC = () => {
                     />
                 )}
             </ToggleGroup>
-            <MenySideInnhold valgtMenyside={aktivSide} />
+            <OversiktOgHandlingerInnhold valgtMenyside={aktivSide} />
         </div>
     );
 };
