@@ -11,8 +11,8 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { parseISO } from 'date-fns/parseISO';
-import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { Fragment, useEffect, useMemo, useState } from 'react';
+import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ToggleName } from '~/context/toggles';
