@@ -36,7 +36,7 @@ const renderVergeContainer = (
     const client = createTestQueryClient();
 
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
+        <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
                 <QueryClientProvider client={client}>
                     <VergeProvider>
@@ -44,7 +44,7 @@ const renderVergeContainer = (
                     </VergeProvider>
                 </QueryClientProvider>
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 };
 

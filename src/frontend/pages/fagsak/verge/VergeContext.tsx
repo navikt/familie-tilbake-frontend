@@ -35,12 +35,12 @@ const erAdvokatValgt = (avhengigheter?: Avhengigheter): boolean =>
 const [VergeProvider, useVerge] = createUseContext(() => {
     const behandling = useBehandling();
     const queryClient = useQueryClient();
-    const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
-    const [erAutoutført, settErAutoutført] = useState<boolean>();
-    const [verge, settVerge] = useState<VergeDto>();
-    const [henterData, settHenterData] = useState<boolean>(false);
-    const [senderInn, settSenderInn] = useState<boolean>(false);
-    const [vergeRespons, settVergeRepons] = useState<Ressurs<string>>();
+    const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
+    const [erAutoutført, setErAutoutført] = useState<boolean>();
+    const [verge, setVerge] = useState<VergeDto>();
+    const [henterData, setHenterData] = useState<boolean>(false);
+    const [senderInn, setSenderInn] = useState<boolean>(false);
+    const [vergeRespons, setVergeRespons] = useState<Ressurs<string>>();
     const { gjerVergeKall, sendInnVerge } = useBehandlingApi();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
@@ -48,9 +48,9 @@ const [VergeProvider, useVerge] = createUseContext(() => {
 
     useEffect(() => {
         if (behandling.harVerge) {
-            settStegErBehandlet(erStegBehandlet('VERGE'));
-            settErAutoutført(erStegAutoutført('VERGE'));
-            settHenterData(true);
+            setStegErBehandlet(erStegBehandlet('VERGE'));
+            setErAutoutført(erStegAutoutført('VERGE'));
+            setHenterData(true);
             hentVerge();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,7 +59,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
     const hentVerge = (): void => {
         gjerVergeKall(behandling.behandlingId).then((respons: Ressurs<VergeDto>) => {
             if (respons.status === RessursStatus.Suksess) {
-                settHenterData(false);
+                setHenterData(false);
                 const hentetVerge = respons.data;
                 skjema.felter.vergetype.onChange(hentetVerge.type);
                 skjema.felter.begrunnelse.onChange(hentetVerge.begrunnelse);
@@ -68,7 +68,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
                 skjema.felter.organisasjonsnummer.onChange(
                     hentetVerge.orgNr ? hentetVerge.orgNr : ''
                 );
-                settVerge(hentetVerge);
+                setVerge(hentetVerge);
             }
         });
     };
@@ -161,7 +161,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
             nullstillIkkePersisterteKomponenter();
             navigerTilNeste();
         } else if (kanSendeSkjema()) {
-            settSenderInn(true);
+            setSenderInn(true);
             // @ts-expect-error har verdi her
             const vergetype: Vergetype = skjema.felter.vergetype.verdi;
             const payload: VergeStegPayload = {
@@ -182,7 +182,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
             };
             sendInnVerge(behandling.behandlingId, payload)
                 .then(async (respons: Ressurs<string>) => {
-                    settSenderInn(false);
+                    setSenderInn(false);
                     if (respons.status === RessursStatus.Suksess) {
                         nullstillIkkePersisterteKomponenter();
                         await queryClient.invalidateQueries({
@@ -192,12 +192,12 @@ const [VergeProvider, useVerge] = createUseContext(() => {
                         });
                         navigerTilNeste();
                     } else {
-                        settVergeRepons(respons);
+                        setVergeRespons(respons);
                     }
                 })
                 .catch(() => {
-                    settSenderInn(false);
-                    settVergeRepons(byggFeiletRessurs('Ukjent feil ved sending av verge'));
+                    setSenderInn(false);
+                    setVergeRespons(byggFeiletRessurs('Ukjent feil ved sending av verge'));
                 });
         }
     };

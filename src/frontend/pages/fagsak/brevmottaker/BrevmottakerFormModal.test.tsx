@@ -39,11 +39,11 @@ const renderBrevmottakerFormModal = async (
 
     return await waitFor(() =>
         render(
-            <FagsakContext.Provider value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+            <FagsakContext value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
                 <TestBehandlingProvider behandling={lagBehandling()}>
                     <BrevmottakerFormModal {...defaultProps} />
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         )
     );
 };

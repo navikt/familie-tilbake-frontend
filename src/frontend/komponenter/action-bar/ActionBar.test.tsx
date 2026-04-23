@@ -14,7 +14,7 @@ const renderActionBar = (
     isLoading: boolean = false
 ): RenderResult => {
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
+        <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider>
                 <ActionBar
                     stegtekst="Steg 2 av 5"
@@ -25,7 +25,7 @@ const renderActionBar = (
                     onForrige={onForrige}
                 />
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 };
 

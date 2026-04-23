@@ -128,6 +128,3 @@ export const validerGyldigDato = (
     felt: FeltState<Date | undefined>
 ): FeltState<Date | undefined> =>
     felt.verdi && isValid(felt.verdi) ? ok(felt) : feil(felt, 'Du må velge en gyldig dato');
-
-export const harVerdi = (str: string | null | undefined): boolean =>
-    str !== undefined && str !== '' && str !== null;

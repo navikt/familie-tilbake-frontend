@@ -44,7 +44,7 @@ describe('StartPåNytt', () => {
         const queryClient = createTestQueryClient();
         render(
             <QueryClientProvider client={queryClient}>
-                <FagsakContext.Provider value={lagFagsak()}>
+                <FagsakContext value={lagFagsak()}>
                     <TestBehandlingProvider behandling={lagBehandlingDto()}>
                         <ActionMenu open>
                             <ActionMenu.Trigger>
@@ -55,7 +55,7 @@ describe('StartPåNytt', () => {
                             </ActionMenu.Content>
                         </ActionMenu>
                     </TestBehandlingProvider>
-                </FagsakContext.Provider>
+                </FagsakContext>
             </QueryClientProvider>
         );
 

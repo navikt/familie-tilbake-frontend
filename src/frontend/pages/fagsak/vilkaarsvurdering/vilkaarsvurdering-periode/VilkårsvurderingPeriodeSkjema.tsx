@@ -154,7 +154,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     } = useBehandlingState();
     const queryClient = useQueryClient();
 
-    const [visUlagretDataModal, settVisUlagretDataModal] = useState(false);
+    const [visUlagretDataModal, setVisUlagretDataModal] = useState(false);
 
     // Sjekk om ForeslåVedtak-steget har status tilbakeført
     const erVedtakTilbakeført = behandlingsstegsinfo.some(
@@ -170,12 +170,12 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     useEffect(() => {
         if (pendingPeriode && harUlagredeData) {
-            settVisUlagretDataModal(true);
+            setVisUlagretDataModal(true);
         } else if (pendingPeriode && !harUlagredeData) {
             settValgtPeriode(pendingPeriode);
             settPendingPeriode(undefined);
         } else {
-            settVisUlagretDataModal(false);
+            setVisUlagretDataModal(false);
         }
     }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
 
@@ -195,7 +195,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
             settSkjemadataFraPeriode(skjema, pendingPeriode, kanIlleggeRenter);
         }
-        settVisUlagretDataModal(false);
+        setVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 
@@ -209,12 +209,12 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         await sendInnSkjemaOgNaviger(PeriodeHandling.NestePeriode);
 
         settValgtPeriode(pendingPeriode);
-        settVisUlagretDataModal(false);
+        setVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 
     const handleAvbryt = (): void => {
-        settVisUlagretDataModal(false);
+        setVisUlagretDataModal(false);
         settPendingPeriode(undefined);
     };
 

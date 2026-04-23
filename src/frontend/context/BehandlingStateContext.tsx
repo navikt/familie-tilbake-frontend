@@ -37,7 +37,7 @@ type Props = {
 export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
     const behandling = useBehandling();
     const ulagretEndringer = useUlagretEndringer();
-    const [innholdsbredde, settInnholdsbredde] = useState<number>(0);
+    const [innholdsbredde, setInnholdsbredde] = useState<number>(0);
 
     const behandlingILesemodus = useMemo((): boolean => {
         const fatteVedtakErKlarUtenNoenTilbakeførteSteg = behandling.behandlingsstegsinfo.some(
@@ -148,15 +148,11 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         erBehandlingReturnertFraBeslutter,
         harVærtPåFatteVedtakSteget,
         innholdsbredde,
-        settInnholdsbredde,
+        settInnholdsbredde: setInnholdsbredde,
         ...ulagretEndringer,
     };
 
-    return (
-        <BehandlingStateContext.Provider value={contextValue}>
-            {children}
-        </BehandlingStateContext.Provider>
-    );
+    return <BehandlingStateContext value={contextValue}>{children}</BehandlingStateContext>;
 };
 
 export const useBehandlingState = (): BehandlingStateContextType => {

@@ -36,13 +36,13 @@ const renderTotrinnskontroll = (
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
                     <TotrinnskontrollProvider>
                         <Totrinnskontroll />
                     </TotrinnskontrollProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

@@ -10,11 +10,11 @@ import { getEndOfMonthISODateStr, validerDato } from '~/utils';
 
 type DelOppPeriodeHook = {
     visModal: boolean;
-    settVisModal: (vis: boolean) => void;
+    setVisModal: (vis: boolean) => void;
     splittDato: string;
-    settSplittDato: (dato: string) => void;
+    setSplittDato: (dato: string) => void;
     tidslinjeRader: TimelinePeriodProps[][] | undefined;
-    settTidslinjeRader: (rader: TimelinePeriodProps[][]) => void;
+    setTidslinjeRader: (rader: TimelinePeriodProps[][]) => void;
     feilmelding: string;
     vedDatoEndring: (splittPeriode: (månedsslutt: string) => void, nyVerdi?: string) => void;
     sendInnSkjema: (
@@ -26,10 +26,10 @@ type DelOppPeriodeHook = {
 
 export const useDelOppPeriode = (fom: string): DelOppPeriodeHook => {
     const { behandlingId } = useBehandling();
-    const [visModal, settVisModal] = useState(false);
-    const [splittDato, settSplittDato] = useState(fom);
-    const [tidslinjeRader, settTidslinjeRader] = useState<TimelinePeriodProps[][]>();
-    const [feilmelding, settFeilmelding] = useState('');
+    const [visModal, setVisModal] = useState(false);
+    const [splittDato, setSplittDato] = useState(fom);
+    const [tidslinjeRader, setTidslinjeRader] = useState<TimelinePeriodProps[][]>();
+    const [feilmelding, setFeilmelding] = useState('');
     const { request } = useHttp();
 
     const vedDatoEndring = (
@@ -38,13 +38,13 @@ export const useDelOppPeriode = (fom: string): DelOppPeriodeHook => {
     ): void => {
         const feilmelding = validerDato(nyVerdi);
         if (feilmelding) {
-            settFeilmelding(feilmelding);
+            setFeilmelding(feilmelding);
         } else {
-            settFeilmelding('');
+            setFeilmelding('');
             const månedsslutt = getEndOfMonthISODateStr(nyVerdi);
             if (nyVerdi && månedsslutt) {
                 splittPeriode(månedsslutt);
-                settSplittDato(månedsslutt);
+                setSplittDato(månedsslutt);
             }
         }
     };
@@ -60,16 +60,16 @@ export const useDelOppPeriode = (fom: string): DelOppPeriodeHook => {
         }).then((response: Ressurs<BeregnSplittetPeriodeRespons>) => {
             if (response.status === RessursStatus.Suksess) {
                 behandleRespons(response.data);
-                settVisModal(false);
-                settSplittDato('');
-                settTidslinjeRader([]);
+                setVisModal(false);
+                setSplittDato('');
+                setTidslinjeRader([]);
             }
         });
     };
 
     const validateNyPeriode = (periode: Periode, månedsslutt: string): boolean => {
         if (periode.fom > månedsslutt || månedsslutt >= periode.tom) {
-            settFeilmelding('t.o.m. måned er utenfor perioden');
+            setFeilmelding('t.o.m. måned er utenfor perioden');
             return false;
         }
         return true;
@@ -77,11 +77,11 @@ export const useDelOppPeriode = (fom: string): DelOppPeriodeHook => {
 
     return {
         visModal,
-        settVisModal,
+        setVisModal,
         splittDato,
-        settSplittDato,
+        setSplittDato,
         tidslinjeRader,
-        settTidslinjeRader,
+        setTidslinjeRader,
         feilmelding,
         vedDatoEndring,
         sendInnSkjema,

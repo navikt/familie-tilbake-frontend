@@ -33,13 +33,13 @@ const renderBrukeruttalelse = (): RenderResult => {
     });
 
     return render(
-        <FagsakContext.Provider value={lagFagsak()}>
+        <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
             </TestBehandlingProvider>
-        </FagsakContext.Provider>
+        </FagsakContext>
     );
 };
 

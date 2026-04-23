@@ -19,7 +19,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
     const [inaktiveVilkårsvurderinger, setInaktiveVilkårsvurderinger] =
         useState<Ressurs<VilkårsvurderingResponse[]>>(byggTomRessurs);
 
-    const [skjemaData, settSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
+    const [skjemaData, setSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
 
     useEffect(() => {
         hentVilkårsvurdering();
@@ -40,7 +40,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
                 return skjemaPeriode;
             });
 
-            settSkjemaData(skjemaPerioder);
+            setSkjemaData(skjemaPerioder);
         }
     };
 

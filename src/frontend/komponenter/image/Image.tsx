@@ -19,13 +19,13 @@ export const Image: FC<Props> = ({
     onKeyDown,
     className,
 }) => {
-    const [isHovering, setHoovering] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
 
     const onFocus = useCallback((): void => {
-        setHoovering(true);
+        setIsHovering(true);
     }, []);
     const onBlur = useCallback((): void => {
-        setHoovering(false);
+        setIsHovering(false);
     }, []);
     const onKeyDownFn = useCallback((e: KeyboardEvent): void => {
         if (e.key === 'Enter' || e.key === ' ') {

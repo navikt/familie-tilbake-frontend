@@ -81,7 +81,7 @@ const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResu
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext.Provider value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
+            <FagsakContext value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
                 <TestBehandlingProvider
                     behandling={behandling}
                     stateOverrides={{ harKravgrunnlag: true }}
@@ -90,7 +90,7 @@ const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResu
                         <VilkårsvurderingContainer />
                     </VilkårsvurderingProvider>
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 };

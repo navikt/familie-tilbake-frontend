@@ -29,11 +29,11 @@ vi.mock('~/api/http/HttpProvider', () => ({
 const wrapper: FC<{ children: ReactNode }> = ({ children }) => (
     <QueryClientProvider client={createTestQueryClient()}>
         <MemoryRouter>
-            <FagsakContext.Provider value={lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={lagBehandlingDto({ behandlingId })}>
                     {children}
                 </TestBehandlingProvider>
-            </FagsakContext.Provider>
+            </FagsakContext>
         </MemoryRouter>
     </QueryClientProvider>
 );

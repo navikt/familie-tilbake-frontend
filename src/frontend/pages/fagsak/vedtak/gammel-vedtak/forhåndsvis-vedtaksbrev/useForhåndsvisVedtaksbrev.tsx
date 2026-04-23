@@ -21,41 +21,41 @@ type ForhåndsvisVedtaksbrevHook = {
 };
 
 const useForhåndsvisVedtaksbrev = (): ForhåndsvisVedtaksbrevHook => {
-    const [hentetForhåndsvisning, settHentetForhåndsvisning] =
-        useState<Ressurs<string>>(byggTomRessurs());
-    const [visModal, settVisModal] = useState<boolean>(false);
+    const tomRessurs = byggTomRessurs<string>();
+    const [hentetForhåndsvisning, setHentetForhåndsvisning] = useState<Ressurs<string>>(tomRessurs);
+    const [visModal, setVisModal] = useState(false);
     const { hentBrevdata, validerAlleAvsnittOk } = useVedtak();
     const { forhåndsvisVedtaksbrev } = useDokumentApi();
 
     const nullstillHentetForhåndsvisning = (): void => {
-        settHentetForhåndsvisning(byggTomRessurs);
-        settVisModal(false);
+        setHentetForhåndsvisning(byggTomRessurs);
+        setVisModal(false);
     };
 
     const kanViseForhåndsvisning = (): void => {
         if (validerAlleAvsnittOk(false)) {
-            settVisModal(true);
+            setVisModal(true);
         }
     };
 
     const hentVedtaksbrev = (): void => {
-        settHentetForhåndsvisning(byggHenterRessurs());
+        setHentetForhåndsvisning(byggHenterRessurs());
         const payload = hentBrevdata();
         forhåndsvisVedtaksbrev(payload).then((response: Ressurs<string>) => {
-            settVisModal(true);
+            setVisModal(true);
             if (response.status === RessursStatus.Suksess) {
                 const blob = new Blob([base64ToArrayBuffer(response.data)], {
                     type: 'application/pdf',
                 });
-                settHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
+                setHentetForhåndsvisning(byggDataRessurs(window.URL.createObjectURL(blob)));
             } else if (
                 response.status === RessursStatus.Feilet ||
                 response.status === RessursStatus.FunksjonellFeil ||
                 response.status === RessursStatus.IkkeTilgang
             ) {
-                settHentetForhåndsvisning(response);
+                setHentetForhåndsvisning(response);
             } else {
-                settHentetForhåndsvisning(
+                setHentetForhåndsvisning(
                     byggFeiletRessurs('Ukjent feil, kunne ikke generere forhåndsvisning.')
                 );
             }

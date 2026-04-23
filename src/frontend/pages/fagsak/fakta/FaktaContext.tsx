@@ -27,7 +27,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     const behandling = useBehandling();
     const queryClient = useQueryClient();
     const [fakta, setFakta] = useState<Ressurs<FaktaResponse>>();
-    const [skjemaData, settSkjemaData] = useState<FaktaSkjemaData>({
+    const [skjemaData, setSkjemaData] = useState<FaktaSkjemaData>({
         perioder: [],
         vurderingAvBrukersUttalelse: {
             harBrukerUttaltSeg: HarBrukerUttaltSegValg.IkkeVurdert,
@@ -46,17 +46,17 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
             : 'VERGE'
     );
 
-    const [behandlePerioderSamlet, settBehandlePerioderSamlet] = useState<boolean>(false);
-    const [stegErBehandlet, settStegErBehandlet] = useState<boolean>(false);
-    const [visFeilmeldinger, settVisFeilmeldinger] = useState<boolean>(false);
-    const [senderInn, settSenderInn] = useState<boolean>(false);
-    const [feilmeldinger, settFeilmeldinger] = useState<Feilmelding[]>();
+    const [behandlePerioderSamlet, setBehandlePerioderSamlet] = useState<boolean>(false);
+    const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
+    const [visFeilmeldinger, setVisFeilmeldinger] = useState<boolean>(false);
+    const [senderInn, setSenderInn] = useState<boolean>(false);
+    const [feilmeldinger, setFeilmeldinger] = useState<Feilmelding[]>();
     const { erStegBehandlet, settIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
 
     useEffect(() => {
-        settStegErBehandlet(erStegBehandlet('FAKTA'));
+        setStegErBehandlet(erStegBehandlet('FAKTA'));
         hentFakta();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [behandling]);
@@ -76,7 +76,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
                 return behandletPeriode;
             });
 
-            settSkjemaData({
+            setSkjemaData({
                 begrunnelse: data.begrunnelse || undefined,
                 perioder: behandletPerioder,
                 vurderingAvBrukersUttalelse: data.vurderingAvBrukersUttalelse,
@@ -98,13 +98,13 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     };
 
     const oppdaterBegrunnelse = (nyBegrunnelse: string): void => {
-        settSkjemaData(prevState => {
+        setSkjemaData(prevState => {
             return { ...prevState, begrunnelse: nyBegrunnelse };
         });
     };
 
     const oppdaterBrukerHarUttaltSeg = (harBrukerUttaltSeg: HarBrukerUttaltSegValg): void => {
-        settSkjemaData(prevState => {
+        setSkjemaData(prevState => {
             return {
                 ...prevState,
                 vurderingAvBrukersUttalelse: {
@@ -116,7 +116,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     };
 
     const oppdaterBeskrivelseBrukerHarUttaltSeg = (begrunnelse: string): void => {
-        settSkjemaData(prevState => {
+        setSkjemaData(prevState => {
             return {
                 ...prevState,
                 vurderingAvBrukersUttalelse: {
@@ -158,7 +158,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
             return { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
         });
 
-        settSkjemaData((prevState: FaktaSkjemaData) => {
+        setSkjemaData((prevState: FaktaSkjemaData) => {
             return { ...prevState, perioder: nyePerioder };
         });
     };
@@ -173,7 +173,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         const nyPeriode = { ...periode, hendelsestype: nyÅrsak, hendelsesundertype: undefined };
         const nyePerioder = skjemaData.perioder.toSpliced(gammelPeriodeIndex, 1, nyPeriode);
 
-        settSkjemaData((prevState: FaktaSkjemaData) => {
+        setSkjemaData((prevState: FaktaSkjemaData) => {
             return { ...prevState, perioder: nyePerioder };
         });
     };
@@ -189,7 +189,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
             return gammelPeriode;
         });
 
-        settSkjemaData((prevState: FaktaSkjemaData) => {
+        setSkjemaData((prevState: FaktaSkjemaData) => {
             return { ...prevState, perioder: nyePerioder };
         });
     };
@@ -204,7 +204,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         const nyPeriode = { ...periode, hendelsesundertype: nyUnderårsak };
         const nyePerioder = skjemaData.perioder.toSpliced(gammelPeriodeIndex, 1, nyPeriode);
 
-        settSkjemaData((prevState: FaktaSkjemaData) => {
+        setSkjemaData((prevState: FaktaSkjemaData) => {
             return { ...prevState, perioder: nyePerioder };
         });
     };
@@ -305,11 +305,11 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         } else {
             const feilmeldinger = validerForInnsending();
             if (feilmeldinger.length > 0) {
-                settVisFeilmeldinger(true);
-                settFeilmeldinger(feilmeldinger);
+                setVisFeilmeldinger(true);
+                setFeilmeldinger(feilmeldinger);
             } else {
-                settVisFeilmeldinger(false);
-                settSenderInn(true);
+                setVisFeilmeldinger(false);
+                setSenderInn(true);
                 nullstillIkkePersisterteKomponenter();
                 const payload: FaktaStegPayload = {
                     '@type': 'FAKTA',
@@ -330,7 +330,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
                 };
                 sendInnFakta(behandling.behandlingId, payload).then(
                     async (respons: Ressurs<string>) => {
-                        settSenderInn(false);
+                        setSenderInn(false);
                         if (respons.status === RessursStatus.Suksess) {
                             await queryClient.invalidateQueries({
                                 queryKey: hentBehandlingQueryKey({
@@ -356,7 +356,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         oppdaterUnderårsakPåPeriode,
         hentFakta,
         behandlePerioderSamlet,
-        settBehandlePerioderSamlet,
+        settBehandlePerioderSamlet: setBehandlePerioderSamlet,
         sendInnSkjema,
         visFeilmeldinger,
         feilmeldinger,
