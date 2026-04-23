@@ -42,25 +42,25 @@ export const HistorikkOgDokumenter: FC = () => {
                 <ToggleGroup.Item
                     value={Menysider.Historikk}
                     {...(aktivSide === Menysider.Historikk && { label: 'Historikk' })}
-                    icon={<ClockDashedIcon fontSize="1.25rem" aria-label="Historikk" />}
+                    icon={<ClockDashedIcon fontSize="1.25rem" aria-hidden />}
                 />
                 <ToggleGroup.Item
                     value={Menysider.Dokumenter}
                     {...(aktivSide === Menysider.Dokumenter && { label: 'Dokumenter' })}
-                    icon={<FolderFileIcon fontSize="1.25rem" aria-label="Dokumenter" />}
+                    icon={<FolderFileIcon fontSize="1.25rem" aria-hidden />}
                 />
                 {!erNyModell && (
                     <ToggleGroup.Item
                         value={Menysider.SendBrev}
                         {...(aktivSide === Menysider.SendBrev && { label: 'Send brev' })}
-                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-label="Send brev" />}
+                        icon={<EnvelopeClosedIcon fontSize="1.25rem" aria-hidden />}
                     />
                 )}
                 {skalViseTotrinn && (
                     <ToggleGroup.Item
                         value={Menysider.Totrinn}
                         {...(aktivSide === Menysider.Totrinn && { label: 'Fatte vedtak' })}
-                        icon={<PersonGavelIcon fontSize="1.25rem" aria-label="Fatte vedtak" />}
+                        icon={<PersonGavelIcon fontSize="1.25rem" aria-hidden />}
                     />
                 )}
             </ToggleGroup>
