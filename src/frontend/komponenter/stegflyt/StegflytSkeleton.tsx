@@ -9,7 +9,7 @@ export const StegflytSkeleton: FC = () => {
         <nav aria-label="Laster behandlingssteg navigasjon" className="flex flex-row py-1.5 mx-6">
             <ol className="flex flex-row mx-auto gap-5 w-full max-w-4xl">
                 {Array.from({ length: antallGjentagelser }).map((_, index) => (
-                    <Fragment key={`skjelett-steg-indeks-${index}`}>
+                    <Fragment key={crypto.randomUUID()}>
                         {/* Stegene */}
                         <li className="flex flex-row items-center gap-5">
                             <Box width="6 rem" className="flex flex-col items-center gap-2">

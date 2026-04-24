@@ -44,7 +44,11 @@ export const Jul: FC = () => {
         <div className="ml-6 items-center gap-2 hidden md:flex">
             <Image src={stars} altText="julestjerner" className="h-12 w-12" />
             {Array.from({ length: antallLys }).map((_, index) => (
-                <Image key={index} src={christmasCandle} altText={`adventslys ${index + 1}`} />
+                <Image
+                    key={crypto.randomUUID()}
+                    src={christmasCandle}
+                    altText={`adventslys ${index + 1}`}
+                />
             ))}
 
             <Image src={stars} altText="julestjerner" className="h-12 w-12" />

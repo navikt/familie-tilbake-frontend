@@ -127,8 +127,8 @@ export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
                         <option value="" disabled>
                             Velg årsak
                         </option>
-                        {muligeÅrsaker.map((årsak, index) => (
-                            <option key={`årsak_${index}`} value={årsak}>
+                        {muligeÅrsaker.map(årsak => (
+                            <option key={årsak} value={årsak}>
                                 {venteårsaker[årsak]}
                             </option>
                         ))}

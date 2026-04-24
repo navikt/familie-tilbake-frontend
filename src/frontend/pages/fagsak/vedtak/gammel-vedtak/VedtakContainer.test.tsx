@@ -172,8 +172,8 @@ describe('VedtakContainer', () => {
             )
         ).not.toBeInTheDocument();
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
         expect(getByText('Forsett')).toBeInTheDocument();
         expect(getByText('Simpel uaktsomhet')).toBeInTheDocument();
         expect(getAllByText('1 333')).toHaveLength(2);

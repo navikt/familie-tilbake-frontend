@@ -32,10 +32,10 @@ export const VelgHistoriskVilkårsvurdering: FC<Props> = ({
                         ? parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime()
                         : 1;
                 })
-                .map((vurdering, index) => {
+                .map(vurdering => {
                     return (
                         vurdering.opprettetTid && (
-                            <option value={vurdering.opprettetTid} key={index}>
+                            <option value={vurdering.opprettetTid} key={vurdering.opprettetTid}>
                                 Endret {formatterDatoOgTidstring(vurdering.opprettetTid)}
                             </option>
                         )
