@@ -33,7 +33,11 @@ export const Vedtak: FC = () => {
         data: vedtaksbrevData,
         isError: erVedtaksbrevFeil,
         isPending: lasterVedtaksbrev,
-    } = useQuery(behandlingHentVedtaksbrevOptions({ path: { behandlingId } }));
+    } = useQuery({
+        ...behandlingHentVedtaksbrevOptions({ path: { behandlingId } }),
+        staleTime: 0,
+        gcTime: 0,
+    });
 
     const {
         data: beregningsresultat,
