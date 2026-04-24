@@ -27,15 +27,17 @@ export const Image: FC<Props> = ({
     const onBlur = useCallback((): void => {
         setIsHovering(false);
     }, []);
-    const onKeyDownFn = useCallback((e: KeyboardEvent): void => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            if (onKeyDown) {
-                onKeyDown(e);
+    const onKeyDownFn = useCallback(
+        (e: KeyboardEvent): void => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (onKeyDown) {
+                    onKeyDown(e);
+                }
+                e.preventDefault();
             }
-            e.preventDefault();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        },
+        [onKeyDown]
+    );
 
     const imgSource = srcHover && isHovering ? srcHover : src;
 

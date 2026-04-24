@@ -26,10 +26,11 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
         if (valgtMenyside === Menysider.Historikk) {
             hentHistorikkinnslag();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling, valgtMenyside]);
 
     const hentHistorikkinnslag = (): void => {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
         setHistorikkInnslag(byggHenterRessurs());
         request<void, HistorikkInnslag[]>({
             method: 'GET',

@@ -1,3 +1,11 @@
+/* eslint-disable @eslint-react/set-state-in-effect --
+ * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
+ * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
+ * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
+ * synkronisering. Omfanget av endringen er stort siden konteksten eksponerer avledet
+ * skjemaData, valideringsstate og sendInn-flyt på en måte som forutsetter nåværende
+ * arkitektur.
+ */
 import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/totrinnSkjemaTyper';
 import type { BehandlingsstegEnum } from '~/generated';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '~/typer/api';
@@ -61,7 +69,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         setStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
         setErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
         hentTotrinnkontroll();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {

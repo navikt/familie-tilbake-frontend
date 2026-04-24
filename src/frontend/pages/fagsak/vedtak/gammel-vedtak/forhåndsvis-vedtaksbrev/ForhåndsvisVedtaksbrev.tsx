@@ -20,7 +20,7 @@ export const ForhåndsvisVedtaksbrev: FC = () => {
         if (visModal) {
             hentVedtaksbrev();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [visModal]);
 
     return (

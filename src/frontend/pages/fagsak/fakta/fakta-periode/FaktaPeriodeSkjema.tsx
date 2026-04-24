@@ -33,7 +33,7 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [hendelseTyper]);
 
     const hendelseUnderTyper = useMemo(() => {
@@ -49,7 +49,7 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [hendelseUnderTyper]);
 
     const onChangeÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {

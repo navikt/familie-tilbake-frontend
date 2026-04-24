@@ -1,3 +1,9 @@
+/* eslint-disable @eslint-react/set-state-in-effect --
+ * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
+ * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
+ * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
+ * synkronisering.
+ */
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 import type {
     ForeslåVedtakStegPayload,
@@ -95,7 +101,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     useEffect(() => {
         hentBeregningsresultat();
         hentVedtaksbrevtekster();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {

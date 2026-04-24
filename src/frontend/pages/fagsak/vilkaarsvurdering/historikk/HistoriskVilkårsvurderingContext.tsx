@@ -23,7 +23,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
 
     useEffect(() => {
         hentVilkårsvurdering();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     const setInaktivVilkårsvurdering = (
@@ -47,6 +47,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
     const { gjerInaktiveVilkårsvurderingerKall } = useBehandlingApi();
 
     const hentVilkårsvurdering = (): void => {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
         setInaktiveVilkårsvurderinger(byggHenterRessurs());
         gjerInaktiveVilkårsvurderingerKall(behandling.behandlingId)
             .then((respons: Ressurs<VilkårsvurderingResponse[]>) => {

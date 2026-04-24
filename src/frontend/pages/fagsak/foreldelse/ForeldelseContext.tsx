@@ -1,3 +1,9 @@
+/* eslint-disable @eslint-react/set-state-in-effect --
+ * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
+ * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
+ * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
+ * synkronisering.
+ */
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
 import type { BehandlingstatusEnum } from '~/generated';
 import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '~/typer/api';
@@ -90,7 +96,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         if (!autoutført) {
             hentForeldelse();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -121,7 +127,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 setValgtPeriode(valgtForeldelsePeriode);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [foreldelse]);
 
     useEffect(() => {
@@ -131,7 +137,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             );
             setAllePerioderBehandlet(!nokonUbehandlet);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentForeldelse = (): void => {

@@ -1,3 +1,9 @@
+/* eslint-disable @eslint-react/set-state-in-effect --
+ * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
+ * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
+ * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
+ * synkronisering.
+ */
 import type { PeriodeHandling } from './typer/periodeHandling';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 import type { AxiosError } from 'axios';
@@ -88,7 +94,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         setErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
         setKanIlleggeRenter(kanIleggeRenter);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -123,7 +129,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             );
             setBehandletPerioder(behandletPerioder);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentVilkårsvurdering = (): void => {
