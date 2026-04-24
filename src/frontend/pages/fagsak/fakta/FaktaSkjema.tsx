@@ -324,7 +324,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
                         hideLabel
                         size="small"
                         readOnly={behandlingILesemodus}
-                        key={`${rettsligGrunnlag.bestemmelse}${index}`}
+                        key={rettsligGrunnlag.bestemmelse}
                         error={
                             formState.errors.perioder
                                 ?.at?.(periodeIndex)
@@ -353,7 +353,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
                         label="Velg grunnlag"
                         hideLabel
                         size="small"
-                        key={`${rettsligGrunnlag.grunnlag}${index}`}
+                        key={rettsligGrunnlag.grunnlag}
                         readOnly={behandlingILesemodus}
                         error={
                             formState.errors.perioder

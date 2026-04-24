@@ -20,7 +20,6 @@ export const FeilModal: FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) =>
     const { behandlingId } = useBehandling();
     const { eksternFagsakId } = useFagsak();
     const feilObjekt = hentFeilObjekt(hentStatus(feil));
-    const innheholderCSRFTokenFeil = feil.message?.includes('CSRF-token');
     return (
         <Modal open onClose={lukkFeilModal} aria-labelledby="modal-heading" portal>
             <Modal.Header className="bg-[#FFE6E6]" closeButton={false}>
@@ -42,18 +41,7 @@ export const FeilModal: FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) =>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>
                             <Box marginBlock="space-12" asChild>
                                 <List data-aksel-migrated-v8 as="ul" size="small">
-                                    {!innheholderCSRFTokenFeil &&
-                                        feilObjekt.hvaKanGjøres.map((handling, index) => (
-                                            <List.Item key={`${handling}${index}`}>
-                                                {handling}
-                                            </List.Item>
-                                        ))}
-                                    {innheholderCSRFTokenFeil && (
-                                        <List.Item>
-                                            Lagre det du holder på med, og last siden på nytt
-                                        </List.Item>
-                                    )}
-                                    {(feil.status !== 403 || innheholderCSRFTokenFeil) && (
+                                    {feil.status !== 403 && (
                                         <List.Item>
                                             <Link
                                                 href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
