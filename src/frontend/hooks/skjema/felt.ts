@@ -1,4 +1,4 @@
-/* eslint-disable @eslint-react/set-state-in-effect, @eslint-react/exhaustive-deps, react-hooks/exhaustive-deps --
+/* eslint-disable @eslint-react/set-state-in-effect, react-hooks/set-state-in-effect, @eslint-react/exhaustive-deps, react-hooks/exhaustive-deps --
  * useFelt er en generisk skjemahook hvor feltstate og synlighet (`erSynlig`) synkroniseres
  * mot avhengighetene via en useEffect. Å fjerne disse setState-kallene krever en større
  * refaktor av skjemaløsningen — typisk migrering til react-hook-form + zod, som allerede
