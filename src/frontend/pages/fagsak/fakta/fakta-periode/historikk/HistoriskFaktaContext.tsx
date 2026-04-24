@@ -55,6 +55,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
     const { gjerInaktiveFaktaKall } = useBehandlingApi();
 
     const hentFakta = (): void => {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
         setInaktiveFakta(byggHenterRessurs());
         gjerInaktiveFaktaKall(behandling.behandlingId)
             .then((respons: Ressurs<FaktaResponse[]>) => {

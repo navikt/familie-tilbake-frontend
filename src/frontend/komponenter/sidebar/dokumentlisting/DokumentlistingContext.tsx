@@ -26,6 +26,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
         }, [behandlingId, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {
+            // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
             setJournalposter(byggHenterRessurs());
             request<void, Journalpost[]>({
                 method: 'GET',
