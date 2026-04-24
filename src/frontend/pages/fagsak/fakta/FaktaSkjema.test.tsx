@@ -343,9 +343,7 @@ describe('Fakta om feilutbetaling', () => {
                 });
                 expect(bestemmelseDropdown).not.toHaveValue();
                 expect(bestemmelseDropdown).toBeInvalid();
-                expect(bestemmelseDropdown).toHaveAccessibleDescription(
-                    'Du må fylle inn en verdi'
-                );
+                expect(bestemmelseDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
             });
 
             fireEvent.change(
