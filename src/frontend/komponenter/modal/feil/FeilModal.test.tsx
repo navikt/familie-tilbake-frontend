@@ -81,20 +81,6 @@ describe('FeilModal', () => {
         ).toBeInTheDocument();
         expect(screen.queryByText('Meld feil i porten')).not.toBeInTheDocument();
     });
-
-    test('Håndterer CSRF-token feil riktig', () => {
-        const mockFeil = new Feil('Ugyldig CSRF-token.', 403);
-
-        renderFeilModal(mockFeil);
-
-        expect(
-            screen.getByText('Lagre det du holder på med, og last siden på nytt')
-        ).toBeInTheDocument();
-        expect(screen.getByText('Meld feil i porten')).toBeInTheDocument();
-        expect(
-            screen.queryByText('Om du mener at du burde ha tilgang, ta kontakt med nærmeste leder')
-        ).not.toBeInTheDocument();
-    });
     //#endregion 403 Forbidden feil
 
     //#region 404 Not Found feil

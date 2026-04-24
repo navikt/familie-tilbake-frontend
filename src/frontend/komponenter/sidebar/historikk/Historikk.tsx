@@ -24,8 +24,8 @@ export const Historikk: FC = () => {
     innslag.sort((a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime());
     return (
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
-            {innslag.map((hi, index) => (
-                <HistorikkInnslag key={`${hi.tittel}_${index}`} innslag={hi} />
+            {innslag.map(hi => (
+                <HistorikkInnslag key={`${hi.opprettetTid}_${hi.tittel}`} innslag={hi} />
             ))}
         </div>
     );
