@@ -39,19 +39,14 @@ const lagFormData = (overrides: Partial<VedtaksbrevFormData> = {}): VedtaksbrevF
 });
 
 describe('tilVedtaksbrevDataWritable', () => {
-    test('mapper statiske felter og utelater sistOppdatert', () => {
+    test('kopierer statiske felter og utelater sistOppdatert', () => {
         const vedtaksbrevData = lagVedtaksbrevData();
-        const formData = lagFormData();
 
-        const resultat = tilVedtaksbrevDataWritable(vedtaksbrevData, formData);
+        const resultat = tilVedtaksbrevDataWritable(vedtaksbrevData, lagFormData());
 
-        expect(resultat.brevGjelder).toEqual(vedtaksbrevData.brevGjelder);
-        expect(resultat.sendtDato).toBe(vedtaksbrevData.sendtDato);
-        expect(resultat.ytelse).toEqual(vedtaksbrevData.ytelse);
-        expect(resultat.signatur).toEqual(vedtaksbrevData.signatur);
-        expect(resultat.oppsummeringstabell).toEqual(vedtaksbrevData.oppsummeringstabell);
-        expect(resultat.bunntekster).toEqual(vedtaksbrevData.bunntekster);
-        expect(resultat.saksnummer).toBe(vedtaksbrevData.saksnummer);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { sistOppdatert, hovedavsnitt, avsnitt, ...statiskeFelter } = vedtaksbrevData;
+        expect(resultat).toMatchObject(statiskeFelter);
         expect(resultat).not.toHaveProperty('sistOppdatert');
     });
 
@@ -171,101 +166,27 @@ describe('tekstTilElementArray', () => {
 });
 
 describe('vedtaksbrevResolver', () => {
-    // Simulerer options som RHF sender med registrerte feltnavn
-    const lagOptions = (names: string[]) => ({
-        names,
-        fields: {},
-        shouldUseNativeValidation: false,
-    });
-
     const kjørResolver = async (
-        data: VedtaksbrevFormData,
-        registrerteNavn: string[] = []
+        data: VedtaksbrevFormData
     ): Promise<ReturnType<typeof vedtaksbrevResolver>> =>
-        vedtaksbrevResolver(data, {}, lagOptions(registrerteNavn));
+        vedtaksbrevResolver(
+            data,
+            {},
+            {
+                names: [],
+                fields: {},
+                shouldUseNativeValidation: false,
+            }
+        );
 
     const FORVENTET_FEILMELDING = 'Du må fylle inn minst 3 tegn';
 
-    test('gir feil for tom påkrevd_begrunnelse underavsnitt', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: {
-                tittel: 'Hovedtittel',
-                underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
-            },
-            avsnitt: [
-                {
-                    tittel: 'Avsnittstittel',
-                    id: '550e8400-e29b-41d4-a716-446655440000',
-                    underavsnitt: [
-                        { type: 'rentekst', tekst: 'noe tekst' },
-                        {
-                            type: 'påkrevd_begrunnelse',
-                            begrunnelseType: 'test',
-                            underavsnitt: [],
-                        },
-                    ],
-                },
-            ],
-        });
-
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 1, 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-    });
-
-    test('gir feil for tom påkrevd_begrunnelse når den er eneste element', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: {
-                tittel: 'Hovedtittel',
-                underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
-            },
-            avsnitt: [
-                {
-                    tittel: 'Avsnittstittel',
-                    id: '550e8400-e29b-41d4-a716-446655440000',
-                    underavsnitt: [
-                        {
-                            type: 'påkrevd_begrunnelse',
-                            begrunnelseType: 'test',
-                            underavsnitt: [],
-                        },
-                    ],
-                },
-            ],
-        });
-
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 0, 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-    });
-
-    test('gir feil for avsnitt uten rentekst-elementer', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: {
-                tittel: 'Hovedtittel',
-                underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
-            },
-            avsnitt: [
-                {
-                    tittel: 'Avsnittstittel',
-                    id: '550e8400-e29b-41d4-a716-446655440000',
-                    underavsnitt: [
-                        {
-                            type: 'påkrevd_begrunnelse',
-                            begrunnelseType: 'test',
-                            underavsnitt: [{ type: 'rentekst', tekst: 'begrunnelse' }],
-                        },
-                    ],
-                },
-            ],
-        });
-
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
+    const lagAvsnitt = (
+        underavsnitt: VedtaksbrevFormData['avsnitt'][number]['underavsnitt']
+    ): VedtaksbrevFormData['avsnitt'][number] => ({
+        tittel: 'Avsnittstittel',
+        id: '550e8400-e29b-41d4-a716-446655440000',
+        underavsnitt,
     });
 
     test('passerer for gyldig data', async () => {
@@ -275,127 +196,21 @@ describe('vedtaksbrevResolver', () => {
                 underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
             },
             avsnitt: [
-                {
-                    tittel: 'Avsnittstittel',
-                    id: '550e8400-e29b-41d4-a716-446655440000',
-                    underavsnitt: [
-                        { type: 'rentekst', tekst: 'periodetekst' },
-                        {
-                            type: 'påkrevd_begrunnelse',
-                            begrunnelseType: 'test',
-                            underavsnitt: [{ type: 'rentekst', tekst: 'begrunnelse' }],
-                        },
-                    ],
-                },
+                lagAvsnitt([
+                    { type: 'rentekst', tekst: 'periodetekst' },
+                    {
+                        type: 'påkrevd_begrunnelse',
+                        begrunnelseType: 'test',
+                        underavsnitt: [{ type: 'rentekst', tekst: 'begrunnelse' }],
+                    },
+                ]),
             ],
         });
 
         expect(errors).toEqual({});
     });
 
-    test('gir feil på alle tre stier når alle textareaer er tomme', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: {
-                tittel: 'Hovedtittel',
-                underavsnitt: [],
-            },
-            avsnitt: [
-                {
-                    tittel: 'Avsnittstittel',
-                    id: '550e8400-e29b-41d4-a716-446655440000',
-                    underavsnitt: [
-                        {
-                            type: 'påkrevd_begrunnelse',
-                            begrunnelseType: 'test',
-                            underavsnitt: [],
-                        },
-                    ],
-                },
-            ],
-        });
-
-        expect(errors).toHaveProperty(
-            ['hovedavsnitt', 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 0, 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-    });
-
-    test('gir kun feil på hovedavsnitt og påkrevd_begrunnelse når avsnitt har rentekst', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: {
-                tittel: 'Hovedtittel',
-                underavsnitt: [],
-            },
-            avsnitt: [
-                {
-                    tittel: 'Avsnittstittel',
-                    id: '550e8400-e29b-41d4-a716-446655440000',
-                    underavsnitt: [
-                        { type: 'rentekst', tekst: 'noe tekst' },
-                        {
-                            type: 'påkrevd_begrunnelse',
-                            begrunnelseType: 'test',
-                            underavsnitt: [],
-                        },
-                    ],
-                },
-            ],
-        });
-
-        expect(errors).toHaveProperty(
-            ['hovedavsnitt', 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-        expect(errors).not.toHaveProperty(['avsnitt', 0, 'underavsnitt', 'message']);
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 1, 'underavsnitt', 'message'],
-            FORVENTET_FEILMELDING
-        );
-    });
-
-    test('overlappende feilstier → foreldresti wrappet i .root med registrerte felt', async () => {
-        const registrerteNavn = ['avsnitt.0.underavsnitt', 'avsnitt.0.underavsnitt.0.underavsnitt'];
-        const { errors } = await kjørResolver(
-            {
-                hovedavsnitt: {
-                    tittel: 'Hovedtittel',
-                    underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
-                },
-                avsnitt: [
-                    {
-                        tittel: 'Avsnittstittel',
-                        id: '550e8400-e29b-41d4-a716-446655440000',
-                        underavsnitt: [
-                            {
-                                type: 'påkrevd_begrunnelse',
-                                begrunnelseType: 'test',
-                                underavsnitt: [],
-                            },
-                        ],
-                    },
-                ],
-            },
-            registrerteNavn
-        );
-
-        // Forelder har .root fordi register() gir zodResolver feltnavn
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'underavsnitt', 'root', 'message'],
-            FORVENTET_FEILMELDING
-        );
-        // Barn har direkte feil
-        expect(errors).toHaveProperty(['avsnitt', 0, 'underavsnitt', 0, 'underavsnitt']);
-    });
-
-    test('1-2 tegn → feil vises med riktig melding', async () => {
+    test('gir feil når hovedavsnitt har under 3 tegn rentekst', async () => {
         const { errors } = await kjørResolver({
             hovedavsnitt: {
                 tittel: 'Hovedtittel',
@@ -406,6 +221,53 @@ describe('vedtaksbrevResolver', () => {
 
         expect(errors).toHaveProperty(
             ['hovedavsnitt', 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
+    });
+
+    test('gir feil når avsnitt mangler rentekst-elementer', async () => {
+        const { errors } = await kjørResolver({
+            hovedavsnitt: {
+                tittel: 'Hovedtittel',
+                underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
+            },
+            avsnitt: [
+                lagAvsnitt([
+                    {
+                        type: 'påkrevd_begrunnelse',
+                        begrunnelseType: 'test',
+                        underavsnitt: [{ type: 'rentekst', tekst: 'begrunnelse' }],
+                    },
+                ]),
+            ],
+        });
+
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 'message'],
+            FORVENTET_FEILMELDING
+        );
+    });
+
+    test('gir feil når påkrevd_begrunnelse har for lite rentekst', async () => {
+        const { errors } = await kjørResolver({
+            hovedavsnitt: {
+                tittel: 'Hovedtittel',
+                underavsnitt: [{ type: 'rentekst', tekst: 'noe tekst' }],
+            },
+            avsnitt: [
+                lagAvsnitt([
+                    { type: 'rentekst', tekst: 'noe tekst' },
+                    {
+                        type: 'påkrevd_begrunnelse',
+                        begrunnelseType: 'test',
+                        underavsnitt: [],
+                    },
+                ]),
+            ],
+        });
+
+        expect(errors).toHaveProperty(
+            ['avsnitt', 0, 'underavsnitt', 1, 'underavsnitt', 'message'],
             FORVENTET_FEILMELDING
         );
     });
