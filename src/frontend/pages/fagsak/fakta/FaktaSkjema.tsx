@@ -318,13 +318,13 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
                 {formatterDatostring(periodeInfo.fom)}–{formatterDatostring(periodeInfo.tom)}
             </Table.DataCell>
             <Table.DataCell className={erSiste ? 'border-b-0' : ''}>
-                {periode.rettsligGrunnlag.map((rettsligGrunnlag, index) => (
+                {periode.rettsligGrunnlag.map((_, index) => (
                     <Select
                         label="Velg bestemmelse"
                         hideLabel
                         size="small"
                         readOnly={behandlingILesemodus}
-                        key={rettsligGrunnlag.bestemmelse}
+                        key={crypto.randomUUID()}
                         error={
                             formState.errors.perioder
                                 ?.at?.(periodeIndex)

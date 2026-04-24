@@ -36,22 +36,22 @@ export const BrevmottakerListe: FC = () => {
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse)
                     .map(mottaker => (
-                        <li key={mottaker.personIdent}>{mottaker.navn} | Utenlandsk adresse</li>
+                        <li key={crypto.randomUUID()}>{mottaker.navn} | Utenlandsk adresse</li>
                     ))}
             {harManuellDødsboadresse &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.Dødsbo)
-                    .map(mottaker => <li key={mottaker.personIdent}>{mottaker.navn} | Dødsbo</li>)}
+                    .map(mottaker => <li key={crypto.randomUUID()}>{mottaker.navn} | Dødsbo</li>)}
             {harFullmektig &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.Fullmektig)
                     .map(mottaker => (
-                        <li key={mottaker.personIdent}>{mottaker.navn} | Fullmektig</li>
+                        <li key={crypto.randomUUID()}>{mottaker.navn} | Fullmektig</li>
                     ))}
             {harVerge &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.Verge)
-                    .map(mottaker => <li key={mottaker.personIdent}>{mottaker.navn} | Verge</li>)}
+                    .map(mottaker => <li key={crypto.randomUUID()}>{mottaker.navn} | Verge</li>)}
         </ul>
     );
 };
