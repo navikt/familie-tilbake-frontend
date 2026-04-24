@@ -94,7 +94,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         setErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
         setKanIlleggeRenter(kanIleggeRenter);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -129,7 +129,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             );
             setBehandletPerioder(behandletPerioder);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentVilkårsvurdering = (): void => {
