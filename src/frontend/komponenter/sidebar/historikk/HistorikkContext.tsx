@@ -26,7 +26,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
         if (valgtMenyside === Menysider.Historikk) {
             hentHistorikkinnslag();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling, valgtMenyside]);
 
     const hentHistorikkinnslag = (): void => {

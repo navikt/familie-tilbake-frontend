@@ -23,7 +23,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
 
     useEffect(() => {
         hentFakta();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     const setInaktivFakta = (inaktivFakta?: FaktaResponse): void => {

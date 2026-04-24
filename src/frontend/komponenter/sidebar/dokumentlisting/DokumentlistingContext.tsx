@@ -22,7 +22,7 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
             if (valgtMenyside === Menysider.Dokumenter) {
                 hentDokumentlisting();
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
         }, [behandlingId, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {

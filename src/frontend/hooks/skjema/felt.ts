@@ -1,9 +1,14 @@
-/* eslint-disable @eslint-react/set-state-in-effect, react-hooks/set-state-in-effect --
+/* eslint-disable @eslint-react/set-state-in-effect, @eslint-react/exhaustive-deps, react-hooks/exhaustive-deps --
  * useFelt er en generisk skjemahook hvor feltstate og synlighet (`erSynlig`) synkroniseres
  * mot avhengighetene via en useEffect. Å fjerne disse setState-kallene krever en større
  * refaktor av skjemaløsningen — typisk migrering til react-hook-form + zod, som allerede
  * er valgt retning i prosjektet. Inntil videre må hooken beholdes som den er for å unngå
  * å bryte alle skjemaer som bruker den.
+ *
+ * TODO: Exhaustive-deps-reglene er også skrudd av her fordi useCallback/useMemo-kallene
+ * bevisst bruker et subsett av avhengighetene for å unngå at memoiseringen blir meningsløs
+ * (flere indre funksjoner er ikke selv memoisert). Dette løses ved migrering til
+ * react-hook-form. Se også på om useEffect-bruken her er en bug eller tiltenkt funksjonalitet.
  */
 import type {
     Felt,
@@ -109,18 +114,15 @@ export const useFelt = <Verdi = string>({
         } else {
             validerOgSettFelt();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [...hentAvhengighetArray()]);
 
     const onChange = useCallback(
-        // tslint:disable-next-line:no-shadowed-variable
         (verdi: ChangeEvent | Verdi) => {
             const normalisertVerdi = isChangeEvent(verdi) ? verdi.target.value : verdi;
 
             validerOgSettFelt(normalisertVerdi as Verdi);
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, setFeltState]
+        [validerOgSettFelt]
     );
 
     const hentNavInputProps = useCallback(
@@ -131,8 +133,7 @@ export const useFelt = <Verdi = string>({
             onChange,
             value: feltState.verdi,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, setFeltState]
+        [validerOgSettFelt]
     );
 
     const hentNavBaseSkjemaProps = useCallback(
@@ -142,8 +143,7 @@ export const useFelt = <Verdi = string>({
             id,
             value: feltState.verdi,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, setFeltState]
+        [validerOgSettFelt]
     );
 
     return useMemo(
@@ -157,7 +157,6 @@ export const useFelt = <Verdi = string>({
             onChange,
             validerOgSettFelt,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [feltState, hentNavInputProps, validerOgSettFelt, nullstill, onChange]
     );
 };
