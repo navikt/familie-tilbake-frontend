@@ -172,8 +172,11 @@ describe('tekstTilElementArray', () => {
 
 describe('vedtaksbrevResolver', () => {
     // Simulerer options som RHF sender med registrerte feltnavn
-    const lagOptions = (names: string[]): never =>
-        ({ names, fields: {}, shouldUseNativeValidation: false }) as never;
+    const lagOptions = (names: string[]) => ({
+        names,
+        fields: {},
+        shouldUseNativeValidation: false,
+    });
 
     const kjørResolver = async (
         data: VedtaksbrevFormData,
