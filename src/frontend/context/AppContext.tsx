@@ -4,7 +4,7 @@ import type { Ressurs } from '~/typer/ressurs';
 import type { Saksbehandler } from '~/typer/saksbehandler';
 
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { HttpProvider, useHttp } from '~/api/http/HttpProvider';
 
@@ -31,19 +31,10 @@ type AuthProviderExports = {
 const [AuthProvider, useAuth] = createUseContext(
     ({ autentisertSaksbehandler }: AppProps): AuthProviderExports => {
         const [autentisert, setAutentisert] = useState(true);
-        const [innloggetSaksbehandler, setInnloggetSaksbehandler] =
-            useState(autentisertSaksbehandler);
-
-        useEffect(() => {
-            if (autentisertSaksbehandler) {
-                setAutentisert(true);
-                setInnloggetSaksbehandler(autentisertSaksbehandler);
-            }
-        }, [autentisertSaksbehandler]);
 
         return {
             autentisert,
-            innloggetSaksbehandler,
+            innloggetSaksbehandler: autentisertSaksbehandler,
             settAutentisert: setAutentisert,
         };
     }

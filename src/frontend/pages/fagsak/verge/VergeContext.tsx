@@ -1,3 +1,9 @@
+/* eslint-disable @eslint-react/set-state-in-effect --
+ * useEffect synkroniserer lokal state fra BehandlingState og utløser henting av verge
+ * via fetch-pattern. En ordentlig løsning krever migrering av vergehentingen til
+ * TanStack Query (useQuery), samt avledning av stegErBehandlet/erAutoutført direkte i
+ * render (uten useState + useEffect).
+ */
 import type { VergeDto, VergeStegPayload } from '~/typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';

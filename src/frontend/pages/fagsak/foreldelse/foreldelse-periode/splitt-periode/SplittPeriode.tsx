@@ -75,11 +75,13 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
                             erSplittet: true,
                         },
                     ];
+                    // eslint-disable-next-line @eslint-react/set-state-in-effect -- False positive: kalles i en bruker-callback via useDelOppPeriode, ikke i en useEffect. Ville bli løst ved migrering til react-hook-form.
                     setSplittetPerioder(nyePerioder);
                     setTidslinjeRader([
                         [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
                     ]);
                 } else {
+                    // eslint-disable-next-line @eslint-react/set-state-in-effect -- Se kommentar over.
                     setSplittetPerioder([periode]);
                     setSplittDato(periode.periode.tom);
                 }

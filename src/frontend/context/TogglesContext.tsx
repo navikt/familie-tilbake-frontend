@@ -36,6 +36,7 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
                 }
             })
             .catch(() => {
+                // eslint-disable-next-line @eslint-react/set-state-in-effect -- False positive: setState skjer i .catch og er derfor asynkront. Bør uansett migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
                 setFeilmelding('Kunne ikke hente toggles');
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
