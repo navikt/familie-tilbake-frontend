@@ -50,10 +50,13 @@ const Avsnitt: FC<{
 }> = ({ avsnitt, avsnittIndex }) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
+        register,
         setValue,
+        trigger,
         formState: { errors, isSubmitted },
     } = useFormContext<VedtaksbrevFormData>();
     const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
+    const { ref } = register(name);
     const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
     const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
 
@@ -65,6 +68,7 @@ const Avsnitt: FC<{
     return (
         <>
             <Textarea
+                ref={ref}
                 name={name}
                 label={avsnitt.tittel}
                 description={avsnitt.forklaring}
@@ -74,10 +78,8 @@ const Avsnitt: FC<{
                     setLocalText(e.target.value);
                     const nyeRentekst = tekstTilElementArray(e.target.value);
                     const andreElementer = elementValue.filter(({ type }) => type !== 'rentekst');
-                    setValue(name, [...nyeRentekst, ...andreElementer], {
-                        shouldDirty: true,
-                        shouldValidate: isSubmitted,
-                    });
+                    setValue(name, [...nyeRentekst, ...andreElementer], { shouldDirty: true });
+                    if (isSubmitted) void trigger();
                 }}
                 size="small"
                 maxLength={3000}
@@ -113,6 +115,7 @@ const ElementTextarea: FC<
     const {
         register,
         setValue,
+        trigger,
         formState: { errors, isSubmitted },
     } = useFormContext<VedtaksbrevFormData>();
     const { ref } = register(name);
@@ -128,10 +131,8 @@ const ElementTextarea: FC<
             error={hentFeilmelding(errors, name)}
             onChange={e => {
                 setLocalText(e.target.value);
-                setValue(name, tekstTilElementArray(e.target.value), {
-                    shouldDirty: true,
-                    shouldValidate: isSubmitted,
-                });
+                setValue(name, tekstTilElementArray(e.target.value), { shouldDirty: true });
+                if (isSubmitted) void trigger();
             }}
             size="small"
             maxLength={3000}
