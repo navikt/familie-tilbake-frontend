@@ -1,5 +1,6 @@
 import type { UserEvent } from '@testing-library/user-event';
 import type { ReactElement, ReactNode } from 'react';
+import type { BehandlingDto } from '~/generated';
 import type { VilkårsvurderingHook } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -10,6 +11,7 @@ import { vi } from 'vitest';
 import { FagsakContext } from '~/context/FagsakContext';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
 import { lagVilkårsvurderingPeriodeSkjemaData } from '~/testdata/vilkårsvurderingFactory';
 import { createTestQueryClient } from '~/testutils/queryTestUtils';
@@ -38,12 +40,18 @@ vi.mock('../VilkårsvurderingContext', () => {
 
 const periode = lagVilkårsvurderingPeriodeSkjemaData();
 
-const TestWrapper = ({ children }: { children: ReactNode }): ReactElement => {
+const TestWrapper = ({
+    children,
+    behandling,
+}: {
+    children: ReactNode;
+    behandling?: BehandlingDto;
+}): ReactElement => {
     const queryClient = createTestQueryClient();
     return (
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
-                <TestBehandlingProvider>{children}</TestBehandlingProvider>
+                <TestBehandlingProvider behandling={behandling}>{children}</TestBehandlingProvider>
             </FagsakContext>
         </QueryClientProvider>
     );
@@ -1371,6 +1379,101 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByTestId('annetBegrunnelse')).toHaveValue('Dette er en annen begrunnelse');
         expect(getByTestId('harGrunnerTilReduksjon_Ja')).toBeChecked();
         expect(getByTestId('andelSomTilbakekrevesManuell')).toHaveValue('33');
+    });
+
+    test('Viser særlige grunner og for over 4 rettsgebyr alternativ - uaktsomt', async () => {
+        const behandling = lagBehandling({ erNyModell: true });
+        const { getByTestId, getByText } = render(
+            <TestWrapper behandling={behandling}>
+                <VilkårsvurderingPeriodeSkjema
+                    periode={lagVilkårsvurderingPeriodeSkjemaData({
+                        begrunnelse: 'Gitt mangelfulle opplysninger',
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat:
+                                Vilkårsresultat.MangelfulleOpplysningerFraBruker,
+                            aktsomhet: {
+                                begrunnelse: 'Vurdert aktsomhet til uaktsomt',
+                                aktsomhet: Aktsomhet.Uaktsomt,
+                                unnlates4Rettsgebyr: SkalUnnlates.Over4Rettsgebyr,
+                                særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                                særligeGrunner: [
+                                    { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
+                                    { særligGrunn: SærligeGrunner.StørrelseBeløp },
+                                    {
+                                        særligGrunn: SærligeGrunner.Annet,
+                                        begrunnelse: 'Dette er en annen begrunnelse',
+                                    },
+                                ],
+                                særligeGrunnerTilReduksjon: true,
+                                andelTilbakekreves: 33,
+                            },
+                        },
+                    })}
+                    perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={vi.fn()}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                />
+            </TestWrapper>
+        );
+        expect(
+            getByText(
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
+        ).toBeInTheDocument();
+        expect(
+            getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Over4Rettsgebyr')
+        ).toBeChecked();
+        expect(
+            getByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
+        ).toBeInTheDocument();
+    });
+
+    test('Viser ikke over 4 rettsgebyr alternativ for gammel modell', async () => {
+        const behandling = lagBehandling({ erNyModell: false });
+        const { queryByTestId, getByText } = render(
+            <TestWrapper behandling={behandling}>
+                <VilkårsvurderingPeriodeSkjema
+                    periode={lagVilkårsvurderingPeriodeSkjemaData({
+                        begrunnelse: 'Gitt mangelfulle opplysninger',
+                        vilkårsvurderingsresultatInfo: {
+                            vilkårsvurderingsresultat:
+                                Vilkårsresultat.MangelfulleOpplysningerFraBruker,
+                            aktsomhet: {
+                                begrunnelse: 'Vurdert aktsomhet til uaktsomt',
+                                aktsomhet: Aktsomhet.Uaktsomt,
+                                unnlates4Rettsgebyr: SkalUnnlates.Unnlates,
+                                særligeGrunnerBegrunnelse: 'Det finnes særlige grunner',
+                                særligeGrunner: [
+                                    { særligGrunn: SærligeGrunner.GradAvUaktsomhet },
+                                    { særligGrunn: SærligeGrunner.StørrelseBeløp },
+                                    {
+                                        særligGrunn: SærligeGrunner.Annet,
+                                        begrunnelse: 'Dette er en annen begrunnelse',
+                                    },
+                                ],
+                                særligeGrunnerTilReduksjon: true,
+                                andelTilbakekreves: 33,
+                            },
+                        },
+                    })}
+                    perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={vi.fn()}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={true}
+                />
+            </TestWrapper>
+        );
+        expect(
+            getByText(
+                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
+            )
+        ).toBeInTheDocument();
+        expect(
+            queryByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Over4Rettsgebyr')
+        ).not.toBeInTheDocument();
     });
 
     test('Validering vises når man forsøker å gå videre uten å fylle inn påkrevde felter', async () => {
