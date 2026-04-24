@@ -41,16 +41,23 @@ export const FeilModal: FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) =>
                             <h3 className="font-semibold text-base">Hva kan du gjøre?</h3>
                             <Box marginBlock="space-12" asChild>
                                 <List data-aksel-migrated-v8 as="ul" size="small">
-                                    {feil.status !== 403 && (
-                                        <List.Item>
-                                            <Link
-                                                href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
-                                                target="_blank"
-                                            >
-                                                Meld feil i porten
-                                            </Link>
-                                        </List.Item>
-                                    )}
+                                    <>
+                                        {feilObjekt.hvaKanGjøres.map(handling => (
+                                            <List.Item key={crypto.randomUUID()}>
+                                                {handling}
+                                            </List.Item>
+                                        ))}
+                                        {feil.status !== 403 && (
+                                            <List.Item>
+                                                <Link
+                                                    href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                                                    target="_blank"
+                                                >
+                                                    Meld feil i porten
+                                                </Link>
+                                            </List.Item>
+                                        )}
+                                    </>
                                 </List>
                             </Box>
                         </VStack>

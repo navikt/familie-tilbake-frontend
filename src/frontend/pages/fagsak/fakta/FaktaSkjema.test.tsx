@@ -337,12 +337,16 @@ describe('Fakta om feilutbetaling', () => {
             fireEvent.click(
                 await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
             );
-            const bestemmelseDropdown = await findByRole('combobox', {
-                name: 'Velg bestemmelse',
+            await waitFor(async () => {
+                const bestemmelseDropdown = await findByRole('combobox', {
+                    name: 'Velg bestemmelse',
+                });
+                expect(bestemmelseDropdown).not.toHaveValue();
+                expect(bestemmelseDropdown).toBeInvalid();
+                expect(bestemmelseDropdown).toHaveAccessibleDescription(
+                    'Du må fylle inn en verdi'
+                );
             });
-            expect(bestemmelseDropdown).not.toHaveValue();
-            expect(bestemmelseDropdown).toBeInvalid();
-            expect(bestemmelseDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
 
             fireEvent.change(
                 await findByRole('combobox', {
@@ -354,10 +358,12 @@ describe('Fakta om feilutbetaling', () => {
             fireEvent.click(
                 await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
             );
-            const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
-            expect(grunnlagDropdown).not.toHaveValue();
-            expect(grunnlagDropdown).toBeInvalid();
-            expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
+            await waitFor(async () => {
+                const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
+                expect(grunnlagDropdown).not.toHaveValue();
+                expect(grunnlagDropdown).toBeInvalid();
+                expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
+            });
         });
 
         test('dato felt valideres ved unblur', async () => {
