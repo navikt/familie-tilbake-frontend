@@ -13,7 +13,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect, type FC, type ReactNode } from 'react';
+import { useEffect, useEffectEvent, type FC, type ReactNode } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema/typer';
@@ -38,16 +38,21 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
     const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
     const erLesevisning = behandlingILesemodus || !!erAutoutført;
 
-    useEffect(() => {
-        skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
-        skjema.felter.foreldelsesvurderingstype.onChange(periode?.foreldelsesvurderingstype || '');
+    const oppdaterSkjemaFraPeriode = useEffectEvent((nyPeriode: ForeldelsePeriodeSkjemeData) => {
+        skjema.felter.begrunnelse.onChange(nyPeriode?.begrunnelse || '');
+        skjema.felter.foreldelsesvurderingstype.onChange(
+            nyPeriode?.foreldelsesvurderingstype || ''
+        );
         skjema.felter.foreldelsesfrist.onChange(
-            periode?.foreldelsesfrist ? isoStringTilDate(periode.foreldelsesfrist) : undefined
+            nyPeriode?.foreldelsesfrist ? isoStringTilDate(nyPeriode.foreldelsesfrist) : undefined
         );
         skjema.felter.oppdagelsesdato.onChange(
-            periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
+            nyPeriode?.oppdagelsesdato ? isoStringTilDate(nyPeriode.oppdagelsesdato) : undefined
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterSkjemaFraPeriode(periode);
     }, [periode]);
 
     const erForeldet =

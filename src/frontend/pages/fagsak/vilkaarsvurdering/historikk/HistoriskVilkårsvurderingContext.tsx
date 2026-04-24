@@ -2,7 +2,7 @@ import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurder
 import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -21,9 +21,12 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
 
     const [skjemaData, setSkjemaData] = useState<VilkårsvurderingPeriodeSkjemaData[]>([]);
 
-    useEffect(() => {
+    const hentVedBehandlingEndring = useEffectEvent(() => {
         hentVilkårsvurdering();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        hentVedBehandlingEndring();
     }, [behandling]);
 
     const setInaktivVilkårsvurdering = (

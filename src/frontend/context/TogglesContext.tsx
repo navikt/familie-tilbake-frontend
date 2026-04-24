@@ -1,7 +1,7 @@
 import type { Toggles } from './toggles';
 
 import createUseContext from 'constate';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
@@ -18,7 +18,7 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
     const { request } = useHttp();
     TogglesProvider.displayName = 'TOGGLES_PROVIDER';
 
-    const fetchToggles = useCallback(() => {
+    const fetchToggles = useEffectEvent(() => {
         const hentToggles = (): Promise<Ressurs<Toggles>> => {
             return request<void, Toggles>({
                 url: `/familie-tilbake/api/featuretoggle`,
@@ -38,12 +38,11 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
             .catch(() => {
                 setFeilmelding('Kunne ikke hente toggles');
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    });
 
     useEffect(() => {
         fetchToggles();
-    }, [fetchToggles]);
+    }, []);
 
     return { toggles, feilmelding };
 });

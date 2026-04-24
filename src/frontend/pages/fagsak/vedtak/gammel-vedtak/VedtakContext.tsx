@@ -9,7 +9,7 @@ import type { Beregningsresultat, VedtaksbrevAvsnitt } from '~/typer/vedtakTyper
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useDokumentApi } from '~/api/dokument';
@@ -92,10 +92,13 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         useBehandlingApi();
     const { lagreUtkastVedtaksbrev } = useDokumentApi();
 
-    useEffect(() => {
+    const oppdaterVedBehandlingEndring = useEffectEvent(() => {
         hentBeregningsresultat();
         hentVedtaksbrevtekster();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterVedBehandlingEndring();
     }, [behandling]);
 
     useEffect(() => {

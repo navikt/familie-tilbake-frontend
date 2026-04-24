@@ -4,7 +4,7 @@ import type { FC } from 'react';
 import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
 
 import { Detail, Link } from '@navikt/ds-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useState } from 'react';
 
 import splitPeriodImageUrl from '~/images/splitt.svg';
 import splitPeriodImageHoverUrl from '~/images/splitt_hover.svg';
@@ -114,11 +114,14 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
         }
     };
 
-    useEffect(() => {
-        if (periode.periode.fom) {
-            onChangeDato(periode.periode.fom);
+    const initierSplittDato = useEffectEvent((fom: string) => {
+        if (fom) {
+            onChangeDato(fom);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        initierSplittDato(periode.periode.fom);
     }, [periode.periode.fom]);
 
     return periode && tidslinjeRader ? (

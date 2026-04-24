@@ -6,7 +6,7 @@ import type { SynligSteg } from '~/utils/sider';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useEffectEvent } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '~/api/behandling';
@@ -57,11 +57,14 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const [feilmelding, setFeilmelding] = useState<string>('');
     const [laster, setLaster] = useState(false);
 
-    useEffect(() => {
+    const oppdaterVedBehandlingEndring = useEffectEvent((endretBehandling: typeof behandling) => {
         setStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
-        setErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
+        setErLesevisning(!endretBehandling.kanEndres || erBehandlingReturnertFraBeslutter());
         hentTotrinnkontroll();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterVedBehandlingEndring(behandling);
     }, [behandling]);
 
     useEffect(() => {

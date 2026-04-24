@@ -1,7 +1,7 @@
 import type { Journalpost } from '~/typer/journalføring';
 
 import createUseContext from 'constate';
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -18,11 +18,14 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
         const [journalposter, setJournalposter] = useState<Ressurs<Journalpost[]>>();
         const { request } = useHttp();
 
-        useEffect(() => {
-            if (valgtMenyside === Menysider.Dokumenter) {
+        const hentDokumenterVedEndring = useEffectEvent((aktivMenyside: Menysider | null) => {
+            if (aktivMenyside === Menysider.Dokumenter) {
                 hentDokumentlisting();
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+        });
+
+        useEffect(() => {
+            hentDokumenterVedEndring(valgtMenyside);
         }, [behandlingId, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { Button } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 
@@ -16,11 +16,14 @@ export const ForhåndsvisVedtaksbrev: FC = () => {
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisVedtaksbrev();
 
-    useEffect(() => {
-        if (visModal) {
+    const onVisModalEndret = useEffectEvent((skalVises: boolean) => {
+        if (skalVises) {
             hentVedtaksbrev();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        onVisModalEndret(visModal);
     }, [visModal]);
 
     return (

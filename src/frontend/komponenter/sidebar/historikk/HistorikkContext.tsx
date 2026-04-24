@@ -2,7 +2,7 @@ import type { HistorikkInnslag } from '~/typer/historikk';
 import type { SynligSteg } from '~/utils/sider';
 
 import createUseContext from 'constate';
-import { useState, useEffect } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useHttp } from '~/api/http/HttpProvider';
@@ -22,11 +22,14 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
     const navigate = useNavigate();
     const { request } = useHttp();
 
-    useEffect(() => {
-        if (valgtMenyside === Menysider.Historikk) {
+    const hentHistorikkVedEndring = useEffectEvent((aktivMenyside: Menysider) => {
+        if (aktivMenyside === Menysider.Historikk) {
             hentHistorikkinnslag();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        hentHistorikkVedEndring(valgtMenyside);
     }, [behandling, valgtMenyside]);
 
     const hentHistorikkinnslag = (): void => {

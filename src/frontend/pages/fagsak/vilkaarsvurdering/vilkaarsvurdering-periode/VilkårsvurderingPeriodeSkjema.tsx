@@ -18,7 +18,7 @@ import {
 } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -175,11 +175,20 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         }
     }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
 
+    const oppdaterSkjemaFraPeriode = useEffectEvent(
+        (
+            nyPeriode: VilkårsvurderingPeriodeSkjemaData,
+            nyErTotalbeløpUnder4Rettsgebyr: boolean,
+            nyKanIlleggeRenter: boolean
+        ) => {
+            skjema.felter.feilutbetaltBeløpPeriode.onChange(nyPeriode.feilutbetaltBeløp);
+            skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(nyErTotalbeløpUnder4Rettsgebyr);
+            settSkjemadataFraPeriode(skjema, nyPeriode, nyKanIlleggeRenter);
+        }
+    );
+
     useEffect(() => {
-        skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
-        skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
-        settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        oppdaterSkjemaFraPeriode(periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter);
     }, [periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter]);
 
     const handleForlatUtenÅLagre = (): void => {

@@ -3,7 +3,7 @@ import type { ChangeEvent, FC } from 'react';
 import type { HendelseType, HendelseUndertype } from '~/kodeverk';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useEffectEvent, useMemo } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '~/kodeverk';
@@ -27,29 +27,33 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
         useFakta();
     const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
 
-    useEffect(() => {
-        const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelseTyper?.length === 1;
+    const autovelgHendelsestype = useEffectEvent((hendelsestyper: HendelseType[] | undefined) => {
+        const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelsestyper?.length === 1;
         if (skalAutoVelgeHendelsestype) {
-            oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
+            oppdaterÅrsakPåPeriode(periode, hendelsestyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        autovelgHendelsestype(hendelseTyper);
     }, [hendelseTyper]);
 
     const hendelseUnderTyper = useMemo(() => {
         return periode.hendelsestype ? hentHendelseUndertyper(periode.hendelsestype) : [];
     }, [periode.hendelsestype]);
 
-    useEffect(() => {
+    const autovelgUndertype = useEffectEvent((undertyper: HendelseUndertype[]) => {
         const skalAutoVelgeUnderType =
-            !periode.hendelsesundertype &&
-            hendelseUnderTyper.length === 1 &&
-            !!periode.hendelsestype;
+            !periode.hendelsesundertype && undertyper.length === 1 && !!periode.hendelsestype;
         if (skalAutoVelgeUnderType) {
-            oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
+            oppdaterUnderårsakPåPeriode(periode, undertyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        autovelgUndertype(hendelseUnderTyper);
     }, [hendelseUnderTyper]);
 
     const onChangeÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {

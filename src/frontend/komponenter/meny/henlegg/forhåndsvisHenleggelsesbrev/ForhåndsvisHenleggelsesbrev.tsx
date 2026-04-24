@@ -3,7 +3,7 @@ import type { HenleggelseSkjemaDefinisjon } from '~/komponenter/meny/henlegg/hen
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { type Skjema } from '~/hooks/skjema';
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
@@ -24,11 +24,14 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisHenleggelsesbrev({ skjema });
 
-    useEffect(() => {
-        if (visModal) {
+    const onVisModalEndret = useEffectEvent((skalVises: boolean) => {
+        if (skalVises) {
             hentBrev();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        onVisModalEndret(visModal);
     }, [visModal]);
 
     return kanForhåndsvise ? (

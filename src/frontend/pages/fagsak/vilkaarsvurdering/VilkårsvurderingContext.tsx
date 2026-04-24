@@ -7,7 +7,7 @@ import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { Feil } from '~/api/feil';
@@ -84,11 +84,14 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
     const navigerTilForrige = useStegNavigering('FORELDELSE');
 
-    useEffect(() => {
+    const oppdaterVedBehandlingEndring = useEffectEvent(() => {
         setErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
         setKanIlleggeRenter(kanIleggeRenter);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterVedBehandlingEndring();
     }, [behandling]);
 
     useEffect(() => {
@@ -112,7 +115,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         }
     }, [vilkårsvurdering]);
 
-    useEffect(() => {
+    const oppdaterBehandletPerioder = useEffectEvent(() => {
         if (skjemaData) {
             const behandletPerioder = skjemaData.filter(
                 periode =>
@@ -123,7 +126,10 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             );
             setBehandletPerioder(behandletPerioder);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterBehandletPerioder();
     }, [valgtPeriode]);
 
     const hentVilkårsvurdering = (): void => {

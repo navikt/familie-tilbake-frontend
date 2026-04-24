@@ -11,7 +11,7 @@ import {
     LocalAlert,
     VStack,
 } from '@navikt/ds-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -77,15 +77,15 @@ export const VedtakContainer: FC = () => {
         hentVedtaksbrevtekster();
     };
 
-    useEffect(() => {
-        const fetch = async (): Promise<void> => {
-            await hentErPerioderLike();
+    const hentPerioderStatus = useEffectEvent(async (): Promise<boolean> => {
+        await hentErPerioderLike();
 
-            const sammenslåttResponse = await hentErPerioderSammenslått();
-            setErPerioderSammenslått(!!sammenslåttResponse);
-        };
-        fetch();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const sammenslåttResponse = await hentErPerioderSammenslått();
+        return !!sammenslåttResponse;
+    });
+
+    useEffect(() => {
+        hentPerioderStatus().then(setErPerioderSammenslått);
     }, []);
 
     useEffect(() => {

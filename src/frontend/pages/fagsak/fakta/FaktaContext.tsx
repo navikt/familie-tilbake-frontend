@@ -5,7 +5,7 @@ import type { FaktaResponse, VurderingAvBrukersUttalelse } from '~/typer/tilbake
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -55,10 +55,13 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
 
-    useEffect(() => {
+    const oppdaterVedBehandlingEndring = useEffectEvent(() => {
         setStegErBehandlet(erStegBehandlet('FAKTA'));
         hentFakta();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterVedBehandlingEndring();
     }, [behandling]);
 
     useEffect(() => {

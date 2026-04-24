@@ -5,7 +5,7 @@ import type { ForeldelseResponse } from '~/typer/tilbakekrevingstyper';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -83,55 +83,66 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             : 'FAKTA'
     );
 
-    useEffect(() => {
+    const oppdaterVedBehandlingEndring = useEffectEvent(() => {
         setStegErBehandlet(erStegBehandlet('FORELDELSE'));
         const autoutført = erStegAutoutført('FORELDELSE');
         setErAutoutført(autoutført);
         if (!autoutført) {
             hentForeldelse();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterVedBehandlingEndring();
     }, [behandling]);
 
-    useEffect(() => {
-        if (foreldelse?.status === RessursStatus.Suksess) {
-            const foreldetPerioder = foreldelse.data.foreldetPerioder;
-            const sortertePerioder = sorterFeilutbetaltePerioder(foreldetPerioder);
-            const skjemaPerioder = sortertePerioder.map((fuFP, index) => {
-                const skjemaPeriode: ForeldelsePeriodeSkjemeData = {
-                    index: `idx_fpsd_${index}`,
-                    feilutbetaltBeløp: fuFP.feilutbetaltBeløp,
-                    periode: fuFP.periode,
-                    begrunnelse: fuFP.begrunnelse,
-                    foreldelsesvurderingstype: fuFP.foreldelsesvurderingstype,
-                    foreldelsesfrist: fuFP.foreldelsesfrist,
-                    oppdagelsesdato: fuFP.oppdagelsesdato,
-                };
-                return skjemaPeriode;
-            });
-            const valgtForeldelsePeriode = utledValgtPeriode(
-                skjemaPerioder,
-                behandling.status,
-                behandling.erNyModell
-            );
+    const oppdaterSkjemaFraForeldelse = useEffectEvent(
+        (nyForeldelse: Ressurs<ForeldelseResponse> | undefined) => {
+            if (nyForeldelse?.status === RessursStatus.Suksess) {
+                const foreldetPerioder = nyForeldelse.data.foreldetPerioder;
+                const sortertePerioder = sorterFeilutbetaltePerioder(foreldetPerioder);
+                const skjemaPerioder = sortertePerioder.map((periode, index) => {
+                    const skjemaPeriode: ForeldelsePeriodeSkjemeData = {
+                        index: `idx_fpsd_${index}`,
+                        feilutbetaltBeløp: periode.feilutbetaltBeløp,
+                        periode: periode.periode,
+                        begrunnelse: periode.begrunnelse,
+                        foreldelsesvurderingstype: periode.foreldelsesvurderingstype,
+                        foreldelsesfrist: periode.foreldelsesfrist,
+                        oppdagelsesdato: periode.oppdagelsesdato,
+                    };
+                    return skjemaPeriode;
+                });
+                const valgtForeldelsePeriode = utledValgtPeriode(
+                    skjemaPerioder,
+                    behandling.status,
+                    behandling.erNyModell
+                );
 
-            setSkjemaData(skjemaPerioder);
+                setSkjemaData(skjemaPerioder);
 
-            if (valgtForeldelsePeriode) {
-                setValgtPeriode(valgtForeldelsePeriode);
+                if (valgtForeldelsePeriode) {
+                    setValgtPeriode(valgtForeldelsePeriode);
+                }
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [foreldelse]);
+    );
 
     useEffect(() => {
+        oppdaterSkjemaFraForeldelse(foreldelse);
+    }, [foreldelse]);
+
+    const oppdaterAllePerioderBehandlet = useEffectEvent(() => {
         if (skjemaData) {
             const nokonUbehandlet = skjemaData.some(
                 per => !per.begrunnelse || !per.foreldelsesvurderingstype
             );
             setAllePerioderBehandlet(!nokonUbehandlet);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterAllePerioderBehandlet();
     }, [valgtPeriode]);
 
     const hentForeldelse = (): void => {

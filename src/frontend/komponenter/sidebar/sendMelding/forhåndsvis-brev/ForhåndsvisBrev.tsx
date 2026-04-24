@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { Button } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useSendMelding } from '~/komponenter/sidebar/sendMelding/SendMeldingContext';
@@ -22,11 +22,14 @@ export const ForhåndsvisBrev: FC<Props> = () => {
     } = useForhåndsvisBrev();
     const { kanSendeSkjema } = useSendMelding();
 
-    useEffect(() => {
-        if (visModal) {
+    const onVisModalEndret = useEffectEvent((skalVises: boolean) => {
+        if (skalVises) {
             hentBrev();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        onVisModalEndret(visModal);
     }, [visModal]);
 
     return (

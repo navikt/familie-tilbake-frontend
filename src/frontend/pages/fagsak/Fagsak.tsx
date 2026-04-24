@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { useLocation } from 'react-router';
 
 import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
@@ -22,21 +22,34 @@ export const FagsakContainer: FC = () => {
 
     const behandlingId = eksternBrukId ? finnBehandlingId(behandlinger, eksternBrukId) : undefined;
 
-    useEffect(() => {
-        if (eksternBrukId) {
-            setBehandlingId(eksternBrukId);
-        }
+    const oppdaterFagsakState = useEffectEvent(
+        (
+            aktivtEksternBrukId: string | undefined,
+            personIdent: string,
+            fagsakId: string,
+            aktivtFagsystem: typeof fagsystem
+        ) => {
+            if (aktivtEksternBrukId) {
+                setBehandlingId(aktivtEksternBrukId);
+            }
 
-        setPersonIdent(bruker.personIdent);
-        setEksternFagsakId(eksternFagsakId);
-        setFagsystem(fagsystem);
+            setPersonIdent(personIdent);
+            setEksternFagsakId(fagsakId);
+            setFagsystem(aktivtFagsystem);
+        }
+    );
+
+    const nullstillFagsakOgBehandlingState = useEffectEvent(() => {
+        setBehandlingId(undefined);
+        resetFagsak();
+    });
+
+    useEffect(() => {
+        oppdaterFagsakState(eksternBrukId, bruker.personIdent, eksternFagsakId, fagsystem);
 
         return (): void => {
-            setBehandlingId(undefined);
-            setPersonIdent(undefined);
-            resetFagsak();
+            nullstillFagsakOgBehandlingState();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fagsystem, eksternFagsakId, bruker.personIdent, eksternBrukId]);
 
     if (!behandlingId) {

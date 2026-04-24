@@ -2,7 +2,7 @@ import type { VergeDto, VergeStegPayload } from '~/typer/api';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useEffectEvent } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -46,14 +46,17 @@ const [VergeProvider, useVerge] = createUseContext(() => {
         useBehandlingState();
     const navigerTilNeste = useStegNavigering('FAKTA');
 
-    useEffect(() => {
-        if (behandling.harVerge) {
+    const oppdaterVedBehandlingEndring = useEffectEvent((endretBehandling: typeof behandling) => {
+        if (endretBehandling.harVerge) {
             setStegErBehandlet(erStegBehandlet('VERGE'));
             setErAutoutført(erStegAutoutført('VERGE'));
             setHenterData(true);
             hentVerge();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        oppdaterVedBehandlingEndring(behandling);
     }, [behandling]);
 
     const hentVerge = (): void => {

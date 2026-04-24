@@ -2,7 +2,7 @@ import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta'
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useBehandlingApi } from '~/api/behandling';
 import { useBehandling } from '~/context/BehandlingContext';
@@ -21,9 +21,12 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
     const [skjemaData, setSkjemaData] = useState<FaktaSkjemaData>();
     const [fakta, setFakta] = useState<FaktaResponse>();
 
-    useEffect(() => {
+    const hentVedBehandlingEndring = useEffectEvent(() => {
         hentFakta();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
+
+    useEffect(() => {
+        hentVedBehandlingEndring();
     }, [behandling]);
 
     const setInaktivFakta = (inaktivFakta?: FaktaResponse): void => {

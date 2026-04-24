@@ -52,11 +52,13 @@ export const useFelt = <Verdi = string>({
     const skalAvhengigheterVises = skalFeltetVises ? skalFeltetVises(avhengigheter) : true;
     const [erSynlig, setErSynlig] = useState(skalAvhengigheterVises);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const nullstill = (): void => {
         setFeltState(initialFeltState);
     };
 
     // tslint:disable-next-line:no-shadowed-variable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const validerOgSettFelt = (verdi: Verdi = feltState.verdi): FeltState<Verdi> => {
         const validertFelt: FeltState<Verdi> = feltState.valider(
             {
@@ -112,8 +114,7 @@ export const useFelt = <Verdi = string>({
 
             validerOgSettFelt(normalisertVerdi as Verdi);
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, setFeltState]
+        [validerOgSettFelt]
     );
 
     const hentNavInputProps = useCallback(
@@ -124,8 +125,7 @@ export const useFelt = <Verdi = string>({
             onChange,
             value: feltState.verdi,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, setFeltState]
+        [feltState.feilmelding, feltState.verdi, id, onChange]
     );
 
     const hentNavBaseSkjemaProps = useCallback(
@@ -135,8 +135,7 @@ export const useFelt = <Verdi = string>({
             id,
             value: feltState.verdi,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [validerOgSettFelt, setFeltState]
+        [feltState.feilmelding, feltState.verdi, id]
     );
 
     return useMemo(
@@ -150,7 +149,15 @@ export const useFelt = <Verdi = string>({
             onChange,
             validerOgSettFelt,
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [feltState, hentNavInputProps, validerOgSettFelt, nullstill, onChange]
+        [
+            feltState,
+            hentNavInputProps,
+            hentNavBaseSkjemaProps,
+            validerOgSettFelt,
+            nullstill,
+            onChange,
+            erSynlig,
+            id,
+        ]
     );
 };
