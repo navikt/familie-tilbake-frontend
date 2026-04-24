@@ -25,11 +25,11 @@ export const VedtakPerioder: FC<Props> = ({ perioder }) => {
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {perioder.map((per, index) => {
+                {perioder.map(per => {
                     return (
-                        <Table.Row key={index}>
+                        <Table.Row key={`${per.periode.fom}–${per.periode.tom}`}>
                             <Table.DataCell>
-                                {`${formatterDatostring(per.periode.fom)} - ${formatterDatostring(
+                                {`${formatterDatostring(per.periode.fom)}–${formatterDatostring(
                                     per.periode.tom
                                 )}`}
                             </Table.DataCell>

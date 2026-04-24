@@ -57,7 +57,7 @@ export const HistoriskFaktaVisning: FC<Props> = ({ skjemaData, fakta }) => {
                             {skjemaData.perioder.map((periode, i) => {
                                 return (
                                     <FaktaPeriodeSkjema
-                                        key={i}
+                                        key={`${periode.periode.fom}–${periode.periode.tom}`}
                                         periode={periode}
                                         hendelseTyper={[]}
                                         index={i}

@@ -35,29 +35,23 @@ export const BrevmottakerListe: FC = () => {
             {harUtenlandskAdresse &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.BrukerMedUtenlandskAdresse)
-                    .map((mottaker, index) => (
-                        <li key={`utenlandsk-adresse-${index}`}>
-                            {mottaker.navn} | Utenlandsk adresse
-                        </li>
+                    .map(mottaker => (
+                        <li key={crypto.randomUUID()}>{mottaker.navn} | Utenlandsk adresse</li>
                     ))}
             {harManuellDødsboadresse &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.Dødsbo)
-                    .map((mottaker, index) => (
-                        <li key={`doedsbo-${index}`}>{mottaker.navn} | Dødsbo</li>
-                    ))}
+                    .map(mottaker => <li key={crypto.randomUUID()}>{mottaker.navn} | Dødsbo</li>)}
             {harFullmektig &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.Fullmektig)
-                    .map((mottaker, index) => (
-                        <li key={`fullmektig-${index}`}>{mottaker.navn} | Fullmektig</li>
+                    .map(mottaker => (
+                        <li key={crypto.randomUUID()}>{mottaker.navn} | Fullmektig</li>
                     ))}
             {harVerge &&
                 brevmottakere
                     .filter(mottaker => mottaker.type === MottakerType.Verge)
-                    .map((mottaker, index) => (
-                        <li key={`verge-${index}`}>{mottaker.navn} | Verge</li>
-                    ))}
+                    .map(mottaker => <li key={crypto.randomUUID()}>{mottaker.navn} | Verge</li>)}
         </ul>
     );
 };
