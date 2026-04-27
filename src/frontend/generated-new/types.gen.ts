@@ -91,6 +91,7 @@ export type Hovedavsnitt = {
     tittel: string;
     readonly forklaring: string;
     underavsnitt: Array<RotElement>;
+    hjemler: string;
 };
 
 export type HovedavsnittUpdate = {
@@ -260,6 +261,7 @@ export type AvsnittWritable = {
 export type HovedavsnittWritable = {
     tittel: string;
     underavsnitt: Array<RotElementWritable>;
+    hjemler: string;
 };
 
 export type PakrevdBegrunnelseWritable = {

@@ -54,8 +54,8 @@ export type OppdaterBehandlendeEnhetRequest = {
 export type Datoperiode = {
     fom: string;
     tom: string;
-    tomMåned: string;
     fomMåned: string;
+    tomMåned: string;
 };
 
 export type FritekstavsnittDto = {
@@ -93,8 +93,8 @@ export type Ressurs = {
 };
 
 export type FristUtsettelseDto = {
-    nyFrist: string;
-    begrunnelse: string;
+    nyFrist?: string | null;
+    begrunnelse?: string | null;
 };
 
 export type ForhåndsvarselUnntakDto = {

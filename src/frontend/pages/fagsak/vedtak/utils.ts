@@ -35,6 +35,7 @@ export const tilVedtaksbrevDataWritable = (
         ...statiskeData,
         hovedavsnitt: {
             tittel: formData.hovedavsnitt.tittel,
+            hjemler: vedtaksbrevData.hovedavsnitt.hjemler,
             underavsnitt: formData.hovedavsnitt.underavsnitt.map(el =>
                 tilRotElementWritable(el, hovedavsnitt.underavsnitt)
             ),

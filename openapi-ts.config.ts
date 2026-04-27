@@ -29,16 +29,14 @@ export default defineConfig([
         output: {
             path: 'src/frontend/generated',
             format: 'prettier',
-            lint: 'eslint',
         },
     },
     {
         ...defaultConfig,
-        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/1932adc67a9eb1a8c6368ea61f72cd7dc60db8a4/tsp-output/schema/openapi.yaml',
+        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/5cdbfedb8a3c932358d8bd68cdb961052f9e99b8/tsp-output/schema/openapi.yaml',
         output: {
             path: 'src/frontend/generated-new',
             format: 'prettier',
-            lint: 'eslint',
         },
     },
 ] satisfies UserConfig[]);

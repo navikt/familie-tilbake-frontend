@@ -167,7 +167,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                             }
                         )}
                     >
-                        {pdfSider.length > 0 && (
+                        {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                             <HStack
                                 justify="center"
                                 align="center"
@@ -215,7 +215,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                                     </Button>
                                 </VStack>
                             )}
-                            {pdfSider.length > 0 && (
+                            {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                                 <img
                                     className="max-w-full max-h-full object-contain"
                                     alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
