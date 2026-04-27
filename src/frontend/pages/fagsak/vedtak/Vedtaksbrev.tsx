@@ -125,6 +125,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     }, [vedtaksbrevData]);
 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
+    console.log(harDataEllerFeil, pdfSider.length > 0);
 
     return (
         <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
@@ -167,7 +168,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                             }
                         )}
                     >
-                        {pdfSider.length > 0 && (
+                        {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                             <HStack
                                 justify="center"
                                 align="center"
@@ -215,7 +216,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                                     </Button>
                                 </VStack>
                             )}
-                            {pdfSider.length > 0 && (
+                            {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                                 <img
                                     className="max-w-full max-h-full object-contain"
                                     alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}
