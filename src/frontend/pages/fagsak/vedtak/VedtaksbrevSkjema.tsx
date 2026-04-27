@@ -6,7 +6,7 @@ import type { Avsnitt, PakrevdBegrunnelse, RotElement, VedtaksbrevData } from '~
 
 import { Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
-import { get, useFormContext, useWatch } from 'react-hook-form';
+import { get, useController, useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 
@@ -50,14 +50,14 @@ const Avsnitt: FC<{
 }> = ({ avsnitt, avsnittIndex }) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
-        register,
-        setValue,
         trigger,
         formState: { errors, isSubmitted },
     } = useFormContext<VedtaksbrevFormData>();
     const name = `avsnitt.${avsnittIndex}.underavsnitt` satisfies FieldPath<VedtaksbrevFormData>;
-    const { ref } = register(name);
-    const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
+    const {
+        field: { ref, name: fieldName, onBlur, value, onChange },
+    } = useController<VedtaksbrevFormData>({ name });
+    const elementValue = value as RotElement[];
     const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
 
     const opprinneligePåkrevdeBegrunnelser = avsnitt.underavsnitt.filter(
@@ -69,7 +69,8 @@ const Avsnitt: FC<{
         <>
             <Textarea
                 ref={ref}
-                name={name}
+                name={fieldName}
+                onBlur={onBlur}
                 label={avsnitt.tittel}
                 description={avsnitt.forklaring}
                 value={localText}
@@ -78,7 +79,7 @@ const Avsnitt: FC<{
                     setLocalText(e.target.value);
                     const nyeRentekst = tekstTilElementArray(e.target.value);
                     const andreElementer = elementValue.filter(({ type }) => type !== 'rentekst');
-                    setValue(name, [...nyeRentekst, ...andreElementer], { shouldDirty: true });
+                    onChange([...nyeRentekst, ...andreElementer]);
                     if (isSubmitted) void trigger();
                 }}
                 size="small"
@@ -113,25 +114,25 @@ const ElementTextarea: FC<
 > = ({ name, ...props }) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
-        register,
-        setValue,
         trigger,
         formState: { errors, isSubmitted },
     } = useFormContext<VedtaksbrevFormData>();
-    const { ref } = register(name);
-    const elementValue = useWatch<VedtaksbrevFormData>({ name }) as RotElement[];
-    const [localText, setLocalText] = useState(() => elementArrayTilTekst(elementValue));
+    const {
+        field: { ref, name: fieldName, onBlur, value, onChange },
+    } = useController<VedtaksbrevFormData>({ name });
+    const [localText, setLocalText] = useState(() => elementArrayTilTekst(value as RotElement[]));
 
     return (
         <Textarea
             {...props}
             ref={ref}
-            name={name}
+            name={fieldName}
+            onBlur={onBlur}
             value={localText}
             error={hentFeilmelding(errors, name)}
             onChange={e => {
                 setLocalText(e.target.value);
-                setValue(name, tekstTilElementArray(e.target.value), { shouldDirty: true });
+                onChange(tekstTilElementArray(e.target.value));
                 if (isSubmitted) void trigger();
             }}
             size="small"
