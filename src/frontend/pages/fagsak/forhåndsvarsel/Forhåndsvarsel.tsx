@@ -144,7 +144,7 @@ export const Forhåndsvarsel: FC = () => {
                             </Tag>
                         </Tooltip>
                     )}
-                    {forhåndsvarselInfo?.utsettUttalelseFrist && (
+                    {forhåndsvarselInfo?.utsettUttalelseFrist?.nyFrist && (
                         <Tag variant="warning-moderate" icon={<TimerPauseIcon aria-hidden />}>
                             {`Ny frist: ${formatterDatostringKortårstall(forhåndsvarselInfo.utsettUttalelseFrist.nyFrist)}`}
                         </Tag>
