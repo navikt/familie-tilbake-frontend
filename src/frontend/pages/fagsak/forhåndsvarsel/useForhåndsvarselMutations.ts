@@ -65,7 +65,7 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
     readonly sendBrukeruttalelse: (formData: UttalelseFormData, varselErSendt: boolean) => void;
     readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
-    readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
+    readonly sendUtsettUttalelseFrist: (formData: FristUtsettelseDto) => void;
     readonly navigerTilNeste: () => void;
     readonly navigerTilForrige: () => void;
 };
@@ -214,17 +214,10 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendUtsettUttalelseFrist: (formData: UttalelseFormData): void => {
-            if (formData.harUttaltSeg !== HarUttaltSeg.UtsettFrist) return;
-
-            const payload: FristUtsettelseDto = {
-                nyFrist: formData.utsettUttalelseFrist.nyFrist,
-                begrunnelse: formData.utsettUttalelseFrist.begrunnelse,
-            };
-
+        sendUtsettUttalelseFrist: (formData: FristUtsettelseDto): void => {
             sendUtsettUttalelseFristMutation.mutate({
                 path: { behandlingId: behandlingId },
-                body: payload,
+                body: formData,
             });
         },
         navigerTilNeste,

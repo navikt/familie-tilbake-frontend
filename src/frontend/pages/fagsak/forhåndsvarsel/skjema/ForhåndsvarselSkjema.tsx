@@ -15,10 +15,10 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
-import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import {
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
+    HarUttaltSeg,
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
 } from '~/pages/fagsak/forhåndsvarsel/schema';
@@ -59,7 +59,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
         sendUtsettUttalelseFristMutation,
-        sendUtsettUttalelseFrist,
         sendBrukeruttalelse,
         sendForhåndsvarsel,
         sendUnntakMutation,
@@ -127,16 +126,12 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         | 'SEND_FORHÅNDSVARSEL'
         | 'SEND_UNNTAK_OG_UTTALELSE'
         | 'SEND_UNNTAK'
-        | 'SEND_UTTALELSE'
-        | 'UTSETT_FRIST';
+        | 'SEND_UTTALELSE';
 
     const skalSendeForhåndsvarsel =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
 
     const getSubmitAction = (): SubmitAction => {
-        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
-            return 'UTSETT_FRIST';
-        }
         if (skalSendeForhåndsvarsel) {
             return 'SEND_FORHÅNDSVARSEL';
         }
@@ -171,8 +166,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 
     const getNesteKnappTekst = (action: SubmitAction): string => {
         switch (action) {
-            case 'UTSETT_FRIST':
-                return 'Utsett frist';
             case 'SEND_FORHÅNDSVARSEL':
                 return 'Send forhåndsvarselet';
             case 'NAVIGER':
@@ -236,10 +229,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
             navigerTilNeste();
             return;
         }
-        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
-            sendUtsettUttalelseFrist(data);
-            return;
-        }
         sendBrukeruttalelse(data, varselErSendt);
     };
 
@@ -267,8 +256,10 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
                 <FormProvider {...uttalelseMethods}>
                     <Uttalelse
                         handleUttalelseSubmit={handleUttalelseSubmit}
-                        kanUtsetteFrist
                         varselErSendt={varselErSendt}
+                        fristForUttalelse={
+                            forhåndsvarselInfo.varselbrevDto?.opprinneligFristForUttalelse
+                        }
                     />
                 </FormProvider>
             )}

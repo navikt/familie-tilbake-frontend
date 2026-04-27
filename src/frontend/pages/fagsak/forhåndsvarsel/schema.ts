@@ -42,7 +42,7 @@ const harIkkeUttaltSegSchema = z.object({
     kommentar: fritekstSchema,
 });
 
-const utsettUttalelseFristSchema = z.object({
+export const utsettUttalelseFristSchema = z.object({
     nyFrist: z.iso.date({ message: 'Du må velge en ny frist' }),
     begrunnelse: fritekstSchema,
 });
@@ -96,7 +96,7 @@ const getNeiUttalelseValues = (uttalelse: BrukeruttalelseDto | undefined): Uttal
 };
 
 const getUtsettUttalelseValues = (
-    utsettelse: FristUtsettelseDto | undefined
+    utsettelse: FristUtsettelseDto | null | undefined
 ): UttalelseFormData => {
     return {
         harUttaltSeg: HarUttaltSeg.UtsettFrist,

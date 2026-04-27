@@ -10,30 +10,27 @@ import {
     Textarea,
     useDatepicker,
 } from '@navikt/ds-react';
+import { addDays } from 'date-fns/addDays';
+import { isBefore } from 'date-fns/isBefore';
 import { parseISO } from 'date-fns/parseISO';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { ToggleName } from '~/context/toggles';
-import { useToggles } from '~/context/TogglesContext';
 import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import { dateTilIsoDatoString } from '~/utils/dato';
 
-import { UtsettFristSkjema } from './UtsettFristSkjema';
-
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;
-    kanUtsetteFrist?: boolean;
     varselErSendt: boolean;
+    fristForUttalelse?: string | null;
 };
 
 export const Uttalelse: FC<Props> = ({
     handleUttalelseSubmit,
-    kanUtsetteFrist = false,
     varselErSendt,
+    fristForUttalelse,
 }) => {
-    const { toggles } = useToggles();
     const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
     const { behandlingILesemodus } = useBehandlingState();
@@ -46,6 +43,10 @@ export const Uttalelse: FC<Props> = ({
     const errors = methods.formState.errors;
 
     const iDag = useMemo(() => new Date(), []);
+
+    const fristIkkeUtgått = fristForUttalelse
+        ? isBefore(iDag, addDays(parseISO(fristForUttalelse), 1))
+        : false;
 
     const {
         datepickerProps,
@@ -106,14 +107,9 @@ export const Uttalelse: FC<Props> = ({
                 <Radio value={HarUttaltSeg.Ja} {...radioProps}>
                     Ja
                 </Radio>
-                <Radio value={HarUttaltSeg.Nei} {...radioProps}>
+                <Radio value={HarUttaltSeg.Nei} {...radioProps} disabled={fristIkkeUtgått}>
                     Nei
                 </Radio>
-                {toggles[ToggleName.Forhåndsvarselsteg] && kanUtsetteFrist && (
-                    <Radio value={HarUttaltSeg.UtsettFrist} {...radioProps}>
-                        Utsett frist for å uttale seg
-                    </Radio>
-                )}
             </RadioGroup>
             {harUttaltSeg === HarUttaltSeg.Ja &&
                 fields.map((fieldItem, index) => (
@@ -185,7 +181,6 @@ export const Uttalelse: FC<Props> = ({
                     error={get(errors, 'kommentar.message')}
                 />
             )}
-            {harUttaltSeg === HarUttaltSeg.UtsettFrist && <UtsettFristSkjema />}
         </form>
     );
 };
