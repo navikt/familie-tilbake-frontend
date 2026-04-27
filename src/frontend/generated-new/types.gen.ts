@@ -130,6 +130,17 @@ export type OppdaterFaktaPeriode = {
     rettsligGrunnlag: Array<RettsligGrunnlag>;
 };
 
+export type Oppsummeringsdata = {
+    fom: string;
+    tom: string;
+    feilutbetaltBeløp: string;
+    vurdering: string;
+    andelAvBeløp: string;
+    renteprosent: string;
+    tilbakekrevingsbeløp: string;
+    tilbakekrevesBeløpEtterSkatt: string;
+};
+
 export type PakrevdBegrunnelse = {
     tittel: string;
     readonly forklaring: string;
@@ -186,6 +197,11 @@ export type Signatur = {
     besluttendeSaksbehandler: string | null;
 };
 
+export type Standardtekst = {
+    tittel: string;
+    underavsnitt: Array<Element>;
+};
+
 export type UnderavsnittElement = {
     tittel: string;
     underavsnitt: Array<Element>;
@@ -199,6 +215,9 @@ export type VedtaksbrevData = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
+    oppsummeringstabell: Array<Oppsummeringsdata>;
+    bunntekster: Array<Standardtekst>;
+    saksnummer: string;
 };
 
 export type VedtaksbrevRedigerbareData = {
@@ -267,6 +286,9 @@ export type VedtaksbrevDataWritable = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
+    oppsummeringstabell: Array<Oppsummeringsdata>;
+    bunntekster: Array<Standardtekst>;
+    saksnummer: string;
 };
 
 export type VedtaksbrevRedigerbareDataWritable = {
@@ -511,5 +533,8 @@ export type VedtaksbrevLagSvgVedtaksbrevResponses = {
     /**
      * The request has succeeded.
      */
-    200: unknown;
+    200: Blob | File;
 };
+
+export type VedtaksbrevLagSvgVedtaksbrevResponse =
+    VedtaksbrevLagSvgVedtaksbrevResponses[keyof VedtaksbrevLagSvgVedtaksbrevResponses];

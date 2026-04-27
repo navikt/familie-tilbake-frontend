@@ -1,10 +1,7 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
-import type {
-    VedtaksbrevData,
-    VedtaksbrevDataWritable,
-    VedtaksbrevRedigerbareDataUpdate,
-} from '~/generated-new';
+import type { SubmitHandler } from 'react-hook-form';
+import type { VedtaksbrevData, VedtaksbrevDataWritable } from '~/generated-new';
 
 import {
     Button,
@@ -26,9 +23,10 @@ import {
     behandlingOppdaterVedtaksbrevMutation,
     vedtaksbrevLagSvgVedtaksbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
-// import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
 import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 
+import { vedtaksbrevResolver } from './schema';
+import { tilVedtaksbrevDataWritable } from './utils';
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
 
 const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) => {
@@ -46,14 +44,22 @@ const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) =
 
 type Props = {
     vedtaksbrevData: VedtaksbrevData;
+    onSubmit: SubmitHandler<VedtaksbrevFormData>;
 };
 
-export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
+export const VEDTAKSBREV_FORM_ID = 'vedtaksbrev-skjema';
+
+export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
 
     const methods = useForm<VedtaksbrevFormData>({
-        values: { ...vedtaksbrevData },
+        resolver: vedtaksbrevResolver,
+        mode: 'onSubmit',
+        values: {
+            hovedavsnitt: vedtaksbrevData.hovedavsnitt,
+            avsnitt: vedtaksbrevData.avsnitt,
+        },
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -86,25 +92,18 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
         ...behandlingOppdaterVedtaksbrevMutation(),
     });
 
-    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void => {
+    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void =>
         forhåndsvisningMutation.mutate({
             body: data,
         });
-    };
 
-    const debouncedUpdate = useDebounce(async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { sistOppdatert: _, ...pdfData } = methods.getValues();
-        oppdaterForhåndsvisning(pdfData);
-
-        const erGyldig = await methods.trigger();
-        if (erGyldig) {
-            const { hovedavsnitt, avsnitt } = pdfData;
-            oppdaterVedtaksbrevMutation.mutate({
-                path: { behandlingId },
-                body: { hovedavsnitt, avsnitt } satisfies VedtaksbrevRedigerbareDataUpdate,
-            });
-        }
+    const debouncedUpdate = useDebounce(() => {
+        const formData = methods.getValues();
+        oppdaterForhåndsvisning(tilVedtaksbrevDataWritable(vedtaksbrevData, formData));
+        oppdaterVedtaksbrevMutation.mutate({
+            path: { behandlingId },
+            body: formData,
+        });
     });
     useEffect(() => {
         return methods.subscribe({
@@ -144,7 +143,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData }) => {
                 </HStack>
 
                 <FormProvider {...methods}>
-                    <VedtaksbrevSkjema />
+                    <VedtaksbrevSkjema vedtaksbrevData={vedtaksbrevData} onSubmit={onSubmit} />
                 </FormProvider>
             </section>
 
