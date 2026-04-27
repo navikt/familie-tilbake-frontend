@@ -1,4 +1,3 @@
-import type { VedtaksbrevFormData } from './schema';
 import type { RenderResult } from '@testing-library/react';
 import type { Avsnitt, Brevmottaker, VedtaksbrevData } from '~/generated-new';
 
@@ -10,12 +9,12 @@ import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 
-const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevFormData): RenderResult => {
+const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevData): RenderResult => {
     const client = new QueryClient();
     return render(
         <QueryClientProvider client={client}>
             <TestBehandlingProvider>
-                <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} />
+                <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={vitest.fn()} />
             </TestBehandlingProvider>
         </QueryClientProvider>
     );
@@ -30,6 +29,7 @@ describe('Vedtaksbrev', () => {
                 hovedavsnitt: {
                     tittel: 'Du må betale tilbake stønaden',
                     forklaring: 'Forklaring til hovedavsnitt',
+                    hjemler: '22-15',
                     underavsnitt: [
                         {
                             type: 'rentekst',
@@ -63,6 +63,7 @@ describe('Vedtaksbrev', () => {
                         id: '1',
                         tittel: 'Perioden 12.02.2025–12.03.2025',
                         forklaring: 'Forklaring til perioden',
+                        meldingerTilSaksbehandler: [],
                         underavsnitt: [
                             { type: 'rentekst', tekst: 'Første textarea' },
                             {
@@ -70,6 +71,7 @@ describe('Vedtaksbrev', () => {
                                 tittel: 'Hvordan har vi kommet frem til at du må betale tilbake?',
                                 begrunnelseType: 'SKAL_IKKE_UNNLATES_4_RETTSGEBYR',
                                 forklaring: '',
+                                meldingerTilSaksbehandler: [],
                                 underavsnitt: [{ type: 'rentekst', tekst: 'Andre textarea' }],
                             },
                             {
@@ -77,6 +79,7 @@ describe('Vedtaksbrev', () => {
                                 tittel: 'Hvorfor har vi ikke redusert beløpet?',
                                 begrunnelseType: 'IKKE_REDUSERT_SÆRLIGE_GRUNNER',
                                 forklaring: tredjeAvsnittForklaring,
+                                meldingerTilSaksbehandler: [],
                                 underavsnitt: [{ type: 'rentekst', tekst: 'Tredje textarea' }],
                             },
                         ],
@@ -116,6 +119,7 @@ const lagVedtaksbrevData = (overrides?: Partial<VedtaksbrevData>): VedtaksbrevDa
         hovedavsnitt: {
             tittel: 'Du må betale tilbake stønaden',
             forklaring: 'Forklaring til hovedavsnitt',
+            hjemler: '22-15',
             underavsnitt: [
                 {
                     type: 'rentekst',
@@ -141,5 +145,8 @@ const lagVedtaksbrevData = (overrides?: Partial<VedtaksbrevData>): VedtaksbrevDa
             ansvarligSaksbehandler: 'Ola Nordmann',
             besluttendeSaksbehandler: 'Kari Nordmann',
         } satisfies VedtaksbrevData['signatur'],
+        oppsummeringstabell: [],
+        bunntekster: [],
+        saksnummer: '123456',
     };
 };
