@@ -26,8 +26,8 @@ export const zOppdaterBehandlendeEnhetRequest = z.object({
 export const zDatoperiode = z.object({
     fom: z.iso.date(),
     tom: z.iso.date(),
-    tomMåned: z.string(),
     fomMåned: z.string(),
+    tomMåned: z.string(),
 });
 
 export const zPeriodeMedTekstDto = z.object({
@@ -51,8 +51,8 @@ export const zUttalelsesdetaljer = z.object({
 });
 
 export const zFristUtsettelseDto = z.object({
-    nyFrist: z.iso.date(),
-    begrunnelse: z.string(),
+    nyFrist: z.iso.date().nullish(),
+    begrunnelse: z.string().nullish(),
 });
 
 export const zHentForhåndvisningVedtaksbrevPdfDto = z.object({
@@ -1569,12 +1569,8 @@ export const zRessursBehandlingDto = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zTvingHenleggBehandlingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zTvingHenleggBehandlingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1582,13 +1578,9 @@ export const zTvingHenleggBehandlingData = z.object({
  */
 export const zTvingHenleggBehandlingResponse = zRessursString;
 
-export const zKorrigerKravgrunnlagData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-        eksternKravgrunnlagId: z.int(),
-    }),
-    query: z.never().optional(),
+export const zKorrigerKravgrunnlagPath = z.object({
+    behandlingId: z.uuid(),
+    eksternKravgrunnlagId: z.int(),
 });
 
 /**
@@ -1596,12 +1588,8 @@ export const zKorrigerKravgrunnlagData = z.object({
  */
 export const zKorrigerKravgrunnlagResponse = zRessursString;
 
-export const zKorrigerKravgrunnlag1Data = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zKorrigerKravgrunnlag1Path = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1609,12 +1597,8 @@ export const zKorrigerKravgrunnlag1Data = z.object({
  */
 export const zKorrigerKravgrunnlag1Response = zRessursString;
 
-export const zFlyttBehandlingTilFaktaData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zFlyttBehandlingTilFaktaPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1622,12 +1606,8 @@ export const zFlyttBehandlingTilFaktaData = z.object({
  */
 export const zFlyttBehandlingTilFaktaResponse = zRessursString;
 
-export const zArkiverMottattKravgrunnlagData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        mottattXmlId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zArkiverMottattKravgrunnlagPath = z.object({
+    mottattXmlId: z.uuid(),
 });
 
 /**
@@ -1635,12 +1615,8 @@ export const zArkiverMottattKravgrunnlagData = z.object({
  */
 export const zArkiverMottattKravgrunnlagResponse = zRessursString;
 
-export const zAnnulerKravgrunnlagData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        eksternKravgrunnlagId: z.int(),
-    }),
-    query: z.never().optional(),
+export const zAnnulerKravgrunnlagPath = z.object({
+    eksternKravgrunnlagId: z.int(),
 });
 
 /**
@@ -1648,13 +1624,9 @@ export const zAnnulerKravgrunnlagData = z.object({
  */
 export const zAnnulerKravgrunnlagResponse = zRessursString;
 
-export const zFjernManuellBrevmottakerData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-        manuellBrevmottakerId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zFjernManuellBrevmottakerPath = z.object({
+    behandlingId: z.uuid(),
+    manuellBrevmottakerId: z.uuid(),
 });
 
 /**
@@ -1662,13 +1634,11 @@ export const zFjernManuellBrevmottakerData = z.object({
  */
 export const zFjernManuellBrevmottakerResponse = zRessursString;
 
-export const zOppdaterManuellBrevmottakerData = z.object({
-    body: zBrevmottaker,
-    path: z.object({
-        behandlingId: z.uuid(),
-        manuellBrevmottakerId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zOppdaterManuellBrevmottakerBody = zBrevmottaker;
+
+export const zOppdaterManuellBrevmottakerPath = z.object({
+    behandlingId: z.uuid(),
+    manuellBrevmottakerId: z.uuid(),
 });
 
 /**
@@ -1676,12 +1646,8 @@ export const zOppdaterManuellBrevmottakerData = z.object({
  */
 export const zOppdaterManuellBrevmottakerResponse = zRessursString;
 
-export const zFjernBrevmottakerStegData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zFjernBrevmottakerStegPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1689,12 +1655,10 @@ export const zFjernBrevmottakerStegData = z.object({
  */
 export const zFjernBrevmottakerStegResponse = zRessursString;
 
-export const zSettBehandlingPåVentData = z.object({
-    body: zBehandlingPåVentDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zSettBehandlingPåVentBody = zBehandlingPåVentDto;
+
+export const zSettBehandlingPåVentPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1702,12 +1666,10 @@ export const zSettBehandlingPåVentData = z.object({
  */
 export const zSettBehandlingPåVentResponse = zRessursString;
 
-export const zHenleggBehandlingData = z.object({
-    body: zHenleggelsesbrevFritekstDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHenleggBehandlingBody = zHenleggelsesbrevFritekstDto;
+
+export const zHenleggBehandlingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1715,12 +1677,8 @@ export const zHenleggBehandlingData = z.object({
  */
 export const zHenleggBehandlingResponse = zRessursString;
 
-export const zTaBehandlingAvVentData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zTaBehandlingAvVentPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1728,12 +1686,8 @@ export const zTaBehandlingAvVentData = z.object({
  */
 export const zTaBehandlingAvVentResponse = zRessursString;
 
-export const zFlyttBehandlingTilFakta1Data = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zFlyttBehandlingTilFakta1Path = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1741,12 +1695,10 @@ export const zFlyttBehandlingTilFakta1Data = z.object({
  */
 export const zFlyttBehandlingTilFakta1Response = zRessursString;
 
-export const zByttEnhetData = z.object({
-    body: zByttEnhetDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zByttEnhetBody = zByttEnhetDto;
+
+export const zByttEnhetPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1754,12 +1706,8 @@ export const zByttEnhetData = z.object({
  */
 export const zByttEnhetResponse = zRessursString;
 
-export const zAngreSendTilBeslutterData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zAngreSendTilBeslutterPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1767,12 +1715,8 @@ export const zAngreSendTilBeslutterData = z.object({
  */
 export const zAngreSendTilBeslutterResponse = zRessursString;
 
-export const zHentVergeData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentVergePath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1780,12 +1724,8 @@ export const zHentVergeData = z.object({
  */
 export const zHentVergeResponse = zRessursVergeDto;
 
-export const zOpprettVergeStegData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zOpprettVergeStegPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1793,12 +1733,8 @@ export const zOpprettVergeStegData = z.object({
  */
 export const zOpprettVergeStegResponse = zRessursString;
 
-export const zFjernVergeData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zFjernVergePath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1806,23 +1742,15 @@ export const zFjernVergeData = z.object({
  */
 export const zFjernVergeResponse = zRessursString;
 
-export const zOppdaterBehandlendeEnhetPåBehandlingData = z.object({
-    body: zOppdaterBehandlendeEnhetRequest,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zOppdaterBehandlendeEnhetPåBehandlingBody = zOppdaterBehandlendeEnhetRequest;
 
 /**
  * OK
  */
 export const zOppdaterBehandlendeEnhetPåBehandlingResponse = zRessursString;
 
-export const zSammenslåData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zSammenslåPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1830,12 +1758,8 @@ export const zSammenslåData = z.object({
  */
 export const zSammenslåResponse = zRessursString;
 
-export const zAngreSammenslåingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zAngreSammenslåingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1843,85 +1767,45 @@ export const zAngreSammenslåingData = z.object({
  */
 export const zAngreSammenslåingResponse = zRessursString;
 
-export const zSettIverksettStegTilUtførtOgFortsettData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        taskId: z.coerce
-            .bigint()
-            .min(BigInt('-9223372036854775808'), {
-                error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
-            })
-            .max(BigInt('9223372036854775807'), {
-                error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
-            }),
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zSettIverksettStegTilUtførtOgFortsettPath = z.object({
+    taskId: z.coerce
+        .bigint()
+        .min(BigInt('-9223372036854775808'), {
+            error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
+        })
+        .max(BigInt('9223372036854775807'), {
+            error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
+        }),
+    behandlingId: z.uuid(),
 });
 
-export const zSendSisteTilstandForBehandlingerTilDvhData = z.object({
-    body: z.array(z.uuid()),
-    path: z.never().optional(),
-    query: z.never().optional(),
+export const zSendSisteTilstandForBehandlingerTilDvhBody = z.array(z.uuid());
+
+export const zSendPåminnelseTilAlleSakerITilstandQuery = z.object({
+    tilstand: zSchemaEnum,
 });
 
-export const zSendPåminnelseTilAlleSakerITilstandData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        tilstand: zSchemaEnum,
-    }),
+export const zOppdaterFagsysteminfoPath = z.object({
+    behandlingId: z.uuid(),
 });
 
-export const zOppdaterFagsysteminfoData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zLagOppdaterOppgaveTaskForBehandlingBody = z.array(z.uuid());
+
+export const zFinnGamleÅpneBehandlingerUtenOppgavePath = z.object({
+    fagsystem: zSchemaEnum2,
 });
 
-export const zMigrerAlleSakerData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional(),
+export const zFerdigstillOppgaverForBehandlingPath = z.object({
+    behandlingId: z.uuid(),
+    oppgaveType: z.string(),
 });
 
-export const zLagOppdaterOppgaveTaskForBehandlingData = z.object({
-    body: z.array(z.uuid()),
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zFerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveBody = z.array(z.uuid());
 
-export const zFinnGamleÅpneBehandlingerUtenOppgaveData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        fagsystem: zSchemaEnum2,
-    }),
-    query: z.never().optional(),
-});
+export const zSimulerMottakAvKravgrunnlagBody = z.string();
 
-export const zFerdigstillOppgaverForBehandlingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-        oppgaveType: z.string(),
-    }),
-    query: z.never().optional(),
-});
-
-export const zFerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveData = z.object({
-    body: z.array(z.uuid()),
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
-
-export const zSimulerMottakAvKravgrunnlagData = z.object({
-    body: z.string(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zSimulerMottakAvKravgrunnlagPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1929,12 +1813,10 @@ export const zSimulerMottakAvKravgrunnlagData = z.object({
  */
 export const zSimulerMottakAvKravgrunnlagResponse = zRessursString;
 
-export const zLagreUtkastVedtaksbrevData = z.object({
-    body: zFritekstavsnittDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zLagreUtkastVedtaksbrevBody = zFritekstavsnittDto;
+
+export const zLagreUtkastVedtaksbrevPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1942,12 +1824,10 @@ export const zLagreUtkastVedtaksbrevData = z.object({
  */
 export const zLagreUtkastVedtaksbrevResponse = zRessursString;
 
-export const zLagreBrukeruttalelseData = z.object({
-    body: zBrukeruttalelseDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zLagreBrukeruttalelseBody = zBrukeruttalelseDto;
+
+export const zLagreBrukeruttalelsePath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1955,12 +1835,10 @@ export const zLagreBrukeruttalelseData = z.object({
  */
 export const zLagreBrukeruttalelseResponse = zRessurs;
 
-export const zUtsettUttalelseFristData = z.object({
-    body: zFristUtsettelseDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zUtsettUttalelseFristBody = zFristUtsettelseDto;
+
+export const zUtsettUttalelseFristPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1968,12 +1846,10 @@ export const zUtsettUttalelseFristData = z.object({
  */
 export const zUtsettUttalelseFristResponse = zRessurs;
 
-export const zForhåndsvarselUnntakData = z.object({
-    body: zForhåndsvarselUnntakDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zForhåndsvarselUnntakBody = zForhåndsvarselUnntakDto;
+
+export const zForhåndsvarselUnntakPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1981,12 +1857,10 @@ export const zForhåndsvarselUnntakData = z.object({
  */
 export const zForhåndsvarselUnntakResponse = zRessurs;
 
-export const zForhåndsvisBrevData = z.object({
-    body: zBestillBrevDto,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zForhåndsvisBrevBody = zBestillBrevDto;
+
+export const zForhåndsvisBrevPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -1994,56 +1868,36 @@ export const zForhåndsvisBrevData = z.object({
  */
 export const zForhåndsvisBrevResponse = zRessursByte;
 
-export const zHentForhåndsvisningVedtaksbrevData = z.object({
-    body: zHentForhåndvisningVedtaksbrevPdfDto,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zHentForhåndsvisningVedtaksbrevBody = zHentForhåndvisningVedtaksbrevPdfDto;
 
 /**
  * OK
  */
 export const zHentForhåndsvisningVedtaksbrevResponse = zRessursByte;
 
-export const zHentForhåndsvisningVarselbrevData = z.object({
-    body: zForhåndsvisVarselbrevRequest,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zHentForhåndsvisningVarselbrevBody = zForhåndsvisVarselbrevRequest;
 
 /**
  * OK
  */
 export const zHentForhåndsvisningVarselbrevResponse = z.string();
 
-export const zHentForhåndsvisningHenleggelsesbrevData = z.object({
-    body: zForhåndsvisningHenleggelsesbrevDto,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zHentForhåndsvisningHenleggelsesbrevBody = zForhåndsvisningHenleggelsesbrevDto;
 
 /**
  * OK
  */
 export const zHentForhåndsvisningHenleggelsesbrevResponse = zRessursByte;
 
-export const zBestillBrevData = z.object({
-    body: zBestillBrevDto,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zBestillBrevBody = zBestillBrevDto;
 
 /**
  * OK
  */
 export const zBestillBrevResponse = zRessurs;
 
-export const zHentManuellBrevmottakereData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentManuellBrevmottakerePath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2051,12 +1905,10 @@ export const zHentManuellBrevmottakereData = z.object({
  */
 export const zHentManuellBrevmottakereResponse = zRessursListManuellBrevmottakerResponsDto;
 
-export const zLeggTilBrevmottakerData = z.object({
-    body: zBrevmottaker,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zLeggTilBrevmottakerBody = zBrevmottaker;
+
+export const zLeggTilBrevmottakerPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2064,12 +1916,8 @@ export const zLeggTilBrevmottakerData = z.object({
  */
 export const zLeggTilBrevmottakerResponse = zRessursUuid;
 
-export const zOpprettBrevmottakerStegData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zOpprettBrevmottakerStegPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2077,20 +1925,18 @@ export const zOpprettBrevmottakerStegData = z.object({
  */
 export const zOpprettBrevmottakerStegResponse = zRessursString;
 
-export const zUtførBehandlingsstegData = z.object({
-    body: z.union([
-        zBehandlingsstegBrevmottakerDto,
-        zBehandlingsstegFaktaDto,
-        zBehandlingsstegFatteVedtaksstegDto,
-        zBehandlingsstegForeldelseDto,
-        zBehandlingsstegForeslåVedtaksstegDto,
-        zBehandlingsstegVergeDto,
-        zBehandlingsstegVilkårsvurderingDto,
-    ]),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zUtførBehandlingsstegBody = z.union([
+    zBehandlingsstegBrevmottakerDto,
+    zBehandlingsstegFaktaDto,
+    zBehandlingsstegFatteVedtaksstegDto,
+    zBehandlingsstegForeldelseDto,
+    zBehandlingsstegForeslåVedtaksstegDto,
+    zBehandlingsstegVergeDto,
+    zBehandlingsstegVilkårsvurderingDto,
+]);
+
+export const zUtførBehandlingsstegPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2098,12 +1944,10 @@ export const zUtførBehandlingsstegData = z.object({
  */
 export const zUtførBehandlingsstegResponse = zRessursString;
 
-export const zBeregnBeløpData = z.object({
-    body: z.array(zDatoperiode),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zBeregnBeløpBody = z.array(zDatoperiode);
+
+export const zBeregnBeløpPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2111,46 +1955,30 @@ export const zBeregnBeløpData = z.object({
  */
 export const zBeregnBeløpResponse = zRessursBeregnetPerioderDto;
 
-export const zOpprettBehandlingData = z.object({
-    body: zOpprettTilbakekrevingRequest,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zOpprettBehandlingBody = zOpprettTilbakekrevingRequest;
 
 /**
  * OK
  */
 export const zOpprettBehandlingResponse = zRessursString;
 
-export const zOpprettRevurderingData = z.object({
-    body: zOpprettRevurderingDto,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zOpprettRevurderingBody = zOpprettRevurderingDto;
 
 /**
  * OK
  */
 export const zOpprettRevurderingResponse = zRessursString;
 
-export const zOpprettBehandlingManuellTaskData = z.object({
-    body: zOpprettManueltTilbakekrevingRequest,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zOpprettBehandlingManuellTaskBody = zOpprettManueltTilbakekrevingRequest;
 
 /**
  * OK
  */
 export const zOpprettBehandlingManuellTaskResponse = zRessursString;
 
-export const zKanBehandlingOpprettesManueltData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        ytelsestype: zSchemaEnum3,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zKanBehandlingOpprettesManueltPath = z.object({
+    ytelsestype: zSchemaEnum3,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2158,12 +1986,8 @@ export const zKanBehandlingOpprettesManueltData = z.object({
  */
 export const zKanBehandlingOpprettesManueltResponse = zRessursKanBehandlingOpprettesManueltRespons;
 
-export const zErPerioderLikeData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zErPerioderLikePath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2171,12 +1995,8 @@ export const zErPerioderLikeData = z.object({
  */
 export const zErPerioderLikeResponse = zRessursBoolean;
 
-export const zErPerioderSammenslåttData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zErPerioderSammenslåttPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2184,24 +2004,14 @@ export const zErPerioderSammenslåttData = z.object({
  */
 export const zErPerioderSammenslåttResponse = zRessursBoolean;
 
-export const zHentInfoData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
-
 /**
  * OK
  */
 export const zHentInfoResponse = zRessursInfo;
 
-export const zHentForvaltningsinfoData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        ytelsestype: zSchemaEnum4,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zHentForvaltningsinfoPath = z.object({
+    ytelsestype: zSchemaEnum4,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2209,13 +2019,9 @@ export const zHentForvaltningsinfoData = z.object({
  */
 export const zHentForvaltningsinfoResponse = zRessursListBehandlingsinfo;
 
-export const zHentKravgrunnlagsinfoData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        ytelsestype: zSchemaEnum3,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zHentKravgrunnlagsinfoPath = z.object({
+    ytelsestype: zSchemaEnum3,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2223,44 +2029,24 @@ export const zHentKravgrunnlagsinfoData = z.object({
  */
 export const zHentKravgrunnlagsinfoResponse = zRessursListKravgrunnlagsinfo;
 
-export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData =
+export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgavePath =
     z.object({
-        body: z.never().optional(),
-        path: z.object({
-            fagsystem: zSchemaEnum2,
-        }),
-        query: z.never().optional(),
+        fagsystem: zSchemaEnum2,
     });
-
-export const zAlleSakerOver4RettsgebyrData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
 
 /**
  * OK
  */
 export const zAlleSakerOver4RettsgebyrResponse = zRessursListString;
 
-export const zFeatureTogglesData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
-
 /**
  * OK
  */
 export const zFeatureTogglesResponse = zRessursMapStringBoolean;
 
-export const zHentVedtakForFagsystemData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        fagsystem: zSchemaEnum2,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zHentVedtakForFagsystemPath = z.object({
+    fagsystem: zSchemaEnum2,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2268,13 +2054,9 @@ export const zHentVedtakForFagsystemData = z.object({
  */
 export const zHentVedtakForFagsystemResponse = zRessursListFagsystemVedtak;
 
-export const zHentFagsakData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        fagsystem: zSchemaEnum2,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zHentFagsakPath = z.object({
+    fagsystem: zSchemaEnum2,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2282,13 +2064,9 @@ export const zHentFagsakData = z.object({
  */
 export const zHentFagsakResponse = zRessursFagsakDto;
 
-export const zFinnesÅpenTilbakekrevingsbehandlingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        fagsystem: zSchemaEnum2,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zFinnesÅpenTilbakekrevingsbehandlingPath = z.object({
+    fagsystem: zSchemaEnum2,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2296,13 +2074,9 @@ export const zFinnesÅpenTilbakekrevingsbehandlingData = z.object({
  */
 export const zFinnesÅpenTilbakekrevingsbehandlingResponse = zRessursFinnesBehandlingResponse;
 
-export const zHentBehandlingerForFagsystemData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        fagsystem: zSchemaEnum2,
-        eksternFagsakId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zHentBehandlingerForFagsystemPath = z.object({
+    fagsystem: zSchemaEnum2,
+    eksternFagsakId: z.string(),
 });
 
 /**
@@ -2310,12 +2084,8 @@ export const zHentBehandlingerForFagsystemData = z.object({
  */
 export const zHentBehandlingerForFagsystemResponse = zRessursListBehandling;
 
-export const zHentVedtaksbrevtekstData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentVedtaksbrevtekstPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2323,12 +2093,8 @@ export const zHentVedtaksbrevtekstData = z.object({
  */
 export const zHentVedtaksbrevtekstResponse = zRessursListAvsnitt;
 
-export const zHentForhåndsvarselTekstData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentForhåndsvarselTekstPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2336,12 +2102,8 @@ export const zHentForhåndsvarselTekstData = z.object({
  */
 export const zHentForhåndsvarselTekstResponse = zRessursVarselbrevtekst;
 
-export const zHentForhåndsvarselinfoData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentForhåndsvarselinfoPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2349,15 +2111,10 @@ export const zHentForhåndsvarselinfoData = z.object({
  */
 export const zHentForhåndsvarselinfoResponse = zRessursForhåndsvarselDto;
 
-export const zHentUrlTilArbeidOgInntektData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional(),
-    headers: z.object({
-        'x-person-ident': zPersonIdent,
-        'x-fagsak-id': z.string().optional(),
-        'x-behandling-id': z.string().optional(),
-    }),
+export const zHentUrlTilArbeidOgInntektHeaders = z.object({
+    'x-person-ident': zPersonIdent,
+    'x-fagsak-id': z.string().optional(),
+    'x-behandling-id': z.string().optional(),
 });
 
 /**
@@ -2365,12 +2122,8 @@ export const zHentUrlTilArbeidOgInntektData = z.object({
  */
 export const zHentUrlTilArbeidOgInntektResponse = zRessursBrukerlenkeDto;
 
-export const zHentHistorikkinnslagData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentHistorikkinnslagPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2378,12 +2131,8 @@ export const zHentHistorikkinnslagData = z.object({
  */
 export const zHentHistorikkinnslagResponse = zRessursListHistorikkinnslagDto;
 
-export const zHentVurdertVilkårsvurderingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentVurdertVilkårsvurderingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2391,12 +2140,8 @@ export const zHentVurdertVilkårsvurderingData = z.object({
  */
 export const zHentVurdertVilkårsvurderingResponse = zRessursVurdertVilkårsvurderingDto;
 
-export const zHentInaktivVilkårsvurderingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentInaktivVilkårsvurderingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2404,12 +2149,8 @@ export const zHentInaktivVilkårsvurderingData = z.object({
  */
 export const zHentInaktivVilkårsvurderingResponse = zRessursListVurdertVilkårsvurderingDto;
 
-export const zHentTotrinnsvurderingerData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentTotrinnsvurderingerPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2417,12 +2158,8 @@ export const zHentTotrinnsvurderingerData = z.object({
  */
 export const zHentTotrinnsvurderingerResponse = zRessursTotrinnsvurderingDto;
 
-export const zHentJournalposterData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentJournalposterPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2430,14 +2167,10 @@ export const zHentJournalposterData = z.object({
  */
 export const zHentJournalposterResponse = zRessursListJournalpost;
 
-export const zHentDokumentData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-        journalpostId: z.string(),
-        dokumentInfoId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zHentDokumentPath = z.object({
+    behandlingId: z.uuid(),
+    journalpostId: z.string(),
+    dokumentInfoId: z.string(),
 });
 
 /**
@@ -2445,12 +2178,8 @@ export const zHentDokumentData = z.object({
  */
 export const zHentDokumentResponse = zRessursByte;
 
-export const zHentVurdertForeldelseData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentVurdertForeldelsePath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2458,12 +2187,8 @@ export const zHentVurdertForeldelseData = z.object({
  */
 export const zHentVurdertForeldelseResponse = zRessursVurdertForeldelseDto;
 
-export const zHentFaktaomfeilutbetalingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentFaktaomfeilutbetalingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2471,12 +2196,8 @@ export const zHentFaktaomfeilutbetalingData = z.object({
  */
 export const zHentFaktaomfeilutbetalingResponse = zRessursFaktaFeilutbetalingDto;
 
-export const zHentInaktivFaktaomfeilutbetalingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentInaktivFaktaomfeilutbetalingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2484,12 +2205,8 @@ export const zHentInaktivFaktaomfeilutbetalingData = z.object({
  */
 export const zHentInaktivFaktaomfeilutbetalingResponse = zRessursListFaktaFeilutbetalingDto;
 
-export const zHentBeregningsresultatData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentBeregningsresultatPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -2497,12 +2214,8 @@ export const zHentBeregningsresultatData = z.object({
  */
 export const zHentBeregningsresultatResponse = zRessursBeregningsresultatDto;
 
-export const zHentBehandlingData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zHentBehandlingPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
