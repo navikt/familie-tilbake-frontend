@@ -132,6 +132,11 @@ export type OppdaterFaktaPeriode = {
 };
 
 export type Oppsummeringsdata = {
+    beregnerSkatt: boolean;
+    perioder: Array<OppsummertPeriode>;
+};
+
+export type OppsummertPeriode = {
     fom: string;
     tom: string;
     feilutbetaltBeløp: string;
@@ -216,7 +221,7 @@ export type VedtaksbrevData = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
-    oppsummeringstabell: Array<Oppsummeringsdata>;
+    oppsummeringstabell: Oppsummeringsdata;
     bunntekster: Array<Standardtekst>;
     saksnummer: string;
 };
@@ -288,7 +293,7 @@ export type VedtaksbrevDataWritable = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
-    oppsummeringstabell: Array<Oppsummeringsdata>;
+    oppsummeringstabell: Oppsummeringsdata;
     bunntekster: Array<Standardtekst>;
     saksnummer: string;
 };

@@ -71,6 +71,7 @@ export type {
     OppdaterFaktaOmFeilutbetaling,
     OppdaterFaktaPeriode,
     Oppsummeringsdata,
+    OppsummertPeriode,
     PakrevdBegrunnelse,
     PakrevdBegrunnelseUpdateItem,
     PakrevdBegrunnelseWritable,

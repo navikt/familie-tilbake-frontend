@@ -69,7 +69,7 @@ export const zMuligeRettsligGrunnlag = z.object({
     grunnlag: z.array(zBestemmelseEllerGrunnlag),
 });
 
-export const zOppsummeringsdata = z.object({
+export const zOppsummertPeriode = z.object({
     fom: z.string(),
     tom: z.string(),
     feilutbetaltBeløp: z.string(),
@@ -78,6 +78,11 @@ export const zOppsummeringsdata = z.object({
     renteprosent: z.string(),
     tilbakekrevingsbeløp: z.string(),
     tilbakekrevesBeløpEtterSkatt: z.string(),
+});
+
+export const zOppsummeringsdata = z.object({
+    beregnerSkatt: z.boolean(),
+    perioder: z.array(zOppsummertPeriode),
 });
 
 export const zRentekstElement = z.object({
@@ -226,7 +231,7 @@ export const zVedtaksbrevData = z.object({
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
-    oppsummeringstabell: z.array(zOppsummeringsdata),
+    oppsummeringstabell: zOppsummeringsdata,
     bunntekster: z.array(zStandardtekst),
     saksnummer: z.string(),
 });
@@ -311,7 +316,7 @@ export const zVedtaksbrevDataWritable = z.object({
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
-    oppsummeringstabell: z.array(zOppsummeringsdata),
+    oppsummeringstabell: zOppsummeringsdata,
     bunntekster: z.array(zStandardtekst),
     saksnummer: z.string(),
 });
