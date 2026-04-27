@@ -1,7 +1,6 @@
 import type { VedtaksbrevFormData } from './schema';
 import type {
     PakrevdBegrunnelseUpdateItem,
-    RotElement,
     RotElementUpdateItem,
     RotElementWritable,
     VedtaksbrevData,
@@ -9,17 +8,21 @@ import type {
     VedtaksbrevRedigerbareDataUpdate,
 } from '~/generated-new';
 
-export const elementArrayTilTekst = (elementer: RotElement[]): string =>
+type RentekstElement = { type: 'rentekst'; tekst: string };
+
+export const elementArrayTilTekst = (
+    elementer: readonly { type: string; tekst?: string }[]
+): string =>
     elementer
-        .filter(e => e.type === 'rentekst')
-        .map(e => (e.type === 'rentekst' ? e.tekst : ''))
+        .filter((e): e is RentekstElement => e.type === 'rentekst')
+        .map(e => e.tekst)
         .join('\n\n');
 
-export const tekstTilElementArray = (tekst: string): RotElement[] =>
+export const tekstTilElementArray = (tekst: string): RentekstElement[] =>
     tekst
         .split(/\n\n+/)
         .filter(t => t.length > 0)
-        .map(t => ({ type: 'rentekst' as const, tekst: t }));
+        .map(t => ({ type: 'rentekst', tekst: t }));
 
 export const tilFormData = (vedtaksbrevData: VedtaksbrevData): VedtaksbrevFormData => ({
     hovedavsnitt: {
@@ -32,13 +35,25 @@ export const tilFormData = (vedtaksbrevData: VedtaksbrevData): VedtaksbrevFormDa
             .filter(el => el.type === 'påkrevd_begrunnelse')
             .map(el => ({
                 begrunnelseType: el.begrunnelseType,
-                tekst: el.underavsnitt
-                    .filter(u => u.type === 'rentekst')
-                    .map(u => u.tekst)
-                    .join('\n\n'),
+                tekst: elementArrayTilTekst(el.underavsnitt),
             })),
     })),
 });
+
+const finnFormPåkrevd = (
+    formAvsnitt: VedtaksbrevFormData['avsnitt'][number],
+    begrunnelseType: string
+): VedtaksbrevFormData['avsnitt'][number]['påkrevdeBegrunnelser'][number] => {
+    const formPåkrevd = formAvsnitt.påkrevdeBegrunnelser.find(
+        p => p.begrunnelseType === begrunnelseType
+    );
+    if (!formPåkrevd) {
+        throw new Error(
+            `Fant ikke matchende 'påkrevd_begrunnelse' med begrunnelseType '${begrunnelseType}' i form-data`
+        );
+    }
+    return formPåkrevd;
+};
 
 export const tilVedtaksbrevDataWritable = (
     vedtaksbrevData: VedtaksbrevData,
@@ -55,30 +70,16 @@ export const tilVedtaksbrevDataWritable = (
         },
         avsnitt: formData.avsnitt.map((formAvsnitt, i) => {
             const opprinnelig = avsnitt[i];
-            const påkrevdeFraDto = opprinnelig.underavsnitt.filter(
-                el => el.type === 'påkrevd_begrunnelse'
-            );
-            const påkrevdeWritable: RotElementWritable[] = påkrevdeFraDto.map(
-                opprinneligPåkrevd => {
-                    const formPåkrevd = formAvsnitt.påkrevdeBegrunnelser.find(
-                        p => p.begrunnelseType === opprinneligPåkrevd.begrunnelseType
-                    );
-                    if (!formPåkrevd) {
-                        throw new Error(
-                            `Fant ikke matchende 'påkrevd_begrunnelse' med begrunnelseType '${opprinneligPåkrevd.begrunnelseType}' i form-data`
-                        );
-                    }
-                    return {
-                        type: 'påkrevd_begrunnelse',
-                        tittel: opprinneligPåkrevd.tittel,
-                        begrunnelseType: opprinneligPåkrevd.begrunnelseType,
-                        underavsnitt: formPåkrevd.tekst
-                            .split(/\n\n+/)
-                            .filter(t => t.length > 0)
-                            .map(t => ({ type: 'rentekst' as const, tekst: t })),
-                    };
-                }
-            );
+            const påkrevdeWritable: RotElementWritable[] = opprinnelig.underavsnitt
+                .filter(el => el.type === 'påkrevd_begrunnelse')
+                .map(opprinneligPåkrevd => ({
+                    type: 'påkrevd_begrunnelse',
+                    tittel: opprinneligPåkrevd.tittel,
+                    begrunnelseType: opprinneligPåkrevd.begrunnelseType,
+                    underavsnitt: tekstTilElementArray(
+                        finnFormPåkrevd(formAvsnitt, opprinneligPåkrevd.begrunnelseType).tekst
+                    ),
+                }));
             return {
                 tittel: opprinnelig.tittel,
                 id: formAvsnitt.id,
@@ -98,27 +99,17 @@ export const tilVedtaksbrevRedigerbareDataUpdate = (
     },
     avsnitt: formData.avsnitt.map((formAvsnitt, i) => {
         const opprinnelig = vedtaksbrevData.avsnitt[i];
-        const påkrevdeFraDto = opprinnelig.underavsnitt.filter(
-            el => el.type === 'påkrevd_begrunnelse'
-        );
-        const påkrevdeUpdate: RotElementUpdateItem[] = påkrevdeFraDto.map(opprinneligPåkrevd => {
-            const formPåkrevd = formAvsnitt.påkrevdeBegrunnelser.find(
-                p => p.begrunnelseType === opprinneligPåkrevd.begrunnelseType
-            );
-            if (!formPåkrevd) {
-                throw new Error(
-                    `Fant ikke matchende 'påkrevd_begrunnelse' med begrunnelseType '${opprinneligPåkrevd.begrunnelseType}' i form-data`
-                );
-            }
-            const update = {
-                begrunnelseType: opprinneligPåkrevd.begrunnelseType,
-                underavsnitt: formPåkrevd.tekst
-                    .split(/\n\n+/)
-                    .filter(t => t.length > 0)
-                    .map(t => ({ type: 'rentekst' as const, tekst: t })),
-            } satisfies PakrevdBegrunnelseUpdateItem;
-            return { type: 'påkrevd_begrunnelse', ...update };
-        });
+        const påkrevdeUpdate: RotElementUpdateItem[] = opprinnelig.underavsnitt
+            .filter(el => el.type === 'påkrevd_begrunnelse')
+            .map(opprinneligPåkrevd => {
+                const update: PakrevdBegrunnelseUpdateItem = {
+                    begrunnelseType: opprinneligPåkrevd.begrunnelseType,
+                    underavsnitt: tekstTilElementArray(
+                        finnFormPåkrevd(formAvsnitt, opprinneligPåkrevd.begrunnelseType).tekst
+                    ),
+                };
+                return { type: 'påkrevd_begrunnelse', ...update };
+            });
         return {
             tittel: opprinnelig.tittel,
             id: formAvsnitt.id,
