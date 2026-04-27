@@ -125,7 +125,6 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     }, [vedtaksbrevData]);
 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
-    console.log(harDataEllerFeil, pdfSider.length > 0);
 
     return (
         <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
