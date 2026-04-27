@@ -1,16 +1,16 @@
+import eslintReact from '@eslint-react/eslint-plugin';
 import eslint from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import * as importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
-    react.configs.flat.recommended,
+    eslintReact.configs['recommended-typescript'],
     jsxA11y.flatConfigs.recommended,
     eslintPluginPrettierRecommended,
     {
@@ -36,7 +36,6 @@ export default defineConfig(
                 },
             ],
             '@typescript-eslint/explicit-function-return-type': 'warn',
-            'react/react-in-jsx-scope': 'off',
             '@typescript-eslint/consistent-type-imports': [
                 'warn',
                 {
@@ -82,15 +81,7 @@ export default defineConfig(
                     format: ['PascalCase'],
                 },
             ],
-            'react/no-unescaped-entities': 'off',
             '@typescript-eslint/no-unused-expressions': 'off',
-            'react/jsx-curly-brace-presence': [
-                'warn',
-                {
-                    props: 'never',
-                    children: 'never',
-                },
-            ],
             '@typescript-eslint/adjacent-overload-signatures': 'warn',
             '@typescript-eslint/array-type': 'warn',
             '@typescript-eslint/no-confusing-non-null-assertion': 'error',
@@ -98,11 +89,6 @@ export default defineConfig(
             '@typescript-eslint/no-non-null-assertion': 'error',
             '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/sort-type-constituents': 'warn',
-        },
-        settings: {
-            react: {
-                version: 'detect',
-            },
         },
     },
     [globalIgnores(['src/frontend/generated/', 'src/frontend/generated-new/'])]
