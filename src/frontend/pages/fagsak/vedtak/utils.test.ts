@@ -47,6 +47,7 @@ describe('tilVedtaksbrevDataWritable', () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { sistOppdatert, hovedavsnitt, avsnitt, ...statiskeFelter } = vedtaksbrevData;
         expect(resultat).toMatchObject(statiskeFelter);
+        expect(resultat.hovedavsnitt.hjemler).toEqual(vedtaksbrevData.hovedavsnitt.hjemler);
         expect(resultat).not.toHaveProperty('sistOppdatert');
     });
 
