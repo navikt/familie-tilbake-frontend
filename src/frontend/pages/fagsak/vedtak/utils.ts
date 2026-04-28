@@ -1,7 +1,6 @@
 import type { VedtaksbrevFormData } from './schema';
 import type { TagProps } from '@navikt/ds-react';
 import type {
-    PakrevdBegrunnelseUpdateItem,
     RotElementUpdateItem,
     RotElementWritable,
     VedtaksbrevData,
@@ -81,12 +80,8 @@ export const tilVedtaksbrevDataWritable = (
             const påkrevdeWritable: RotElementWritable[] = opprinnelig.underavsnitt
                 .filter(el => el.type === 'påkrevd_begrunnelse')
                 .map(opprinneligPåkrevd => ({
-                    type: 'påkrevd_begrunnelse',
                     tittel: opprinneligPåkrevd.tittel,
-                    begrunnelseType: opprinneligPåkrevd.begrunnelseType,
-                    underavsnitt: tekstTilElementArray(
-                        finnFormPåkrevd(formAvsnitt, opprinneligPåkrevd.begrunnelseType).tekst
-                    ),
+                    ...mapTilRotElementUpdateItem(opprinneligPåkrevd, formAvsnitt),
                 }));
             return {
                 tittel: opprinnelig.tittel,
@@ -109,19 +104,24 @@ export const tilVedtaksbrevRedigerbareDataUpdate = (
         const opprinnelig = vedtaksbrevData.avsnitt[i];
         const påkrevdeUpdate: RotElementUpdateItem[] = opprinnelig.underavsnitt
             .filter(el => el.type === 'påkrevd_begrunnelse')
-            .map(opprinneligPåkrevd => {
-                const update: PakrevdBegrunnelseUpdateItem = {
-                    begrunnelseType: opprinneligPåkrevd.begrunnelseType,
-                    underavsnitt: tekstTilElementArray(
-                        finnFormPåkrevd(formAvsnitt, opprinneligPåkrevd.begrunnelseType).tekst
-                    ),
-                };
-                return { type: 'påkrevd_begrunnelse', ...update };
-            });
+            .map(opprinneligPåkrevd => mapTilRotElementUpdateItem(opprinneligPåkrevd, formAvsnitt));
         return {
             tittel: opprinnelig.tittel,
             id: formAvsnitt.id,
             underavsnitt: [...tekstTilElementArray(formAvsnitt.tekst), ...påkrevdeUpdate],
         };
     }),
+});
+
+const mapTilRotElementUpdateItem = (
+    opprinnelig: VedtaksbrevData['avsnitt'][number]['underavsnitt'][number] & {
+        type: 'påkrevd_begrunnelse';
+    },
+    formAvsnitt: VedtaksbrevFormData['avsnitt'][number]
+): RotElementUpdateItem => ({
+    type: opprinnelig.type,
+    begrunnelseType: opprinnelig.begrunnelseType,
+    underavsnitt: tekstTilElementArray(
+        finnFormPåkrevd(formAvsnitt, opprinnelig.begrunnelseType).tekst
+    ),
 });
