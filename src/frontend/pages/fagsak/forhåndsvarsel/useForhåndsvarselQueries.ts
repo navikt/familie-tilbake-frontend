@@ -27,7 +27,7 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
                     behandlingId: behandling.behandlingId,
                 },
             }),
-        select: data => data.data?.data,
+        select: data => data.data?.data ?? undefined,
     });
 
     const varselbrevteksterQuery = useQuery({
@@ -38,7 +38,7 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
                     behandlingId: behandling.behandlingId,
                 },
             }),
-        select: data => data.data?.data,
+        select: data => data.data?.data ?? undefined,
     });
 
     return {
