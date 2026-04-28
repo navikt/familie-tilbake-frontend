@@ -28,7 +28,7 @@ export default defineConfig([
         input: 'https://tilbakekreving-backend.intern.dev.nav.no/v3/api-docs',
         output: {
             path: 'src/frontend/generated',
-            format: 'prettier',
+            postProcess: ['prettier'],
         },
     },
     {
@@ -36,7 +36,7 @@ export default defineConfig([
         input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/5ea9fe1ca05309288dc4053adb78e46131ee3b79/tsp-output/schema/openapi.yaml',
         output: {
             path: 'src/frontend/generated-new',
-            format: 'prettier',
+            postProcess: ['prettier'],
         },
     },
 ] satisfies UserConfig[]);
