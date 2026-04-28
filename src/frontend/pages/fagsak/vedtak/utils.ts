@@ -1,4 +1,5 @@
 import type { VedtaksbrevFormData } from './schema';
+import type { TagProps } from '@navikt/ds-react';
 import type {
     PakrevdBegrunnelseUpdateItem,
     RotElementUpdateItem,
@@ -6,9 +7,16 @@ import type {
     VedtaksbrevData,
     VedtaksbrevDataWritable,
     VedtaksbrevRedigerbareDataUpdate,
+    Vedtaksresultat,
 } from '~/generated-new';
 
 type RentekstElement = { type: 'rentekst'; tekst: string };
+
+export const vedtaksresultatFarger: Record<Vedtaksresultat, TagProps['data-color']> = {
+    DelvisTilbakebetaling: 'meta-purple',
+    IngenTilbakebetaling: 'brand-beige',
+    FullTilbakebetaling: 'meta-lime',
+};
 
 export const elementArrayTilTekst = (
     elementer: readonly { type: string; tekst?: string }[]

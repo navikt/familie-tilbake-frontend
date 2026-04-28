@@ -18,9 +18,9 @@ import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
+import { vedtaksresultatFarger } from './utils';
 import { Vedtaksbrev, VEDTAKSBREV_FORM_ID } from './Vedtaksbrev';
 import { VedtakSkeleton } from './VedtakSkeleton';
-import { vedtaksresultatFarger } from './vedtaksresultatFarger';
 import { Vedtakstabell } from './Vedtakstabell';
 import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
 
