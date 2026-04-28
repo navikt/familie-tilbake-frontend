@@ -40,6 +40,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE: ${{ github.sha }}
         run: |
+          pnpm typecheck
           pnpm build
           pnpm test
 

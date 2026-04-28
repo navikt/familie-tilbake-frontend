@@ -91,6 +91,7 @@ export type Hovedavsnitt = {
     tittel: string;
     readonly forklaring: string;
     underavsnitt: Array<RotElement>;
+    hjemler: string;
 };
 
 export type HovedavsnittUpdate = {
@@ -131,6 +132,11 @@ export type OppdaterFaktaPeriode = {
 };
 
 export type Oppsummeringsdata = {
+    beregnerSkatt: boolean;
+    perioder: Array<OppsummertPeriode>;
+};
+
+export type OppsummertPeriode = {
     fom: string;
     tom: string;
     feilutbetaltBeløp: string;
@@ -215,7 +221,7 @@ export type VedtaksbrevData = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
-    oppsummeringstabell: Array<Oppsummeringsdata>;
+    oppsummeringstabell: Oppsummeringsdata;
     bunntekster: Array<Standardtekst>;
     saksnummer: string;
 };
@@ -260,6 +266,7 @@ export type AvsnittWritable = {
 export type HovedavsnittWritable = {
     tittel: string;
     underavsnitt: Array<RotElementWritable>;
+    hjemler: string;
 };
 
 export type PakrevdBegrunnelseWritable = {
@@ -286,7 +293,7 @@ export type VedtaksbrevDataWritable = {
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
-    oppsummeringstabell: Array<Oppsummeringsdata>;
+    oppsummeringstabell: Oppsummeringsdata;
     bunntekster: Array<Standardtekst>;
     saksnummer: string;
 };

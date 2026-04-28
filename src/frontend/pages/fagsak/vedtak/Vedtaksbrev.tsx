@@ -26,7 +26,11 @@ import {
 import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
 
 import { vedtaksbrevResolver } from './schema';
-import { tilVedtaksbrevDataWritable } from './utils';
+import {
+    tilFormData,
+    tilVedtaksbrevDataWritable,
+    tilVedtaksbrevRedigerbareDataUpdate,
+} from './utils';
 import { VedtaksbrevSkjema } from './VedtaksbrevSkjema';
 
 const useDebounce = (updateFunction: () => Promise<void> | void): (() => void) => {
@@ -56,10 +60,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     const methods = useForm<VedtaksbrevFormData>({
         resolver: vedtaksbrevResolver,
         mode: 'onSubmit',
-        values: {
-            hovedavsnitt: vedtaksbrevData.hovedavsnitt,
-            avsnitt: vedtaksbrevData.avsnitt,
-        },
+        values: tilFormData(vedtaksbrevData),
     });
 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
@@ -102,7 +103,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
         oppdaterForhåndsvisning(tilVedtaksbrevDataWritable(vedtaksbrevData, formData));
         oppdaterVedtaksbrevMutation.mutate({
             path: { behandlingId },
-            body: formData,
+            body: tilVedtaksbrevRedigerbareDataUpdate(vedtaksbrevData, formData),
         });
     });
     useEffect(() => {
@@ -167,7 +168,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                             }
                         )}
                     >
-                        {pdfSider.length > 0 && (
+                        {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                             <HStack
                                 justify="center"
                                 align="center"
@@ -215,7 +216,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                                     </Button>
                                 </VStack>
                             )}
-                            {pdfSider.length > 0 && (
+                            {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                                 <img
                                     className="max-w-full max-h-full object-contain"
                                     alt={`Forhåndsvisning av vedtaksbrev, side ${gjeldendeSide}`}

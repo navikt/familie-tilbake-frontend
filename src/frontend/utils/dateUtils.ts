@@ -63,7 +63,7 @@ export const formatterDatoOgTidstring = (datoAsString: string): string => {
     })} ${dato.toLocaleTimeString('no-NO', tidformat)}`;
 };
 
-export const hentAlder = (fødselsdato: string, dødsdato: string | undefined): number => {
+export const hentAlder = (fødselsdato: string, dødsdato: string | null | undefined): number => {
     const dødsdatoEllerNå = dødsdato ? parseISO(dødsdato) : new Date();
     const fødselsdatoDate = parseISO(fødselsdato);
     return differenceInYears(dødsdatoEllerNå, fødselsdatoDate);

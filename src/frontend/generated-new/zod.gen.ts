@@ -69,7 +69,7 @@ export const zMuligeRettsligGrunnlag = z.object({
     grunnlag: z.array(zBestemmelseEllerGrunnlag),
 });
 
-export const zOppsummeringsdata = z.object({
+export const zOppsummertPeriode = z.object({
     fom: z.string(),
     tom: z.string(),
     feilutbetaltBeløp: z.string(),
@@ -78,6 +78,11 @@ export const zOppsummeringsdata = z.object({
     renteprosent: z.string(),
     tilbakekrevingsbeløp: z.string(),
     tilbakekrevesBeløpEtterSkatt: z.string(),
+});
+
+export const zOppsummeringsdata = z.object({
+    beregnerSkatt: z.boolean(),
+    perioder: z.array(zOppsummertPeriode),
 });
 
 export const zRentekstElement = z.object({
@@ -152,22 +157,10 @@ export const zUnderavsnittElement = z.object({
     underavsnitt: z.array(zElement),
 });
 
-export const zRotElement = z.union([
-    z
-        .object({
-            type: z.literal('rentekst'),
-        })
-        .and(zRentekstElement),
-    z
-        .object({
-            type: z.literal('underavsnitt'),
-        })
-        .and(zUnderavsnittElement),
-    z
-        .object({
-            type: z.literal('påkrevd_begrunnelse'),
-        })
-        .and(zPakrevdBegrunnelse),
+export const zRotElement = z.discriminatedUnion('type', [
+    zRentekstElement.extend({ type: z.literal('rentekst') }),
+    zUnderavsnittElement.extend({ type: z.literal('underavsnitt') }),
+    zPakrevdBegrunnelse.extend({ type: z.literal('påkrevd_begrunnelse') }),
 ]);
 
 export const zAvsnitt = z.object({
@@ -182,24 +175,13 @@ export const zHovedavsnitt = z.object({
     tittel: z.string().min(3).max(300),
     forklaring: z.string().readonly(),
     underavsnitt: z.array(zRotElement),
+    hjemler: z.string(),
 });
 
-export const zRotElementUpdateItem = z.union([
-    z
-        .object({
-            type: z.literal('rentekst'),
-        })
-        .and(zRentekstElement),
-    z
-        .object({
-            type: z.literal('underavsnitt'),
-        })
-        .and(zUnderavsnittElement),
-    z
-        .object({
-            type: z.literal('påkrevd_begrunnelse'),
-        })
-        .and(zPakrevdBegrunnelseUpdateItem),
+export const zRotElementUpdateItem = z.discriminatedUnion('type', [
+    zRentekstElement.extend({ type: z.literal('rentekst') }),
+    zUnderavsnittElement.extend({ type: z.literal('underavsnitt') }),
+    zPakrevdBegrunnelseUpdateItem.extend({ type: z.literal('påkrevd_begrunnelse') }),
 ]);
 
 export const zAvsnittUpdateItem = z.object({
@@ -249,7 +231,7 @@ export const zVedtaksbrevData = z.object({
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
-    oppsummeringstabell: z.array(zOppsummeringsdata),
+    oppsummeringstabell: zOppsummeringsdata,
     bunntekster: z.array(zStandardtekst),
     saksnummer: z.string(),
 });
@@ -309,22 +291,10 @@ export const zPakrevdBegrunnelseWritable = z.object({
     underavsnitt: z.array(zElement),
 });
 
-export const zRotElementWritable = z.union([
-    z
-        .object({
-            type: z.literal('rentekst'),
-        })
-        .and(zRentekstElement),
-    z
-        .object({
-            type: z.literal('underavsnitt'),
-        })
-        .and(zUnderavsnittElement),
-    z
-        .object({
-            type: z.literal('påkrevd_begrunnelse'),
-        })
-        .and(zPakrevdBegrunnelseWritable),
+export const zRotElementWritable = z.discriminatedUnion('type', [
+    zRentekstElement.extend({ type: z.literal('rentekst') }),
+    zUnderavsnittElement.extend({ type: z.literal('underavsnitt') }),
+    zPakrevdBegrunnelseWritable.extend({ type: z.literal('påkrevd_begrunnelse') }),
 ]);
 
 export const zAvsnittWritable = z.object({
@@ -336,6 +306,7 @@ export const zAvsnittWritable = z.object({
 export const zHovedavsnittWritable = z.object({
     tittel: z.string().min(3).max(300),
     underavsnitt: z.array(zRotElementWritable),
+    hjemler: z.string(),
 });
 
 export const zVedtaksbrevDataWritable = z.object({
@@ -345,7 +316,7 @@ export const zVedtaksbrevDataWritable = z.object({
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
-    oppsummeringstabell: z.array(zOppsummeringsdata),
+    oppsummeringstabell: zOppsummeringsdata,
     bunntekster: z.array(zStandardtekst),
     saksnummer: z.string(),
 });
@@ -355,12 +326,8 @@ export const zVedtaksbrevRedigerbareDataWritable = z.object({
     avsnitt: z.array(zAvsnittWritable),
 });
 
-export const zBehandlingBehandlingsloggData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingBehandlingsloggPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -368,12 +335,8 @@ export const zBehandlingBehandlingsloggData = z.object({
  */
 export const zBehandlingBehandlingsloggResponse = z.array(zLogginnslag);
 
-export const zBehandlingFaktaData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingFaktaPath = z.object({
+    behandlingId: z.string(),
 });
 
 /**
@@ -381,12 +344,10 @@ export const zBehandlingFaktaData = z.object({
  */
 export const zBehandlingFaktaResponse = zFaktaOmFeilutbetaling;
 
-export const zBehandlingOppdaterFaktaData = z.object({
-    body: zOppdaterFaktaOmFeilutbetaling,
-    path: z.object({
-        behandlingId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingOppdaterFaktaBody = zOppdaterFaktaOmFeilutbetaling;
+
+export const zBehandlingOppdaterFaktaPath = z.object({
+    behandlingId: z.string(),
 });
 
 /**
@@ -394,20 +355,12 @@ export const zBehandlingOppdaterFaktaData = z.object({
  */
 export const zBehandlingOppdaterFaktaResponse = zFaktaOmFeilutbetaling;
 
-export const zBehandlingForeslaaVedtakData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingForeslaaVedtakPath = z.object({
+    behandlingId: z.uuid(),
 });
 
-export const zBehandlingHentVedtaksbrevData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.string(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingHentVedtaksbrevPath = z.object({
+    behandlingId: z.string(),
 });
 
 /**
@@ -415,12 +368,10 @@ export const zBehandlingHentVedtaksbrevData = z.object({
  */
 export const zBehandlingHentVedtaksbrevResponse = zVedtaksbrevData;
 
-export const zBehandlingOppdaterVedtaksbrevData = z.object({
-    body: zVedtaksbrevRedigerbareDataUpdate,
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingOppdaterVedtaksbrevBody = zVedtaksbrevRedigerbareDataUpdate;
+
+export const zBehandlingOppdaterVedtaksbrevPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -428,12 +379,8 @@ export const zBehandlingOppdaterVedtaksbrevData = z.object({
  */
 export const zBehandlingOppdaterVedtaksbrevResponse = zVedtaksbrevRedigerbareData;
 
-export const zBehandlingHentVedtaksresultatData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        behandlingId: z.uuid(),
-    }),
-    query: z.never().optional(),
+export const zBehandlingHentVedtaksresultatPath = z.object({
+    behandlingId: z.uuid(),
 });
 
 /**
@@ -441,11 +388,7 @@ export const zBehandlingHentVedtaksresultatData = z.object({
  */
 export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
 
-export const zVedtaksbrevLagSvgVedtaksbrevData = z.object({
-    body: zVedtaksbrevDataWritable,
-    path: z.never().optional(),
-    query: z.never().optional(),
-});
+export const zVedtaksbrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
 
 /**
  * The request has succeeded.
