@@ -1,5 +1,5 @@
-import type { ForhåndsvarselDto } from '~/generated';
 import type { FC } from 'react';
+import type { ForhåndsvarselDto } from '~/generated';
 
 import { ClockIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
