@@ -1,5 +1,5 @@
-import { TagProps } from '@navikt/ds-react';
 import type { VedtaksbrevFormData } from './schema';
+import type { TagProps } from '@navikt/ds-react';
 import type {
     PakrevdBegrunnelseUpdateItem,
     RotElementUpdateItem,
