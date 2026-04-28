@@ -1,5 +1,5 @@
 import type { VedtaksbrevFormData } from './schema';
-import type { Avsnitt, VedtaksbrevData } from '~/generated-new';
+import type { Avsnitt, VedtaksbrevData, Vedtaksresultat } from '~/generated-new';
 
 import { describe, expect, test } from 'vitest';
 
@@ -9,6 +9,7 @@ import {
     tekstTilElementArray,
     tilFormData,
     tilVedtaksbrevDataWritable,
+    vedtaksresultatFarger,
 } from './utils';
 
 const lagVedtaksbrevData = (overrides: Partial<VedtaksbrevData> = {}): VedtaksbrevData => ({
@@ -239,5 +240,22 @@ describe('vedtaksbrevResolver', () => {
             ['avsnitt', 0, 'påkrevdeBegrunnelser', 0, 'tekst', 'message'],
             FORVENTET_FEILMELDING
         );
+    });
+});
+
+describe('vedtaksresultatFarger', () => {
+    test('delvis tilbakebetaling har farge meta-purple', () => {
+        const resultat: Vedtaksresultat = 'DelvisTilbakebetaling';
+        expect(vedtaksresultatFarger[resultat]).toBe('meta-purple');
+    });
+
+    test('ingen tilbakebetaling har farge brand-beige', () => {
+        const resultat: Vedtaksresultat = 'IngenTilbakebetaling';
+        expect(vedtaksresultatFarger[resultat]).toBe('brand-beige');
+    });
+
+    test('full tilbakebetaling har farge meta-lime', () => {
+        const resultat: Vedtaksresultat = 'FullTilbakebetaling';
+        expect(vedtaksresultatFarger[resultat]).toBe('meta-lime');
     });
 });

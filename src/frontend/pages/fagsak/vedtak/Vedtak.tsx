@@ -20,7 +20,7 @@ import { useStegNavigering } from '~/utils/sider';
 
 import { Vedtaksbrev, VEDTAKSBREV_FORM_ID } from './Vedtaksbrev';
 import { VedtakSkeleton } from './VedtakSkeleton';
-import { vedtaksresultatFarger } from './vedtaksresultatFarger';
+import { vedtaksresultatFarger } from './utils';
 import { Vedtakstabell } from './Vedtakstabell';
 import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
 
