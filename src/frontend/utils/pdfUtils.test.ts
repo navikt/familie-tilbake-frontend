@@ -16,7 +16,7 @@ Object.defineProperty(globalThis, 'URL', {
 // Mock Blob som en constructor class
 class MockBlob {
     type: string;
-    constructor(parts: BlobPart[], options?: BlobPropertyBag) {
+    constructor(_parts: BlobPart[], options?: BlobPropertyBag) {
         this.type = options?.type || '';
     }
 }

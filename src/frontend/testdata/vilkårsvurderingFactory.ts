@@ -44,6 +44,7 @@ export const lagVilkårsvurderingResponse = (
         perioder: [lagVilkårsvurderingPeriode()],
         rettsgebyr: 1199,
         opprettetTid: new Date().toISOString(),
+        kanUnnlates4xRettsgebyr: false,
         ...overrides,
     };
 };

@@ -16,7 +16,7 @@ import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';
-import { GamleVedtaksresultat, Underavsnittstype, Vurdering } from '~/kodeverk';
+import { Underavsnittstype, Vurdering } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
@@ -97,7 +97,7 @@ const perioder: BeregningsresultatPeriode[] = [
 ];
 const beregningsresultat: Beregningsresultat = {
     beregningsresultatsperioder: perioder,
-    vedtaksresultat: GamleVedtaksresultat.DelvisTilbakebetaling,
+    vedtaksresultat: 'DelvisTilbakebetaling',
     vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
 };
 

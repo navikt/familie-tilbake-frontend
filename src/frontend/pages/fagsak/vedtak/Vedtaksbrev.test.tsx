@@ -145,7 +145,7 @@ const lagVedtaksbrevData = (overrides?: Partial<VedtaksbrevData>): VedtaksbrevDa
             ansvarligSaksbehandler: 'Ola Nordmann',
             besluttendeSaksbehandler: 'Kari Nordmann',
         } satisfies VedtaksbrevData['signatur'],
-        oppsummeringstabell: [],
+        oppsummeringstabell: { beregnerSkatt: false, perioder: [] },
         bunntekster: [],
         saksnummer: '123456',
     };

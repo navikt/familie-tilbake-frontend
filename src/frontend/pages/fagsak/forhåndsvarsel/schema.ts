@@ -96,7 +96,7 @@ const getNeiUttalelseValues = (uttalelse: BrukeruttalelseDto | undefined): Uttal
 };
 
 const getUtsettUttalelseValues = (
-    utsettelse: FristUtsettelseDto | undefined
+    utsettelse: FristUtsettelseDto | null | undefined
 ): UttalelseFormData => {
     return {
         harUttaltSeg: HarUttaltSeg.UtsettFrist,

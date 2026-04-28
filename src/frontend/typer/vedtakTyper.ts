@@ -1,5 +1,6 @@
 import type { FaktaPeriode, VurderingAvBrukersUttalelse } from './tilbakekrevingstyper';
-import type { Avsnittstype, Underavsnittstype, Vedtaksresultat, Vurdering } from '~/kodeverk';
+import type { Vedtaksresultat } from '~/generated-new';
+import type { Avsnittstype, Underavsnittstype, Vurdering } from '~/kodeverk';
 
 export interface BeregningsresultatPeriode extends FaktaPeriode {
     vurdering: Vurdering;
