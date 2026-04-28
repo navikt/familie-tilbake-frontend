@@ -28,7 +28,7 @@ const lagVedtaksbrevData = (overrides: Partial<VedtaksbrevData> = {}): Vedtaksbr
         ansvarligSaksbehandler: 'Saksbehandler A',
         besluttendeSaksbehandler: null,
     },
-    oppsummeringstabell: [],
+    oppsummeringstabell: { beregnerSkatt: false, perioder: [] },
     bunntekster: [],
     saksnummer: '0012345678',
     ...overrides,
