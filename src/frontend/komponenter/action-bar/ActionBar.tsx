@@ -15,6 +15,7 @@ type BaseProps = {
     isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
+    forrigeTekst?: string;
 };
 
 type ButtonProps = BaseProps & {
@@ -42,6 +43,7 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
     skjulNeste = false,
     disableNeste = false,
     type = 'button',
+    forrigeTekst = 'Forrige',
 }) => {
     return (
         <nav

@@ -12,6 +12,18 @@ import { finnDatoRelativtTilNå } from '~/utils';
 import { ForeldelsePerioder } from './foreldelse-periode/ForeldelsePerioder';
 import { useForeldelse } from './ForeldelseContext';
 
+const forrigeAriaLabel = (finnesForhåndsvarsel: boolean, skalLagre: boolean): string => {
+    if (finnesForhåndsvarsel && skalLagre) {
+        return 'Lagre og gå tilbake til forhåndsvarselsteget';
+    } else if (!finnesForhåndsvarsel && skalLagre) {
+        return 'Lagre og gå tilbake til faktasteget';
+    } else if (finnesForhåndsvarsel && !skalLagre) {
+        return 'Gå tilbake til forhåndsvarselsteget';
+    } else {
+        return 'Gå tilbake til faktasteget';
+    }
+};
+
 export const ForeldelseContainer: FC = () => {
     const {
         foreldelse,
@@ -23,11 +35,20 @@ export const ForeldelseContainer: FC = () => {
         sendInnSkjema,
         senderInn,
         allePerioderBehandlet,
+        harUlagredeEndringer,
     } = useForeldelse();
     const behandling = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
-    const navigerEllerLagreOgNaviger =
-        erAutoutført || (stegErBehandlet && behandlingILesemodus) ? navigerTilNeste : sendInnSkjema;
+
+    const skalNavigere =
+        !harUlagredeEndringer || erAutoutført || (stegErBehandlet && behandlingILesemodus);
+    const onNeste = skalNavigere ? navigerTilNeste : (): void => sendInnSkjema(navigerTilNeste);
+    const onForrige = skalNavigere
+        ? navigerTilForrige
+        : (): void => sendInnSkjema(navigerTilForrige);
+    const finnesForhåndsvarsel = behandling.behandlingsstegsinfo.some(
+        steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
+    );
 
     return (
         <VStack gap="space-24">
@@ -113,16 +134,16 @@ export const ForeldelseContainer: FC = () => {
             )}
             <ActionBar
                 stegtekst={actionBarStegtekst('FORELDELSE')}
-                forrigeAriaLabel={
-                    behandling.behandlingsstegsinfo.some(
-                        steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
-                    )
-                        ? 'Gå tilbake til forhåndsvarselsteget'
-                        : 'Gå tilbake til faktasteget'
+                forrigeAriaLabel={forrigeAriaLabel(finnesForhåndsvarsel, !skalNavigere)}
+                nesteAriaLabel={
+                    skalNavigere
+                        ? 'Gå videre til vilkårsvurderingssteget'
+                        : 'Lagre og gå videre til vilkårsvurderingssteget'
                 }
-                nesteAriaLabel="Gå videre til vilkårsvurderingssteget"
-                onForrige={navigerTilForrige}
-                onNeste={navigerEllerLagreOgNaviger}
+                onForrige={onForrige}
+                onNeste={onNeste}
+                nesteTekst={skalNavigere ? 'Neste' : 'Lagre og gå til neste'}
+                forrigeTekst={skalNavigere ? 'Forrige' : 'Lagre og gå til forrige'}
                 disableNeste={!allePerioderBehandlet}
                 isLoading={senderInn}
             />

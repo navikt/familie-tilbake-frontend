@@ -54,14 +54,15 @@ export type ForeldelseHook = {
     skjemaData: ForeldelsePeriodeSkjemeData[];
     oppdaterPeriode: (periode: ForeldelsePeriodeSkjemeData) => void;
     valgtPeriode: ForeldelsePeriodeSkjemeData | undefined;
-    settValgtPeriode: (
+    setValgtPeriode: (
         valgtPeriode: ForeldelsePeriodeSkjemeData | undefined
     ) => ForeldelsePeriodeSkjemeData | undefined;
     allePerioderBehandlet: boolean;
+    harUlagredeEndringer: boolean;
     navigerTilNeste: () => void;
     navigerTilForrige: () => void;
     senderInn: boolean;
-    sendInnSkjema: () => void;
+    sendInnSkjema: (naviger: () => void) => void;
     onSplitPeriode: (
         periode: ForeldelsePeriodeSkjemeData,
         nyePerioder: ForeldelsePeriodeSkjemeData[]
@@ -177,7 +178,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         setValgtPeriode(nyePerioder[0]);
     };
 
-    const harEndretOpplysninger = (): boolean | undefined => {
+    const harEndretOpplysninger = (): boolean => {
         if (foreldelse?.status === RessursStatus.Suksess) {
             const hentetPerioder = foreldelse.data.foreldetPerioder;
             return skjemaData.some(skjemaPeriode => {
@@ -196,50 +197,46 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 );
             });
         }
+        return false;
     };
 
-    const sendInnSkjema = (): void => {
+    const sendInnSkjema = (naviger: () => void): void => {
         nullstillIkkePersisterteKomponenter();
-        if (stegErBehandlet && !harEndretOpplysninger()) {
-            navigerTilNeste();
-        } else {
-            setSenderInn(true);
-            const payload: ForeldelseStegPayload = {
-                '@type': 'FORELDELSE',
-                foreldetPerioder: skjemaData.map<PeriodeForeldelseStegPayload>(per => {
-                    const erForeldelse =
-                        per.foreldelsesvurderingstype === Foreldelsevurdering.Foreldet;
-                    const erTilleggsfrist =
-                        per.foreldelsesvurderingstype === Foreldelsevurdering.Tilleggsfrist;
-                    return {
-                        periode: per.periode,
-                        begrunnelse: per.begrunnelse,
-                        foreldelsesvurderingstype: per.foreldelsesvurderingstype,
-                        foreldelsesfrist:
-                            erForeldelse || erTilleggsfrist ? per.foreldelsesfrist : undefined,
-                        oppdagelsesdato: erTilleggsfrist ? per.oppdagelsesdato : undefined,
-                    };
-                }),
-            };
-            sendInnForeldelse(behandling.behandlingId, payload).then(
-                async (respons: Ressurs<string>) => {
-                    setSenderInn(false);
-                    if (respons.status === RessursStatus.Suksess) {
-                        await queryClient.refetchQueries({
-                            queryKey: hentBehandlingQueryKey({
-                                path: { behandlingId: behandling.behandlingId },
-                            }),
-                        });
-                        void queryClient.invalidateQueries({
-                            queryKey: behandlingHentVedtaksresultatQueryKey({
-                                path: { behandlingId: behandling.behandlingId },
-                            }),
-                        });
-                        navigerTilNeste();
-                    }
+        setSenderInn(true);
+        const payload: ForeldelseStegPayload = {
+            '@type': 'FORELDELSE',
+            foreldetPerioder: skjemaData.map<PeriodeForeldelseStegPayload>(per => {
+                const erForeldelse = per.foreldelsesvurderingstype === Foreldelsevurdering.Foreldet;
+                const erTilleggsfrist =
+                    per.foreldelsesvurderingstype === Foreldelsevurdering.Tilleggsfrist;
+                return {
+                    periode: per.periode,
+                    begrunnelse: per.begrunnelse,
+                    foreldelsesvurderingstype: per.foreldelsesvurderingstype,
+                    foreldelsesfrist:
+                        erForeldelse || erTilleggsfrist ? per.foreldelsesfrist : undefined,
+                    oppdagelsesdato: erTilleggsfrist ? per.oppdagelsesdato : undefined,
+                };
+            }),
+        };
+        sendInnForeldelse(behandling.behandlingId, payload).then(
+            async (respons: Ressurs<string>) => {
+                setSenderInn(false);
+                if (respons.status === RessursStatus.Suksess) {
+                    await queryClient.refetchQueries({
+                        queryKey: hentBehandlingQueryKey({
+                            path: { behandlingId: behandling.behandlingId },
+                        }),
+                    });
+                    void queryClient.invalidateQueries({
+                        queryKey: behandlingHentVedtaksresultatQueryKey({
+                            path: { behandlingId: behandling.behandlingId },
+                        }),
+                    });
+                    naviger();
                 }
-            );
-        }
+            }
+        );
     };
 
     return {
@@ -249,8 +246,9 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         skjemaData,
         oppdaterPeriode,
         valgtPeriode,
-        settValgtPeriode: setValgtPeriode,
+        setValgtPeriode,
         allePerioderBehandlet,
+        harUlagredeEndringer: harEndretOpplysninger(),
         navigerTilNeste,
         navigerTilForrige,
         senderInn,

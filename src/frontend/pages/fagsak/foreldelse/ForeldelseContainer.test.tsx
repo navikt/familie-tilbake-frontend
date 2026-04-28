@@ -141,7 +141,7 @@ describe('ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
+                name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         ).toBeDisabled();
 
@@ -173,13 +173,13 @@ describe('ForeldelseContainer', () => {
         expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
         expect(
             getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
+                name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
+                name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         );
     });
