@@ -12,7 +12,6 @@ import {
     Radio,
     RadioGroup,
     Select,
-    Stack,
     Textarea,
     VStack,
 } from '@navikt/ds-react';
@@ -293,21 +292,14 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     return (
         <VStack gap="space-24" className="max-w-xl">
-            <HGrid columns="1fr 4rem">
-                <Stack
-                    className="max-w-120 w-full"
-                    justify="space-between"
-                    align={{ md: 'start', lg: 'center' }}
-                    direction={{ md: 'column', lg: 'row' }}
-                >
-                    <Heading size="small" level="2">
-                        Detaljer for valgt periode
-                    </Heading>
-                    {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
-                        <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
-                    )}
-                </Stack>
-            </HGrid>
+            <HStack justify="space-between">
+                <Heading size="small" level="2">
+                    Detaljer for valgt periode
+                </Heading>
+                {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
+                    <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
+                )}
+            </HStack>
             <PeriodeOppsummering
                 fom={periode.periode.fom}
                 tom={periode.periode.tom}
