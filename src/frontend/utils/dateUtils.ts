@@ -4,6 +4,7 @@ import type { FaktaPeriode } from '~/typer/tilbakekrevingstyper';
 
 import {
     add,
+    addDays,
     differenceInDays,
     differenceInMilliseconds,
     differenceInMonths,
@@ -12,6 +13,7 @@ import {
     endOfDay,
     endOfMonth,
     format,
+    intervalToDuration,
     isBefore,
     parseISO,
 } from 'date-fns';
@@ -79,9 +81,13 @@ export const finnDatoRelativtTilNå = (config: Duration): string => {
     return formatterDato(aDate);
 };
 
-const formatterPeriodelengde = (years?: number, months?: number): string => {
-    if (years === undefined && months === undefined) {
-        return 'Antall år og måneder -';
+const formatterPeriodelengde = (years?: number, months?: number, days?: number): string | null => {
+    if (years === undefined && months === undefined && days === undefined) {
+        return null;
+    }
+
+    if (years === 0 && months === 0) {
+        return days === 1 ? `${days} dag` : `${days} dager`;
     }
 
     if (months === 0) {
@@ -99,13 +105,17 @@ const formatterPeriodelengde = (years?: number, months?: number): string => {
     return `${years} år ${months} måneder`;
 };
 
-export const hentPeriodelengde = (fraDatoPeriode: string, tilDatoPeriode: string): string => {
-    const numOfMonths = differenceInMonths(new Date(tilDatoPeriode), new Date(fraDatoPeriode)) + 1;
+export const hentPeriodelengde = (fom: string, tom: string): string | null => {
+    const {
+        years = 0,
+        months = 0,
+        days = 0,
+    } = intervalToDuration({
+        start: parseISO(fom),
+        end: addDays(parseISO(tom), 1),
+    });
 
-    const years = Math.floor(numOfMonths / 12);
-    const months = numOfMonths % 12;
-
-    return formatterPeriodelengde(years, months);
+    return formatterPeriodelengde(years, months, days);
 };
 
 const yesterday = (): Date => {

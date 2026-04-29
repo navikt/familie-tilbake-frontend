@@ -317,8 +317,8 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
             {!erLesevisning &&
                 !periode.foreldet &&
-                behandletPerioder &&
-                behandletPerioder.length > 0 && (
+                behandletPerioder.length > 0 &&
+                perioder.length > 1 && (
                     <Select
                         className="w-60"
                         name="perioderForKopi"
@@ -332,7 +332,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             <option key={`${per.periode.fom}_${per.periode.tom}`} value={per.index}>
                                 {`${formatterDatostring(
                                     per.periode.fom
-                                )} - ${formatterDatostring(per.periode.tom)}`}
+                                )}–${formatterDatostring(per.periode.tom)}`}
                             </option>
                         ))}
                     </Select>
