@@ -3,12 +3,12 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
 
+import { SplitHorizontalIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { DelOppPeriode, useDelOppPeriode } from '~/komponenter/modal/del-opp-periode';
 import { flyttDatoISODateStr } from '~/utils';
-import { SplitHorizontalIcon } from '@navikt/aksel-icons';
 
 const konverterPeriode = (periode: ForeldelsePeriodeSkjemeData): TimelinePeriodProps => {
     return {
