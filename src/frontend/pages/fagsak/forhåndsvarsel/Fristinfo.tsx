@@ -35,7 +35,10 @@ export const Fristinfo: FC<Props> = ({ forhåndsvarselInfo, onUtsettFrist }) => 
                     <BodyShort size="small" weight="semibold">
                         {nyFrist ? 'Opprinnelig frist' : 'Frist for uttalelse'}
                     </BodyShort>
-                    <time dateTime={opprinneligFrist} className="font-ax-bold text-ax-heading-medium text-ax-text-info">
+                    <time
+                        dateTime={opprinneligFrist}
+                        className="font-ax-bold text-ax-heading-medium text-ax-text-info"
+                    >
                         {formatterDatostring(opprinneligFrist)}
                     </time>
                 </div>
@@ -44,7 +47,10 @@ export const Fristinfo: FC<Props> = ({ forhåndsvarselInfo, onUtsettFrist }) => 
                         <BodyShort size="small" weight="semibold">
                             Ny frist for uttalelse
                         </BodyShort>
-                        <time dateTime={nyFrist} className="font-ax-bold text-ax-heading-medium text-ax-text-info">
+                        <time
+                            dateTime={nyFrist}
+                            className="font-ax-bold text-ax-heading-medium text-ax-text-info"
+                        >
                             {formatterDatostring(nyFrist)}
                         </time>
                     </div>
