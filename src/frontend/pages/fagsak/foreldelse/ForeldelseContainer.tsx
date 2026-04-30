@@ -35,11 +35,7 @@ export const ForeldelseContainer: FC = () => {
             {erAutoutført ? (
                 <LocalAlert status="success" className="min-w-80">
                     <LocalAlert.Header>
-                        <LocalAlert.Title>
-                            <Heading size="small" level="3">
-                                Perioden er ikke foreldet
-                            </Heading>
-                        </LocalAlert.Title>
+                        <LocalAlert.Title as="h3">Perioden er ikke foreldet</LocalAlert.Title>
                     </LocalAlert.Header>
                     <LocalAlert.Content>
                         <VStack gap="space-24">
@@ -76,11 +72,9 @@ export const ForeldelseContainer: FC = () => {
                     {behandling.erNyModell ? null : (
                         <LocalAlert status="announcement" className="min-w-80">
                             <LocalAlert.Header>
-                                <LocalAlert.Title>
-                                    <Heading size="small" level="3">
-                                        Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan
-                                        være foreldet
-                                    </Heading>
+                                <LocalAlert.Title as="h3">
+                                    Perioden før {finnDatoRelativtTilNå({ months: -30 })} kan være
+                                    foreldet
                                 </LocalAlert.Title>
                             </LocalAlert.Header>
                             <LocalAlert.Content>

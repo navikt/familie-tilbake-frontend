@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Heading, LocalAlert, VStack } from '@navikt/ds-react';
+import { LocalAlert, VStack } from '@navikt/ds-react';
 
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '~/typer/ressurs';
@@ -19,9 +19,7 @@ export const HistoriskFaktaContainer: FC = () => {
                     <LocalAlert status="announcement">
                         <LocalAlert.Header>
                             <LocalAlert.Title>
-                                <Heading level="2" size="small">
-                                    Tidligere fakta på denne behandlingen
-                                </Heading>
+                                Tidligere fakta på denne behandlingen
                             </LocalAlert.Title>
                         </LocalAlert.Header>
                     </LocalAlert>

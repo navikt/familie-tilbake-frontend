@@ -15,8 +15,8 @@ export const Steginformasjon: FC<Props> = ({ behandletSteg, infotekst }) => {
             </LocalAlert.Header>
         </LocalAlert>
     ) : (
-        <p className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2">
             <Label size="small">Behandlet:</Label> <BodyShort size="small">{infotekst}</BodyShort>
-        </p>
+        </div>
     );
 };
