@@ -19,8 +19,7 @@ export const HistorikkOgDokumenter: FC = () => {
     const { harVærtPåFatteVedtakSteget } = useBehandlingState();
 
     const skalViseTotrinn = status === 'FATTER_VEDTAK' || harVærtPåFatteVedtakSteget();
-    const standardside = erNyModell ? Menysider.Dokumenter : Menysider.Historikk;
-    const defaultSide = skalViseTotrinn ? Menysider.Totrinn : standardside;
+    const defaultSide = skalViseTotrinn ? Menysider.Totrinn : Menysider.Historikk;
 
     const [valgtSide, setValgtSide] = useState<Menysider | null>(null);
     const erGyldigValg = valgtSide !== null && (valgtSide !== Menysider.Totrinn || skalViseTotrinn);
