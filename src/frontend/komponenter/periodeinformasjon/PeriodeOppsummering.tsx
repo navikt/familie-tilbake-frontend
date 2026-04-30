@@ -20,7 +20,7 @@ export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype 
                 size="small"
                 className="rounded-xl border border-ax-text-brand-magenta py-2 px-4 bg-ax-bg-brand-magenta-soft w-fit"
             >
-                Feilutbetalt:{' '}
+                Feilutbetalt:{' '}
                 <span className="text-ax-text-brand-magenta">{formatCurrencyNoKr(beløp)}</span>
             </BodyShort>
             <BodyShort

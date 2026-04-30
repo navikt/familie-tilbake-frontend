@@ -120,10 +120,10 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
     return periode && tidslinjeRader ? (
         <div className="text-right">
             <Button
-                size="small"
+                size="xsmall"
                 variant="tertiary"
                 onClick={() => setVisModal(true)}
-                icon={<SplitHorizontalIcon aria-hidden fontSize="1.5rem" />}
+                icon={<SplitHorizontalIcon aria-hidden />}
             >
                 Del opp perioden
             </Button>
