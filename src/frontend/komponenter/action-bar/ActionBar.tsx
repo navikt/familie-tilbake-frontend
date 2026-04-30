@@ -11,6 +11,7 @@ type BaseProps = {
     nesteAriaLabel: string;
     onForrige: (() => void) | undefined;
     nesteTekst?: string;
+    forrigeTekst?: string;
     isLoading?: boolean;
     skjulNeste?: boolean;
     disableNeste?: boolean;
@@ -36,6 +37,7 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
     onForrige,
     formId,
     nesteTekst = 'Neste',
+    forrigeTekst = 'Forrige',
     isLoading = false,
     skjulNeste = false,
     disableNeste = false,
@@ -69,7 +71,7 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
                                 onClick={onForrige}
                                 aria-label={forrigeAriaLabel}
                             >
-                                <span className="hidden ax-md:block">Forrige</span>
+                                <span className="hidden ax-md:block">{forrigeTekst}</span>
                             </Button>
                         </Tooltip>
                     )}

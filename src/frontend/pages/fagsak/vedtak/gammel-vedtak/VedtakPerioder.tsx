@@ -12,7 +12,7 @@ type Props = {
 
 export const VedtakPerioder: FC<Props> = ({ perioder }) => {
     return (
-        <Table>
+        <Table size="small">
             <Table.Header>
                 <Table.Row>
                     <Table.DataCell scope="col">Periode</Table.DataCell>
@@ -54,28 +54,30 @@ export const VedtakPerioder: FC<Props> = ({ perioder }) => {
                         </Table.Row>
                     );
                 })}
-                <Table.DataCell>Sum</Table.DataCell>
-                <Table.DataCell>
-                    {formatCurrencyNoKr(
-                        perioder.reduce((sum, periode) => sum + periode.feilutbetaltBeløp, 0)
-                    )}
-                </Table.DataCell>
-                <Table.DataCell></Table.DataCell>
-                <Table.DataCell></Table.DataCell>
-                <Table.DataCell></Table.DataCell>
-                <Table.DataCell>
-                    {formatCurrencyNoKr(
-                        perioder.reduce((sum, periode) => sum + periode.tilbakekrevingsbeløp, 0)
-                    )}
-                </Table.DataCell>
-                <Table.DataCell>
-                    {formatCurrencyNoKr(
-                        perioder.reduce(
-                            (sum, periode) => sum + periode.tilbakekrevesBeløpEtterSkatt,
-                            0
-                        )
-                    )}
-                </Table.DataCell>
+                <Table.Row>
+                    <Table.DataCell>Sum</Table.DataCell>
+                    <Table.DataCell>
+                        {formatCurrencyNoKr(
+                            perioder.reduce((sum, periode) => sum + periode.feilutbetaltBeløp, 0)
+                        )}
+                    </Table.DataCell>
+                    <Table.DataCell></Table.DataCell>
+                    <Table.DataCell></Table.DataCell>
+                    <Table.DataCell></Table.DataCell>
+                    <Table.DataCell>
+                        {formatCurrencyNoKr(
+                            perioder.reduce((sum, periode) => sum + periode.tilbakekrevingsbeløp, 0)
+                        )}
+                    </Table.DataCell>
+                    <Table.DataCell>
+                        {formatCurrencyNoKr(
+                            perioder.reduce(
+                                (sum, periode) => sum + periode.tilbakekrevesBeløpEtterSkatt,
+                                0
+                            )
+                        )}
+                    </Table.DataCell>
+                </Table.Row>
             </Table.Body>
         </Table>
     );
