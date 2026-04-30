@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon } from '@navikt/aksel-icons';
-import { Button, Heading, HStack, VStack } from '@navikt/ds-react';
+import { Button, Heading, HStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -26,7 +26,7 @@ export const Forhåndsvarsel: FC = () => {
         useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
-    const { forhåndsvisning, sendUtsettUttalelseFrist, sendUtsettUttalelseFristMutation } =
+    const { forhåndsvisning, sendUtsettFrist, sendUtsettFristMutation } =
         useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
     const utsettFristModalRef = useRef<HTMLDialogElement>(null);
@@ -108,23 +108,31 @@ export const Forhåndsvarsel: FC = () => {
     const skalViseFristinfo = !!forhåndsvarselInfo?.varselbrevDto?.opprinneligFristForUttalelse;
 
     return (
-        <HStack gap="space-24" wrap={false} align="start">
-            <VStack gap="space-24" className="flex-1 min-w-0">
-                <HStack align="center" gap="space-16">
-                    <Heading size="medium">Forhåndsvarsel</Heading>
-                    <Button
-                        loading={forhåndsvisning.isPending}
-                        icon={<EyeIcon aria-hidden />}
-                        variant="tertiary"
-                        size="small"
-                        onClick={seForhåndsvisningWithModal}
-                        className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
-                        aria-hidden={!visForhåndsvisningsknapp}
-                        tabIndex={visForhåndsvisningsknapp ? 0 : -1}
-                    >
-                        Forhåndsvis
-                    </Button>
-                </HStack>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_18rem] gap-6 items-start">
+            <HStack align="center" gap="space-16">
+                <Heading size="medium">Forhåndsvarsel</Heading>
+                <Button
+                    loading={forhåndsvisning.isPending}
+                    icon={<EyeIcon aria-hidden />}
+                    variant="tertiary"
+                    size="small"
+                    onClick={seForhåndsvisningWithModal}
+                    className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
+                    aria-hidden={!visForhåndsvisningsknapp}
+                    tabIndex={visForhåndsvisningsknapp ? 0 : -1}
+                >
+                    Forhåndsvis
+                </Button>
+            </HStack>
+            {skalViseFristinfo && forhåndsvarselInfo && (
+                <div className="lg:col-start-2 lg:row-start-1 lg:row-end-4">
+                    <Fristinfo
+                        forhåndsvarselInfo={forhåndsvarselInfo}
+                        onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
+                    />
+                </div>
+            )}
+            <div className="flex flex-col gap-6">
                 <FormProvider {...methods}>
                     <ForhåndsvarselSkjema
                         forhåndsvarselInfo={forhåndsvarselInfo}
@@ -138,18 +146,12 @@ export const Forhåndsvarsel: FC = () => {
                         onRequestClose={() => setShowModal(false)}
                     />
                 )}
-            </VStack>
-            {skalViseFristinfo && forhåndsvarselInfo && (
-                <Fristinfo
-                    forhåndsvarselInfo={forhåndsvarselInfo}
-                    onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
-                />
-            )}
+            </div>
             <UtsettFristModal
                 dialogRef={utsettFristModalRef}
-                onUtsettFrist={sendUtsettUttalelseFrist}
-                laster={sendUtsettUttalelseFristMutation.isPending}
+                onUtsettFrist={sendUtsettFrist}
+                laster={sendUtsettFristMutation.isPending}
             />
-        </HStack>
+        </div>
     );
 };

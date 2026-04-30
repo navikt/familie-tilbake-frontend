@@ -58,7 +58,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
     const {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
-        sendUtsettUttalelseFristMutation,
+        sendUtsettFristMutation,
         sendBrukeruttalelse,
         sendForhåndsvarsel,
         sendUnntakMutation,
@@ -70,7 +70,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
     const mutations = [
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
         { key: 'brukeruttalelse', mutation: sendBrukeruttalelseMutation },
-        { key: 'utsettFrist', mutation: sendUtsettUttalelseFristMutation },
+        { key: 'utsettFrist', mutation: sendUtsettFristMutation },
         { key: 'unntak', mutation: sendUnntakMutation },
     ] as const;
 

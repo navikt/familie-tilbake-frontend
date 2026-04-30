@@ -2,8 +2,9 @@ import type { FC } from 'react';
 import type { ForhåndsvarselDto } from '~/generated';
 
 import { ClockIcon } from '@navikt/aksel-icons';
-import { BodyShort, Box, Button, Heading, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, Button, VStack } from '@navikt/ds-react';
 
+import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { formatterDatostring } from '~/utils';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export const Fristinfo: FC<Props> = ({ forhåndsvarselInfo, onUtsettFrist }) => {
+    const { behandlingILesemodus } = useBehandlingState();
     const opprinneligFrist = forhåndsvarselInfo.varselbrevDto?.opprinneligFristForUttalelse;
     const nyFrist = forhåndsvarselInfo.utsettUttalelseFrist?.nyFrist;
 
@@ -26,35 +28,37 @@ export const Fristinfo: FC<Props> = ({ forhåndsvarselInfo, onUtsettFrist }) => 
             borderWidth="1"
             borderColor="info"
             background="info-soft"
-            className="w-72 shrink-0"
+            className="w-72"
         >
             <VStack gap="space-16" align="start">
                 <div>
                     <BodyShort size="small" weight="semibold">
                         {nyFrist ? 'Opprinnelig frist' : 'Frist for uttalelse'}
                     </BodyShort>
-                    <Heading size="medium" level="3" className="text-ax-text-info">
+                    <time dateTime={opprinneligFrist} className="font-ax-bold text-ax-heading-medium text-ax-text-info">
                         {formatterDatostring(opprinneligFrist)}
-                    </Heading>
+                    </time>
                 </div>
                 {nyFrist && (
                     <div>
                         <BodyShort size="small" weight="semibold">
                             Ny frist for uttalelse
                         </BodyShort>
-                        <Heading size="medium" level="3" className="text-ax-text-info">
+                        <time dateTime={nyFrist} className="font-ax-bold text-ax-heading-medium text-ax-text-info">
                             {formatterDatostring(nyFrist)}
-                        </Heading>
+                        </time>
                     </div>
                 )}
-                <Button
-                    variant="tertiary"
-                    size="small"
-                    icon={<ClockIcon aria-hidden />}
-                    onClick={onUtsettFrist}
-                >
-                    Utsett frist
-                </Button>
+                {!behandlingILesemodus && (
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        icon={<ClockIcon aria-hidden />}
+                        onClick={onUtsettFrist}
+                    >
+                        Utsett frist
+                    </Button>
+                )}
             </VStack>
         </Box>
     );

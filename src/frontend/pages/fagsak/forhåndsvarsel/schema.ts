@@ -2,7 +2,6 @@ import type {
     BrukeruttalelseDto,
     ForhåndsvarselDto,
     ForhåndsvarselUnntakDto,
-    FristUtsettelseDto,
     Uttalelsesdetaljer,
 } from '~/generated';
 
@@ -20,7 +19,6 @@ export enum SkalSendesForhåndsvarsel {
 export enum HarUttaltSeg {
     Ja = 'ja',
     Nei = 'nei',
-    UtsettFrist = 'utsett_frist',
     IkkeValgt = '',
 }
 
@@ -47,11 +45,6 @@ export const utsettUttalelseFristSchema = z.object({
     begrunnelse: fritekstSchema,
 });
 
-const utsettFristSchema = z.object({
-    harUttaltSeg: z.literal(HarUttaltSeg.UtsettFrist),
-    utsettUttalelseFrist: utsettUttalelseFristSchema,
-});
-
 const ikkeValgtUttalelseSchema = z.object({
     harUttaltSeg: z.literal(HarUttaltSeg.IkkeValgt),
 });
@@ -59,14 +52,13 @@ const ikkeValgtUttalelseSchema = z.object({
 const uttalelseSchemaBase = z.discriminatedUnion('harUttaltSeg', [
     harUttaltSegSchema,
     harIkkeUttaltSegSchema,
-    utsettFristSchema,
     ikkeValgtUttalelseSchema,
 ]);
 
 export const uttalelseSchema = uttalelseSchemaBase.refine(
     data => data.harUttaltSeg !== HarUttaltSeg.IkkeValgt,
     {
-        message: 'Du må velge om brukeren har uttalt seg', // eller om fristen skal utsettes', Tas med når toggle fjernes
+        message: 'Du må velge om brukeren har uttalt seg',
         path: ['harUttaltSeg'],
     }
 );
@@ -95,18 +87,6 @@ const getNeiUttalelseValues = (uttalelse: BrukeruttalelseDto | undefined): Uttal
     };
 };
 
-const getUtsettUttalelseValues = (
-    utsettelse: FristUtsettelseDto | null | undefined
-): UttalelseFormData => {
-    return {
-        harUttaltSeg: HarUttaltSeg.UtsettFrist,
-        utsettUttalelseFrist: {
-            nyFrist: utsettelse?.nyFrist ?? '',
-            begrunnelse: utsettelse?.begrunnelse ?? '',
-        },
-    };
-};
-
 export const getUttalelseValuesBasertPåValg = (
     harUttaltSeg: HarUttaltSeg,
     forhåndsvarselInfo: ForhåndsvarselDto | undefined
@@ -121,8 +101,6 @@ export const getUttalelseValuesBasertPåValg = (
             return getJaUttalelseValues(harSammeType ? eksisterendeUttalelse : undefined);
         case HarUttaltSeg.Nei:
             return getNeiUttalelseValues(harSammeType ? eksisterendeUttalelse : undefined);
-        case HarUttaltSeg.UtsettFrist:
-            return getUtsettUttalelseValues(forhåndsvarselInfo?.utsettUttalelseFrist);
         default:
             return {
                 harUttaltSeg: HarUttaltSeg.IkkeValgt,
@@ -139,10 +117,6 @@ export const getUttalelseValues = (
 
     if (forhåndsvarselInfo?.brukeruttalelse?.kommentar) {
         return getNeiUttalelseValues(forhåndsvarselInfo.brukeruttalelse);
-    }
-
-    if (forhåndsvarselInfo?.utsettUttalelseFrist) {
-        return getUtsettUttalelseValues(forhåndsvarselInfo.utsettUttalelseFrist);
     }
 
     return {
@@ -226,5 +200,4 @@ export type ForhåndsvarselFormData =
 export type UttalelseFormData =
     | z.infer<typeof harIkkeUttaltSegSchema>
     | z.infer<typeof harUttaltSegSchema>
-    | z.infer<typeof utsettFristSchema>
     | { harUttaltSeg: HarUttaltSeg.IkkeValgt };

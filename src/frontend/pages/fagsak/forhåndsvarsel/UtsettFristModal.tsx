@@ -1,4 +1,5 @@
 import type { FC, RefObject } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import type { FristUtsettelseDto } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,12 +57,12 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
         },
     });
 
-    const handleSubmit = methods.handleSubmit((data: UtsettFristFormData) => {
+    const handleSubmit: SubmitHandler<UtsettFristFormData> = data => {
         onUtsettFrist({
             nyFrist: data.nyFrist,
             begrunnelse: data.begrunnelse,
         });
-    });
+    };
 
     const handleLukk = () => {
         methods.reset();
@@ -75,7 +76,7 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
             className={MODAL_BREDDE}
             onClose={handleLukk}
         >
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={methods.handleSubmit(handleSubmit)}>
                 <Modal.Body>
                     <VStack gap="space-24">
                         <DatePicker {...datepickerProps}>
@@ -108,7 +109,7 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
                     <Button type="submit" loading={laster} disabled={laster}>
                         Utsett frist
                     </Button>
-                    <Button variant="secondary" type="button" onClick={handleLukk}>
+                    <Button variant="secondary" onClick={handleLukk}>
                         Avbryt
                     </Button>
                 </Modal.Footer>
