@@ -3,14 +3,12 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
 
-import { Detail, Link } from '@navikt/ds-react';
+import { Button } from '@navikt/ds-react';
 import { useCallback, useEffect, useState } from 'react';
 
-import splitPeriodImageUrl from '~/images/splitt.svg';
-import splitPeriodImageHoverUrl from '~/images/splitt_hover.svg';
-import { Image } from '~/komponenter/image/Image';
 import { DelOppPeriode, useDelOppPeriode } from '~/komponenter/modal/del-opp-periode';
 import { flyttDatoISODateStr } from '~/utils';
+import { SplitHorizontalIcon } from '@navikt/aksel-icons';
 
 const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): TimelinePeriodProps => {
     return {
@@ -121,26 +119,14 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
 
     return periode && tidslinjeRader ? (
         <div className="text-right">
-            <Link
-                href="#"
-                role="button"
+            <Button
+                size="small"
+                variant="tertiary"
                 onClick={() => setVisModal(true)}
-                onKeyUp={e => {
-                    if (e.code === 'Space' || e.code === 'Enter') {
-                        e.preventDefault();
-                        setVisModal(true);
-                    }
-                }}
-                aria-label="Del opp perioden"
+                icon={<SplitHorizontalIcon aria-hidden fontSize="1.5rem" />}
             >
-                <Image
-                    src={splitPeriodImageUrl}
-                    srcHover={splitPeriodImageHoverUrl}
-                    altText="Del opp perioden"
-                    aria-label="Del opp perioden"
-                />
-                <Detail className="ml-0.5">Del opp perioden</Detail>
-            </Link>
+                Del opp perioden
+            </Button>
             {visModal && (
                 <DelOppPeriode
                     periode={periode}
