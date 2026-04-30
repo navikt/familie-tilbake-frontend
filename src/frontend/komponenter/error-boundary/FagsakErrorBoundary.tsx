@@ -1,6 +1,6 @@
 import type { ErrorInfo, ReactNode } from 'react';
 
-import { BodyLong, BodyShort, Button, Heading, LocalAlert, VStack } from '@navikt/ds-react';
+import { BodyLong, BodyShort, Button, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';
 
 type Props = {
@@ -37,11 +37,9 @@ export class FagsakErrorBoundary extends Component<Props, State> {
                             <LocalAlert status="error">
                                 <LocalAlert.Header>
                                     <LocalAlert.Title>
-                                        <Heading size="medium" spacing>
-                                            {isFagsakError
-                                                ? 'Kunne ikke laste fagsak'
-                                                : 'Noe gikk galt'}
-                                        </Heading>
+                                        {isFagsakError
+                                            ? 'Kunne ikke laste fagsak'
+                                            : 'Noe gikk galt'}
                                     </LocalAlert.Title>
                                 </LocalAlert.Header>
                                 <LocalAlert.Content>
