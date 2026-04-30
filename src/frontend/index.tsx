@@ -1,7 +1,5 @@
-import axe from '@axe-core/react';
 import * as Sentry from '@sentry/browser';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
 import './api/http/configureHeyApi';
@@ -22,7 +20,11 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-    axe(React, ReactDOM, 1000, {});
+    void Promise.all([import('@axe-core/react'), import('react-dom')]).then(
+        ([{ default: axe }, ReactDOM]) => {
+            axe(React, ReactDOM, 1000, {});
+        }
+    );
 }
 
 initGrafanaFaro();
