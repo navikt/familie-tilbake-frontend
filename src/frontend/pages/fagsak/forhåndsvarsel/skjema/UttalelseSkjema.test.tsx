@@ -172,6 +172,58 @@ describe('Brukeruttalelse', () => {
         expect(neiRadio).not.toBeDisabled();
     });
 
+    test('Deaktiverer Nei-alternativet når ny frist ikke er utgått', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevDto: {
+                        varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                        opprinneligFristForUttalelse: '2020-01-01',
+                    },
+                    utsettUttalelseFrist: {
+                        nyFrist: '2099-01-01',
+                        begrunnelse: 'Trenger mer tid',
+                    },
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
+
+        renderBrukeruttalelse();
+
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        expect(neiRadio).toBeDisabled();
+    });
+
+    test('Aktiverer Nei-alternativet når ny frist er utgått', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevDto: {
+                        varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                        opprinneligFristForUttalelse: '2020-01-01',
+                    },
+                    utsettUttalelseFrist: {
+                        nyFrist: '2020-06-01',
+                        begrunnelse: 'Trenger mer tid',
+                    },
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
+
+        renderBrukeruttalelse();
+
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        expect(neiRadio).not.toBeDisabled();
+    });
+
     describe('Fylt uttalelse', () => {
         test('Viser utfylte verdier når brukeruttalelse er fylt ut', async () => {
             vi.mocked(useForhåndsvarselQueries).mockReturnValue(

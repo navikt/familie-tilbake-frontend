@@ -4,6 +4,7 @@ import type { ForhåndsvarselDto } from '~/generated';
 import type {
     ForhåndsvarselFormData,
     UttalelseFormData,
+    HarUttaltSeg,
 } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +19,6 @@ import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import {
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
-    HarUttaltSeg,
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
 } from '~/pages/fagsak/forhåndsvarsel/schema';
@@ -258,6 +258,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
                         handleUttalelseSubmit={handleUttalelseSubmit}
                         varselErSendt={varselErSendt}
                         fristForUttalelse={
+                            forhåndsvarselInfo.utsettUttalelseFrist?.nyFrist ??
                             forhåndsvarselInfo.varselbrevDto?.opprinneligFristForUttalelse
                         }
                     />

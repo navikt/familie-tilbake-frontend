@@ -132,21 +132,19 @@ export const Forhåndsvarsel: FC = () => {
                     />
                 </div>
             )}
-            <div className="flex flex-col gap-6">
-                <FormProvider {...methods}>
-                    <ForhåndsvarselSkjema
-                        forhåndsvarselInfo={forhåndsvarselInfo}
-                        skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
-                    />
-                </FormProvider>
-                {showModal && pdfData && (
-                    <PdfVisningModal
-                        åpen
-                        pdfdata={pdfData}
-                        onRequestClose={() => setShowModal(false)}
-                    />
-                )}
-            </div>
+            <FormProvider {...methods}>
+                <ForhåndsvarselSkjema
+                    forhåndsvarselInfo={forhåndsvarselInfo}
+                    skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
+                />
+            </FormProvider>
+            {showModal && pdfData && (
+                <PdfVisningModal
+                    åpen
+                    pdfdata={pdfData}
+                    onRequestClose={() => setShowModal(false)}
+                />
+            )}
             <UtsettFristModal
                 dialogRef={utsettFristModalRef}
                 onUtsettFrist={sendUtsettFrist}
