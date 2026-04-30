@@ -109,7 +109,7 @@ describe('ForeldelseContainer', () => {
             expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByText('3 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
 
@@ -145,7 +145,7 @@ describe('ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
         expect(getByText('2 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
 
@@ -237,7 +237,7 @@ describe('ForeldelseContainer', () => {
             expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 1');
         expect(getByLabelText('Perioden er foreldet')).toBeChecked();
         expect(
@@ -253,7 +253,7 @@ describe('ForeldelseContainer', () => {
             })
         );
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
         expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 2');
         expect(
             getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
@@ -306,7 +306,7 @@ describe('ForeldelseContainer', () => {
             // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
             expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
         });
-        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByText('Begrunnelse 1')).toBeInTheDocument();
         expect(
             getByLabelText('Perioden er foreldet', {
@@ -359,7 +359,7 @@ describe('ForeldelseContainer', () => {
 
         // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
         expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
-        expect(getByText('01.05.2020 - 30.06.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
         expect(getByText('Begrunnelse 2')).toBeInTheDocument();
         expect(
             getByLabelText('Perioden er foreldet', {

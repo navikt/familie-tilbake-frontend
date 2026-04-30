@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { HendelseType } from '~/kodeverk';
 
-import { BodyShort, HGrid, HStack, Label, VStack } from '@navikt/ds-react';
+import { BodyShort } from '@navikt/ds-react';
 
 import { hendelsetyper } from '~/kodeverk';
 import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '~/utils';
@@ -15,29 +15,36 @@ type Props = {
 
 export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
     return (
-        <VStack
-            gap="space-20"
-            className="text-ax-text-info rounded-xl bg-ax-bg-info-moderate px-4 py-3"
-        >
-            <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="space-16">
-                <Label size="small">{`${formatterDatostring(fom)} - ${formatterDatostring(
-                    tom
-                )}`}</Label>
-                <BodyShort size="small">{hentPeriodelengde(fom, tom)}</BodyShort>
-            </HGrid>
-            <HGrid columns={{ md: 1, lg: '5fr 3fr' }} gap="space-16">
-                <HStack gap="space-8">
-                    <BodyShort size="small">Feilutbetaling:</BodyShort>
-                    <BodyShort
-                        className="text-ax-text-brand-magenta"
-                        weight="semibold"
-                        size="small"
-                    >
-                        {formatCurrencyNoKr(beløp)}
-                    </BodyShort>
-                </HStack>
-                {hendelsetype && <BodyShort size="small">{hendelsetyper[hendelsetype]}</BodyShort>}
-            </HGrid>
-        </VStack>
+        <div className="flex gap-4 flex-wrap">
+            <BodyShort
+                size="small"
+                className="rounded-xl border border-ax-text-brand-magenta py-2 px-4 bg-ax-bg-brand-magenta-soft w-fit"
+            >
+                Feilutbetalt:{' '}
+                <span className="text-ax-text-brand-magenta">{formatCurrencyNoKr(beløp)}</span>
+            </BodyShort>
+            <BodyShort
+                size="small"
+                className="rounded-xl border border-ax-border-neutral-subtle py-2 px-4 w-fit"
+            >
+                {formatterDatostring(fom)}–{formatterDatostring(tom)}
+            </BodyShort>
+            {hentPeriodelengde(fom, tom) && (
+                <BodyShort
+                    size="small"
+                    className="rounded-xl border border-ax-border-neutral-subtle py-2 px-4 w-fit"
+                >
+                    {hentPeriodelengde(fom, tom)}
+                </BodyShort>
+            )}
+            {hendelsetype && (
+                <BodyShort
+                    size="small"
+                    className="rounded-xl border border-ax-border-neutral-subtle py-2 px-4 w-fit"
+                >
+                    Rettslig grunnlag: {hendelsetyper[hendelsetype]}
+                </BodyShort>
+            )}
+        </div>
     );
 };

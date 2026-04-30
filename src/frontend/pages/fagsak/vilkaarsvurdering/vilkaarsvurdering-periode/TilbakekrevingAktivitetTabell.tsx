@@ -11,7 +11,7 @@ type Props = {
 
 export const TilbakekrevingAktivitetTabell: FC<Props> = ({ ytelser }) => {
     return ytelser && ytelser.length > 0 ? (
-        <Table>
+        <Table size="small">
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell scope="col">Aktivitet</Table.HeaderCell>
