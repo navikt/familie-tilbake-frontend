@@ -131,56 +131,6 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
     });
 
-    test('Viser tag med sendt informasjon når forhåndsvarsel er sendt', async () => {
-        const mockQueries = vi.mocked(useForhåndsvarselQueries);
-        mockQueries.mockReturnValue(
-            lagForhåndsvarselQueries({
-                forhåndsvarselInfo: lagForhåndsvarselInfo({
-                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                }),
-            })
-        );
-
-        renderForhåndsvarsel();
-
-        const tag = await screen.findByText(/Sendt/);
-        expect(tag).toBeInTheDocument();
-    });
-
-    test('Viser tag med ny frist når utsettUttalelseFrist finnes', async () => {
-        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
-            lagForhåndsvarselQueries({
-                forhåndsvarselInfo: lagForhåndsvarselInfo({
-                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                    utsettUttalelseFrist: {
-                        nyFrist: '2026-05-15',
-                        begrunnelse: 'Trenger mer tid',
-                    },
-                }),
-            })
-        );
-
-        renderForhåndsvarsel();
-
-        const fristTag = await screen.findByText(/Ny frist: 15\.05\.26/);
-        expect(fristTag).toBeInTheDocument();
-    });
-
-    test('Viser ikke tag med ny frist når utsettUttalelseFrist er undefined', () => {
-        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
-            lagForhåndsvarselQueries({
-                forhåndsvarselInfo: lagForhåndsvarselInfo({
-                    varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                    utsettUttalelseFrist: undefined,
-                }),
-            })
-        );
-
-        renderForhåndsvarsel();
-
-        expect(screen.queryByText(/Ny frist/)).not.toBeInTheDocument();
-    });
-
     test('Låser valg når varsel er sendt', async () => {
         const mockQueries = vi.mocked(useForhåndsvarselQueries);
         mockQueries.mockReturnValue(
@@ -318,26 +268,26 @@ describe('Forhåndsvarsel', () => {
             expect(await screen.findByRole('button', { name: 'Neste' })).toBeInTheDocument();
         });
 
-        test('Viser "Utsett frist" når bruker velger å utsette frist', async () => {
+        test('Viser "Utsett frist"-modal når bruker klikker utsett frist-knappen', async () => {
             const mockQueries = vi.mocked(useForhåndsvarselQueries);
             mockQueries.mockReturnValue(
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: lagForhåndsvarselInfo({
-                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                        varselbrevDto: {
+                            varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                            opprinneligFristForUttalelse: '2023-01-22',
+                        },
                     }),
                 })
             );
 
             renderForhåndsvarsel();
 
-            const brukeruttalelseFieldset = await screen.findByRole('radiogroup', {
-                name: /har brukeren uttalt seg/i,
-            });
-            fireEvent.click(
-                within(brukeruttalelseFieldset).getByLabelText('Utsett frist for å uttale seg')
-            );
+            fireEvent.click(screen.getByRole('button', { name: /utsett frist/i }));
 
-            expect(await screen.findByRole('button', { name: 'Utsett frist' })).toBeInTheDocument();
+            expect(
+                await screen.findByRole('dialog', { name: /utsett frist for uttalelse/i })
+            ).toBeInTheDocument();
         });
     });
 
@@ -810,6 +760,80 @@ describe('Forhåndsvarsel', () => {
             await waitFor(() => {
                 expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
             });
+        });
+    });
+
+    describe('Fristinfo', () => {
+        test('Viser fristinfo med opprinnelig frist når varsel er sendt', async () => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: {
+                            varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                            opprinneligFristForUttalelse: '2023-01-22',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            expect(screen.getByText('Frist for uttalelse')).toBeInTheDocument();
+            expect(screen.getByText('22.01.2023')).toBeInTheDocument();
+        });
+
+        test('Viser ny frist i fristinfo når frist er utsatt', async () => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: {
+                            varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                            opprinneligFristForUttalelse: '2023-01-22',
+                        },
+                        utsettUttalelseFrist: {
+                            nyFrist: '2023-02-15',
+                            begrunnelse: 'Trenger mer tid',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            expect(screen.getByText('Opprinnelig frist')).toBeInTheDocument();
+            expect(screen.getByText('Ny frist for uttalelse')).toBeInTheDocument();
+            expect(screen.getByText('15.02.2023')).toBeInTheDocument();
+        });
+
+        test('Viser ikke fristinfo når opprinneligFristForUttalelse mangler', () => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            expect(screen.queryByText('Frist for uttalelse')).not.toBeInTheDocument();
+        });
+
+        test('Viser utsett frist-knapp i fristinfo', async () => {
+            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+                lagForhåndsvarselQueries({
+                    forhåndsvarselInfo: lagForhåndsvarselInfo({
+                        varselbrevDto: {
+                            varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                            opprinneligFristForUttalelse: '2023-01-22',
+                        },
+                    }),
+                })
+            );
+
+            renderForhåndsvarsel();
+
+            expect(screen.getByRole('button', { name: /utsett frist/i })).toBeInTheDocument();
         });
     });
 });
