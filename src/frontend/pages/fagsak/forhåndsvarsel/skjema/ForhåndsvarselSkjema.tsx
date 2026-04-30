@@ -30,7 +30,7 @@ import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/useFor
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 
 import { SkalSendeSkjema } from './SkalSendeSkjema';
-import { Uttalelse } from './UttalelseSkjema';
+import { UttalelseSkjema } from './UttalelseSkjema';
 
 type Props = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
@@ -254,7 +254,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 
             {forhåndsvarselInfo && skalViseUttalelseSkjema && (
                 <FormProvider {...uttalelseMethods}>
-                    <Uttalelse
+                    <UttalelseSkjema
                         handleUttalelseSubmit={handleUttalelseSubmit}
                         varselErSendt={varselErSendt}
                         fristForUttalelse={

@@ -26,7 +26,7 @@ type Props = {
     fristForUttalelse?: string | null;
 };
 
-export const Uttalelse: FC<Props> = ({
+export const UttalelseSkjema: FC<Props> = ({
     handleUttalelseSubmit,
     varselErSendt,
     fristForUttalelse,
