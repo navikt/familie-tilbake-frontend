@@ -35,8 +35,8 @@ vi.mock('~/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
-const førstePeriode = '01.01.2020 - 31.03.2020';
-const andrePeriode = '01.05.2020 - 30.06.2020';
+const førstePeriode = '01.01.2020–31.03.2020';
+const andrePeriode = '01.05.2020–30.06.2020';
 const perioder: VilkårsvurderingPeriode[] = [
     lagVilkårsvurderingPeriode({
         begrunnelse: 'Begrunnelse vilkår 1',
@@ -115,12 +115,8 @@ describe('VilkårsvurderingContainer', () => {
             renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
-            expect(getByText(førstePeriode)).toBeInTheDocument();
+            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
         });
-
-        expect(getByText('3 måneder')).toBeInTheDocument();
-        expect(getByText('1 333')).toBeInTheDocument();
-        expect(getByText('Bosatt i riket')).toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -194,10 +190,7 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(getByText(andrePeriode)).toBeInTheDocument();
-        expect(getByText('2 måneder')).toBeInTheDocument();
-        expect(getByText('1 333')).toBeInTheDocument();
-        expect(getByText('Bor med søker')).toBeInTheDocument();
+        expect(getByText(andrePeriode, { selector: 'p' })).toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -358,7 +351,7 @@ describe('VilkårsvurderingContainer', () => {
             renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
+            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
         });
 
         expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
@@ -388,7 +381,7 @@ describe('VilkårsvurderingContainer', () => {
 
         expect(
             getByText(andrePeriode, {
-                selector: 'label',
+                selector: 'p',
             })
         ).toBeInTheDocument();
 
@@ -448,7 +441,7 @@ describe('VilkårsvurderingContainer', () => {
             renderVilkårsvurderingContainer(lagBehandling());
 
         await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
+            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
         });
 
         expect(getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
@@ -498,7 +491,7 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(getByText(andrePeriode, { selector: 'label' })).toBeInTheDocument();
+        expect(getByText(andrePeriode, { selector: 'p' })).toBeInTheDocument();
         expect(getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
         expect(
             getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
@@ -564,7 +557,7 @@ describe('VilkårsvurderingContainer', () => {
             ).toBeInTheDocument();
         });
 
-        expect(getByText(førstePeriode, { selector: 'label' })).toBeInTheDocument();
+        expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
         expect(
             getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',

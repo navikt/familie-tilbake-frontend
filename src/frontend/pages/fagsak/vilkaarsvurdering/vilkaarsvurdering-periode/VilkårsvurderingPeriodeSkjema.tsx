@@ -12,7 +12,6 @@ import {
     Radio,
     RadioGroup,
     Select,
-    Stack,
     Textarea,
     VStack,
 } from '@navikt/ds-react';
@@ -292,201 +291,204 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     if (!periode) return null;
 
     return (
-        <VStack gap="space-24" className="max-w-xl">
-            <HGrid columns="1fr 4rem">
-                <Stack
-                    className="max-w-120 w-full"
-                    justify="space-between"
-                    align={{ md: 'start', lg: 'center' }}
-                    direction={{ md: 'column', lg: 'row' }}
-                >
+        <>
+            <VStack gap="space-24">
+                <HStack justify="space-between">
                     <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
                     {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
                         <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                     )}
-                </Stack>
-            </HGrid>
-            <PeriodeOppsummering
-                fom={periode.periode.fom}
-                tom={periode.periode.tom}
-                beløp={periode.feilutbetaltBeløp}
-                hendelsetype={periode.hendelsestype}
-            />
-            <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
-            {!erLesevisning &&
-                !periode.foreldet &&
-                behandletPerioder &&
-                behandletPerioder.length > 0 && (
-                    <Select
-                        className="w-60"
-                        name="perioderForKopi"
-                        onChange={(event: ChangeEvent<HTMLSelectElement>) => onKopierPeriode(event)}
-                        label={<Detail>Kopier vilkårsvurdering fra</Detail>}
-                        readOnly={erLesevisning}
-                        size="small"
-                    >
-                        <option value="-">-</option>
-                        {behandletPerioder.map(per => (
-                            <option key={`${per.periode.fom}_${per.periode.tom}`} value={per.index}>
-                                {`${formatterDatostring(
-                                    per.periode.fom
-                                )} - ${formatterDatostring(per.periode.tom)}`}
-                            </option>
-                        ))}
-                    </Select>
-                )}
-            {periode.foreldet && (
-                <HGrid gap="space-8">
-                    <Heading size="xsmall" level="2">
-                        Foreldelse
-                    </Heading>
-                    <BodyShort size="small">Perioden er foreldet</BodyShort>
-                </HGrid>
-            )}
-            {!periode.foreldet && (
-                <>
-                    <RadioGroup
-                        id="valgtVilkarResultatType"
-                        size="small"
-                        readOnly={erLesevisning}
-                        legend="Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden "
-                        value={skjema.felter.vilkårsresultatvurdering.verdi}
-                        error={
-                            ugyldigVilkårsresultatValgt
-                                ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
-                                : ''
-                        }
-                        onChange={(val: Vilkårsresultat) => {
-                            skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val);
-                            setIkkePersistertKomponent('vilkårsvurdering');
-                        }}
-                    >
-                        <Radio
-                            name="valgtVilkarResultatType"
-                            value={Vilkårsresultat.ForstoBurdeForstått}
-                        >
-                            Mottaker <strong>forsto eller burde forstått</strong> at utbetalingen
-                            skyldtes en feil (1. ledd, 1. punktum)
-                        </Radio>
-                        <Radio
-                            name="valgtVilkarResultatType"
-                            value={Vilkårsresultat.FeilOpplysningerFraBruker}
-                        >
-                            Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt{' '}
-                            <strong>feilaktige</strong> opplysninger (1. ledd, 2. punkt)
-                        </Radio>
-                        <Radio
-                            name="valgtVilkarResultatType"
-                            value={Vilkårsresultat.MangelfulleOpplysningerFraBruker}
-                        >
-                            Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt{' '}
-                            <strong>mangelfulle</strong> opplysninger (1. ledd, 2. punkt)
-                        </Radio>
-                        <Radio name="valgtVilkarResultatType" value={Vilkårsresultat.GodTro}>
-                            Mottaker har mottatt beløpet i <strong>aktsom god tro</strong> (1. ledd)
-                        </Radio>
-                    </RadioGroup>
-                    <Textarea
-                        {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
-                            skjema.visFeilmeldinger
-                        )}
-                        name="vilkårsresultatBegrunnelse"
-                        label="Begrunn hvorfor du valgte vilkåret ovenfor"
-                        size="small"
-                        resize
-                        minRows={3}
-                        description="Beskriv hvem og hva som forårsaket feilutbetalingen"
-                        maxLength={3000}
-                        readOnly={erLesevisning}
-                        value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
-                        onChange={(event: { target: { value: string } }) => {
-                            skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
-                                event.target.value
-                            );
-                            setIkkePersistertKomponent('vilkårsvurdering');
-                        }}
-                    />
-                    {vilkårsresultatVurderingGjort && (
-                        <>
-                            {erGodTro ? (
-                                <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
-                            ) : (
-                                <AktsomhetsvurderingSkjema
-                                    skjema={skjema}
-                                    erLesevisning={erLesevisning}
-                                    nyModell={erNyModell}
-                                />
-                            )}
-                        </>
-                    )}
-                </>
-            )}
-            <HStack className="justify-end gap-4">
-                {!erFørstePeriode && (
-                    <Button
-                        variant="secondary"
-                        onClick={() => handleNavigering(PeriodeHandling.ForrigePeriode)}
-                        loading={sendInnSkjemaMutation.isPending}
-                        aria-live="polite"
-                        size="small"
-                        className="py-2"
-                    >
-                        Forrige periode
-                    </Button>
-                )}
-                {!erSistePeriode && (
-                    <Button
-                        onClick={() => handleNavigering(PeriodeHandling.NestePeriode)}
-                        loading={sendInnSkjemaMutation.isPending}
-                        aria-live="polite"
-                        size="small"
-                        className="py-2"
-                    >
-                        Neste periode
-                    </Button>
-                )}
-            </HStack>
-            <ActionBar
-                stegtekst={actionBarStegtekst('VILKÅRSVURDERING')}
-                forrigeAriaLabel="Gå tilbake til foreldelsessteget"
-                nesteAriaLabel="Gå videre til vedtakssteget"
-                onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
-                onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
-                nesteTekst={harUlagredeData ? 'Lagre og gå til neste' : 'Neste'}
-                forrigeTekst={harUlagredeData ? 'Lagre og gå til forrige' : 'Forrige'}
-                // Foreldede perioder blir ikke riktig validert, derfor de disables her. Opprettet bug i trello for dette.
-                // https://trello.com/c/CEfUALXj/369-ved-trykk-p%C3%A5-neste-steg-i-vilk%C3%A5rsvurderingen-ved-foreldet-steg-s%C3%A5-er-det-en-feil-i-valideringen-som-sier-at-perioden-mangler-vil
-                disableNeste={(!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet}
-            />
-            {sendInnSkjemaMutation.isError && (
-                <FeilModal
-                    feil={sendInnSkjemaMutation.error}
-                    lukkFeilModal={sendInnSkjemaMutation.reset}
-                    beskjed="Du kunne ikke lagre vilkårsvurderingen"
+                </HStack>
+                <PeriodeOppsummering
+                    fom={periode.periode.fom}
+                    tom={periode.periode.tom}
+                    beløp={periode.feilutbetaltBeløp}
+                    hendelsetype={periode.hendelsestype}
                 />
-            )}
-            {visUlagretDataModal && (
-                <ModalWrapper
-                    tittel="Du har ulagrede endringer"
-                    visModal
-                    onClose={handleAvbryt}
-                    aksjonsknapper={{
-                        hovedKnapp: {
-                            onClick: handleLagreOgByttPeriode,
-                            tekst: 'Lagre og bytt periode',
-                        },
-                        lukkKnapp: {
-                            onClick: handleForlatUtenÅLagre,
-                            tekst: 'Fortsett uten å lagre',
-                        },
-                    }}
-                >
-                    Hvis du bytter periode nå, mister du endringene dine. Vil du lagre før du
-                    fortsetter?
-                </ModalWrapper>
-            )}
-        </VStack>
+            </VStack>
+            <VStack gap="space-24" className="max-w-xl">
+                <TilbakekrevingAktivitetTabell ytelser={periode.aktiviteter} />
+                {!erLesevisning &&
+                    !periode.foreldet &&
+                    behandletPerioder.length > 0 &&
+                    perioder.length > 1 && (
+                        <Select
+                            className="w-60"
+                            name="perioderForKopi"
+                            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                                onKopierPeriode(event)
+                            }
+                            label={<Detail>Kopier vilkårsvurdering fra</Detail>}
+                            readOnly={erLesevisning}
+                            size="small"
+                        >
+                            <option value="-">-</option>
+                            {behandletPerioder.map(per => (
+                                <option
+                                    key={`${per.periode.fom}_${per.periode.tom}`}
+                                    value={per.index}
+                                >
+                                    {`${formatterDatostring(
+                                        per.periode.fom
+                                    )}–${formatterDatostring(per.periode.tom)}`}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
+                {periode.foreldet && (
+                    <HGrid gap="space-8">
+                        <Heading size="xsmall" level="2">
+                            Foreldelse
+                        </Heading>
+                        <BodyShort size="small">Perioden er foreldet</BodyShort>
+                    </HGrid>
+                )}
+                {!periode.foreldet && (
+                    <>
+                        <RadioGroup
+                            id="valgtVilkarResultatType"
+                            size="small"
+                            readOnly={erLesevisning}
+                            legend="Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden "
+                            value={skjema.felter.vilkårsresultatvurdering.verdi}
+                            error={
+                                ugyldigVilkårsresultatValgt
+                                    ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
+                                    : ''
+                            }
+                            onChange={(val: Vilkårsresultat) => {
+                                skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val);
+                                setIkkePersistertKomponent('vilkårsvurdering');
+                            }}
+                        >
+                            <Radio
+                                name="valgtVilkarResultatType"
+                                value={Vilkårsresultat.ForstoBurdeForstått}
+                            >
+                                Mottaker <strong>forsto eller burde forstått</strong> at
+                                utbetalingen skyldtes en feil (1. ledd, 1. punktum)
+                            </Radio>
+                            <Radio
+                                name="valgtVilkarResultatType"
+                                value={Vilkårsresultat.FeilOpplysningerFraBruker}
+                            >
+                                Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt
+                                gitt <strong>feilaktige</strong> opplysninger (1. ledd, 2. punkt)
+                            </Radio>
+                            <Radio
+                                name="valgtVilkarResultatType"
+                                value={Vilkårsresultat.MangelfulleOpplysningerFraBruker}
+                            >
+                                Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt
+                                gitt <strong>mangelfulle</strong> opplysninger (1. ledd, 2. punkt)
+                            </Radio>
+                            <Radio name="valgtVilkarResultatType" value={Vilkårsresultat.GodTro}>
+                                Mottaker har mottatt beløpet i <strong>aktsom god tro</strong> (1.
+                                ledd)
+                            </Radio>
+                        </RadioGroup>
+                        <Textarea
+                            {...skjema.felter.vilkårsresultatBegrunnelse.hentNavInputProps(
+                                skjema.visFeilmeldinger
+                            )}
+                            name="vilkårsresultatBegrunnelse"
+                            label="Begrunn hvorfor du valgte vilkåret ovenfor"
+                            size="small"
+                            resize
+                            minRows={3}
+                            description="Beskriv hvem og hva som forårsaket feilutbetalingen"
+                            maxLength={3000}
+                            readOnly={erLesevisning}
+                            value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
+                            onChange={(event: { target: { value: string } }) => {
+                                skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
+                                    event.target.value
+                                );
+                                setIkkePersistertKomponent('vilkårsvurdering');
+                            }}
+                        />
+                        {vilkårsresultatVurderingGjort && (
+                            <>
+                                {erGodTro ? (
+                                    <GodTroSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                                ) : (
+                                    <AktsomhetsvurderingSkjema
+                                        skjema={skjema}
+                                        erLesevisning={erLesevisning}
+                                        nyModell={erNyModell}
+                                    />
+                                )}
+                            </>
+                        )}
+                    </>
+                )}
+                <HStack className="justify-end gap-4">
+                    {!erFørstePeriode && (
+                        <Button
+                            variant="secondary"
+                            onClick={() => handleNavigering(PeriodeHandling.ForrigePeriode)}
+                            loading={sendInnSkjemaMutation.isPending}
+                            aria-live="polite"
+                            size="small"
+                            className="py-2"
+                        >
+                            Forrige periode
+                        </Button>
+                    )}
+                    {!erSistePeriode && (
+                        <Button
+                            onClick={() => handleNavigering(PeriodeHandling.NestePeriode)}
+                            loading={sendInnSkjemaMutation.isPending}
+                            aria-live="polite"
+                            size="small"
+                            className="py-2"
+                        >
+                            Neste periode
+                        </Button>
+                    )}
+                </HStack>
+                <ActionBar
+                    stegtekst={actionBarStegtekst('VILKÅRSVURDERING')}
+                    forrigeAriaLabel="Gå tilbake til foreldelsessteget"
+                    nesteAriaLabel="Gå videre til vedtakssteget"
+                    onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
+                    onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
+                    nesteTekst={harUlagredeData ? 'Lagre og gå til neste' : 'Neste'}
+                    forrigeTekst={harUlagredeData ? 'Lagre og gå til forrige' : 'Forrige'}
+                    // Foreldede perioder blir ikke riktig validert, derfor de disables her. Opprettet bug i trello for dette.
+                    // https://trello.com/c/CEfUALXj/369-ved-trykk-p%C3%A5-neste-steg-i-vilk%C3%A5rsvurderingen-ved-foreldet-steg-s%C3%A5-er-det-en-feil-i-valideringen-som-sier-at-perioden-mangler-vil
+                    disableNeste={(!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet}
+                />
+                {sendInnSkjemaMutation.isError && (
+                    <FeilModal
+                        feil={sendInnSkjemaMutation.error}
+                        lukkFeilModal={sendInnSkjemaMutation.reset}
+                        beskjed="Du kunne ikke lagre vilkårsvurderingen"
+                    />
+                )}
+                {visUlagretDataModal && (
+                    <ModalWrapper
+                        tittel="Du har ulagrede endringer"
+                        visModal
+                        onClose={handleAvbryt}
+                        aksjonsknapper={{
+                            hovedKnapp: {
+                                onClick: handleLagreOgByttPeriode,
+                                tekst: 'Lagre og bytt periode',
+                            },
+                            lukkKnapp: {
+                                onClick: handleForlatUtenÅLagre,
+                                tekst: 'Fortsett uten å lagre',
+                            },
+                        }}
+                    >
+                        Hvis du bytter periode nå, mister du endringene dine. Vil du lagre før du
+                        fortsetter?
+                    </ModalWrapper>
+                )}
+            </VStack>
+        </>
     );
 };
