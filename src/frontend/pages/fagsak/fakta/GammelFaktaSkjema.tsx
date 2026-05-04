@@ -8,7 +8,7 @@ import {
     Detail,
     Heading,
     HGrid,
-    LocalAlert,
+    InlineMessage,
     Radio,
     RadioGroup,
     Textarea,
@@ -47,23 +47,15 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
 
     return (
         <HGrid columns={2} gap="space-40">
-            <VStack gap="space-28">
+            <VStack gap="space-24">
                 <Heading level="2" size="small">
                     Feilutbetaling
                 </Heading>
                 {erKravgrunnlagKnyttetTilEnEnEldreRevurdering && (
-                    <div>
-                        <LocalAlert status="warning">
-                            <LocalAlert.Header>
-                                <LocalAlert.Title>Flere revurderinger</LocalAlert.Title>
-                            </LocalAlert.Header>
-                            <LocalAlert.Content>
-                                Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
-                                <br />
-                                Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
-                            </LocalAlert.Content>
-                        </LocalAlert>
-                    </div>
+                    <InlineMessage status="warning" size="small">
+                        Det finnes flere revurderinger knyttet til denne tilbakekrevingen.
+                        Dobbeltsjekk at beløp, perioder og årsak til utbetaling stemmer.
+                    </InlineMessage>
                 )}
                 <HGrid columns={3} gap="space-4">
                     <div>
@@ -71,7 +63,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                         <BodyShort size="small">
                             {`${formatterDatostring(
                                 fakta.totalFeilutbetaltPeriode.fom
-                            )} - ${formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}`}
+                            )}–${formatterDatostring(fakta.totalFeilutbetaltPeriode.tom)}`}
                         </BodyShort>
                     </div>
                     <div>
@@ -80,13 +72,13 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                             size="small"
                             className="text-ax-text-brand-magenta-subtle font-ax-bold"
                         >
-                            {`${formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}`}
+                            {formatCurrencyNoKr(fakta.totaltFeilutbetaltBeløp)}
                         </BodyShort>
                     </div>
                     <div>
                         <Detail weight="semibold">Tidligere varslet beløp</Detail>
                         <BodyShort size="small">
-                            {fakta.varsletBeløp ? `${formatCurrencyNoKr(fakta.varsletBeløp)}` : ''}
+                            {fakta.varsletBeløp ? formatCurrencyNoKr(fakta.varsletBeløp) : ''}
                         </BodyShort>
                     </div>
                 </HGrid>
@@ -94,7 +86,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     {!behandlingILesemodus && (
                         <Checkbox
                             size="small"
-                            checked={behandlePerioderSamlet === true}
+                            checked={behandlePerioderSamlet}
                             onChange={() => {
                                 setIkkePersistertKomponent('fakta');
                                 settBehandlePerioderSamlet(!behandlePerioderSamlet);
@@ -104,14 +96,10 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                         </Checkbox>
                     )}
                     {skjemaData.perioder.some(p => p.hendelsestype === HendelseType.Inntekt) && (
-                        <LocalAlert status="warning">
-                            <LocalAlert.Header>
-                                <LocalAlert.Title>
-                                    Husk å kontrollere faktisk inntekt den siste måneden i
-                                    feilutbetalingsperioden
-                                </LocalAlert.Title>
-                            </LocalAlert.Header>
-                        </LocalAlert>
+                        <InlineMessage status="warning" size="small">
+                            Husk å kontrollere faktisk inntekt den siste måneden i
+                            feilutbetalingsperioden
+                        </InlineMessage>
                     )}
                     {skjemaData.perioder && <FaktaPerioder perioder={skjemaData.perioder} />}
                 </VStack>
@@ -125,6 +113,8 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                         setIkkePersistertKomponent('fakta');
                         oppdaterBegrunnelse(e.target.value);
                     }}
+                    size="small"
+                    minRows={3}
                     maxLength={3000}
                     className={behandlingILesemodus ? 'lesevisning' : ''}
                     error={
@@ -134,6 +124,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                 />
                 <VStack gap="space-8">
                     <RadioGroup
+                        size="small"
                         id="brukerHarUttaltSeg"
                         readOnly={behandlingILesemodus}
                         legend="Har bruker uttalt seg om feilutbetalingen?"

@@ -12,7 +12,7 @@ type Props = {
 
 export const FaktaRevurdering: FC<Props> = ({ fakta }) => {
     return fakta ? (
-        <VStack gap="space-20">
+        <VStack gap="space-24">
             <Heading level="2" size="small">
                 Revurdering
             </Heading>

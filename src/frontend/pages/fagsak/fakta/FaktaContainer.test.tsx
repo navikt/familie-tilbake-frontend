@@ -116,7 +116,7 @@ describe('FaktaContainer', () => {
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
-        expect(getByText('01.01.2020 - 31.10.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.10.2020')).toBeInTheDocument();
         expect(getByText('3 999')).toBeInTheDocument();
         expect(getByText('5 200')).toBeInTheDocument();
 
@@ -126,10 +126,10 @@ describe('FaktaContainer', () => {
         expect(getByText('Reduksjon av ytelsen, Feilutbetaling')).toBeInTheDocument();
         expect(getByText('Opprett tilbakekreving, send varsel')).toBeInTheDocument();
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
 
-        expect(getByText('01.05.2020 - 31.07.2020')).toBeInTheDocument();
-        expect(getByText('01.09.2020 - 31.10.2020')).toBeInTheDocument();
+        expect(getByText('01.05.2020–31.07.2020')).toBeInTheDocument();
+        expect(getByText('01.09.2020–31.10.2020')).toBeInTheDocument();
         expect(queryAllByText('1 333')).toHaveLength(3);
 
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -205,7 +205,7 @@ describe('FaktaContainer', () => {
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('Opprett tilbakekreving, send varsel')).toBeInTheDocument();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
 
@@ -293,7 +293,7 @@ describe('FaktaContainer', () => {
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.BosattIRiket);
         expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.Annet);
         expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.BarnsAlder);
@@ -348,7 +348,7 @@ describe('FaktaContainer', () => {
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByTestId('perioder.0.årsak')).toHaveValue(HendelseType.EnsligForsørger);
         expect(getByTestId('perioder.1.årsak')).toHaveValue(HendelseType.Annet);
         expect(getByTestId('perioder.2.årsak')).toHaveValue(HendelseType.YrkesrettetAktivitet);
@@ -402,7 +402,7 @@ describe('FaktaContainer', () => {
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByText('Bosatt i riket')).toBeInTheDocument();
         expect(getByText('Bruker bor ikke i Norge')).toBeInTheDocument();
         expect(getByText('Annet')).toBeInTheDocument();
@@ -453,7 +453,7 @@ describe('FaktaContainer', () => {
         });
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByText('§15-4 Enslig forsørger')).toBeInTheDocument();
         expect(getByText('Ugift (3. ledd)')).toBeInTheDocument();
         expect(getByText('Annet')).toBeInTheDocument();
