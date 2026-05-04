@@ -1,7 +1,7 @@
 import eslintReact from '@eslint-react/eslint-plugin';
 import eslint from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import * as importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -21,7 +21,7 @@ export default defineConfig(
         },
     },
     {
-        plugins: { 'react-hooks': reactHooks, import: importPlugin },
+        plugins: { 'react-hooks': reactHooks, 'import-x': importPlugin },
         rules: {
             ...reactHooks.configs.recommended.rules,
             'no-restricted-imports': [
@@ -43,7 +43,7 @@ export default defineConfig(
                     disallowTypeAnnotations: true,
                 },
             ],
-            'import/order': [
+            'import-x/order': [
                 'error',
                 {
                     groups: [

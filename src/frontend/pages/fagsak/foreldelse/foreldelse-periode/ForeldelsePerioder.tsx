@@ -45,7 +45,7 @@ type Props = {
 };
 
 export const ForeldelsePerioder: FC<Props> = ({ perioder }) => {
-    const { valgtPeriode, settValgtPeriode } = useForeldelse();
+    const { valgtPeriode, setValgtPeriode } = useForeldelse();
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 
     const onSelectPeriode = (periode: TimelinePeriodProps): void => {
@@ -54,7 +54,7 @@ export const ForeldelsePerioder: FC<Props> = ({ perioder }) => {
         const foreldelsePeriode = perioder.find(
             per => per.periode.fom === periodeFom && per.periode.tom === periodeTom
         );
-        settValgtPeriode(foreldelsePeriode);
+        setValgtPeriode(foreldelsePeriode);
     };
 
     return perioder && tidslinjeRader ? (

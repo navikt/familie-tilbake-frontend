@@ -141,7 +141,7 @@ describe('ForeldelseContainer', () => {
 
         expect(
             getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
+                name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         ).toBeDisabled();
 
@@ -173,13 +173,13 @@ describe('ForeldelseContainer', () => {
         expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
         expect(
             getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
+                name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
-                name: 'Gå videre til vilkårsvurderingssteget',
+                name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         );
     });
@@ -409,5 +409,64 @@ describe('ForeldelseContainer', () => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
         });
         expect(getByText('Perioden er ikke foreldet')).toBeInTheDocument();
+    });
+
+    describe('Knappetekst på neste/forrige', () => {
+        const vurdertPeriode = {
+            ...foreldetPerioder[0],
+            begrunnelse: 'Begrunnelse 1',
+            foreldelsesvurderingstype: Foreldelsevurdering.IkkeForeldet,
+        };
+
+        test('Autoutført steg uten vurdering viser Neste/Forrige', async () => {
+            setupMock();
+            const { getByRole } = renderForeldelseContainer(lagBehandling(), false, false, true);
+
+            await waitFor(() => {
+                expect(
+                    getByRole('button', {
+                        name: 'Gå videre til vilkårsvurderingssteget',
+                    })
+                ).toBeInTheDocument();
+            });
+            expect(getByRole('button', { name: 'Gå tilbake til faktasteget' })).toBeInTheDocument();
+        });
+
+        test('Uvurdert steg viser Lagre-tekst når bruker vurderer en periode', async () => {
+            setupMock(lagForeldelseResponse({ foreldetPerioder: [foreldetPerioder[0]] }));
+            const { getByRole, getByLabelText } = renderForeldelseContainer(lagBehandling(), false);
+
+            await waitFor(() => {
+                expect(getByLabelText('Vurdering')).toBeInTheDocument();
+            });
+
+            await user.type(getByLabelText('Vurdering'), 'Begrunnelse');
+            await user.click(getByLabelText('Perioden er ikke foreldet'));
+            await user.click(getByRole('button', { name: 'Bekreft periode' }));
+
+            expect(
+                getByRole('button', {
+                    name: 'Lagre og gå videre til vilkårsvurderingssteget',
+                })
+            ).toBeInTheDocument();
+            expect(
+                getByRole('button', { name: 'Lagre og gå tilbake til faktasteget' })
+            ).toBeInTheDocument();
+        });
+
+        test('Vurdert steg med vurdert periode uten endringer viser Neste/Forrige', async () => {
+            setupMock(lagForeldelseResponse({ foreldetPerioder: [vurdertPeriode] }));
+            const { getByRole, getByText } = renderForeldelseContainer(lagBehandling(), true);
+
+            await waitFor(() => {
+                expect(getByText('Foreldelse')).toBeInTheDocument();
+            });
+            expect(
+                getByRole('button', {
+                    name: 'Gå videre til vilkårsvurderingssteget',
+                })
+            ).toBeInTheDocument();
+            expect(getByRole('button', { name: 'Gå tilbake til faktasteget' })).toBeInTheDocument();
+        });
     });
 });
