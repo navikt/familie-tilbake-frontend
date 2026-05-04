@@ -210,7 +210,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                 </div>
                 <section
                     ref={contentRef}
-                    className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
+                    className="py-4 border-ax-border-neutral-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
                     <Routes>

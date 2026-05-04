@@ -108,24 +108,28 @@ export const Forhåndsvarsel: FC = () => {
     const skalViseFristinfo = !!forhåndsvarselInfo?.varselbrevDto?.opprinneligFristForUttalelse;
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_18rem] gap-6 items-start">
+        <div
+            className={`grid grid-cols-1 gap-6 items-start ${skalViseFristinfo ? ' lg:grid-cols-[1fr_18rem]' : ''}`}
+        >
             <HStack align="center" gap="space-16">
                 <Heading size="medium">Forhåndsvarsel</Heading>
-                <Button
-                    loading={forhåndsvisning.isPending}
-                    icon={<EyeIcon aria-hidden />}
-                    variant="tertiary"
-                    size="small"
-                    onClick={seForhåndsvisningWithModal}
-                    className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
-                    aria-hidden={!visForhåndsvisningsknapp}
-                    tabIndex={visForhåndsvisningsknapp ? 0 : -1}
-                >
-                    Forhåndsvis
-                </Button>
+                {visForhåndsvisningsknapp && (
+                    <Button
+                        loading={forhåndsvisning.isPending}
+                        icon={<EyeIcon aria-hidden />}
+                        variant="tertiary"
+                        size="small"
+                        onClick={seForhåndsvisningWithModal}
+                        className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
+                        aria-hidden={!visForhåndsvisningsknapp}
+                        tabIndex={visForhåndsvisningsknapp ? 0 : -1}
+                    >
+                        Forhåndsvis
+                    </Button>
+                )}
             </HStack>
             {skalViseFristinfo && forhåndsvarselInfo && (
-                <div className="lg:col-start-2 lg:row-start-1 lg:row-end-4">
+                <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
                     <Fristinfo
                         forhåndsvarselInfo={forhåndsvarselInfo}
                         onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
