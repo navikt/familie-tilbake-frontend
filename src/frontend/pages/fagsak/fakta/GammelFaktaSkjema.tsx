@@ -179,6 +179,8 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                                 oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
                             }}
                             maxLength={3000}
+                            size="small"
+                            minRows={3}
                             className={behandlingILesemodus ? 'lesevisning' : ''}
                             error={
                                 visFeilmeldinger &&
