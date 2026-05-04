@@ -3,7 +3,7 @@ import type { UserEvent } from '@testing-library/user-event';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { BehandlingDto } from '~/generated';
 import type { Ressurs } from '~/typer/ressurs';
-import type { ForeldelseResponse } from '~/typer/tilbakekrevingstyper';
+import type { ForeldelsePeriode, ForeldelseResponse } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
@@ -11,7 +11,6 @@ import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';
-import { Foreldelsevurdering } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
@@ -54,7 +53,7 @@ const renderForeldelseContainer = (
     );
 };
 
-const foreldetPerioder = [
+const foreldelsesperioder = [
     lagForeldelsePeriode({
         feilutbetaltBeløp: 1333,
         periode: {
@@ -71,25 +70,23 @@ const foreldetPerioder = [
     }),
 ];
 
-const setupMock = (foreldelse?: ForeldelseResponse): void => {
-    if (foreldelse) {
-        mockUseBehandlingApi.mockImplementation(() => ({
-            gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
-                const ressurs: Ressurs<ForeldelseResponse> = {
-                    status: RessursStatus.Suksess,
-                    data: foreldelse,
-                };
-                return Promise.resolve(ressurs);
-            },
-            sendInnForeldelse: (): Promise<Ressurs<string>> => {
-                const ressurs: Ressurs<string> = {
-                    status: RessursStatus.Suksess,
-                    data: 'suksess',
-                };
-                return Promise.resolve(ressurs);
-            },
-        }));
-    }
+const setupMock = (foreldelse: ForeldelseResponse): void => {
+    mockUseBehandlingApi.mockImplementation(() => ({
+        gjerForeldelseKall: (): Promise<Ressurs<ForeldelseResponse>> => {
+            const ressurs: Ressurs<ForeldelseResponse> = {
+                status: RessursStatus.Suksess,
+                data: foreldelse,
+            };
+            return Promise.resolve(ressurs);
+        },
+        sendInnForeldelse: (): Promise<Ressurs<string>> => {
+            const ressurs: Ressurs<string> = {
+                status: RessursStatus.Suksess,
+                data: 'suksess',
+            };
+            return Promise.resolve(ressurs);
+        },
+    }));
 };
 
 describe('ForeldelseContainer', () => {
@@ -100,7 +97,7 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis og fyll ut perioder og send inn', async () => {
-        setupMock(lagForeldelseResponse({ foreldetPerioder }));
+        setupMock(lagForeldelseResponse({ foreldetPerioder: foreldelsesperioder }));
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderForeldelseContainer(lagBehandling());
 
@@ -109,7 +106,7 @@ describe('ForeldelseContainer', () => {
             expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByText('3 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
 
@@ -127,8 +124,8 @@ describe('ForeldelseContainer', () => {
         await waitFor(() => {
             expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         });
-        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 1');
-        await user.click(getByLabelText('Perioden er ikke foreldet'));
+        await user.type(getByLabelText('Begrunn valget over'), 'Begrunnelse 1');
+        await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
 
         await user.click(
             getByRole('button', {
@@ -145,7 +142,7 @@ describe('ForeldelseContainer', () => {
             })
         ).toBeDisabled();
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
         expect(getByText('2 måneder')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
 
@@ -158,8 +155,8 @@ describe('ForeldelseContainer', () => {
             expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         });
 
-        await user.type(getByLabelText('Vurdering'), 'Begrunnelse 2');
-        await user.click(getByLabelText('Perioden er ikke foreldet'));
+        await user.type(getByLabelText('Begrunn valget over'), 'Begrunnelse 2');
+        await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
 
         await user.click(
             getByRole('button', {
@@ -188,15 +185,15 @@ describe('ForeldelseContainer', () => {
         const foreldelseResponse = lagForeldelseResponse({
             foreldetPerioder: [
                 {
-                    ...foreldetPerioder[0],
+                    ...foreldelsesperioder[0],
                     begrunnelse: 'Begrunnelse 1',
-                    foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
+                    foreldelsesvurderingstype: 'FORELDET',
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
-                    ...foreldetPerioder[1],
+                    ...foreldelsesperioder[1],
                     begrunnelse: 'Begrunnelse 2',
-                    foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
+                    foreldelsesvurderingstype: 'TILLEGGSFRIST',
                     foreldelsesfrist: '2021-01-01',
                     oppdagelsesdato: '2020-12-24',
                 },
@@ -237,9 +234,9 @@ describe('ForeldelseContainer', () => {
             expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
         });
 
-        expect(getByText('01.01.2020 - 31.03.2020')).toBeInTheDocument();
-        expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 1');
-        expect(getByLabelText('Perioden er foreldet')).toBeChecked();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 1');
+        expect(getByLabelText('Ja, perioden er foreldet')).toBeChecked();
         expect(
             getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
@@ -253,10 +250,10 @@ describe('ForeldelseContainer', () => {
             })
         );
 
-        expect(getByText('01.05.2020 - 30.06.2020')).toBeInTheDocument();
-        expect(getByLabelText('Vurdering')).toHaveValue('Begrunnelse 2');
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 2');
         expect(
-            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
+            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder')
         ).toBeChecked();
         expect(
             getByLabelText('Foreldelsesfrist', {
@@ -279,15 +276,15 @@ describe('ForeldelseContainer', () => {
         setupMock({
             foreldetPerioder: [
                 {
-                    ...foreldetPerioder[0],
+                    ...foreldelsesperioder[0],
                     begrunnelse: 'Begrunnelse 1',
-                    foreldelsesvurderingstype: Foreldelsevurdering.Foreldet,
+                    foreldelsesvurderingstype: 'FORELDET',
                     foreldelsesfrist: '2021-01-01',
                 },
                 {
-                    ...foreldetPerioder[1],
+                    ...foreldelsesperioder[1],
                     begrunnelse: 'Begrunnelse 2',
-                    foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
+                    foreldelsesvurderingstype: 'TILLEGGSFRIST',
                     foreldelsesfrist: '2021-01-01',
                     oppdagelsesdato: '2020-12-24',
                 },
@@ -306,7 +303,7 @@ describe('ForeldelseContainer', () => {
             // Første periode sitt endringspanel skal være åpnet by default i lesevisning, sjekker at riktige verdier er satt
             expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
         });
-        expect(getByText('01.01.2020 - 31.03.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(getByText('Begrunnelse 1')).toBeInTheDocument();
         expect(
             getByLabelText('Perioden er foreldet', {
@@ -315,7 +312,7 @@ describe('ForeldelseContainer', () => {
             })
         ).toBeChecked();
         expect(
-            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes', {
+            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder', {
                 selector: 'input',
                 exact: false,
             })
@@ -359,7 +356,7 @@ describe('ForeldelseContainer', () => {
 
         // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
         expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
-        expect(getByText('01.05.2020 - 30.06.2020', { selector: 'label' })).toBeInTheDocument();
+        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
         expect(getByText('Begrunnelse 2')).toBeInTheDocument();
         expect(
             getByLabelText('Perioden er foreldet', {
@@ -368,7 +365,7 @@ describe('ForeldelseContainer', () => {
             })
         ).not.toBeChecked();
         expect(
-            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes', {
+            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder', {
                 selector: 'input',
                 exact: false,
             })
@@ -402,24 +399,28 @@ describe('ForeldelseContainer', () => {
     });
 
     test('Vis autoutført', async () => {
-        setupMock();
+        setupMock(lagForeldelseResponse({ foreldetPerioder: [] }));
         const { getByText } = renderForeldelseContainer(lagBehandling(), false, false, true);
 
         await waitFor(() => {
             expect(getByText('Foreldelse')).toBeInTheDocument();
         });
-        expect(getByText('Perioden er ikke foreldet')).toBeInTheDocument();
+        expect(
+            getByText(
+                'Perioden blir automatisk vurdert dersom det er mer enn 6 måneder til den er foreldet.'
+            )
+        ).toBeInTheDocument();
     });
 
     describe('Knappetekst på neste/forrige', () => {
-        const vurdertPeriode = {
-            ...foreldetPerioder[0],
+        const ikkeForeldetPeriode = {
+            ...foreldelsesperioder[0],
             begrunnelse: 'Begrunnelse 1',
-            foreldelsesvurderingstype: Foreldelsevurdering.IkkeForeldet,
-        };
+            foreldelsesvurderingstype: 'IKKE_FORELDET',
+        } satisfies ForeldelsePeriode;
 
         test('Autoutført steg uten vurdering viser Neste/Forrige', async () => {
-            setupMock();
+            setupMock(lagForeldelseResponse({ foreldetPerioder: [] }));
             const { getByRole } = renderForeldelseContainer(lagBehandling(), false, false, true);
 
             await waitFor(() => {
@@ -433,15 +434,15 @@ describe('ForeldelseContainer', () => {
         });
 
         test('Uvurdert steg viser Lagre-tekst når bruker vurderer en periode', async () => {
-            setupMock(lagForeldelseResponse({ foreldetPerioder: [foreldetPerioder[0]] }));
+            setupMock(lagForeldelseResponse({ foreldetPerioder: [foreldelsesperioder[0]] }));
             const { getByRole, getByLabelText } = renderForeldelseContainer(lagBehandling(), false);
 
             await waitFor(() => {
-                expect(getByLabelText('Vurdering')).toBeInTheDocument();
+                expect(getByLabelText('Begrunn valget over')).toBeInTheDocument();
             });
 
-            await user.type(getByLabelText('Vurdering'), 'Begrunnelse');
-            await user.click(getByLabelText('Perioden er ikke foreldet'));
+            await user.type(getByLabelText('Begrunn valget over'), 'Begrunnelse');
+            await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
             await user.click(getByRole('button', { name: 'Bekreft periode' }));
 
             expect(
@@ -455,7 +456,7 @@ describe('ForeldelseContainer', () => {
         });
 
         test('Vurdert steg med vurdert periode uten endringer viser Neste/Forrige', async () => {
-            setupMock(lagForeldelseResponse({ foreldetPerioder: [vurdertPeriode] }));
+            setupMock(lagForeldelseResponse({ foreldetPerioder: [ikkeForeldetPeriode] }));
             const { getByRole, getByText } = renderForeldelseContainer(lagBehandling(), true);
 
             await waitFor(() => {

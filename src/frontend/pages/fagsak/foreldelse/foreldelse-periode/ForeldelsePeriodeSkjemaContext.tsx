@@ -1,23 +1,23 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
+import type { ForeldelsesvurderingstypeEnum } from '~/generated/types.gen';
 import type { Avhengigheter, FeltState, Skjema } from '~/hooks/skjema';
 
 import { ok, useFelt, useSkjema, Valideringsstatus } from '~/hooks/skjema';
-import { Foreldelsevurdering } from '~/kodeverk';
 import { erFeltetEmpty, validerGyldigDato, validerTekstFeltMaksLengde } from '~/utils';
 import { dateTilIsoDatoStringEllerUndefined } from '~/utils/dato';
 
 const avhengigheterOppfyltForeldelsesfrist = (avhengigheter?: Avhengigheter): boolean => {
     return (
         avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Ok &&
-        (avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet ||
-            avhengigheter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist)
+        (avhengigheter.foreldelsesvurderingstype.verdi === 'FORELDET' ||
+            avhengigheter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST')
     );
 };
 
 const avhengigheterOppfyltOppdagelsesdato = (avhengigheter?: Avhengigheter): boolean => {
     return (
         avhengigheter?.foreldelsesvurderingstype.valideringsstatus === Valideringsstatus.Ok &&
-        avhengigheter?.foreldelsesvurderingstype?.verdi === Foreldelsevurdering.Tilleggsfrist
+        avhengigheter?.foreldelsesvurderingstype?.verdi === 'TILLEGGSFRIST'
     );
 };
 
@@ -25,7 +25,7 @@ type ForeldelsesPeriodeSkjemaHook = {
     skjema: Skjema<
         {
             begrunnelse: string | '';
-            foreldelsesvurderingstype: Foreldelsevurdering | '';
+            foreldelsesvurderingstype: ForeldelsesvurderingstypeEnum | '';
             foreldelsesfrist: Date | undefined;
             oppdagelsesdato: Date | undefined;
         },
@@ -37,9 +37,9 @@ type ForeldelsesPeriodeSkjemaHook = {
 const useForeldelsePeriodeSkjema = (
     oppdaterPeriode: (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => void
 ): ForeldelsesPeriodeSkjemaHook => {
-    const foreldelsesvurderingstype = useFelt<Foreldelsevurdering | ''>({
+    const foreldelsesvurderingstype = useFelt<ForeldelsesvurderingstypeEnum | ''>({
         verdi: '',
-        valideringsfunksjon: (felt: FeltState<Foreldelsevurdering | ''>) => {
+        valideringsfunksjon: (felt: FeltState<ForeldelsesvurderingstypeEnum | ''>) => {
             return erFeltetEmpty(felt);
         },
     });
@@ -65,7 +65,7 @@ const useForeldelsePeriodeSkjema = (
     const { skjema, kanSendeSkjema, validerAlleSynligeFelter, nullstillSkjema } = useSkjema<
         {
             begrunnelse: string | '';
-            foreldelsesvurderingstype: Foreldelsevurdering | '';
+            foreldelsesvurderingstype: ForeldelsesvurderingstypeEnum | '';
             foreldelsesfrist: Date | undefined;
             oppdagelsesdato: Date | undefined;
         },
