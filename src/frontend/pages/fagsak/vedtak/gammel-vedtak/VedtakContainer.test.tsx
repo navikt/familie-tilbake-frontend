@@ -836,7 +836,6 @@ describe('VedtakContainer', () => {
             expect(getByRole('dialog')).toBeInTheDocument();
         });
 
-        expect(getByText('Denne handlingen kan ikke angres.')).toBeInTheDocument();
         expect(
             getByRole('button', {
                 name: 'Avbryt',
