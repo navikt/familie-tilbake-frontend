@@ -95,7 +95,12 @@ const formatterPeriodelengde = (years?: number, months?: number, days?: number):
     }
 
     if (years === 0) {
-        return months === 1 ? `${months} måned` : `${months} måneder`;
+        const månedDel = months === 1 ? `${months} måned` : `${months} måneder`;
+        if (days === 0) {
+            return månedDel;
+        }
+        const dagDel = days === 1 ? `${days} dag` : `${days} dager`;
+        return `${månedDel} og ${dagDel}`;
     }
 
     if (months === 1) {

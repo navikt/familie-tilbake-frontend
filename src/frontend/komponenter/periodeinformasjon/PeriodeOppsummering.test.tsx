@@ -43,4 +43,25 @@ describe('PeriodeOppsummering', () => {
         expect(getByText('15.01.2021–31.01.2021')).toBeInTheDocument();
         expect(getByText('17 dager')).toBeInTheDocument();
     });
+
+    test('Viser måned og dag for perioder over én måned', () => {
+        const { getByText } = renderPeriodeOppsummering('2021-01-15', '2021-02-15', 3333);
+
+        expect(getByText('15.01.2021–15.02.2021')).toBeInTheDocument();
+        expect(getByText('1 måned og 1 dag')).toBeInTheDocument();
+    });
+
+    test('Viser måned og dager for perioder over én måned', () => {
+        const { getByText } = renderPeriodeOppsummering('2021-01-15', '2021-03-10', 3333);
+
+        expect(getByText('15.01.2021–10.03.2021')).toBeInTheDocument();
+        expect(getByText('1 måned og 24 dager')).toBeInTheDocument();
+    });
+
+    test('Viser måneder og dager for perioder over én måned', () => {
+        const { getByText } = renderPeriodeOppsummering('2021-01-15', '2021-04-10', 3333);
+
+        expect(getByText('15.01.2021–10.04.2021')).toBeInTheDocument();
+        expect(getByText('2 måneder og 27 dager')).toBeInTheDocument();
+    });
 });
