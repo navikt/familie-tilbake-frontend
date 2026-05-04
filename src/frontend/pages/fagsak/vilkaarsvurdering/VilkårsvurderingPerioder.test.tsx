@@ -114,8 +114,6 @@ const findPeriodButton = (
 
 const modalTekst =
     'Hvis du bytter periode nå, mister du endringene dine. Vil du lagre før du fortsetter?';
-const førstePeriode = '01.01.2020 - 31.03.2020';
-const andrePeriode = '01.05.2020 - 30.06.2020';
 
 describe('VilkårsvurderingPerioder', () => {
     let user: UserEvent;
@@ -127,16 +125,15 @@ describe('VilkårsvurderingPerioder', () => {
     });
 
     test('Skal bytte periode når det ikke er ulagrede endringer', async () => {
-        const { getByText, getAllByRole } = renderVilkårsvurderingPerioder();
+        const { getAllByRole } = renderVilkårsvurderingPerioder();
 
-        expect(getByText(førstePeriode)).toBeInTheDocument();
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (!andrePeriodeButton) {
             throw new Error('Andre periode button ikke funnet');
         }
 
         await user.click(andrePeriodeButton);
-        expect(getByText(andrePeriode)).toBeInTheDocument();
+        expect(andrePeriodeButton).toHaveAttribute('aria-current', 'true');
     });
 
     test('Skal vise modal ved bytte av periode med ulagrede endringer', async () => {
@@ -170,7 +167,7 @@ describe('VilkårsvurderingPerioder', () => {
         expect(getByText(modalTekst)).toBeInTheDocument();
         await user.click(getByRole('button', { name: 'Fortsett uten å lagre' }));
 
-        expect(getByText(andrePeriode)).toBeInTheDocument();
+        expect(andrePeriodeButton).toHaveAttribute('aria-current', 'true');
         expect(queryByText(modalTekst)).not.toBeInTheDocument();
     });
 
@@ -200,7 +197,7 @@ describe('VilkårsvurderingPerioder', () => {
         expect(getByText(modalTekst)).toBeInTheDocument();
         await user.click(getByRole('button', { name: 'Lagre og bytt periode' }));
 
-        expect(getByText(andrePeriode)).toBeInTheDocument();
+        expect(andrePeriodeButton).toHaveAttribute('aria-current', 'true');
         expect(queryByText(modalTekst)).not.toBeInTheDocument();
     });
 
@@ -211,6 +208,7 @@ describe('VilkårsvurderingPerioder', () => {
         const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
         await user.type(begrunnelseInput, 'Test begrunnelse');
 
+        const førstePeriodeButton = findPeriodButton(getAllByRole, '01.01.2020');
         const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
@@ -219,7 +217,7 @@ describe('VilkårsvurderingPerioder', () => {
         expect(getByText(modalTekst)).toBeInTheDocument();
         await user.click(getByRole('button', { name: 'Lukk' }));
 
-        expect(getByText(førstePeriode)).toBeInTheDocument();
+        expect(førstePeriodeButton).toHaveAttribute('aria-current', 'true');
         expect(queryByText(modalTekst)).not.toBeInTheDocument();
         expect(begrunnelseInput).toHaveValue('Test begrunnelse');
     });

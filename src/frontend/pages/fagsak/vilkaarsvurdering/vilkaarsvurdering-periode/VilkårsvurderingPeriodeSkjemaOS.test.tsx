@@ -103,7 +103,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Aktivitet 2')).toBeInTheDocument();
         expect(getByText('1 000')).toBeInTheDocument();
-        expect(getByText('Kopier vilkårsvurdering fra')).toBeInTheDocument();
 
         expect(
             queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')

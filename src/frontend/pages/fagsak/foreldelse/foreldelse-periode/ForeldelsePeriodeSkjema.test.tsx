@@ -1,12 +1,11 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
-import type { RenderResult } from '@testing-library/react';
+import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { ForeldelseHook } from '~/pages/fagsak/foreldelse/ForeldelseContext';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { Foreldelsevurdering } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagForeldelsePeriodeSkjemaData } from '~/testdata/foreldelseFactory';
 
@@ -34,6 +33,13 @@ describe('ForeldelsePeriodeSkjema', () => {
         vi.clearAllMocks();
     });
 
+    const bekreftPeriodeKnapp = (
+        getByRole: (role: ByRoleMatcher, options?: ByRoleOptions | undefined) => HTMLElement
+    ): HTMLElement =>
+        getByRole('button', {
+            name: 'Bekreft periode',
+        });
+
     test('Vurderer periode ikke foreldet ', async () => {
         const { getByRole, getByText, getByLabelText, queryAllByText, queryByLabelText } =
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
@@ -41,31 +47,20 @@ describe('ForeldelsePeriodeSkjema', () => {
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.click(getByLabelText('Perioden er ikke foreldet'));
+        await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
 
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
+
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await user.type(getByLabelText('Begrunn valget over'), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
@@ -76,7 +71,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
-        await user.click(getByLabelText('Perioden er foreldet'));
+        await user.click(getByLabelText('Ja, perioden er foreldet'));
 
         expect(
             queryByLabelText('Foreldelsesfrist', {
@@ -85,15 +80,11 @@ describe('ForeldelsePeriodeSkjema', () => {
             })
         ).toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(1);
 
-        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await user.type(getByLabelText('Begrunn valget over'), 'begrunnelse');
         await user.type(
             getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
@@ -102,11 +93,7 @@ describe('ForeldelsePeriodeSkjema', () => {
             '14.09.2020'
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
@@ -122,7 +109,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         ).not.toBeInTheDocument();
 
         await user.click(
-            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
+            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder')
         );
 
         expect(
@@ -133,15 +120,11 @@ describe('ForeldelsePeriodeSkjema', () => {
         ).toBeInTheDocument();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(2);
 
-        await user.type(getByLabelText('Vurdering'), 'begrunnelse');
+        await user.type(getByLabelText('Begrunn valget over'), 'begrunnelse');
         await user.type(
             getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
@@ -151,11 +134,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         );
         await user.type(getByLabelText('Dato for når feilutbetaling ble oppdaget'), '14.06.2020');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Bekreft periode',
-            })
-        );
+        await user.click(bekreftPeriodeKnapp(getByRole));
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
@@ -163,7 +142,7 @@ describe('ForeldelsePeriodeSkjema', () => {
     test('Åpner vurdert periode med tilleggsfrist ', async () => {
         const { getByLabelText, getByText, queryByLabelText } = renderForeldelsePeriodeSkjema(
             lagForeldelsePeriodeSkjemaData({
-                foreldelsesvurderingstype: Foreldelsevurdering.Tilleggsfrist,
+                foreldelsesvurderingstype: 'TILLEGGSFRIST',
                 begrunnelse: 'Vurdert',
                 foreldelsesfrist: '2019-12-04',
                 oppdagelsesdato: '2019-09-18',
@@ -179,9 +158,9 @@ describe('ForeldelsePeriodeSkjema', () => {
         ).toBeInTheDocument();
         expect(queryByLabelText('Dato for når feilutbetaling ble oppdaget')).toBeInTheDocument();
 
-        expect(getByLabelText('Vurdering')).toHaveValue('Vurdert');
+        expect(getByLabelText('Begrunn valget over')).toHaveValue('Vurdert');
         expect(
-            getByLabelText('Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes')
+            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder')
         ).toBeChecked();
         expect(
             getByLabelText('Foreldelsesfrist', {

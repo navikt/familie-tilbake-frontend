@@ -1,4 +1,3 @@
-import type { ManuellBrevmottakerResponsDto } from '~/generated';
 import type {
     FaktaStegPayload,
     FatteVedtakStegPayload,
@@ -55,9 +54,6 @@ export type BehandlingApiHook = {
         behandlingId: string,
         brevmottakerId: string
     ) => Promise<Ressurs<string>>;
-    hentManuelleBrevmottakere: (
-        behandlingId: string
-    ) => Promise<Ressurs<ManuellBrevmottakerResponsDto[]>>;
     kallAngreSendTilBeslutter: (behandlingId: string) => Promise<Ressurs<string>>;
     gjerInaktiveVilkårsvurderingerKall: (
         behandlingId: string
@@ -204,15 +200,6 @@ const useBehandlingApi = (): BehandlingApiHook => {
         });
     };
 
-    const hentManuelleBrevmottakere = (
-        behandlingId: string
-    ): Promise<Ressurs<ManuellBrevmottakerResponsDto[]>> => {
-        return request<void, ManuellBrevmottakerResponsDto[]>({
-            method: 'GET',
-            url: `/familie-tilbake/api/brevmottaker/manuell/${behandlingId}`,
-        });
-    };
-
     const sendInnVerge = (
         behandlingId: string,
         payload: VergeStegPayload
@@ -259,7 +246,6 @@ const useBehandlingApi = (): BehandlingApiHook => {
         sendInnVerge,
         henleggBehandling,
         fjernManuellBrevmottaker,
-        hentManuelleBrevmottakere,
         kallAngreSendTilBeslutter,
         gjerInaktiveVilkårsvurderingerKall,
     };

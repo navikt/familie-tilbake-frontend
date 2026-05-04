@@ -20,14 +20,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
 
     test('Åpning av modal', async () => {
         const behandling = lagBehandling();
-        const {
-            getByAltText,
-            getByLabelText,
-            getByText,
-            queryAllByText,
-            queryByAltText,
-            queryByText,
-        } = render(
+        const { getByLabelText, getByRole, queryAllByText, queryByText } = render(
             <HttpProvider>
                 <TestBehandlingProvider behandling={behandling}>
                     <SplittPeriode
@@ -38,19 +31,14 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
             </HttpProvider>
         );
 
-        expect(queryByAltText('Del opp perioden')).toBeInTheDocument();
-        expect(queryAllByText('Del opp perioden')).toHaveLength(1);
+        expect(getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
         expect(queryByText('01.01.2021 - 30.04.2021')).not.toBeInTheDocument();
 
-        await user.click(getByAltText('Del opp perioden'));
+        await user.click(getByRole('button', { name: 'Del opp perioden' }));
 
         expect(queryAllByText('Del opp perioden')).toHaveLength(2);
         expect(queryByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
-        expect(
-            getByText('Del opp perioden', {
-                selector: 'p',
-            })
-        ).toBeInTheDocument();
+        expect(getByRole('heading', { name: 'Del opp perioden' })).toBeInTheDocument();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeInTheDocument();
         expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('januar 2021');
     });
