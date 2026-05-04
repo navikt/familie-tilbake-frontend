@@ -21,19 +21,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
           scope: "@navikt"
           registry-url: "https://npm.pkg.github.com"
-          package-manager-cache: false
+          cache: "pnpm"
 
-      - uses: pnpm/action-setup@v6
+      - name: Install dependencies
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          run_install: |
-            - args: [--frozen-lockfile, --prefer-offline]
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and test
         env:
