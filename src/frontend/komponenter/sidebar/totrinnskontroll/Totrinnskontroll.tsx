@@ -5,7 +5,6 @@ import type { SynligSteg } from '~/utils/sider';
 import { BodyShort, Button, Link, LocalAlert, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
-import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
@@ -38,7 +37,6 @@ export const Totrinnskontroll: FC = () => {
         feilmelding,
         erLesevisning,
     } = useTotrinnskontroll();
-    const { erNyModell } = useBehandling();
     const { aktivtSteg } = useBehandlingState();
     const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
 
@@ -177,7 +175,7 @@ export const Totrinnskontroll: FC = () => {
                     dialogRef={bekreftelsesmodalRef}
                     tekster={{
                         overskrift: 'Godkjenn vedtaket',
-                        brødtekst: erNyModell ? 'Denne handlingen kan ikke angres.' : undefined,
+                        brødtekst: 'Denne handlingen kan ikke angres.',
                         bekreftTekst: 'Godkjenn vedtaket',
                     }}
                     onBekreft={() => sendInnSkjema(() => bekreftelsesmodalRef.current?.close())}
