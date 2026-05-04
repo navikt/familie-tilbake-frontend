@@ -44,8 +44,7 @@ export const VedtakContainer: FC = () => {
         lagreUtkast,
         hentVedtaksbrevtekster,
     } = useVedtak();
-    const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere, erNyModell } =
-        useBehandling();
+    const { type, behandlingsårsakstype, kanEndres, manuelleBrevmottakere } = useBehandling();
     const { behandlingILesemodus, aktivtSteg, actionBarStegtekst } = useBehandlingState();
     const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
     const visGlobalAlert = useVisGlobalAlert();
@@ -217,7 +216,7 @@ export const VedtakContainer: FC = () => {
                     dialogRef={bekreftelsesmodalRef}
                     tekster={{
                         overskrift: 'Send til godkjenning',
-                        brødtekst: erNyModell ? 'Denne handlingen kan ikke angres.' : undefined,
+                        brødtekst: undefined,
                         bekreftTekst: 'Send til godkjenning',
                     }}
                     onBekreft={() => sendInnSkjema(() => bekreftelsesmodalRef.current?.close())}
