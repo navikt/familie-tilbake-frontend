@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { LocalAlert } from '@navikt/ds-react';
+import { InlineMessage, LocalAlert } from '@navikt/ds-react';
 
 import { Serverfeil } from '~/pages/feilsider/serverfeil';
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
@@ -46,14 +46,7 @@ export const DataLastIkkeSuksess: FC<Props> = ({
         return <Serverfeil />;
     }
     if (feiletRessurs) {
-        return (
-            <LocalAlert status="error">
-                <LocalAlert.Header>
-                    <LocalAlert.Title>En feil har oppstått</LocalAlert.Title>
-                </LocalAlert.Header>
-                <LocalAlert.Content>{feiletRessurs.frontendFeilmelding}</LocalAlert.Content>
-            </LocalAlert>
-        );
+        return <InlineMessage status="error">{feiletRessurs.frontendFeilmelding}</InlineMessage>;
     }
 
     if (serverFeil) {
