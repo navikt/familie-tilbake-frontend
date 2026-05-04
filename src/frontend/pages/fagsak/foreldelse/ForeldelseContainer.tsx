@@ -54,7 +54,7 @@ export const ForeldelseContainer: FC = () => {
         <VStack gap="space-24">
             <Heading size="medium">Foreldelse</Heading>
             {erAutoutført ? (
-                <LocalAlert status="success" className="min-w-80">
+                <LocalAlert status="success" className="min-w-80" size="small">
                     <LocalAlert.Header>
                         <LocalAlert.Title as="h3">Perioden er ikke foreldet</LocalAlert.Title>
                     </LocalAlert.Header>

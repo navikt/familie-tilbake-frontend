@@ -18,7 +18,6 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 import { behandlingHentVedtaksresultatQueryKey } from '~/generated-new/@tanstack/react-query.gen';
-import { Foreldelsevurdering } from '~/kodeverk';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
 import { sorterFeilutbetaltePerioder } from '~/utils';
 import { useStegNavigering } from '~/utils/sider';
@@ -30,7 +29,7 @@ const utledValgtPeriode = (
 ): ForeldelsePeriodeSkjemeData | undefined => {
     const førsteUbehandletPeriode = skjemaPerioder.find(periode => {
         if (erNyModell) {
-            return periode.foreldelsesvurderingstype === Foreldelsevurdering.IkkeVurdert;
+            return periode.foreldelsesvurderingstype === 'IKKE_VURDERT';
         } else {
             return !periode.foreldelsesvurderingstype;
         }
@@ -206,9 +205,8 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         const payload: ForeldelseStegPayload = {
             '@type': 'FORELDELSE',
             foreldetPerioder: skjemaData.map<PeriodeForeldelseStegPayload>(per => {
-                const erForeldelse = per.foreldelsesvurderingstype === Foreldelsevurdering.Foreldet;
-                const erTilleggsfrist =
-                    per.foreldelsesvurderingstype === Foreldelsevurdering.Tilleggsfrist;
+                const erForeldelse = per.foreldelsesvurderingstype === 'FORELDET';
+                const erTilleggsfrist = per.foreldelsesvurderingstype === 'TILLEGGSFRIST';
                 return {
                     periode: per.periode,
                     begrunnelse: per.begrunnelse,

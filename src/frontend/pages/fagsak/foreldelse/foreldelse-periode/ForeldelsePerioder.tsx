@@ -3,7 +3,6 @@ import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { ForeldelsePeriode } from '~/typer/tilbakekrevingstyper';
 
-import { Foreldelsevurdering } from '~/kodeverk';
 import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
 import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
 
@@ -11,13 +10,12 @@ import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 
 const finnPeriodeStatus = (periode: ForeldelsePeriode): TimelinePeriodProps['status'] => {
     switch (periode.foreldelsesvurderingstype) {
-        case Foreldelsevurdering.Foreldet:
+        case 'FORELDET':
             return 'warning';
-        case Foreldelsevurdering.Tilleggsfrist:
-        case Foreldelsevurdering.IkkeForeldet:
+        case 'TILLEGGSFRIST':
+        case 'IKKE_FORELDET':
             return 'success';
-        case Foreldelsevurdering.IkkeVurdert:
-        case Foreldelsevurdering.Udefinert:
+        case 'IKKE_VURDERT':
         default:
             return 'neutral';
     }

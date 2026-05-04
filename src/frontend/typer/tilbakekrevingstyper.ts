@@ -1,7 +1,7 @@
+import type { ForeldelsesvurderingstypeEnum } from '~/generated/types.gen';
 import type {
     HendelseType,
     HendelseUndertype,
-    Foreldelsevurdering,
     Vilkårsresultat,
     Aktsomhet,
     SærligeGrunner,
@@ -75,7 +75,7 @@ export const harBrukerUttaltSegValgTilTekst: Record<HarBrukerUttaltSegValg, stri
 };
 
 export interface ForeldelsePeriode extends FeilutbetalingPeriode {
-    foreldelsesvurderingstype?: Foreldelsevurdering;
+    foreldelsesvurderingstype?: ForeldelsesvurderingstypeEnum;
     begrunnelse?: string;
     foreldelsesfrist?: string;
     oppdagelsesdato?: string;

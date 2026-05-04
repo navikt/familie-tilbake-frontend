@@ -1,4 +1,5 @@
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
+import type { ForeldelsesvurderingstypeEnum } from '~/generated';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
@@ -17,7 +18,6 @@ import { useEffect, type FC, type ReactNode } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema/typer';
-import { Foreldelsevurdering, foreldelsevurderinger, foreldelseVurderingTyper } from '~/kodeverk';
 import { Datovelger } from '~/komponenter/datovelger/Datovelger';
 import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
 import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
@@ -50,10 +50,8 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode]);
 
-    const erForeldet =
-        skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet;
-    const erMedTilleggsfrist =
-        skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist;
+    const erForeldet = skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET';
+    const erMedTilleggsfrist = skjema.felter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST';
 
     const ugyldigVurderingValgt =
         skjema.visFeilmeldinger &&
@@ -68,7 +66,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
         skjema.felter.oppdagelsesdato.valideringsstatus === Valideringsstatus.Feil;
 
     const lagForeldelsesfristHjelpetekst = (): ReactNode => {
-        if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Tilleggsfrist) {
+        if (skjema.felter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST') {
             return (
                 <>
                     <BodyLong size="small">
@@ -84,7 +82,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                     </BodyLong>
                 </>
             );
-        } else if (skjema.felter.foreldelsesvurderingstype.verdi === Foreldelsevurdering.Foreldet) {
+        } else if (skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET') {
             return (
                 <>
                     <BodyLong size="small" className="flex flex-col gap-2">
@@ -136,13 +134,40 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                 />
             </VStack>
             <VStack gap="space-24" className="max-w-xl">
+                <RadioGroup
+                    id="foreldet"
+                    readOnly={erLesevisning}
+                    size="small"
+                    legend="Er perioden foreldet?"
+                    value={skjema.felter.foreldelsesvurderingstype.verdi}
+                    error={
+                        ugyldigVurderingValgt
+                            ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
+                            : ''
+                    }
+                    onChange={(val: ForeldelsesvurderingstypeEnum) => {
+                        skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val);
+                        setIkkePersistertKomponent('foreldelse');
+                    }}
+                >
+                    <Radio key="IKKE_FORELDET" name="foreldet" value="IKKE_FORELDET">
+                        Nei, perioden er ikke foreldet
+                    </Radio>
+                    <Radio key="FORELDET" name="foreldet" value="FORELDET">
+                        Ja, perioden er foreldet
+                    </Radio>
+                    <Radio key="TILLEGGSFRIST" name="foreldet" value="TILLEGGSFRIST">
+                        Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder
+                    </Radio>
+                </RadioGroup>
                 <Textarea
                     {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                     id="begrunnelse"
                     name="begrunnelse"
-                    label="Vurdering"
+                    label="Begrunn valget over"
                     size="small"
                     maxLength={3000}
+                    minRows={3}
                     readOnly={erLesevisning}
                     value={skjema.felter.begrunnelse.verdi}
                     onChange={event => {
@@ -151,29 +176,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                     }}
                 />
 
-                <RadioGroup
-                    id="foreldet"
-                    readOnly={erLesevisning}
-                    size="small"
-                    legend="Vurder om perioden er foreldet"
-                    value={skjema.felter.foreldelsesvurderingstype.verdi}
-                    error={
-                        ugyldigVurderingValgt
-                            ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
-                            : ''
-                    }
-                    onChange={(val: Foreldelsevurdering) => {
-                        skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val);
-                        setIkkePersistertKomponent('foreldelse');
-                    }}
-                >
-                    {foreldelseVurderingTyper.map(type => (
-                        <Radio key={type} name="foreldet" value={type}>
-                            {foreldelsevurderinger[type]}
-                        </Radio>
-                    ))}
-                </RadioGroup>
-                <VStack gap="space-20">
+                <>
                     {erMedTilleggsfrist && (
                         <Datovelger
                             felt={skjema.felter.oppdagelsesdato}
@@ -188,7 +191,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                         />
                     )}
                     {(erForeldet || erMedTilleggsfrist) && (
-                        <VStack gap="space-8">
+                        <>
                             <Datovelger
                                 felt={skjema.felter.foreldelsesfrist}
                                 label="Foreldelsesfrist"
@@ -204,12 +207,12 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                                 }
                             />
                             {!erLesevisning && <>{lagForeldelsesfristHjelpetekst()}</>}
-                        </VStack>
+                        </>
                     )}
-                </VStack>
+                </>
 
                 {!erLesevisning && (
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                         <Button size="small" className="w-40" onClick={() => onBekreft(periode)}>
                             Bekreft periode
                         </Button>
