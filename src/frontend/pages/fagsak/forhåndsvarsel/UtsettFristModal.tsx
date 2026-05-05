@@ -1,7 +1,6 @@
 import type { FC, RefObject } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type { z } from 'zod';
-
 import type { FristUtsettelseDto } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
