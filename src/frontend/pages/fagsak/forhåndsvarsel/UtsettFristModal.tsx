@@ -1,12 +1,13 @@
 import type { FC, RefObject } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
+import type { z } from 'zod';
+
 import type { FristUtsettelseDto } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Modal, Textarea, DatePicker, useDatepicker, VStack } from '@navikt/ds-react';
 import { useMemo, useState } from 'react';
 import { useForm, get } from 'react-hook-form';
-import { z } from 'zod';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { MODAL_BREDDE } from '~/komponenter/meny/utils';
@@ -64,7 +65,7 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
         });
     };
 
-    const handleLukk = () => {
+    const handleLukk = (): void => {
         methods.reset();
         dialogRef.current?.close();
     };

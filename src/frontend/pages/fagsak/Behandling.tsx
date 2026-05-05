@@ -375,14 +375,18 @@ export const BehandlingContainer: FC = () => {
                     stackIndex={index}
                     onClose={() => lukkGlobalAlert(alert.id)}
                 >
-                    {alert.message}
-                    {alert.visPortenLenke && (
-                        <Link
-                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
-                            target="_blank"
-                        >
-                            Meld feilen i porten
-                        </Link>
+                    {(alert.message || alert.visPortenLenke) && (
+                        <>
+                            {alert.message}
+                            {alert.visPortenLenke && (
+                                <Link
+                                    href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                                    target="_blank"
+                                >
+                                    Meld feilen i porten
+                                </Link>
+                            )}
+                        </>
                     )}
                 </FixedAlert>
             ))}

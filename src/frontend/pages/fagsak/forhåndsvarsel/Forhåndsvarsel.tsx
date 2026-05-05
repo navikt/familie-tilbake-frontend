@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon } from '@navikt/aksel-icons';
 import { Button, Heading, HStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -12,6 +13,7 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
+import { isoStringTilDate } from '~/utils/dato';
 
 import { Fristinfo } from './Fristinfo';
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
@@ -89,6 +91,17 @@ export const Forhåndsvarsel: FC = () => {
             );
         }
     };
+
+    useEffect(() => {
+        if (sendUtsettFristMutation.isSuccess) {
+            const nyFrist = sendUtsettFristMutation.variables?.body?.nyFrist;
+            const formatertDato = nyFrist ? format(isoStringTilDate(nyFrist), 'dd.MM.yyyy') : '';
+            visGlobalAlert({
+                title: `Fristen for uttalelse er utsatt til ${formatertDato}`,
+                status: 'success',
+            });
+        }
+    }, [sendUtsettFristMutation.isSuccess, sendUtsettFristMutation.variables, visGlobalAlert]);
 
     useEffect(() => {
         if (forhåndsvisning.error) {
