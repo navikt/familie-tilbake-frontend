@@ -22,13 +22,13 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
-          scope: "@navikt"
-          registry-url: "https://npm.pkg.github.com"
           cache: "pnpm"
 
+      - name: Authentiser mot GitHub Packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >>
+          .npmrc
+
       - name: Install dependencies
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and test
