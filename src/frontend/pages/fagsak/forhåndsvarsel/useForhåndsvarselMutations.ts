@@ -47,7 +47,7 @@ export type UseForhåndsvarselMutationsReturn = {
         AxiosError<DefaultError>,
         Options<LagreBrukeruttalelseData>
     >;
-    readonly sendUtsettUttalelseFristMutation: UseMutationResult<
+    readonly sendUtsettFristMutation: UseMutationResult<
         UtsettUttalelseFristResponse,
         AxiosError<DefaultError>,
         Options<UtsettUttalelseFristData>
@@ -65,7 +65,7 @@ export type UseForhåndsvarselMutationsReturn = {
     readonly sendForhåndsvarsel: (formData: ForhåndsvarselFormData) => void;
     readonly sendBrukeruttalelse: (formData: UttalelseFormData, varselErSendt: boolean) => void;
     readonly sendUnntak: (formData: ForhåndsvarselFormData) => void;
-    readonly sendUtsettUttalelseFrist: (formData: UttalelseFormData) => void;
+    readonly sendUtsettFrist: (formData: FristUtsettelseDto) => void;
     readonly navigerTilNeste: () => void;
     readonly navigerTilForrige: () => void;
 };
@@ -145,7 +145,7 @@ export const useForhåndsvarselMutations = (
         },
     });
 
-    const sendUtsettUttalelseFristMutation = useMutation({
+    const sendUtsettFristMutation = useMutation({
         ...utsettUttalelseFristMutation(),
         onSuccess: async () => {
             await invalidateQueries();
@@ -168,7 +168,7 @@ export const useForhåndsvarselMutations = (
     return {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
-        sendUtsettUttalelseFristMutation,
+        sendUtsettFristMutation,
         sendUnntakMutation,
         forhåndsvisning: seForhåndsvisningMutation,
 
@@ -214,17 +214,10 @@ export const useForhåndsvarselMutations = (
                 body: payload,
             });
         },
-        sendUtsettUttalelseFrist: (formData: UttalelseFormData): void => {
-            if (formData.harUttaltSeg !== HarUttaltSeg.UtsettFrist) return;
-
-            const payload: FristUtsettelseDto = {
-                nyFrist: formData.utsettUttalelseFrist.nyFrist,
-                begrunnelse: formData.utsettUttalelseFrist.begrunnelse,
-            };
-
-            sendUtsettUttalelseFristMutation.mutate({
+        sendUtsettFrist: (formData: FristUtsettelseDto): void => {
+            sendUtsettFristMutation.mutate({
                 path: { behandlingId: behandlingId },
-                body: payload,
+                body: formData,
             });
         },
         navigerTilNeste,

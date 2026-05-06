@@ -46,7 +46,7 @@ Saksbehandlerapplikasjon for tilbakekreving etter folketrygdloven § 22-15. Appl
 ## Forutsetninger
 
 - [Node.js](https://nodejs.org/) >= 24 (LTS)
-- [pnpm](https://pnpm.io/installation) >= 10
+- [pnpm](https://pnpm.io/installation) >= 11
 - [Docker](https://www.docker.com/) eller [Colima](https://github.com/abiosoft/colima) (for Redis, Wonderwall og Texas)
 - Tilgang til NAVs GitHub Package Registry (`@navikt`-pakker)
 
