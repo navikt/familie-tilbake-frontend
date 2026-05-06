@@ -12,18 +12,33 @@ import type {
     BehandlingForeslaaVedtakData,
     BehandlingForeslaaVedtakErrors,
     BehandlingForeslaaVedtakResponses,
+    BehandlingForhandsvarselData,
+    BehandlingForhandsvarselErrors,
+    BehandlingForhandsvarselResponses,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevErrors,
     BehandlingHentVedtaksbrevResponses,
     BehandlingHentVedtaksresultatData,
     BehandlingHentVedtaksresultatErrors,
     BehandlingHentVedtaksresultatResponses,
+    BehandlingLagreBrukersuttalelseData,
+    BehandlingLagreBrukersuttalelseErrors,
+    BehandlingLagreBrukersuttalelseResponses,
+    BehandlingLagreForhaandsvarselUnntakData,
+    BehandlingLagreForhaandsvarselUnntakErrors,
+    BehandlingLagreForhaandsvarselUnntakResponses,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaErrors,
     BehandlingOppdaterFaktaResponses,
     BehandlingOppdaterVedtaksbrevData,
     BehandlingOppdaterVedtaksbrevErrors,
     BehandlingOppdaterVedtaksbrevResponses,
+    BehandlingSendVarselbrevData,
+    BehandlingSendVarselbrevErrors,
+    BehandlingSendVarselbrevResponses,
+    BehandlingUtsettUttalelsesfristData,
+    BehandlingUtsettUttalelsesfristErrors,
+    BehandlingUtsettUttalelsesfristResponses,
     VedtaksbrevLagSvgVedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevResponses,
 } from './types.gen';
@@ -93,6 +108,84 @@ export const behandlingForeslaaVedtak = <ThrowOnError extends boolean = false>(
         BehandlingForeslaaVedtakErrors,
         ThrowOnError
     >({ url: '/api/v1/behandling/{behandlingId}/foreslå-vedtak', ...options });
+
+export const behandlingForhandsvarsel = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingForhandsvarselData, ThrowOnError>
+) =>
+    (options.client ?? client).get<
+        BehandlingForhandsvarselResponses,
+        BehandlingForhandsvarselErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel',
+        ...options,
+    });
+
+export const behandlingSendVarselbrev = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingSendVarselbrevData, ThrowOnError>
+) =>
+    (options.client ?? client).post<
+        BehandlingSendVarselbrevResponses,
+        BehandlingSendVarselbrevErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/send-varselbrev',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const behandlingLagreForhaandsvarselUnntak = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingLagreForhaandsvarselUnntakData, ThrowOnError>
+) =>
+    (options.client ?? client).post<
+        BehandlingLagreForhaandsvarselUnntakResponses,
+        BehandlingLagreForhaandsvarselUnntakErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/unntak',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const behandlingUtsettUttalelsesfrist = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingUtsettUttalelsesfristData, ThrowOnError>
+) =>
+    (options.client ?? client).put<
+        BehandlingUtsettUttalelsesfristResponses,
+        BehandlingUtsettUttalelsesfristErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/utsett-frist',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const behandlingLagreBrukersuttalelse = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingLagreBrukersuttalelseData, ThrowOnError>
+) =>
+    (options.client ?? client).post<
+        BehandlingLagreBrukersuttalelseResponses,
+        BehandlingLagreBrukersuttalelseErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/uttalelse',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
 
 export const behandlingHentVedtaksbrev = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingHentVedtaksbrevData, ThrowOnError>

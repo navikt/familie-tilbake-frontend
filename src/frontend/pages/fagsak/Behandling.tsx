@@ -50,8 +50,12 @@ const HistoriskFaktaContainer = lazyImportMedRetry(
     () => import('./fakta/fakta-periode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
 );
-const Forhåndsvarsel = lazyImportMedRetry(
+const GammelForhåndsvarsel = lazyImportMedRetry(
     () => import('./forhåndsvarsel/gammel-forhåndsvarsel/Forhåndsvarsel'),
+    'Forhåndsvarsel'
+);
+const Forhåndsvarsel = lazyImportMedRetry(
+    () => import('./forhåndsvarsel/Forhåndsvarsel'),
     'Forhåndsvarsel'
 );
 const ForeldelseContainer = lazyImportMedRetry(
@@ -237,7 +241,11 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             element={
                                 <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
                                     <Suspense fallback={<ForhåndsvarselSkeleton />}>
-                                        <Forhåndsvarsel />
+                                        {toggles[ToggleName.Forhaandsvarsel] ? (
+                                            <Forhåndsvarsel />
+                                        ) : (
+                                            <GammelForhåndsvarsel />
+                                        )}
                                     </Suspense>
                                 </StegErrorBoundary>
                             }
