@@ -78,12 +78,6 @@ describe('Brukeruttalelse', () => {
         expect(neiOptions).toHaveLength(2);
     });
 
-    test('Viser "Utsett frist" alternativ hvis varsel er sendt', () => {
-        renderBrukeruttalelse();
-
-        expect(screen.getByLabelText('Utsett frist for å uttale seg')).toBeInTheDocument();
-    });
-
     test('Viser uttalelsesfelter når Ja er valgt', async () => {
         renderBrukeruttalelse();
 
@@ -132,16 +126,102 @@ describe('Brukeruttalelse', () => {
         expect(await screen.findByLabelText('Kommentar til valget over')).toBeInTheDocument();
     });
 
-    test('Viser utsettelsesfelter når "Utsett frist" er valgt', async () => {
+    test('Deaktiverer Nei-alternativet når opprinnelig frist ikke er utgått', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevDto: {
+                        varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                        opprinneligFristForUttalelse: '2099-01-01',
+                    },
+                    utsettUttalelseFrist: undefined,
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
+
         renderBrukeruttalelse();
 
-        expect(screen.queryByLabelText('Sett ny dato for frist')).not.toBeInTheDocument();
-        expect(screen.queryByLabelText('Begrunnelse for utsatt frist')).not.toBeInTheDocument();
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        expect(neiRadio).toBeDisabled();
+    });
 
-        fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
+    test('Aktiverer Nei-alternativet når opprinnelig frist er utgått', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevDto: {
+                        varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                        opprinneligFristForUttalelse: '2020-01-01',
+                    },
+                    utsettUttalelseFrist: undefined,
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
 
-        expect(await screen.findByLabelText('Sett ny dato for frist')).toBeInTheDocument();
-        expect(screen.getByLabelText('Begrunnelse for utsatt frist')).toBeInTheDocument();
+        renderBrukeruttalelse();
+
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        expect(neiRadio).not.toBeDisabled();
+    });
+
+    test('Deaktiverer Nei-alternativet når ny frist ikke er utgått', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevDto: {
+                        varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                        opprinneligFristForUttalelse: '2020-01-01',
+                    },
+                    utsettUttalelseFrist: {
+                        nyFrist: '2099-01-01',
+                        begrunnelse: 'Trenger mer tid',
+                    },
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
+
+        renderBrukeruttalelse();
+
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        expect(neiRadio).toBeDisabled();
+    });
+
+    test('Aktiverer Nei-alternativet når ny frist er utgått', () => {
+        vi.mocked(useForhåndsvarselQueries).mockReturnValue(
+            lagForhåndsvarselQueries({
+                forhåndsvarselInfo: {
+                    varselbrevDto: {
+                        varselbrevSendtTid: '2023-01-01T10:00:00Z',
+                        opprinneligFristForUttalelse: '2020-01-01',
+                    },
+                    utsettUttalelseFrist: {
+                        nyFrist: '2020-06-01',
+                        begrunnelse: 'Trenger mer tid',
+                    },
+                    brukeruttalelse: undefined,
+                },
+            })
+        );
+
+        renderBrukeruttalelse();
+
+        const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
+            name: /har brukeren uttalt seg etter forhåndsvarselet/i,
+        });
+        const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
+        expect(neiRadio).not.toBeDisabled();
     });
 
     describe('Fylt uttalelse', () => {
@@ -179,33 +259,6 @@ describe('Brukeruttalelse', () => {
                 name: 'Beskriv hva brukeren har uttalt seg om',
             });
             expect(beskrivelse).toHaveValue('Brukeren forklarte situasjonen');
-        });
-
-        test('Viser utfylte verdier når utsettUttalelseFrist finnes', async () => {
-            vi.mocked(useForhåndsvarselQueries).mockReturnValue(
-                lagForhåndsvarselQueries({
-                    forhåndsvarselInfo: {
-                        varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-                        utsettUttalelseFrist: {
-                            nyFrist: '2025-06-15',
-                            begrunnelse: 'Trenger mer tid',
-                        },
-                        brukeruttalelse: undefined,
-                    },
-                })
-            );
-
-            renderBrukeruttalelse();
-
-            const utsettFristRadio = screen.getByLabelText('Utsett frist for å uttale seg');
-            expect(utsettFristRadio).toBeChecked();
-
-            expect(await screen.findByLabelText('Sett ny dato for frist')).toHaveValue(
-                '15.06.2025'
-            );
-            expect(screen.getByLabelText('Begrunnelse for utsatt frist')).toHaveValue(
-                'Trenger mer tid'
-            );
         });
     });
 
@@ -319,21 +372,6 @@ describe('Brukeruttalelse', () => {
                     name: /gå til neste måned/i,
                 });
                 expect(nesteMånedKnapp).toBeDisabled();
-            });
-        });
-
-        describe('Når Utsett frist er valgt', () => {
-            test('skal vise feilmelding for manglende frist-dato', async () => {
-                renderBrukeruttalelse();
-
-                fireEvent.click(screen.getByLabelText('Utsett frist for å uttale seg'));
-
-                const nesteKnapp = await screen.findByRole('button', {
-                    name: 'Utsett frist',
-                });
-                fireEvent.click(nesteKnapp);
-
-                expect(await screen.findByText('Du må velge en ny frist')).toBeInTheDocument();
             });
         });
     });

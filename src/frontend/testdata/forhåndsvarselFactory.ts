@@ -77,13 +77,13 @@ export const lagForhåndsvarselMutations = (): UseForhåndsvarselMutationsReturn
     ({
         sendForhåndsvarsel: vi.fn(),
         sendBrukeruttalelse: vi.fn(),
-        sendUtsettUttalelseFrist: vi.fn(),
+        sendUtsettFrist: vi.fn(),
         sendUnntak: vi.fn(),
         seForhåndsvisning: vi.fn(),
         navigerTilNeste: vi.fn(),
         sendForhåndsvarselMutation: lagMockQuery(),
         sendBrukeruttalelseMutation: lagMockQuery(),
-        sendUtsettUttalelseFristMutation: lagMockQuery(),
+        sendUtsettFristMutation: lagMockQuery(),
         sendUnntakMutation: lagMockQuery(),
         forhåndsvisning: lagMockQuery(),
     }) as unknown as UseForhåndsvarselMutationsReturn;

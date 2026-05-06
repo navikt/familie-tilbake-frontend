@@ -210,7 +210,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                 </div>
                 <section
                     ref={contentRef}
-                    className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
+                    className="py-4 border-ax-border-neutral-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
                     <Routes>
@@ -375,14 +375,18 @@ export const BehandlingContainer: FC = () => {
                     stackIndex={index}
                     onClose={() => lukkGlobalAlert(alert.id)}
                 >
-                    {alert.message}
-                    {alert.visPortenLenke && (
-                        <Link
-                            href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
-                            target="_blank"
-                        >
-                            Meld feilen i porten
-                        </Link>
+                    {(alert.message || alert.visPortenLenke) && (
+                        <>
+                            {alert.message}
+                            {alert.visPortenLenke && (
+                                <Link
+                                    href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                                    target="_blank"
+                                >
+                                    Meld feilen i porten
+                                </Link>
+                            )}
+                        </>
                     )}
                 </FixedAlert>
             ))}

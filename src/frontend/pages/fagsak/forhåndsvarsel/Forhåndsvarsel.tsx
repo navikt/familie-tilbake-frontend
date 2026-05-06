@@ -2,30 +2,25 @@ import type { ForhåndsvarselFormData } from './schema';
 import type { FC } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FilePdfIcon, MegaphoneIcon, TimerPauseIcon } from '@navikt/aksel-icons';
-import { Button, Heading, HStack, Tag, Tooltip, VStack } from '@navikt/ds-react';
+import { EyeIcon } from '@navikt/aksel-icons';
+import { Button, Heading, HStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { differenceInWeeks } from 'date-fns/differenceInWeeks';
-import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { formatterDatostring, formatterDatostringKortårstall, formatterRelativTid } from '~/utils';
+import { isoStringTilDate } from '~/utils/dato';
 
+import { Fristinfo } from './Fristinfo';
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
 import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
-
-type TagVariant = 'info-moderate' | 'success-moderate';
-
-const getTagVariant = (sendtTid: string): TagVariant => {
-    const ukerSiden = differenceInWeeks(new Date(), new Date(sendtTid));
-    return ukerSiden >= 3 ? 'success-moderate' : 'info-moderate';
-};
+import { UtsettFristModal } from './UtsettFristModal';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
@@ -33,8 +28,10 @@ export const Forhåndsvarsel: FC = () => {
         useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const { forhåndsvarselInfo } = useForhåndsvarselQueries();
-    const { forhåndsvisning } = useForhåndsvarselMutations();
+    const { forhåndsvisning, sendUtsettFrist, sendUtsettFristMutation } =
+        useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
+    const utsettFristModalRef = useRef<HTMLDialogElement>(null);
     const queryClient = useQueryClient();
 
     const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
@@ -96,6 +93,17 @@ export const Forhåndsvarsel: FC = () => {
     };
 
     useEffect(() => {
+        if (sendUtsettFristMutation.isSuccess) {
+            const nyFrist = sendUtsettFristMutation.variables?.body?.nyFrist;
+            const formatertDato = nyFrist ? format(isoStringTilDate(nyFrist), 'dd.MM.yyyy') : '';
+            visGlobalAlert({
+                title: `Fristen for uttalelse er utsatt til ${formatertDato}`,
+                status: 'success',
+            });
+        }
+    }, [sendUtsettFristMutation.isSuccess, sendUtsettFristMutation.variables, visGlobalAlert]);
+
+    useEffect(() => {
         if (forhåndsvisning.error) {
             visGlobalAlert({
                 title: 'Forhåndsvisning feilet',
@@ -110,15 +118,18 @@ export const Forhåndsvarsel: FC = () => {
         queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
     const visForhåndsvisningsknapp = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
+    const skalViseFristinfo = !!forhåndsvarselInfo?.varselbrevDto?.opprinneligFristForUttalelse;
 
     return (
-        <VStack gap="space-24">
-            <HStack align="center" justify="space-between">
+        <div
+            className={`grid grid-cols-1 gap-6 items-start ${skalViseFristinfo ? ' lg:grid-cols-[1fr_18rem]' : ''}`}
+        >
+            <HStack align="center" gap="space-16">
                 <Heading size="medium">Forhåndsvarsel</Heading>
-                <HStack gap="space-16">
+                {visForhåndsvisningsknapp && (
                     <Button
                         loading={forhåndsvisning.isPending}
-                        icon={<FilePdfIcon aria-hidden />}
+                        icon={<EyeIcon aria-hidden />}
                         variant="tertiary"
                         size="small"
                         onClick={seForhåndsvisningWithModal}
@@ -128,29 +139,16 @@ export const Forhåndsvarsel: FC = () => {
                     >
                         Forhåndsvis
                     </Button>
-                    {forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid && (
-                        <Tooltip
-                            arrow={false}
-                            placement="bottom"
-                            content={`Sendt ${formatterDatostring(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                        >
-                            <Tag
-                                variant={getTagVariant(
-                                    forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid
-                                )}
-                                icon={<MegaphoneIcon aria-hidden />}
-                            >
-                                {`Sendt ${formatterRelativTid(forhåndsvarselInfo.varselbrevDto.varselbrevSendtTid)}`}
-                            </Tag>
-                        </Tooltip>
-                    )}
-                    {forhåndsvarselInfo?.utsettUttalelseFrist?.nyFrist && (
-                        <Tag variant="warning-moderate" icon={<TimerPauseIcon aria-hidden />}>
-                            {`Ny frist: ${formatterDatostringKortårstall(forhåndsvarselInfo.utsettUttalelseFrist.nyFrist)}`}
-                        </Tag>
-                    )}
-                </HStack>
+                )}
             </HStack>
+            {skalViseFristinfo && forhåndsvarselInfo && (
+                <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
+                    <Fristinfo
+                        forhåndsvarselInfo={forhåndsvarselInfo}
+                        onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
+                    />
+                </div>
+            )}
             <FormProvider {...methods}>
                 <ForhåndsvarselSkjema
                     forhåndsvarselInfo={forhåndsvarselInfo}
@@ -164,6 +162,11 @@ export const Forhåndsvarsel: FC = () => {
                     onRequestClose={() => setShowModal(false)}
                 />
             )}
-        </VStack>
+            <UtsettFristModal
+                dialogRef={utsettFristModalRef}
+                onUtsettFrist={sendUtsettFrist}
+                laster={sendUtsettFristMutation.isPending}
+            />
+        </div>
     );
 };

@@ -5,10 +5,7 @@ import type { FaktaPeriode } from '~/typer/tilbakekrevingstyper';
 import {
     add,
     addDays,
-    differenceInDays,
     differenceInMilliseconds,
-    differenceInMonths,
-    differenceInWeeks,
     differenceInYears,
     endOfDay,
     endOfMonth,
@@ -45,15 +42,6 @@ export const formatterDatoOgTid = (dato: Date): string =>
 export const formatterDatostring = (datoAsString: string): string => {
     const dato = parseISO(datoAsString);
     return dato.toLocaleDateString('no-NO', datoformat);
-};
-
-export const formatterDatostringKortårstall = (datoAsString: string): string => {
-    const dato = parseISO(datoAsString);
-    return dato.toLocaleDateString('no-NO', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-    });
 };
 
 export const formatterDatoOgTidstring = (datoAsString: string): string => {
@@ -180,24 +168,4 @@ export const hentDatoRegistrertSendt = (
 
 export const formatterDatoDDMMYYYY = (dato: Date): string => {
     return format(new Date(dato), 'dd.MM.yyyy');
-};
-
-export const formatterRelativTid = (dato: string): string => {
-    const target = new Date(dato);
-    const now = new Date();
-
-    const ukerSiden = differenceInWeeks(now, target);
-    const dagerSiden = differenceInDays(now, target);
-    const månederSiden = differenceInMonths(now, target);
-
-    if (månederSiden >= 1 || ukerSiden >= 4) {
-        const antallMåneder = Math.max(månederSiden, 1);
-        return `${antallMåneder} ${antallMåneder === 1 ? 'måned' : 'måneder'} siden`;
-    } else if (ukerSiden >= 1) {
-        return `${ukerSiden} ${ukerSiden === 1 ? 'uke' : 'uker'} siden`;
-    } else if (dagerSiden >= 1) {
-        return `${dagerSiden} ${dagerSiden === 1 ? 'dag' : 'dager'} siden`;
-    } else {
-        return 'i dag';
-    }
 };
