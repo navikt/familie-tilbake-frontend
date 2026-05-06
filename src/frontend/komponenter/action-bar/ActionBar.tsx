@@ -78,7 +78,7 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
                     {!skjulNeste && (
                         <Tooltip content={nesteAriaLabel} aria-disabled={isLoading || disableNeste}>
                             <Button
-                                icon={<ChevronRightIcon title="a11y-title" fontSize="1.5rem" />}
+                                icon={<ChevronRightIcon aria-hidden fontSize="1.5rem" />}
                                 iconPosition="right"
                                 className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
                                 type={type}

@@ -69,7 +69,7 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             <Table.DataCell>
                 <BodyShort size="small">{`${formatterDatostring(
                     periode.periode.fom
-                )} - ${formatterDatostring(periode.periode.tom)}`}</BodyShort>
+                )}–${formatterDatostring(periode.periode.tom)}`}</BodyShort>
             </Table.DataCell>
             <Table.DataCell>
                 <VStack gap="space-4" className="mt-1">

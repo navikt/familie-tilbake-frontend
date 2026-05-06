@@ -33,7 +33,7 @@ export const FaktaContainer: FC = () => {
         <>
             {fakta?.status === RessursStatus.Suksess ? (
                 <VStack gap="space-24">
-                    <Heading size="small">Fakta fra feilutbetalingssaken</Heading>
+                    <Heading size="medium">Fakta fra feilutbetalingssaken</Heading>
                     {(!behandlingILesemodus || stegErBehandlet) && (
                         <Steginformasjon
                             behandletSteg={stegErBehandlet}

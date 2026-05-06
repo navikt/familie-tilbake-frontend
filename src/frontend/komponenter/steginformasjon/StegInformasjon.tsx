@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { BodyShort, Label, LocalAlert } from '@navikt/ds-react';
+import { BodyShort, InlineMessage, Label } from '@navikt/ds-react';
 
 type Props = {
     behandletSteg: boolean;
@@ -9,14 +9,13 @@ type Props = {
 
 export const Steginformasjon: FC<Props> = ({ behandletSteg, infotekst }) => {
     return !behandletSteg ? (
-        <LocalAlert status="announcement">
-            <LocalAlert.Header>
-                <LocalAlert.Title>{infotekst}</LocalAlert.Title>
-            </LocalAlert.Header>
-        </LocalAlert>
+        <InlineMessage status="info" size="small">
+            {infotekst}
+        </InlineMessage>
     ) : (
         <div className="flex flex-row gap-2">
-            <Label size="small">Behandlet:</Label> <BodyShort size="small">{infotekst}</BodyShort>
+            <Label size="small">Behandlet:</Label>
+            <BodyShort size="small">{infotekst}</BodyShort>
         </div>
     );
 };
