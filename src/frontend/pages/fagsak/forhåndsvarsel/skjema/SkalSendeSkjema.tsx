@@ -4,10 +4,16 @@ import type { Section, Varselbrevtekst } from '~/generated';
 import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
-import { Fragment } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { parseISO } from 'date-fns';
+import { Fragment, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useFagsak } from '~/context/FagsakContext';
+import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
+import { type Ytelsetype, ytelsestypeTilBestemtEntall } from '~/kodeverk';
 import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { Unntak } from './UnntakSkjema';
@@ -25,12 +31,41 @@ export const SkalSendeSkjema: FC<Props> = ({
 }) => {
     const maksAntallTegn = 4000;
     const { behandlingILesemodus } = useBehandlingState();
+    const { behandlingId } = useBehandling();
+    const { ytelsestype } = useFagsak();
     const {
         control,
         register,
         handleSubmit,
+        setValue,
+        getValues,
         formState: { errors },
     } = useFormContext<ForhåndsvarselFormData>();
+
+    const { data: faktaOmFeilutbetaling } = useQuery(
+        behandlingFaktaOptions({ path: { behandlingId } })
+    );
+
+    const lagStønadstekst = (): string | undefined => {
+        const vedtaksdato = faktaOmFeilutbetaling?.feilutbetaling.revurdering.vedtaksdato;
+        const ytelseNavn = ytelsestypeTilBestemtEntall[ytelsestype as Ytelsetype];
+        if (!vedtaksdato || !ytelseNavn) return undefined;
+
+        const formatertDato = parseISO(vedtaksdato).toLocaleDateString('no-NO', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+        return `${ytelseNavn.charAt(0).toUpperCase()}${ytelseNavn.slice(1)} din ble endret ${formatertDato}, og endringen har ført til at du har fått utbetalt for mye.`;
+    };
+
+    const stønadstekst = lagStønadstekst();
+
+    useEffect(() => {
+        if (stønadstekst && !getValues('fritekst')) {
+            setValue('fritekst', stønadstekst);
+        }
+    }, [stønadstekst, setValue, getValues]);
 
     const fieldError: FieldErrors<
         Extract<ForhåndsvarselFormData, { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja }>
@@ -82,23 +117,30 @@ export const SkalSendeSkjema: FC<Props> = ({
                         {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                             <Fragment key={avsnitt.title}>
                                 {/* I første element er tittel er tom */}
-                                {avsnitt.title && (
+                                {avsnitt.title && avsnitt.title !== 'Dette har skjedd' && (
                                     <Heading level="4" size="xsmall">
                                         {avsnitt.title}
                                     </Heading>
                                 )}
-                                <BodyLong size="small">{avsnitt.body}</BodyLong>
+                                {avsnitt.title !== 'Dette har skjedd' && (
+                                    <BodyLong size="small">{avsnitt.body}</BodyLong>
+                                )}
                                 {avsnitt.title === 'Dette har skjedd' && (
-                                    <Textarea
-                                        {...register('fritekst')}
-                                        size="small"
-                                        minRows={3}
-                                        label="Legg til utdypende tekst"
-                                        maxLength={maksAntallTegn}
-                                        error={fieldError.fritekst?.message}
-                                        readOnly={varselErSendt}
-                                        resize
-                                    />
+                                    <VStack gap="space-16">
+                                        <Heading level="4" size="xsmall">
+                                            {avsnitt.title}
+                                        </Heading>
+                                        <Textarea
+                                            {...register('fritekst')}
+                                            size="small"
+                                            minRows={3}
+                                            label="Legg til utdypende tekst"
+                                            maxLength={maksAntallTegn}
+                                            error={fieldError.fritekst?.message}
+                                            readOnly={varselErSendt}
+                                            resize
+                                        />
+                                    </VStack>
                                 )}
                             </Fragment>
                         ))}
