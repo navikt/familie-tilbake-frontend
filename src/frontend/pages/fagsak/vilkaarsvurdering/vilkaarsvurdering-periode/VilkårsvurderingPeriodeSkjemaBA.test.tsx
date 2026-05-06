@@ -595,7 +595,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         expect(getByText('Angi andel som skal tilbakekreves')).toBeInTheDocument();
         expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
         expect(
             getByRole('combobox', {
                 name: 'Angi andel som skal tilbakekreves',

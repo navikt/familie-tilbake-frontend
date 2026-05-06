@@ -5,7 +5,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsv
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { Aktsomhet } from '~/kodeverk';
+import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
 import {
     ANDELER,
     EGENDEFINERT,
@@ -33,7 +33,11 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
         skjema.felter.uaktsomAndelTilbakekreves.verdi !== '-';
 
     const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt;
-
+    const erFeilaktigEllerMangelfull =
+        skjema.felter.vilkårsresultatvurdering.verdi ===
+            Vilkårsresultat.FeilOpplysningerFraBruker ||
+        skjema.felter.vilkårsresultatvurdering.verdi ===
+            Vilkårsresultat.MangelfulleOpplysningerFraBruker;
     return (
         <>
             {skjema.felter.harGrunnerTilReduksjon.verdi === OptionJA && (
@@ -91,7 +95,6 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                                 style={{ width: '100px' }}
                             />
                         ))}
-
                     {harMerEnnEnAktivitet && (
                         <TextField
                             {...skjema.felter.uaktsomTilbakekrevesBeløp.hentNavInputProps(
@@ -118,6 +121,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             felt={skjema.felter.grovtUaktsomIlleggeRenter}
                             visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             readOnly
+                            erFeilaktigEllerMangelfull={erFeilaktigEllerMangelfull}
                         />
                     )}
                 </>
@@ -144,13 +148,13 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             <option>100%</option>
                         </Select>
                     )}
-
                     {erGrovtUaktsomhet && (
                         <TilleggesRenterRadioGroup
                             kanIlleggeRenter={kanIlleggeRenter}
                             felt={skjema.felter.grovtUaktsomIlleggeRenter}
                             visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
                             readOnly={erLesevisning}
+                            erFeilaktigEllerMangelfull={erFeilaktigEllerMangelfull}
                         />
                     )}
                 </>
