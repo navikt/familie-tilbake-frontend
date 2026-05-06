@@ -18,6 +18,21 @@ import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/schema
 
 import { Unntak } from './UnntakSkjema';
 
+const lagStønadstekst = (
+    vedtaksdato: string | undefined,
+    ytelsestype: string
+): string | undefined => {
+    const ytelseNavn = ytelsestypeTilBestemtEntall[ytelsestype as Ytelsetype];
+    if (!vedtaksdato || !ytelseNavn) return undefined;
+
+    const formatertDato = parseISO(vedtaksdato).toLocaleDateString('no-NO', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    });
+    return `${ytelseNavn.charAt(0).toUpperCase()}${ytelseNavn.slice(1)} din ble endret ${formatertDato}, og endringen har ført til at du har fått utbetalt for mye.`;
+};
+
 type Props = {
     varselbrevtekster: Varselbrevtekst | undefined;
     varselErSendt: boolean;
@@ -46,20 +61,10 @@ export const SkalSendeSkjema: FC<Props> = ({
         behandlingFaktaOptions({ path: { behandlingId } })
     );
 
-    const lagStønadstekst = (): string | undefined => {
-        const vedtaksdato = faktaOmFeilutbetaling?.feilutbetaling.revurdering.vedtaksdato;
-        const ytelseNavn = ytelsestypeTilBestemtEntall[ytelsestype as Ytelsetype];
-        if (!vedtaksdato || !ytelseNavn) return undefined;
-
-        const formatertDato = parseISO(vedtaksdato).toLocaleDateString('no-NO', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        });
-        return `${ytelseNavn.charAt(0).toUpperCase()}${ytelseNavn.slice(1)} din ble endret ${formatertDato}, og endringen har ført til at du har fått utbetalt for mye.`;
-    };
-
-    const stønadstekst = lagStønadstekst();
+    const stønadstekst = lagStønadstekst(
+        faktaOmFeilutbetaling?.feilutbetaling.revurdering.vedtaksdato,
+        ytelsestype
+    );
 
     useEffect(() => {
         if (stønadstekst && !getValues('fritekst')) {
