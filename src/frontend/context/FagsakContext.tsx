@@ -1,5 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { FagsakDto } from '~/generated';
+import type { Error as ModellError } from '~/generated-new';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use } from 'react';
@@ -14,6 +15,18 @@ type Props = {
     children: ReactNode;
 };
 
+export class FagsakIkkeStøttetError extends Error {
+    tittel: string;
+    fagsystem: Fagsystem;
+    fagsakId?: string;
+    constructor(tittel: string, message: string, fagsystem: Fagsystem, fagsakId?: string) {
+        super(message);
+        this.tittel = tittel;
+        this.fagsystem = fagsystem;
+        this.fagsakId = fagsakId;
+    }
+}
+
 export const FagsakProvider = ({ children }: Props): ReactElement => {
     const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
     const fagsystem =
@@ -23,32 +36,44 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
 
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, eksternFagsakId],
+        retry: (count, error) => {
+            console.log(error);
+            return count < 4 && !(error instanceof FagsakIkkeStøttetError);
+        },
         queryFn: async () => {
-            try {
-                const result = await hentFagsak({
-                    path: {
-                        fagsystem: fagsystem,
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        eksternFagsakId: eksternFagsakId!,
-                    },
-                });
-
-                if (!result.data?.data) {
-                    throw new Error(
-                        `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`
-                    );
-                }
-
-                return result.data.data;
-            } catch (error) {
-                if (error instanceof Error) {
-                    throw error;
+            const result = await hentFagsak({
+                path: {
+                    fagsystem: fagsystem,
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    eksternFagsakId: eksternFagsakId!,
+                },
+            }).catch(e => {
+                if (e instanceof Error) {
+                    throw e;
                 }
                 throw new Error(
                     `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`,
-                    { cause: error }
+                    { cause: e }
                 );
+            });
+
+            if (!result.data?.data) {
+                switch (result.status) {
+                    case 405:
+                        throw new FagsakIkkeStøttetError(
+                            (result.error as ModellError).tittel,
+                            (result.error as ModellError).melding,
+                            fagsystem,
+                            eksternFagsakId
+                        );
+                    default:
+                        throw new Error(
+                            `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`
+                        );
+                }
             }
+
+            return result.data.data;
         },
     });
 

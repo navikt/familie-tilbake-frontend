@@ -51,6 +51,7 @@ export type Element = {
 } & RentekstElement;
 
 export type Error = {
+    tittel: string;
     melding: string;
 };
 
@@ -108,6 +109,8 @@ export type Logginnslag = {
     tittel: string;
     tekst: string | null;
     steg: string | null;
+    journalpostId: string | null;
+    dokumentInfoId: string | null;
 };
 
 export type MuligeRettsligGrunnlag = {
