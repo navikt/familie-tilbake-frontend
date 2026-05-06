@@ -37,7 +37,6 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, eksternFagsakId],
         retry: (count, error) => {
-            console.log(error);
             return count < 4 && !(error instanceof FagsakIkkeStøttetError);
         },
         queryFn: async () => {

@@ -43,21 +43,17 @@ export class FagsakErrorBoundary extends Component<Props, State> {
 
 const IkkeStøttetError = ({ error }: { error: FagsakIkkeStøttetError }): ReactNode => {
     return (
-        <div className="h-screen">
-            <div className="px-45 py-20 w-full">
+        <div className="h-screen px-10 sm:px-20 md:px-45 py-20">
+            <VStack gap="space-48">
                 <VStack gap="space-16">
                     <Heading size="large">{error.tittel}</Heading>
                     <p className="max-w-2xl text-ax-large">{error.message}</p>
-                    <p className="text-ax-text-neutral-subtle pt-8 flex flex-col text-ax-small">
-                        <span>Fagsystem: {error.fagsystem}</span>
-                        {error.fagsakId && (
-                            <>
-                                <span>Fagsak: {error.fagsakId}</span>
-                            </>
-                        )}
-                    </p>
                 </VStack>
-            </div>
+                <p className="text-ax-text-neutral-subtle flex flex-col text-ax-small">
+                    <span>Fagsystem: {error.fagsystem}</span>
+                    {error.fagsakId && <span>Fagsak: {error.fagsakId}</span>}
+                </p>
+            </VStack>
         </div>
     );
 };
