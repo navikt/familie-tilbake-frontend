@@ -597,7 +597,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
-        const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText } = render(
+        const { getByLabelText, getByRole, getByText, queryAllByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
                     periode={periode}
@@ -671,8 +671,100 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeChecked();
+        const rentetilleggRadioGroup = getByRole('radiogroup', {
+            name: 'Skal det beregnes 10% rentetillegg?',
+        });
+        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
+
+        await user.click(
+            getByRole('button', {
+                name: 'Gå videre til vedtakssteget',
+            })
+        );
+
+        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+    });
+
+    test('nyModell - Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
+        const { getByLabelText, getByRole, getByText, queryAllByText } = render(
+            <TestWrapper behandling={lagBehandling({ erNyModell: true })}>
+                <VilkårsvurderingPeriodeSkjema
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={vi.fn()}
+                />
+            </TestWrapper>
+        );
+
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
+
+        expect(
+            getByRole('button', {
+                name: 'Gå videre til vedtakssteget',
+            })
+        ).toBeEnabled();
+        expect(
+            getByRole('button', {
+                name: 'Gå tilbake til foreldelsessteget',
+            })
+        ).toBeEnabled();
+
+        await user.type(
+            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            'begrunnelse'
+        );
+        await user.click(
+            getByLabelText(
+                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
+            )
+        );
+
+        expect(
+            getByRole('button', {
+                name: 'Gå videre til vedtakssteget',
+            })
+        ).toBeEnabled();
+
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
+        await user.click(
+            getByLabelText('Grovt uaktsomt', {
+                selector: 'input',
+            })
+        );
+
+        await user.click(
+            getByRole('button', {
+                name: 'Gå videre til vedtakssteget',
+            })
+        );
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+
+        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
+        await user.click(
+            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
+                selector: 'input',
+            })
+        );
+        await user.click(
+            getByRole('radio', {
+                name: 'Nei',
+            })
+        );
+
+        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
+        const rentetilleggRadioGroup = getByRole('radiogroup', {
+            name: 'SkrivebeskyttetSkal det beregnes 10% rentetillegg?',
+        });
+        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
 
         await user.click(
             getByRole('button', {
