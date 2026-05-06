@@ -4,6 +4,7 @@ import type { ForhåndsvarselDto } from '~/generated';
 import type {
     ForhåndsvarselFormData,
     UttalelseFormData,
+    HarUttaltSeg,
 } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,7 +16,6 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
-import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
 import {
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
@@ -30,7 +30,7 @@ import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/useFor
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 
 import { SkalSendeSkjema } from './SkalSendeSkjema';
-import { Uttalelse } from './UttalelseSkjema';
+import { UttalelseSkjema } from './UttalelseSkjema';
 
 type Props = {
     forhåndsvarselInfo: ForhåndsvarselDto | undefined;
@@ -58,8 +58,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
     const {
         sendForhåndsvarselMutation,
         sendBrukeruttalelseMutation,
-        sendUtsettUttalelseFristMutation,
-        sendUtsettUttalelseFrist,
+        sendUtsettFristMutation,
         sendBrukeruttalelse,
         sendForhåndsvarsel,
         sendUnntakMutation,
@@ -71,7 +70,7 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
     const mutations = [
         { key: 'forhåndsvarsel', mutation: sendForhåndsvarselMutation },
         { key: 'brukeruttalelse', mutation: sendBrukeruttalelseMutation },
-        { key: 'utsettFrist', mutation: sendUtsettUttalelseFristMutation },
+        { key: 'utsettFrist', mutation: sendUtsettFristMutation },
         { key: 'unntak', mutation: sendUnntakMutation },
     ] as const;
 
@@ -127,16 +126,12 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         | 'SEND_FORHÅNDSVARSEL'
         | 'SEND_UNNTAK_OG_UTTALELSE'
         | 'SEND_UNNTAK'
-        | 'SEND_UTTALELSE'
-        | 'UTSETT_FRIST';
+        | 'SEND_UTTALELSE';
 
     const skalSendeForhåndsvarsel =
         skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja && !varselErSendt;
 
     const getSubmitAction = (): SubmitAction => {
-        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
-            return 'UTSETT_FRIST';
-        }
         if (skalSendeForhåndsvarsel) {
             return 'SEND_FORHÅNDSVARSEL';
         }
@@ -171,8 +166,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 
     const getNesteKnappTekst = (action: SubmitAction): string => {
         switch (action) {
-            case 'UTSETT_FRIST':
-                return 'Utsett frist';
             case 'SEND_FORHÅNDSVARSEL':
                 return 'Send forhåndsvarselet';
             case 'NAVIGER':
@@ -236,10 +229,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
             navigerTilNeste();
             return;
         }
-        if (harUttaltSeg === HarUttaltSeg.UtsettFrist) {
-            sendUtsettUttalelseFrist(data);
-            return;
-        }
         sendBrukeruttalelse(data, varselErSendt);
     };
 
@@ -265,10 +254,13 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
 
             {forhåndsvarselInfo && skalViseUttalelseSkjema && (
                 <FormProvider {...uttalelseMethods}>
-                    <Uttalelse
+                    <UttalelseSkjema
                         handleUttalelseSubmit={handleUttalelseSubmit}
-                        kanUtsetteFrist
                         varselErSendt={varselErSendt}
+                        fristForUttalelse={
+                            forhåndsvarselInfo.utsettUttalelseFrist?.nyFrist ??
+                            forhåndsvarselInfo.varselbrevDto?.opprinneligFristForUttalelse
+                        }
                     />
                 </FormProvider>
             )}

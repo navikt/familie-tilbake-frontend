@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom/vitest';
 
-import type { TogglesHook } from './frontend/context/TogglesContext';
-
 import { Crypto } from '@peculiar/webcrypto';
 import { TextEncoder } from 'util';
 import { vi } from 'vitest';
@@ -34,13 +32,3 @@ vi.mock('react-router', async () => {
         useNavigate: (): ReturnType<typeof vi.fn> => vi.fn(),
     };
 });
-
-// Global mock for TogglesContext - fjernes når utsettelse er ute
-vi.mock('./frontend/context/TogglesContext', () => ({
-    useToggles: (): TogglesHook => ({
-        toggles: {
-            'familie-tilbake-frontend.forhaandsvarselsteg': true,
-        },
-        feilmelding: '',
-    }),
-}));
