@@ -15,7 +15,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      packages: read
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
@@ -27,10 +26,6 @@ jobs:
         with:
           node-version: "24"
           cache: "pnpm"
-
-      - name: Authentiser mot GitHub Packages
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >>
-          .npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
