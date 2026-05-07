@@ -144,7 +144,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { behandlingId, behandlingsstegsinfo, erNyModell } = useBehandling();
+    const { behandlingId, behandlingsstegsinfo } = useBehandling();
     const {
         setIkkePersistertKomponent,
         harUlagredeData,
@@ -417,7 +417,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     <AktsomhetsvurderingSkjema
                                         skjema={skjema}
                                         erLesevisning={erLesevisning}
-                                        nyModell={erNyModell}
                                     />
                                 )}
                             </>

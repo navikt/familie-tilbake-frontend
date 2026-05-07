@@ -4,7 +4,6 @@ import type { JaNeiOption } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurde
 
 import { Radio, RadioGroup } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema';
 import {
@@ -29,7 +28,6 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
     visFeilmeldingerForSkjema,
 }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
-    const { erNyModell } = useBehandling();
     const kanIleggeRenterValue = kanIlleggeRenter ? OptionJA : OptionNEI;
     const value = !erFeilaktigEllerMangelfull ? felt.verdi : kanIleggeRenterValue;
 
@@ -40,7 +38,7 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
             value={value}
             size="small"
             aria-live="polite"
-            readOnly={readOnly || !kanIlleggeRenter || (erFeilaktigEllerMangelfull && erNyModell)}
+            readOnly={readOnly || !kanIlleggeRenter}
             error={
                 visFeilmeldingerForSkjema &&
                 felt.valideringsstatus === Valideringsstatus.Feil &&

@@ -4,6 +4,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsv
 
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 
+import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
 import {
@@ -24,6 +25,7 @@ type Props = {
 
 export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
+    const { erNyModell } = useBehandling();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
     const harMerEnnEnAktivitet = skjema.felter.harMerEnnEnAktivitet.verdi === true;
     const erEgendefinert =
@@ -115,7 +117,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             style={{ width: '100px' }}
                         />
                     )}
-                    {erGrovtUaktsomhet && (
+                    {erGrovtUaktsomhet && !erNyModell && (
                         <TilleggesRenterRadioGroup
                             kanIlleggeRenter={kanIlleggeRenter}
                             felt={skjema.felter.grovtUaktsomIlleggeRenter}
@@ -148,7 +150,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             <option>100%</option>
                         </Select>
                     )}
-                    {erGrovtUaktsomhet && (
+                    {erGrovtUaktsomhet && !erNyModell && (
                         <TilleggesRenterRadioGroup
                             kanIlleggeRenter={kanIlleggeRenter}
                             felt={skjema.felter.grovtUaktsomIlleggeRenter}
