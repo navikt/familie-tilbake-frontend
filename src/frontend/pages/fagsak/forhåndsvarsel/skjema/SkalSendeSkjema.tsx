@@ -30,7 +30,7 @@ const lagStønadstekst = (
         month: 'long',
         year: 'numeric',
     });
-    return `${ytelseNavn.charAt(0).toUpperCase()}${ytelseNavn.slice(1)} din ble endret ${formatertDato}, og endringen har ført til at du har fått utbetalt for mye.`;
+    return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
 };
 
 type Props = {

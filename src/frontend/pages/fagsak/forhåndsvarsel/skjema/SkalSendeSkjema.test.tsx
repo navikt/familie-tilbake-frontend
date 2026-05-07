@@ -175,13 +175,13 @@ describe('Stønadstekst', () => {
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
-    test('Initialiserer fritekst med stønadstekst basert på ytelsestype og vedtaksdato', async () => {
+    test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
         renderMedFaktaData(Ytelsetype.Barnetrygd, '2025-09-05');
 
         const textarea = await screen.findByLabelText('Legg til utdypende tekst');
         await waitFor(() => {
             expect(textarea).toHaveValue(
-                'Barnetrygden din ble endret 5. september 2025, og endringen har ført til at du har fått utbetalt for mye.'
+                'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
             );
         });
     });
@@ -192,7 +192,7 @@ describe('Stønadstekst', () => {
         const textarea = await screen.findByLabelText('Legg til utdypende tekst');
         await waitFor(() => {
             expect(textarea).toHaveValue(
-                'Barnetrygden din ble endret 5. september 2025, og endringen har ført til at du har fått utbetalt for mye.'
+                'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
             );
         });
 
