@@ -38,7 +38,7 @@ export const GradForsettSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                 readOnly={
                     erLesevisning || !kanIlleggeRenter || !erValgtResultatTypeForstoBurdeForstått
                 }
-                feilaktigForsett={!erValgtResultatTypeForstoBurdeForstått}
+                erFeilaktigEllerMangelfull={!erValgtResultatTypeForstoBurdeForstått}
             />
         </>
     );
