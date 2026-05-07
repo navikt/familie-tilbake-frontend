@@ -2,7 +2,7 @@ import type { RenderResult } from '@testing-library/react';
 import type { FaktaOmFeilutbetaling } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { behandlingFaktaQueryKey } from '~/generated-new/@tanstack/react-query.gen';
@@ -179,22 +179,18 @@ describe('Stønadstekst', () => {
     test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
         const { getByRole } = renderMedFaktaData('2025-09-05');
 
-        await waitFor(() => {
-            expect(getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
-                'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
-            );
-        });
+        expect(getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
+            'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
+        );
     });
 
     test('Overskriver ikke fritekst som brukeren har skrevet', async () => {
         const { getByRole } = renderMedFaktaData('2025-09-05');
 
         const textarea = getByRole('textbox', { name: 'Legg til utdypende tekst' });
-        await waitFor(() => {
-            expect(textarea).toHaveValue(
-                'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
-            );
-        });
+        expect(textarea).toHaveValue(
+            'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
+        );
 
         fireEvent.change(textarea, { target: { value: 'Egendefinert tekst' } });
         expect(textarea).toHaveValue('Egendefinert tekst');
