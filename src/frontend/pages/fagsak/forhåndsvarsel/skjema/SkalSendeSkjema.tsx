@@ -11,19 +11,13 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useFagsak } from '~/context/FagsakContext';
 import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
-import { type Ytelsetype, ytelsestypeTilBestemtEntall } from '~/kodeverk';
 import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { Unntak } from './UnntakSkjema';
 
-const lagStønadstekst = (
-    vedtaksdato: string | undefined,
-    ytelsestype: string
-): string | undefined => {
-    const ytelseNavn = ytelsestypeTilBestemtEntall[ytelsestype as Ytelsetype];
-    if (!vedtaksdato || !ytelseNavn) return undefined;
+const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined => {
+    if (!vedtaksdato) return undefined;
 
     const formatertDato = parseISO(vedtaksdato).toLocaleDateString('no-NO', {
         day: 'numeric',
@@ -47,7 +41,6 @@ export const SkalSendeSkjema: FC<Props> = ({
     const maksAntallTegn = 4000;
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();
-    const { ytelsestype } = useFagsak();
     const {
         control,
         register,
@@ -62,8 +55,7 @@ export const SkalSendeSkjema: FC<Props> = ({
     );
 
     const stønadstekst = lagStønadstekst(
-        faktaOmFeilutbetaling?.feilutbetaling.revurdering.vedtaksdato,
-        ytelsestype
+        faktaOmFeilutbetaling?.feilutbetaling.revurdering.vedtaksdato
     );
 
     useEffect(() => {

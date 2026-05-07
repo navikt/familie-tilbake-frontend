@@ -6,7 +6,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { behandlingFaktaQueryKey } from '~/generated-new/@tanstack/react-query.gen';
-import { Ytelsetype } from '~/kodeverk';
 import { Forhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/Forhåndsvarsel';
 import { useForhåndsvarselMutations } from '~/pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
@@ -140,7 +139,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato: string): FaktaOmFeilutbetaling =>
         ferdigvurdert: false,
     }) satisfies FaktaOmFeilutbetaling;
 
-const renderMedFaktaData = (ytelsestype: string, vedtaksdato: string): void => {
+const renderMedFaktaData = (vedtaksdato: string): void => {
     const behandling = lagBehandlingDto();
     const queryClient = createTestQueryClient();
 
@@ -150,7 +149,7 @@ const renderMedFaktaData = (ytelsestype: string, vedtaksdato: string): void => {
     queryClient.setQueryData(queryKey, lagFaktaOmFeilutbetaling(vedtaksdato));
 
     render(
-        <FagsakContext value={lagFagsak({ ytelsestype: ytelsestype as never })}>
+        <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={queryClient}>
                     <Forhåndsvarsel />
@@ -176,7 +175,7 @@ describe('Stønadstekst', () => {
     });
 
     test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
-        renderMedFaktaData(Ytelsetype.Barnetrygd, '2025-09-05');
+        renderMedFaktaData('2025-09-05');
 
         const textarea = await screen.findByLabelText('Legg til utdypende tekst');
         await waitFor(() => {
@@ -187,7 +186,7 @@ describe('Stønadstekst', () => {
     });
 
     test('Overskriver ikke fritekst som brukeren har skrevet', async () => {
-        renderMedFaktaData(Ytelsetype.Barnetrygd, '2025-09-05');
+        renderMedFaktaData('2025-09-05');
 
         const textarea = await screen.findByLabelText('Legg til utdypende tekst');
         await waitFor(() => {
