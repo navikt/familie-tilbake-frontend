@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Felt } from '~/hooks/skjema';
 import type { JaNeiOption } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
-import { Radio, RadioGroup, Stack } from '@navikt/ds-react';
+import { Radio, RadioGroup } from '@navikt/ds-react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema';
@@ -16,7 +16,7 @@ type Props = {
     kanIlleggeRenter: boolean;
     felt: Felt<JaNeiOption | ''>;
     readOnly: boolean;
-    feilaktigForsett?: boolean;
+    erFeilaktigEllerMangelfull: boolean;
     visFeilmeldingerForSkjema: boolean;
 };
 
@@ -24,11 +24,13 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
     kanIlleggeRenter,
     felt,
     readOnly,
-    feilaktigForsett,
+    erFeilaktigEllerMangelfull,
     visFeilmeldingerForSkjema,
 }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
-    const value = !feilaktigForsett ? felt.verdi : kanIlleggeRenter ? OptionJA : OptionNEI;
+    const kanIleggeRenterValue = kanIlleggeRenter ? OptionJA : OptionNEI;
+    const value = !erFeilaktigEllerMangelfull ? felt.verdi : kanIleggeRenterValue;
+
     return (
         <RadioGroup
             id="skalDetTilleggesRenter"
@@ -47,18 +49,16 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
                 setIkkePersistertKomponent(`vilkårsvurdering`);
             }}
         >
-            <Stack gap="space-0 space-24" direction={{ xs: 'column', sm: 'row' }} wrap={false}>
-                {jaNeiOptions.map(opt => (
-                    <Radio
-                        key={opt.label}
-                        name="skalDetTilleggesRenter"
-                        value={opt}
-                        data-testid={`skalDetTilleggesRenter_${opt.label}`}
-                    >
-                        {opt.label}
-                    </Radio>
-                ))}
-            </Stack>
+            {jaNeiOptions.map(opt => (
+                <Radio
+                    key={opt.label}
+                    name="skalDetTilleggesRenter"
+                    value={opt}
+                    data-testid={`skalDetTilleggesRenter_${opt.label}`}
+                >
+                    {opt.label}
+                </Radio>
+            ))}
         </RadioGroup>
     );
 };

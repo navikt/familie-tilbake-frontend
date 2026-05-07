@@ -3,6 +3,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsv
 
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 
+import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
 import { Aktsomhet, aktsomheter, Vilkårsresultat } from '~/kodeverk';
@@ -14,11 +15,11 @@ import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-    nyModell: boolean;
 };
 
-export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning, nyModell }) => {
+export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
+    const { erNyModell } = useBehandling();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
     const ugyldigAktsomhetvurderingValgt =
@@ -122,16 +123,13 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning, ny
                 }}
                 maxLength={3000}
             />
+            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig && !erNyModell && (
+                <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
+            )}
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
-                (skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig ? (
-                    <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
-                ) : (
-                    <GradUaktsomhetSkjema
-                        skjema={skjema}
-                        erLesevisning={erLesevisning}
-                        nyModell={nyModell}
-                    />
-                ))}
+                skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.Forsettlig && (
+                    <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                )}
         </>
     );
 };

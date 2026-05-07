@@ -3,6 +3,7 @@ import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsv
 
 import { LocalAlert, Radio, RadioGroup } from '@navikt/ds-react';
 
+import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
 import { Aktsomhet } from '~/kodeverk';
@@ -13,11 +14,11 @@ import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
-    nyModell: boolean;
 };
 
-export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning, nyModell }) => {
+export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
+    const { erNyModell } = useBehandling();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
         skjema.visFeilmeldinger &&
         skjema.felter.unnlates4Rettsgebyr.valideringsstatus === Valideringsstatus.Feil;
@@ -60,7 +61,7 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning, nyModel
                             >
                                 Ja
                             </Radio>
-                            {nyModell && (
+                            {erNyModell && (
                                 <Radio
                                     key="Over4Rettsgebyr"
                                     name="tilbakekrevSelvOmBeloepErUnder4Rettsgebyr"
