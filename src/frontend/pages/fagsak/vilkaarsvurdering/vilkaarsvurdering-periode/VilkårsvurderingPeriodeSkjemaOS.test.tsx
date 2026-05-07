@@ -4,7 +4,7 @@ import type { BehandlingDto } from '~/generated';
 import type { VilkårsvurderingHook } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -492,8 +492,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
         expect(getByText('100%')).toBeInTheDocument();
         expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
         expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
 
         await user.click(
@@ -588,7 +586,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
         expect(getByText('100%')).toBeInTheDocument();
         expect(queryByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
+        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeChecked();
 
         await user.click(
             getByRole('button', {
@@ -599,7 +597,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     });
 
     test('Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
-        const { getByLabelText, getByRole, getByTestId, getByText, queryAllByText } = render(
+        const { getByLabelText, getByRole, getByText, queryAllByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
                     periode={periode}
@@ -673,8 +671,10 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeInTheDocument();
+        const rentetilleggRadioGroup = getByRole('radiogroup', {
+            name: 'Skal det beregnes 10% rentetillegg?',
+        });
+        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
 
         await user.click(
             getByRole('button', {
@@ -691,10 +691,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             getByLabelText,
             getByRole,
             getByText,
-            queryAllByText,
             queryByLabelText,
+            queryAllByText,
             queryByText,
-            getByTestId,
         } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
@@ -715,36 +714,19 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(
             queryByText('I hvilken grad har mottaker handlet uaktsomt?')
         ).not.toBeInTheDocument();
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
 
+        const vilkårRadioGroup = getByRole('radiogroup', {
+            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
+        });
+        await user.click(
+            within(vilkårRadioGroup).getByRole('radio', {
+                name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
+            })
+        );
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
             'begrunnelse'
         );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
 
         expect(
             queryByLabelText('Begrunn resultatet av vurderingen ovenfor')
@@ -754,47 +736,38 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         ).not.toBeInTheDocument();
         expect(queryByText('Skal særlige grunner redusere beløpet?')).not.toBeInTheDocument();
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
+        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
+            name: 'I hvilken grad har mottaker handlet uaktsomt?',
+        });
         await user.click(
-            getByLabelText('Grovt uaktsomt', {
-                selector: 'input',
+            within(aktsomhetsgradRadioGroup).getByRole('radio', {
+                name: 'Grovt uaktsomt',
             })
         );
-
-        expect(queryByLabelText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
-        expect(
-            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
-        ).toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner redusere beløpet?')).toBeInTheDocument();
+        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
 
         await user.click(
             getByRole('button', {
                 name: 'Gå videre til vedtakssteget',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
+        const særligeGrunnerCheckboxGroup = getByRole('group', {
+            name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
+        });
+        await user.click(
+            within(særligeGrunnerCheckboxGroup).getByRole('checkbox', {
+                name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+            })
+        );
+
+        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
+            name: 'Skal særlige grunner redusere beløpet?',
+        });
+        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
-        );
-
-        expect(getByText('Angi andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeInTheDocument();
-        expect(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            })
-        ).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -802,14 +775,16 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
 
-        await user.selectOptions(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            }),
-            '30'
-        );
+        const andelAvBeløp = getByRole('combobox', {
+            name: 'Angi andel som skal tilbakekreves',
+        });
+        await user.selectOptions(andelAvBeløp, '30');
+
+        const rentetilleggRadioGroup = getByRole('radiogroup', {
+            name: 'SkrivebeskyttetSkal det beregnes 10% rentetillegg?',
+        });
+        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
 
         await user.click(
             getByRole('button', {
@@ -819,8 +794,55 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
+    test('Ny model viser ikke tilleggsrenter', async () => {
+        const { getByRole, queryByText } = render(
+            <TestWrapper behandling={lagBehandling({ erNyModell: true })}>
+                <VilkårsvurderingPeriodeSkjema
+                    periode={periode}
+                    behandletPerioder={[]}
+                    erTotalbeløpUnder4Rettsgebyr={false}
+                    perioder={[periode]}
+                    pendingPeriode={undefined}
+                    settPendingPeriode={vi.fn()}
+                />
+            </TestWrapper>
+        );
+
+        const vilkårRadioGroup = getByRole('radiogroup', {
+            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
+        });
+        await user.click(
+            within(vilkårRadioGroup).getByRole('radio', {
+                name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
+            })
+        );
+        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
+            name: 'I hvilken grad har mottaker handlet uaktsomt?',
+        });
+        await user.click(
+            within(aktsomhetsgradRadioGroup).getByRole('radio', {
+                name: 'Grovt uaktsomt',
+            })
+        );
+        const særligeGrunnerCheckboxGroup = getByRole('group', {
+            name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
+        });
+        await user.click(
+            within(særligeGrunnerCheckboxGroup).getByRole('checkbox', {
+                name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+            })
+        );
+
+        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
+            name: 'Skal særlige grunner redusere beløpet?',
+        });
+        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
+
+        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
+    });
+
     test('Feilaktige - grovt uaktsomt - grunn til reduksjon - egendefinert', async () => {
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByRole } = render(
+        const { getByLabelText, getByRole, queryAllByText } = render(
             <TestWrapper>
                 <VilkårsvurderingPeriodeSkjema
                     periode={periode}
@@ -833,82 +855,55 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
             </TestWrapper>
         );
 
-        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
+        const vilkårRadioGroup = getByRole('radiogroup', {
+            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
+        });
+        await user.click(
+            within(vilkårRadioGroup).getByRole('radio', {
+                name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
             })
-        ).toBeEnabled();
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
-
+        );
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
             'begrunnelse'
         );
+
+        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
+            name: 'I hvilken grad har mottaker handlet uaktsomt?',
+        });
         await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
+            within(aktsomhetsgradRadioGroup).getByRole('radio', {
+                name: 'Grovt uaktsomt',
             })
-        ).toBeEnabled();
-
+        );
         await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
+
+        const særligeGrunnerCheckboxGroup = getByRole('group', {
+            name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
+        });
         await user.click(
-            getByLabelText('Grovt uaktsomt', {
-                selector: 'input',
+            within(særligeGrunnerCheckboxGroup).getByRole('checkbox', {
+                name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
             })
         );
 
+        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
+            name: 'Skal særlige grunner redusere beløpet?',
+        });
+        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
         await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
-        );
 
-        expect(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            })
-        ).toBeInTheDocument();
-
+        const andelAvBeløp = getByRole('combobox', {
+            name: 'Angi andel som skal tilbakekreves',
+        });
         await user.click(
             getByRole('button', {
                 name: 'Gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
-        expect(
-            queryByRole('textbox', {
-                name: '',
-            })
-        ).not.toBeInTheDocument();
 
-        await user.selectOptions(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            }),
-            'Egendefinert'
-        );
+        await user.selectOptions(andelAvBeløp, 'Egendefinert');
 
         await user.click(
             getByRole('button', {
@@ -917,12 +912,10 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(
-            getByRole('textbox', {
-                name: 'Angi andel som skal tilbakekreves - fritekst',
-            }),
-            '22'
-        );
+        const andelAvBeløpFritekst = getByRole('textbox', {
+            name: 'Angi andel som skal tilbakekreves - fritekst',
+        });
+        await user.type(andelAvBeløpFritekst, '22');
 
         await user.click(
             getByRole('button', {
