@@ -5,7 +5,6 @@ import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/sch
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
-import { parseISO } from 'date-fns';
 import { Fragment, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -13,17 +12,14 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
 import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/schema';
+import { formatterDatostringLangt } from '~/utils/dateUtils';
 
 import { Unntak } from './UnntakSkjema';
 
 const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined => {
     if (!vedtaksdato) return undefined;
 
-    const formatertDato = parseISO(vedtaksdato).toLocaleDateString('no-NO', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
+    const formatertDato = formatterDatostringLangt(vedtaksdato);
     return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
 };
 
@@ -113,16 +109,7 @@ export const SkalSendeSkjema: FC<Props> = ({
                         </Heading>
                         {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                             <Fragment key={avsnitt.title}>
-                                {/* I første element er tittel er tom */}
-                                {avsnitt.title && avsnitt.title !== 'Dette har skjedd' && (
-                                    <Heading level="4" size="xsmall">
-                                        {avsnitt.title}
-                                    </Heading>
-                                )}
-                                {avsnitt.title !== 'Dette har skjedd' && (
-                                    <BodyLong size="small">{avsnitt.body}</BodyLong>
-                                )}
-                                {avsnitt.title === 'Dette har skjedd' && (
+                                {avsnitt.title === 'Dette har skjedd' ? (
                                     <VStack gap="space-16">
                                         <Heading level="4" size="xsmall">
                                             {avsnitt.title}
@@ -138,6 +125,15 @@ export const SkalSendeSkjema: FC<Props> = ({
                                             resize
                                         />
                                     </VStack>
+                                ) : (
+                                    <>
+                                        {avsnitt.title && (
+                                            <Heading level="4" size="xsmall">
+                                                {avsnitt.title}
+                                            </Heading>
+                                        )}
+                                        <BodyLong size="small">{avsnitt.body}</BodyLong>
+                                    </>
                                 )}
                             </Fragment>
                         ))}

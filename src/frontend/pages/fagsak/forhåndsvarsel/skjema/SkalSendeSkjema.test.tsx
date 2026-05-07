@@ -139,7 +139,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato: string): FaktaOmFeilutbetaling =>
         ferdigvurdert: false,
     }) satisfies FaktaOmFeilutbetaling;
 
-const renderMedFaktaData = (vedtaksdato: string): void => {
+const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
     const behandling = lagBehandlingDto();
     const queryClient = createTestQueryClient();
 
@@ -148,7 +148,7 @@ const renderMedFaktaData = (vedtaksdato: string): void => {
     });
     queryClient.setQueryData(queryKey, lagFaktaOmFeilutbetaling(vedtaksdato));
 
-    render(
+    const renderForhåndsvarsel = render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={queryClient}>
@@ -165,6 +165,8 @@ const renderMedFaktaData = (vedtaksdato: string): void => {
     const jaRadioButton = fieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
+
+    return renderForhåndsvarsel;
 };
 
 describe('Stønadstekst', () => {
@@ -175,20 +177,19 @@ describe('Stønadstekst', () => {
     });
 
     test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
-        renderMedFaktaData('2025-09-05');
+        const { getByRole } = renderMedFaktaData('2025-09-05');
 
-        const textarea = await screen.findByLabelText('Legg til utdypende tekst');
         await waitFor(() => {
-            expect(textarea).toHaveValue(
+            expect(getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
                 'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
             );
         });
     });
 
     test('Overskriver ikke fritekst som brukeren har skrevet', async () => {
-        renderMedFaktaData('2025-09-05');
+        const { getByRole } = renderMedFaktaData('2025-09-05');
 
-        const textarea = await screen.findByLabelText('Legg til utdypende tekst');
+        const textarea = getByRole('textbox', { name: 'Legg til utdypende tekst' });
         await waitFor(() => {
             expect(textarea).toHaveValue(
                 'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
