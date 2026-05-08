@@ -48,6 +48,7 @@ export const zBrevmottaker = z.object({
 });
 
 export const zError = z.object({
+    tittel: z.string(),
     melding: z.string(),
 });
 
@@ -62,6 +63,8 @@ export const zLogginnslag = z.object({
     tittel: z.string(),
     tekst: z.string().nullable(),
     steg: z.string().nullable(),
+    journalpostId: z.string().nullable(),
+    dokumentInfoId: z.string().nullable(),
 });
 
 export const zMuligeRettsligGrunnlag = z.object({
