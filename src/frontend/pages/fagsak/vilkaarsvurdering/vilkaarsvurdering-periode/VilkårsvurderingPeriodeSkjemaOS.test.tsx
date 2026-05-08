@@ -40,6 +40,20 @@ vi.mock('../VilkårsvurderingContext', () => {
 
 const periode = lagVilkårsvurderingPeriodeSkjemaData();
 
+const renderVilkårsvurderingsperiodeSkjema = (behandling?: BehandlingDto) =>
+    render(
+        <TestWrapper behandling={behandling}>
+            <VilkårsvurderingPeriodeSkjema
+                periode={periode}
+                behandletPerioder={[]}
+                erTotalbeløpUnder4Rettsgebyr={false}
+                perioder={[periode]}
+                pendingPeriode={undefined}
+                settPendingPeriode={vi.fn()}
+            />
+        </TestWrapper>
+    );
+
 const TestWrapper = ({
     children,
     behandling,
@@ -794,18 +808,9 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Ny model viser ikke tilleggsrenter', async () => {
-        const { getByRole, queryByText } = render(
-            <TestWrapper behandling={lagBehandling({ erNyModell: true })}>
-                <VilkårsvurderingPeriodeSkjema
-                    periode={periode}
-                    behandletPerioder={[]}
-                    erTotalbeløpUnder4Rettsgebyr={false}
-                    perioder={[periode]}
-                    pendingPeriode={undefined}
-                    settPendingPeriode={vi.fn()}
-                />
-            </TestWrapper>
+    test('nyModell - Feilaktige - grovt uaktsomt - låst ja rentetillegg', async () => {
+        const { getByRole } = renderVilkårsvurderingsperiodeSkjema(
+            lagBehandling({ erNyModell: true })
         );
 
         const vilkårRadioGroup = getByRole('radiogroup', {
@@ -816,6 +821,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
             })
         );
+
         const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
             name: 'I hvilken grad har mottaker handlet uaktsomt?',
         });
@@ -824,12 +830,61 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 name: 'Grovt uaktsomt',
             })
         );
-        const særligeGrunnerCheckboxGroup = getByRole('group', {
-            name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
+        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
+            name: 'Skal særlige grunner redusere beløpet?',
+        });
+        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
+
+        const rentetilleggRadioGroup = getByRole('radiogroup', {
+            name: 'SkrivebeskyttetSkal det beregnes 10% rentetillegg?',
+        });
+        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
+    });
+
+    test('nyModell - ForstoBurdeForstått - forsto - ikke synlig rentetillegg', async () => {
+        const { getByRole, queryByText } = renderVilkårsvurderingsperiodeSkjema(
+            lagBehandling({ erNyModell: true })
+        );
+
+        const vilkårRadioGroup = getByRole('radiogroup', {
+            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
         });
         await user.click(
-            within(særligeGrunnerCheckboxGroup).getByRole('checkbox', {
-                name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+            within(vilkårRadioGroup).getByRole('radio', {
+                name: 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punktum)',
+            })
+        );
+        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
+            name: 'Vurder mottakers grad av aktsomhet',
+        });
+        await user.click(
+            within(aktsomhetsgradRadioGroup).getByRole('radio', {
+                name: 'Mottaker forsto at utbetalingen skyldtes en feil',
+            })
+        );
+
+        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
+    });
+
+    test('nyModell - ForstoBurdeForstått - må ha forstått - ikke synlig rentetillegg', async () => {
+        const { getByRole, queryByText } = renderVilkårsvurderingsperiodeSkjema(
+            lagBehandling({ erNyModell: true })
+        );
+
+        const vilkårRadioGroup = getByRole('radiogroup', {
+            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
+        });
+        await user.click(
+            within(vilkårRadioGroup).getByRole('radio', {
+                name: 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punktum)',
+            })
+        );
+        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
+            name: 'Vurder mottakers grad av aktsomhet',
+        });
+        await user.click(
+            within(aktsomhetsgradRadioGroup).getByRole('radio', {
+                name: 'Mottaker må ha forstått at utbetalingen skyldtes en feil',
             })
         );
 

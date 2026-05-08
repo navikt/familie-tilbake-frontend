@@ -25,6 +25,7 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) 
     const ugyldigAktsomhetvurderingValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.Feil;
+    const skalIkkeVisesNårNyModellOgForstodBurdeForstått = erNyModell && erForstodBurdeForstått;
 
     return (
         <>
@@ -123,8 +124,14 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) 
                 }}
                 maxLength={3000}
             />
-            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig && !erNyModell && (
-                <GradForsettSkjema skjema={skjema} erLesevisning={erLesevisning} />
+            {skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.Forsettlig && (
+                <GradForsettSkjema
+                    skjema={skjema}
+                    erLesevisning={erLesevisning}
+                    skalIkkeViseNårNyModellOgForstodBurdeForstått={
+                        skalIkkeVisesNårNyModellOgForstodBurdeForstått
+                    }
+                />
             )}
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.Forsettlig && (

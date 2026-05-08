@@ -35,6 +35,10 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
         skjema.felter.uaktsomAndelTilbakekreves.verdi !== '-';
 
     const erGrovtUaktsomhet = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt;
+    const erForstodBurdeForstått =
+        skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
+    const skalIkkeVisesNårNyModellOgForstodBurdeForstått = erNyModell && erForstodBurdeForstått;
+
     const erFeilaktigEllerMangelfull =
         skjema.felter.vilkårsresultatvurdering.verdi ===
             Vilkårsresultat.FeilOpplysningerFraBruker ||
@@ -117,7 +121,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             style={{ width: '100px' }}
                         />
                     )}
-                    {erGrovtUaktsomhet && !erNyModell && (
+                    {erGrovtUaktsomhet && !skalIkkeVisesNårNyModellOgForstodBurdeForstått && (
                         <TilleggesRenterRadioGroup
                             kanIlleggeRenter={kanIlleggeRenter}
                             felt={skjema.felter.grovtUaktsomIlleggeRenter}
@@ -150,7 +154,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             <option>100%</option>
                         </Select>
                     )}
-                    {erGrovtUaktsomhet && !erNyModell && (
+                    {erGrovtUaktsomhet && !skalIkkeVisesNårNyModellOgForstodBurdeForstått && (
                         <TilleggesRenterRadioGroup
                             kanIlleggeRenter={kanIlleggeRenter}
                             felt={skjema.felter.grovtUaktsomIlleggeRenter}

@@ -12,11 +12,15 @@ import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    skalIkkeViseNårNyModellOgForstodBurdeForstått: boolean;
 };
 
-export const GradForsettSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradForsettSkjema: FC<Props> = ({
+    skjema,
+    erLesevisning,
+    skalIkkeViseNårNyModellOgForstodBurdeForstått,
+}) => {
     const { kanIlleggeRenter } = useVilkårsvurdering();
-
     const erValgtResultatTypeForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
 
@@ -31,15 +35,19 @@ export const GradForsettSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
             >
                 <option>100%</option>
             </Select>
-            <TilleggesRenterRadioGroup
-                kanIlleggeRenter={kanIlleggeRenter}
-                felt={skjema.felter.forstoIlleggeRenter}
-                visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
-                readOnly={
-                    erLesevisning || !kanIlleggeRenter || !erValgtResultatTypeForstoBurdeForstått
-                }
-                erFeilaktigEllerMangelfull={!erValgtResultatTypeForstoBurdeForstått}
-            />
+            {!skalIkkeViseNårNyModellOgForstodBurdeForstått && (
+                <TilleggesRenterRadioGroup
+                    kanIlleggeRenter={kanIlleggeRenter}
+                    felt={skjema.felter.forstoIlleggeRenter}
+                    visFeilmeldingerForSkjema={skjema.visFeilmeldinger}
+                    readOnly={
+                        erLesevisning ||
+                        !kanIlleggeRenter ||
+                        !erValgtResultatTypeForstoBurdeForstått
+                    }
+                    erFeilaktigEllerMangelfull={!erValgtResultatTypeForstoBurdeForstått}
+                />
+            )}
         </>
     );
 };
