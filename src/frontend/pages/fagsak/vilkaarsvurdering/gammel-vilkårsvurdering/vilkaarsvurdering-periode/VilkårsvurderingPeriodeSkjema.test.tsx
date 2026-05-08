@@ -1,11 +1,11 @@
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { BehandlingDto, FagsakDto } from '~/generated';
+import type { BehandlingDto } from '~/generated';
 import type { VilkårsvurderingHook } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -44,18 +44,16 @@ const renderVilkårsvurderingPeriodeSkjema = ({
     erTotalbeløpUnder4Rettsgebyr,
     behandletPerioder,
     behandling,
-    fagsak,
 }: {
     periode?: VilkårsvurderingPeriodeSkjemaData;
     erTotalbeløpUnder4Rettsgebyr?: boolean;
     behandletPerioder?: VilkårsvurderingPeriodeSkjemaData[];
     behandling?: BehandlingDto;
-    fagsak?: FagsakDto;
 }): RenderResult => {
     const queryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={queryClient}>
-            <FagsakContext value={fagsak ?? lagFagsak()}>
+            <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
                     <VilkårsvurderingPeriodeSkjema
                         periode={periode ?? lagVilkårsvurderingPeriodeSkjemaData()}
@@ -70,6 +68,162 @@ const renderVilkårsvurderingPeriodeSkjema = ({
         </QueryClientProvider>
     );
 };
+
+const vilkårsresultatGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
+    });
+
+const aktsomhetForstoBurdeForståttGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: 'Vurder mottakers grad av aktsomhet',
+    });
+
+const aktsomhetsgradGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: 'I hvilken grad har mottaker handlet uaktsomt?',
+    });
+
+const erBeløpetIBeholdGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: 'Er beløpet i behold?',
+    });
+
+const rentetilleggGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: /Skal det beregnes 10% rentetillegg\?/,
+    });
+
+const særligeGrunnerGruppe = (): HTMLElement =>
+    screen.getByRole('group', {
+        name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
+    });
+
+const skalRedusereBeløpGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: 'Skal særlige grunner redusere beløpet?',
+    });
+
+const under4RettsgebyrGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: /Totalbeløpet kan være under 4 ganger rettsgebyret/,
+    });
+
+const andelTilbakekrevesSelect = (): HTMLElement =>
+    screen.getByRole('combobox', {
+        name: 'Angi andel som skal tilbakekreves',
+    });
+// Vilkårsresultat-valg
+const godTroValg = (): HTMLElement =>
+    within(vilkårsresultatGruppe()).getByRole('radio', { name: /aktsom god tro/i });
+const forstoBurdeForståttValg = (): HTMLElement =>
+    within(vilkårsresultatGruppe()).getByRole('radio', {
+        name: /forsto eller burde forstått/i,
+    });
+const feilaktigeOpplysningerValg = (): HTMLElement =>
+    within(vilkårsresultatGruppe()).getByRole('radio', {
+        name: /feilaktige.*opplysninger/i,
+    });
+const mangelfulleOpplysningerValg = (): HTMLElement =>
+    within(vilkårsresultatGruppe()).getByRole('radio', {
+        name: /mangelfulle.*opplysninger/i,
+    });
+
+// Aktsomhet forsto/burde forstått - valg
+const mottakerForstoValg = (): HTMLElement =>
+    within(aktsomhetForstoBurdeForståttGruppe()).getByRole('radio', {
+        name: 'Mottaker forsto at utbetalingen skyldtes en feil',
+    });
+const mottakerMåHaForståttValg = (): HTMLElement =>
+    within(aktsomhetForstoBurdeForståttGruppe()).getByRole('radio', {
+        name: 'Mottaker må ha forstått at utbetalingen skyldtes en feil',
+    });
+
+// Aktsomhetsgrad-valg
+const forsettligValg = (): HTMLElement =>
+    within(aktsomhetsgradGruppe()).getByRole('radio', { name: 'Forsettlig' });
+const grovtUaktsomtValg = (): HTMLElement =>
+    within(aktsomhetsgradGruppe()).getByRole('radio', { name: 'Grovt uaktsomt' });
+const uaktsomtValg = (): HTMLElement =>
+    within(aktsomhetsgradGruppe()).getByRole('radio', { name: 'Uaktsomt' });
+
+// Er beløpet i behold - valg
+const beløpIBeholdJa = (): HTMLElement =>
+    within(erBeløpetIBeholdGruppe()).getByRole('radio', { name: 'Ja' });
+const beløpIBeholdNei = (): HTMLElement =>
+    within(erBeløpetIBeholdGruppe()).getByRole('radio', { name: 'Nei' });
+
+// Rentetillegg-valg
+const rentetilleggJa = (): HTMLElement =>
+    within(rentetilleggGruppe()).getByRole('radio', { name: 'Ja' });
+const rentetilleggNei = (): HTMLElement =>
+    within(rentetilleggGruppe()).getByRole('radio', { name: 'Nei' });
+
+// Særlige grunner-valg (checkboxes)
+const gradAvUaktsomhetValg = (): HTMLElement =>
+    within(særligeGrunnerGruppe()).getByRole('checkbox', {
+        name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+    });
+const størrelseBeløpValg = (): HTMLElement =>
+    within(særligeGrunnerGruppe()).getByRole('checkbox', {
+        name: 'Størrelsen av det feilutbetalte beløpet',
+    });
+const annetSærligGrunnValg = (): HTMLElement =>
+    within(særligeGrunnerGruppe()).getByRole('checkbox', { name: 'Annet' });
+
+// Skal redusere beløp - valg
+const skalRedusereJa = (): HTMLElement =>
+    within(skalRedusereBeløpGruppe()).getByRole('radio', { name: 'Ja' });
+const skalRedusereNei = (): HTMLElement =>
+    within(skalRedusereBeløpGruppe()).getByRole('radio', { name: 'Nei' });
+
+// Under 4 rettsgebyr - valg
+const under4RettsgebyrJa = (): HTMLElement =>
+    within(under4RettsgebyrGruppe()).getByRole('radio', { name: 'Ja' });
+const under4RettsgebyrNei = (): HTMLElement =>
+    within(under4RettsgebyrGruppe()).getByRole('radio', { name: 'Nei' });
+
+// Begrunnelse-tekstfelt
+const begrunnVilkår = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Begrunn hvorfor du valgte vilkåret ovenfor' });
+const begrunnAlternativ = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Begrunn hvorfor du valgte alternativet ovenfor' });
+const begrunnAktsomhetsgrad = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Begrunn mottakerens aktsomhetsgrad' });
+const begrunnResultat = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Begrunn resultatet av vurderingen ovenfor' });
+const begrunnBeløpIkkeIBehold = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Begrunn hvorfor beløpet ikke er i behold' });
+const begrunnBeløpIBehold = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Begrunn hvorfor beløpet er i behold' });
+
+// Beløp-felt
+const angiBeløpTilbakekreves = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Angi beløp som skal tilbakekreves' });
+const beløpSomTilbakekreves = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Beløp som skal tilbakekreves' });
+
+// Knapper
+const gåVidereKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Gå videre til vedtakssteget' });
+
+// Feilmeldinger
+const antallFeiledeFelter = (): HTMLElement[] => screen.queryAllByText('Feltet må fylles ut');
+const særligGrunnFeil = (): HTMLElement[] =>
+    screen.queryAllByText('Du må velge minst en særlig grunn');
+
+// Query-versjoner av gruppe-hjelpere (returnerer null hvis ikke funnet)
+const queryRentetilleggGruppe = (): HTMLElement | null =>
+    screen.queryByRole('radiogroup', { name: /Skal det beregnes 10% rentetillegg\?/ });
+
+// Informasjonstekst
+const sjetteLeddInfoTekst = (): HTMLElement | null =>
+    screen.queryByText('Når 6. ledd anvendes må alle perioder behandles likt');
+
+// Ytterligere tekstfelt-hjelpere
+const begrunnAnnet = (): HTMLElement => screen.getByRole('textbox', { name: 'Begrunnelse: Annet' });
+const andelTilbakekrevesFritekst = (): HTMLElement =>
+    screen.getByRole('textbox', { name: 'Angi andel som skal tilbakekreves - fritekst' });
 
 describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
@@ -92,1045 +246,381 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 },
             ],
         });
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByLabelText } =
-            renderVilkårsvurderingPeriodeSkjema({
-                periode: vilkårsvurderingPeriode,
-                erTotalbeløpUnder4Rettsgebyr: false,
-                behandletPerioder: [lagVilkårsvurderingPeriodeSkjemaData()],
-            });
+        const { getByText } = renderVilkårsvurderingPeriodeSkjema({
+            periode: vilkårsvurderingPeriode,
+            erTotalbeløpUnder4Rettsgebyr: false,
+            behandletPerioder: [lagVilkårsvurderingPeriodeSkjemaData()],
+        });
 
-        expect(getByText('Feilutbetalt beløp')).toBeInTheDocument();
         expect(getByText('Aktivitet 1')).toBeInTheDocument();
         expect(getByText('1 333')).toBeInTheDocument();
         expect(getByText('Aktivitet 2')).toBeInTheDocument();
         expect(getByText('1 000')).toBeInTheDocument();
 
-        expect(
-            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
-        ).not.toBeInTheDocument();
+        await user.click(godTroValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        expect(
-            getByRole('radio', {
-                name: /mottaker forsto eller burde forstått at utbetalingen skyldtes en feil/i,
-            })
-        ).toBeInTheDocument();
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        expect(
-            getByRole('radio', {
-                name: /mottaker har forårsaket feilutbetalingen.*feilaktige.*opplysninger/i,
-            })
-        ).toBeInTheDocument();
+        await user.click(beløpIBeholdNei());
+        await user.type(begrunnBeløpIkkeIBehold(), 'begrunnelse');
 
-        expect(
-            getByRole('radio', {
-                name: /mottaker har forårsaket feilutbetalingen.*mangelfulle.*opplysninger/i,
-            })
-        ).toBeInTheDocument();
-
-        expect(
-            getByRole('radio', {
-                name: /Mottaker har mottatt beløpet i aktsom god tro/i,
-            })
-        ).toBeInTheDocument();
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
-
-        expect(
-            getByRole('button', {
-                name: 'Gå tilbake til foreldelsessteget',
-            })
-        ).toBeEnabled();
-
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
-                selector: 'input',
-                exact: false,
-            })
-        );
-
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        ).toBeEnabled();
-
-        expect(
-            queryByLabelText('Begrunn hvorfor beløpet ikke er i behold')
-        ).not.toBeInTheDocument();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-
-        await user.click(
-            getByLabelText('Nei', {
-                selector: 'input',
-            })
-        );
-        await user.type(getByLabelText('Begrunn hvorfor beløpet ikke er i behold'), 'begrunnelse');
-
-        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        const tilbakekrevdBeløp = beløpSomTilbakekreves();
         expect(tilbakekrevdBeløp).toHaveValue('0');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('God tro - beløp i behold', async () => {
-        const { getByLabelText, getByRole, queryAllByText, queryByLabelText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema({});
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        expect(queryByText('Kopier vilkårsvurdering fra')).not.toBeInTheDocument();
+        await user.click(godTroValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        expect(
-            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
-        ).not.toBeInTheDocument();
+        await user.click(beløpIBeholdJa());
+        await user.type(begrunnBeløpIBehold(), 'begrunnelse');
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
-                selector: 'input',
-                exact: false,
-            })
-        );
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        await user.click(
-            getByLabelText('Ja', {
-                selector: 'input',
-            })
-        );
-        await user.type(getByLabelText('Begrunn hvorfor beløpet er i behold'), 'begrunnelse');
+        await user.type(angiBeløpTilbakekreves(), '2000');
 
-        expect(queryByLabelText('Angi beløp som skal tilbakekreves')).toBeInTheDocument();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-
-        await user.type(getByLabelText('Angi beløp som skal tilbakekreves'), '2000');
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Forsto/burde forstått - forsto', async () => {
-        const {
-            getByLabelText,
-            getByRole,
-            getByText,
-            queryAllByText,
-            queryByLabelText,
-            queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema({});
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        expect(
-            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
-        ).not.toBeInTheDocument();
-        expect(queryByText('Vurder mottakers grad av aktsomhet')).not.toBeInTheDocument();
+        await user.click(forstoBurdeForståttValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
 
-        expect(
-            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
-        ).toBeInTheDocument();
-        expect(queryByText('Vurder mottakers grad av aktsomhet')).toBeInTheDocument();
+        await user.click(mottakerForstoValg());
+        await user.type(begrunnAlternativ(), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(rentetilleggNei()).toBeChecked();
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil', {
-                selector: 'input',
-            })
-        );
-
-        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100%')).toBeInTheDocument();
-        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByLabelText('Nei')).toBeChecked();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Forsto/burde forstått - må ha forstått - ingen grunn til reduksjon', async () => {
-        const {
-            getByLabelText,
-            getByRole,
-            getByTestId,
-            getByText,
-            queryAllByText,
-            queryByLabelText,
-            queryByRole,
-            queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema({});
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        expect(
-            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
-        ).not.toBeInTheDocument();
-        expect(queryByText('Vurder mottakers grad av aktsomhet')).not.toBeInTheDocument();
+        await user.click(forstoBurdeForståttValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(mottakerMåHaForståttValg());
+        await user.type(begrunnAlternativ(), 'begrunnelse');
 
-        expect(
-            queryByLabelText('Begrunn resultatet av vurderingen ovenfor')
-        ).not.toBeInTheDocument();
-        expect(
-            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
-        ).not.toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner redusere beløpet?')).not.toBeInTheDocument();
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(særligGrunnFeil()).toHaveLength(1);
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText('Mottaker må ha forstått at utbetalingen skyldtes en feil', {
-                selector: 'input',
-            })
-        );
+        await user.click(gradAvUaktsomhetValg());
+        await user.click(annetSærligGrunnValg());
 
-        expect(queryByLabelText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
-        expect(
-            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
-        ).toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner redusere beløpet?')).toBeInTheDocument();
+        await user.click(skalRedusereNei());
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+        await user.type(begrunnResultat(), 'begrunnelse');
 
-        // Annet begrunnelse
-        expect(
-            queryByRole('textbox', {
-                name: '',
-            })
-        ).not.toBeInTheDocument();
+        expect(rentetilleggNei()).toBeChecked();
 
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(
-            getByLabelText('Annet', {
-                selector: 'input',
-            })
-        );
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
-        );
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100%')).toBeInTheDocument();
-        expect(getByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
+        await user.type(begrunnAnnet(), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-
-        await user.type(
-            getByRole('textbox', {
-                name: 'Begrunnelse: Annet',
-            }),
-            'begrunnelse'
-        );
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Feilaktig - forsto', async () => {
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, getByTestId } =
-            renderVilkårsvurderingPeriodeSkjema({});
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(feilaktigeOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Forsettlig', {
-                selector: 'input',
-            })
-        );
+        await user.click(forsettligValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100%')).toBeInTheDocument();
-        expect(queryByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Ja')).toBeChecked();
+        expect(rentetilleggJa()).toBeChecked();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('BAKS - Feilaktig - forsto', async () => {
-        mockKanIlleggeRenter.value = false; // Mocker context som leser ytelsestype enten Barnetrygd eller Kontantstøtte fra useFagsak
-        const { getByLabelText, getByRole, getByText, queryAllByText, queryByText, getByTestId } =
-            renderVilkårsvurderingPeriodeSkjema({
-                fagsak: lagFagsak({ fagsystem: 'BA', ytelsestype: 'BARNETRYGD' }),
-            });
+        // Simulerer BAKS hvor det ikke kan ilegges renter
+        mockKanIlleggeRenter.value = false;
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(feilaktigeOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Forsettlig', {
-                selector: 'input',
-            })
-        );
+        await user.click(forsettligValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        expect(getByText('100%')).toBeInTheDocument();
-        expect(queryByText('Skal det beregnes 10% rentetillegg?')).toBeInTheDocument();
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
+        expect(rentetilleggNei()).toBeChecked();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
-        const { getByLabelText, getByRole, getByText, queryAllByText } =
-            renderVilkårsvurderingPeriodeSkjema({});
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(feilaktigeOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Grovt uaktsomt', {
-                selector: 'input',
-            })
-        );
+        await user.click(grovtUaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(særligGrunnFeil()).toHaveLength(1);
 
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
-        );
+        await user.click(gradAvUaktsomhetValg());
+        await user.click(skalRedusereNei());
+        await user.type(begrunnResultat(), 'begrunnelse');
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        const rentetilleggRadioGroup = getByRole('radiogroup', {
-            name: 'Skal det beregnes 10% rentetillegg?',
-        });
-        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
+        expect(rentetilleggJa()).toBeChecked();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
+        await user.click(gåVidereKnapp());
 
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(særligGrunnFeil()).toHaveLength(0);
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('BAKS - Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
-        mockKanIlleggeRenter.value = false; // Mocker context som leser ytelsestype enten Barnetrygd eller Kontantstøtte fra useFagsak
-        const { getByLabelText, getByRole, getByText, queryAllByText } =
-            renderVilkårsvurderingPeriodeSkjema({});
+        // Simulerer BAKS hvor det ikke kan ilegges renter
+        mockKanIlleggeRenter.value = false;
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(feilaktigeOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Grovt uaktsomt', {
-                selector: 'input',
-            })
-        );
+        await user.click(grovtUaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(særligGrunnFeil()).toHaveLength(1);
 
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
-        );
+        await user.click(gradAvUaktsomhetValg());
+        await user.click(skalRedusereNei());
+        await user.type(begrunnResultat(), 'begrunnelse');
 
-        expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
-        const rentetilleggRadioGroup = getByRole('radiogroup', {
-            name: 'SkrivebeskyttetSkal det beregnes 10% rentetillegg?',
-        });
-        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Nei' })).toBeChecked();
+        expect(rentetilleggNei()).toBeChecked();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
+        await user.click(gåVidereKnapp());
 
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(0);
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(særligGrunnFeil()).toHaveLength(0);
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Feilaktige - grovt uaktsomt - grunn til reduksjon', async () => {
-        const { getByLabelText, getByRole, queryByLabelText, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema({});
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        expect(
-            queryByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
-        ).not.toBeInTheDocument();
-        expect(
-            queryByText('I hvilken grad har mottaker handlet uaktsomt?')
-        ).not.toBeInTheDocument();
+        await user.click(feilaktigeOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        const vilkårRadioGroup = getByRole('radiogroup', {
-            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
-        });
-        await user.click(
-            within(vilkårRadioGroup).getByRole('radio', {
-                name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
-            })
-        );
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
+        await user.click(grovtUaktsomtValg());
 
-        expect(
-            queryByLabelText('Begrunn resultatet av vurderingen ovenfor')
-        ).not.toBeInTheDocument();
-        expect(
-            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
-        ).not.toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner redusere beløpet?')).not.toBeInTheDocument();
+        await user.click(gåVidereKnapp());
+        expect(særligGrunnFeil()).toHaveLength(1);
+        expect(antallFeiledeFelter()).toHaveLength(2);
 
-        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
-            name: 'I hvilken grad har mottaker handlet uaktsomt?',
-        });
-        await user.click(
-            within(aktsomhetsgradRadioGroup).getByRole('radio', {
-                name: 'Grovt uaktsomt',
-            })
-        );
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
+        await user.click(gradAvUaktsomhetValg());
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        await user.click(skalRedusereJa());
 
-        const særligeGrunnerCheckboxGroup = getByRole('group', {
-            name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
-        });
-        await user.click(
-            within(særligeGrunnerCheckboxGroup).getByRole('checkbox', {
-                name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
-            })
-        );
+        await user.type(begrunnResultat(), 'begrunnelse');
 
-        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
-            name: 'Skal særlige grunner redusere beløpet?',
-        });
-        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.selectOptions(andelTilbakekrevesSelect(), '30');
 
-        const andelAvBeløp = getByRole('combobox', {
-            name: 'Angi andel som skal tilbakekreves',
-        });
-        await user.selectOptions(andelAvBeløp, '30');
+        expect(rentetilleggJa()).toBeChecked();
 
-        const rentetilleggRadioGroup = getByRole('radiogroup', {
-            name: 'SkrivebeskyttetSkal det beregnes 10% rentetillegg?',
-        });
-        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('nyModell - Feilaktige - grovt uaktsomt - låst ja rentetillegg', async () => {
-        const { getByRole } = renderVilkårsvurderingPeriodeSkjema({
+        renderVilkårsvurderingPeriodeSkjema({
             behandling: lagBehandling({ erNyModell: true }),
         });
 
-        const vilkårRadioGroup = getByRole('radiogroup', {
-            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
-        });
-        await user.click(
-            within(vilkårRadioGroup).getByRole('radio', {
-                name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
-            })
-        );
+        await user.click(feilaktigeOpplysningerValg());
+        await user.click(grovtUaktsomtValg());
+        await user.click(skalRedusereJa());
 
-        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
-            name: 'I hvilken grad har mottaker handlet uaktsomt?',
-        });
-        await user.click(
-            within(aktsomhetsgradRadioGroup).getByRole('radio', {
-                name: 'Grovt uaktsomt',
-            })
-        );
-        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
-            name: 'Skal særlige grunner redusere beløpet?',
-        });
-        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
-
-        const rentetilleggRadioGroup = getByRole('radiogroup', {
-            name: 'SkrivebeskyttetSkal det beregnes 10% rentetillegg?',
-        });
-        expect(within(rentetilleggRadioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
+        expect(rentetilleggJa()).toBeChecked();
     });
 
     test('nyModell - ForstoBurdeForstått - forsto - ikke synlig rentetillegg', async () => {
-        const { getByRole, queryByText } = renderVilkårsvurderingPeriodeSkjema({
+        renderVilkårsvurderingPeriodeSkjema({
             behandling: lagBehandling({ erNyModell: true }),
         });
 
-        const vilkårRadioGroup = getByRole('radiogroup', {
-            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
-        });
-        await user.click(
-            within(vilkårRadioGroup).getByRole('radio', {
-                name: 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punktum)',
-            })
-        );
-        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
-            name: 'Vurder mottakers grad av aktsomhet',
-        });
-        await user.click(
-            within(aktsomhetsgradRadioGroup).getByRole('radio', {
-                name: 'Mottaker forsto at utbetalingen skyldtes en feil',
-            })
-        );
+        await user.click(forstoBurdeForståttValg());
+        await user.click(mottakerForstoValg());
 
-        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
+        expect(queryRentetilleggGruppe()).not.toBeInTheDocument();
     });
 
     test('nyModell - ForstoBurdeForstått - må ha forstått - ikke synlig rentetillegg', async () => {
-        const { getByRole, queryByText } = renderVilkårsvurderingPeriodeSkjema({
+        renderVilkårsvurderingPeriodeSkjema({
             behandling: lagBehandling({ erNyModell: true }),
         });
 
-        const vilkårRadioGroup = getByRole('radiogroup', {
-            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
-        });
-        await user.click(
-            within(vilkårRadioGroup).getByRole('radio', {
-                name: 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil (1. ledd, 1. punktum)',
-            })
-        );
-        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
-            name: 'Vurder mottakers grad av aktsomhet',
-        });
-        await user.click(
-            within(aktsomhetsgradRadioGroup).getByRole('radio', {
-                name: 'Mottaker må ha forstått at utbetalingen skyldtes en feil',
-            })
-        );
+        await user.click(forstoBurdeForståttValg());
+        await user.click(mottakerMåHaForståttValg());
+        await user.click(skalRedusereJa());
 
-        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
-            name: 'Skal særlige grunner redusere beløpet?',
-        });
-        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
-
-        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
+        expect(queryRentetilleggGruppe()).not.toBeInTheDocument();
     });
 
     test('Feilaktige - grovt uaktsomt - grunn til reduksjon - egendefinert', async () => {
-        const { getByLabelText, getByRole, queryAllByText } = renderVilkårsvurderingPeriodeSkjema(
-            {}
-        );
+        renderVilkårsvurderingPeriodeSkjema({});
 
-        const vilkårRadioGroup = getByRole('radiogroup', {
-            name: 'Velg det vilkåret i folketrygdloven §22-15 som gjelder for perioden',
-        });
-        await user.click(
-            within(vilkårRadioGroup).getByRole('radio', {
-                name: /Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger/i,
-            })
-        );
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
+        await user.click(feilaktigeOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        const aktsomhetsgradRadioGroup = getByRole('radiogroup', {
-            name: 'I hvilken grad har mottaker handlet uaktsomt?',
-        });
-        await user.click(
-            within(aktsomhetsgradRadioGroup).getByRole('radio', {
-                name: 'Grovt uaktsomt',
-            })
-        );
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
+        await user.click(grovtUaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        const særligeGrunnerCheckboxGroup = getByRole('group', {
-            name: 'Hvilke særlige grunner kan være aktuelle i denne saken?',
-        });
-        await user.click(
-            within(særligeGrunnerCheckboxGroup).getByRole('checkbox', {
-                name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
-            })
-        );
+        await user.click(gradAvUaktsomhetValg());
 
-        const særligeGrunnerRadioGroup = getByRole('radiogroup', {
-            name: 'Skal særlige grunner redusere beløpet?',
-        });
-        await user.click(within(særligeGrunnerRadioGroup).getByRole('radio', { name: 'Ja' }));
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
+        await user.click(skalRedusereJa());
 
-        const andelAvBeløp = getByRole('combobox', {
-            name: 'Angi andel som skal tilbakekreves',
-        });
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.type(begrunnResultat(), 'begrunnelse');
+
+        const andelAvBeløp = andelTilbakekrevesSelect();
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
         await user.selectOptions(andelAvBeløp, 'Egendefinert');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        const andelAvBeløpFritekst = getByRole('textbox', {
-            name: 'Angi andel som skal tilbakekreves - fritekst',
-        });
+        const andelAvBeløpFritekst = andelTilbakekrevesFritekst();
         await user.type(andelAvBeløpFritekst, '22');
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - grunn til reduksjon', async () => {
-        const {
-            getByLabelText,
-            getByRole,
-            getByTestId,
-            queryAllByText,
-            queryByLabelText,
-            queryByText,
-        } = renderVilkårsvurderingPeriodeSkjema({ erTotalbeløpUnder4Rettsgebyr: true });
+        renderVilkårsvurderingPeriodeSkjema({
+            erTotalbeløpUnder4Rettsgebyr: true,
+        });
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(mangelfulleOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        expect(
-            queryByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).not.toBeInTheDocument();
+        await user.click(uaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Uaktsomt', {
-                selector: 'input',
-            })
-        );
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        expect(
-            queryByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).toBeInTheDocument();
+        await user.click(under4RettsgebyrJa());
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(særligGrunnFeil()).toHaveLength(1);
 
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
-        );
+        await user.click(gradAvUaktsomhetValg());
 
-        expect(queryByLabelText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
-        expect(
-            queryByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
-        ).toBeInTheDocument();
-        expect(queryByText('Skal særlige grunner redusere beløpet?')).toBeInTheDocument();
+        await user.click(skalRedusereJa());
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+        await user.type(begrunnResultat(), 'begrunnelse');
 
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(getByTestId('harGrunnerTilReduksjon_Ja'));
+        expect(queryRentetilleggGruppe()).not.toBeInTheDocument();
+        andelTilbakekrevesSelect();
 
-        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
-        expect(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            })
-        ).toBeInTheDocument();
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.selectOptions(andelTilbakekrevesSelect(), '30');
 
-        await user.selectOptions(
-            getByRole('combobox', {
-                name: 'Angi andel som skal tilbakekreves',
-            }),
-            '30'
-        );
-
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
-        const { getByLabelText, getByRole, getByText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema({ erTotalbeløpUnder4Rettsgebyr: true });
+        const { getByText } = renderVilkårsvurderingPeriodeSkjema({
+            erTotalbeløpUnder4Rettsgebyr: true,
+        });
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(mangelfulleOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Uaktsomt', {
-                selector: 'input',
-            })
-        );
+        await user.click(uaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        expect(
-            queryByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).toBeInTheDocument();
-        expect(
-            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
-        ).not.toBeInTheDocument();
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.click(under4RettsgebyrJa());
+        expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
 
-        await user.click(
-            getByRole('radio', {
-                name: 'Ja',
-            })
-        );
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(særligGrunnFeil()).toHaveLength(1);
 
-        expect(
-            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
-        ).not.toBeInTheDocument();
+        await user.click(gradAvUaktsomhetValg());
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        expect(queryAllByText('Du må velge minst en særlig grunn')).toHaveLength(1);
+        await user.click(skalRedusereNei());
 
-        await user.type(getByLabelText('Begrunn resultatet av vurderingen ovenfor'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
-                selector: 'input',
-            })
-        );
-        await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
+        await user.type(begrunnResultat(), 'begrunnelse');
 
         expect(getByText('Andel som skal tilbakekreves')).toBeInTheDocument();
         expect(getByText('100%')).toBeInTheDocument();
-        expect(queryByText('Skal det beregnes 10% rentetillegg?')).not.toBeInTheDocument();
+        expect(queryRentetilleggGruppe()).not.toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves', async () => {
-        const { getByLabelText, getByRole, queryAllByText, queryByText } =
-            renderVilkårsvurderingPeriodeSkjema({ erTotalbeløpUnder4Rettsgebyr: true });
+        renderVilkårsvurderingPeriodeSkjema({
+            erTotalbeløpUnder4Rettsgebyr: true,
+        });
 
-        await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
-            'begrunnelse'
-        );
-        await user.click(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        );
+        await user.click(mangelfulleOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
 
-        await user.type(getByLabelText('Begrunn mottakerens aktsomhetsgrad'), 'begrunnelse');
-        await user.click(
-            getByLabelText('Uaktsomt', {
-                selector: 'input',
-            })
-        );
+        await user.click(uaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
-        expect(
-            queryByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).toBeInTheDocument();
-        expect(
-            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
-        ).not.toBeInTheDocument();
+        expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(1);
 
-        await user.click(
-            getByRole('radio', {
-                name: 'Nei',
-            })
-        );
+        await user.click(under4RettsgebyrNei());
 
-        expect(
-            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
-        ).toBeInTheDocument();
+        expect(sjetteLeddInfoTekst()).toBeInTheDocument();
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
-            })
-        );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
     test('Åpner vurdert periode - god tro - beløp i behold', async () => {
@@ -1145,22 +635,15 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 },
             },
         });
-        const { getByLabelText } = renderVilkårsvurderingPeriodeSkjema({
+        renderVilkårsvurderingPeriodeSkjema({
             periode: periode,
             erTotalbeløpUnder4Rettsgebyr: true,
         });
-        await waitFor(() => {});
-        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
-            'Gitt i god tro'
-        );
-        expect(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
-                selector: 'input',
-                exact: false,
-            })
-        ).toBeChecked();
-        expect(getByLabelText('Ja')).toBeChecked();
-        expect(getByLabelText('Angi beløp som skal tilbakekreves')).toHaveValue('699');
+        expect(godTroValg()).toBeChecked();
+        expect(begrunnVilkår()).toHaveValue('Gitt i god tro');
+
+        expect(beløpIBeholdJa()).toBeChecked();
+        expect(angiBeløpTilbakekreves()).toHaveValue('699');
     });
 
     test('Åpner vurdert periode - mangelfulle - uaktsomt - under 4 rettsgebyr', async () => {
@@ -1186,43 +669,28 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 },
             },
         });
-        const { getByLabelText, getByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema({
+        const { getByTestId } = renderVilkårsvurderingPeriodeSkjema({
             periode: periode,
             erTotalbeløpUnder4Rettsgebyr: true,
         });
-        await waitFor(() => {});
-        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
-            'Gitt mangelfulle opplysninger'
-        );
-        expect(
-            getByLabelText(
-                'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
-                {
-                    selector: 'input',
-                    exact: false,
-                }
-            )
-        ).toBeChecked();
-        expect(getByLabelText('Begrunn mottakerens aktsomhetsgrad')).toHaveValue(
-            'Vurdert aktsomhet til uaktsomt'
-        );
-        expect(getByLabelText('Uaktsomt')).toBeChecked();
-        expect(
-            getByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).toBeInTheDocument();
-        expect(getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Ja')).toBeChecked();
-        expect(getByLabelText('Begrunn resultatet av vurderingen ovenfor')).toHaveValue(
-            'Det finnes særlige grunner'
-        );
-        expect(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot')
-        ).toBeChecked();
-        expect(getByLabelText('Størrelsen av det feilutbetalte beløpet')).toBeChecked();
-        expect(getByLabelText('Annet')).toBeChecked();
-        expect(getByTestId('annetBegrunnelse')).toHaveValue('Dette er en annen begrunnelse');
-        expect(getByTestId('harGrunnerTilReduksjon_Ja')).toBeChecked();
+        expect(mangelfulleOpplysningerValg()).toBeChecked();
+        expect(begrunnVilkår()).toHaveValue('Gitt mangelfulle opplysninger');
+
+        expect(uaktsomtValg()).toBeChecked();
+        expect(begrunnAktsomhetsgrad()).toHaveValue('Vurdert aktsomhet til uaktsomt');
+
+        expect(gradAvUaktsomhetValg()).toBeChecked();
+        expect(størrelseBeløpValg()).toBeChecked();
+        expect(annetSærligGrunnValg()).toBeChecked();
+
+        expect(begrunnAnnet()).toHaveValue('Dette er en annen begrunnelse');
+
+        expect(skalRedusereJa()).toBeChecked();
+
+        expect(begrunnResultat()).toHaveValue('Det finnes særlige grunner');
+
+        expect(under4RettsgebyrJa()).toBeChecked();
+
         expect(getByTestId('andelSomTilbakekrevesManuell')).toHaveValue('33');
     });
 
@@ -1249,22 +717,16 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 },
             },
         });
-        const { getByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema({
+        const { getByTestId } = renderVilkårsvurderingPeriodeSkjema({
             periode: periode,
             behandling: lagBehandling({ erNyModell: true }),
             erTotalbeløpUnder4Rettsgebyr: true,
         });
-        expect(
-            getByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).toBeInTheDocument();
+        under4RettsgebyrGruppe();
         expect(
             getByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Over4Rettsgebyr')
         ).toBeChecked();
-        expect(
-            getByText('Hvilke særlige grunner kan være aktuelle i denne saken?')
-        ).toBeInTheDocument();
+        særligeGrunnerGruppe();
     });
 
     test('Viser ikke over 4 rettsgebyr alternativ for gammel modell', async () => {
@@ -1290,15 +752,11 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
                 },
             },
         });
-        const { queryByTestId, getByText } = renderVilkårsvurderingPeriodeSkjema({
+        const { queryByTestId } = renderVilkårsvurderingPeriodeSkjema({
             periode: periode,
             erTotalbeløpUnder4Rettsgebyr: true,
         });
-        expect(
-            getByText(
-                'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
-            )
-        ).toBeInTheDocument();
+        under4RettsgebyrGruppe();
         expect(
             queryByTestId('tilbakekrevSelvOmBeloepErUnder4Rettsgebyr_Over4Rettsgebyr')
         ).not.toBeInTheDocument();
