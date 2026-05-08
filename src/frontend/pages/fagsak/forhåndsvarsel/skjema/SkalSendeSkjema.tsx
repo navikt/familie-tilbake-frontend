@@ -4,13 +4,24 @@ import type { Section, Varselbrevtekst } from '~/generated';
 import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
-import { Fragment } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Fragment, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
 import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/schema';
+import { formatterDatostringLangt } from '~/utils/dateUtils';
 
 import { Unntak } from './UnntakSkjema';
+
+const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined => {
+    if (!vedtaksdato) return undefined;
+
+    const formatertDato = formatterDatostringLangt(vedtaksdato);
+    return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
+};
 
 type Props = {
     varselbrevtekster: Varselbrevtekst | undefined;
@@ -25,12 +36,29 @@ export const SkalSendeSkjema: FC<Props> = ({
 }) => {
     const maksAntallTegn = 4000;
     const { behandlingILesemodus } = useBehandlingState();
+    const { behandlingId } = useBehandling();
     const {
         control,
         register,
         handleSubmit,
+        setValue,
+        getValues,
         formState: { errors },
     } = useFormContext<ForhåndsvarselFormData>();
+
+    const { data: faktaOmFeilutbetaling } = useQuery(
+        behandlingFaktaOptions({ path: { behandlingId } })
+    );
+
+    const stønadstekst = lagStønadstekst(
+        faktaOmFeilutbetaling?.feilutbetaling.revurdering.vedtaksdato
+    );
+
+    useEffect(() => {
+        if (stønadstekst && !getValues('fritekst')) {
+            setValue('fritekst', stønadstekst);
+        }
+    }, [stønadstekst, setValue, getValues]);
 
     const fieldError: FieldErrors<
         Extract<ForhåndsvarselFormData, { skalSendesForhåndsvarsel: SkalSendesForhåndsvarsel.Ja }>
@@ -81,24 +109,31 @@ export const SkalSendeSkjema: FC<Props> = ({
                         </Heading>
                         {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
                             <Fragment key={avsnitt.title}>
-                                {/* I første element er tittel er tom */}
-                                {avsnitt.title && (
-                                    <Heading level="4" size="xsmall">
-                                        {avsnitt.title}
-                                    </Heading>
-                                )}
-                                <BodyLong size="small">{avsnitt.body}</BodyLong>
-                                {avsnitt.title === 'Dette har skjedd' && (
-                                    <Textarea
-                                        {...register('fritekst')}
-                                        size="small"
-                                        minRows={3}
-                                        label="Legg til utdypende tekst"
-                                        maxLength={maksAntallTegn}
-                                        error={fieldError.fritekst?.message}
-                                        readOnly={varselErSendt}
-                                        resize
-                                    />
+                                {avsnitt.title === 'Dette har skjedd' ? (
+                                    <VStack gap="space-16">
+                                        <Heading level="4" size="xsmall">
+                                            {avsnitt.title}
+                                        </Heading>
+                                        <Textarea
+                                            {...register('fritekst')}
+                                            size="small"
+                                            minRows={3}
+                                            label="Legg til utdypende tekst"
+                                            maxLength={maksAntallTegn}
+                                            error={fieldError.fritekst?.message}
+                                            readOnly={varselErSendt}
+                                            resize
+                                        />
+                                    </VStack>
+                                ) : (
+                                    <>
+                                        {avsnitt.title && (
+                                            <Heading level="4" size="xsmall">
+                                                {avsnitt.title}
+                                            </Heading>
+                                        )}
+                                        <BodyLong size="small">{avsnitt.body}</BodyLong>
+                                    </>
                                 )}
                             </Fragment>
                         ))}

@@ -44,6 +44,11 @@ export const formatterDatostring = (datoAsString: string): string => {
     return dato.toLocaleDateString('no-NO', datoformat);
 };
 
+export const formatterDatostringLangt = (datoAsString: string): string => {
+    const dato = parseISO(datoAsString);
+    return dato.toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+
 export const formatterDatoOgTidstring = (datoAsString: string): string => {
     const dato = parseISO(datoAsString);
     return `${dato.toLocaleDateString('no-NO', {
