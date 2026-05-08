@@ -1,7 +1,15 @@
 version: 2
+registries:
+  npm-registry:
+    type: npm-registry
+    url: https://registry.npmjs.org
+    replaces-base: true
+
 updates:
   - package-ecosystem: npm
     directory: /
+    registries:
+      - npm-registry
     schedule:
       interval: daily
       time: '06:00'
