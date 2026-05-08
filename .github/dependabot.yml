@@ -3,7 +3,7 @@ registries:
   npm-registry:
     type: npm-registry
     url: https://registry.npmjs.org
-    replaces-base: true
+    token: ${{secrets.READER_TOKEN}}
 
 updates:
   - package-ecosystem: npm
