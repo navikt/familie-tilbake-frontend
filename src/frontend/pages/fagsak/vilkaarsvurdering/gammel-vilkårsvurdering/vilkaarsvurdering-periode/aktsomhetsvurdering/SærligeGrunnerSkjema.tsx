@@ -11,7 +11,7 @@ import {
     OptionNEI,
     type JaNeiOption,
     type VilkårsvurderingSkjemaDefinisjon,
-} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { ReduksjonAvBeløpSkjema } from './ReduksjonAvBeløpSkjema';
 

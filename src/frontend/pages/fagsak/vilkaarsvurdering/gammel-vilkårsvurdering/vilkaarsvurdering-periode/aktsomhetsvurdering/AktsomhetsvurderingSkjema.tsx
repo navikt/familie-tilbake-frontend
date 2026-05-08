@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 
@@ -7,7 +7,7 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
 import { Aktsomhet, aktsomheter, Vilkårsresultat } from '~/kodeverk';
-import { OptionNEI } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { OptionNEI } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { GradForsettSkjema } from './GradForsettSkjema';
 import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';

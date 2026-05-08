@@ -1,4 +1,4 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '~/pages/fagsak/vilkaarsvurdering/typer/vilkårsvurdering';
+import type { VilkårsvurderingPeriodeSkjemaData } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/typer/vilkårsvurdering';
 import type {
     VilkårsvurderingPeriode,
     VilkårsvurderingResponse,

@@ -28,7 +28,7 @@ import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import { ModalWrapper } from '~/komponenter/modal/ModalWrapper';
 import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
-import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import { formatterDatostring, isEmpty } from '~/utils';
 
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';

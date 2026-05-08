@@ -3,5 +3,6 @@ export type Toggles = {
 };
 
 export enum ToggleName {
+    Vilkårsvurdering = 'tilbakekreving-frontend.nytt-vilkaarsvurderingssteg',
     Vedtaksbrev = 'tilbakekreving-frontend.nytt-vedtaksbrev',
 }

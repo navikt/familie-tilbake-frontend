@@ -1,7 +1,7 @@
 import type { UserEvent } from '@testing-library/user-event';
 import type { ReactElement, ReactNode } from 'react';
 import type { BehandlingDto } from '~/generated';
-import type { VilkårsvurderingHook } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
+import type { VilkårsvurderingHook } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor, within } from '@testing-library/react';

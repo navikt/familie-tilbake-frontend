@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Skjema } from '~/hooks/skjema';
-import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 
@@ -12,8 +12,8 @@ import {
     EGENDEFINERT,
     OptionJA,
     OptionNEI,
-} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
-import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/VilkårsvurderingContext';
+} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import { formatCurrencyNoKr, isEmpty, isNumeric } from '~/utils';
 
 import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
