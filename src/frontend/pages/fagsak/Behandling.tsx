@@ -37,8 +37,9 @@ import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
 import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
 import { VergeProvider } from './verge/VergeContext';
-import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/historikk/HistoriskVilkårsvurderingContext';
-import { VilkårsvurderingProvider } from './vilkaarsvurdering/VilkårsvurderingContext';
+import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
+import { VilkårsvurderingProvider } from './vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
+import { Vilkårsvurdering } from './vilkaarsvurdering/Vilkårsvurdering';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./brevmottaker/Brevmottakere'),
@@ -64,11 +65,12 @@ const VedtakContainer = lazyImportMedRetry(
 const Vedtak = lazyImportMedRetry(() => import('./vedtak/Vedtak'), 'Vedtak');
 const VergeContainer = lazyImportMedRetry(() => import('./verge/VergeContainer'), 'VergeContainer');
 const VilkårsvurderingContainer = lazyImportMedRetry(
-    () => import('./vilkaarsvurdering/VilkårsvurderingContainer'),
+    () => import('./vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContainer'),
     'VilkårsvurderingContainer'
 );
 const HistoriskVilkårsvurderingContainer = lazyImportMedRetry(
-    () => import('./vilkaarsvurdering/historikk/HistoriskVilkårsvurderingContainer'),
+    () =>
+        import('./vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer'),
     'HistoriskVilkårsvurderingContainer'
 );
 const Sidebar = lazyImportMedRetry(() => import('../../komponenter/sidebar/Sidebar'), 'Sidebar');
@@ -251,9 +253,13 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                             element={
-                                <VilkårsvurderingProvider>
-                                    <VilkårsvurderingContainer />
-                                </VilkårsvurderingProvider>
+                                behandling.erNyModell && toggles[ToggleName.Vilkårsvurdering] ? (
+                                    <Vilkårsvurdering />
+                                ) : (
+                                    <VilkårsvurderingProvider>
+                                        <VilkårsvurderingContainer />
+                                    </VilkårsvurderingProvider>
+                                )
                             }
                         />
                         <Route

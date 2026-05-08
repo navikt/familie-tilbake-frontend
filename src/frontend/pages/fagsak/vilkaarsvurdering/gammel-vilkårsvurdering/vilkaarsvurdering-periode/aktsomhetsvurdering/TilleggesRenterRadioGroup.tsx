@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Felt } from '~/hooks/skjema';
-import type { JaNeiOption } from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { JaNeiOption } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup } from '@navikt/ds-react';
 
@@ -11,7 +11,7 @@ import {
     jaNeiOptions,
     OptionJA,
     OptionNEI,
-} from '~/pages/fagsak/vilkaarsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
     kanIlleggeRenter: boolean;
