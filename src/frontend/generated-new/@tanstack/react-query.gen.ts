@@ -8,10 +8,15 @@ import {
     behandlingBehandlingslogg,
     behandlingFakta,
     behandlingForeslaaVedtak,
+    behandlingForhandsvarsel,
     behandlingHentVedtaksbrev,
     behandlingHentVedtaksresultat,
+    behandlingLagreBrukersuttalelse,
+    behandlingLagreForhaandsvarselUnntak,
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
+    behandlingSendVarselbrev,
+    behandlingUtsettUttalelsesfrist,
     type Options,
     vedtaksbrevLagSvgVedtaksbrev,
 } from '../sdk.gen';
@@ -24,18 +29,30 @@ import type {
     BehandlingFaktaResponse,
     BehandlingForeslaaVedtakData,
     BehandlingForeslaaVedtakError,
+    BehandlingForhandsvarselData,
+    BehandlingForhandsvarselError,
+    BehandlingForhandsvarselResponse,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevError,
     BehandlingHentVedtaksbrevResponse,
     BehandlingHentVedtaksresultatData,
     BehandlingHentVedtaksresultatError,
     BehandlingHentVedtaksresultatResponse,
+    BehandlingLagreBrukersuttalelseData,
+    BehandlingLagreBrukersuttalelseError,
+    BehandlingLagreForhaandsvarselUnntakData,
+    BehandlingLagreForhaandsvarselUnntakError,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
     BehandlingOppdaterFaktaResponse,
     BehandlingOppdaterVedtaksbrevData,
     BehandlingOppdaterVedtaksbrevError,
     BehandlingOppdaterVedtaksbrevResponse,
+    BehandlingSendVarselbrevData,
+    BehandlingSendVarselbrevError,
+    BehandlingUtsettUttalelsesfristData,
+    BehandlingUtsettUttalelsesfristError,
+    BehandlingUtsettUttalelsesfristResponse,
     VedtaksbrevLagSvgVedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevResponse,
 } from '../types.gen';
@@ -162,6 +179,124 @@ export const behandlingForeslaaVedtakMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await behandlingForeslaaVedtak({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const behandlingForhandsvarselQueryKey = (options: Options<BehandlingForhandsvarselData>) =>
+    createQueryKey('behandlingForhandsvarsel', options);
+
+export const behandlingForhandsvarselOptions = (options: Options<BehandlingForhandsvarselData>) =>
+    queryOptions<
+        BehandlingForhandsvarselResponse,
+        AxiosError<BehandlingForhandsvarselError>,
+        BehandlingForhandsvarselResponse,
+        ReturnType<typeof behandlingForhandsvarselQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingForhandsvarsel({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingForhandsvarselQueryKey(options),
+    });
+
+export const behandlingSendVarselbrevMutation = (
+    options?: Partial<Options<BehandlingSendVarselbrevData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingSendVarselbrevError>,
+    Options<BehandlingSendVarselbrevData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingSendVarselbrevError>,
+        Options<BehandlingSendVarselbrevData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingSendVarselbrev({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const behandlingLagreForhaandsvarselUnntakMutation = (
+    options?: Partial<Options<BehandlingLagreForhaandsvarselUnntakData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingLagreForhaandsvarselUnntakError>,
+    Options<BehandlingLagreForhaandsvarselUnntakData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingLagreForhaandsvarselUnntakError>,
+        Options<BehandlingLagreForhaandsvarselUnntakData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingLagreForhaandsvarselUnntak({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const behandlingUtsettUttalelsesfristMutation = (
+    options?: Partial<Options<BehandlingUtsettUttalelsesfristData>>
+): UseMutationOptions<
+    BehandlingUtsettUttalelsesfristResponse,
+    AxiosError<BehandlingUtsettUttalelsesfristError>,
+    Options<BehandlingUtsettUttalelsesfristData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BehandlingUtsettUttalelsesfristResponse,
+        AxiosError<BehandlingUtsettUttalelsesfristError>,
+        Options<BehandlingUtsettUttalelsesfristData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingUtsettUttalelsesfrist({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const behandlingLagreBrukersuttalelseMutation = (
+    options?: Partial<Options<BehandlingLagreBrukersuttalelseData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingLagreBrukersuttalelseError>,
+    Options<BehandlingLagreBrukersuttalelseData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingLagreBrukersuttalelseError>,
+        Options<BehandlingLagreBrukersuttalelseData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingLagreBrukersuttalelse({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,

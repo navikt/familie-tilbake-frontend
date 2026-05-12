@@ -52,7 +52,14 @@ export const zError = z.object({
     melding: z.string(),
 });
 
+export const zForhaandsvarselInfo = z.object({
+    tekstFraSaksbehandler: z.string(),
+    varselbrevSendtTid: z.iso.date(),
+});
+
 export const zFritekst = z.string().min(3).max(3000);
+
+export const zIkkeVurdert = z.object({});
 
 export const zLogginnslag = z.object({
     behandlingId: z.string(),
@@ -86,6 +93,8 @@ export const zOppsummertPeriode = z.object({
 export const zOppsummeringsdata = z.object({
     beregnerSkatt: z.boolean(),
     perioder: z.array(zOppsummertPeriode),
+    sumFeilutbetaltBeløp: z.string(),
+    sumTilbakekrevesBeløpEtterSkatt: z.string(),
 });
 
 export const zRentekstElement = z.object({
@@ -144,6 +153,10 @@ export const zOppdaterFaktaPeriode = z.object({
     rettsligGrunnlag: z.array(zRettsligGrunnlag).min(1),
 });
 
+export const zSendForhaandsvarsel = z.object({
+    tekstFraSaksbehandler: z.string(),
+});
+
 export const zSignatur = z.object({
     enhetNavn: z.string(),
     ansvarligSaksbehandler: z.string(),
@@ -196,6 +209,60 @@ export const zAvsnittUpdateItem = z.object({
 export const zHovedavsnittUpdate = z.object({
     tittel: z.string().min(3).max(300),
     underavsnitt: z.array(zRotElementUpdateItem),
+});
+
+export const zUpdateUttalelsesfrist = z.object({
+    nyFrist: z.iso.date().optional(),
+    begrunnelse: z.string().optional(),
+});
+
+export const zUttalelseVurdering = z.enum([
+    'JA_ETTER_FORHÅNDSVARSEL',
+    'NEI_ETTER_FORHÅNDSVARSEL',
+    'UNNTAK_ALLEREDE_UTTALT_SEG',
+    'UNNTAK_INGEN_UTTALELSE',
+    'IKKE_VURDERT',
+]);
+
+export const zUttalelse = z.object({
+    harBrukerUttaltSeg: zUttalelseVurdering,
+    uttalelsesdato: z.iso.date().optional(),
+    hvorBrukerenUttalteSeg: z.string().optional(),
+    beskrivelse: z.string().optional(),
+});
+
+export const zUttalelsesfrist = z.object({
+    nyFrist: z.iso.date().optional(),
+    begrunnelse: z.string().optional(),
+    opprinneligFrist: z.iso.date().readonly(),
+});
+
+export const zForhaandsvarselErSendt = z.object({
+    forhåndsvarselInfo: zForhaandsvarselInfo,
+    uttalelsesfrist: zUttalelsesfrist,
+});
+
+export const zVarslingsunntak = z.enum([
+    'IKKE_PRAKTISK_MULIG',
+    'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
+    'ÅPENBART_UNØDVENDIG',
+    'ALLEREDE_UTTALET_SEG',
+]);
+
+export const zForhaandsvarselUnntak = z.object({
+    begrunnelseForUnntak: zVarslingsunntak,
+    beskrivelse: z.string(),
+});
+
+export const zForhaandsvarselSteg = z.discriminatedUnion('type', [
+    zIkkeVurdert.extend({ type: z.literal('ikke_vurdert') }),
+    zForhaandsvarselErSendt.extend({ type: z.literal('sendt') }),
+    zForhaandsvarselUnntak.extend({ type: z.literal('unntak') }),
+]);
+
+export const zForhaandsvarselResponse = z.object({
+    forhaandsvarselSteg: zForhaandsvarselSteg,
+    brukeruttalelse: zUttalelse.nullable(),
 });
 
 export const zVedtaksbrevRedigerbareData = z.object({
@@ -312,6 +379,27 @@ export const zHovedavsnittWritable = z.object({
     hjemler: z.string(),
 });
 
+export const zUttalelsesfristWritable = z.object({
+    nyFrist: z.iso.date().optional(),
+    begrunnelse: z.string().optional(),
+});
+
+export const zForhaandsvarselErSendtWritable = z.object({
+    forhåndsvarselInfo: zForhaandsvarselInfo,
+    uttalelsesfrist: zUttalelsesfristWritable,
+});
+
+export const zForhaandsvarselStegWritable = z.discriminatedUnion('type', [
+    zIkkeVurdert.extend({ type: z.literal('ikke_vurdert') }),
+    zForhaandsvarselErSendtWritable.extend({ type: z.literal('sendt') }),
+    zForhaandsvarselUnntak.extend({ type: z.literal('unntak') }),
+]);
+
+export const zForhaandsvarselResponseWritable = z.object({
+    forhaandsvarselSteg: zForhaandsvarselStegWritable,
+    brukeruttalelse: zUttalelse.nullable(),
+});
+
 export const zVedtaksbrevDataWritable = z.object({
     hovedavsnitt: zHovedavsnittWritable,
     avsnitt: z.array(zAvsnittWritable),
@@ -359,6 +447,44 @@ export const zBehandlingOppdaterFaktaPath = z.object({
 export const zBehandlingOppdaterFaktaResponse = zFaktaOmFeilutbetaling;
 
 export const zBehandlingForeslaaVedtakPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+export const zBehandlingForhandsvarselPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingForhandsvarselResponse = zForhaandsvarselResponse;
+
+export const zBehandlingSendVarselbrevBody = zSendForhaandsvarsel;
+
+export const zBehandlingSendVarselbrevPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+export const zBehandlingLagreForhaandsvarselUnntakBody = zForhaandsvarselUnntak;
+
+export const zBehandlingLagreForhaandsvarselUnntakPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+export const zBehandlingUtsettUttalelsesfristBody = zUpdateUttalelsesfrist;
+
+export const zBehandlingUtsettUttalelsesfristPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingUtsettUttalelsesfristResponse = zUttalelsesfrist;
+
+export const zBehandlingLagreBrukersuttalelseBody = zUttalelse;
+
+export const zBehandlingLagreBrukersuttalelsePath = z.object({
     behandlingId: z.uuid(),
 });
 
