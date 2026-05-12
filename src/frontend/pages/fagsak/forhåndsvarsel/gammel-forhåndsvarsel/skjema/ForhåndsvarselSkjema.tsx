@@ -5,7 +5,7 @@ import type {
     ForhåndsvarselFormData,
     UttalelseFormData,
     HarUttaltSeg,
-} from '~/pages/fagsak/forhåndsvarsel/schema';
+} from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { VStack } from '@navikt/ds-react';
@@ -21,12 +21,12 @@ import {
     getUttalelseValuesBasertPåValg,
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
-} from '~/pages/fagsak/forhåndsvarsel/schema';
+} from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
-} from '~/pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
+} from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 
 import { SkalSendeSkjema } from './SkalSendeSkjema';

@@ -4,9 +4,9 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
-import { Forhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/Forhåndsvarsel';
-import { useForhåndsvarselMutations } from '~/pages/fagsak/forhåndsvarsel/useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/useForhåndsvarselQueries';
+import { Forhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/Forhåndsvarsel';
+import { useForhåndsvarselMutations } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandlingDto } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
