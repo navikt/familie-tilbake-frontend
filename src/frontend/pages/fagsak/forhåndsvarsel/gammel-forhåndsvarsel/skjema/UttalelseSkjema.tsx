@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
+import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
 import {
     RadioGroup,
@@ -17,7 +17,7 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/schema';
+import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 import { dateTilIsoDatoString } from '~/utils/dato';
 
 type Props = {

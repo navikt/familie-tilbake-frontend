@@ -10,7 +10,7 @@ import { useForm, get } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { MODAL_BREDDE } from '~/komponenter/meny/utils';
-import { utsettUttalelseFristSchema } from '~/pages/fagsak/forhåndsvarsel/schema';
+import { utsettUttalelseFristSchema } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 import { dateTilIsoDatoString } from '~/utils/dato';
 
 type UtsettFristFormData = z.infer<typeof utsettUttalelseFristSchema>;
