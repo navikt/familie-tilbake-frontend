@@ -7,7 +7,11 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
 import { Aktsomhet, aktsomheter, Vilkårsresultat } from '~/kodeverk';
-import { OptionNEI } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import {
+    OptionJA,
+    OptionNEI,
+} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 
 import { GradForsettSkjema } from './GradForsettSkjema';
 import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';
@@ -20,8 +24,14 @@ type Props = {
 export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
+    const { kanIlleggeRenter } = useVilkårsvurdering();
     const erForstodBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;
+    const erFeilaktigEllerMangelfull =
+        skjema.felter.vilkårsresultatvurdering.verdi ===
+            Vilkårsresultat.FeilOpplysningerFraBruker ||
+        skjema.felter.vilkårsresultatvurdering.verdi ===
+            Vilkårsresultat.MangelfulleOpplysningerFraBruker;
     const ugyldigAktsomhetvurderingValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.aktsomhetVurdering.valideringsstatus === Valideringsstatus.Feil;
@@ -46,13 +56,17 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) 
                         : ''
                 }
                 onChange={(val: Aktsomhet) => {
-                    const skalPreutfylleUtenRenter =
+                    if (
                         val === Aktsomhet.Forsettlig &&
-                        skjema.felter.forstoIlleggeRenter.verdi === '' &&
-                        skjema.felter.vilkårsresultatvurdering.verdi ===
-                            Vilkårsresultat.ForstoBurdeForstått;
-                    if (skalPreutfylleUtenRenter) {
-                        skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
+                        skjema.felter.forstoIlleggeRenter.verdi === ''
+                    ) {
+                        if (erFeilaktigEllerMangelfull) {
+                            skjema.felter.forstoIlleggeRenter.validerOgSettFelt(
+                                kanIlleggeRenter ? OptionJA : OptionNEI
+                            );
+                        } else if (erForstodBurdeForstått) {
+                            skjema.felter.forstoIlleggeRenter.validerOgSettFelt(OptionNEI);
+                        }
                     }
                     setIkkePersistertKomponent(`vilkårsvurdering`);
                     return skjema.felter.aktsomhetVurdering.validerOgSettFelt(val);

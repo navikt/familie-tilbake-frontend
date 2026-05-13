@@ -21,12 +21,13 @@ import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
 import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriodeSkjema';
 
 const mockKanIlleggeRenter = vi.hoisted(() => ({ value: true }));
+const mockOppdaterPeriode = vi.hoisted(() => vi.fn());
 
 vi.mock('../VilkårsvurderingContext', () => {
     return {
         useVilkårsvurdering: (): Partial<VilkårsvurderingHook> => ({
             kanIlleggeRenter: mockKanIlleggeRenter.value,
-            oppdaterPeriode: vi.fn(),
+            oppdaterPeriode: mockOppdaterPeriode,
             navigerTilNeste: vi.fn(),
             sendInnSkjemaOgNaviger: vi.fn(),
             sendInnSkjemaMutation: {
@@ -524,6 +525,26 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(gåVidereKnapp());
         expect(antallFeiledeFelter()).toHaveLength(0);
+    });
+
+    test('Mangelfulle - grovt uaktsomt - ingen grunn til reduksjon - ileggRenter er true', async () => {
+        renderVilkårsvurderingPeriodeSkjema({});
+
+        await user.click(mangelfulleOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
+
+        await user.click(grovtUaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
+
+        await user.click(gradAvUaktsomhetValg());
+        await user.click(skalRedusereNei());
+        await user.type(begrunnResultat(), 'begrunnelse');
+
+        await user.click(gåVidereKnapp());
+        expect(antallFeiledeFelter()).toHaveLength(0);
+
+        const oppdatertPeriode = mockOppdaterPeriode.mock.calls[0][0];
+        expect(oppdatertPeriode.vilkårsvurderingsresultatInfo.aktsomhet.ileggRenter).toBe(true);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - grunn til reduksjon', async () => {
