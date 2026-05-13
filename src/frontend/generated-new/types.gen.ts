@@ -86,6 +86,37 @@ export type Feilutbetaling = {
     revurdering: Revurdering;
 };
 
+export type ForhaandsvarselErSendt = {
+    forhåndsvarselInfo: ForhaandsvarselInfo;
+    uttalelsesfrist: Uttalelsesfrist;
+};
+
+export type ForhaandsvarselInfo = {
+    tekstFraSaksbehandler: string;
+    varselbrevSendtTid: string;
+};
+
+export type ForhaandsvarselResponse = {
+    forhaandsvarselSteg: ForhaandsvarselSteg;
+    brukeruttalelse: Uttalelse | null;
+};
+
+export type ForhaandsvarselSteg =
+    | ({
+          type: 'ikke_vurdert';
+      } & IkkeVurdert)
+    | ({
+          type: 'sendt';
+      } & ForhaandsvarselErSendt)
+    | ({
+          type: 'unntak';
+      } & ForhaandsvarselUnntak);
+
+export type ForhaandsvarselUnntak = {
+    begrunnelseForUnntak: Varslingsunntak;
+    beskrivelse: string;
+};
+
 export type Fritekst = string;
 
 export type Hovedavsnitt = {
@@ -98,6 +129,10 @@ export type Hovedavsnitt = {
 export type HovedavsnittUpdate = {
     tittel: string;
     underavsnitt: Array<RotElementUpdateItem>;
+};
+
+export type IkkeVurdert = {
+    [key: string]: unknown;
 };
 
 export type Logginnslag = {
@@ -137,6 +172,8 @@ export type OppdaterFaktaPeriode = {
 export type Oppsummeringsdata = {
     beregnerSkatt: boolean;
     perioder: Array<OppsummertPeriode>;
+    sumFeilutbetaltBeløp: string;
+    sumTilbakekrevesBeløpEtterSkatt: string;
 };
 
 export type OppsummertPeriode = {
@@ -200,6 +237,10 @@ export type RotElementUpdateItem =
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseUpdateItem);
 
+export type SendForhaandsvarsel = {
+    tekstFraSaksbehandler: string;
+};
+
 export type Signatur = {
     enhetNavn: string;
     ansvarligSaksbehandler: string;
@@ -215,6 +256,37 @@ export type UnderavsnittElement = {
     tittel: string;
     underavsnitt: Array<Element>;
 };
+
+export type UpdateUttalelsesfrist = {
+    nyFrist?: string;
+    begrunnelse?: string;
+};
+
+export type Uttalelse = {
+    harBrukerUttaltSeg: UttalelseVurdering;
+    uttalelsesdato?: string;
+    hvorBrukerenUttalteSeg?: string;
+    beskrivelse?: string;
+};
+
+export type UttalelseVurdering =
+    | 'JA_ETTER_FORHÅNDSVARSEL'
+    | 'NEI_ETTER_FORHÅNDSVARSEL'
+    | 'UNNTAK_ALLEREDE_UTTALT_SEG'
+    | 'UNNTAK_INGEN_UTTALELSE'
+    | 'IKKE_VURDERT';
+
+export type Uttalelsesfrist = {
+    nyFrist?: string;
+    begrunnelse?: string;
+    readonly opprinneligFrist: string;
+};
+
+export type Varslingsunntak =
+    | 'IKKE_PRAKTISK_MULIG'
+    | 'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING'
+    | 'ÅPENBART_UNØDVENDIG'
+    | 'ALLEREDE_UTTALET_SEG';
 
 export type VedtaksbrevData = {
     hovedavsnitt: Hovedavsnitt;
@@ -266,6 +338,27 @@ export type AvsnittWritable = {
     underavsnitt: Array<RotElementWritable>;
 };
 
+export type ForhaandsvarselErSendtWritable = {
+    forhåndsvarselInfo: ForhaandsvarselInfo;
+    uttalelsesfrist: UttalelsesfristWritable;
+};
+
+export type ForhaandsvarselResponseWritable = {
+    forhaandsvarselSteg: ForhaandsvarselStegWritable;
+    brukeruttalelse: Uttalelse | null;
+};
+
+export type ForhaandsvarselStegWritable =
+    | ({
+          type: 'ikke_vurdert';
+      } & IkkeVurdert)
+    | ({
+          type: 'sendt';
+      } & ForhaandsvarselErSendtWritable)
+    | ({
+          type: 'unntak';
+      } & ForhaandsvarselUnntak);
+
 export type HovedavsnittWritable = {
     tittel: string;
     underavsnitt: Array<RotElementWritable>;
@@ -288,6 +381,11 @@ export type RotElementWritable =
     | ({
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseWritable);
+
+export type UttalelsesfristWritable = {
+    nyFrist?: string;
+    begrunnelse?: string;
+};
 
 export type VedtaksbrevDataWritable = {
     hovedavsnitt: HovedavsnittWritable;
@@ -427,6 +525,162 @@ export type BehandlingForeslaaVedtakError =
     BehandlingForeslaaVedtakErrors[keyof BehandlingForeslaaVedtakErrors];
 
 export type BehandlingForeslaaVedtakResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
+export type BehandlingForhandsvarselData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel';
+};
+
+export type BehandlingForhandsvarselErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingForhandsvarselError =
+    BehandlingForhandsvarselErrors[keyof BehandlingForhandsvarselErrors];
+
+export type BehandlingForhandsvarselResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: ForhaandsvarselResponse;
+};
+
+export type BehandlingForhandsvarselResponse =
+    BehandlingForhandsvarselResponses[keyof BehandlingForhandsvarselResponses];
+
+export type BehandlingSendVarselbrevData = {
+    body: SendForhaandsvarsel;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/send-varselbrev';
+};
+
+export type BehandlingSendVarselbrevErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingSendVarselbrevError =
+    BehandlingSendVarselbrevErrors[keyof BehandlingSendVarselbrevErrors];
+
+export type BehandlingSendVarselbrevResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
+export type BehandlingLagreForhaandsvarselUnntakData = {
+    body: ForhaandsvarselUnntak;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/unntak';
+};
+
+export type BehandlingLagreForhaandsvarselUnntakErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingLagreForhaandsvarselUnntakError =
+    BehandlingLagreForhaandsvarselUnntakErrors[keyof BehandlingLagreForhaandsvarselUnntakErrors];
+
+export type BehandlingLagreForhaandsvarselUnntakResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
+export type BehandlingUtsettUttalelsesfristData = {
+    body: UpdateUttalelsesfrist;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/utsett-frist';
+};
+
+export type BehandlingUtsettUttalelsesfristErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingUtsettUttalelsesfristError =
+    BehandlingUtsettUttalelsesfristErrors[keyof BehandlingUtsettUttalelsesfristErrors];
+
+export type BehandlingUtsettUttalelsesfristResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Uttalelsesfrist;
+};
+
+export type BehandlingUtsettUttalelsesfristResponse =
+    BehandlingUtsettUttalelsesfristResponses[keyof BehandlingUtsettUttalelsesfristResponses];
+
+export type BehandlingLagreBrukersuttalelseData = {
+    body: Uttalelse;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/forhåndsvarsel/uttalelse';
+};
+
+export type BehandlingLagreBrukersuttalelseErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingLagreBrukersuttalelseError =
+    BehandlingLagreBrukersuttalelseErrors[keyof BehandlingLagreBrukersuttalelseErrors];
+
+export type BehandlingLagreBrukersuttalelseResponses = {
     /**
      * The request has succeeded.
      */

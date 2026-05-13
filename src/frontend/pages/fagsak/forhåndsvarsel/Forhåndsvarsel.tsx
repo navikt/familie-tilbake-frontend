@@ -1,172 +1,36 @@
-import type { ForhåndsvarselFormData } from './schema';
 import type { FC } from 'react';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { EyeIcon } from '@navikt/aksel-icons';
-import { Button, Heading, HStack } from '@navikt/ds-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Heading } from '@navikt/ds-react';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { isoStringTilDate } from '~/utils/dato';
+import { behandlingForhandsvarselOptions } from '~/generated-new/@tanstack/react-query.gen';
 
-import { Fristinfo } from './Fristinfo';
-import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
-import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';
-import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
-import { UtsettFristModal } from './UtsettFristModal';
+import { IkkeVurdert } from './IkkeVurdert';
+import { SendtVarsel } from './SendtVarsel';
+import { Unntak } from './Unntak';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
-    const { setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
-        useBehandlingState();
-    const visGlobalAlert = useVisGlobalAlert();
-    const { forhåndsvarselInfo } = useForhåndsvarselQueries();
-    const { forhåndsvisning, sendUtsettFrist, sendUtsettFristMutation } =
-        useForhåndsvarselMutations();
-    const [showModal, setShowModal] = useState(false);
-    const utsettFristModalRef = useRef<HTMLDialogElement>(null);
-    const queryClient = useQueryClient();
 
-    const varselErSendt = !!forhåndsvarselInfo?.varselbrevDto?.varselbrevSendtTid;
+    const { data: response } = useSuspenseQuery(
+        behandlingForhandsvarselOptions({
+            path: { behandlingId },
+        })
+    );
 
-    const methods = useForm<ForhåndsvarselFormData>({
-        resolver: zodResolver(forhåndsvarselSchema),
-        mode: 'onSubmit',
-        reValidateMode: 'onChange',
-        criteriaMode: 'all',
-        defaultValues: getDefaultValues(varselErSendt, forhåndsvarselInfo),
-    });
-
-    methods.subscribe({
-        formState: { isDirty: true },
-        callback: data => {
-            if (data.isDirty) {
-                setIkkePersistertKomponent('forhåndsvarsel');
-            } else {
-                nullstillIkkePersisterteKomponenter();
-            }
-        },
-    });
-
-    const fritekst = useWatch({
-        control: methods.control,
-        name: 'fritekst',
-    });
-
-    const skalSendesForhåndsvarsel = useWatch({
-        control: methods.control,
-        name: 'skalSendesForhåndsvarsel',
-    });
-
-    const seForhåndsvisningWithModal = (): void => {
-        const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
-
-        const cachedData = queryClient.getQueryData(currentQueryKey);
-
-        if (cachedData) {
-            setShowModal(true);
-        } else {
-            forhåndsvisning.mutate(
-                {
-                    path: { behandlingId },
-                    body: {
-                        behandlingId,
-                        brevmalkode: 'VARSEL',
-                        fritekst: fritekst || '',
-                    },
-                },
-                {
-                    onSuccess: data => {
-                        queryClient.setQueryData(currentQueryKey, data);
-                        setShowModal(true);
-                    },
-                }
-            );
-        }
-    };
-
-    useEffect(() => {
-        if (sendUtsettFristMutation.isSuccess) {
-            const nyFrist = sendUtsettFristMutation.variables?.body?.nyFrist;
-            const formatertDato = nyFrist ? format(isoStringTilDate(nyFrist), 'dd.MM.yyyy') : '';
-            visGlobalAlert({
-                title: `Fristen for uttalelse er utsatt til ${formatertDato}`,
-                status: 'success',
-            });
-        }
-    }, [sendUtsettFristMutation.isSuccess, sendUtsettFristMutation.variables, visGlobalAlert]);
-
-    useEffect(() => {
-        if (forhåndsvisning.error) {
-            visGlobalAlert({
-                title: 'Forhåndsvisning feilet',
-                message: forhåndsvisning.error.message,
-                status: 'error',
-            });
-        }
-    }, [forhåndsvisning.error, visGlobalAlert]);
-
-    const pdfData =
-        forhåndsvisning.data ||
-        queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
-
-    const visForhåndsvisningsknapp = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
-    const skalViseFristinfo = !!forhåndsvarselInfo?.varselbrevDto?.opprinneligFristForUttalelse;
+    const { forhaandsvarselSteg, brukeruttalelse } = response;
 
     return (
-        <div
-            className={`grid grid-cols-1 gap-6 items-start ${skalViseFristinfo ? ' lg:grid-cols-[1fr_18rem]' : ''}`}
-        >
-            <HStack align="center" gap="space-16">
-                <Heading size="medium">Forhåndsvarsel</Heading>
-                {visForhåndsvisningsknapp && (
-                    <Button
-                        loading={forhåndsvisning.isPending}
-                        icon={<EyeIcon aria-hidden />}
-                        variant="tertiary"
-                        size="small"
-                        onClick={seForhåndsvisningWithModal}
-                        className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
-                        aria-hidden={!visForhåndsvisningsknapp}
-                        tabIndex={visForhåndsvisningsknapp ? 0 : -1}
-                    >
-                        Forhåndsvis
-                    </Button>
-                )}
-            </HStack>
-            {skalViseFristinfo && forhåndsvarselInfo && (
-                <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
-                    <Fristinfo
-                        forhåndsvarselInfo={forhåndsvarselInfo}
-                        onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
-                    />
-                </div>
+        <div className="flex flex-col gap-4">
+            <Heading size="medium">Forhåndsvarsel</Heading>
+            {forhaandsvarselSteg.type === 'ikke_vurdert' && <IkkeVurdert />}
+            {forhaandsvarselSteg.type === 'sendt' && (
+                <SendtVarsel {...forhaandsvarselSteg} brukeruttalelse={brukeruttalelse} />
             )}
-            <FormProvider {...methods}>
-                <ForhåndsvarselSkjema
-                    forhåndsvarselInfo={forhåndsvarselInfo}
-                    skalSendesForhåndsvarsel={skalSendesForhåndsvarsel}
-                />
-            </FormProvider>
-            {showModal && pdfData && (
-                <PdfVisningModal
-                    åpen
-                    pdfdata={pdfData}
-                    onRequestClose={() => setShowModal(false)}
-                />
+            {forhaandsvarselSteg.type === 'unntak' && (
+                <Unntak {...forhaandsvarselSteg} brukeruttalelse={brukeruttalelse} />
             )}
-            <UtsettFristModal
-                dialogRef={utsettFristModalRef}
-                onUtsettFrist={sendUtsettFrist}
-                laster={sendUtsettFristMutation.isPending}
-            />
         </div>
     );
 };

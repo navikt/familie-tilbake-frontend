@@ -34,7 +34,7 @@ import { HistoriskFaktaProvider } from './fakta/fakta-periode/historikk/Historis
 import { FaktaProvider } from './fakta/FaktaContext';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
-import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
+import { ForhåndsvarselSkeleton } from './forhåndsvarsel/gammel-forhåndsvarsel/ForhåndsvarselSkeleton';
 import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
 import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
@@ -49,6 +49,10 @@ const FaktaContainer = lazyImportMedRetry(() => import('./fakta/FaktaContainer')
 const HistoriskFaktaContainer = lazyImportMedRetry(
     () => import('./fakta/fakta-periode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
+);
+const GammelForhåndsvarsel = lazyImportMedRetry(
+    () => import('./forhåndsvarsel/gammel-forhåndsvarsel/Forhåndsvarsel'),
+    'Forhåndsvarsel'
 );
 const Forhåndsvarsel = lazyImportMedRetry(
     () => import('./forhåndsvarsel/Forhåndsvarsel'),
@@ -237,7 +241,11 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             element={
                                 <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
                                     <Suspense fallback={<ForhåndsvarselSkeleton />}>
-                                        <Forhåndsvarsel />
+                                        {toggles[ToggleName.Forhaandsvarsel] ? (
+                                            <Forhåndsvarsel />
+                                        ) : (
+                                            <GammelForhåndsvarsel />
+                                        )}
                                     </Suspense>
                                 </StegErrorBoundary>
                             }

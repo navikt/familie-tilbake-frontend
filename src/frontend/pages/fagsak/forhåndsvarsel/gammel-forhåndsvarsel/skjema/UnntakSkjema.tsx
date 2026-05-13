@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/schema';
+import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
 import { RadioGroup, Radio, Textarea, Link } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';
