@@ -94,9 +94,10 @@ export const Forhåndsvarsel: FC = () => {
                 forrigeAriaLabel="Gå tilbake til faktasteget"
                 isLoading={sendVarselbrev.isPending}
                 skjulNeste={behandlingILesemodus}
-                type="submit"
-                formId={FORHÅNDSVARSEL_FORM_ID}
                 onForrige={navigerTilForrige}
+                {...(forhaandsvarselSteg.type === 'ikke_vurdert'
+                    ? { type: 'submit' as const, formId: FORHÅNDSVARSEL_FORM_ID }
+                    : { onNeste: navigerTilNeste })}
             />
         </VStack>
     );

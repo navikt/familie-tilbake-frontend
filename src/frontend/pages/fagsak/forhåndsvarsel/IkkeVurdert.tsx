@@ -1,7 +1,7 @@
 import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
-import type { SubmitHandler } from 'react-hook-form';
-import type { Section } from '~/generated';
+import type { ChangeHandler, SubmitHandler } from 'react-hook-form';
+import type { Section, Varselbrevtekst } from '~/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BodyLong, Box, Heading, Textarea, VStack } from '@navikt/ds-react';
@@ -48,13 +48,9 @@ export const IkkeVurdert: FC<Props> = ({ onSubmit, onValgEndring }) => {
 
     const valg = useWatch({ control, name: 'valg' });
 
-    useEffect(() => {
-        onValgEndring?.(valg);
-    }, [valg, onValgEndring]);
-
     const { data: varselbrevtekster } = useQuery({
         ...hentForhåndsvarselTekstOptions({ path: { behandlingId } }),
-        select: data => data.data ?? undefined,
+        select: (data): Varselbrevtekst | undefined => data.data ?? undefined,
     });
 
     const { data: faktaOmFeilutbetaling } = useQuery(
@@ -71,7 +67,17 @@ export const IkkeVurdert: FC<Props> = ({ onSubmit, onValgEndring }) => {
         }
     }, [stønadstekst, valg, setValue, getValues]);
 
-    const { name: valgName, ref: valgRef, ...valgRadioProps } = register('valg');
+    const {
+        name: valgName,
+        ref: valgRef,
+        onChange: registerOnChange,
+        ...valgRadioProps
+    } = register('valg');
+
+    const handleValgChange: ChangeHandler = async event => {
+        await registerOnChange(event);
+        onValgEndring?.(event.target.value as 'send' | 'unntak');
+    };
 
     return (
         <VStack asChild gap="space-24">
@@ -82,6 +88,7 @@ export const IkkeVurdert: FC<Props> = ({ onSubmit, onValgEndring }) => {
                     readOnly={behandlingILesemodus}
                     value={valg}
                     error={errors.valg?.message}
+                    onChange={handleValgChange}
                     {...valgRadioProps}
                 />
 
@@ -93,51 +100,53 @@ export const IkkeVurdert: FC<Props> = ({ onSubmit, onValgEndring }) => {
                         paddingBlock="space-12"
                         paddingInline="space-16"
                     >
-                        <Heading level="2" size="small" spacing>
-                            Opprett forhåndsvarsel
-                        </Heading>
-                        <VStack className="max-w-xl pt-4" gap="space-24">
-                            <Heading level="3" size="medium">
-                                {varselbrevtekster.overskrift}
+                        <VStack gap="space-24">
+                            <Heading level="2" size="small">
+                                Opprett forhåndsvarsel
                             </Heading>
-                            {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
-                                <Fragment key={avsnitt.title}>
-                                    {avsnitt.title === 'Dette har skjedd' ? (
-                                        <VStack gap="space-16">
-                                            <Heading level="4" size="xsmall">
-                                                {avsnitt.title}
-                                            </Heading>
-                                            <Textarea
-                                                {...register('tekstFraSaksbehandler')}
-                                                label="Legg til utdypende tekst"
-                                                maxLength={4000}
-                                                minRows={3}
-                                                size="small"
-                                                readOnly={behandlingILesemodus}
-                                                resize
-                                                error={
-                                                    (
-                                                        errors as {
-                                                            tekstFraSaksbehandler?: {
-                                                                message?: string;
-                                                            };
-                                                        }
-                                                    ).tekstFraSaksbehandler?.message
-                                                }
-                                            />
-                                        </VStack>
-                                    ) : (
-                                        <>
-                                            {avsnitt.title && (
+                            <VStack className="max-w-xl" gap="space-24">
+                                <Heading level="3" size="medium">
+                                    {varselbrevtekster.overskrift}
+                                </Heading>
+                                {varselbrevtekster.avsnitter.map((avsnitt: Section) => (
+                                    <Fragment key={avsnitt.title}>
+                                        {avsnitt.title === 'Dette har skjedd' ? (
+                                            <VStack gap="space-16">
                                                 <Heading level="4" size="xsmall">
                                                     {avsnitt.title}
                                                 </Heading>
-                                            )}
-                                            <BodyLong size="small">{avsnitt.body}</BodyLong>
-                                        </>
-                                    )}
-                                </Fragment>
-                            ))}
+                                                <Textarea
+                                                    {...register('tekstFraSaksbehandler')}
+                                                    label="Legg til utdypende tekst"
+                                                    maxLength={4000}
+                                                    minRows={3}
+                                                    size="small"
+                                                    readOnly={behandlingILesemodus}
+                                                    resize
+                                                    error={
+                                                        (
+                                                            errors as {
+                                                                tekstFraSaksbehandler?: {
+                                                                    message?: string;
+                                                                };
+                                                            }
+                                                        ).tekstFraSaksbehandler?.message
+                                                    }
+                                                />
+                                            </VStack>
+                                        ) : (
+                                            <>
+                                                {avsnitt.title && (
+                                                    <Heading level="4" size="xsmall">
+                                                        {avsnitt.title}
+                                                    </Heading>
+                                                )}
+                                                <BodyLong size="small">{avsnitt.body}</BodyLong>
+                                            </>
+                                        )}
+                                    </Fragment>
+                                ))}
+                            </VStack>
                         </VStack>
                     </Box>
                 )}

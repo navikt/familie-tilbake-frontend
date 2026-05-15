@@ -4,6 +4,10 @@ import { Crypto } from '@peculiar/webcrypto';
 import { TextEncoder } from 'util';
 import { vi } from 'vitest';
 
+import { configureZod } from './frontend/utils/zodConfig';
+
+configureZod();
+
 global.console = {
     ...console,
     // uncomment to ignore a specific log level

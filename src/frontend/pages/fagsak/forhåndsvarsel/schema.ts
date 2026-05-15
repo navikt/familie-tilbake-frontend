@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const sendSchema = z.object({
     valg: z.literal('send'),
-    tekstFraSaksbehandler: z.string().trim().min(1, 'Du må fylle ut teksten').max(4000),
+    tekstFraSaksbehandler: z.string().trim().min(1).max(4000),
 });
 
 const unntakSchema = z.object({
