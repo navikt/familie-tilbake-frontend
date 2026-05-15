@@ -16,11 +16,22 @@ type GlobalAlertState = {
     lukkAlert: (id: string) => void;
 };
 
-export const useGlobalAlertStore = create<GlobalAlertState>(set => ({
+const autoLukkEtterMs = 6000;
+
+const skalAutoLukke = (status: LocalAlertProps['status']): boolean =>
+    status !== 'error' && status !== 'warning';
+
+export const useGlobalAlertStore = create<GlobalAlertState>((set, get) => ({
     alerts: [],
     visAlert: (alert): void => {
         const id = crypto.randomUUID();
         set(() => ({ alerts: [{ ...alert, id }] }));
+
+        if (skalAutoLukke(alert.status)) {
+            globalThis.setTimeout((): void => {
+                get().lukkAlert(id);
+            }, autoLukkEtterMs);
+        }
     },
     lukkAlert: (id): void => {
         set(state => ({ alerts: state.alerts.filter(alert => alert.id !== id) }));
