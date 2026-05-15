@@ -137,7 +137,7 @@ export const Forhåndsvarsel: FC = () => {
                         aria-hidden={!visForhåndsvisningsknapp}
                         tabIndex={visForhåndsvisningsknapp ? 0 : -1}
                     >
-                        Forhåndsvis
+                        Vis brevet
                     </Button>
                 )}
             </HStack>
