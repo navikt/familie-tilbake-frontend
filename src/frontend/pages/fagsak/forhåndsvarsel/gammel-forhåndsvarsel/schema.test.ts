@@ -1,15 +1,9 @@
-import { configureZod } from '~/utils/zodConfig';
-
 import {
     forhåndsvarselSchema,
     uttalelseSchema,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
 } from './schema';
-
-beforeAll(() => {
-    configureZod();
-});
 
 describe('Overskriving av feilmeldinger i forhåndsvarsel-skjema', () => {
     test('skalSendesForhåndsvarsel', () => {
