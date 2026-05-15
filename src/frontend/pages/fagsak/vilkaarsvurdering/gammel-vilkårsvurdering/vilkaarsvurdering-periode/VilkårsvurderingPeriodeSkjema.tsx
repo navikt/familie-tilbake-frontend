@@ -417,6 +417,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     <AktsomhetsvurderingSkjema
                                         skjema={skjema}
                                         erLesevisning={erLesevisning}
+                                        harFlerePerioder={perioder.length > 1}
                                     />
                                 )}
                             </>
