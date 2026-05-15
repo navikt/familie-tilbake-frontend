@@ -7,11 +7,7 @@ import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema';
-import {
-    jaNeiOptions,
-    OptionJA,
-    OptionNEI,
-} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { jaNeiOptions } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 type Props = {
     kanIlleggeRenter: boolean;
@@ -30,14 +26,12 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
 }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
-    const kanIleggeRenterValue = kanIlleggeRenter ? OptionJA : OptionNEI;
-    const value = !erFeilaktigEllerMangelfull ? felt.verdi : kanIleggeRenterValue;
 
     return (
         <RadioGroup
             id="skalDetTilleggesRenter"
             legend="Skal det beregnes 10% rentetillegg?"
-            value={value}
+            value={felt.verdi}
             size="small"
             aria-live="polite"
             readOnly={readOnly || !kanIlleggeRenter || (erFeilaktigEllerMangelfull && erNyModell)}

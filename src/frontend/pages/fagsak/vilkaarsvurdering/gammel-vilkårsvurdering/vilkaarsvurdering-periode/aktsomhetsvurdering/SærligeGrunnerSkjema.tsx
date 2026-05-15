@@ -5,13 +5,21 @@ import { Checkbox, CheckboxGroup, Radio, Textarea, RadioGroup } from '@navikt/ds
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { Valideringsstatus } from '~/hooks/skjema';
-import { SærligeGrunner, særligegrunner, særligeGrunnerTyper } from '~/kodeverk';
+import {
+    Aktsomhet,
+    SærligeGrunner,
+    særligegrunner,
+    særligeGrunnerTyper,
+    Vilkårsresultat,
+} from '~/kodeverk';
 import {
     jaNeiOptions,
+    OptionJA,
     OptionNEI,
     type JaNeiOption,
     type VilkårsvurderingSkjemaDefinisjon,
 } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 
 import { ReduksjonAvBeløpSkjema } from './ReduksjonAvBeløpSkjema';
 
@@ -22,6 +30,22 @@ type Props = {
 
 export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
+    const { kanIlleggeRenter } = useVilkårsvurdering();
+
+    const erFeilaktigEllerMangelfull =
+        skjema.felter.vilkårsresultatvurdering.verdi ===
+            Vilkårsresultat.FeilOpplysningerFraBruker ||
+        skjema.felter.vilkårsresultatvurdering.verdi ===
+            Vilkårsresultat.MangelfulleOpplysningerFraBruker;
+
+    const erGrovtUaktsomt = skjema.felter.aktsomhetVurdering.verdi === Aktsomhet.GrovtUaktsomt;
+
+    const utledGrovtUaktsomIlleggeRenterVerdi = (): JaNeiOption => {
+        if (erFeilaktigEllerMangelfull && erGrovtUaktsomt) {
+            return kanIlleggeRenter ? OptionJA : OptionNEI;
+        }
+        return OptionNEI;
+    };
 
     const onChangeSærligeGrunner = (val: SærligeGrunner[]): void => {
         skjema.felter.særligeGrunner.validerOgSettFelt(val);
@@ -88,7 +112,9 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                         : ''
                 }
                 onChange={(val: JaNeiOption) => {
-                    skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(OptionNEI);
+                    skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(
+                        utledGrovtUaktsomIlleggeRenterVerdi()
+                    );
                     setIkkePersistertKomponent('vilkårsvurdering');
                     return skjema.felter.harGrunnerTilReduksjon.validerOgSettFelt(val);
                 }}
