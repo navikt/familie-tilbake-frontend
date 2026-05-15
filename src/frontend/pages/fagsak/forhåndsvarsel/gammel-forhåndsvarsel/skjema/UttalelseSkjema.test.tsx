@@ -16,7 +16,6 @@ import {
     lagForhåndsvarselMutations,
 } from '~/testdata/forhåndsvarselFactory';
 import { createTestQueryClient } from '~/testutils/queryTestUtils';
-import { configureZod } from '~/utils/zodConfig';
 
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),
@@ -42,10 +41,6 @@ const renderBrukeruttalelse = (): RenderResult => {
         </FagsakContext>
     );
 };
-
-beforeAll(() => {
-    configureZod();
-});
 
 describe('Brukeruttalelse', () => {
     beforeEach(() => {

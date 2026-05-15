@@ -124,13 +124,9 @@ export const IkkeVurdert: FC<Props> = ({ onSubmit, onValgEndring }) => {
                                                     readOnly={behandlingILesemodus}
                                                     resize
                                                     error={
-                                                        (
-                                                            errors as {
-                                                                tekstFraSaksbehandler?: {
-                                                                    message?: string;
-                                                                };
-                                                            }
-                                                        ).tekstFraSaksbehandler?.message
+                                                        'tekstFraSaksbehandler' in errors
+                                                            ? errors.tekstFraSaksbehandler?.message
+                                                            : undefined
                                                     }
                                                 />
                                             </VStack>

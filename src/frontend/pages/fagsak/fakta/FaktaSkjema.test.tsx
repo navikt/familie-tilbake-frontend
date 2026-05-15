@@ -11,7 +11,6 @@ import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
 import { createTestQueryClient } from '~/testutils/queryTestUtils';
-import { configureZod } from '~/utils/zodConfig';
 
 import { FaktaSkjema } from './FaktaSkjema';
 
@@ -94,10 +93,6 @@ const renderFakta = (
         mutationBody,
     };
 };
-
-beforeAll(() => {
-    configureZod();
-});
 
 describe('Fakta om feilutbetaling', () => {
     describe('Rettslig grunnlag', () => {
