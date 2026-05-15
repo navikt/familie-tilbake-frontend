@@ -1,3 +1,4 @@
+import type { TagProps } from '@navikt/ds-react';
 import type { RenderResult } from '@testing-library/react';
 import type {
     BehandlingDto,
@@ -55,10 +56,10 @@ describe('Faktaboks', () => {
         expect(screen.queryByText('Revurderingsårsak')).not.toBeInTheDocument();
     });
 
-    test.each<[BehandlingstatusEnum, string]>([
+    test.each<[BehandlingstatusEnum, TagProps['data-color']]>([
         ['OPPRETTET', 'neutral'],
         ['UTREDES', 'info'],
-        ['FATTER_VEDTAK', 'meta-purple'],
+        ['FATTER_VEDTAK', 'brand-beige'],
         ['IVERKSETTER_VEDTAK', 'meta-lime'],
         ['AVSLUTTET', 'success'],
     ])('Status tag variant %s', (status, forventetDataColor) => {
@@ -69,10 +70,10 @@ describe('Faktaboks', () => {
         expect(tag?.getAttribute('data-color')).toBe(forventetDataColor);
     });
 
-    test.each<[BehandlingsresultatstypeEnum, string]>([
+    test.each<[BehandlingsresultatstypeEnum, TagProps['data-color']]>([
         ['HENLAGT', 'danger'],
-        ['INGEN_TILBAKEBETALING', 'warning'],
-        ['DELVIS_TILBAKEBETALING', 'warning'],
+        ['INGEN_TILBAKEBETALING', 'brand-magenta'],
+        ['DELVIS_TILBAKEBETALING', 'meta-purple'],
         ['FULL_TILBAKEBETALING', 'info'],
     ])('Resultat tag variant %s', (resultat, forventetDataColor) => {
         renderFaktaboks({ resultatstype: resultat });

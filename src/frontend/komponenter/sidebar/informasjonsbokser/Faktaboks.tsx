@@ -104,50 +104,42 @@ export const Faktaboks: FC<Props> = ({ open, onToggle }) => {
 const STATUS_META = {
     OPPRETTET: {
         dataColor: 'neutral',
-        variant: 'moderate',
         icon: FilePlusIcon,
     },
     UTREDES: {
         dataColor: 'info',
-        variant: 'moderate',
         icon: FileLoadingIcon,
     },
     FATTER_VEDTAK: {
-        dataColor: 'meta-purple',
-        variant: 'moderate',
+        dataColor: 'brand-beige',
         icon: TasklistIcon,
     },
     IVERKSETTER_VEDTAK: {
         dataColor: 'meta-lime',
-        variant: 'moderate',
         icon: TasklistSendIcon,
     },
     JOURNALFØR_VEDTAK: {
         dataColor: 'neutral',
-        variant: 'moderate',
         icon: FilePlusIcon,
     },
     DISTRIUBER_VEDTAK: {
         dataColor: 'neutral',
-        variant: 'moderate',
         icon: FilePlusIcon,
     },
     AVSLUTTET: {
         dataColor: 'success',
-        variant: 'moderate',
         icon: FileCheckmarkIcon,
     },
 } satisfies Record<
     BehandlingstatusEnum,
     {
         dataColor: TagProps['data-color'];
-        variant: TagProps['variant'];
         icon: ComponentType;
     }
 >;
 
 const StatusTag: FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
-    const { dataColor, variant, icon: StatusIkon } = STATUS_META[status];
+    const { dataColor, icon: StatusIkon } = STATUS_META[status];
     return (
         <>
             <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
@@ -155,7 +147,7 @@ const StatusTag: FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
                 Status
             </dt>
             <dd className="text-ax-medium items-center flex">
-                <Tag size="small" data-color={dataColor} variant={variant}>
+                <Tag size="small" data-color={dataColor} variant="moderate">
                     {behandlingsstatuser[status]}
                 </Tag>
             </dd>
@@ -163,25 +155,22 @@ const StatusTag: FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
     );
 };
 
-const RESULTAT_META: Record<
-    BehandlingsresultatstypeEnum,
-    { dataColor: TagProps['data-color']; variant: TagProps['variant'] }
-> = {
-    HENLAGT: { dataColor: 'danger', variant: 'moderate' },
-    HENLAGT_FEILOPPRETTET: { dataColor: 'danger', variant: 'moderate' },
-    HENLAGT_FEILOPPRETTET_MED_BREV: { dataColor: 'danger', variant: 'moderate' },
-    HENLAGT_FEILOPPRETTET_UTEN_BREV: { dataColor: 'danger', variant: 'moderate' },
-    HENLAGT_KRAVGRUNNLAG_NULLSTILT: { dataColor: 'danger', variant: 'moderate' },
-    HENLAGT_TEKNISK_VEDLIKEHOLD: { dataColor: 'danger', variant: 'moderate' },
-    HENLAGT_MANGLENDE_KRAVGRUNNLAG: { dataColor: 'danger', variant: 'moderate' },
-    IKKE_FASTSATT: { dataColor: 'danger', variant: 'moderate' },
-    INGEN_TILBAKEBETALING: { dataColor: 'warning', variant: 'moderate' },
-    DELVIS_TILBAKEBETALING: { dataColor: 'warning', variant: 'moderate' },
-    FULL_TILBAKEBETALING: { dataColor: 'info', variant: 'moderate' },
+export const RESULTAT_META: Record<BehandlingsresultatstypeEnum, TagProps['data-color']> = {
+    HENLAGT: 'danger',
+    HENLAGT_FEILOPPRETTET: 'danger',
+    HENLAGT_FEILOPPRETTET_MED_BREV: 'danger',
+    HENLAGT_FEILOPPRETTET_UTEN_BREV: 'danger',
+    HENLAGT_KRAVGRUNNLAG_NULLSTILT: 'danger',
+    HENLAGT_TEKNISK_VEDLIKEHOLD: 'danger',
+    HENLAGT_MANGLENDE_KRAVGRUNNLAG: 'danger',
+    IKKE_FASTSATT: 'danger',
+    INGEN_TILBAKEBETALING: 'brand-magenta',
+    DELVIS_TILBAKEBETALING: 'meta-purple',
+    FULL_TILBAKEBETALING: 'info',
 };
 
 const ResultatTag: FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat }) => {
-    const { dataColor, variant } = RESULTAT_META[resultat];
+    const dataColor = RESULTAT_META[resultat];
     return (
         <>
             <dt className="shrink-0text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
@@ -189,7 +178,7 @@ const ResultatTag: FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat 
                 Resultat
             </dt>
             <dd className="text-ax-medium items-center flex">
-                <Tag size="small" data-color={dataColor} variant={variant}>
+                <Tag size="small" data-color={dataColor} variant="moderate">
                     {behandlingsresultater[resultat]}
                 </Tag>
             </dd>
