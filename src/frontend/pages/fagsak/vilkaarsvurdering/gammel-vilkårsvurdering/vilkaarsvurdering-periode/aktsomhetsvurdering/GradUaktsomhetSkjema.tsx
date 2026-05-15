@@ -14,9 +14,10 @@ import { SærligeGrunnerSkjema } from './SærligeGrunnerSkjema';
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    harFlerePerioder: boolean;
 };
 
-export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning, harFlerePerioder }) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
@@ -82,15 +83,16 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                                 aria-live="polite"
                             />
                         )}
-                        {skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Unnlates && (
-                            <LocalAlert status="warning" aria-live="polite">
-                                <LocalAlert.Header>
-                                    <LocalAlert.Title>
-                                        Når 6. ledd anvendes må alle perioder behandles likt
-                                    </LocalAlert.Title>
-                                </LocalAlert.Header>
-                            </LocalAlert>
-                        )}
+                        {skjema.felter.unnlates4Rettsgebyr.verdi === SkalUnnlates.Unnlates &&
+                            harFlerePerioder && (
+                                <LocalAlert status="warning" aria-live="polite">
+                                    <LocalAlert.Header>
+                                        <LocalAlert.Title>
+                                            Når 6. ledd anvendes må alle perioder behandles likt
+                                        </LocalAlert.Title>
+                                    </LocalAlert.Header>
+                                </LocalAlert>
+                            )}
                     </>
                 )}
             {(skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.Uaktsomt ||

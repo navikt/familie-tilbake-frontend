@@ -19,9 +19,14 @@ import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';
 type Props = {
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>;
     erLesevisning: boolean;
+    harFlerePerioder: boolean;
 };
 
-export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const AktsomhetsvurderingSkjema: FC<Props> = ({
+    skjema,
+    erLesevisning,
+    harFlerePerioder,
+}) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
     const { kanIlleggeRenter } = useVilkårsvurdering();
@@ -149,7 +154,11 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({ skjema, erLesevisning }) 
             )}
             {skjema.felter.aktsomhetVurdering.verdi !== '' &&
                 skjema.felter.aktsomhetVurdering.verdi !== Aktsomhet.Forsettlig && (
-                    <GradUaktsomhetSkjema skjema={skjema} erLesevisning={erLesevisning} />
+                    <GradUaktsomhetSkjema
+                        skjema={skjema}
+                        erLesevisning={erLesevisning}
+                        harFlerePerioder={harFlerePerioder}
+                    />
                 )}
         </>
     );
