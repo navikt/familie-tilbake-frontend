@@ -2,9 +2,11 @@ import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 
-import { Heading, VStack } from '@navikt/ds-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Heading, HStack, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -17,7 +19,9 @@ import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
+import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
+import { ikkeVurdertSchema } from './schema';
 import { SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { Unntak } from './Unntak';
@@ -39,6 +43,10 @@ export const Forhåndsvarsel: FC = () => {
     const { forhaandsvarselSteg, brukeruttalelse } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
+    const methods = useForm<IkkeVurdertFormData>({
+        resolver: zodResolver(ikkeVurdertSchema),
+    });
+
     const sendVarselbrev = useMutation({
         ...behandlingSendVarselbrevMutation(),
         onSuccess: async () => {
@@ -50,7 +58,7 @@ export const Forhåndsvarsel: FC = () => {
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende forhåndsvarsel',
-                message: error.response?.data?.melding,
+                message: error.message,
                 status: 'error',
             });
         },
@@ -65,13 +73,21 @@ export const Forhåndsvarsel: FC = () => {
         }
     };
 
+    const visForhåndsvisning = forhaandsvarselSteg.type === 'ikke_vurdert' && valg === 'send';
+
     return (
         <VStack gap="space-24">
-            <Heading size="medium">Forhåndsvarsel</Heading>
             {forhaandsvarselSteg.type === 'ikke_vurdert' ? (
-                <IkkeVurdert onSubmit={onSubmit} onValgEndring={setValg} />
+                <FormProvider {...methods}>
+                    <HStack align="center" gap="space-16">
+                        <Heading size="medium">Forhåndsvarsel</Heading>
+                        {visForhåndsvisning && <ForhåndsvisVarselbrev />}
+                    </HStack>
+                    <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
+                </FormProvider>
             ) : (
                 <>
+                    <Heading size="medium">Forhåndsvarsel</Heading>
                     <SkalSendeForhåndsvarsel
                         name="valg"
                         value={forhaandsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
