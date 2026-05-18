@@ -10,16 +10,14 @@ import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
 import { MottakerType } from '~/typer/Brevmottaker';
-import { RessursStatus } from '~/typer/ressurs';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 
+const mockLagreBrevmottaker = vi.fn().mockResolvedValue({ success: true });
+
 vi.mock('~/hooks/useBrevmottakerApi', () => ({
     useBrevmottakerApi: vi.fn(() => ({
-        lagreBrevmottaker: vi.fn().mockResolvedValue({
-            status: RessursStatus.Suksess,
-            data: 'success',
-        }),
+        lagreBrevmottaker: mockLagreBrevmottaker,
     })),
 }));
 
@@ -481,6 +479,53 @@ describe('BrevmottakerFormModal', () => {
 
             test('Ved tomt land skal vise feilmelding', async () => {
                 await testDødsboLandValidering(user, mode);
+            });
+        });
+    });
+
+    describe('Innsending av Dødsbo med norsk adresse', () => {
+        beforeEach(async () => {
+            mockLagreBrevmottaker.mockResolvedValue({ success: true });
+            await renderBrevmottakerFormModal({ mode: 'leggTil' });
+        });
+
+        test('Sender postnummer og poststed i payload', async () => {
+            const select = screen.getByLabelText('Mottaker');
+            await user.selectOptions(select, MottakerType.Dødsbo);
+
+            await waitFor(() => {
+                expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
+            });
+
+            const landSelect = await screen.findByLabelText(/velg land/i);
+            await user.type(landSelect, 'Norge');
+            await user.keyboard('[ArrowDown][Enter]');
+
+            const adresseInput = await screen.findByLabelText(/adresselinje 1/i);
+            await user.type(adresseInput, 'Testveien 1');
+
+            const postnummerInput = await screen.findByLabelText(/postnummer/i);
+            await user.type(postnummerInput, '0123');
+
+            const poststedInput = await screen.findByLabelText(/poststed/i);
+            await user.type(poststedInput, 'Oslo');
+
+            const submitButton = screen.getByRole('button', { name: 'Legg til' });
+            await user.click(submitButton);
+
+            await waitFor(() => {
+                expect(mockLagreBrevmottaker).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: 'DØDSBO',
+                        manuellAdresseInfo: expect.objectContaining({
+                            postnummer: '0123',
+                            poststed: 'Oslo',
+                            landkode: 'NO',
+                            adresselinje1: 'Testveien 1',
+                        }),
+                    }),
+                    undefined
+                );
             });
         });
     });

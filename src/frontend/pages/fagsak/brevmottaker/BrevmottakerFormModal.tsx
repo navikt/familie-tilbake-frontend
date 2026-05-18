@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Brevmottaker } from '~/typer/Brevmottaker';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
+import { Alert, Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -71,6 +71,10 @@ export const BrevmottakerFormModal: FC<BrevmottakerFormModalProps> = ({
                 if (firstError) {
                     handleBrevmottakerError(formData, firstError.message);
                 }
+            } else {
+                const errorMessage =
+                    error instanceof Error ? error.message : 'En ukjent feil oppstod';
+                handleBrevmottakerError(formData, errorMessage);
             }
         }
     };
@@ -81,11 +85,17 @@ export const BrevmottakerFormModal: FC<BrevmottakerFormModalProps> = ({
                 setError('fullmektig.organisasjonsnummer', { message: errorMessage });
             } else if (data.fullmektig?.adresseKilde === AdresseKilde.OppslagRegister) {
                 setError('fullmektig.fødselsnummer', { message: errorMessage });
+            } else {
+                setError('root', { message: errorMessage });
             }
         } else if (data.mottakerType === MottakerType.Verge) {
             if (data.verge?.adresseKilde === AdresseKilde.OppslagRegister) {
                 setError('verge.fødselsnummer', { message: errorMessage });
+            } else {
+                setError('root', { message: errorMessage });
             }
+        } else {
+            setError('root', { message: errorMessage });
         }
     };
 
@@ -116,6 +126,11 @@ export const BrevmottakerFormModal: FC<BrevmottakerFormModalProps> = ({
                     {/* Må ha en min høyde for at select dropdown ikke skal overlappe */}
                     <Modal.Body style={{ minHeight: '500px' }}>
                         <VStack gap="space-16">
+                            {formState.errors.root?.message && (
+                                <Alert variant="error" size="small">
+                                    {formState.errors.root.message}
+                                </Alert>
+                            )}
                             <Fieldset legend={tekster.beskrivelse} hideLegend>
                                 <VStack gap="space-32">
                                     <Select
