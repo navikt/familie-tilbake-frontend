@@ -13,8 +13,8 @@ type RentekstElement = { type: 'rentekst'; tekst: string };
 
 export const vedtaksresultatFarger: Record<Vedtaksresultat, TagProps['data-color']> = {
     DelvisTilbakebetaling: 'meta-purple',
-    IngenTilbakebetaling: 'brand-beige',
-    FullTilbakebetaling: 'meta-lime',
+    IngenTilbakebetaling: 'brand-magenta',
+    FullTilbakebetaling: 'info',
 };
 
 export const elementArrayTilTekst = (
