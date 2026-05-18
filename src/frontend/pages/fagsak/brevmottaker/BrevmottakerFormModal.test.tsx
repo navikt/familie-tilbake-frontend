@@ -1,7 +1,7 @@
 import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -45,6 +45,97 @@ const renderBrevmottakerFormModal = async (
         )
     );
 };
+const adresseRadioGroup = (): HTMLElement => screen.getByRole('radiogroup', { name: /Adresse/i });
+const manuellRegistreringRadio = (): HTMLElement =>
+    within(adresseRadioGroup()).getByRole('radio', { name: 'Manuell registrering' });
+const oppslagIPersonregisterRadio = (): HTMLElement =>
+    within(adresseRadioGroup()).getByRole('radio', { name: 'Oppslag i personregister' });
+const oppslagIOrganisasjonsregisterRadio = (): HTMLElement =>
+    within(adresseRadioGroup()).getByRole('radio', { name: 'Oppslag i organisasjonsregister' });
+
+const velgLandCombobox = (): HTMLElement =>
+    screen.getByRole('combobox', { name: /velg land for brevmottaker/i });
+
+const mottakerCombobox = (): HTMLElement => screen.getByRole('combobox', { name: /mottaker/i });
+
+const navnInput = (): HTMLElement => screen.getByRole('textbox', { name: /navn/i });
+const adresseInput = (): HTMLElement => screen.getByRole('textbox', { name: /adresselinje 1/i });
+const adresse2Input = (): HTMLElement => screen.getByRole('textbox', { name: /adresselinje 2/i });
+const postnummerInput = (): HTMLElement => screen.getByRole('textbox', { name: /postnummer/i });
+const poststedInput = (): HTMLElement => screen.getByRole('textbox', { name: /poststed/i });
+const fødselsnummerInput = (): HTMLElement =>
+    screen.getByRole('textbox', { name: /fødselsnummer/i });
+
+const leggTilKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Legg til' });
+const lagreEndringerKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Lagre endringer' });
+
+const testManuellRegistreringFelter = async (user: UserEvent): Promise<void> => {
+    await user.click(manuellRegistreringRadio());
+    expect(navnInput()).toBeInTheDocument();
+    expect(velgLandCombobox()).toBeInTheDocument();
+};
+
+const testManuellRegistreringMedUtenlandskAdresse = async (user: UserEvent): Promise<void> => {
+    await user.click(manuellRegistreringRadio());
+    await user.type(velgLandCombobox(), 'Sverige');
+    await user.keyboard('[ArrowDown][Enter]');
+
+    expect(adresseInput()).toBeInTheDocument();
+    expect(adresse2Input()).toBeInTheDocument();
+};
+
+const testManuellRegistreringMedNorsk = async (user: UserEvent): Promise<void> => {
+    await user.click(manuellRegistreringRadio());
+    await user.type(velgLandCombobox(), 'Norge');
+    await user.keyboard('[ArrowDown][Enter]');
+
+    expect(adresseInput()).toBeInTheDocument();
+    expect(adresse2Input()).toBeInTheDocument();
+    expect(postnummerInput()).toBeInTheDocument();
+    expect(poststedInput()).toBeInTheDocument();
+};
+
+const testOppslagIPersonregister = async (user: UserEvent): Promise<void> => {
+    await user.click(oppslagIPersonregisterRadio());
+    expect(fødselsnummerInput()).toBeInTheDocument();
+};
+
+const selectMottakerAndWaitForRender = async (
+    user: UserEvent,
+    mottakerType: MottakerType
+): Promise<void> => {
+    await user.selectOptions(mottakerCombobox(), mottakerType);
+
+    if (
+        mottakerType === MottakerType.BrukerMedUtenlandskAdresse ||
+        mottakerType === MottakerType.Dødsbo
+    ) {
+        expect(navnInput()).toBeInTheDocument();
+    } else if (mottakerType === MottakerType.Fullmektig || mottakerType === MottakerType.Verge) {
+        expect(screen.getByRole('radiogroup', { name: /adresse|verge/i })).toBeInTheDocument();
+    }
+};
+
+const testRadioValidering = async (user: UserEvent, mode: 'endre' | 'leggTil'): Promise<void> => {
+    const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
+    await user.click(submitButton);
+
+    expect(screen.getByText('Du må velge en adressetype')).toBeInTheDocument();
+};
+
+const testManuellRegistreringUtenLand = async (
+    user: UserEvent,
+    mode: 'endre' | 'leggTil',
+    navn = 'Test Navn'
+): Promise<void> => {
+    await user.click(manuellRegistreringRadio());
+    await user.type(navnInput(), navn);
+    const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
+    await user.click(submitButton);
+
+    expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
+};
 
 describe('BrevmottakerFormModal', () => {
     let user: UserEvent;
@@ -55,258 +146,39 @@ describe('BrevmottakerFormModal', () => {
     });
 
     describe('Grunnleggende rendering', () => {
-        test('Viser modal med riktig tittel for legg til modus', () => {
-            renderBrevmottakerFormModal({ mode: 'leggTil' });
+        test('Viser modal med riktig tittel for legg til modus', async () => {
+            await renderBrevmottakerFormModal({ mode: 'leggTil' });
             expect(screen.getByText('Legg til brevmottaker')).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: 'Legg til' })).toBeInTheDocument();
+            expect(leggTilKnapp()).toBeInTheDocument();
         });
 
-        test('Viser modal med riktig tittel for endre modus', () => {
-            renderBrevmottakerFormModal({ mode: 'endre' });
+        test('Viser modal med riktig tittel for endre modus', async () => {
+            await renderBrevmottakerFormModal({ mode: 'endre' });
             expect(screen.getByText('Endre brevmottaker')).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: 'Lagre endringer' })).toBeInTheDocument();
+            expect(lagreEndringerKnapp()).toBeInTheDocument();
         });
 
-        test('Viser ikke modal når visBrevmottakerModal er false', () => {
+        test('Viser ikke modal når visBrevmottakerModal er false', async () => {
             renderBrevmottakerFormModal({ visBrevmottakerModal: false });
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
 
         test('leggTil modus har ingen default valgt - bruker må velge', async () => {
-            const { getByLabelText } = await renderBrevmottakerFormModal({ mode: 'leggTil' });
-
-            const select = getByLabelText('Mottaker') as HTMLSelectElement;
-
-            expect(select.value).toBe('');
-
-            expect(screen.queryByLabelText(/navn/i)).not.toBeInTheDocument();
-            expect(screen.queryByLabelText(/velg land for brevmottaker/i)).not.toBeInTheDocument();
+            await renderBrevmottakerFormModal({ mode: 'leggTil' });
+            expect(mottakerCombobox()).toHaveValue('');
+            expect(screen.queryByRole('textbox', { name: /navn/i })).not.toBeInTheDocument();
+            expect(
+                screen.queryByRole('combobox', { name: /velg land for brevmottaker/i })
+            ).not.toBeInTheDocument();
         });
     });
-
-    const testManuellRegistreringFelter = async (user: UserEvent): Promise<void> => {
-        const manuellRadio = await screen.findByLabelText('Manuell registrering');
-        await user.click(manuellRadio);
-
-        expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/velg land/i)).toBeInTheDocument();
-    };
-
-    const testManuellRegistreringMedUtenlandskAdresse = async (user: UserEvent): Promise<void> => {
-        const manuellRadio = await screen.findByLabelText('Manuell registrering');
-        await user.click(manuellRadio);
-
-        const landSelect = await screen.findByLabelText(/velg land/i);
-        await user.type(landSelect, 'Sverige');
-        await user.keyboard('[ArrowDown][Enter]');
-
-        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-    };
-
-    const testManuellRegistreringMedNorsk = async (user: UserEvent): Promise<void> => {
-        const manuellRadio = await screen.findByLabelText('Manuell registrering');
-        await user.click(manuellRadio);
-
-        const landSelect = await screen.findByLabelText(/velg land/i);
-        await user.type(landSelect, 'Norge');
-        await user.keyboard('[ArrowDown][Enter]');
-
-        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/postnummer/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/poststed/i)).toBeInTheDocument();
-    };
-
-    const testOppslagIPersonregister = async (user: UserEvent): Promise<void> => {
-        const personregisterRadio = await screen.findByLabelText('Oppslag i personregister');
-        await user.click(personregisterRadio);
-
-        expect(screen.getByLabelText(/fødselsnummer/i)).toBeInTheDocument();
-    };
-
-    const testLandvelgerMedNorge = async (user: UserEvent): Promise<void> => {
-        const landSelect = await screen.findByLabelText(/velg land/i);
-        await user.type(landSelect, 'Norge');
-        await user.keyboard('[ArrowDown][Enter]');
-
-        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/postnummer/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/poststed/i)).toBeInTheDocument();
-    };
-
-    const expectNavnfeltReadonly = (): void => {
-        const navnFelt = screen.getByLabelText(/navn/i);
-        expect(navnFelt).toBeInTheDocument();
-        expect(navnFelt).toHaveAttribute('readonly');
-        expect(navnFelt).toHaveValue('Test Bruker');
-    };
-
-    const expectLandvalgUtenNorge = (): void => {
-        const landSelect = screen.getByLabelText(/velg land for brevmottaker/i);
-        expect(landSelect).toBeInTheDocument();
-
-        const options = landSelect.querySelectorAll('option');
-        const norgeOption = Array.from(options).find(option =>
-            option.textContent?.toLowerCase().includes('norge')
-        );
-        expect(norgeOption).toBeUndefined();
-    };
-
-    const expectAdresseFelterEtterLandvalg = async (user: UserEvent): Promise<void> => {
-        const landSelect = await screen.findByLabelText(/velg land for brevmottaker/i);
-        await user.type(landSelect, 'Sverige');
-        await user.keyboard('[ArrowDown][Enter]');
-
-        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-    };
-
-    const selectMottakerAndWaitForRender = async (
-        user: UserEvent,
-        mottakerType: MottakerType
-    ): Promise<void> => {
-        const select = screen.getByLabelText('Mottaker');
-        await user.selectOptions(select, mottakerType);
-
-        if (mottakerType === MottakerType.BrukerMedUtenlandskAdresse) {
-            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-        } else if (
-            mottakerType === MottakerType.Fullmektig ||
-            mottakerType === MottakerType.Verge
-        ) {
-            expect(screen.getByRole('radiogroup', { name: /adresse|verge/i })).toBeInTheDocument();
-        } else if (mottakerType === MottakerType.Dødsbo) {
-            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-        }
-    };
-
-    const expectFullmektigRadiogruppe = (): void => {
-        expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
-        expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
-        expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
-        expect(screen.getByText('Oppslag i organisasjonsregister')).toBeInTheDocument();
-    };
-
-    const expectOrganisasjonsregisterFelter = async (user: UserEvent): Promise<void> => {
-        const orgRegisterRadio = await screen.findByLabelText('Oppslag i organisasjonsregister');
-        await user.click(orgRegisterRadio);
-
-        expect(screen.getByLabelText(/organisasjonsnummer/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/kontaktperson i organisasjonen/i)).toBeInTheDocument();
-    };
-
-    const expectVergeRadiogruppe = (): void => {
-        expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
-        expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
-        expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
-        expect(screen.queryByText('Oppslag i organisasjonsregister')).not.toBeInTheDocument();
-    };
-
-    const testRadioValidering = async (
-        user: UserEvent,
-        mode: 'endre' | 'leggTil'
-    ): Promise<void> => {
-        const submitButton = screen.getByRole('button', {
-            name: mode === 'leggTil' ? 'Legg til' : 'Lagre endringer',
-        });
-        await user.click(submitButton);
-
-        expect(screen.getByText('Du må velge en adressetype')).toBeInTheDocument();
-    };
-
-    const testManuellRegistreringUtenLand = async (
-        user: UserEvent,
-        mode: 'endre' | 'leggTil',
-        navn = 'Test Navn'
-    ): Promise<void> => {
-        const manuellRadio = await screen.findByLabelText('Manuell registrering');
-        await user.click(manuellRadio);
-
-        const navnInput = await screen.findByLabelText(/navn/i);
-        await user.type(navnInput, navn);
-
-        const submitButton = screen.getByRole('button', {
-            name: mode === 'leggTil' ? 'Legg til' : 'Lagre endringer',
-        });
-        await user.click(submitButton);
-
-        expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
-    };
-
-    const testPostnummerValidering = async (
-        user: UserEvent,
-        mode: 'endre' | 'leggTil'
-    ): Promise<void> => {
-        const manuellRadio = await screen.findByLabelText('Manuell registrering');
-        await user.click(manuellRadio);
-
-        const navnInput = await screen.findByLabelText(/navn/i);
-        await user.type(navnInput, 'Test Navn');
-
-        const landSelect = await screen.findByLabelText(/velg land/i);
-        await user.type(landSelect, 'Norge');
-        await user.keyboard('[ArrowDown][Enter]');
-
-        const adresseInput = await screen.findByLabelText(/adresselinje 1/i);
-        await user.type(adresseInput, 'Test Adresse 123');
-
-        const postnummerInput = await screen.findByLabelText(/postnummer/i);
-        await user.type(postnummerInput, 'abc123');
-
-        const poststedInput = await screen.findByLabelText(/poststed/i);
-        await user.type(poststedInput, 'Oslo');
-
-        const submitButton = screen.getByRole('button', {
-            name: mode === 'leggTil' ? 'Legg til' : 'Lagre endringer',
-        });
-        await user.click(submitButton);
-
-        expect(screen.getByText('Postnummer må være 4 siffer')).toBeInTheDocument();
-    };
-
-    const testFødselsnummerValidering = async (
-        user: UserEvent,
-        mode: 'endre' | 'leggTil'
-    ): Promise<void> => {
-        const personregisterRadio = await screen.findByLabelText('Oppslag i personregister');
-        await user.click(personregisterRadio);
-
-        const fødselsnummerInput = await screen.findByLabelText(/fødselsnummer/i);
-        await user.type(fødselsnummerInput, '1234567890');
-
-        const submitButton = screen.getByRole('button', {
-            name: mode === 'leggTil' ? 'Legg til' : 'Lagre endringer',
-        });
-        await user.click(submitButton);
-
-        expect(
-            screen.getByText('Fødselsnummer må være 11 sammenhengende siffer')
-        ).toBeInTheDocument();
-    };
-
-    const testDødsboLandValidering = async (
-        user: UserEvent,
-        mode: 'endre' | 'leggTil'
-    ): Promise<void> => {
-        const navnInput = await screen.findByLabelText(/navn/i);
-        await user.type(navnInput, 'Test Dødsbo');
-
-        const submitButton = screen.getByRole('button', {
-            name: mode === 'leggTil' ? 'Legg til' : 'Lagre endringer',
-        });
-        await user.click(submitButton);
-
-        expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
-    };
 
     describe.each([
         { mode: 'endre' as const, modeDisplayName: 'Redigere brevmottaker' },
         { mode: 'leggTil' as const, modeDisplayName: 'Opprette brevmottaker' },
     ])('$modeDisplayName (mode: $mode)', ({ mode }) => {
-        beforeEach(() => {
-            renderBrevmottakerFormModal({ mode });
+        beforeEach(async () => {
+            await renderBrevmottakerFormModal({ mode });
         });
 
         describe('Bruker med utenlandsk adresse', () => {
@@ -315,15 +187,24 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Navnefelt skal være readonly og fyllt med brukerens navn', async () => {
-                await expectNavnfeltReadonly();
+                expect(navnInput()).toHaveAttribute('readonly');
+                expect(navnInput()).toHaveValue('Test Bruker');
             });
 
             test('Skal vise Landevelger og Norge skal ikke være i listen', async () => {
-                await expectLandvalgUtenNorge();
+                const options = velgLandCombobox().querySelectorAll('option');
+                const norgeOption = Array.from(options).find(option =>
+                    option.textContent?.toLowerCase().includes('norge')
+                );
+                expect(norgeOption).toBeUndefined();
             });
 
             test('Når Land er valgt skal det finnes adresselinje felter', async () => {
-                await expectAdresseFelterEtterLandvalg(user);
+                await user.type(velgLandCombobox(), 'Sverige');
+                await user.keyboard('[ArrowDown][Enter]');
+
+                expect(adresseInput()).toBeInTheDocument();
+                expect(adresse2Input()).toBeInTheDocument();
             });
         });
 
@@ -333,7 +214,9 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Skal vise radiogruppe med korrekte valg', async () => {
-                await expectFullmektigRadiogruppe();
+                expect(manuellRegistreringRadio()).toBeInTheDocument();
+                expect(oppslagIPersonregisterRadio()).toBeInTheDocument();
+                expect(oppslagIOrganisasjonsregisterRadio()).toBeInTheDocument();
             });
 
             test('Manuell registrering skal vise navn og land felter', async () => {
@@ -353,7 +236,12 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Oppslag i organisasjonsregister viser org.nr og kontaktperson', async () => {
-                await expectOrganisasjonsregisterFelter(user);
+                await user.click(oppslagIOrganisasjonsregisterRadio());
+
+                expect(screen.getByLabelText(/organisasjonsnummer/i)).toBeInTheDocument();
+                expect(
+                    screen.getByLabelText(/kontaktperson i organisasjonen/i)
+                ).toBeInTheDocument();
             });
 
             test('Trykker på submit uten å ha valgt radio, skal vise feilmelding', async () => {
@@ -365,11 +253,35 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Manuell registrering Norge skal validere postnummer', async () => {
-                await testPostnummerValidering(user, mode);
+                await user.click(manuellRegistreringRadio());
+
+                await user.type(navnInput(), 'Test Navn');
+
+                await user.type(velgLandCombobox(), 'Norge');
+                await user.keyboard('[ArrowDown][Enter]');
+
+                await user.type(adresseInput(), 'Test Adresse 123');
+
+                await user.type(postnummerInput(), 'abc123');
+
+                await user.type(poststedInput(), 'Oslo');
+
+                const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
+                await user.click(submitButton);
+
+                expect(screen.getByText('Postnummer må være 4 siffer')).toBeInTheDocument();
             });
 
             test('Oppslag personregister med ugyldig nummer skal vise feilmelding', async () => {
-                await testFødselsnummerValidering(user, mode);
+                await user.click(oppslagIPersonregisterRadio());
+
+                await user.type(fødselsnummerInput(), '1234567890');
+                const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
+                await user.click(submitButton);
+
+                expect(
+                    screen.getByText('Fødselsnummer må være 11 sammenhengende siffer')
+                ).toBeInTheDocument();
             });
 
             test.todo('Oppslag personregister skal trimme mellomrom fra organisasjonsnummer');
@@ -381,7 +293,12 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Skal vise radiogruppe uten organisasjonsregister valg', async () => {
-                await expectVergeRadiogruppe();
+                expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
+                expect(manuellRegistreringRadio()).toBeInTheDocument();
+                expect(oppslagIPersonregisterRadio()).toBeInTheDocument();
+                expect(
+                    screen.queryByRole('radio', { name: 'Oppslag i organisasjonsregister' })
+                ).not.toBeInTheDocument();
             });
 
             test('Manuell registrering skal vise navn og land felter', async () => {
@@ -415,22 +332,31 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Navn felt er disabled med brukerens navn v/dødsbo', () => {
-                const navnFelt = screen.getByLabelText(/navn/i);
-                expect(navnFelt).toBeInTheDocument();
-                expect(navnFelt).toHaveAttribute('readonly');
-                expect(navnFelt).toHaveValue('Test Bruker v/dødsbo');
+                expect(navnInput()).toHaveAttribute('readonly');
+                expect(navnInput()).toHaveValue('Test Bruker v/dødsbo');
             });
 
             test('Skal vise land felt', () => {
-                expect(screen.getByLabelText(/velg land/i)).toBeInTheDocument();
+                expect(velgLandCombobox()).toBeInTheDocument();
             });
 
             test('Valg av Norge viser alle adressefelter', async () => {
-                await testLandvelgerMedNorge(user);
+                await user.type(velgLandCombobox(), 'Norge');
+                await user.keyboard('[ArrowDown][Enter]');
+
+                expect(adresseInput()).toBeInTheDocument();
+                expect(adresse2Input()).toBeInTheDocument();
+                expect(postnummerInput()).toBeInTheDocument();
+                expect(poststedInput()).toBeInTheDocument();
             });
 
             test('Ved tomt land skal vise feilmelding', async () => {
-                await testDødsboLandValidering(user, mode);
+                await user.type(navnInput(), 'Test Dødsbo');
+
+                const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
+                await user.click(submitButton);
+
+                expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
             });
         });
     });
@@ -442,26 +368,17 @@ describe('BrevmottakerFormModal', () => {
         });
 
         test('Sender postnummer og poststed i payload', async () => {
-            const select = screen.getByLabelText('Mottaker');
-            await user.selectOptions(select, MottakerType.Dødsbo);
+            await user.selectOptions(mottakerCombobox(), MottakerType.Dødsbo);
 
-            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
+            expect(navnInput()).toBeInTheDocument();
 
-            const landSelect = await screen.findByLabelText(/velg land/i);
-            await user.type(landSelect, 'Norge');
+            await user.type(velgLandCombobox(), 'Norge');
             await user.keyboard('[ArrowDown][Enter]');
 
-            const adresseInput = await screen.findByLabelText(/adresselinje 1/i);
-            await user.type(adresseInput, 'Testveien 1');
-
-            const postnummerInput = await screen.findByLabelText(/postnummer/i);
-            await user.type(postnummerInput, '0123');
-
-            const poststedInput = await screen.findByLabelText(/poststed/i);
-            await user.type(poststedInput, 'Oslo');
-
-            const submitButton = screen.getByRole('button', { name: 'Legg til' });
-            await user.click(submitButton);
+            await user.type(adresseInput(), 'Testveien 1');
+            await user.type(postnummerInput(), '0123');
+            await user.type(poststedInput(), 'Oslo');
+            await user.click(leggTilKnapp());
 
             expect(mockLagreBrevmottaker).toHaveBeenCalledWith(
                 expect.objectContaining({
