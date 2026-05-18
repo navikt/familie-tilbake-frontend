@@ -88,10 +88,8 @@ describe('BrevmottakerFormModal', () => {
         const manuellRadio = await screen.findByLabelText('Manuell registrering');
         await user.click(manuellRadio);
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/velg land/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/velg land/i)).toBeInTheDocument();
     };
 
     const testManuellRegistreringMedUtenlandskAdresse = async (user: UserEvent): Promise<void> => {
@@ -102,10 +100,8 @@ describe('BrevmottakerFormModal', () => {
         await user.type(landSelect, 'Sverige');
         await user.keyboard('[ArrowDown][Enter]');
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
     };
 
     const testManuellRegistreringMedNorsk = async (user: UserEvent): Promise<void> => {
@@ -116,21 +112,17 @@ describe('BrevmottakerFormModal', () => {
         await user.type(landSelect, 'Norge');
         await user.keyboard('[ArrowDown][Enter]');
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/postnummer/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/poststed/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/postnummer/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/poststed/i)).toBeInTheDocument();
     };
 
     const testOppslagIPersonregister = async (user: UserEvent): Promise<void> => {
         const personregisterRadio = await screen.findByLabelText('Oppslag i personregister');
         await user.click(personregisterRadio);
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/fødselsnummer/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/fødselsnummer/i)).toBeInTheDocument();
     };
 
     const testLandvelgerMedNorge = async (user: UserEvent): Promise<void> => {
@@ -138,34 +130,28 @@ describe('BrevmottakerFormModal', () => {
         await user.type(landSelect, 'Norge');
         await user.keyboard('[ArrowDown][Enter]');
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/postnummer/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/poststed/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/postnummer/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/poststed/i)).toBeInTheDocument();
     };
 
-    const expectNavnfeltReadonly = async (): Promise<void> => {
-        await waitFor(() => {
-            const navnFelt = screen.getByLabelText(/navn/i);
-            expect(navnFelt).toBeInTheDocument();
-            expect(navnFelt).toHaveAttribute('readonly');
-            expect(navnFelt).toHaveValue('Test Bruker');
-        });
+    const expectNavnfeltReadonly = (): void => {
+        const navnFelt = screen.getByLabelText(/navn/i);
+        expect(navnFelt).toBeInTheDocument();
+        expect(navnFelt).toHaveAttribute('readonly');
+        expect(navnFelt).toHaveValue('Test Bruker');
     };
 
-    const expectLandvalgUtenNorge = async (): Promise<void> => {
-        await waitFor(() => {
-            const landSelect = screen.getByLabelText(/velg land for brevmottaker/i);
-            expect(landSelect).toBeInTheDocument();
+    const expectLandvalgUtenNorge = (): void => {
+        const landSelect = screen.getByLabelText(/velg land for brevmottaker/i);
+        expect(landSelect).toBeInTheDocument();
 
-            const options = landSelect.querySelectorAll('option');
-            const norgeOption = Array.from(options).find(option =>
-                option.textContent?.toLowerCase().includes('norge')
-            );
-            expect(norgeOption).toBeUndefined();
-        });
+        const options = landSelect.querySelectorAll('option');
+        const norgeOption = Array.from(options).find(option =>
+            option.textContent?.toLowerCase().includes('norge')
+        );
+        expect(norgeOption).toBeUndefined();
     };
 
     const expectAdresseFelterEtterLandvalg = async (user: UserEvent): Promise<void> => {
@@ -173,10 +159,8 @@ describe('BrevmottakerFormModal', () => {
         await user.type(landSelect, 'Sverige');
         await user.keyboard('[ArrowDown][Enter]');
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/adresselinje 1/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/adresselinje 2/i)).toBeInTheDocument();
     };
 
     const selectMottakerAndWaitForRender = async (
@@ -186,63 +170,38 @@ describe('BrevmottakerFormModal', () => {
         const select = screen.getByLabelText('Mottaker');
         await user.selectOptions(select, mottakerType);
 
-        await waitFor(() => {
-            if (mottakerType === MottakerType.BrukerMedUtenlandskAdresse) {
-                expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-            } else if (
-                mottakerType === MottakerType.Fullmektig ||
-                mottakerType === MottakerType.Verge
-            ) {
-                expect(
-                    screen.getByRole('radiogroup', { name: /adresse|verge/i })
-                ).toBeInTheDocument();
-            } else if (mottakerType === MottakerType.Dødsbo) {
-                expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-            }
-        });
+        if (mottakerType === MottakerType.BrukerMedUtenlandskAdresse) {
+            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
+        } else if (
+            mottakerType === MottakerType.Fullmektig ||
+            mottakerType === MottakerType.Verge
+        ) {
+            expect(screen.getByRole('radiogroup', { name: /adresse|verge/i })).toBeInTheDocument();
+        } else if (mottakerType === MottakerType.Dødsbo) {
+            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
+        }
     };
 
-    const expectFullmektigRadiogruppe = async (): Promise<void> => {
-        await waitFor(() => {
-            expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
-            expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
-            expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
-            expect(screen.getByText('Oppslag i organisasjonsregister')).toBeInTheDocument();
-        });
+    const expectFullmektigRadiogruppe = (): void => {
+        expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
+        expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
+        expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
+        expect(screen.getByText('Oppslag i organisasjonsregister')).toBeInTheDocument();
     };
 
     const expectOrganisasjonsregisterFelter = async (user: UserEvent): Promise<void> => {
         const orgRegisterRadio = await screen.findByLabelText('Oppslag i organisasjonsregister');
         await user.click(orgRegisterRadio);
 
-        await waitFor(() => {
-            expect(screen.getByLabelText(/organisasjonsnummer/i)).toBeInTheDocument();
-            expect(screen.getByLabelText(/kontaktperson i organisasjonen/i)).toBeInTheDocument();
-        });
+        expect(screen.getByLabelText(/organisasjonsnummer/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/kontaktperson i organisasjonen/i)).toBeInTheDocument();
     };
 
-    const expectVergeRadiogruppe = async (): Promise<void> => {
-        await waitFor(() => {
-            expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
-            expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
-            expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
-            expect(screen.queryByText('Oppslag i organisasjonsregister')).not.toBeInTheDocument();
-        });
-    };
-
-    const expectDødsboNavnfelt = async (): Promise<void> => {
-        await waitFor(() => {
-            const navnFelt = screen.getByLabelText(/navn/i);
-            expect(navnFelt).toBeInTheDocument();
-            expect(navnFelt).toHaveAttribute('readonly');
-            expect(navnFelt).toHaveValue('Test Bruker v/dødsbo');
-        });
-    };
-
-    const expectLandFelt = async (): Promise<void> => {
-        await waitFor(() => {
-            expect(screen.getByLabelText(/velg land/i)).toBeInTheDocument();
-        });
+    const expectVergeRadiogruppe = (): void => {
+        expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
+        expect(screen.getByText('Manuell registrering')).toBeInTheDocument();
+        expect(screen.getByText('Oppslag i personregister')).toBeInTheDocument();
+        expect(screen.queryByText('Oppslag i organisasjonsregister')).not.toBeInTheDocument();
     };
 
     const testRadioValidering = async (
@@ -254,9 +213,7 @@ describe('BrevmottakerFormModal', () => {
         });
         await user.click(submitButton);
 
-        await waitFor(() => {
-            expect(screen.getByText('Du må velge en adressetype')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Du må velge en adressetype')).toBeInTheDocument();
     };
 
     const testManuellRegistreringUtenLand = async (
@@ -275,9 +232,7 @@ describe('BrevmottakerFormModal', () => {
         });
         await user.click(submitButton);
 
-        await waitFor(() => {
-            expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
     };
 
     const testPostnummerValidering = async (
@@ -308,9 +263,7 @@ describe('BrevmottakerFormModal', () => {
         });
         await user.click(submitButton);
 
-        await waitFor(() => {
-            expect(screen.getByText('Postnummer må være 4 siffer')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Postnummer må være 4 siffer')).toBeInTheDocument();
     };
 
     const testFødselsnummerValidering = async (
@@ -328,11 +281,9 @@ describe('BrevmottakerFormModal', () => {
         });
         await user.click(submitButton);
 
-        await waitFor(() => {
-            expect(
-                screen.getByText('Fødselsnummer må være 11 sammenhengende siffer')
-            ).toBeInTheDocument();
-        });
+        expect(
+            screen.getByText('Fødselsnummer må være 11 sammenhengende siffer')
+        ).toBeInTheDocument();
     };
 
     const testDødsboLandValidering = async (
@@ -347,9 +298,7 @@ describe('BrevmottakerFormModal', () => {
         });
         await user.click(submitButton);
 
-        await waitFor(() => {
-            expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
-        });
+        expect(screen.getByText('Land er påkrevd')).toBeInTheDocument();
     };
 
     describe.each([
@@ -465,12 +414,15 @@ describe('BrevmottakerFormModal', () => {
                 await selectMottakerAndWaitForRender(user, MottakerType.Dødsbo);
             });
 
-            test('Navn felt er disabled med brukerens navn v/dødsbo', async () => {
-                await expectDødsboNavnfelt();
+            test('Navn felt er disabled med brukerens navn v/dødsbo', () => {
+                const navnFelt = screen.getByLabelText(/navn/i);
+                expect(navnFelt).toBeInTheDocument();
+                expect(navnFelt).toHaveAttribute('readonly');
+                expect(navnFelt).toHaveValue('Test Bruker v/dødsbo');
             });
 
-            test('Skal vise land felt', async () => {
-                await expectLandFelt();
+            test('Skal vise land felt', () => {
+                expect(screen.getByLabelText(/velg land/i)).toBeInTheDocument();
             });
 
             test('Valg av Norge viser alle adressefelter', async () => {
@@ -493,9 +445,7 @@ describe('BrevmottakerFormModal', () => {
             const select = screen.getByLabelText('Mottaker');
             await user.selectOptions(select, MottakerType.Dødsbo);
 
-            await waitFor(() => {
-                expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
-            });
+            expect(screen.getByLabelText(/navn/i)).toBeInTheDocument();
 
             const landSelect = await screen.findByLabelText(/velg land/i);
             await user.type(landSelect, 'Norge');
@@ -513,20 +463,18 @@ describe('BrevmottakerFormModal', () => {
             const submitButton = screen.getByRole('button', { name: 'Legg til' });
             await user.click(submitButton);
 
-            await waitFor(() => {
-                expect(mockLagreBrevmottaker).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        type: 'DØDSBO',
-                        manuellAdresseInfo: expect.objectContaining({
-                            postnummer: '0123',
-                            poststed: 'Oslo',
-                            landkode: 'NO',
-                            adresselinje1: 'Testveien 1',
-                        }),
+            expect(mockLagreBrevmottaker).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: 'DØDSBO',
+                    manuellAdresseInfo: expect.objectContaining({
+                        postnummer: '0123',
+                        poststed: 'Oslo',
+                        landkode: 'NO',
+                        adresselinje1: 'Testveien 1',
                     }),
-                    undefined
-                );
-            });
+                }),
+                undefined
+            );
         });
     });
 });
