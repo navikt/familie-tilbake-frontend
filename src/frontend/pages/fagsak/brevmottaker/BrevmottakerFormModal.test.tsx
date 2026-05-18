@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -26,7 +25,7 @@ const renderBrevmottakerFormModal = async (
         mode?: 'endre' | 'leggTil';
         visBrevmottakerModal?: boolean;
     } = {}
-): Promise<RenderResult> => {
+): Promise<void> => {
     const defaultProps = {
         visBrevmottakerModal: true,
         settVisBrevmottakerModal: vi.fn(),
@@ -35,15 +34,14 @@ const renderBrevmottakerFormModal = async (
         ...props,
     };
 
-    return await waitFor(() =>
-        render(
-            <FagsakContext value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
-                <TestBehandlingProvider behandling={lagBehandling()}>
-                    <BrevmottakerFormModal {...defaultProps} />
-                </TestBehandlingProvider>
-            </FagsakContext>
-        )
+    render(
+        <FagsakContext value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+            <TestBehandlingProvider behandling={lagBehandling()}>
+                <BrevmottakerFormModal {...defaultProps} />
+            </TestBehandlingProvider>
+        </FagsakContext>
     );
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
 };
 const adresseRadioGroup = (): HTMLElement => screen.getByRole('radiogroup', { name: /Adresse/i });
 const manuellRegistreringRadio = (): HTMLElement =>
@@ -72,7 +70,8 @@ const lagreEndringerKnapp = (): HTMLElement =>
 
 const velgLand = async (user: UserEvent, land: string): Promise<void> => {
     await user.click(velgLandCombobox());
-    await user.click(await screen.findByRole('option', { name: land }));
+    const listbox = screen.getByRole('listbox');
+    await user.click(within(listbox).getByText(land));
 };
 
 const testManuellRegistreringFelter = async (user: UserEvent): Promise<void> => {
@@ -133,7 +132,8 @@ const testManuellRegistreringUtenLand = async (
     navn = 'Test Navn'
 ): Promise<void> => {
     await user.click(manuellRegistreringRadio());
-    await user.type(navnInput(), navn);
+    await user.click(navnInput());
+    await user.paste(navn);
     const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
     await user.click(submitButton);
 
@@ -161,8 +161,19 @@ describe('BrevmottakerFormModal', () => {
             expect(lagreEndringerKnapp()).toBeInTheDocument();
         });
 
-        test('Viser ikke modal når visBrevmottakerModal er false', async () => {
-            renderBrevmottakerFormModal({ visBrevmottakerModal: false });
+        test('Viser ikke modal når visBrevmottakerModal er false', () => {
+            render(
+                <FagsakContext value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+                    <TestBehandlingProvider behandling={lagBehandling()}>
+                        <BrevmottakerFormModal
+                            visBrevmottakerModal={false}
+                            settVisBrevmottakerModal={vi.fn()}
+                            settBrevmottakerIdTilEndring={vi.fn()}
+                            mode="leggTil"
+                        />
+                    </TestBehandlingProvider>
+                </FagsakContext>
+            );
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
 
@@ -195,11 +206,9 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Skal vise Landevelger og Norge skal ikke være i listen', async () => {
-                const options = velgLandCombobox().querySelectorAll('option');
-                const norgeOption = Array.from(options).find(option =>
-                    option.textContent?.toLowerCase().includes('norge')
-                );
-                expect(norgeOption).toBeUndefined();
+                expect(
+                    within(velgLandCombobox()).queryByRole('option', { name: /norge/i })
+                ).not.toBeInTheDocument();
             });
 
             test('Når Land er valgt skal det finnes adresselinje felter', async () => {
@@ -257,15 +266,19 @@ describe('BrevmottakerFormModal', () => {
             test('Manuell registrering Norge skal validere postnummer', async () => {
                 await user.click(manuellRegistreringRadio());
 
-                await user.type(navnInput(), 'Test Navn');
+                await user.click(navnInput());
+                await user.paste('Test Navn');
 
                 await velgLand(user, 'Norge');
 
-                await user.type(adresseInput(), 'Test Adresse 123');
+                await user.click(adresseInput());
+                await user.paste('Test Adresse 123');
 
-                await user.type(postnummerInput(), 'abc123');
+                await user.click(postnummerInput());
+                await user.paste('abc123');
 
-                await user.type(poststedInput(), 'Oslo');
+                await user.click(poststedInput());
+                await user.paste('Oslo');
 
                 const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
                 await user.click(submitButton);
@@ -276,7 +289,8 @@ describe('BrevmottakerFormModal', () => {
             test('Oppslag personregister med ugyldig nummer skal vise feilmelding', async () => {
                 await user.click(oppslagIPersonregisterRadio());
 
-                await user.type(fødselsnummerInput(), '1234567890');
+                await user.click(fødselsnummerInput());
+                await user.paste('1234567890');
                 const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
                 await user.click(submitButton);
 
@@ -351,7 +365,8 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Ved tomt land skal vise feilmelding', async () => {
-                await user.type(navnInput(), 'Test Dødsbo');
+                await user.click(navnInput());
+                await user.paste('Test Dødsbo');
 
                 const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
                 await user.click(submitButton);
@@ -374,9 +389,12 @@ describe('BrevmottakerFormModal', () => {
 
             await velgLand(user, 'Norge');
 
-            await user.type(adresseInput(), 'Testveien 1');
-            await user.type(postnummerInput(), '0123');
-            await user.type(poststedInput(), 'Oslo');
+            await user.click(adresseInput());
+            await user.paste('Testveien 1');
+            await user.click(postnummerInput());
+            await user.paste('0123');
+            await user.click(poststedInput());
+            await user.paste('Oslo');
             await user.click(leggTilKnapp());
 
             expect(mockLagreBrevmottaker).toHaveBeenCalledWith(
