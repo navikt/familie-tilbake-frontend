@@ -1,6 +1,6 @@
 import type { UserEvent } from '@testing-library/user-event';
 
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -103,11 +103,8 @@ const testOppslagIPersonregister = async (user: UserEvent): Promise<void> => {
     expect(fødselsnummerInput()).toBeInTheDocument();
 };
 
-const selectMottakerAndWaitForRender = async (
-    user: UserEvent,
-    mottakerType: MottakerType
-): Promise<void> => {
-    await user.selectOptions(mottakerCombobox(), mottakerType);
+const velgMottaker = (mottakerType: MottakerType): void => {
+    fireEvent.change(mottakerCombobox(), { target: { value: mottakerType } });
 
     if (
         mottakerType === MottakerType.BrukerMedUtenlandskAdresse ||
@@ -132,8 +129,7 @@ const testManuellRegistreringUtenLand = async (
     navn = 'Test Navn'
 ): Promise<void> => {
     await user.click(manuellRegistreringRadio());
-    await user.click(navnInput());
-    await user.paste(navn);
+    fireEvent.change(navnInput(), { target: { value: navn } });
     const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
     await user.click(submitButton);
 
@@ -196,16 +192,16 @@ describe('BrevmottakerFormModal', () => {
         });
 
         describe('Bruker med utenlandsk adresse', () => {
-            beforeEach(async () => {
-                await selectMottakerAndWaitForRender(user, MottakerType.BrukerMedUtenlandskAdresse);
+            beforeEach(() => {
+                velgMottaker(MottakerType.BrukerMedUtenlandskAdresse);
             });
 
-            test('Navnefelt skal være readonly og fyllt med brukerens navn', async () => {
+            test('Navnefelt skal være readonly og fyllt med brukerens navn', () => {
                 expect(navnInput()).toHaveAttribute('readonly');
                 expect(navnInput()).toHaveValue('Test Bruker');
             });
 
-            test('Skal vise Landevelger og Norge skal ikke være i listen', async () => {
+            test('Skal vise Landevelger og Norge skal ikke være i listen', () => {
                 expect(
                     within(velgLandCombobox()).queryByRole('option', { name: /norge/i })
                 ).not.toBeInTheDocument();
@@ -220,11 +216,11 @@ describe('BrevmottakerFormModal', () => {
         });
 
         describe('Fullmektig', () => {
-            beforeEach(async () => {
-                await selectMottakerAndWaitForRender(user, MottakerType.Fullmektig);
+            beforeEach(() => {
+                velgMottaker(MottakerType.Fullmektig);
             });
 
-            test('Skal vise radiogruppe med korrekte valg', async () => {
+            test('Skal vise radiogruppe med korrekte valg', () => {
                 expect(manuellRegistreringRadio()).toBeInTheDocument();
                 expect(oppslagIPersonregisterRadio()).toBeInTheDocument();
                 expect(oppslagIOrganisasjonsregisterRadio()).toBeInTheDocument();
@@ -266,19 +262,13 @@ describe('BrevmottakerFormModal', () => {
             test('Manuell registrering Norge skal validere postnummer', async () => {
                 await user.click(manuellRegistreringRadio());
 
-                await user.click(navnInput());
-                await user.paste('Test Navn');
+                fireEvent.change(navnInput(), { target: { value: 'Test Navn' } });
 
                 await velgLand(user, 'Norge');
 
-                await user.click(adresseInput());
-                await user.paste('Test Adresse 123');
-
-                await user.click(postnummerInput());
-                await user.paste('abc123');
-
-                await user.click(poststedInput());
-                await user.paste('Oslo');
+                fireEvent.change(adresseInput(), { target: { value: 'Test Adresse 123' } });
+                fireEvent.change(postnummerInput(), { target: { value: 'abc123' } });
+                fireEvent.change(poststedInput(), { target: { value: 'Oslo' } });
 
                 const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
                 await user.click(submitButton);
@@ -289,8 +279,7 @@ describe('BrevmottakerFormModal', () => {
             test('Oppslag personregister med ugyldig nummer skal vise feilmelding', async () => {
                 await user.click(oppslagIPersonregisterRadio());
 
-                await user.click(fødselsnummerInput());
-                await user.paste('1234567890');
+                fireEvent.change(fødselsnummerInput(), { target: { value: '1234567890' } });
                 const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
                 await user.click(submitButton);
 
@@ -303,11 +292,11 @@ describe('BrevmottakerFormModal', () => {
         });
 
         describe('Verge', () => {
-            beforeEach(async () => {
-                await selectMottakerAndWaitForRender(user, MottakerType.Verge);
+            beforeEach(() => {
+                velgMottaker(MottakerType.Verge);
             });
 
-            test('Skal vise radiogruppe uten organisasjonsregister valg', async () => {
+            test('Skal vise radiogruppe uten organisasjonsregister valg', () => {
                 expect(screen.getByRole('radiogroup', { name: /adresse/i })).toBeInTheDocument();
                 expect(manuellRegistreringRadio()).toBeInTheDocument();
                 expect(oppslagIPersonregisterRadio()).toBeInTheDocument();
@@ -342,8 +331,8 @@ describe('BrevmottakerFormModal', () => {
         });
 
         describe('Dødsbo', () => {
-            beforeEach(async () => {
-                await selectMottakerAndWaitForRender(user, MottakerType.Dødsbo);
+            beforeEach(() => {
+                velgMottaker(MottakerType.Dødsbo);
             });
 
             test('Navn felt er disabled med brukerens navn v/dødsbo', () => {
@@ -365,8 +354,7 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Ved tomt land skal vise feilmelding', async () => {
-                await user.click(navnInput());
-                await user.paste('Test Dødsbo');
+                fireEvent.change(navnInput(), { target: { value: 'Test Dødsbo' } });
 
                 const submitButton = mode === 'leggTil' ? leggTilKnapp() : lagreEndringerKnapp();
                 await user.click(submitButton);
@@ -383,18 +371,15 @@ describe('BrevmottakerFormModal', () => {
         });
 
         test('Sender postnummer og poststed i payload', async () => {
-            await user.selectOptions(mottakerCombobox(), MottakerType.Dødsbo);
+            fireEvent.change(mottakerCombobox(), { target: { value: MottakerType.Dødsbo } });
 
             expect(navnInput()).toBeInTheDocument();
 
             await velgLand(user, 'Norge');
 
-            await user.click(adresseInput());
-            await user.paste('Testveien 1');
-            await user.click(postnummerInput());
-            await user.paste('0123');
-            await user.click(poststedInput());
-            await user.paste('Oslo');
+            fireEvent.change(adresseInput(), { target: { value: 'Testveien 1' } });
+            fireEvent.change(postnummerInput(), { target: { value: '0123' } });
+            fireEvent.change(poststedInput(), { target: { value: 'Oslo' } });
             await user.click(leggTilKnapp());
 
             expect(mockLagreBrevmottaker).toHaveBeenCalledWith(
