@@ -70,6 +70,11 @@ const leggTilKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Legg
 const lagreEndringerKnapp = (): HTMLElement =>
     screen.getByRole('button', { name: 'Lagre endringer' });
 
+const velgLand = async (user: UserEvent, land: string): Promise<void> => {
+    await user.click(velgLandCombobox());
+    await user.click(await screen.findByRole('option', { name: land }));
+};
+
 const testManuellRegistreringFelter = async (user: UserEvent): Promise<void> => {
     await user.click(manuellRegistreringRadio());
     expect(navnInput()).toBeInTheDocument();
@@ -78,8 +83,7 @@ const testManuellRegistreringFelter = async (user: UserEvent): Promise<void> => 
 
 const testManuellRegistreringMedUtenlandskAdresse = async (user: UserEvent): Promise<void> => {
     await user.click(manuellRegistreringRadio());
-    await user.type(velgLandCombobox(), 'Sverige');
-    await user.keyboard('[ArrowDown][Enter]');
+    await velgLand(user, 'Sverige');
 
     expect(adresseInput()).toBeInTheDocument();
     expect(adresse2Input()).toBeInTheDocument();
@@ -87,8 +91,7 @@ const testManuellRegistreringMedUtenlandskAdresse = async (user: UserEvent): Pro
 
 const testManuellRegistreringMedNorsk = async (user: UserEvent): Promise<void> => {
     await user.click(manuellRegistreringRadio());
-    await user.type(velgLandCombobox(), 'Norge');
-    await user.keyboard('[ArrowDown][Enter]');
+    await velgLand(user, 'Norge');
 
     expect(adresseInput()).toBeInTheDocument();
     expect(adresse2Input()).toBeInTheDocument();
@@ -200,8 +203,7 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Når Land er valgt skal det finnes adresselinje felter', async () => {
-                await user.type(velgLandCombobox(), 'Sverige');
-                await user.keyboard('[ArrowDown][Enter]');
+                await velgLand(user, 'Sverige');
 
                 expect(adresseInput()).toBeInTheDocument();
                 expect(adresse2Input()).toBeInTheDocument();
@@ -257,8 +259,7 @@ describe('BrevmottakerFormModal', () => {
 
                 await user.type(navnInput(), 'Test Navn');
 
-                await user.type(velgLandCombobox(), 'Norge');
-                await user.keyboard('[ArrowDown][Enter]');
+                await velgLand(user, 'Norge');
 
                 await user.type(adresseInput(), 'Test Adresse 123');
 
@@ -341,8 +342,7 @@ describe('BrevmottakerFormModal', () => {
             });
 
             test('Valg av Norge viser alle adressefelter', async () => {
-                await user.type(velgLandCombobox(), 'Norge');
-                await user.keyboard('[ArrowDown][Enter]');
+                await velgLand(user, 'Norge');
 
                 expect(adresseInput()).toBeInTheDocument();
                 expect(adresse2Input()).toBeInTheDocument();
@@ -372,8 +372,7 @@ describe('BrevmottakerFormModal', () => {
 
             expect(navnInput()).toBeInTheDocument();
 
-            await user.type(velgLandCombobox(), 'Norge');
-            await user.keyboard('[ArrowDown][Enter]');
+            await velgLand(user, 'Norge');
 
             await user.type(adresseInput(), 'Testveien 1');
             await user.type(postnummerInput(), '0123');
