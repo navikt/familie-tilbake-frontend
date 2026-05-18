@@ -378,21 +378,21 @@ const isManuellAdresse = withNullCheck<FullmektigData | VergeData>(
 const getManuellAdresseInfo = (
     adresseData: AdresseDataUnion
 ): Brevmottaker['manuellAdresseInfo'] => {
+    if (isDødsbo(adresseData)) {
+        return {
+            adresselinje1: adresseData.adresselinje1 ?? '',
+            adresselinje2: adresseData.adresselinje2,
+            postnummer: adresseData.postnummer ?? '',
+            poststed: adresseData.poststed ?? '',
+            landkode: adresseData.land,
+        };
+    }
     if (isBrukerMedUtenlandskAdresse(adresseData)) {
         return {
             adresselinje1: adresseData.adresselinje1 || '',
             adresselinje2: adresseData.adresselinje2,
             postnummer: '',
             poststed: '',
-            landkode: adresseData.land,
-        };
-    }
-    if (isDødsbo(adresseData)) {
-        return {
-            adresselinje1: adresseData.adresselinje1,
-            adresselinje2: adresseData.adresselinje2,
-            postnummer: adresseData.postnummer ?? '',
-            poststed: adresseData.poststed ?? '',
             landkode: adresseData.land,
         };
     }
