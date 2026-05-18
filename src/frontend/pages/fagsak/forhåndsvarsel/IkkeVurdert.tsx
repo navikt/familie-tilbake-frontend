@@ -3,11 +3,10 @@ import type { FC } from 'react';
 import type { ChangeHandler, SubmitHandler } from 'react-hook-form';
 import type { Section, Varselbrevtekst } from '~/generated';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { BodyLong, Box, Heading, Textarea, VStack } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { Fragment, useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -15,14 +14,13 @@ import { hentForhåndsvarselTekstOptions } from '~/generated/@tanstack/react-que
 import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
 import { formatterDatostringLangt } from '~/utils/dateUtils';
 
-import { ikkeVurdertSchema } from './schema';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 
 export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
 type Props = {
-    onSubmit: SubmitHandler<IkkeVurdertFormData>;
     onValgEndring?: (valg: 'send' | 'unntak' | undefined) => void;
+    onSubmit: SubmitHandler<IkkeVurdertFormData>;
 };
 
 const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined => {
@@ -31,20 +29,18 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
     return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
 };
 
-export const IkkeVurdert: FC<Props> = ({ onSubmit, onValgEndring }) => {
+export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();
 
     const {
         register,
-        handleSubmit,
         control,
         setValue,
         getValues,
+        handleSubmit,
         formState: { errors },
-    } = useForm<IkkeVurdertFormData>({
-        resolver: zodResolver(ikkeVurdertSchema),
-    });
+    } = useFormContext<IkkeVurdertFormData>();
 
     const valg = useWatch({ control, name: 'valg' });
 
