@@ -45,22 +45,25 @@ const renderVilkårsvurderingPeriodeSkjema = ({
     erTotalbeløpUnder4Rettsgebyr,
     behandletPerioder,
     behandling,
+    perioder,
 }: {
     periode?: VilkårsvurderingPeriodeSkjemaData;
     erTotalbeløpUnder4Rettsgebyr?: boolean;
     behandletPerioder?: VilkårsvurderingPeriodeSkjemaData[];
     behandling?: BehandlingDto;
+    perioder?: VilkårsvurderingPeriodeSkjemaData[];
 }): RenderResult => {
     const queryClient = createTestQueryClient();
+    const defaultPeriode = periode ?? lagVilkårsvurderingPeriodeSkjemaData();
     return render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
                     <VilkårsvurderingPeriodeSkjema
-                        periode={periode ?? lagVilkårsvurderingPeriodeSkjemaData()}
+                        periode={defaultPeriode}
                         behandletPerioder={behandletPerioder ?? []}
                         erTotalbeløpUnder4Rettsgebyr={erTotalbeløpUnder4Rettsgebyr ?? false}
-                        perioder={[periode ?? lagVilkårsvurderingPeriodeSkjemaData()]}
+                        perioder={perioder ?? [defaultPeriode]}
                         pendingPeriode={undefined}
                         settPendingPeriode={vi.fn()}
                     />
@@ -620,7 +623,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(antallFeiledeFelter()).toHaveLength(0);
     });
 
-    test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves', async () => {
+    test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves - én periode viser ikke 6. ledd-advarsel', async () => {
         renderVilkårsvurderingPeriodeSkjema({
             erTotalbeløpUnder4Rettsgebyr: true,
         });
@@ -638,10 +641,35 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(under4RettsgebyrNei());
 
-        expect(sjetteLeddInfoTekst()).toBeInTheDocument();
+        expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
 
         await user.click(gåVidereKnapp());
         expect(antallFeiledeFelter()).toHaveLength(0);
+    });
+
+    test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves - flere perioder viser 6. ledd-advarsel', async () => {
+        const periode = lagVilkårsvurderingPeriodeSkjemaData();
+        const andrePeriode = lagVilkårsvurderingPeriodeSkjemaData({
+            index: '1',
+            periode: { fom: '2021-05-01', tom: '2021-08-31' },
+        });
+        renderVilkårsvurderingPeriodeSkjema({
+            periode,
+            erTotalbeløpUnder4Rettsgebyr: true,
+            perioder: [periode, andrePeriode],
+        });
+
+        await user.click(mangelfulleOpplysningerValg());
+        await user.type(begrunnVilkår(), 'begrunnelse');
+
+        await user.click(uaktsomtValg());
+        await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
+
+        expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
+
+        await user.click(under4RettsgebyrNei());
+
+        expect(sjetteLeddInfoTekst()).toBeInTheDocument();
     });
 
     test('Åpner vurdert periode - god tro - beløp i behold', async () => {
