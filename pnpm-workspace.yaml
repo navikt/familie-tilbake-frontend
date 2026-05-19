@@ -1,3 +1,6 @@
+overrides:
+  protobufjs: ">=8.0.2"
+
 allowBuilds:
   '@sentry/cli': true
   esbuild: true

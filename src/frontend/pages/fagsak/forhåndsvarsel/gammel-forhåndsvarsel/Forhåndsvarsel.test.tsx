@@ -97,7 +97,7 @@ describe('Forhåndsvarsel', () => {
         const fritekstFelt = screen.getByLabelText(/Legg til utdypende tekst/i);
         fireEvent.change(fritekstFelt, { target: { value: 'Dette er en fritekst' } });
 
-        expect(await screen.findByRole('button', { name: 'Forhåndsvis' })).toBeInTheDocument();
+        expect(await screen.findByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
     });
 
     test('Viser skjema for unntak når Nei er valgt', () => {
