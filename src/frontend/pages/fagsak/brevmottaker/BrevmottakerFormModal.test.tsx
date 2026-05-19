@@ -201,10 +201,13 @@ describe('BrevmottakerFormModal', () => {
                 expect(navnInput()).toHaveValue('Test Bruker');
             });
 
-            test('Skal vise Landevelger og Norge skal ikke være i listen', () => {
-                expect(
-                    within(velgLandCombobox()).queryByRole('option', { name: /norge/i })
-                ).not.toBeInTheDocument();
+            test('Skal vise Landevelger og Norge skal ikke være i listen', async () => {
+                expect(velgLandCombobox()).toBeInTheDocument();
+
+                await user.click(velgLandCombobox());
+                const listbox = screen.getByRole('listbox');
+
+                expect(within(listbox).queryByText('Norge')).not.toBeInTheDocument();
             });
 
             test('Når Land er valgt skal det finnes adresselinje felter', async () => {
