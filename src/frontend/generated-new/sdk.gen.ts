@@ -15,6 +15,12 @@ import type {
     BehandlingForhandsvarselData,
     BehandlingForhandsvarselErrors,
     BehandlingForhandsvarselResponses,
+    BehandlingHentDokumentData,
+    BehandlingHentDokumentErrors,
+    BehandlingHentDokumentInfoData,
+    BehandlingHentDokumentInfoErrors,
+    BehandlingHentDokumentInfoResponses,
+    BehandlingHentDokumentResponses,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevErrors,
     BehandlingHentVedtaksbrevResponses,
@@ -187,6 +193,19 @@ export const behandlingLagreBrukersuttalelse = <ThrowOnError extends boolean = f
         },
     });
 
+export const behandlingHentDokument = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentDokumentData, ThrowOnError>
+) =>
+    (options.client ?? client).get<
+        BehandlingHentDokumentResponses,
+        BehandlingHentDokumentErrors,
+        ThrowOnError
+    >({
+        responseType: 'blob',
+        url: '/api/v1/behandling/{behandlingId}/journalpost/{journalpostId}/dokument/{dokumentInfoId}',
+        ...options,
+    });
+
 export const behandlingHentVedtaksbrev = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingHentVedtaksbrevData, ThrowOnError>
 ) =>
@@ -227,6 +246,19 @@ export const behandlingHentVedtaksresultat = <ThrowOnError extends boolean = fal
     >({
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/vedtak/resultat',
+        ...options,
+    });
+
+export const behandlingHentDokumentInfo = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentDokumentInfoData, ThrowOnError>
+) =>
+    (options.client ?? client).get<
+        BehandlingHentDokumentInfoResponses,
+        BehandlingHentDokumentInfoErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/{dokumentType}/gjeldende',
         ...options,
     });
 

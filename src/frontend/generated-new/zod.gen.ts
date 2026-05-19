@@ -47,6 +47,13 @@ export const zBrevmottaker = z.object({
     personIdent: z.string(),
 });
 
+export const zDokumentInfo = z.object({
+    journalpostId: z.string().nullable(),
+    dokumentId: z.string().nullable(),
+});
+
+export const zDokumentType = z.enum(['VARSELBREV', 'VEDTAKSBREV']);
+
 export const zError = z.object({
     tittel: z.string(),
     melding: z.string(),
@@ -70,8 +77,7 @@ export const zLogginnslag = z.object({
     tittel: z.string(),
     tekst: z.string().nullable(),
     steg: z.string().nullable(),
-    journalpostId: z.string().nullable(),
-    dokumentInfoId: z.string().nullable(),
+    ekstraInfo: z.record(z.string(), z.unknown()),
 });
 
 export const zMuligeRettsligGrunnlag = z.object({
@@ -488,6 +494,17 @@ export const zBehandlingLagreBrukersuttalelsePath = z.object({
     behandlingId: z.uuid(),
 });
 
+export const zBehandlingHentDokumentPath = z.object({
+    behandlingId: z.uuid(),
+    journalpostId: z.string(),
+    dokumentInfoId: z.string(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentDokumentResponse = z.string();
+
 export const zBehandlingHentVedtaksbrevPath = z.object({
     behandlingId: z.string(),
 });
@@ -516,6 +533,16 @@ export const zBehandlingHentVedtaksresultatPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
+
+export const zBehandlingHentDokumentInfoPath = z.object({
+    behandlingId: z.uuid(),
+    dokumentType: zDokumentType,
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentDokumentInfoResponse = zDokumentInfo;
 
 export const zVedtaksbrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
 

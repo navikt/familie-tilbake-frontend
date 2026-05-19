@@ -27,7 +27,7 @@ export const Forhåndsvarsel: FC = () => {
     const { setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
-    const { forhåndsvarselInfo } = useForhåndsvarselQueries();
+    const { forhåndsvarselInfo, sendtDokument, sendtDokumentLoading } = useForhåndsvarselQueries();
     const { forhåndsvisning, sendUtsettFrist, sendUtsettFristMutation } =
         useForhåndsvarselMutations();
     const [showModal, setShowModal] = useState(false);
@@ -65,7 +65,7 @@ export const Forhåndsvarsel: FC = () => {
         name: 'skalSendesForhåndsvarsel',
     });
 
-    const seForhåndsvisningWithModal = (): void => {
+    const seForhåndsvisning = (): void => {
         const currentQueryKey = ['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst];
 
         const cachedData = queryClient.getQueryData(currentQueryKey);
@@ -92,6 +92,12 @@ export const Forhåndsvarsel: FC = () => {
         }
     };
 
+    const seBrevet = (): void => {
+        if (sendtDokument) {
+            setShowModal(true);
+        }
+    };
+
     useEffect(() => {
         if (sendUtsettFristMutation.isSuccess) {
             const nyFrist = sendUtsettFristMutation.variables?.body?.nyFrist;
@@ -113,11 +119,13 @@ export const Forhåndsvarsel: FC = () => {
         }
     }, [forhåndsvisning.error, visGlobalAlert]);
 
-    const pdfData =
-        forhåndsvisning.data ||
-        queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
+    const pdfData = varselErSendt
+        ? sendtDokument
+        : forhåndsvisning.data ||
+          queryClient.getQueryData(['forhåndsvisBrev', behandlingId, 'VARSEL', fritekst]);
 
-    const visForhåndsvisningsknapp = skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
+    const visForhåndsvisningsknapp =
+        varselErSendt || skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Ja;
     const skalViseFristinfo = !!forhåndsvarselInfo?.varselbrevDto?.opprinneligFristForUttalelse;
 
     return (
@@ -128,16 +136,16 @@ export const Forhåndsvarsel: FC = () => {
                 <Heading size="medium">Forhåndsvarsel</Heading>
                 {visForhåndsvisningsknapp && (
                     <Button
-                        loading={forhåndsvisning.isPending}
+                        loading={forhåndsvisning.isPending || sendtDokumentLoading}
                         icon={<EyeIcon aria-hidden />}
                         variant="tertiary"
                         size="small"
-                        onClick={seForhåndsvisningWithModal}
+                        onClick={varselErSendt ? seBrevet : seForhåndsvisning}
                         className={visForhåndsvisningsknapp ? '' : 'invisible pointer-events-none'}
                         aria-hidden={!visForhåndsvisningsknapp}
                         tabIndex={visForhåndsvisningsknapp ? 0 : -1}
                     >
-                        Forhåndsvis
+                        Vis brevet
                     </Button>
                 )}
             </HStack>

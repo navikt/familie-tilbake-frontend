@@ -50,6 +50,9 @@ export const lagForhåndsvarselQueries = (
     forhåndsvarselInfoError: false,
     varselbrevteksterError: false,
     varselbrevteksterQuery: lagMockQuery<Varselbrevtekst>(),
+    sendtDokument: undefined,
+    sendtDokumentLoading: false,
+    sendtDokumentError: false,
     ...overrides,
 });
 

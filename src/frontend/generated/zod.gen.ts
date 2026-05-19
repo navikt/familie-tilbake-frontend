@@ -1117,6 +1117,8 @@ export const zHistorikkinnslagDto = z.object({
     journalpostId: z.string().nullish(),
     dokumentId: z.string().nullish(),
     opprettetTid: z.iso.datetime(),
+    nyFrist: z.iso.date().nullish(),
+    begrunnelseForUtsattFrist: z.string().nullish(),
 });
 
 export const zRessursListHistorikkinnslagDto = z.object({

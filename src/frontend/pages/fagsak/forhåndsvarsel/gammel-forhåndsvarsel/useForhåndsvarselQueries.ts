@@ -1,10 +1,14 @@
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { ForhåndsvarselDto, Varselbrevtekst } from '~/generated';
+import type { ForhåndsvarselDto, RessursByte, Varselbrevtekst } from '~/generated';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { hentForhåndsvarselinfo, hentForhåndsvarselTekst } from '~/generated';
+import {
+    behandlingHentDokumentInfoOptions,
+    behandlingHentDokumentOptions,
+} from '~/generated-new/@tanstack/react-query.gen';
 
 export type UseForhåndsvarselQueriesReturn = {
     readonly varselbrevteksterQuery: UseQueryResult<Varselbrevtekst | undefined>;
@@ -14,6 +18,9 @@ export type UseForhåndsvarselQueriesReturn = {
     readonly varselbrevteksterLoading: boolean;
     readonly forhåndsvarselInfoError: boolean;
     readonly varselbrevteksterError: boolean;
+    readonly sendtDokument: RessursByte | undefined;
+    readonly sendtDokumentLoading: boolean;
+    readonly sendtDokumentError: boolean;
 };
 
 export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => {
@@ -28,6 +35,31 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
                 },
             }),
         select: data => data.data?.data ?? undefined,
+    });
+
+    const varselErSendt = !!forhåndsvarselInfoQuery.data?.varselbrevDto?.varselbrevSendtTid;
+
+    const dokumentInfoQuery = useQuery({
+        ...behandlingHentDokumentInfoOptions({
+            path: { behandlingId: behandling.behandlingId, dokumentType: 'VARSELBREV' },
+        }),
+        enabled: varselErSendt,
+    });
+
+    const sendtDokumentQuery = useQuery({
+        ...behandlingHentDokumentOptions({
+            path: {
+                behandlingId: behandling.behandlingId,
+                journalpostId: dokumentInfoQuery.data?.journalpostId ?? '',
+                dokumentInfoId: dokumentInfoQuery.data?.dokumentId ?? '',
+            },
+        }),
+        enabled: !!dokumentInfoQuery.data?.journalpostId && !!dokumentInfoQuery.data?.dokumentId,
+        select: (blob): RessursByte => ({
+            data: URL.createObjectURL(new Blob([blob], { type: 'application/pdf' })),
+            status: 'SUKSESS',
+            melding: 'OK',
+        }),
     });
 
     const varselbrevteksterQuery = useQuery({
@@ -49,5 +81,8 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
         varselbrevteksterLoading: varselbrevteksterQuery.isLoading,
         forhåndsvarselInfoError: forhåndsvarselInfoQuery.isError,
         varselbrevteksterError: varselbrevteksterQuery.isError,
+        sendtDokument: sendtDokumentQuery.data,
+        sendtDokumentLoading: sendtDokumentQuery.isLoading,
+        sendtDokumentError: sendtDokumentQuery.isError,
     };
 };
