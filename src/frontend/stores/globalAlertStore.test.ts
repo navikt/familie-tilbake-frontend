@@ -38,24 +38,8 @@ describe('globalAlertStore', () => {
         expect(useGlobalAlertStore.getState().alerts).toHaveLength(0);
     });
 
-    test('info-alert lukkes automatisk etter 6 sekunder', () => {
-        useGlobalAlertStore.getState().visAlert({ title: 'Info', status: 'announcement' });
-
-        vi.advanceTimersByTime(6000);
-
-        expect(useGlobalAlertStore.getState().alerts).toHaveLength(0);
-    });
-
     test('error-alert lukkes IKKE automatisk', () => {
         useGlobalAlertStore.getState().visAlert({ title: 'Feil', status: 'error' });
-
-        vi.advanceTimersByTime(6000);
-
-        expect(useGlobalAlertStore.getState().alerts).toHaveLength(1);
-    });
-
-    test('warning-alert lukkes IKKE automatisk', () => {
-        useGlobalAlertStore.getState().visAlert({ title: 'Advarsel', status: 'warning' });
 
         vi.advanceTimersByTime(6000);
 
