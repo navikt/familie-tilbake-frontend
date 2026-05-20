@@ -15,7 +15,7 @@ import {
     behandlingForhandsvarselQueryKey,
     behandlingSendVarselbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
@@ -75,6 +75,33 @@ export const Forhåndsvarsel: FC = () => {
 
     const visForhåndsvisning = forhaandsvarselSteg.type === 'ikke_vurdert' && valg === 'send';
 
+    useActionBar(
+        forhaandsvarselSteg.type === 'ikke_vurdert'
+            ? {
+                  type: 'submit',
+                  formId: FORHÅNDSVARSEL_FORM_ID,
+                  stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
+                  nesteTekst: valg === 'send' ? 'Send forhåndsvarselet' : 'Neste',
+                  nesteAriaLabel:
+                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
+                  forrigeAriaLabel: 'Gå tilbake til faktasteget',
+                  isLoading: sendVarselbrev.isPending,
+                  skjulNeste: behandlingILesemodus,
+                  onForrige: navigerTilForrige,
+              }
+            : {
+                  stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
+                  nesteTekst: valg === 'send' ? 'Send forhåndsvarselet' : 'Neste',
+                  nesteAriaLabel:
+                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
+                  forrigeAriaLabel: 'Gå tilbake til faktasteget',
+                  isLoading: sendVarselbrev.isPending,
+                  skjulNeste: behandlingILesemodus,
+                  onForrige: navigerTilForrige,
+                  onNeste: navigerTilNeste,
+              }
+    );
+
     return (
         <VStack gap="space-24">
             {forhaandsvarselSteg.type === 'ikke_vurdert' ? (
@@ -101,20 +128,6 @@ export const Forhåndsvarsel: FC = () => {
                     )}
                 </>
             )}
-            <ActionBar
-                stegtekst={actionBarStegtekst('FORHÅNDSVARSEL')}
-                nesteTekst={valg === 'send' ? 'Send forhåndsvarselet' : 'Neste'}
-                nesteAriaLabel={
-                    valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget'
-                }
-                forrigeAriaLabel="Gå tilbake til faktasteget"
-                isLoading={sendVarselbrev.isPending}
-                skjulNeste={behandlingILesemodus}
-                onForrige={navigerTilForrige}
-                {...(forhaandsvarselSteg.type === 'ikke_vurdert'
-                    ? { type: 'submit' as const, formId: FORHÅNDSVARSEL_FORM_ID }
-                    : { onNeste: navigerTilNeste })}
-            />
         </VStack>
     );
 };

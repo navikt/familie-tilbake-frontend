@@ -12,13 +12,18 @@ import {
 } from '@navikt/ds-react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useActionBar } from '~/hooks/useActionBar';
 import { Vergetype, vergetyper } from '~/kodeverk/verge';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { HenterData } from '~/komponenter/datalast/HenterData';
 import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
 import { hentFrontendFeilmelding } from '~/utils';
 
 import { useVerge } from './VergeContext';
+
+const VergeActionBar: FC<Parameters<typeof useActionBar>[0]> = config => {
+    useActionBar(config);
+    return null;
+};
 
 export const VergeContainer: FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
@@ -131,7 +136,7 @@ export const VergeContainer: FC = () => {
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
 
-                    <ActionBar
+                    <VergeActionBar
                         stegtekst={actionBarStegtekst('VERGE')}
                         forrigeAriaLabel={undefined}
                         nesteAriaLabel="Gå videre til faktasteget"

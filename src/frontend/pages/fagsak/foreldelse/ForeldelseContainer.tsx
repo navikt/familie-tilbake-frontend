@@ -4,7 +4,7 @@ import { BodyLong, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { RessursStatus } from '~/typer/ressurs';
 import { finnDatoRelativtTilNå } from '~/utils';
@@ -49,6 +49,20 @@ export const ForeldelseContainer: FC = () => {
     const finnesForhåndsvarsel = behandling.behandlingsstegsinfo.some(
         steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
     );
+
+    useActionBar({
+        stegtekst: actionBarStegtekst('FORELDELSE'),
+        forrigeAriaLabel: forrigeAriaLabel(finnesForhåndsvarsel, !skalNavigere),
+        nesteAriaLabel: skalNavigere
+            ? 'Gå videre til vilkårsvurderingssteget'
+            : 'Lagre og gå videre til vilkårsvurderingssteget',
+        onForrige,
+        onNeste,
+        nesteTekst: skalNavigere ? 'Neste' : 'Lagre og gå til neste',
+        forrigeTekst: skalNavigere ? 'Forrige' : 'Lagre og gå til forrige',
+        disableNeste: !allePerioderBehandlet,
+        isLoading: senderInn,
+    });
 
     return (
         <VStack gap="space-24">
@@ -132,21 +146,6 @@ export const ForeldelseContainer: FC = () => {
             ) : (
                 <DataLastIkkeSuksess ressurser={[foreldelse]} />
             )}
-            <ActionBar
-                stegtekst={actionBarStegtekst('FORELDELSE')}
-                forrigeAriaLabel={forrigeAriaLabel(finnesForhåndsvarsel, !skalNavigere)}
-                nesteAriaLabel={
-                    skalNavigere
-                        ? 'Gå videre til vilkårsvurderingssteget'
-                        : 'Lagre og gå videre til vilkårsvurderingssteget'
-                }
-                onForrige={onForrige}
-                onNeste={onNeste}
-                nesteTekst={skalNavigere ? 'Neste' : 'Lagre og gå til neste'}
-                forrigeTekst={skalNavigere ? 'Forrige' : 'Lagre og gå til forrige'}
-                disableNeste={!allePerioderBehandlet}
-                isLoading={senderInn}
-            />
         </VStack>
     );
 };

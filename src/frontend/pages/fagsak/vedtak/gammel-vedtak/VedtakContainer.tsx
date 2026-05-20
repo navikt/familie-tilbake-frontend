@@ -15,9 +15,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useActionBar } from '~/hooks/useActionBar';
 import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
 import { gamleVedtaksresultater } from '~/kodeverk';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
@@ -29,6 +29,11 @@ import { ForhåndsvisVedtaksbrev } from './forhåndsvis-vedtaksbrev/Forhåndsvis
 import { useVedtak } from './VedtakContext';
 import { VedtakPerioder } from './VedtakPerioder';
 import { VedtakSkjema } from './VedtakSkjema';
+
+const VedtakActionBar: FC<Parameters<typeof useActionBar>[0]> = config => {
+    useActionBar(config);
+    return null;
+};
 
 export const VedtakContainer: FC = () => {
     const {
@@ -77,13 +82,13 @@ export const VedtakContainer: FC = () => {
     };
 
     useEffect(() => {
-        const fetch = async (): Promise<void> => {
+        const hentInitialData = async (): Promise<void> => {
             await hentErPerioderLike();
 
             const sammenslåttResponse = await hentErPerioderSammenslått();
             setErPerioderSammenslått(!!sammenslåttResponse);
         };
-        fetch();
+        hentInitialData();
         // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, []);
 
@@ -201,7 +206,7 @@ export const VedtakContainer: FC = () => {
                         )}
                     </HStack>
                 </div>
-                <ActionBar
+                <VedtakActionBar
                     disableNeste={senderInn || disableBekreft || harValideringsFeil}
                     skjulNeste={behandlingILesemodus}
                     stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}

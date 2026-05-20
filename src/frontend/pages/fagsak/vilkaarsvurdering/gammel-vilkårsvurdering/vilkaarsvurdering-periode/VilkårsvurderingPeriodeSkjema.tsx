@@ -23,8 +23,8 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
+import { useActionBar } from '~/hooks/useActionBar';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import { ModalWrapper } from '~/komponenter/modal/ModalWrapper';
 import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
@@ -43,6 +43,11 @@ import {
     useVilkårsvurderingPeriodeSkjema,
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { PeriodeHandling } from '../typer/periodeHandling';
+
+const VilkårsvurderingPeriodeActionBar: FC<Parameters<typeof useActionBar>[0]> = config => {
+    useActionBar(config);
+    return null;
+};
 
 const settSkjemadataFraPeriode = (
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>,
@@ -449,7 +454,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-                <ActionBar
+                <VilkårsvurderingPeriodeActionBar
                     stegtekst={actionBarStegtekst('VILKÅRSVURDERING')}
                     forrigeAriaLabel="Gå tilbake til foreldelsessteget"
                     nesteAriaLabel="Gå videre til vedtakssteget"

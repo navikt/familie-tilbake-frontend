@@ -37,7 +37,7 @@ import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
 import { dateTilIsoDatoString } from '~/utils/dato';
 import { useStegNavigering } from '~/utils/sider';
@@ -161,6 +161,30 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
     };
 
     const { name: avRadioGroupName, ...radioProps } = methods.register('vurdering.oppdaget.av');
+    const skalSubmitteFaktaSkjema =
+        methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert;
+
+    useActionBar(
+        skalSubmitteFaktaSkjema
+            ? {
+                  type: 'submit',
+                  stegtekst: actionBarStegtekst('FAKTA'),
+                  forrigeAriaLabel: undefined,
+                  nesteAriaLabel: 'Gå videre til forhåndsvarselsteget',
+                  onForrige: undefined,
+                  isLoading: oppdaterMutation.isPending,
+                  nesteTekst: methods.formState.isDirty ? 'Lagre og gå til neste' : 'Neste',
+                  formId: 'fakta-skjema',
+              }
+            : {
+                  stegtekst: actionBarStegtekst('FAKTA'),
+                  forrigeAriaLabel: undefined,
+                  nesteAriaLabel: 'Gå videre til forhåndsvarselsteget',
+                  onForrige: undefined,
+                  isLoading: oppdaterMutation.isPending,
+                  onNeste: navigerTilNeste,
+              }
+    );
 
     return (
         <FormProvider {...methods}>
@@ -265,22 +289,6 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
                         readOnly={behandlingILesemodus}
                     />
                 </section>
-                <ActionBar
-                    {...(methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert
-                        ? {
-                              type: 'submit',
-                              nesteTekst: methods.formState.isDirty
-                                  ? 'Lagre og gå til neste'
-                                  : 'Neste',
-                              formId: 'fakta-skjema',
-                          }
-                        : { type: 'button', onNeste: navigerTilNeste })}
-                    stegtekst={actionBarStegtekst('FAKTA')}
-                    forrigeAriaLabel={undefined}
-                    nesteAriaLabel="Gå videre til forhåndsvarselsteget"
-                    onForrige={undefined}
-                    isLoading={oppdaterMutation.isPending}
-                />
             </form>
         </FormProvider>
     );

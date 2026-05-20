@@ -11,7 +11,7 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { MottakerType, mottakerTypeVisningsnavn } from '~/typer/Brevmottaker';
 import { RessursStatus, type Ressurs } from '~/typer/ressurs';
 import { norskLandnavn } from '~/utils/land';
@@ -240,6 +240,14 @@ export const Brevmottakere: FC = () => {
             manuellBrevmottaker => manuellBrevmottaker.brevmottaker.type === MottakerType.Dødsbo
         );
 
+    useActionBar({
+        stegtekst: actionBarStegtekst('BREVMOTTAKER'),
+        forrigeAriaLabel: undefined,
+        nesteAriaLabel: 'Gå til faktasteget',
+        onNeste: navigerTilNeste,
+        onForrige: undefined,
+    });
+
     return (
         <>
             {visBrevmottakerModal && (
@@ -306,14 +314,6 @@ export const Brevmottakere: FC = () => {
                     </Button>
                 )}
             </VStack>
-
-            <ActionBar
-                stegtekst={actionBarStegtekst('BREVMOTTAKER')}
-                forrigeAriaLabel={undefined}
-                nesteAriaLabel="Gå til faktasteget"
-                onNeste={navigerTilNeste}
-                onForrige={undefined}
-            />
         </>
     );
 };
