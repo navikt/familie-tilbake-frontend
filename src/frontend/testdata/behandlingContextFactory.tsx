@@ -7,6 +7,7 @@ import { BehandlingContext } from '~/context/BehandlingContext';
 import { BehandlingStateContext } from '~/context/BehandlingStateContext';
 import { useUlagretEndringer } from '~/hooks/useUlagretEndringer';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 import { useActionBarConfig } from '~/stores/actionBarStore';
 
 import { lagBehandling } from './behandlingFactory';
@@ -69,7 +70,7 @@ export const lagBehandlingStateContext = (
 const TestActionBar: FC = () => {
     const actionBarConfig = useActionBarConfig();
 
-    return actionBarConfig ? <ActionBar {...actionBarConfig} /> : null;
+    return actionBarConfig ? <ActionBar {...actionBarConfig} /> : <ActionBarSkeleton />;
 };
 
 export const TestBehandlingProvider: FC<{

@@ -45,8 +45,7 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
 }) => {
     return (
         <nav
-            /* Hacker plasseringen til pga at den ikke er på behandlingcontainer nivå men nede i stegcontainerene som styrer hvor startposisjon er */
-            className="flex flex-row fixed bottom-4 bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between z-10 flex-nowrap ax-lg:w-[calc((100vw*2/3)-34px)] w-[calc(100vw-32px)] min-w-96 -ml-6"
+            className="flex flex-row bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between flex-nowrap min-w-96"
             aria-label="Meny og behandlingens steg"
         >
             <Behandlingsmeny />

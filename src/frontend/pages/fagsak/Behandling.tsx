@@ -12,7 +12,9 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
 import { ToggleName } from '~/context/toggles';
 import { useToggles } from '~/context/TogglesContext';
+import { useActionBar } from '~/hooks/useActionBar';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 import { StegErrorBoundary } from '~/komponenter/error-boundary/StegErrorBoundary';
 import { lazyImportMedRetry } from '~/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
@@ -86,6 +88,17 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
+/**
+ * Leaf-komponent som viser ActionBar fra storen.
+ * Må være en separat komponent slik at store-subscriptions IKKE befinner seg
+ * i en forfedre-komponent til stegene — ellers vil steg-komponentene re-rendre
+ * hver gang storen oppdateres og skape en uendelig løkke med useActionBar.
+ */
+const GlobalActionBar: FC = () => {
+    const config = useActionBarConfig();
+    return config ? <ActionBar {...config} /> : <ActionBarSkeleton />;
+};
+
 type BehandlingLayoutProps = {
     children: ReactNode;
     visHøyremeny?: boolean;
@@ -98,7 +111,10 @@ const BehandlingLayout: FC<BehandlingLayoutProps> = ({
     dialogRef,
 }) => (
     <>
-        <div className="flex-1 overflow-auto">{children}</div>
+        <div className="flex flex-col flex-1 min-h-0">
+            <div className="flex-1 overflow-auto min-h-0">{children}</div>
+            <GlobalActionBar />
+        </div>
         {visHøyremeny && <Sidebar dialogRef={dialogRef} />}
     </>
 );
@@ -119,18 +135,21 @@ type VenterPåKravgrunnlagBehandlingProps = {
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
+const VenterPåKravgrunnlagActionBar: FC = () => {
+    useActionBar({
+        stegtekst: 'På vent',
+        skjulNeste: true,
+        forrigeAriaLabel: undefined,
+        nesteAriaLabel: 'Neste',
+        onNeste: () => undefined,
+        onForrige: undefined,
+    });
+    return null;
+};
+
 const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> = ({ dialogRef }) => (
     <BehandlingLayout dialogRef={dialogRef}>
-        <section className="px-6 text-center" aria-label="Venter på kravgrunnlag">
-            <ActionBar
-                stegtekst="På vent"
-                skjulNeste
-                forrigeAriaLabel={undefined}
-                nesteAriaLabel="Neste"
-                onNeste={() => null}
-                onForrige={undefined}
-            />
-        </section>
+        <VenterPåKravgrunnlagActionBar />
     </BehandlingLayout>
 );
 
@@ -178,7 +197,6 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
     const { ventegrunn, setInnholdsbredde } = useBehandlingState();
-    const actionBarConfig = useActionBarConfig();
     const contentRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
@@ -196,10 +214,11 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
     return (
         <>
             <section
-                /* Trekker fra høyde fra header (48), padding (16+16 + 16) og action baren (66), hvis det er vente grunn blir det ytterligere 62 */
+                /* Trekker fra høyde fra header (48) og padding oppe og nede (16+16).
+                   Hvis det er ventegrunn legges det til ytterligere 62 */
                 className={classNames(
-                    'flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-162px)]',
-                    { 'max-h-[calc(100vh-224px)]': !!ventegrunn }
+                    'flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-80px)]',
+                    { 'max-h-[calc(100vh-142px)]': !!ventegrunn }
                 )}
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
@@ -301,7 +320,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                         <Route path="*" element={<IkkeFunnet />} />
                     </Routes>
                 </section>
-                {actionBarConfig && <ActionBar {...actionBarConfig} />}
+                <GlobalActionBar />
             </section>
 
             <Sidebar dialogRef={dialogRef} />

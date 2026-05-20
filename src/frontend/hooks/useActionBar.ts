@@ -18,18 +18,13 @@ import { type ActionBarConfig, useActionBarStore } from '~/stores/actionBarStore
  * });
  */
 export const useActionBar = (config: ActionBarConfig): void => {
-    const registrer = useActionBarStore(s => s.registrer);
-    const avregistrer = useActionBarStore(s => s.avregistrer);
-
-    // Synkroniser config etter hver render slik at reaktive verdier
-    // (isLoading, disableNeste, etc.) alltid er oppdaterte i storen.
     useEffect(() => {
-        registrer(config);
+        useActionBarStore.getState().registrer(config);
     });
 
     useEffect(() => {
         return (): void => {
-            avregistrer();
+            useActionBarStore.getState().avregistrer();
         };
-    }, [avregistrer]);
+    }, []);
 };
