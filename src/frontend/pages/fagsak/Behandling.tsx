@@ -19,6 +19,7 @@ import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
 import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
 import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
 import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
+import { useActionBarConfig } from '~/stores/actionBarStore';
 import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
 import { venteårsaker } from '~/typer/behandling';
 import { formatterDatostring } from '~/utils';
@@ -177,6 +178,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
     const { ventegrunn, setInnholdsbredde } = useBehandlingState();
+    const actionBarConfig = useActionBarConfig();
     const contentRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
@@ -299,6 +301,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                         <Route path="*" element={<IkkeFunnet />} />
                     </Routes>
                 </section>
+                {actionBarConfig && <ActionBar {...actionBarConfig} />}
             </section>
 
             <Sidebar dialogRef={dialogRef} />
