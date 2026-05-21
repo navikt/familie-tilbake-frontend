@@ -15,6 +15,7 @@ import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.ge
 import { formatterDatostringLangt } from '~/utils/dateUtils';
 
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
+import { Unntak } from './Unntak';
 
 export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
@@ -63,15 +64,10 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
         }
     }, [stønadstekst, valg, setValue, getValues]);
 
-    const {
-        name: valgName,
-        ref: valgRef,
-        onChange: registerOnChange,
-        ...valgRadioProps
-    } = register('valg');
+    const { onChange, ...radioProps } = register('valg');
 
     const handleValgChange: ChangeHandler = async event => {
-        await registerOnChange(event);
+        await onChange(event);
         onValgEndring?.(event.target.value as 'send' | 'unntak');
     };
 
@@ -79,13 +75,10 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
         <VStack asChild gap="space-24">
             <form id={FORHÅNDSVARSEL_FORM_ID} onSubmit={handleSubmit(onSubmit)}>
                 <SkalSendeForhåndsvarsel
-                    name={valgName}
-                    radioRef={valgRef}
                     readOnly={behandlingILesemodus}
-                    value={valg}
                     error={errors.valg?.message}
                     onChange={handleValgChange}
-                    {...valgRadioProps}
+                    {...radioProps}
                 />
 
                 {valg === 'send' && varselbrevtekster && (
@@ -142,6 +135,8 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
                         </VStack>
                     </Box>
                 )}
+
+                {valg === 'unntak' && <Unntak />}
             </form>
         </VStack>
     );
