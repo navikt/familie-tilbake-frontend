@@ -30,11 +30,6 @@ import { useVedtak } from './VedtakContext';
 import { VedtakPerioder } from './VedtakPerioder';
 import { VedtakSkjema } from './VedtakSkjema';
 
-const VedtakActionBar: FC<Parameters<typeof useActionBar>[0]> = config => {
-    useActionBar(config);
-    return null;
-};
-
 export const VedtakContainer: FC = () => {
     const {
         vedtaksbrevavsnitt,
@@ -118,6 +113,18 @@ export const VedtakContainer: FC = () => {
             });
         }
     }, [foreslåVedtakRespons, visGlobalAlert]);
+
+    useActionBar({
+        disableNeste: senderInn || disableBekreft || harValideringsFeil,
+        skjulNeste: behandlingILesemodus,
+        stegtekst: actionBarStegtekst('FORESLÅ_VEDTAK'),
+        nesteTekst: 'Send til godkjenning',
+        forrigeAriaLabel: 'Gå tilbake til vilkårsvurderingssteget',
+        nesteAriaLabel: 'Send til godkjenning hos beslutter',
+        onNeste: () => bekreftelsesmodalRef.current?.showModal(),
+        onForrige: navigerTilForrige,
+        isLoading: senderInn,
+    });
 
     if (
         beregningsresultat?.status === RessursStatus.Suksess &&
@@ -206,17 +213,7 @@ export const VedtakContainer: FC = () => {
                         )}
                     </HStack>
                 </div>
-                <VedtakActionBar
-                    disableNeste={senderInn || disableBekreft || harValideringsFeil}
-                    skjulNeste={behandlingILesemodus}
-                    stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
-                    nesteTekst="Send til godkjenning"
-                    forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
-                    nesteAriaLabel="Send til godkjenning hos beslutter"
-                    onNeste={() => bekreftelsesmodalRef.current?.showModal()}
-                    onForrige={navigerTilForrige}
-                    isLoading={senderInn}
-                />
+
                 <Bekreftelsesmodal
                     dialogRef={bekreftelsesmodalRef}
                     tekster={{

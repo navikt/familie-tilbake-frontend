@@ -44,11 +44,6 @@ import {
 } from './VilkårsvurderingPeriodeSkjemaContext';
 import { PeriodeHandling } from '../typer/periodeHandling';
 
-const VilkårsvurderingPeriodeActionBar: FC<Parameters<typeof useActionBar>[0]> = config => {
-    useActionBar(config);
-    return null;
-};
-
 const settSkjemadataFraPeriode = (
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>,
     periode: VilkårsvurderingPeriodeSkjemaData,
@@ -285,6 +280,17 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
 
+    useActionBar({
+        stegtekst: actionBarStegtekst('VILKÅRSVURDERING'),
+        forrigeTekst: harUlagredeData ? 'Lagre og gå til forrige' : 'Forrige',
+        nesteTekst: harUlagredeData ? 'Lagre og gå til neste' : 'Neste',
+        forrigeAriaLabel: 'Gå tilbake til foreldelsessteget',
+        nesteAriaLabel: 'Gå videre til vedtakssteget',
+        onForrige: () => handleNavigering(PeriodeHandling.GåTilForrigeSteg),
+        onNeste: () => handleNavigering(PeriodeHandling.GåTilNesteSteg),
+        disableNeste: (!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet,
+    });
+
     if (sendInnSkjemaMutation.isPending) {
         return (
             <div className="min-w-[20rem]" aria-live="polite">
@@ -454,18 +460,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-                <VilkårsvurderingPeriodeActionBar
-                    stegtekst={actionBarStegtekst('VILKÅRSVURDERING')}
-                    forrigeAriaLabel="Gå tilbake til foreldelsessteget"
-                    nesteAriaLabel="Gå videre til vedtakssteget"
-                    onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
-                    onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
-                    nesteTekst={harUlagredeData ? 'Lagre og gå til neste' : 'Neste'}
-                    forrigeTekst={harUlagredeData ? 'Lagre og gå til forrige' : 'Forrige'}
-                    // Foreldede perioder blir ikke riktig validert, derfor de disables her. Opprettet bug i trello for dette.
-                    // https://trello.com/c/CEfUALXj/369-ved-trykk-p%C3%A5-neste-steg-i-vilk%C3%A5rsvurderingen-ved-foreldet-steg-s%C3%A5-er-det-en-feil-i-valideringen-som-sier-at-perioden-mangler-vil
-                    disableNeste={(!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet}
-                />
+
                 {sendInnSkjemaMutation.isError && (
                     <FeilModal
                         feil={sendInnSkjemaMutation.error}

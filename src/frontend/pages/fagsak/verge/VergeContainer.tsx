@@ -20,11 +20,6 @@ import { hentFrontendFeilmelding } from '~/utils';
 
 import { useVerge } from './VergeContext';
 
-const VergeActionBar: FC<Parameters<typeof useActionBar>[0]> = config => {
-    useActionBar(config);
-    return null;
-};
-
 export const VergeContainer: FC = () => {
     const { skjema, henterData, stegErBehandlet, erAutoutført, sendInn, senderInn, vergeRespons } =
         useVerge();
@@ -40,6 +35,15 @@ export const VergeContainer: FC = () => {
     const vergetypeValgt = !!skjema.felter.vergetype.verdi;
 
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
+
+    useActionBar({
+        stegtekst: actionBarStegtekst('VERGE'),
+        forrigeAriaLabel: undefined,
+        nesteAriaLabel: 'Gå videre til faktasteget',
+        onNeste: sendInn,
+        onForrige: undefined,
+        isLoading: senderInn,
+    });
 
     return (
         <>
@@ -135,15 +139,6 @@ export const VergeContainer: FC = () => {
                         maxLength={400}
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
-
-                    <VergeActionBar
-                        stegtekst={actionBarStegtekst('VERGE')}
-                        forrigeAriaLabel={undefined}
-                        nesteAriaLabel="Gå videre til faktasteget"
-                        onNeste={sendInn}
-                        onForrige={undefined}
-                        isLoading={senderInn}
-                    />
                 </VStack>
             )}
         </>
