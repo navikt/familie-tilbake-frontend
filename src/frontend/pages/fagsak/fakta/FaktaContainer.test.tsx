@@ -6,7 +6,7 @@ import type { Ressurs } from '~/typer/ressurs';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -99,6 +99,11 @@ const setupMock = (fakta: FaktaResponse): void => {
     }));
 };
 
+const gåVidereKnapp = (): HTMLElement =>
+    screen.getByRole('button', {
+        name: 'Gå videre til foreldelsessteget',
+    });
+
 describe('FaktaContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
@@ -111,9 +116,10 @@ describe('FaktaContainer', () => {
 
         const { getByText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(lagBehandling(), 'BARNETRYGD');
-        await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
-        });
+
+        expect(
+            await screen.findByRole('heading', { name: 'Fakta fra feilutbetalingssaken' })
+        ).toBeInTheDocument();
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('01.01.2020–31.10.2020')).toBeInTheDocument();
@@ -137,14 +143,8 @@ describe('FaktaContainer', () => {
 
         await user.click(getByTestId('brukerHarUttaltSeg.nei'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        );
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
-        });
+        await user.click(gåVidereKnapp());
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
         await user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.BosattIRiket);
         await user.selectOptions(getByTestId('perioder.1.årsak'), HendelseType.BorMedSøker);
@@ -159,15 +159,9 @@ describe('FaktaContainer', () => {
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        );
+        await user.click(gåVidereKnapp());
         // BorMedSøker har kun 1 underårsak og vil derfor bli automatisk satt
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
-        });
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(
             getByTestId('perioder.0.underårsak'),
@@ -182,14 +176,9 @@ describe('FaktaContainer', () => {
             HendelseUndertype.BrukerFlyttetFraNorge
         );
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        );
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        });
+        await user.click(gåVidereKnapp());
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
@@ -199,9 +188,9 @@ describe('FaktaContainer', () => {
         const { getByText, getByLabelText, getByRole, getAllByRole, getByTestId, queryAllByText } =
             renderFaktaContainer(lagBehandling(), 'BARNETRYGD');
 
-        await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole('heading', { name: 'Fakta fra feilutbetalingssaken' })
+        ).toBeInTheDocument();
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('Opprett tilbakekreving, send varsel')).toBeInTheDocument();
@@ -209,14 +198,9 @@ describe('FaktaContainer', () => {
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(getAllByRole('combobox')).toHaveLength(3);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        );
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(5);
-        });
+        await user.click(gåVidereKnapp());
+
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(5);
 
         await user.click(
             getByRole('checkbox', {
@@ -229,12 +213,7 @@ describe('FaktaContainer', () => {
 
         expect(getAllByRole('combobox')).toHaveLength(6);
 
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        );
-
+        await user.click(gåVidereKnapp());
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(4);
 
         await user.selectOptions(
@@ -248,14 +227,9 @@ describe('FaktaContainer', () => {
             ),
             'Begrunnelse'
         );
-        await user.click(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        );
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
-        });
+        await user.click(gåVidereKnapp());
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+
         expect(mockedSettIkkePersistertKomponent).toHaveBeenCalledWith('fakta');
     });
 
@@ -282,15 +256,15 @@ describe('FaktaContainer', () => {
         });
         setupMock(faktaResponse);
 
-        const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
+        const { getByText, getByLabelText, getByTestId } = renderFaktaContainer(
             lagBehandling(),
             'BARNETRYGD',
             true
         );
 
-        await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole('heading', { name: 'Fakta fra feilutbetalingssaken' })
+        ).toBeInTheDocument();
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
@@ -307,11 +281,7 @@ describe('FaktaContainer', () => {
             'Dette er en test-begrunnelse'
         );
 
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        ).toBeInTheDocument();
+        expect(gåVidereKnapp()).toBeInTheDocument();
     });
 
     test('Vis utfylt skjema - Overgangsstønad', async () => {
@@ -337,15 +307,15 @@ describe('FaktaContainer', () => {
         });
         setupMock(faktaResponse);
 
-        const { getByText, getByLabelText, getByTestId, getByRole } = renderFaktaContainer(
+        const { getByText, getByLabelText, getByTestId } = renderFaktaContainer(
             lagBehandling(),
             'OVERGANGSSTØNAD',
             true
         );
 
-        await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole('heading', { name: 'Fakta fra feilutbetalingssaken' })
+        ).toBeInTheDocument();
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
@@ -360,11 +330,7 @@ describe('FaktaContainer', () => {
             'Dette er en test-begrunnelse'
         );
 
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        ).toBeInTheDocument();
+        expect(gåVidereKnapp()).toBeInTheDocument();
     });
 
     test('Vis utfylt skjema - lesevisning - Barnetrygd', async () => {
@@ -390,16 +356,11 @@ describe('FaktaContainer', () => {
         });
         setupMock(faktaResponse);
 
-        const { getByText, getByRole } = renderFaktaContainer(
-            lagBehandling(),
-            'BARNETRYGD',
-            true,
-            true
-        );
+        const { getByText } = renderFaktaContainer(lagBehandling(), 'BARNETRYGD', true, true);
 
-        await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole('heading', { name: 'Fakta fra feilutbetalingssaken' })
+        ).toBeInTheDocument();
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
@@ -411,11 +372,7 @@ describe('FaktaContainer', () => {
         expect(getByText('Barn over 6 år')).toBeInTheDocument();
         expect(getByText('Dette er en test-begrunnelse')).toBeInTheDocument();
 
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        ).toBeInTheDocument();
+        expect(gåVidereKnapp()).toBeInTheDocument();
     });
 
     test('Vis utfylt skjema - lesevisning - Overgangsstønad', async () => {
@@ -441,16 +398,11 @@ describe('FaktaContainer', () => {
         });
         setupMock(faktaResponse);
 
-        const { getByText, getByRole } = renderFaktaContainer(
-            lagBehandling(),
-            'OVERGANGSSTØNAD',
-            true,
-            true
-        );
+        const { getByText } = renderFaktaContainer(lagBehandling(), 'OVERGANGSSTØNAD', true, true);
 
-        await waitFor(() => {
-            expect(getByText('Fakta fra feilutbetalingssaken')).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole('heading', { name: 'Fakta fra feilutbetalingssaken' })
+        ).toBeInTheDocument();
 
         expect(getByText('Periode med feilutbetaling')).toBeInTheDocument();
         expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
@@ -462,29 +414,23 @@ describe('FaktaContainer', () => {
         expect(getByText('Arbeid')).toBeInTheDocument();
         expect(getByText('Dette er en test-begrunnelse')).toBeInTheDocument();
 
-        expect(
-            getByRole('button', {
-                name: 'Gå videre til foreldelsessteget',
-            })
-        ).toBeInTheDocument();
+        expect(gåVidereKnapp()).toBeInTheDocument();
     });
 
     test('Velg hendelsesundertype automatisk ved kun ett valg', async () => {
         setupMock(lagFaktaResponse({ feilutbetaltePerioder: [feilutbetaltePerioder[0]] }));
 
-        const { getByTestId, getAllByRole } = renderFaktaContainer(
-            lagBehandling(),
-            'OVERGANGSSTØNAD'
-        );
+        const { getAllByRole } = renderFaktaContainer(lagBehandling(), 'OVERGANGSSTØNAD');
 
-        await waitFor(() => {
-            user.selectOptions(getByTestId('perioder.0.årsak'), HendelseType.Overgangsstønad);
-        });
+        user.selectOptions(
+            await screen.findByTestId('perioder.0.årsak'),
+            HendelseType.Overgangsstønad
+        );
 
         expect(getAllByRole('combobox')).toHaveLength(1);
 
-        await waitFor(() => {
-            expect(getByTestId('perioder.0.underårsak')).toHaveValue(HendelseUndertype.Barn8År);
-        });
+        expect(await screen.findByTestId('perioder.0.underårsak')).toHaveValue(
+            HendelseUndertype.Barn8År
+        );
     });
 });

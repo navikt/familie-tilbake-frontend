@@ -4,7 +4,7 @@ import type { DokumentApiHook } from '~/api/dokument';
 import type { BehandlingDto, SpråkkodeEnum } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -71,10 +71,7 @@ describe('SendMelding', () => {
         const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
             renderSendMelding(lagBehandling({ varselSendt: false }));
 
-        await waitFor(() => {
-            expect(getByText('Brevmottaker')).toBeInTheDocument();
-        });
-
+        expect(getByText('Brevmottaker')).toBeInTheDocument();
         expect(getByLabelText('Mal')).toHaveLength(3);
         expect(queryByText('Bokmål')).not.toBeInTheDocument();
 
@@ -128,10 +125,7 @@ describe('SendMelding', () => {
             'NN'
         );
 
-        await waitFor(() => {
-            expect(getByText('Brevmottaker')).toBeInTheDocument();
-        });
-
+        expect(getByText('Brevmottaker')).toBeInTheDocument();
         expect(getByLabelText('Mal')).toHaveLength(3);
         expect(queryByText('Nynorsk')).not.toBeInTheDocument();
 
@@ -166,9 +160,7 @@ describe('SendMelding', () => {
             lagBehandling({ varselSendt: true })
         );
 
-        await waitFor(() => {
-            expect(getByText('Brevmottaker')).toBeInTheDocument();
-        });
+        expect(getByText('Brevmottaker')).toBeInTheDocument();
         expect(
             getByRole('button', {
                 name: 'Send brev',

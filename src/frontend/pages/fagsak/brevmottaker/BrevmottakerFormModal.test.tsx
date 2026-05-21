@@ -1,6 +1,6 @@
 import type { UserEvent } from '@testing-library/user-event';
 
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -41,8 +41,9 @@ const renderBrevmottakerFormModal = async (
             </TestBehandlingProvider>
         </FagsakContext>
     );
-    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
 };
+
 const adresseRadioGroup = (): HTMLElement => screen.getByRole('radiogroup', { name: /Adresse/i });
 const manuellRegistreringRadio = (): HTMLElement =>
     within(adresseRadioGroup()).getByRole('radio', { name: 'Manuell registrering' });

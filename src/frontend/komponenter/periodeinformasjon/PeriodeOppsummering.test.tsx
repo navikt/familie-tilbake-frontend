@@ -1,6 +1,6 @@
 import type { RenderResult } from '@testing-library/react';
 
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { HendelseType } from '~/kodeverk';
 
@@ -29,9 +29,8 @@ describe('PeriodeOppsummering', () => {
             333,
             HendelseType.Annet
         );
-        await waitFor(() => {
-            expect(getByText('01.01.2021–30.04.2021')).toBeInTheDocument();
-        });
+
+        expect(getByText('01.01.2021–30.04.2021')).toBeInTheDocument();
         expect(getByText('4 måneder')).toBeInTheDocument();
         expect(getByText('333')).toBeInTheDocument();
         expect(getByText('Rettslig grunnlag: Annet')).toBeInTheDocument();
