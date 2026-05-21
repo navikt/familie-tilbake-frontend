@@ -46,6 +46,13 @@ export type Brevmottaker = {
     personIdent: string;
 };
 
+export type DokumentInfo = {
+    journalpostId: string | null;
+    dokumentId: string | null;
+};
+
+export type DokumentType = 'VARSELBREV' | 'VEDTAKSBREV';
+
 export type Element = {
     type: 'rentekst';
 } & RentekstElement;
@@ -144,8 +151,9 @@ export type Logginnslag = {
     tittel: string;
     tekst: string | null;
     steg: string | null;
-    journalpostId: string | null;
-    dokumentInfoId: string | null;
+    ekstraInfo: {
+        [key: string]: unknown;
+    };
 };
 
 export type MuligeRettsligGrunnlag = {
@@ -687,6 +695,41 @@ export type BehandlingLagreBrukersuttalelseResponses = {
     200: unknown;
 };
 
+export type BehandlingHentDokumentData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+        journalpostId: string;
+        dokumentInfoId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/journalpost/{journalpostId}/dokument/{dokumentInfoId}';
+};
+
+export type BehandlingHentDokumentErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentDokumentError =
+    BehandlingHentDokumentErrors[keyof BehandlingHentDokumentErrors];
+
+export type BehandlingHentDokumentResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Blob | File;
+};
+
+export type BehandlingHentDokumentResponse =
+    BehandlingHentDokumentResponses[keyof BehandlingHentDokumentResponses];
+
 export type BehandlingHentVedtaksbrevData = {
     body?: never;
     path: {
@@ -785,6 +828,40 @@ export type BehandlingHentVedtaksresultatResponses = {
 
 export type BehandlingHentVedtaksresultatResponse =
     BehandlingHentVedtaksresultatResponses[keyof BehandlingHentVedtaksresultatResponses];
+
+export type BehandlingHentDokumentInfoData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+        dokumentType: DokumentType;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/{dokumentType}/gjeldende';
+};
+
+export type BehandlingHentDokumentInfoErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentDokumentInfoError =
+    BehandlingHentDokumentInfoErrors[keyof BehandlingHentDokumentInfoErrors];
+
+export type BehandlingHentDokumentInfoResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: DokumentInfo;
+};
+
+export type BehandlingHentDokumentInfoResponse =
+    BehandlingHentDokumentInfoResponses[keyof BehandlingHentDokumentInfoResponses];
 
 export type VedtaksbrevLagSvgVedtaksbrevData = {
     body: VedtaksbrevDataWritable;

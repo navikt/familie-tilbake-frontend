@@ -9,6 +9,8 @@ import {
     behandlingFakta,
     behandlingForeslaaVedtak,
     behandlingForhandsvarsel,
+    behandlingHentDokument,
+    behandlingHentDokumentInfo,
     behandlingHentVedtaksbrev,
     behandlingHentVedtaksresultat,
     behandlingLagreBrukersuttalelse,
@@ -32,6 +34,12 @@ import type {
     BehandlingForhandsvarselData,
     BehandlingForhandsvarselError,
     BehandlingForhandsvarselResponse,
+    BehandlingHentDokumentData,
+    BehandlingHentDokumentError,
+    BehandlingHentDokumentInfoData,
+    BehandlingHentDokumentInfoError,
+    BehandlingHentDokumentInfoResponse,
+    BehandlingHentDokumentResponse,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevError,
     BehandlingHentVedtaksbrevResponse,
@@ -307,6 +315,28 @@ export const behandlingLagreBrukersuttalelseMutation = (
     return mutationOptions;
 };
 
+export const behandlingHentDokumentQueryKey = (options: Options<BehandlingHentDokumentData>) =>
+    createQueryKey('behandlingHentDokument', options);
+
+export const behandlingHentDokumentOptions = (options: Options<BehandlingHentDokumentData>) =>
+    queryOptions<
+        BehandlingHentDokumentResponse,
+        AxiosError<BehandlingHentDokumentError>,
+        BehandlingHentDokumentResponse,
+        ReturnType<typeof behandlingHentDokumentQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentDokument({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentDokumentQueryKey(options),
+    });
+
 export const behandlingHentVedtaksbrevQueryKey = (
     options: Options<BehandlingHentVedtaksbrevData>
 ) => createQueryKey('behandlingHentVedtaksbrev', options);
@@ -377,6 +407,31 @@ export const behandlingHentVedtaksresultatOptions = (
             return data;
         },
         queryKey: behandlingHentVedtaksresultatQueryKey(options),
+    });
+
+export const behandlingHentDokumentInfoQueryKey = (
+    options: Options<BehandlingHentDokumentInfoData>
+) => createQueryKey('behandlingHentDokumentInfo', options);
+
+export const behandlingHentDokumentInfoOptions = (
+    options: Options<BehandlingHentDokumentInfoData>
+) =>
+    queryOptions<
+        BehandlingHentDokumentInfoResponse,
+        AxiosError<BehandlingHentDokumentInfoError>,
+        BehandlingHentDokumentInfoResponse,
+        ReturnType<typeof behandlingHentDokumentInfoQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentDokumentInfo({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentDokumentInfoQueryKey(options),
     });
 
 export const vedtaksbrevLagSvgVedtaksbrevMutation = (

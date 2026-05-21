@@ -618,6 +618,8 @@ export type HistorikkinnslagDto = {
     journalpostId?: string | null;
     dokumentId?: string | null;
     opprettetTid: string;
+    nyFrist?: string | null;
+    begrunnelseForUtsattFrist?: string | null;
 };
 
 export type RessursListHistorikkinnslagDto = {
