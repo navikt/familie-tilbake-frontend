@@ -21,10 +21,10 @@ export const ActionBarSkeleton: FC<Props> = ({ className }) => {
             </Button>
 
             <HStack gap="space-32" className="flex items-center">
-                <Skeleton width={100} variant="rounded" />
+                <Skeleton width={80} variant="rounded" />
                 <HStack gap="space-16" className="flex-nowrap">
-                    <Skeleton width={50} height={40} variant="rounded" />
-                    <Skeleton width={50} height={40} variant="rounded" />
+                    <Skeleton width={100} height={40} variant="rounded" />
+                    <Skeleton width={100} height={40} variant="rounded" />
                 </HStack>
             </HStack>
         </div>
