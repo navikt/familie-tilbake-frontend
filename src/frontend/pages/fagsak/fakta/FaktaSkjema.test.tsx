@@ -3,7 +3,8 @@ import type { JSX } from 'react';
 import type { FaktaOmFeilutbetaling, BehandlingOppdaterFaktaData } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { expect } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -94,25 +95,41 @@ const renderFakta = (
     };
 };
 
+const nesteKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Gå videre til forhåndsvarselsteget' });
+const oppdagetDato = (): HTMLElement =>
+    screen.getByRole('textbox', {
+        name: 'Når ble feilutbetalingen oppdaget?',
+    });
+const årsakBeskrivelse = (): HTMLElement =>
+    screen.getByRole('textbox', {
+        name: 'Årsak til feilutbetalingen',
+    });
+
 describe('Fakta om feilutbetaling', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+    beforeAll(() => {
+        user = userEvent.setup({ delay: null });
+    });
+
     describe('Rettslig grunnlag', () => {
         test('Forhåndsutfylt rettslig grunnlag fra backend', async () => {
             const {
-                result: { findByRole },
+                result: { getByRole },
             } = renderFakta();
 
-            const bestemmelse = await findByRole('combobox', { name: 'Velg bestemmelse' });
+            const bestemmelse = getByRole('combobox', { name: 'Velg bestemmelse' });
             expect(bestemmelse).toHaveTextContent('Annet');
             expect(bestemmelse).toHaveValue('ANNET');
 
-            const grunnlag = await findByRole('combobox', { name: 'Velg grunnlag' });
+            const grunnlag = getByRole('combobox', { name: 'Velg grunnlag' });
             expect(grunnlag).toHaveTextContent('Annet fritekst');
             expect(grunnlag).toHaveValue('ANNET_FRITEKST');
         });
 
         test('Defaults hentes fra input objekt', async () => {
             const {
-                result: { findByRole },
+                result: { getByRole },
             } = renderFakta({
                 vurdering: {
                     årsak: 'Svindel',
@@ -124,19 +141,12 @@ describe('Fakta om feilutbetaling', () => {
                 },
             });
 
-            const årsakBeskrivelse = await findByRole('textbox', {
-                name: 'Årsak til feilutbetalingen',
-            });
-            expect(årsakBeskrivelse).toHaveValue('Svindel');
+            expect(årsakBeskrivelse()).toHaveValue('Svindel');
+            expect(oppdagetDato()).toHaveValue('20.04.2020');
 
-            const oppdagetDato = await findByRole('textbox', {
-                name: 'Når ble feilutbetalingen oppdaget?',
-            });
-            expect(oppdagetDato).toHaveValue('20.04.2020');
-
-            expect(await findByRole('radio', { name: 'Nav' })).toBeChecked();
-            expect(await findByRole('radio', { name: 'Bruker' })).not.toBeChecked();
-            const oppdagetBeskrivelse = await findByRole('textbox', {
+            expect(getByRole('radio', { name: 'Nav' })).toBeChecked();
+            expect(getByRole('radio', { name: 'Bruker' })).not.toBeChecked();
+            const oppdagetBeskrivelse = getByRole('textbox', {
                 name: 'Hvordan ble feilutbetalingen oppdaget?',
             });
             expect(oppdagetBeskrivelse).toHaveValue('Fant et dokument under bordet.');
@@ -144,49 +154,29 @@ describe('Fakta om feilutbetaling', () => {
 
         test('Submit form with all values', async () => {
             const {
-                result: { findByRole },
+                result: { getByRole },
                 mutationBody,
             } = renderFakta({});
 
-            await waitFor(async () => {
-                fireEvent.change(
-                    await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }),
-                    {
-                        target: { value: 'årsak' },
-                    }
-                );
-            });
+            await user.type(årsakBeskrivelse(), 'årsak');
+            await user.type(oppdagetDato(), '20.04.2020');
 
-            const oppdagetDato = await findByRole('textbox', {
-                name: 'Når ble feilutbetalingen oppdaget?',
-            });
-            fireEvent.change(oppdagetDato, { target: { value: '20.04.2020' } });
-
-            fireEvent.click(await findByRole('radio', { name: 'Nav' }));
-            fireEvent.change(
-                await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' }),
-                {
-                    target: { value: 'hvordan' },
-                }
+            await user.click(getByRole('radio', { name: 'Nav' }));
+            await user.type(
+                getByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' }),
+                'hvordan'
             );
-            await waitFor(async () => {
-                fireEvent.click(
-                    await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
-                );
-            });
+
+            await user.click(nesteKnapp());
+
             await expect(mutationBody).resolves.toEqual({
-                path: {
-                    behandlingId: 'unik',
-                },
+                path: { behandlingId: 'unik' },
                 body: {
                     perioder: [
                         {
                             id: 'unik',
                             rettsligGrunnlag: [
-                                {
-                                    bestemmelse: 'ANNET',
-                                    grunnlag: 'ANNET_FRITEKST',
-                                },
+                                { bestemmelse: 'ANNET', grunnlag: 'ANNET_FRITEKST' },
                             ],
                         },
                     ],
@@ -202,31 +192,8 @@ describe('Fakta om feilutbetaling', () => {
             });
         });
 
-        test('bytter til submit knapp når dato endres', async () => {
-            const {
-                result: { findByRole },
-            } = renderFakta({});
-
-            const nesteKnapp = await findByRole('button', {
-                name: 'Gå videre til forhåndsvarselsteget',
-            });
-            expect(nesteKnapp).toHaveAttribute('type', 'submit');
-
-            const oppdagetDato = await findByRole('textbox', {
-                name: 'Når ble feilutbetalingen oppdaget?',
-            });
-
-            fireEvent.change(oppdagetDato, { target: { value: '20.04.2020' } });
-            const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til forhåndsvarselsteget',
-            });
-            expect(submitKnapp).toHaveAttribute('type', 'submit');
-        });
-
-        test('bytter til submit knapp ', async () => {
-            const {
-                result: { findByRole },
-            } = renderFakta({
+        test('Bytter til submit knapp ', async () => {
+            renderFakta({
                 vurdering: {
                     årsak: 'Toast',
                     oppdaget: {
@@ -235,27 +202,19 @@ describe('Fakta om feilutbetaling', () => {
                         beskrivelse: 'VI OPPDAGET EN FEIL!!!!',
                     },
                 },
+                ferdigvurdert: true,
             });
 
-            const nesteKnapp = await findByRole('button', {
-                name: 'Gå videre til forhåndsvarselsteget',
-            });
-            expect(nesteKnapp).toHaveAttribute('type', 'submit');
+            expect(nesteKnapp()).toHaveAttribute('type', 'button');
 
-            const oppdagetDato = await findByRole('textbox', {
-                name: 'Når ble feilutbetalingen oppdaget?',
-            });
-            fireEvent.change(oppdagetDato, { target: { value: '' } });
+            await user.clear(oppdagetDato());
 
-            const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til forhåndsvarselsteget',
-            });
-            expect(submitKnapp).toHaveAttribute('type', 'submit');
+            expect(nesteKnapp()).toHaveAttribute('type', 'submit');
         });
 
         test('Bytting av bestemmelse i rettslig grunnlag', async () => {
             const {
-                result: { findByRole },
+                result: { getByRole },
             } = renderFakta({
                 muligeRettsligGrunnlag: [
                     {
@@ -282,17 +241,14 @@ describe('Fakta om feilutbetaling', () => {
                 ],
             });
 
-            expect(await findByRole('combobox', { name: 'Velg grunnlag' })).toHaveValue('G1');
-
-            fireEvent.change(await findByRole('combobox', { name: 'Velg bestemmelse' }), {
-                target: { value: 'B2' },
-            });
-            expect(await findByRole('combobox', { name: 'Velg grunnlag' })).not.toHaveValue();
+            expect(getByRole('combobox', { name: 'Velg grunnlag' })).toHaveValue('G1');
+            await user.selectOptions(getByRole('combobox', { name: 'Velg bestemmelse' }), 'B2');
+            expect(getByRole('combobox', { name: 'Velg grunnlag' })).not.toHaveValue();
         });
 
         test('Ingen forhåndsutfylt rettslig grunnlag', async () => {
             const {
-                result: { findByRole },
+                result: { getByRole, findByRole },
             } = renderFakta({
                 muligeRettsligGrunnlag: [
                     {
@@ -324,53 +280,43 @@ describe('Fakta om feilutbetaling', () => {
                 },
             });
 
-            // Tving en endring for å få opp lagre-knappen(ikke nødvendig etter backend-endring)
-            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
-                target: { value: 'Ny årsak' },
-            });
+            await user.click(nesteKnapp());
 
-            fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
-            );
-            await waitFor(async () => {
-                const bestemmelseDropdown = await findByRole('combobox', {
-                    name: 'Velg bestemmelse',
-                });
-                expect(bestemmelseDropdown).not.toHaveValue();
-                expect(bestemmelseDropdown).toBeInvalid();
-                expect(bestemmelseDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
-            });
-
-            fireEvent.change(
+            const bestemmelseDropdown = async (): Promise<HTMLElement> =>
                 await findByRole('combobox', {
                     name: 'Velg bestemmelse',
-                }),
-                { target: { value: 'B1' } }
+                });
+            expect(await bestemmelseDropdown()).not.toHaveValue();
+            expect(await bestemmelseDropdown()).toBeInvalid();
+            expect(await bestemmelseDropdown()).toHaveAccessibleDescription(
+                'Du må fylle inn en verdi'
             );
 
-            fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
+            await user.type(
+                getByRole('combobox', {
+                    name: 'Velg bestemmelse',
+                }),
+                'B1'
             );
-            await waitFor(async () => {
-                const grunnlagDropdown = await findByRole('combobox', { name: 'Velg grunnlag' });
-                expect(grunnlagDropdown).not.toHaveValue();
-                expect(grunnlagDropdown).toBeInvalid();
-                expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
-            });
+
+            await user.click(nesteKnapp());
+            const grunnlagDropdown = getByRole('combobox', { name: 'Velg grunnlag' });
+            expect(grunnlagDropdown).not.toHaveValue();
+            expect(grunnlagDropdown).toBeInvalid();
+            expect(grunnlagDropdown).toHaveAccessibleDescription('Du må fylle inn en verdi');
         });
 
-        test('dato felt valideres ved unblur', async () => {
+        test('Datofelt valideres ved unblur', async () => {
             const {
                 result: { findByRole },
             } = renderFakta();
 
-            fireEvent.change(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' }), {
+            fireEvent.change(årsakBeskrivelse(), {
                 target: { value: 'Ny årsak' },
             });
 
-            fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
-            );
+            fireEvent.click(nesteKnapp());
+
             const oppdagetDato = await findByRole('textbox', {
                 name: 'Når ble feilutbetalingen oppdaget?',
             });
@@ -380,24 +326,18 @@ describe('Fakta om feilutbetaling', () => {
             );
         });
 
-        test('Viser fortsatt Neste dersom fakta ikke er ferdigvurdert, men uendret', async () => {
-            const {
-                result: { findByRole },
-            } = renderFakta({
+        test('Viser fortsatt "Neste" dersom fakta ikke er ferdigvurdert, men uendret', async () => {
+            renderFakta({
                 ferdigvurdert: false,
             });
 
-            const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til forhåndsvarselsteget',
-            });
+            const submitKnapp = nesteKnapp();
             expect(submitKnapp).toHaveAttribute('type', 'submit');
             expect(submitKnapp).toHaveTextContent('Neste');
         });
 
         test('Viser nesteknapp dersom fakta er ferdigvurdert og uendret', async () => {
-            const {
-                result: { findByRole },
-            } = renderFakta({
+            renderFakta({
                 ferdigvurdert: true,
                 vurdering: {
                     årsak: 'Begrunnelse',
@@ -409,16 +349,14 @@ describe('Fakta om feilutbetaling', () => {
                 },
             });
 
-            const submitKnapp = await findByRole('button', {
-                name: 'Gå videre til forhåndsvarselsteget',
-            });
+            const submitKnapp = nesteKnapp();
             expect(submitKnapp).toHaveAttribute('type', 'button');
             expect(submitKnapp).toHaveTextContent('Neste');
         });
 
         test('Valg av dato med musepeker - skal revalidere etter valg', async () => {
             const {
-                result: { findByRole },
+                result: { getByRole, findByRole },
             } = renderFakta({
                 vurdering: {
                     årsak: 'test',
@@ -431,24 +369,22 @@ describe('Fakta om feilutbetaling', () => {
             });
 
             const datoSelector = async (): Promise<HTMLElement> =>
-                findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' });
+                await findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' });
 
             fireEvent.change(await datoSelector(), { target: { value: 'lol' } });
-            fireEvent.click(
-                await findByRole('button', { name: 'Gå videre til forhåndsvarselsteget' })
-            );
+            fireEvent.click(nesteKnapp());
             expect(await datoSelector()).toHaveAccessibleDescription(
                 'Du må skrive en dato på denne måten: dd.mm.åååå'
             );
 
-            fireEvent.click(await findByRole('button', { name: 'Åpne datovelger' }));
-            fireEvent.change(await findByRole('combobox', { name: 'År' }), {
+            fireEvent.click(getByRole('button', { name: 'Åpne datovelger' }));
+            fireEvent.change(getByRole('combobox', { name: 'År' }), {
                 target: { value: '2020' },
             });
-            fireEvent.change(await findByRole('combobox', { name: 'Måned' }), {
+            fireEvent.change(getByRole('combobox', { name: 'Måned' }), {
                 target: { value: 'januar' },
             });
-            fireEvent.click(await findByRole('button', { name: 'onsdag 1' }));
+            fireEvent.click(getByRole('button', { name: 'onsdag 1' }));
 
             expect(await datoSelector()).toHaveValue('01.01.2020');
             expect(await datoSelector()).not.toHaveAccessibleDescription();
@@ -495,34 +431,24 @@ describe('Fakta om feilutbetaling', () => {
                 </FagsakContext>
             );
 
-            const { rerender, findByRole } = render(wrapMedProviders(utfyltFakta));
+            const { rerender, getByRole } = render(wrapMedProviders(utfyltFakta));
 
-            expect(await findByRole('textbox', { name: 'Årsak til feilutbetalingen' })).toHaveValue(
-                'Svindel'
-            );
-            expect(await findByRole('radio', { name: 'Nav' })).toBeChecked();
+            expect(årsakBeskrivelse()).toHaveValue('Svindel');
+            expect(getByRole('radio', { name: 'Nav' })).toBeChecked();
+            expect(oppdagetDato()).toHaveValue('20.04.2020');
             expect(
-                await findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' })
-            ).toHaveValue('20.04.2020');
-            expect(
-                await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' })
+                getByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' })
             ).toHaveValue('Fant et dokument under bordet.');
 
             // Simulerer at faktaOmFeilutbetaling oppdateres med nullstilt data, slik det gjøres ved start på nytt
             rerender(wrapMedProviders(nullstiltFakta));
 
-            await waitFor(async () => {
-                expect(
-                    await findByRole('textbox', { name: 'Årsak til feilutbetalingen' })
-                ).toHaveValue('');
-            });
-            expect(await findByRole('radio', { name: 'Nav' })).not.toBeChecked();
-            expect(await findByRole('radio', { name: 'Bruker' })).not.toBeChecked();
+            expect(årsakBeskrivelse()).toHaveValue('');
+            expect(getByRole('radio', { name: 'Nav' })).not.toBeChecked();
+            expect(getByRole('radio', { name: 'Bruker' })).not.toBeChecked();
+            expect(oppdagetDato()).toHaveValue('');
             expect(
-                await findByRole('textbox', { name: 'Når ble feilutbetalingen oppdaget?' })
-            ).toHaveValue('');
-            expect(
-                await findByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' })
+                getByRole('textbox', { name: 'Hvordan ble feilutbetalingen oppdaget?' })
             ).toHaveValue('');
         });
     });
