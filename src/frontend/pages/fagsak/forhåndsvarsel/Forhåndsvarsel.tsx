@@ -44,8 +44,8 @@ export const Forhåndsvarsel: FC = () => {
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
     /** TODO
-     * skal ikke være redigerbar hvis unntak er sendt inn og skjema ikke er endret.
-     * Nå POSTes unntak på nytt hver gang man trykker på neste-knappen
+     * Kan ikke være redigerbar hvis unntak er sendt inn og skjema ikke er endret.
+     * Nå postes unntak på nytt hver gang man trykker på neste-knappen
      */
     const erRedigerbarForhåndsvarselFlyt =
         forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
