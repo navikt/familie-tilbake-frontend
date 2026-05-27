@@ -42,6 +42,11 @@ export const Forhåndsvarsel: FC = () => {
 
     const { forhaandsvarselSteg: forhåndsvarselSteg, brukeruttalelse } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
+
+    /** TODO
+     * skal ikke være redigerbar hvis unntak er sendt inn og skjema ikke er endret.
+     * Nå POSTes unntak på nytt hver gang man trykker på neste-knappen
+     */
     const erRedigerbarForhåndsvarselFlyt =
         forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
 
@@ -120,12 +125,15 @@ export const Forhåndsvarsel: FC = () => {
                   type: 'submit' as const,
                   formId: FORHÅNDSVARSEL_FORM_ID,
                   ...fellesActionBarConfig,
-                  nesteTekst: 'Send forhåndsvarselet',
-                  nesteAriaLabel: 'Send forhåndsvarselet',
+                  // TODO legg til "Lagre og gå videre" når setIkkePersistertKomponent er lagt til
+                  ...(valg === 'send' && { nesteTekst: 'Send forhåndsvarselet' }),
+                  nesteAriaLabel:
+                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
               }
             : {
                   ...fellesActionBarConfig,
                   onNeste: navigerTilNeste,
+                  // TODO legg til "Lagre og gå videre til foreldelsessteget" når setIkkePersistertKomponent er lagt til
                   nesteAriaLabel: 'Gå videre til foreldelsessteget',
               }
     );

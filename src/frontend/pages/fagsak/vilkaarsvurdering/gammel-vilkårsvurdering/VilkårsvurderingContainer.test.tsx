@@ -240,7 +240,7 @@ describe('VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
+                name: 'Lagre og gå videre til vedtakssteget',
             })
         );
         expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
@@ -314,7 +314,7 @@ describe('VilkårsvurderingContainer', () => {
 
         await user.click(
             getByRole('button', {
-                name: 'Gå videre til vedtakssteget',
+                name: 'Lagre og gå videre til vedtakssteget',
             })
         );
     });
