@@ -164,24 +164,24 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
     const skalSubmitteFaktaSkjema =
         methods.formState.isDirty || !faktaOmFeilutbetaling.ferdigvurdert;
 
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FAKTA'),
+        forrigeAriaLabel: undefined,
+        nesteAriaLabel: 'Gå videre til forhåndsvarselsteget',
+        onForrige: undefined,
+        isLoading: oppdaterMutation.isPending,
+    };
+
     useActionBar(
         skalSubmitteFaktaSkjema
             ? {
                   type: 'submit',
-                  stegtekst: actionBarStegtekst('FAKTA'),
-                  forrigeAriaLabel: undefined,
-                  nesteAriaLabel: 'Gå videre til forhåndsvarselsteget',
-                  onForrige: undefined,
-                  isLoading: oppdaterMutation.isPending,
-                  nesteTekst: methods.formState.isDirty ? 'Lagre og gå til neste' : 'Neste',
                   formId: 'fakta-skjema',
+                  ...fellesActionBarConfig,
+                  ...(methods.formState.isDirty && { nesteTekst: 'Lagre og gå til neste' }),
               }
             : {
-                  stegtekst: actionBarStegtekst('FAKTA'),
-                  forrigeAriaLabel: undefined,
-                  nesteAriaLabel: 'Gå videre til forhåndsvarselsteget',
-                  onForrige: undefined,
-                  isLoading: oppdaterMutation.isPending,
+                  ...fellesActionBarConfig,
                   onNeste: navigerTilNeste,
               }
     );

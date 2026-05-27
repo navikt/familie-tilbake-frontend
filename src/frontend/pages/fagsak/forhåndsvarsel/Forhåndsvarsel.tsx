@@ -28,7 +28,7 @@ import { Unntak } from './Unntak';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
-    const { actionBarStegtekst, behandlingILesemodus } = useBehandlingState();
+    const { actionBarStegtekst } = useBehandlingState();
     const navigerTilNeste = useStegNavigering('FORELDELSE');
     const navigerTilForrige = useStegNavigering('FAKTA');
     const queryClient = useQueryClient();
@@ -75,30 +75,26 @@ export const Forhåndsvarsel: FC = () => {
 
     const visForhåndsvisning = forhaandsvarselSteg.type === 'ikke_vurdert' && valg === 'send';
 
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
+        forrigeAriaLabel: 'Gå tilbake til faktasteget',
+        onForrige: navigerTilForrige,
+        isLoading: sendVarselbrev.isPending,
+    };
+
     useActionBar(
         forhaandsvarselSteg.type === 'ikke_vurdert'
             ? {
-                  type: 'submit',
+                  type: 'submit' as const,
                   formId: FORHÅNDSVARSEL_FORM_ID,
-                  stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
-                  nesteTekst: valg === 'send' ? 'Send forhåndsvarselet' : 'Neste',
-                  nesteAriaLabel:
-                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
-                  forrigeAriaLabel: 'Gå tilbake til faktasteget',
-                  isLoading: sendVarselbrev.isPending,
-                  skjulNeste: behandlingILesemodus,
-                  onForrige: navigerTilForrige,
+                  ...fellesActionBarConfig,
+                  nesteTekst: 'Send forhåndsvarselet',
+                  nesteAriaLabel: 'Send forhåndsvarselet',
               }
             : {
-                  stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
-                  nesteTekst: valg === 'send' ? 'Send forhåndsvarselet' : 'Neste',
-                  nesteAriaLabel:
-                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
-                  forrigeAriaLabel: 'Gå tilbake til faktasteget',
-                  isLoading: sendVarselbrev.isPending,
-                  skjulNeste: behandlingILesemodus,
-                  onForrige: navigerTilForrige,
+                  ...fellesActionBarConfig,
                   onNeste: navigerTilNeste,
+                  nesteAriaLabel: 'Gå videre til foreldelsessteget',
               }
     );
 

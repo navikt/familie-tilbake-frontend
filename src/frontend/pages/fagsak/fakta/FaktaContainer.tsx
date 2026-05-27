@@ -29,21 +29,34 @@ export const FaktaContainer: FC = () => {
 
     const harFeil = fakta?.status !== RessursStatus.Suksess;
 
-    useActionBar({
+    const forrigeAriaLabel = behandling.harVerge
+        ? 'Gå tilbake til vergesteget'
+        : harBrevmottakerSteg
+          ? 'Gå tilbake til brevmottakersteget'
+          : undefined;
+    const onForrige = behandling.harVerge || harBrevmottakerSteg ? navigerTilForrige : undefined;
+
+    const fellesActionBarConfig = {
         stegtekst: actionBarStegtekst('FAKTA'),
-        forrigeAriaLabel: behandling.harVerge
-            ? 'Gå tilbake til vergesteget'
-            : harBrevmottakerSteg
-              ? 'Gå tilbake til brevmottakersteget'
-              : undefined,
-        nesteAriaLabel: harForhåndsvarselSteg
-            ? 'Gå videre til forhåndsvarselsteget'
-            : 'Gå videre til foreldelsessteget',
-        onForrige: behandling.harVerge || harBrevmottakerSteg ? navigerTilForrige : undefined,
-        onNeste: sendInnSkjema,
+        forrigeAriaLabel: forrigeAriaLabel,
+        onForrige: onForrige,
         isLoading: senderInn,
-        skjulNeste: harFeil,
-    });
+    };
+
+    useActionBar(
+        harFeil
+            ? {
+                  ...fellesActionBarConfig,
+                  skjulNeste: true,
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  onNeste: sendInnSkjema,
+                  nesteAriaLabel: harForhåndsvarselSteg
+                      ? 'Gå videre til forhåndsvarselsteget'
+                      : 'Gå videre til foreldelsessteget',
+              }
+    );
 
     return (
         <>

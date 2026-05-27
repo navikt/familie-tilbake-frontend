@@ -114,17 +114,27 @@ export const VedtakContainer: FC = () => {
         }
     }, [foreslåVedtakRespons, visGlobalAlert]);
 
-    useActionBar({
-        disableNeste: senderInn || disableBekreft || harValideringsFeil,
-        skjulNeste: behandlingILesemodus,
+    const fellesActionBarConfig = {
         stegtekst: actionBarStegtekst('FORESLÅ_VEDTAK'),
-        nesteTekst: 'Send til godkjenning',
         forrigeAriaLabel: 'Gå tilbake til vilkårsvurderingssteget',
-        nesteAriaLabel: 'Send til godkjenning hos beslutter',
-        onNeste: () => bekreftelsesmodalRef.current?.showModal(),
         onForrige: navigerTilForrige,
         isLoading: senderInn,
-    });
+    };
+
+    useActionBar(
+        behandlingILesemodus
+            ? {
+                  ...fellesActionBarConfig,
+                  skjulNeste: true,
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  nesteTekst: 'Send til godkjenning',
+                  nesteAriaLabel: 'Send til godkjenning hos beslutter',
+                  disableNeste: senderInn || disableBekreft || harValideringsFeil,
+                  onNeste: (): void => bekreftelsesmodalRef.current?.showModal(),
+              }
+    );
 
     if (
         beregningsresultat?.status === RessursStatus.Suksess &&

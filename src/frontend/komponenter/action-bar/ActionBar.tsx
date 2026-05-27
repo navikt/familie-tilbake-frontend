@@ -1,35 +1,12 @@
 import type { FC } from 'react';
+import type { ActionBarConfig } from '~/stores/actionBarStore';
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
 import { Behandlingsmeny } from '~/komponenter/meny/Meny';
 
-type BaseProps = {
-    stegtekst: string | undefined;
-    forrigeAriaLabel: string | undefined;
-    nesteAriaLabel: string;
-    onForrige: (() => void) | undefined;
-    nesteTekst?: string;
-    forrigeTekst?: string;
-    isLoading?: boolean;
-    skjulNeste?: boolean;
-    disableNeste?: boolean;
-};
-
-type ButtonProps = BaseProps & {
-    type?: 'button';
-    formId?: never;
-    onNeste: () => void;
-};
-
-type SubmitProps = BaseProps & {
-    type: 'submit';
-    formId: string;
-    onNeste?: never;
-};
-
-const ActionBar: FC<ButtonProps | SubmitProps> = ({
+const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',
     forrigeAriaLabel,
     nesteAriaLabel,
@@ -45,7 +22,7 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
 }) => {
     return (
         <nav
-            className="flex flex-row bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between flex-nowrap min-w-96"
+            className="flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between min-w-96"
             aria-label="Meny og behandlingens steg"
         >
             <Behandlingsmeny />
@@ -75,7 +52,10 @@ const ActionBar: FC<ButtonProps | SubmitProps> = ({
                         </Tooltip>
                     )}
                     {!skjulNeste && (
-                        <Tooltip content={nesteAriaLabel} aria-disabled={isLoading || disableNeste}>
+                        <Tooltip
+                            content={nesteAriaLabel ?? nesteTekst}
+                            aria-disabled={isLoading || disableNeste}
+                        >
                             <Button
                                 icon={<ChevronRightIcon aria-hidden fontSize="1.5rem" />}
                                 iconPosition="right"

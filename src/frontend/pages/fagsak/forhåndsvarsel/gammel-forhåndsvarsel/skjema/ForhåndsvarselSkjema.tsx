@@ -244,32 +244,28 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
             begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
+        nesteTekst: getNesteKnappTekst(submitAction),
+        onForrige: navigerTilForrige,
+        nesteAriaLabel: getNesteKnappTekst(submitAction),
+        forrigeAriaLabel: 'Gå til fakta om feilutbetaling',
+        isLoading:
+            sendForhåndsvarselMutation.isPending ||
+            sendBrukeruttalelseMutation.isPending ||
+            sendUnntakMutation?.isPending,
+    };
+
     useActionBar(
         formId
             ? {
                   type: 'submit',
-                  formId,
-                  stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
-                  nesteTekst: getNesteKnappTekst(submitAction),
-                  isLoading:
-                      sendForhåndsvarselMutation.isPending ||
-                      sendBrukeruttalelseMutation.isPending ||
-                      sendUnntakMutation?.isPending,
-                  forrigeAriaLabel: 'Gå til fakta om feilutbetaling',
-                  onForrige: navigerTilForrige,
-                  nesteAriaLabel: getNesteKnappTekst(submitAction),
+                  formId: formId,
+                  ...fellesActionBarConfig,
               }
             : {
-                  stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
-                  nesteTekst: getNesteKnappTekst(submitAction),
-                  isLoading:
-                      sendForhåndsvarselMutation.isPending ||
-                      sendBrukeruttalelseMutation.isPending ||
-                      sendUnntakMutation?.isPending,
-                  forrigeAriaLabel: 'Gå til fakta om feilutbetaling',
-                  onForrige: navigerTilForrige,
-                  nesteAriaLabel: getNesteKnappTekst(submitAction),
                   onNeste: navigerTilNeste,
+                  ...fellesActionBarConfig,
               }
     );
 

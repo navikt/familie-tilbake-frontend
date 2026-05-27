@@ -139,11 +139,9 @@ type VenterPåKravgrunnlagBehandlingProps = {
 const VenterPåKravgrunnlagActionBar: FC = () => {
     useActionBar({
         stegtekst: 'På vent',
-        skjulNeste: true,
         forrigeAriaLabel: undefined,
-        nesteAriaLabel: 'Neste',
-        onNeste: () => undefined,
         onForrige: undefined,
+        skjulNeste: true,
     });
     return null;
 };

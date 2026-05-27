@@ -71,17 +71,27 @@ export const Vedtak: FC = () => {
         foreslåVedtak.mutate({ path: { behandlingId } });
     };
 
-    useActionBar({
-        stegtekst: actionBarStegtekst('FORESLÅ_VEDTAK'),
-        nesteTekst: 'Send til godkjenning',
-        forrigeAriaLabel: 'Gå tilbake til vilkårsvurderingssteget',
-        nesteAriaLabel: 'Send til godkjenning hos beslutter',
-        isLoading: foreslåVedtak.isPending,
-        skjulNeste: behandlingILesemodus,
-        type: 'submit',
+    const fellesActionBarConfig = {
+        type: 'submit' as const,
         formId: VEDTAKSBREV_FORM_ID,
+        stegtekst: actionBarStegtekst('FORESLÅ_VEDTAK'),
+        forrigeAriaLabel: 'Gå tilbake til vilkårsvurderingssteget',
         onForrige: navigerTilForrige,
-    });
+        isLoading: foreslåVedtak.isPending,
+    };
+
+    useActionBar(
+        behandlingILesemodus
+            ? {
+                  ...fellesActionBarConfig,
+                  skjulNeste: true,
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  nesteTekst: 'Send til godkjenning',
+                  nesteAriaLabel: 'Send til godkjenning hos beslutter',
+              }
+    );
 
     return (
         <VStack gap="space-24">

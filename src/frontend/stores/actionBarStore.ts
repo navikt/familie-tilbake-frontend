@@ -1,30 +1,56 @@
 import { create } from 'zustand';
 
-type ActionBarBaseConfig = {
+type ActionBarBase = {
     stegtekst: string | undefined;
     forrigeAriaLabel: string | undefined;
-    nesteAriaLabel: string;
     onForrige: (() => void) | undefined;
-    nesteTekst?: string;
-    forrigeTekst?: string;
     isLoading?: boolean;
-    skjulNeste?: boolean;
+    forrigeTekst?: string;
+};
+
+type MedNesteKnapp = {
+    nesteAriaLabel: string;
+    onNeste: () => void;
+    skjulNeste?: false;
+    nesteTekst?: string;
     disableNeste?: boolean;
 };
 
-type ActionBarKnappConfig = ActionBarBaseConfig & {
-    type?: 'button';
-    formId?: never;
-    onNeste: () => void;
-};
-
-type ActionBarSubmitConfig = ActionBarBaseConfig & {
-    type: 'submit';
-    formId: string;
+type UtenNesteKnapp = {
+    skjulNeste: true;
+    nesteAriaLabel?: never;
+    nesteTekst?: never;
+    disableNeste?: never;
     onNeste?: never;
 };
 
-export type ActionBarConfig = ActionBarKnappConfig | ActionBarSubmitConfig;
+type MedNesteSubmit = {
+    skjulNeste?: false;
+    nesteAriaLabel: string;
+    nesteTekst?: string;
+    disableNeste?: boolean;
+    onNeste?: never;
+};
+
+type UtenNesteSubmit = {
+    skjulNeste: true;
+    nesteAriaLabel?: never;
+    nesteTekst?: never;
+    disableNeste?: never;
+    onNeste?: never;
+};
+
+type ButtonConfig = ActionBarBase & {
+    type?: 'button';
+    formId?: never;
+} & (MedNesteKnapp | UtenNesteKnapp);
+
+type SubmitConfig = ActionBarBase & {
+    type: 'submit';
+    formId: string;
+} & (MedNesteSubmit | UtenNesteSubmit);
+
+export type ActionBarConfig = ButtonConfig | SubmitConfig;
 
 type ActionBarState = {
     config: ActionBarConfig | null;
@@ -39,6 +65,3 @@ export const useActionBarStore = create<ActionBarState>(set => ({
 }));
 
 export const useActionBarConfig = (): ActionBarConfig | null => useActionBarStore(s => s.config);
-export const useRegistrerActionBar = (): ((config: ActionBarConfig) => void) =>
-    useActionBarStore(s => s.registrer);
-export const useAvregistrerActionBar = (): (() => void) => useActionBarStore(s => s.avregistrer);
