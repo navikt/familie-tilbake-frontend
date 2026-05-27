@@ -223,7 +223,6 @@ export const VedtakContainer: FC = () => {
                         )}
                     </HStack>
                 </div>
-
                 <Bekreftelsesmodal
                     dialogRef={bekreftelsesmodalRef}
                     tekster={{

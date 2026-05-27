@@ -460,7 +460,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-
                 {sendInnSkjemaMutation.isError && (
                     <FeilModal
                         feil={sendInnSkjemaMutation.error}
