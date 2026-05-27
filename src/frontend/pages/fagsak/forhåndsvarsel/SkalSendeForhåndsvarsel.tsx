@@ -1,4 +1,4 @@
-import type { FC, Ref } from 'react';
+import type { FC } from 'react';
 import type { ChangeHandler } from 'react-hook-form';
 
 import { Radio, RadioGroup } from '@navikt/ds-react';
@@ -8,7 +8,6 @@ type Props = {
     readOnly?: boolean;
     value?: 'send' | 'unntak';
     error?: string;
-    radioRef?: Ref<HTMLInputElement>;
     onChange?: ChangeHandler;
     onBlur?: ChangeHandler;
 };
@@ -18,9 +17,7 @@ export const SkalSendeForhåndsvarsel: FC<Props> = ({
     readOnly,
     value,
     error,
-    radioRef,
-    onChange,
-    onBlur,
+    ...radioProps
 }) => (
     <RadioGroup
         name={name}
@@ -29,13 +26,13 @@ export const SkalSendeForhåndsvarsel: FC<Props> = ({
         size="small"
         readOnly={readOnly}
         className="max-w-xl"
-        value={value ?? ''}
+        value={value}
         error={error}
     >
-        <Radio value="send" ref={radioRef} onChange={onChange} onBlur={onBlur}>
+        <Radio value="send" {...radioProps}>
             Ja
         </Radio>
-        <Radio value="unntak" onChange={onChange} onBlur={onBlur}>
+        <Radio value="unntak" {...radioProps}>
             Nei
         </Radio>
     </RadioGroup>

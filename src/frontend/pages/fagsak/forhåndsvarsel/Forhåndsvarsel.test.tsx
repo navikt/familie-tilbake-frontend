@@ -1,7 +1,6 @@
 import type { UserEvent } from '@testing-library/user-event';
 import type { RessursVarselbrevtekst } from '~/generated';
-import type { ForhaandsvarselResponse } from '~/generated-new';
-import type { FaktaOmFeilutbetaling } from '~/generated-new';
+import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, type RenderResult, screen, within } from '@testing-library/react';
@@ -197,7 +196,7 @@ describe('Forhåndsvarsel', () => {
         expect(within(radioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
     });
 
-    test('Viser read-only radio med Nei valgt ved unntak', () => {
+    test('Viser redigerbar radio med Nei valgt ved unntak', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
@@ -209,7 +208,7 @@ describe('Forhåndsvarsel', () => {
         );
 
         const radioGroup = skalSendesRadioGroup();
-        expect(radioGroup).toHaveClass('aksel-fieldset--readonly');
+        expect(radioGroup).not.toHaveClass('aksel-fieldset--readonly');
         expect(within(radioGroup).getByRole('radio', { name: 'Nei' })).toBeChecked();
     });
 

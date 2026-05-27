@@ -13,6 +13,7 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import {
     behandlingForhandsvarselOptions,
     behandlingForhandsvarselQueryKey,
+    behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
 import { useActionBar } from '~/hooks/useActionBar';
@@ -24,7 +25,6 @@ import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
 import { ikkeVurdertSchema } from './schema';
 import { SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
-import { Unntak } from './Unntak';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
@@ -40,24 +40,48 @@ export const Forhåndsvarsel: FC = () => {
         })
     );
 
-    const { forhaandsvarselSteg, brukeruttalelse } = response;
+    const { forhaandsvarselSteg: forhåndsvarselSteg, brukeruttalelse } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
+    const erRedigerbarForhåndsvarselFlyt =
+        forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
 
     const methods = useForm<IkkeVurdertFormData>({
         resolver: zodResolver(ikkeVurdertSchema),
+        defaultValues:
+            forhåndsvarselSteg.type === 'unntak'
+                ? {
+                      valg: 'unntak',
+                      begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
+                      beskrivelse: forhåndsvarselSteg.beskrivelse,
+                  }
+                : undefined,
     });
+
+    const etterVellykketLagring = async (): Promise<void> => {
+        await queryClient.invalidateQueries({
+            queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
+        });
+        navigerTilNeste();
+    };
 
     const sendVarselbrev = useMutation({
         ...behandlingSendVarselbrevMutation(),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
-            });
-            navigerTilNeste();
-        },
+        onSuccess: etterVellykketLagring,
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende forhåndsvarsel',
+                message: error.message,
+                status: 'error',
+            });
+        },
+    });
+
+    const lagreUnntak = useMutation({
+        ...behandlingLagreForhaandsvarselUnntakMutation(),
+        onSuccess: etterVellykketLagring,
+        onError: error => {
+            visGlobalAlert({
+                title: 'Kunne ikke lagre unntak',
                 message: error.message,
                 status: 'error',
             });
@@ -70,10 +94,18 @@ export const Forhåndsvarsel: FC = () => {
                 path: { behandlingId },
                 body: { tekstFraSaksbehandler: data.tekstFraSaksbehandler },
             });
+        } else {
+            lagreUnntak.mutate({
+                path: { behandlingId },
+                body: {
+                    begrunnelseForUnntak: data.begrunnelseForUnntak,
+                    beskrivelse: data.beskrivelse,
+                },
+            });
         }
     };
 
-    const visForhåndsvisning = forhaandsvarselSteg.type === 'ikke_vurdert' && valg === 'send';
+    const visForhåndsvisning = erRedigerbarForhåndsvarselFlyt && valg === 'send';
 
     const fellesActionBarConfig = {
         stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
@@ -83,7 +115,7 @@ export const Forhåndsvarsel: FC = () => {
     };
 
     useActionBar(
-        forhaandsvarselSteg.type === 'ikke_vurdert'
+        erRedigerbarForhåndsvarselFlyt
             ? {
                   type: 'submit' as const,
                   formId: FORHÅNDSVARSEL_FORM_ID,
@@ -100,7 +132,7 @@ export const Forhåndsvarsel: FC = () => {
 
     return (
         <VStack gap="space-24">
-            {forhaandsvarselSteg.type === 'ikke_vurdert' ? (
+            {erRedigerbarForhåndsvarselFlyt ? (
                 <FormProvider {...methods}>
                     <HStack align="center" gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
@@ -113,14 +145,11 @@ export const Forhåndsvarsel: FC = () => {
                     <Heading size="medium">Forhåndsvarsel</Heading>
                     <SkalSendeForhåndsvarsel
                         name="valg"
-                        value={forhaandsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
+                        value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
                         readOnly
                     />
-                    {forhaandsvarselSteg.type === 'sendt' && (
-                        <SendtVarsel {...forhaandsvarselSteg} brukeruttalelse={brukeruttalelse} />
-                    )}
-                    {forhaandsvarselSteg.type === 'unntak' && (
-                        <Unntak {...forhaandsvarselSteg} brukeruttalelse={brukeruttalelse} />
+                    {forhåndsvarselSteg.type === 'sendt' && (
+                        <SendtVarsel {...forhåndsvarselSteg} brukeruttalelse={brukeruttalelse} />
                     )}
                 </>
             )}
