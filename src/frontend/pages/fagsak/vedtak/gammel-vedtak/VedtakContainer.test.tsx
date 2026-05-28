@@ -11,7 +11,7 @@ import type {
 } from '~/typer/vedtakTyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -162,9 +162,7 @@ describe('VedtakContainer', () => {
         const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
             renderVedtakContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText('Vedtak')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
             queryByText(
@@ -184,21 +182,17 @@ describe('VedtakContainer', () => {
         expect(getAllByText('1 222')).toHaveLength(2);
         expect(getAllByText('2 445')).toHaveLength(2);
 
-        await waitFor(() => {
-            expect(
-                queryByRole('button', {
-                    name: 'Forhåndsvis vedtaksbrev',
-                })
-            ).toBeInTheDocument();
-        });
+        expect(
+            queryByRole('button', {
+                name: 'Forhåndsvis vedtaksbrev',
+            })
+        ).toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeDisabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeDisabled();
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
@@ -274,9 +268,7 @@ describe('VedtakContainer', () => {
                 })
             );
 
-        await waitFor(() => {
-            expect(getByText('Vedtak')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
             queryByText(
@@ -284,21 +276,17 @@ describe('VedtakContainer', () => {
             )
         ).not.toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                queryByRole('button', {
-                    name: 'Forhåndsvis vedtaksbrev',
-                })
-            ).toBeInTheDocument();
-        });
+        expect(
+            queryByRole('button', {
+                name: 'Forhåndsvis vedtaksbrev',
+            })
+        ).toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeDisabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeDisabled();
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
@@ -377,9 +365,7 @@ describe('VedtakContainer', () => {
                 })
             );
 
-        await waitFor(() => {
-            expect(getByText('Vedtak')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(getByText('Vedtaksbrev sendes ikke ut fra denne behandlingen.')).toBeInTheDocument();
 
@@ -389,13 +375,11 @@ describe('VedtakContainer', () => {
             })
         ).not.toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeDisabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeDisabled();
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
@@ -426,13 +410,11 @@ describe('VedtakContainer', () => {
             })
         ).not.toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeEnabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
@@ -476,9 +458,7 @@ describe('VedtakContainer', () => {
                 })
             );
 
-        await waitFor(() => {
-            expect(getByText('Vedtak')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
             queryByText(
@@ -486,21 +466,17 @@ describe('VedtakContainer', () => {
             )
         ).not.toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                queryByRole('button', {
-                    name: 'Forhåndsvis vedtaksbrev',
-                })
-            ).toBeInTheDocument();
-        });
+        expect(
+            queryByRole('button', {
+                name: 'Forhåndsvis vedtaksbrev',
+            })
+        ).toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeDisabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeDisabled();
 
         expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
@@ -559,13 +535,11 @@ describe('VedtakContainer', () => {
             })
         ).toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeEnabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeEnabled();
 
         await user.click(
             getByRole('button', {
@@ -601,25 +575,19 @@ describe('VedtakContainer', () => {
         const { getByText, getByRole, getByTestId, queryByRole } =
             renderVedtakContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText('Vedtak')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                queryByRole('button', {
-                    name: 'Forhåndsvis vedtaksbrev',
-                })
-            ).toBeInTheDocument();
-        });
+        expect(
+            queryByRole('button', {
+                name: 'Forhåndsvis vedtaksbrev',
+            })
+        ).toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Send til godkjenning hos beslutter',
-                })
-            ).toBeEnabled();
-        });
+        expect(
+            getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        ).toBeEnabled();
         expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
         expect(
@@ -709,9 +677,7 @@ describe('VedtakContainer', () => {
 
         const { getByText, getByRole, queryByRole } = renderVedtakContainer(lagBehandling(), true);
 
-        await waitFor(() => {
-            expect(getByText('Vedtak')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
             queryByRole('button', {
@@ -725,9 +691,7 @@ describe('VedtakContainer', () => {
             })
         ).not.toBeInTheDocument();
 
-        await waitFor(() => {
-            expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
-        });
+        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
             getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
@@ -816,13 +780,11 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
+        const { getByRole, queryByRole } = renderVedtakContainer(
             lagBehandling({ kanEndres: true, erNyModell: true })
         );
 
-        await waitFor(() => {
-            expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
         expect(queryByRole('dialog')).not.toBeInTheDocument();
 
@@ -832,9 +794,7 @@ describe('VedtakContainer', () => {
             })
         );
 
-        await waitFor(() => {
-            expect(getByRole('dialog')).toBeInTheDocument();
-        });
+        expect(getByRole('dialog')).toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -856,13 +816,11 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(
+        const { getByRole, queryByRole } = renderVedtakContainer(
             lagBehandling({ kanEndres: true })
         );
 
-        await waitFor(() => {
-            expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -870,7 +828,7 @@ describe('VedtakContainer', () => {
             })
         );
 
-        const modal = await waitFor(() => getByRole('dialog'));
+        const modal = getByRole('dialog');
 
         await user.click(
             within(modal).getByRole('button', {
@@ -878,8 +836,6 @@ describe('VedtakContainer', () => {
             })
         );
 
-        await waitFor(() => {
-            expect(queryByRole('dialog')).not.toBeInTheDocument();
-        });
+        expect(queryByRole('dialog')).not.toBeInTheDocument();
     });
 });

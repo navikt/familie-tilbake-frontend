@@ -9,7 +9,7 @@ import type {
 } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -114,9 +114,7 @@ describe('VilkårsvurderingContainer', () => {
         const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
             renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -129,9 +127,7 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-        });
+        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(
             getByLabelText(
@@ -256,9 +252,7 @@ describe('VilkårsvurderingContainer', () => {
         const { getByText, getByRole, getByLabelText } =
             renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode)).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
         await user.type(
             getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
@@ -350,9 +344,7 @@ describe('VilkårsvurderingContainer', () => {
         const { getByText, getByRole, getByLabelText, getByTestId } =
             renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
         expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             'Begrunnelse vilkår 1'
@@ -440,9 +432,7 @@ describe('VilkårsvurderingContainer', () => {
         const { getByText, getByRole, getByLabelText } =
             renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
         expect(getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
         expect(
@@ -546,16 +536,13 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText } =
-            renderVilkårsvurderingContainer(lagBehandling());
+        const { getByText, getByLabelText } = renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Nøytral fra 01.01.2020 til 31.03.2020',
-                })
-            ).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole('button', {
+                name: 'Nøytral fra 01.01.2020 til 31.03.2020',
+            })
+        ).toBeInTheDocument();
 
         expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
         expect(

@@ -6,7 +6,7 @@ import type { VergeDto } from '~/typer/api';
 import type { Ressurs } from '~/typer/ressurs';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -83,9 +83,7 @@ describe('VergeContainer', () => {
         const { getByText, getByRole, getByLabelText, queryAllByText } =
             renderVergeContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText('Verge')).toBeInTheDocument();
-        });
+        expect(getByText('Verge')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -123,9 +121,7 @@ describe('VergeContainer', () => {
         const { getByText, getByRole, getByLabelText, queryAllByText, queryByText } =
             renderVergeContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText('Verge')).toBeInTheDocument();
-        });
+        expect(getByText('Verge')).toBeInTheDocument();
 
         await user.click(
             getByRole('button', {
@@ -183,12 +179,10 @@ describe('VergeContainer', () => {
             }
         );
 
-        await waitFor(() => {
-            expect(getByText('Verge')).toBeInTheDocument();
-            expect(
-                getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
-            ).toBeInTheDocument();
-        });
+        expect(getByText('Verge')).toBeInTheDocument();
+        expect(
+            await screen.findByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+        ).toBeInTheDocument();
 
         expect(
             getByRole('button', {
@@ -210,22 +204,22 @@ describe('VergeContainer', () => {
             ident: '27106903129',
             begrunnelse: 'Verge er opprettet',
         });
-        const { getByText, getByRole, getByLabelText, queryByText, queryByLabelText } =
-            renderVergeContainer(lagBehandling({ harVerge: true }), {
+        const { getByText, getByLabelText, queryByText, queryByLabelText } = renderVergeContainer(
+            lagBehandling({ harVerge: true }),
+            {
                 erStegBehandlet: (): boolean => true,
-            });
+            }
+        );
 
-        await waitFor(() => {
-            expect(getByText('Verge')).toBeInTheDocument();
-            expect(
-                queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
-            ).not.toBeInTheDocument();
-            expect(
-                getByRole('button', {
-                    name: 'Gå videre til faktasteget',
-                })
-            ).toBeEnabled();
-        });
+        expect(getByText('Verge')).toBeInTheDocument();
+        expect(
+            queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+        ).not.toBeInTheDocument();
+        expect(
+            await screen.findByRole('button', {
+                name: 'Gå videre til faktasteget',
+            })
+        ).toBeEnabled();
 
         expect(getByLabelText('Vergetype')).toHaveValue(Vergetype.VergeForBarn);
         expect(getByLabelText('Begrunn endringene')).toHaveValue('Verge er opprettet');
@@ -242,7 +236,7 @@ describe('VergeContainer', () => {
             begrunnelse: 'Bruker har engasjert advokat',
         });
 
-        const { getByText, getByRole, queryByText, getByLabelText } = renderVergeContainer(
+        const { getByText, queryByText, getByLabelText } = renderVergeContainer(
             lagBehandling({ harVerge: true }),
             {
                 erStegBehandlet: (): boolean => true,
@@ -250,17 +244,15 @@ describe('VergeContainer', () => {
             }
         );
 
-        await waitFor(() => {
-            expect(getByText('Verge')).toBeInTheDocument();
-            expect(
-                queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
-            ).not.toBeInTheDocument();
-            expect(
-                getByRole('button', {
-                    name: 'Gå videre til faktasteget',
-                })
-            ).toBeEnabled();
-        });
+        expect(getByText('Verge')).toBeInTheDocument();
+        expect(
+            queryByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+        ).not.toBeInTheDocument();
+        expect(
+            await screen.findByRole('button', {
+                name: 'Gå videre til faktasteget',
+            })
+        ).toBeEnabled();
 
         expect(getByText('Advokat/advokatfullmektig')).toBeInTheDocument();
         expect(getByText('Bruker har engasjert advokat')).toBeInTheDocument();
@@ -285,12 +277,10 @@ describe('VergeContainer', () => {
             }
         );
 
-        await waitFor(() => {
-            expect(getByText('Verge')).toBeInTheDocument();
-            expect(
-                getByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
-            ).toBeInTheDocument();
-        });
+        expect(getByText('Verge')).toBeInTheDocument();
+        expect(
+            await screen.findByText('Automatisk vurdert. Verge er kopiert fra fagsystemet.')
+        ).toBeInTheDocument();
 
         expect(
             getByRole('button', {

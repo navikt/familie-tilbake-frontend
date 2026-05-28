@@ -3,7 +3,7 @@ import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-librar
 import type { UserEvent } from '@testing-library/user-event';
 import type { ForeldelseHook } from '~/pages/fagsak/foreldelse/ForeldelseContext';
 
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
@@ -44,7 +44,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         const { getByRole, getByText, getByLabelText, queryAllByText, queryByLabelText } =
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
-        await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
         await user.click(bekreftPeriodeKnapp(getByRole));
@@ -68,7 +68,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         const { getByLabelText, getByRole, getByText, queryByLabelText, queryAllByText } =
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
-        await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
         await user.click(getByLabelText('Ja, perioden er foreldet'));
@@ -102,7 +102,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         const { getByText, getByRole, getByLabelText, queryByLabelText, queryAllByText } =
             renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
-        await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
         expect(
             queryByLabelText('Dato for når feilutbetaling ble oppdaget')
@@ -149,7 +149,7 @@ describe('ForeldelsePeriodeSkjema', () => {
             })
         );
 
-        await waitFor(() => expect(getByText('Detaljer for valgt periode')).toBeInTheDocument());
+        expect(getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(
             queryByLabelText('Foreldelsesfrist', {
                 selector: 'input',
