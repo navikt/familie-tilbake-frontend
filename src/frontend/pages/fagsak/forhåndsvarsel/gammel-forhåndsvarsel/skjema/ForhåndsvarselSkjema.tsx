@@ -248,7 +248,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
         nesteTekst: getNesteKnappTekst(submitAction),
         onForrige: navigerTilForrige,
-        nesteAriaLabel: getNesteKnappTekst(submitAction),
         forrigeAriaLabel: 'Gå til fakta om feilutbetaling',
         isLoading:
             sendForhåndsvarselMutation.isPending ||
@@ -261,10 +260,12 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
             ? {
                   type: 'submit',
                   formId: formId,
+                  nesteAriaLabel: getNesteKnappTekst(submitAction),
                   ...fellesActionBarConfig,
               }
             : {
                   onNeste: navigerTilNeste,
+                  nesteAriaLabel: 'Gå videre til foreldelsessteget',
                   ...fellesActionBarConfig,
               }
     );

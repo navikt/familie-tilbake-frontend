@@ -6,7 +6,7 @@ import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
 import { Behandlingsmeny } from '~/komponenter/meny/Meny';
 
-const ActionBar: FC<ActionBarConfig> = ({
+export const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',
     forrigeAriaLabel,
     nesteAriaLabel,
@@ -30,17 +30,17 @@ const ActionBar: FC<ActionBarConfig> = ({
             <HStack gap="space-32">
                 <BodyShort
                     size="small"
-                    className="text-ax-text-neutral-subtle font-ax-bold flex items-center text-nowrap"
+                    className="text-ax-text-neutral-subtle font-ax-bold flex items-center"
                 >
                     {stegtekst}
                 </BodyShort>
-                <HStack gap="space-16" className="flex-nowrap">
+                <HStack gap="space-16">
                     {forrigeAriaLabel && onForrige && (
                         <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button
                                 variant="secondary"
-                                icon={<ChevronLeftIcon />}
-                                className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
+                                icon={<ChevronLeftIcon aria-hidden />}
+                                className="flex gap-0 ax-lg:gap-2 py-2"
                                 size="small"
                                 loading={isLoading}
                                 disabled={isLoading}
@@ -57,9 +57,9 @@ const ActionBar: FC<ActionBarConfig> = ({
                             aria-disabled={isLoading || disableNeste}
                         >
                             <Button
-                                icon={<ChevronRightIcon aria-hidden fontSize="1.5rem" />}
+                                icon={<ChevronRightIcon aria-hidden />}
                                 iconPosition="right"
-                                className="flex gap-0 ax-lg:gap-2 text-nowrap py-2"
+                                className="flex gap-0 ax-lg:gap-2 py-2"
                                 type={type}
                                 size="small"
                                 form={formId}
@@ -79,5 +79,3 @@ const ActionBar: FC<ActionBarConfig> = ({
         </nav>
     );
 };
-
-export { ActionBar };
