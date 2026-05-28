@@ -1,5 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
-
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -12,8 +10,8 @@ const renderActionBar = (
     onForrige: () => void,
     onNeste: () => void,
     isLoading: boolean = false
-): RenderResult => {
-    return render(
+): void => {
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider>
                 <ActionBar

@@ -1,9 +1,8 @@
-import type { RenderResult } from '@testing-library/react';
 import type { Location } from 'react-router';
 import type { BehandlingDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { Suspense } from 'react';
 
 import { BehandlingProvider } from '~/context/BehandlingContext';
@@ -37,11 +36,11 @@ const createMockBehandling = (overrides: Record<string, unknown> = {}): Behandli
         ...overrides,
     });
 
-const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): RenderResult => {
+const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): void => {
     const queryClient = createTestQueryClient();
     setBehandlingQueryData(queryClient, '123', behandling);
 
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext
                 value={lagFagsak({
@@ -69,17 +68,17 @@ describe('Stegflyt', () => {
 
     describe('Synlighet av steg', () => {
         test('skal vise Fakta, Foreldelse, Vilkårsvurdering og Vedtak som alltid synlige', () => {
-            const { getByText } = renderStegflyt();
+            renderStegflyt();
 
-            expect(getByText('Fakta')).toBeInTheDocument();
-            expect(getByText('Foreldelse')).toBeInTheDocument();
-            expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
-            expect(getByText('Vedtak')).toBeInTheDocument();
+            expect(screen.getByText('Fakta')).toBeInTheDocument();
+            expect(screen.getByText('Foreldelse')).toBeInTheDocument();
+            expect(screen.getByText('Vilkårsvurdering')).toBeInTheDocument();
+            expect(screen.getByText('Vedtak')).toBeInTheDocument();
         });
 
         test('skal ikke vise Brevmottaker når det ikke er i behandlingsstegsinfo', () => {
-            const { queryByText } = renderStegflyt();
-            expect(queryByText('Brevmottaker')).not.toBeInTheDocument();
+            renderStegflyt();
+            expect(screen.queryByText('Brevmottaker')).not.toBeInTheDocument();
         });
 
         test('skal vise Brevmottaker når det er i behandlingsstegsinfo og støttet', () => {
@@ -91,26 +90,26 @@ describe('Stegflyt', () => {
                     lagBrevmottakerSteg(),
                 ],
             });
-            const { getByText } = renderStegflyt(behandling);
+            renderStegflyt(behandling);
 
-            expect(getByText('Brevmottaker(e)')).toBeInTheDocument();
+            expect(screen.getByText('Brevmottaker(e)')).toBeInTheDocument();
         });
     });
 
     describe('Navigering', () => {
         test('skal ikke navigere til steget som allerede er aktivt', () => {
-            const { getByText } = renderStegflyt();
+            renderStegflyt();
 
-            const aktivtSteg = getByText('Fakta');
+            const aktivtSteg = screen.getByText('Fakta');
             fireEvent.click(aktivtSteg);
 
             expect(mockNavigate).not.toHaveBeenCalled();
         });
 
         test('skal kunne navigere til andre aktive steg', () => {
-            const { getByText } = renderStegflyt();
+            renderStegflyt();
 
-            const foreldelseSteg = getByText('Foreldelse');
+            const foreldelseSteg = screen.getByText('Foreldelse');
             fireEvent.click(foreldelseSteg);
 
             expect(mockNavigate).toHaveBeenCalledWith(
@@ -119,9 +118,9 @@ describe('Stegflyt', () => {
         });
 
         test('skal ikke kunne navigere til inaktive steg', () => {
-            const { getByText } = renderStegflyt();
+            renderStegflyt();
 
-            const vedtakSteg = getByText('Vedtak');
+            const vedtakSteg = screen.getByText('Vedtak');
             fireEvent.click(vedtakSteg);
 
             expect(mockNavigate).not.toHaveBeenCalled();
@@ -130,16 +129,18 @@ describe('Stegflyt', () => {
 
     describe('Aria-labels', () => {
         test('skal ha riktige aria-labels for aktive steg', () => {
-            const { getByLabelText } = renderStegflyt();
+            renderStegflyt();
 
-            expect(getByLabelText('Gå til Foreldelse')).toBeInTheDocument();
-            expect(getByLabelText('Gå til Vilkårsvurdering')).toBeInTheDocument();
+            expect(screen.getByLabelText('Gå til Foreldelse')).toBeInTheDocument();
+            expect(screen.getByLabelText('Gå til Vilkårsvurdering')).toBeInTheDocument();
         });
 
         test('skal ha riktige aria-labels for inaktive steg', () => {
-            const { getByLabelText } = renderStegflyt();
+            renderStegflyt();
 
-            expect(getByLabelText('Inaktivt steg, Vedtak, ikke klikkbar')).toBeInTheDocument();
+            expect(
+                screen.getByLabelText('Inaktivt steg, Vedtak, ikke klikkbar')
+            ).toBeInTheDocument();
         });
     });
 
@@ -149,8 +150,8 @@ describe('Stegflyt', () => {
                 pathname: '/ugyldig-side',
             });
 
-            const { container } = renderStegflyt();
-            expect(container.firstChild).toBeNull();
+            renderStegflyt();
+            expect(screen.queryByText('Fakta')).not.toBeInTheDocument();
         });
     });
 });

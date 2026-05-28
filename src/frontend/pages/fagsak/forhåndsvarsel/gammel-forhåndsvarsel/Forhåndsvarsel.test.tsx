@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { BehandlingDto, ForhåndsvarselDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -35,8 +34,8 @@ const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): Forhå
     ...overrides,
 });
 
-const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): RenderResult => {
-    return render(
+const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): void => {
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider
                 behandling={behandling}

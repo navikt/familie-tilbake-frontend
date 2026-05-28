@@ -1,5 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
-
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -26,12 +24,12 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-const renderBrukeruttalelse = (): RenderResult => {
+const renderBrukeruttalelse = (): void => {
     const behandling = lagBehandlingDto({
         varselSendt: true,
     });
 
-    return render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -240,17 +238,17 @@ describe('Brukeruttalelse', () => {
                 })
             );
 
-            const { findByRole } = renderBrukeruttalelse();
+            renderBrukeruttalelse();
 
-            const uttalelsesdato = await findByRole('textbox', {
+            const uttalelsesdato = await screen.findByRole('textbox', {
                 name: 'Når uttalte brukeren seg?',
             });
             expect(uttalelsesdato).toHaveValue('15.06.2023');
-            const hvordanUttalteSeg = await findByRole('textbox', {
+            const hvordanUttalteSeg = await screen.findByRole('textbox', {
                 name: 'Hvordan uttalte brukeren seg?',
             });
             expect(hvordanUttalteSeg).toHaveValue('Telefon');
-            const beskrivelse = await findByRole('textbox', {
+            const beskrivelse = await screen.findByRole('textbox', {
                 name: 'Beskriv hva brukeren har uttalt seg om',
             });
             expect(beskrivelse).toHaveValue('Brukeren forklarte situasjonen');

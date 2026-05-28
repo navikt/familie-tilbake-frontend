@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { BehandlingDto } from '~/generated';
@@ -31,9 +30,9 @@ const renderForeldelseContainer = (
     behandlet: boolean = false,
     lesemodus: boolean = false,
     autoutført: boolean = false
-): RenderResult => {
+): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider
@@ -98,77 +97,76 @@ describe('ForeldelseContainer', () => {
 
     test('Vis og fyll ut perioder og send inn', async () => {
         setupMock(lagForeldelseResponse({ foreldetPerioder: foreldelsesperioder }));
-        const { getByText, getAllByText, getByRole, getByLabelText, queryAllByText, queryByText } =
-            renderForeldelseContainer(lagBehandling());
+        renderForeldelseContainer(lagBehandling());
 
-        expect(getByText('Foreldelse')).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse')).toBeInTheDocument();
         expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
 
-        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
-        expect(getByText('3 måneder')).toBeInTheDocument();
-        expect(getByText('1 333')).toBeInTheDocument();
+        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(screen.getByText('3 måneder')).toBeInTheDocument();
+        expect(screen.getByText('1 333')).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeDisabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Bekreft periode',
             })
         );
 
-        expect(getAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Begrunn valget over'), 'Begrunnelse 1');
-        await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
+        await user.type(screen.getByLabelText('Begrunn valget over'), 'Begrunnelse 1');
+        await user.click(screen.getByLabelText('Nei, perioden er ikke foreldet'));
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Bekreft periode',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         ).toBeDisabled();
 
-        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
-        expect(getByText('2 måneder')).toBeInTheDocument();
-        expect(getByText('1 333')).toBeInTheDocument();
+        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(screen.getByText('2 måneder')).toBeInTheDocument();
+        expect(screen.getByText('1 333')).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Bekreft periode',
             })
         );
 
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.type(getByLabelText('Begrunn valget over'), 'Begrunnelse 2');
-        await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
+        await user.type(screen.getByLabelText('Begrunn valget over'), 'Begrunnelse 2');
+        await user.click(screen.getByLabelText('Nei, perioden er ikke foreldet'));
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Bekreft periode',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
-        expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
+        expect(screen.queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Lagre og gå videre til vilkårsvurderingssteget',
             })
         );
@@ -194,15 +192,12 @@ describe('ForeldelseContainer', () => {
         });
         setupMock(foreldelseResponse);
 
-        const { getByText, getByRole, getByLabelText, queryByText } = renderForeldelseContainer(
-            lagBehandling(),
-            true
-        );
+        renderForeldelseContainer(lagBehandling(), true);
 
-        expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
+        expect(screen.getByText('Foreldelse')).toBeInTheDocument();
+        expect(screen.queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
@@ -214,46 +209,48 @@ describe('ForeldelseContainer', () => {
         );
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
-        expect(queryByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(screen.queryByText('Detaljer for valgt periode')).toBeInTheDocument();
 
-        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
-        expect(getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 1');
-        expect(getByLabelText('Ja, perioden er foreldet')).toBeChecked();
+        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(screen.getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 1');
+        expect(screen.getByLabelText('Ja, perioden er foreldet')).toBeChecked();
         expect(
-            getByLabelText('Foreldelsesfrist', {
+            screen.getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
                 exact: false,
             })
         ).toHaveValue('01.01.2021');
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         );
 
-        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
-        expect(getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 2');
+        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(screen.getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 2');
         expect(
-            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder')
+            screen.getByLabelText(
+                'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder'
+            )
         ).toBeChecked();
         expect(
-            getByLabelText('Foreldelsesfrist', {
+            screen.getByLabelText('Foreldelsesfrist', {
                 selector: 'input',
                 exact: false,
             })
         ).toHaveValue('01.01.2021');
-        expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
+        expect(screen.getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '24.12.2020'
         );
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
@@ -278,105 +275,109 @@ describe('ForeldelseContainer', () => {
             ],
         });
 
-        const { getByText, getByRole, getByLabelText } = renderForeldelseContainer(
-            lagBehandling({ status: 'FATTER_VEDTAK' }),
-            true,
-            true
-        );
+        renderForeldelseContainer(lagBehandling({ status: 'FATTER_VEDTAK' }), true, true);
 
-        expect(getByText('Foreldelse', { selector: 'h1' })).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse', { selector: 'h1' })).toBeInTheDocument();
 
         expect(
             await screen.findByText('Detaljer for valgt periode', { selector: 'h2' })
         ).toBeInTheDocument();
 
-        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
-        expect(getByText('Begrunnelse 1')).toBeInTheDocument();
+        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(screen.getByText('Begrunnelse 1')).toBeInTheDocument();
         expect(
-            getByLabelText('Perioden er foreldet', {
+            screen.getByLabelText('Perioden er foreldet', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
         expect(
-            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder', {
-                selector: 'input',
-                exact: false,
-            })
+            screen.getByLabelText(
+                'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
+            )
         ).not.toBeChecked();
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+        expect(screen.getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
         // Alle tidslinje knappene skal alltid være synlige
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Advarsel fra 01.01.2020 til 31.03.2020',
             })
         ).toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeInTheDocument();
 
         // Knapper for navigering mellom faner skal alltid være synlige og enabled
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå tilbake til faktasteget',
             })
         ).toBeEnabled();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         );
 
-        expect(getByText('Foreldelse', { selector: 'h1' })).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse', { selector: 'h1' })).toBeInTheDocument();
 
         // Andre periode sitt endringspanel skal nå være åpnet, sjekker at riktige verdier er satt
-        expect(getByText('Detaljer for valgt periode', { selector: 'h2' })).toBeInTheDocument();
-        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
-        expect(getByText('Begrunnelse 2')).toBeInTheDocument();
         expect(
-            getByLabelText('Perioden er foreldet', {
+            screen.getByText('Detaljer for valgt periode', { selector: 'h2' })
+        ).toBeInTheDocument();
+        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(screen.getByText('Begrunnelse 2')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Perioden er foreldet', {
                 selector: 'input',
                 exact: false,
             })
         ).not.toBeChecked();
         expect(
-            getByLabelText('Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder', {
-                selector: 'input',
-                exact: false,
-            })
+            screen.getByLabelText(
+                'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder',
+                {
+                    selector: 'input',
+                    exact: false,
+                }
+            )
         ).toBeChecked();
-        expect(getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
+        expect(screen.getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
             '24.12.2020'
         );
-        expect(getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
+        expect(screen.getByLabelText('Foreldelsesfrist')).toHaveValue('01.01.2021');
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Advarsel fra 01.01.2020 til 31.03.2020',
             })
         ).toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå tilbake til faktasteget',
             })
         ).toBeEnabled();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Gå videre til vilkårsvurderingssteget',
             })
         ).toBeEnabled();
@@ -384,11 +385,11 @@ describe('ForeldelseContainer', () => {
 
     test('Vis autoutført', async () => {
         setupMock(lagForeldelseResponse({ foreldetPerioder: [] }));
-        const { getByText } = renderForeldelseContainer(lagBehandling(), false, false, true);
+        renderForeldelseContainer(lagBehandling(), false, false, true);
 
-        expect(getByText('Foreldelse')).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse')).toBeInTheDocument();
         expect(
-            getByText(
+            screen.getByText(
                 'Perioden blir automatisk vurdert dersom det er mer enn 6 måneder til den er foreldet.'
             )
         ).toBeInTheDocument();
@@ -403,49 +404,53 @@ describe('ForeldelseContainer', () => {
 
         test('Autoutført steg uten vurdering viser Neste/Forrige', async () => {
             setupMock(lagForeldelseResponse({ foreldetPerioder: [] }));
-            const { getByRole } = renderForeldelseContainer(lagBehandling(), false, false, true);
+            renderForeldelseContainer(lagBehandling(), false, false, true);
 
             expect(
-                getByRole('button', {
+                screen.getByRole('button', {
                     name: 'Gå videre til vilkårsvurderingssteget',
                 })
             ).toBeInTheDocument();
 
-            expect(getByRole('button', { name: 'Gå tilbake til faktasteget' })).toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: 'Gå tilbake til faktasteget' })
+            ).toBeInTheDocument();
         });
 
         test('Uvurdert steg viser Lagre-tekst når bruker vurderer en periode', async () => {
             setupMock(lagForeldelseResponse({ foreldetPerioder: [foreldelsesperioder[0]] }));
-            const { getByRole, getByLabelText } = renderForeldelseContainer(lagBehandling(), false);
+            renderForeldelseContainer(lagBehandling(), false);
 
             expect(await screen.findByLabelText('Begrunn valget over')).toBeInTheDocument();
 
-            await user.type(getByLabelText('Begrunn valget over'), 'Begrunnelse');
-            await user.click(getByLabelText('Nei, perioden er ikke foreldet'));
-            await user.click(getByRole('button', { name: 'Bekreft periode' }));
+            await user.type(screen.getByLabelText('Begrunn valget over'), 'Begrunnelse');
+            await user.click(screen.getByLabelText('Nei, perioden er ikke foreldet'));
+            await user.click(screen.getByRole('button', { name: 'Bekreft periode' }));
 
             expect(
-                getByRole('button', {
+                screen.getByRole('button', {
                     name: 'Lagre og gå videre til vilkårsvurderingssteget',
                 })
             ).toBeInTheDocument();
             expect(
-                getByRole('button', { name: 'Lagre og gå tilbake til faktasteget' })
+                screen.getByRole('button', { name: 'Lagre og gå tilbake til faktasteget' })
             ).toBeInTheDocument();
         });
 
         test('Vurdert steg med vurdert periode uten endringer viser Neste/Forrige', async () => {
             setupMock(lagForeldelseResponse({ foreldetPerioder: [ikkeForeldetPeriode] }));
-            const { getByRole } = renderForeldelseContainer(lagBehandling(), true);
+            renderForeldelseContainer(lagBehandling(), true);
 
             expect(await screen.findByText('Foreldelse')).toBeInTheDocument();
 
             expect(
-                getByRole('button', {
+                screen.getByRole('button', {
                     name: 'Gå videre til vilkårsvurderingssteget',
                 })
             ).toBeInTheDocument();
-            expect(getByRole('button', { name: 'Gå tilbake til faktasteget' })).toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: 'Gå tilbake til faktasteget' })
+            ).toBeInTheDocument();
         });
     });
 });

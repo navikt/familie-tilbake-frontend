@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { FaktaOmFeilutbetaling } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -28,9 +27,9 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-const renderForhåndsvarselSkjema = (): RenderResult => {
+const renderForhåndsvarselSkjema = (): void => {
     const behandling = lagBehandlingDto();
-    const result = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -47,15 +46,13 @@ const renderForhåndsvarselSkjema = (): RenderResult => {
     const jaRadioButton = sendForhåndsvarselFieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
-
-    return result;
 };
 
-const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
+const renderForhåndsvarselSkjemaSendt = (): void => {
     vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueriesSendt());
 
     const behandling = lagBehandlingDto();
-    const result = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -72,8 +69,6 @@ const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
     const jaRadioButton = sendForhåndsvarselFieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
-
-    return result;
 };
 
 describe('ForhåndsvarselSkjema', () => {
@@ -139,7 +134,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato: string): FaktaOmFeilutbetaling =>
         ferdigvurdert: false,
     }) satisfies FaktaOmFeilutbetaling;
 
-const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
+const renderMedFaktaData = (vedtaksdato: string): void => {
     const behandling = lagBehandlingDto();
     const queryClient = createTestQueryClient();
 
@@ -148,7 +143,7 @@ const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
     });
     queryClient.setQueryData(queryKey, lagFaktaOmFeilutbetaling(vedtaksdato));
 
-    const renderForhåndsvarsel = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={queryClient}>
@@ -165,8 +160,6 @@ const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
     const jaRadioButton = fieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
-
-    return renderForhåndsvarsel;
 };
 
 describe('Stønadstekst', () => {
@@ -177,17 +170,17 @@ describe('Stønadstekst', () => {
     });
 
     test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
-        const { getByRole } = renderMedFaktaData('2025-09-05');
+        renderMedFaktaData('2025-09-05');
 
-        expect(getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
+        expect(screen.getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
             'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
         );
     });
 
     test('Overskriver ikke fritekst som brukeren har skrevet', async () => {
-        const { getByRole } = renderMedFaktaData('2025-09-05');
+        renderMedFaktaData('2025-09-05');
 
-        const textarea = getByRole('textbox', { name: 'Legg til utdypende tekst' });
+        const textarea = screen.getByRole('textbox', { name: 'Legg til utdypende tekst' });
         expect(textarea).toHaveValue(
             'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
         );

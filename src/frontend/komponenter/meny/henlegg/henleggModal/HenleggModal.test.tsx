@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { RefObject } from 'react';
 import type { BehandlingApiHook } from '~/api/behandling';
@@ -27,10 +26,10 @@ vi.mock('~/api/behandling', () => ({
 const renderHenleggModal = (
     behandling: BehandlingDto,
     årsaker: BehandlingsresultatstypeEnum[]
-): RenderResult => {
+): void => {
     const queryClient = createTestQueryClient();
     const mockDialogRef: RefObject<HTMLDialogElement | null> = { current: null };
-    const renderModal = render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
@@ -40,8 +39,6 @@ const renderHenleggModal = (
         </QueryClientProvider>
     );
     mockDialogRef.current?.showModal();
-
-    return renderModal;
 };
 
 const setupMocks = (): void => {
@@ -69,97 +66,92 @@ describe('HenleggModal', () => {
     });
 
     test('Henlegger behandling med varsel sendt', async () => {
-        const { getByLabelText, queryByText, queryAllByText } = renderHenleggModal(
-            lagBehandling({ varselSendt: true }),
-            ['HENLAGT_FEILOPPRETTET']
-        );
+        renderHenleggModal(lagBehandling({ varselSendt: true }), ['HENLAGT_FEILOPPRETTET']);
 
         expect(henleggTittel()).toBeInTheDocument();
 
-        expect(queryByText('Informer søker:')).toBeInTheDocument();
-        expect(queryByText('Forhåndsvis brev')).toBeInTheDocument();
+        expect(screen.getByText('Informer søker:')).toBeInTheDocument();
+        expect(screen.getByText('Forhåndsvis brev')).toBeInTheDocument();
 
         await user.click(henleggKnapp());
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
+        await user.type(screen.getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
         await user.click(henleggKnapp());
     });
 
     test('Henlegger behandling med varsel ikke sendt', async () => {
-        const { getByLabelText, queryByText, queryAllByText } = renderHenleggModal(
-            lagBehandling(),
-            ['HENLAGT_FEILOPPRETTET']
-        );
+        renderHenleggModal(lagBehandling(), ['HENLAGT_FEILOPPRETTET']);
 
         expect(henleggTittel()).toBeInTheDocument();
 
-        expect(queryByText('Informer søker:')).not.toBeInTheDocument();
-        expect(queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
+        expect(screen.queryByText('Informer søker:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
 
         await user.click(henleggKnapp());
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
-        await user.type(getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
+        await user.type(screen.getByLabelText('Begrunnelse'), 'Feilutbetalingen er mottregnet');
         await user.click(henleggKnapp());
     });
 
     test('Henlegger revurdering, med brev', async () => {
-        const { getByRole, getByText, getByLabelText, queryByRole, queryByText, queryAllByText } =
-            renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
-                'HENLAGT_FEILOPPRETTET_MED_BREV',
-                'HENLAGT_FEILOPPRETTET_UTEN_BREV',
-            ]);
+        renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
+            'HENLAGT_FEILOPPRETTET_MED_BREV',
+            'HENLAGT_FEILOPPRETTET_UTEN_BREV',
+        ]);
 
-        expect(queryByText('Informer søker:')).not.toBeInTheDocument();
-        expect(queryByRole('link', { name: 'Forhåndsvis brev' })).not.toBeInTheDocument();
+        expect(screen.queryByText('Informer søker:')).not.toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: 'Forhåndsvis brev' })).not.toBeInTheDocument();
 
         await user.click(henleggKnapp());
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(
-            getByLabelText('Årsak til henleggelse'),
+            screen.getByLabelText('Årsak til henleggelse'),
             'HENLAGT_FEILOPPRETTET_MED_BREV'
         );
-        await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
+        await user.type(screen.getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 
         await user.click(henleggKnapp());
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.type(
-            getByRole('textbox', { name: 'Fritekst til brev' }),
+            screen.getByRole('textbox', { name: 'Fritekst til brev' }),
             'Revurdering er feilopprettet'
         );
 
-        expect(getByText('Informer søker:')).toBeInTheDocument();
-        expect(getByRole('link', { name: 'Forhåndsvis brev' })).toBeInTheDocument();
+        expect(screen.getByText('Informer søker:')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Forhåndsvis brev' })).toBeInTheDocument();
 
         await user.click(henleggKnapp());
     });
 
     test('Henlegger revurdering, uten brev', async () => {
-        const { getByLabelText, queryByText, queryByRole, queryAllByText } = renderHenleggModal(
-            lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }),
-            ['HENLAGT_FEILOPPRETTET_MED_BREV', 'HENLAGT_FEILOPPRETTET_UTEN_BREV']
-        );
+        renderHenleggModal(lagBehandling({ type: 'REVURDERING_TILBAKEKREVING' }), [
+            'HENLAGT_FEILOPPRETTET_MED_BREV',
+            'HENLAGT_FEILOPPRETTET_UTEN_BREV',
+        ]);
 
         expect(henleggTittel()).toBeInTheDocument();
 
-        expect(queryByText('Informer søker:')).not.toBeInTheDocument();
-        expect(queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
+        expect(screen.queryByText('Informer søker:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
 
         await user.click(henleggKnapp());
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(
-            getByLabelText('Årsak til henleggelse'),
+            screen.getByLabelText('Årsak til henleggelse'),
             'HENLAGT_FEILOPPRETTET_UTEN_BREV'
         );
-        await user.type(getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
+        await user.type(screen.getByLabelText('Begrunnelse'), 'Revurdering er feilopprettet');
 
-        expect(queryByText('Informer søker:')).not.toBeInTheDocument();
-        expect(queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
-        expect(queryByRole('textbox', { name: 'Fritekst til brev' })).not.toBeInTheDocument();
+        expect(screen.queryByText('Informer søker:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Forhåndsvis brev')).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('textbox', { name: 'Fritekst til brev' })
+        ).not.toBeInTheDocument();
 
         await user.click(henleggKnapp());
     });

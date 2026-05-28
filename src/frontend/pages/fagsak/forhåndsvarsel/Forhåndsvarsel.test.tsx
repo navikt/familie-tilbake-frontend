@@ -3,7 +3,7 @@ import type { RessursVarselbrevtekst } from '~/generated';
 import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, type RenderResult, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { Suspense } from 'react';
 
@@ -59,17 +59,14 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
     ferdigvurdert: false,
 });
 
-const renderForhåndsvarsel = (
-    forhåndsvarselResponse = lagForhåndsvarselResponse()
-): RenderResult => {
+const renderForhåndsvarsel = (forhåndsvarselResponse = lagForhåndsvarselResponse()): void => {
     const queryClient = createTestQueryClient();
     const pathOptions = { path: { behandlingId: BEHANDLING_ID } };
 
     queryClient.setQueryData(behandlingForhandsvarselQueryKey(pathOptions), forhåndsvarselResponse);
     queryClient.setQueryData(hentForhåndsvarselTekstQueryKey(pathOptions), lagVarselbrevtekster());
     queryClient.setQueryData(behandlingFaktaQueryKey(pathOptions), lagFaktaOmFeilutbetaling());
-
-    return render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider>
                 <QueryClientProvider client={queryClient}>

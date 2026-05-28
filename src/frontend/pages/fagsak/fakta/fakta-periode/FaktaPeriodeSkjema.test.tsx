@@ -1,5 +1,4 @@
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
-import type { RenderResult } from '@testing-library/react';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { Ressurs } from '~/typer/ressurs';
 
@@ -41,10 +40,10 @@ vi.mock('~/api/behandling', () => ({
 const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
-): RenderResult => {
+): void => {
     const behandling = lagBehandling();
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>

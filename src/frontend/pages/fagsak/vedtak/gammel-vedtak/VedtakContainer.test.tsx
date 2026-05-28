@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { BehandlingDto } from '~/generated';
@@ -45,12 +44,9 @@ vi.mock('~/hooks/useSammenslåPerioder', () => ({
 
 const mockedSettIkkePersistertKomponent = vi.fn();
 
-const renderVedtakContainer = (
-    behandling: BehandlingDto,
-    lesemodus: boolean = false
-): RenderResult => {
+const renderVedtakContainer = (behandling: BehandlingDto, lesemodus: boolean = false): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider
@@ -159,76 +155,75 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByText, getAllByText, getByRole, queryByRole, queryByText } =
-            renderVedtakContainer(lagBehandling());
+        renderVedtakContainer(lagBehandling());
 
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
-            queryByText(
+            screen.queryByText(
                 'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
             )
         ).not.toBeInTheDocument();
 
-        expect(getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
-        expect(getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
-        expect(getByText('Forsett')).toBeInTheDocument();
-        expect(getByText('Simpel uaktsomhet')).toBeInTheDocument();
-        expect(getAllByText('1 333')).toHaveLength(2);
-        expect(getByText('2 666')).toBeInTheDocument();
-        expect(getByText('90 %')).toBeInTheDocument();
-        expect(getByText('91 %')).toBeInTheDocument();
-        expect(getAllByText('1 222')).toHaveLength(2);
-        expect(getAllByText('1 222')).toHaveLength(2);
-        expect(getAllByText('2 445')).toHaveLength(2);
+        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(screen.getByText('Forsett')).toBeInTheDocument();
+        expect(screen.getByText('Simpel uaktsomhet')).toBeInTheDocument();
+        expect(screen.getAllByText('1 333')).toHaveLength(2);
+        expect(screen.getByText('2 666')).toBeInTheDocument();
+        expect(screen.getByText('90 %')).toBeInTheDocument();
+        expect(screen.getByText('91 %')).toBeInTheDocument();
+        expect(screen.getAllByText('1 222')).toHaveLength(2);
+        expect(screen.getAllByText('1 222')).toHaveLength(2);
+        expect(screen.getAllByText('2 445')).toHaveLength(2);
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeDisabled();
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        expect(screen.getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+            screen.getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+            screen.getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeInTheDocument();
 
         expect(
-            getByRole('textbox', {
+            screen.getByRole('textbox', {
                 name: `Utdypende tekst`,
             })
         ).toBeInTheDocument();
 
         await user.type(
-            getByRole('textbox', {
+            screen.getByRole('textbox', {
                 name: `Utdypende tekst`,
             }),
             'Fritekst påkrevet'
         );
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         );
@@ -260,71 +255,70 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByText, getByRole, getAllByRole, getByTestId, queryByRole, queryByText } =
-            renderVedtakContainer(
-                lagBehandling({
-                    type: 'REVURDERING_TILBAKEKREVING',
-                    behandlingsårsakstype: 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
-                })
-            );
+        renderVedtakContainer(
+            lagBehandling({
+                type: 'REVURDERING_TILBAKEKREVING',
+                behandlingsårsakstype: 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+            })
+        );
 
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
-            queryByText(
+            screen.queryByText(
                 'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
             )
         ).not.toBeInTheDocument();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeDisabled();
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        expect(screen.getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+            screen.getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+            screen.getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeInTheDocument();
 
         expect(
-            getAllByRole('textbox', {
+            screen.getAllByRole('textbox', {
                 name: `Utdypende tekst`,
             })
         ).toHaveLength(2);
 
         await user.type(
-            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
+            screen.getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
         await user.type(
-            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
+            screen.getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         );
@@ -357,67 +351,68 @@ describe('VedtakContainer', () => {
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, getAllByRole, getByTestId, queryByRole } =
-            renderVedtakContainer(
-                lagBehandling({
-                    type: 'REVURDERING_TILBAKEKREVING',
-                    behandlingsårsakstype: 'REVURDERING_KLAGE_KA',
-                })
-            );
+        renderVedtakContainer(
+            lagBehandling({
+                type: 'REVURDERING_TILBAKEKREVING',
+                behandlingsårsakstype: 'REVURDERING_KLAGE_KA',
+            })
+        );
 
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
-        expect(getByText('Vedtaksbrev sendes ikke ut fra denne behandlingen.')).toBeInTheDocument();
+        expect(
+            screen.getByText('Vedtaksbrev sendes ikke ut fra denne behandlingen.')
+        ).toBeInTheDocument();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).not.toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeDisabled();
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        expect(screen.getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+            screen.getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+            screen.getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeInTheDocument();
 
         expect(
-            getAllByRole('textbox', {
+            screen.getAllByRole('textbox', {
                 name: `Utdypende tekst`,
             })
         ).toHaveLength(2);
 
         await user.type(
-            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
+            screen.getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
         await user.type(
-            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
+            screen.getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).not.toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         );
@@ -450,56 +445,55 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByText, getByRole, getAllByRole, getByTestId, queryByText, queryByRole } =
-            renderVedtakContainer(
-                lagBehandling({
-                    type: 'REVURDERING_TILBAKEKREVING',
-                    behandlingsårsakstype: 'REVURDERING_KLAGE_NFP',
-                })
-            );
+        renderVedtakContainer(
+            lagBehandling({
+                type: 'REVURDERING_TILBAKEKREVING',
+                behandlingsårsakstype: 'REVURDERING_KLAGE_NFP',
+            })
+        );
 
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
-            queryByText(
+            screen.queryByText(
                 'Vedtaksbrev sendes ikke ut fra denne behandlingen, men må sendes av saksbehandler fra klagebehandlingen'
             )
         ).not.toBeInTheDocument();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeDisabled();
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        expect(screen.getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+            screen.getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+            screen.getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeInTheDocument();
 
         expect(
-            getAllByRole('textbox', {
+            screen.getAllByRole('textbox', {
                 name: `Utdypende tekst`,
             })
         ).toHaveLength(1);
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Legg til utdypende tekst',
             })
         ).not.toBeInTheDocument();
 
         await user.click(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -507,42 +501,42 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
         ).toHaveAttribute('aria-expanded', 'true');
 
         expect(
-            getAllByRole('button', {
+            screen.getAllByRole('button', {
                 name: 'Legg til utdypende tekst Legg til utdypende tekst',
             })
         ).toHaveLength(2);
-        await user.click(getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'));
+        await user.click(screen.getByTestId('legg-til-fritekst-idx_avsnitt_2-idx_underavsnitt_0'));
 
         await user.type(
-            getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
+            screen.getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0'),
             'Fritekst påkrevet'
         );
         await user.type(
-            getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
+            screen.getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0'),
             'Fritekst ekstra'
         );
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         );
@@ -572,34 +566,33 @@ describe('VedtakContainer', () => {
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, getByTestId, queryByRole } =
-            renderVedtakContainer(lagBehandling());
+        renderVedtakContainer(lagBehandling());
 
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).toBeEnabled();
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        expect(screen.getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
         expect(
-            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+            screen.getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+            screen.getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeInTheDocument();
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -607,7 +600,7 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -615,14 +608,14 @@ describe('VedtakContainer', () => {
 
         await user.click(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
         );
         await user.click(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -630,7 +623,7 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -638,16 +631,16 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
         ).toHaveAttribute('aria-expanded', 'true');
 
-        expect(getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toHaveValue(
+        expect(screen.getByTestId('fritekst-idx_avsnitt_1-idx_underavsnitt_0')).toHaveValue(
             'Denne friteksten var påkrevet'
         );
-        expect(getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0')).toHaveValue(
+        expect(screen.getByTestId('fritekst-idx_avsnitt_2-idx_underavsnitt_0')).toHaveValue(
             'Denne friteksten var lagt til ekstra'
         );
     });
@@ -675,33 +668,33 @@ describe('VedtakContainer', () => {
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
 
-        const { getByText, getByRole, queryByRole } = renderVedtakContainer(lagBehandling(), true);
+        renderVedtakContainer(lagBehandling(), true);
 
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).not.toBeInTheDocument();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         ).not.toBeInTheDocument();
 
-        expect(getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        expect(screen.getByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
+            screen.getByText('Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020')
         ).toBeInTheDocument();
         expect(
-            getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
+            screen.getByText('Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020')
         ).toBeInTheDocument();
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -709,7 +702,7 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -717,7 +710,7 @@ describe('VedtakContainer', () => {
 
         await user.click(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -725,7 +718,7 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -733,7 +726,7 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -741,7 +734,7 @@ describe('VedtakContainer', () => {
 
         await user.click(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -749,7 +742,7 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. januar 2020 til og med 31. mars 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
@@ -757,14 +750,14 @@ describe('VedtakContainer', () => {
 
         expect(
             within(
-                getByRole('region', {
+                screen.getByRole('region', {
                     name: `Gjelder perioden fra og med 1. mai 2020 til og med 30. juni 2020`,
                 })
             ).getByRole('button', { name: 'Vis mer' })
         ).toHaveAttribute('aria-expanded', 'true');
 
-        expect(getByText('Denne friteksten var påkrevet')).toBeInTheDocument();
-        expect(getByText('Denne friteksten var lagt til ekstra')).toBeInTheDocument();
+        expect(screen.getByText('Denne friteksten var påkrevet')).toBeInTheDocument();
+        expect(screen.getByText('Denne friteksten var lagt til ekstra')).toBeInTheDocument();
     });
 
     test('Viser bekreftelsesmodal når bruker klikker Send til godkjenning', async () => {
@@ -780,24 +773,22 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByRole, queryByRole } = renderVedtakContainer(
-            lagBehandling({ kanEndres: true, erNyModell: true })
-        );
+        renderVedtakContainer(lagBehandling({ kanEndres: true, erNyModell: true }));
 
         expect(await screen.findByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
-        expect(queryByRole('dialog')).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         );
 
-        expect(getByRole('dialog')).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Avbryt',
             })
         ).toBeInTheDocument();
@@ -816,19 +807,17 @@ describe('VedtakContainer', () => {
             ]),
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        const { getByRole, queryByRole } = renderVedtakContainer(
-            lagBehandling({ kanEndres: true })
-        );
+        renderVedtakContainer(lagBehandling({ kanEndres: true }));
 
         expect(await screen.findByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send til godkjenning hos beslutter',
             })
         );
 
-        const modal = getByRole('dialog');
+        const modal = screen.getByRole('dialog');
 
         await user.click(
             within(modal).getByRole('button', {
@@ -836,6 +825,6 @@ describe('VedtakContainer', () => {
             })
         );
 
-        expect(queryByRole('dialog')).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 });

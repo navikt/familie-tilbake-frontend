@@ -11,6 +11,7 @@ TypeScript-spesifikke testmønstre for Nav: Vitest, mocking, async og React-komp
 - Lag variabler og funksjoner i testene for å unngå duplisering og gjøre det enklere å endre testdata.
 - bruk rolle i stedet for å lete etter tekst når du tester interaksjoner på knapper, lenker og andre elementer som kan ha varierende tekst. For underelementer, bruk within og getByRole på det spesifikke elementet.
 - Unngå waitFor så langt det lar seg gjøre. Bruk heller findBy* for asynkrone tester. waitFor kan føre til unødvendige forsinkelser og gjøre testene mindre pålitelige.
+- Bruk alltid screen for å få tilgang til elementer i DOM-en. Unngå å returnere render-resultatet og bruke destructuring for å få tilgang til getBy* og findBy*-funksjonene, da dette kan føre til forvirring og mindre lesbare tester.
 
 ## Test Structure
 

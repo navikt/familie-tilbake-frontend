@@ -1,10 +1,9 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { DokumentApiHook } from '~/api/dokument';
 import type { BehandlingDto, SpråkkodeEnum } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -27,9 +26,9 @@ const renderSendMelding = (
     behandling: BehandlingDto,
     språkkode: SpråkkodeEnum = 'NB',
     behandlingILesemodus: boolean = false
-): RenderResult => {
+): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak({ språkkode })}>
                 <TestBehandlingProvider
@@ -68,50 +67,49 @@ describe('SendMelding', () => {
     test('Fyller ut skjema og sender varsel', async () => {
         setupMock();
 
-        const { getByText, getByLabelText, getByRole, queryByRole, queryByText } =
-            renderSendMelding(lagBehandling({ varselSendt: false }));
+        renderSendMelding(lagBehandling({ varselSendt: false }));
 
-        expect(getByText('Brevmottaker')).toBeInTheDocument();
-        expect(getByLabelText('Mal')).toHaveLength(3);
-        expect(queryByText('Bokmål')).not.toBeInTheDocument();
+        expect(screen.getByText('Brevmottaker')).toBeInTheDocument();
+        expect(screen.getByLabelText('Mal')).toHaveLength(3);
+        expect(screen.queryByText('Bokmål')).not.toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeDisabled();
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Forhåndsvis',
             })
         ).not.toBeInTheDocument();
 
-        await user.selectOptions(getByLabelText('Mal'), DokumentMal.Varsel);
+        await user.selectOptions(screen.getByLabelText('Mal'), DokumentMal.Varsel);
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeDisabled();
 
-        expect(getByText('Bokmål')).toBeInTheDocument();
-        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
+        expect(screen.getByText('Bokmål')).toBeInTheDocument();
+        await user.type(screen.getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeEnabled();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis',
             })
         ).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         );
@@ -120,34 +118,31 @@ describe('SendMelding', () => {
     test('Fyller ut skjema og sender korrigert varsel', async () => {
         setupMock();
 
-        const { getByText, getByLabelText, getByRole, queryByText } = renderSendMelding(
-            lagBehandling({ varselSendt: true }),
-            'NN'
-        );
+        renderSendMelding(lagBehandling({ varselSendt: true }), 'NN');
 
-        expect(getByText('Brevmottaker')).toBeInTheDocument();
-        expect(getByLabelText('Mal')).toHaveLength(3);
-        expect(queryByText('Nynorsk')).not.toBeInTheDocument();
+        expect(screen.getByText('Brevmottaker')).toBeInTheDocument();
+        expect(screen.getByLabelText('Mal')).toHaveLength(3);
+        expect(screen.queryByText('Nynorsk')).not.toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeDisabled();
 
-        await user.selectOptions(getByLabelText('Mal'), DokumentMal.KorrigertVarsel);
+        await user.selectOptions(screen.getByLabelText('Mal'), DokumentMal.KorrigertVarsel);
 
-        expect(getByText('Nynorsk')).toBeInTheDocument();
-        await user.type(getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
+        expect(screen.getByText('Nynorsk')).toBeInTheDocument();
+        await user.type(screen.getByRole('textbox', { name: 'Fritekst' }), 'Fritekst i varselbrev');
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis',
             })
         ).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         );
@@ -156,33 +151,31 @@ describe('SendMelding', () => {
     test('Fyller ut skjema og sender innhent dokumentasjon', async () => {
         setupMock();
 
-        const { getByText, getByLabelText, getByRole } = renderSendMelding(
-            lagBehandling({ varselSendt: true })
-        );
+        renderSendMelding(lagBehandling({ varselSendt: true }));
 
-        expect(getByText('Brevmottaker')).toBeInTheDocument();
+        expect(screen.getByText('Brevmottaker')).toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeDisabled();
 
-        await user.selectOptions(getByLabelText('Mal'), DokumentMal.InnhentDokumentasjon);
+        await user.selectOptions(screen.getByLabelText('Mal'), DokumentMal.InnhentDokumentasjon);
         await user.type(
-            getByRole('textbox', {
+            screen.getByRole('textbox', {
                 name: 'Liste over dokumenter (skriv ett dokument pr. linje)',
             }),
             'Liste over dokument'
         );
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis',
             })
         ).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         );
@@ -191,22 +184,18 @@ describe('SendMelding', () => {
     test('Lesevisning - venter på svar på manuelt brev', async () => {
         setupMock();
 
-        const { getByText, getByRole, queryByLabelText } = renderSendMelding(
-            lagBehandling({ varselSendt: false }),
-            'NB',
-            true
-        );
+        renderSendMelding(lagBehandling({ varselSendt: false }), 'NB', true);
 
-        expect(getByText('Brevmottaker')).toBeInTheDocument();
+        expect(screen.getByText('Brevmottaker')).toBeInTheDocument();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Send brev',
             })
         ).toBeDisabled();
 
-        expect(queryByLabelText('Mal')).not.toBeInTheDocument();
-        expect(getByText('Mal')).toBeInTheDocument();
-        expect(getByText('Velg brev')).toBeInTheDocument();
+        expect(screen.queryByLabelText('Mal')).not.toBeInTheDocument();
+        expect(screen.getByText('Mal')).toBeInTheDocument();
+        expect(screen.getByText('Velg brev')).toBeInTheDocument();
     });
 });
