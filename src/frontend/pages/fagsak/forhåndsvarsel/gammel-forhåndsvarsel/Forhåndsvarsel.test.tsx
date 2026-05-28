@@ -2,7 +2,8 @@ import type { RenderResult } from '@testing-library/react';
 import type { BehandlingDto, ForhåndsvarselDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { userEvent, type UserEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
@@ -52,9 +53,11 @@ const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): 
 };
 
 describe('Forhåndsvarsel', () => {
+    let user: UserEvent;
+
     beforeEach(() => {
         vi.clearAllMocks();
-
+        user = userEvent.setup();
         vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueries());
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
@@ -429,11 +432,9 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
-            fireEvent.click(nesteKnapp);
+            await user.click(nesteKnapp);
 
-            await waitFor(() => {
-                expect(mockMutations.navigerTilNeste).toHaveBeenCalled();
-            });
+            expect(mockMutations.navigerTilNeste).toHaveBeenCalled();
             expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
         });
 
@@ -462,14 +463,12 @@ describe('Forhåndsvarsel', () => {
             const beskrivelsesFelt = await screen.findByLabelText(
                 'Forklar hvorfor forhåndsvarselet ikke skal bli sendt'
             );
-            fireEvent.change(beskrivelsesFelt, { target: { value: 'Endret beskrivelse' } });
+            await user.type(beskrivelsesFelt, 'Endret beskrivelse');
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
-            fireEvent.click(nesteKnapp);
+            await user.click(nesteKnapp);
 
-            await waitFor(() => {
-                expect(mockMutations.sendUnntak).toHaveBeenCalled();
-            });
+            expect(mockMutations.sendUnntak).toHaveBeenCalled();
             expect(mockMutations.sendBrukeruttalelse).not.toHaveBeenCalled();
         });
 
@@ -496,14 +495,12 @@ describe('Forhåndsvarsel', () => {
             renderForhåndsvarsel();
 
             const kommentarFelt = await screen.findByLabelText('Kommentar til valget over');
-            fireEvent.change(kommentarFelt, { target: { value: 'Endret kommentar' } });
+            await user.type(kommentarFelt, 'Endret kommentar');
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
-            fireEvent.click(nesteKnapp);
+            await user.click(nesteKnapp);
 
-            await waitFor(() => {
-                expect(mockMutations.sendBrukeruttalelse).toHaveBeenCalled();
-            });
+            expect(mockMutations.sendBrukeruttalelse).toHaveBeenCalled();
             expect(mockMutations.sendUnntak).not.toHaveBeenCalled();
         });
 
@@ -633,18 +630,16 @@ describe('Forhåndsvarsel', () => {
             });
 
             const nesteKnapp = await screen.findByRole('button', { name: 'Lagre og gå til neste' });
-            fireEvent.click(nesteKnapp);
+            await user.click(nesteKnapp);
 
             const feilmelding = await screen.findByText('Du må velge om brukeren har uttalt seg');
             expect(feilmelding).toBeInTheDocument();
 
-            fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Nei'));
+            await user.click(within(brukeruttalelseFieldset).getByLabelText('Nei'));
 
-            await waitFor(() => {
-                expect(
-                    screen.queryByText('Du må velge om brukeren har uttalt seg')
-                ).not.toBeInTheDocument();
-            });
+            expect(
+                screen.queryByText('Du må velge om brukeren har uttalt seg')
+            ).not.toBeInTheDocument();
         });
     });
 
@@ -680,9 +675,8 @@ describe('Forhåndsvarsel', () => {
             ).toBeInTheDocument();
 
             fireEvent.click(within(brukeruttalelseFieldset).getByLabelText('Nei'));
-            await waitFor(() => {
-                expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
-            });
+
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
         });
 
         test('Viser "Neste" når bruker bytter skalSendeForhåndsvarsel fra Nei til Ja og tilbake til Nei', async () => {
@@ -716,9 +710,7 @@ describe('Forhåndsvarsel', () => {
             ).toBeInTheDocument();
 
             fireEvent.click(within(skalSendeFieldset).getByLabelText('Nei'));
-            await waitFor(() => {
-                expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
-            });
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
         });
 
         test('Viser "Neste" når bruker bytter begrunnelseForUnntak og tilbake til opprinnelig', async () => {
@@ -752,9 +744,7 @@ describe('Forhåndsvarsel', () => {
             ).toBeInTheDocument();
 
             fireEvent.click(within(begrunnelseFieldset).getByLabelText(/forvaltningsloven §16c/i));
-            await waitFor(() => {
-                expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
-            });
+            expect(screen.getByRole('button', { name: 'Neste' })).toBeInTheDocument();
         });
     });
 
