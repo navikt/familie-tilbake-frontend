@@ -48,7 +48,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         expect(screen.queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
         await user.click(bekreftPeriodeKnapp(screen.getByRole));
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.click(screen.getByLabelText('Nei, perioden er ikke foreldet'));
 
@@ -56,7 +56,7 @@ describe('ForeldelsePeriodeSkjema', () => {
 
         await user.click(bekreftPeriodeKnapp(screen.getByRole));
 
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.type(screen.getByLabelText('Begrunn valget over'), 'begrunnelse');
 
@@ -80,8 +80,8 @@ describe('ForeldelsePeriodeSkjema', () => {
         ).toBeInTheDocument();
 
         await user.click(bekreftPeriodeKnapp(screen.getByRole));
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-        expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Du må velge en gyldig dato')).toHaveLength(1);
 
         await user.type(screen.getByLabelText('Begrunn valget over'), 'begrunnelse');
         await user.type(
@@ -123,8 +123,8 @@ describe('ForeldelsePeriodeSkjema', () => {
         ).toBeInTheDocument();
 
         await user.click(bekreftPeriodeKnapp(screen.getByRole));
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-        expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Du må velge en gyldig dato')).toHaveLength(2);
 
         await user.type(screen.getByLabelText('Begrunn valget over'), 'begrunnelse');
         await user.type(

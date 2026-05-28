@@ -211,7 +211,6 @@ const gåVidereKnapp = (): HTMLElement =>
     screen.getByRole('button', { name: 'Gå videre til vedtakssteget' });
 
 // Feilmeldinger
-const antallFeiledeFelter = (): HTMLElement[] => screen.queryAllByText('Feltet må fylles ut');
 const særligGrunnFeil = (): HTMLElement[] =>
     screen.queryAllByText('Du må velge minst en særlig grunn');
 
@@ -264,7 +263,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnVilkår(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(beløpIBeholdNei());
         await user.type(begrunnBeløpIkkeIBehold(), 'begrunnelse');
@@ -273,7 +272,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(tilbakekrevdBeløp).toHaveValue('0');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('God tro - beløp i behold', async () => {
@@ -286,12 +285,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnBeløpIBehold(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.type(angiBeløpTilbakekreves(), '2000');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Forsto/burde forstått - forsto', async () => {
@@ -301,7 +300,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnVilkår(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.click(mottakerForstoValg());
         await user.type(begrunnAlternativ(), 'begrunnelse');
@@ -309,7 +308,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(rentetilleggNei()).toBeChecked();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Forsto/burde forstått - må ha forstått - ingen grunn til reduksjon', async () => {
@@ -322,7 +321,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnAlternativ(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(særligGrunnFeil()).toHaveLength(1);
 
         await user.click(gradAvUaktsomhetValg());
@@ -335,12 +334,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(rentetilleggNei()).toBeChecked();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.type(begrunnAnnet(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Feilaktig - forsto', async () => {
@@ -350,7 +349,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnVilkår(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.click(forsettligValg());
         await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
@@ -358,7 +357,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(rentetilleggJa()).toBeChecked();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('BAKS - Feilaktig - forsto', async () => {
@@ -370,7 +369,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnVilkår(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.click(forsettligValg());
         await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
@@ -378,7 +377,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(rentetilleggNei()).toBeChecked();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
@@ -391,7 +390,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(særligGrunnFeil()).toHaveLength(1);
 
         await user.click(gradAvUaktsomhetValg());
@@ -403,7 +402,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.click(gåVidereKnapp());
 
         expect(særligGrunnFeil()).toHaveLength(0);
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('BAKS - Feilaktige - grovt uaktsomt - ingen grunn til reduksjon', async () => {
@@ -418,7 +417,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(særligGrunnFeil()).toHaveLength(1);
 
         await user.click(gradAvUaktsomhetValg());
@@ -430,7 +429,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.click(gåVidereKnapp());
 
         expect(særligGrunnFeil()).toHaveLength(0);
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Feilaktige - grovt uaktsomt - grunn til reduksjon', async () => {
@@ -444,7 +443,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         await user.click(gåVidereKnapp());
         expect(særligGrunnFeil()).toHaveLength(1);
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.click(gradAvUaktsomhetValg());
 
@@ -453,14 +452,14 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnResultat(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.selectOptions(andelTilbakekrevesSelect(), '30');
 
         expect(rentetilleggJa()).toBeChecked();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('nyModell - Feilaktige - grovt uaktsomt - låst ja rentetillegg', async () => {
@@ -515,18 +514,18 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
 
         const andelAvBeløp = andelTilbakekrevesSelect();
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.selectOptions(andelAvBeløp, 'Egendefinert');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         const andelAvBeløpFritekst = andelTilbakekrevesFritekst();
         await user.type(andelAvBeløpFritekst, '22');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Mangelfulle - grovt uaktsomt - ingen grunn til reduksjon - ileggRenter er true', async () => {
@@ -543,7 +542,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnResultat(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
 
         const oppdatertPeriode = mockOppdaterPeriode.mock.calls[0][0];
         expect(oppdatertPeriode.vilkårsvurderingsresultatInfo.aktsomhet.ileggRenter).toBe(true);
@@ -561,12 +560,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(under4RettsgebyrJa());
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(særligGrunnFeil()).toHaveLength(1);
 
         await user.click(gradAvUaktsomhetValg());
@@ -579,12 +578,12 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         andelTilbakekrevesSelect();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.selectOptions(andelTilbakekrevesSelect(), '30');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ingen grunn til reduksjon', async () => {
@@ -599,13 +598,13 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         await user.type(begrunnAktsomhetsgrad(), 'begrunnelse');
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(under4RettsgebyrJa());
         expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
         expect(særligGrunnFeil()).toHaveLength(1);
 
         await user.click(gradAvUaktsomhetValg());
@@ -619,7 +618,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(queryRentetilleggGruppe()).not.toBeInTheDocument();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves - én periode viser ikke 6. ledd-advarsel', async () => {
@@ -636,14 +635,14 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(under4RettsgebyrNei());
 
         expect(sjetteLeddInfoTekst()).not.toBeInTheDocument();
 
         await user.click(gåVidereKnapp());
-        expect(antallFeiledeFelter()).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
     test('Mangelfulle - uaktsomt - under 4 rettsgebyr - ikke tilbakekreves - flere perioder viser 6. ledd-advarsel', async () => {

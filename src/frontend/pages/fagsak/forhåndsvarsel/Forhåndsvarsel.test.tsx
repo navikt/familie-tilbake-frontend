@@ -97,9 +97,6 @@ describe('Forhåndsvarsel', () => {
     const sendKnapp = (): HTMLElement =>
         screen.getByRole('button', { name: 'Send forhåndsvarselet' });
 
-    const visBrevetKnapp = (): HTMLElement | null =>
-        screen.queryByRole('button', { name: 'Vis brevet' });
-
     test('Viser spørsmål om forhåndsvarsel', () => {
         renderForhåndsvarsel();
 
@@ -128,7 +125,7 @@ describe('Forhåndsvarsel', () => {
     test('Viser ikke "Vis brevet" før Ja er valgt', () => {
         renderForhåndsvarsel();
 
-        expect(visBrevetKnapp()).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Vis brevet' })).not.toBeInTheDocument();
     });
 
     test('Viser "Vis brevet" når Ja er valgt', async () => {
@@ -136,7 +133,7 @@ describe('Forhåndsvarsel', () => {
 
         await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
 
-        expect(visBrevetKnapp()).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
     });
 
     test('Viser feilmelding ved submit uten valg', async () => {

@@ -178,7 +178,7 @@ describe('VedtakContainer', () => {
         expect(screen.getAllByText('2 445')).toHaveLength(2);
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
@@ -211,7 +211,7 @@ describe('VedtakContainer', () => {
         );
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
@@ -271,7 +271,7 @@ describe('VedtakContainer', () => {
         ).not.toBeInTheDocument();
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
@@ -306,7 +306,7 @@ describe('VedtakContainer', () => {
         );
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
@@ -461,7 +461,7 @@ describe('VedtakContainer', () => {
         ).not.toBeInTheDocument();
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
@@ -524,7 +524,7 @@ describe('VedtakContainer', () => {
         );
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();
@@ -571,7 +571,7 @@ describe('VedtakContainer', () => {
         expect(await screen.findByText('Vedtak')).toBeInTheDocument();
 
         expect(
-            screen.queryByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forhåndsvis vedtaksbrev',
             })
         ).toBeInTheDocument();

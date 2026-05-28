@@ -22,13 +22,13 @@ describe('SplittPeriode - Foreldelse', () => {
         );
 
         expect(screen.getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
-        expect(screen.queryAllByText('Del opp perioden')).toHaveLength(1);
+        expect(screen.getAllByText('Del opp perioden')).toHaveLength(1);
         expect(screen.queryByText('01.01.2021 - 30.04.2021')).not.toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: 'Del opp perioden' }));
 
-        expect(screen.queryAllByText('Del opp perioden')).toHaveLength(2);
-        expect(screen.queryByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
+        expect(screen.getAllByText('Del opp perioden')).toHaveLength(2);
+        expect(screen.getByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: 'Del opp perioden' })).toBeInTheDocument();
         expect(screen.getByLabelText('Angi t.o.m. måned for første periode')).toBeInTheDocument();
         expect(screen.getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue(

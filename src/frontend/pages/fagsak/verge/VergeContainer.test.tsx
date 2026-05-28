@@ -88,7 +88,7 @@ describe('VergeContainer', () => {
             })
         );
 
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(screen.getByLabelText('Vergetype'), Vergetype.Advokat);
 
@@ -99,7 +99,7 @@ describe('VergeContainer', () => {
                 name: 'Gå videre til faktasteget',
             })
         );
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(screen.getByLabelText('Navn'), 'Advokat Advokatesen');
         await user.type(screen.getByLabelText('Organisasjonsnummer'), 'DummyOrg');
@@ -124,7 +124,7 @@ describe('VergeContainer', () => {
                 name: 'Gå videre til faktasteget',
             })
         );
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(screen.getByLabelText('Vergetype'), Vergetype.VergeForBarn);
         await user.type(screen.getByLabelText('Begrunn endringene'), 'Verge er advokat');
@@ -134,7 +134,7 @@ describe('VergeContainer', () => {
                 name: 'Gå videre til faktasteget',
             })
         );
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(screen.getByLabelText('Navn'), 'Verge Vergesen');
         await user.type(screen.getByLabelText('Fødselsnummer'), '12sdf678901');
@@ -145,7 +145,7 @@ describe('VergeContainer', () => {
             })
         );
         expect(screen.queryByText('Du må skrive minst 3 tegn')).not.toBeInTheDocument();
-        expect(screen.queryByText('Ugyldig fødselsnummer')).toBeInTheDocument();
+        expect(screen.getByText('Ugyldig fødselsnummer')).toBeInTheDocument();
 
         await user.clear(screen.getByLabelText('Fødselsnummer'));
         await user.type(screen.getByLabelText('Fødselsnummer'), '27106903129');

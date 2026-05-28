@@ -168,8 +168,8 @@ describe('FeilModal', () => {
 
         renderFeilModal(mockFeil);
 
-        expect(screen.queryByText(/Fagsak ID:/)).toBeInTheDocument();
-        expect(screen.queryByText(/Behandling ID:/)).toBeInTheDocument();
+        expect(screen.getByText(/Fagsak ID:/)).toBeInTheDocument();
+        expect(screen.getByText(/Behandling ID:/)).toBeInTheDocument();
     });
 
     test('Kaller på setVisFeilModal når lukkeknappen klikkes', () => {

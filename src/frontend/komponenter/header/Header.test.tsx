@@ -55,9 +55,7 @@ describe('Header', () => {
         renderHeader();
 
         expect(await screen.findByText('Modia')).toBeInTheDocument();
-
-        const modiaPersonoversiktLenkeTekst = screen.queryByText('Modia personoversikt');
-        expect(modiaPersonoversiktLenkeTekst).not.toBeInTheDocument();
+        expect(screen.queryByText('Modia personoversikt')).not.toBeInTheDocument();
     });
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
@@ -114,9 +112,10 @@ describe('Header', () => {
 
         renderHeader();
 
-        const menyknapp = screen.queryByRole('button', {
-            name: 'Systemer og oppslagsverk',
-        });
-        expect(menyknapp).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', {
+                name: 'Systemer og oppslagsverk',
+            })
+        ).not.toBeInTheDocument();
     });
 });

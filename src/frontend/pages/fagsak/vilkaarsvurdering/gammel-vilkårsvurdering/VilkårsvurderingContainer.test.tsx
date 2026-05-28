@@ -125,7 +125,7 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(
             screen.getByLabelText(
@@ -142,7 +142,7 @@ describe('VilkårsvurderingContainer', () => {
                 name: 'Neste periode',
             })
         );
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(
             screen.getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
@@ -166,7 +166,7 @@ describe('VilkårsvurderingContainer', () => {
                 name: 'Neste periode',
             })
         );
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(
             screen.getByRole('radio', {
@@ -239,7 +239,7 @@ describe('VilkårsvurderingContainer', () => {
         );
         expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(
-            screen.queryByText(
+            screen.getByText(
                 'Totalbeløpet kan være under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
             )
         ).toBeInTheDocument();

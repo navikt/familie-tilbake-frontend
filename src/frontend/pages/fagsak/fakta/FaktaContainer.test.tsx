@@ -134,7 +134,7 @@ describe('FaktaContainer', () => {
 
         expect(screen.getByText('01.05.2020–31.07.2020')).toBeInTheDocument();
         expect(screen.getByText('01.09.2020–31.10.2020')).toBeInTheDocument();
-        expect(screen.queryAllByText('1 333')).toHaveLength(3);
+        expect(screen.getAllByText('1 333')).toHaveLength(3);
 
         expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(screen.getAllByRole('combobox')).toHaveLength(3);
@@ -142,7 +142,7 @@ describe('FaktaContainer', () => {
         await user.click(screen.getByTestId('brukerHarUttaltSeg.nei'));
 
         await user.click(gåVidereKnapp());
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(4);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(4);
 
         await user.selectOptions(screen.getByTestId('perioder.0.årsak'), HendelseType.BosattIRiket);
         await user.selectOptions(screen.getByTestId('perioder.1.årsak'), HendelseType.BorMedSøker);
@@ -159,7 +159,7 @@ describe('FaktaContainer', () => {
 
         await user.click(gåVidereKnapp());
         // BorMedSøker har kun 1 underårsak og vil derfor bli automatisk satt
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.selectOptions(
             screen.getByTestId('perioder.0.underårsak'),
@@ -197,7 +197,7 @@ describe('FaktaContainer', () => {
 
         await user.click(gåVidereKnapp());
 
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(5);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(5);
 
         await user.click(
             screen.getByRole('checkbox', {
@@ -211,7 +211,7 @@ describe('FaktaContainer', () => {
         expect(screen.getAllByRole('combobox')).toHaveLength(6);
 
         await user.click(gåVidereKnapp());
-        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(4);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(4);
 
         await user.selectOptions(
             screen.getByTestId('perioder.0.underårsak'),

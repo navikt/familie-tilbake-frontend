@@ -214,7 +214,7 @@ describe('ForeldelseContainer', () => {
             })
         ).toBeEnabled();
 
-        expect(screen.queryByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
 
         expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
         expect(screen.getByLabelText('Begrunn valget over')).toHaveValue('Begrunnelse 1');
