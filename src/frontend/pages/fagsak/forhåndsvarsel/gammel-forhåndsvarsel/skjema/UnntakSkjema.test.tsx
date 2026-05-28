@@ -79,7 +79,7 @@ describe('Unntak', () => {
         );
         expect(unntakFeilmelding).toBeInTheDocument();
 
-        const beskrivelseFeilmelding = await screen.findByText('Du må fylle inn en verdi');
+        const beskrivelseFeilmelding = screen.getByText('Du må fylle inn en verdi');
         expect(beskrivelseFeilmelding).toBeInTheDocument();
     });
 });

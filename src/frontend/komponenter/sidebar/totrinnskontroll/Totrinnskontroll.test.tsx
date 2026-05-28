@@ -236,7 +236,7 @@ describe('Totrinnskontroll', () => {
 
         await user.click(godkjennKnapp());
 
-        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Fakta' })).toBeInTheDocument();
         expect(screen.getByText('Denne handlingen kan ikke angres.')).toBeInTheDocument();
         expect(
             screen.getByRole('button', {

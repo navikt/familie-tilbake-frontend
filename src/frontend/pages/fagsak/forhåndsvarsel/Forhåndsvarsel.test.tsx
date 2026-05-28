@@ -142,7 +142,7 @@ describe('Forhåndsvarsel', () => {
         await user.click(nesteKnapp());
 
         expect(
-            await screen.findByText('Du må velge om det skal sendes forhåndsvarsel')
+            screen.getByText('Du må velge om det skal sendes forhåndsvarsel')
         ).toBeInTheDocument();
     });
 
@@ -168,7 +168,7 @@ describe('Forhåndsvarsel', () => {
 
         await user.click(sendKnapp());
 
-        expect(await screen.findByText('Du må fylle inn en verdi')).toBeInTheDocument();
+        expect(screen.getByText('Du må fylle inn en verdi')).toBeInTheDocument();
     });
 
     test('Viser read-only radio med Ja valgt når varsel er sendt', () => {

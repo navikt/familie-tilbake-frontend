@@ -79,37 +79,37 @@ describe('ForhåndsvarselSkjema', () => {
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
-    test('Viser riktig tittel når varsel ikke er sendt', async () => {
+    test('Viser riktig tittel når varsel ikke er sendt', () => {
         renderForhåndsvarselSkjema();
 
         expect(
-            await screen.findByRole('heading', {
+            screen.getByRole('heading', {
                 name: 'Opprett forhåndsvarsel',
                 level: 2,
             })
         ).toBeInTheDocument();
     });
 
-    test('Viser riktig tittel når varsel er sendt', async () => {
+    test('Viser riktig tittel når varsel er sendt', () => {
         renderForhåndsvarselSkjemaSendt();
 
         expect(
-            await screen.findByRole('heading', { name: 'Forhåndsvarsel', level: 1 })
+            screen.getByRole('heading', { name: 'Forhåndsvarsel', level: 1 })
         ).toBeInTheDocument();
     });
 
-    test('Viser brevinnhold og fritekstfelt', async () => {
+    test('Viser brevinnhold og fritekstfelt', () => {
         renderForhåndsvarselSkjema();
 
-        expect(await screen.findByText('Dette har skjedd')).toBeInTheDocument();
+        expect(screen.getByText('Dette har skjedd')).toBeInTheDocument();
         expect(screen.getByText('Legg til utdypende tekst')).toBeInTheDocument();
     });
 
-    test('Viser Brukeruttalelse når varsel er sendt', async () => {
+    test('Viser Brukeruttalelse når varsel er sendt', () => {
         renderForhåndsvarselSkjemaSendt();
 
         expect(
-            await screen.findByText('Har brukeren uttalt seg etter forhåndsvarselet ble sendt?')
+            screen.getByText('Har brukeren uttalt seg etter forhåndsvarselet ble sendt?')
         ).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Forhåndsvisning' })).not.toBeInTheDocument();
     });
@@ -169,7 +169,7 @@ describe('Stønadstekst', () => {
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
-    test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
+    test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', () => {
         renderMedFaktaData('2025-09-05');
 
         expect(screen.getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
@@ -177,7 +177,7 @@ describe('Stønadstekst', () => {
         );
     });
 
-    test('Overskriver ikke fritekst som brukeren har skrevet', async () => {
+    test('Overskriver ikke fritekst som brukeren har skrevet', () => {
         renderMedFaktaData('2025-09-05');
 
         const textarea = screen.getByRole('textbox', { name: 'Legg til utdypende tekst' });
