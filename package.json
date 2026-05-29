@@ -55,7 +55,7 @@
     "react-dom": "19.2.6",
     "react-hook-form": "7.76.1",
     "react-router": "7.15.1",
-    "redis": "5.12.1",
+    "redis": "6.0.0",
     "tailwindcss": "4.3.0",
     "winston": "3.19.0",
     "zod": "4.4.3",
