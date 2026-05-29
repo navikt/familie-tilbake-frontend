@@ -15,9 +15,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useActionBar } from '~/hooks/useActionBar';
 import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
 import { gamleVedtaksresultater } from '~/kodeverk';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
@@ -77,13 +77,13 @@ export const VedtakContainer: FC = () => {
     };
 
     useEffect(() => {
-        const fetch = async (): Promise<void> => {
+        const hentInitialData = async (): Promise<void> => {
             await hentErPerioderLike();
 
             const sammenslåttResponse = await hentErPerioderSammenslått();
             setErPerioderSammenslått(!!sammenslåttResponse);
         };
-        fetch();
+        hentInitialData();
         // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, []);
 
@@ -113,6 +113,28 @@ export const VedtakContainer: FC = () => {
             });
         }
     }, [foreslåVedtakRespons, visGlobalAlert]);
+
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FORESLÅ_VEDTAK'),
+        forrigeAriaLabel: 'Gå tilbake til vilkårsvurderingssteget',
+        onForrige: navigerTilForrige,
+        isLoading: senderInn,
+    };
+
+    useActionBar(
+        behandlingILesemodus
+            ? {
+                  ...fellesActionBarConfig,
+                  skjulNeste: true,
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  nesteTekst: 'Send til godkjenning',
+                  nesteAriaLabel: 'Send til godkjenning hos beslutter',
+                  disableNeste: senderInn || disableBekreft || harValideringsFeil,
+                  onNeste: (): void => bekreftelsesmodalRef.current?.showModal(),
+              }
+    );
 
     if (
         beregningsresultat?.status === RessursStatus.Suksess &&
@@ -201,17 +223,6 @@ export const VedtakContainer: FC = () => {
                         )}
                     </HStack>
                 </div>
-                <ActionBar
-                    disableNeste={senderInn || disableBekreft || harValideringsFeil}
-                    skjulNeste={behandlingILesemodus}
-                    stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
-                    nesteTekst="Send til godkjenning"
-                    forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
-                    nesteAriaLabel="Send til godkjenning hos beslutter"
-                    onNeste={() => bekreftelsesmodalRef.current?.showModal()}
-                    onForrige={navigerTilForrige}
-                    isLoading={senderInn}
-                />
                 <Bekreftelsesmodal
                     dialogRef={bekreftelsesmodalRef}
                     tekster={{

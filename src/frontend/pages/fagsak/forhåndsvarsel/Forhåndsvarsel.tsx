@@ -16,7 +16,7 @@ import {
     behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
 } from '~/generated-new/@tanstack/react-query.gen';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
@@ -28,7 +28,7 @@ import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
-    const { actionBarStegtekst, behandlingILesemodus } = useBehandlingState();
+    const { actionBarStegtekst } = useBehandlingState();
     const navigerTilNeste = useStegNavigering('FORELDELSE');
     const navigerTilForrige = useStegNavigering('FAKTA');
     const queryClient = useQueryClient();
@@ -42,6 +42,11 @@ export const Forhåndsvarsel: FC = () => {
 
     const { forhaandsvarselSteg: forhåndsvarselSteg, brukeruttalelse } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
+
+    /** TODO
+     * Kan ikke være redigerbar hvis unntak er sendt inn og skjema ikke er endret.
+     * Nå postes unntak på nytt hver gang man trykker på neste-knappen
+     */
     const erRedigerbarForhåndsvarselFlyt =
         forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
 
@@ -107,6 +112,32 @@ export const Forhåndsvarsel: FC = () => {
 
     const visForhåndsvisning = erRedigerbarForhåndsvarselFlyt && valg === 'send';
 
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
+        forrigeAriaLabel: 'Gå tilbake til faktasteget',
+        onForrige: navigerTilForrige,
+        isLoading: sendVarselbrev.isPending,
+    };
+
+    useActionBar(
+        erRedigerbarForhåndsvarselFlyt
+            ? {
+                  type: 'submit' as const,
+                  formId: FORHÅNDSVARSEL_FORM_ID,
+                  ...fellesActionBarConfig,
+                  // TODO legg til "Lagre og gå videre" når setIkkePersistertKomponent er lagt til
+                  ...(valg === 'send' && { nesteTekst: 'Send forhåndsvarselet' }),
+                  nesteAriaLabel:
+                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  onNeste: navigerTilNeste,
+                  // TODO legg til "Lagre og gå videre til foreldelsessteget" når setIkkePersistertKomponent er lagt til
+                  nesteAriaLabel: 'Gå videre til foreldelsessteget',
+              }
+    );
+
     return (
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
@@ -130,20 +161,6 @@ export const Forhåndsvarsel: FC = () => {
                     )}
                 </>
             )}
-            <ActionBar
-                stegtekst={actionBarStegtekst('FORHÅNDSVARSEL')}
-                nesteTekst={valg === 'send' ? 'Send forhåndsvarselet' : 'Neste'}
-                nesteAriaLabel={
-                    valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget'
-                }
-                forrigeAriaLabel="Gå tilbake til faktasteget"
-                isLoading={sendVarselbrev.isPending || lagreUnntak.isPending}
-                skjulNeste={behandlingILesemodus}
-                onForrige={navigerTilForrige}
-                {...(erRedigerbarForhåndsvarselFlyt
-                    ? { type: 'submit' as const, formId: FORHÅNDSVARSEL_FORM_ID }
-                    : { onNeste: navigerTilNeste })}
-            />
         </VStack>
     );
 };

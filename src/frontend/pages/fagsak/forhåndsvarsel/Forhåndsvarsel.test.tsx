@@ -122,6 +122,18 @@ describe('Forhåndsvarsel', () => {
         expect(sendKnapp()).toBeInTheDocument();
     });
 
+    /** TODO legg til test for "Lagre og gå videre" når setIkkePersistertKomponent er implementert
+
+    test('Viser "Lagre og gå til neste" når Nei er valgt', async () => {
+        renderForhåndsvarsel();
+
+        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Nei' }));
+
+        expect(nesteKnapp()).toHaveTextContent('Lagre og gå til neste');
+    }); 
+
+    */
+
     test('Viser ikke "Vis brevet" før Ja er valgt', () => {
         renderForhåndsvarsel();
 
@@ -136,7 +148,7 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
     });
 
-    test('Viser feilmelding ved submit uten valg', async () => {
+    test('Viser feilmelding ved trykk på "Neste" uten valg', async () => {
         renderForhåndsvarsel();
 
         await user.click(nesteKnapp());

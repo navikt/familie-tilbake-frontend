@@ -6,6 +6,8 @@ import type { UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
 import { BehandlingContext } from '~/context/BehandlingContext';
 import { BehandlingStateContext } from '~/context/BehandlingStateContext';
 import { useUlagretEndringer } from '~/hooks/useUlagretEndringer';
+import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBarConfig } from '~/stores/actionBarStore';
 
 import { lagBehandling } from './behandlingFactory';
 
@@ -64,6 +66,12 @@ export const lagBehandlingStateContext = (
  * Test provider som wrapper både BehandlingContext og BehandlingStateContext.
  * Bruk denne for enkel testing av komponenter som trenger begge kontekstene.
  */
+const TestActionBar: FC = () => {
+    const actionBarConfig = useActionBarConfig();
+
+    return actionBarConfig ? <ActionBar {...actionBarConfig} /> : null;
+};
+
 export const TestBehandlingProvider: FC<{
     behandling?: BehandlingDto;
     stateOverrides?: BehandlingStateContextOverrides;
@@ -75,7 +83,10 @@ export const TestBehandlingProvider: FC<{
 
     return (
         <BehandlingContext value={behandlingValue}>
-            <BehandlingStateContext value={stateValue}>{children}</BehandlingStateContext>
+            <BehandlingStateContext value={stateValue}>
+                {children}
+                <TestActionBar />
+            </BehandlingStateContext>
         </BehandlingContext>
     );
 };
