@@ -1,5 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
-
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import { Feil } from '~/api/feil';
@@ -16,9 +14,9 @@ const renderFeilModal = (
     feil: Feil,
     behandlingId?: string,
     fagsakOverride?: ReturnType<typeof lagFagsak>
-): RenderResult => {
+): void => {
     const behandling = behandlingId ? lagBehandling({ behandlingId }) : lagBehandling();
-    return render(
+    render(
         <FagsakContext value={fagsakOverride ?? lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <FeilModal feil={feil} lukkFeilModal={mockSetVisFeilModal} />
@@ -170,8 +168,8 @@ describe('FeilModal', () => {
 
         renderFeilModal(mockFeil);
 
-        expect(screen.queryByText(/Fagsak ID:/)).toBeInTheDocument();
-        expect(screen.queryByText(/Behandling ID:/)).toBeInTheDocument();
+        expect(screen.getByText(/Fagsak ID:/)).toBeInTheDocument();
+        expect(screen.getByText(/Behandling ID:/)).toBeInTheDocument();
     });
 
     test('Kaller på setVisFeilModal når lukkeknappen klikkes', () => {

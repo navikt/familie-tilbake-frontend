@@ -1,7 +1,5 @@
-import type { RenderResult } from '@testing-library/react';
-
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('~/api/brukerlenker');
@@ -16,9 +14,9 @@ import { Header } from './Header';
 const mockHentBrukerlenkeBaseUrl = vi.mocked(hentBrukerlenkeBaseUrl);
 const mockHentAInntektUrl = vi.mocked(hentAInntektUrl);
 
-const renderHeader = (): RenderResult => {
+const renderHeader = (): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <Header />
         </QueryClientProvider>
@@ -50,19 +48,14 @@ describe('Header', () => {
 
     test('hentBrukerlenkeBaseUrl blir kalt én gang ved rendering', () => {
         renderHeader();
-
         expect(mockHentBrukerlenkeBaseUrl).toHaveBeenCalledTimes(1);
     });
 
     test('Viser riktig titler når ingen personIdent er satt', async () => {
         renderHeader();
 
-        await waitFor(() => {
-            expect(screen.getByText('Modia')).toBeInTheDocument();
-        });
-
-        const modiaPersonoversiktLenkeTekst = screen.queryByText('Modia personoversikt');
-        expect(modiaPersonoversiktLenkeTekst).not.toBeInTheDocument();
+        expect(await screen.findByText('Modia')).toBeInTheDocument();
+        expect(screen.queryByText('Modia personoversikt')).not.toBeInTheDocument();
     });
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
@@ -75,20 +68,14 @@ describe('Header', () => {
         });
         renderHeader();
 
-        await waitFor(() => {
-            expect(mockHentAInntektUrl).toHaveBeenCalled();
-        });
+        expect(mockHentAInntektUrl).toHaveBeenCalled();
 
-        await waitFor(() => {
-            expect(screen.getByTitle('Systemer og oppslagsverk')).toBeInTheDocument();
-        });
-
-        const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
+        const menyknapp = await screen.findByRole('button', { name: 'Systemer og oppslagsverk' });
         await userEvent.click(menyknapp);
 
-        const aInntektLenke = screen.getByText('A-inntekt personoversikt').closest('a');
-        const gosysLenke = screen.getByText('Gosys personoversikt').closest('a');
-        const modiaLenke = screen.getByText('Modia personoversikt').closest('a');
+        const aInntektLenke = screen.getByRole('link', { name: 'A-inntekt personoversikt' });
+        const gosysLenke = screen.getByRole('link', { name: 'Gosys personoversikt' });
+        const modiaLenke = screen.getByRole('link', { name: 'Modia personoversikt' });
 
         expect(aInntektLenke).toHaveAttribute(
             'href',
@@ -104,23 +91,19 @@ describe('Header', () => {
     test('Gir kun baseUrl når personIdent ikke er satt', async () => {
         renderHeader();
 
-        await waitFor(() => {
-            expect(screen.getByTitle('Systemer og oppslagsverk')).toBeInTheDocument();
-        });
-
-        const menyknapp = screen.getByTitle('Systemer og oppslagsverk');
+        const menyknapp = await screen.findByRole('button', { name: 'Systemer og oppslagsverk' });
         await userEvent.click(menyknapp);
 
-        const aInntektLenke = screen.getByText('A-inntekt').closest('a');
-        const gosysLenke = screen.getByText('Gosys').closest('a');
-        const modiaLenke = screen.getByText('Modia').closest('a');
+        const aInntektLenke = screen.getByRole('link', { name: 'A-inntekt' });
+        const gosysLenke = screen.getByRole('link', { name: 'Gosys' });
+        const modiaLenke = screen.getByRole('link', { name: 'Modia' });
 
         expect(aInntektLenke).toHaveAttribute('href', 'https://a-inntekt.nav.no');
         expect(gosysLenke).toHaveAttribute('href', 'https://gosys.nav.no');
         expect(modiaLenke).toHaveAttribute('href', 'https://modia.nav.no');
     });
 
-    test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', async () => {
+    test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', () => {
         mockHentBrukerlenkeBaseUrl.mockResolvedValue({
             aInntektUrl: '',
             gosysBaseUrl: '',
@@ -129,9 +112,10 @@ describe('Header', () => {
 
         renderHeader();
 
-        await waitFor(() => {
-            const menyknapp = screen.queryByTitle('Systemer og oppslagsverk');
-            expect(menyknapp).not.toBeInTheDocument();
-        });
+        expect(
+            screen.queryByRole('button', {
+                name: 'Systemer og oppslagsverk',
+            })
+        ).not.toBeInTheDocument();
     });
 });

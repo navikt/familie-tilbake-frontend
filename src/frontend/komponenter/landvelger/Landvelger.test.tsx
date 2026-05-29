@@ -39,7 +39,7 @@ describe('Landvelger', () => {
         const combobox = screen.getByRole('combobox');
         await user.click(combobox);
 
-        const danmarkValg = await screen.findByText('Danmark');
+        const danmarkValg = screen.getByText('Danmark');
         expect(danmarkValg).toBeInTheDocument();
 
         expect(screen.queryByText('Sverige')).not.toBeInTheDocument();

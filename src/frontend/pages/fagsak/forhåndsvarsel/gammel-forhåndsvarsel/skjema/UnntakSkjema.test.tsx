@@ -1,5 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
-
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 
@@ -25,9 +23,9 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-const renderUnntak = (): RenderResult => {
+const renderUnntak = (): void => {
     const behandling = lagBehandlingDto();
-    const result = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -38,8 +36,6 @@ const renderUnntak = (): RenderResult => {
     );
 
     fireEvent.click(screen.getByLabelText('Nei'));
-
-    return result;
 };
 
 describe('Unntak', () => {
@@ -83,7 +79,7 @@ describe('Unntak', () => {
         );
         expect(unntakFeilmelding).toBeInTheDocument();
 
-        const beskrivelseFeilmelding = await screen.findByText('Du må fylle inn en verdi');
+        const beskrivelseFeilmelding = screen.getByText('Du må fylle inn en verdi');
         expect(beskrivelseFeilmelding).toBeInTheDocument();
     });
 });

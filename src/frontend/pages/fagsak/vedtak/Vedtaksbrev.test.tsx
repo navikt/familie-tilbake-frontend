@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { Avsnitt, Brevmottaker, VedtaksbrevData } from '~/generated-new';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -9,9 +8,9 @@ import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 
-const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevData): RenderResult => {
+const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevData): void => {
     const client = new QueryClient();
-    return render(
+    render(
         <QueryClientProvider client={client}>
             <TestBehandlingProvider>
                 <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={vitest.fn()} />

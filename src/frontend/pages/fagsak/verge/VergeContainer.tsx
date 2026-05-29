@@ -12,8 +12,8 @@ import {
 } from '@navikt/ds-react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useActionBar } from '~/hooks/useActionBar';
 import { Vergetype, vergetyper } from '~/kodeverk/verge';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { HenterData } from '~/komponenter/datalast/HenterData';
 import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
 import { hentFrontendFeilmelding } from '~/utils';
@@ -35,6 +35,15 @@ export const VergeContainer: FC = () => {
     const vergetypeValgt = !!skjema.felter.vergetype.verdi;
 
     const feilmelding = vergeRespons && hentFrontendFeilmelding(vergeRespons);
+
+    useActionBar({
+        stegtekst: actionBarStegtekst('VERGE'),
+        forrigeAriaLabel: undefined,
+        nesteAriaLabel: 'Gå videre til faktasteget',
+        onNeste: sendInn,
+        onForrige: undefined,
+        isLoading: senderInn,
+    });
 
     return (
         <>
@@ -130,15 +139,6 @@ export const VergeContainer: FC = () => {
                         maxLength={400}
                     />
                     {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
-
-                    <ActionBar
-                        stegtekst={actionBarStegtekst('VERGE')}
-                        forrigeAriaLabel={undefined}
-                        nesteAriaLabel="Gå videre til faktasteget"
-                        onNeste={sendInn}
-                        onForrige={undefined}
-                        isLoading={senderInn}
-                    />
                 </VStack>
             )}
         </>

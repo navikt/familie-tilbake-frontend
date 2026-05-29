@@ -15,24 +15,22 @@ export const HistoriskVilkårsvurderingContainer: FC = () => {
 
     if (inaktiveVilkårsvurderinger?.status === RessursStatus.Suksess) {
         return (
-            <div className="p-3">
-                <VStack gap="space-20">
-                    <LocalAlert status="announcement">
-                        <LocalAlert.Header>
-                            <LocalAlert.Title>
-                                Tidligere vilkårsvurderinger på denne behandlingen
-                            </LocalAlert.Title>
-                        </LocalAlert.Header>
-                    </LocalAlert>
-                    <VelgHistoriskVilkårsvurdering
-                        inaktiveVilkårsvurderinger={inaktiveVilkårsvurderinger.data}
-                        setInaktivVilkårsvurdering={setInaktivVilkårsvurdering}
-                    />
-                    {skjemaData && skjemaData.length > 0 && (
-                        <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
-                    )}
-                </VStack>
-            </div>
+            <VStack gap="space-20">
+                <LocalAlert status="announcement" size="small">
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>
+                            Tidligere vilkårsvurderinger på denne behandlingen
+                        </LocalAlert.Title>
+                    </LocalAlert.Header>
+                </LocalAlert>
+                <VelgHistoriskVilkårsvurdering
+                    inaktiveVilkårsvurderinger={inaktiveVilkårsvurderinger.data}
+                    setInaktivVilkårsvurdering={setInaktivVilkårsvurdering}
+                />
+                {skjemaData && skjemaData.length > 0 && (
+                    <HistoriskVilkårsvurderingVisning perioder={skjemaData} />
+                )}
+            </VStack>
         );
     } else {
         return <DataLastIkkeSuksess ressurser={[inaktiveVilkårsvurderinger]} />;

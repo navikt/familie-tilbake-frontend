@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { LeaveIcon } from '@navikt/aksel-icons';
-import { BodyLong, Heading, HStack, Link } from '@navikt/ds-react';
+import { BodyLong, Heading, HStack, Link, VStack } from '@navikt/ds-react';
 import { useLocation } from 'react-router';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -16,10 +16,9 @@ export const HistoriskeVurderingermeny: FC = () => {
     const behandlingsPath = location.pathname.split('/').at(-1);
 
     return (
-        <div className="p-8">
-            <HStack className="mb-4 flex gap-4">
+        <VStack gap="space-8">
+            <HStack gap="space-16">
                 <Behandlingsmeny />
-
                 {behandlingsPath && (
                     <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
                         Gå til behandling
@@ -35,6 +34,6 @@ export const HistoriskeVurderingermeny: FC = () => {
                 <Link href={`${basePath}/inaktiv-fakta`}>Fakta</Link>
                 <Link href={`${basePath}/inaktiv-vilkaarsvurdering`}>Vilkårsvurdering</Link>
             </HStack>
-        </div>
+        </VStack>
     );
 };

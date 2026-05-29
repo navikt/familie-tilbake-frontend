@@ -13,8 +13,8 @@ import {
     behandlingHentVedtaksbrevOptions,
     behandlingHentVedtaksresultatOptions,
 } from '~/generated-new/@tanstack/react-query.gen';
+import { useActionBar } from '~/hooks/useActionBar';
 import { vedtaksresultater } from '~/kodeverk';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { useVisGlobalAlert } from '~/stores/globalAlertStore';
 import { useStegNavigering } from '~/utils/sider';
 
@@ -71,6 +71,28 @@ export const Vedtak: FC = () => {
         foreslåVedtak.mutate({ path: { behandlingId } });
     };
 
+    const fellesActionBarConfig = {
+        type: 'submit' as const,
+        formId: VEDTAKSBREV_FORM_ID,
+        stegtekst: actionBarStegtekst('FORESLÅ_VEDTAK'),
+        forrigeAriaLabel: 'Gå tilbake til vilkårsvurderingssteget',
+        onForrige: navigerTilForrige,
+        isLoading: foreslåVedtak.isPending,
+    };
+
+    useActionBar(
+        behandlingILesemodus
+            ? {
+                  ...fellesActionBarConfig,
+                  skjulNeste: true,
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  nesteTekst: 'Send til godkjenning',
+                  nesteAriaLabel: 'Send til godkjenning hos beslutter',
+              }
+    );
+
     return (
         <VStack gap="space-24">
             <section className="flex flex-row justify-between items-center">
@@ -111,18 +133,6 @@ export const Vedtak: FC = () => {
                     <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={onSubmit} />
                 )
             )}
-
-            <ActionBar
-                stegtekst={actionBarStegtekst('FORESLÅ_VEDTAK')}
-                nesteTekst="Send til godkjenning"
-                forrigeAriaLabel="Gå tilbake til vilkårsvurderingssteget"
-                nesteAriaLabel="Send til godkjenning hos beslutter"
-                isLoading={foreslåVedtak.isPending}
-                skjulNeste={behandlingILesemodus}
-                type="submit"
-                formId={VEDTAKSBREV_FORM_ID}
-                onForrige={navigerTilForrige}
-            />
         </VStack>
     );
 };

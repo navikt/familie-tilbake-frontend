@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { InstitusjonDto } from '~/generated';
 import type { FrontendBrukerDto } from '~/generated';
 
@@ -36,8 +35,8 @@ const baseInstitusjon = (override: Partial<InstitusjonDto> = {}): InstitusjonDto
 const renderBrukerInformasjon = (
     bruker: Partial<FrontendBrukerDto> | null = null,
     institusjon: Partial<InstitusjonDto> | null = null
-): RenderResult => {
-    return render(
+): void => {
+    render(
         <FagsakContext
             value={lagFagsak({
                 bruker: bruker ? baseBruker(bruker) : baseBruker(),

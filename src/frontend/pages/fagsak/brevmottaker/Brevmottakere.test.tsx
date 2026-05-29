@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { BehandlingDto, ManuellBrevmottakerResponsDto } from '~/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -51,9 +50,9 @@ const createMockDødsboBrevmottaker = (): ManuellBrevmottakerResponsDto[] => [
     },
 ];
 
-const renderBrevmottakere = (behandling: BehandlingDto): RenderResult => {
+const renderBrevmottakere = (behandling: BehandlingDto): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>

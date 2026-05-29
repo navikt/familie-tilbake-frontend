@@ -3,7 +3,7 @@ import type { RessursVarselbrevtekst } from '~/generated';
 import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, type RenderResult, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { Suspense } from 'react';
 
@@ -59,17 +59,14 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
     ferdigvurdert: false,
 });
 
-const renderForhåndsvarsel = (
-    forhåndsvarselResponse = lagForhåndsvarselResponse()
-): RenderResult => {
+const renderForhåndsvarsel = (forhåndsvarselResponse = lagForhåndsvarselResponse()): void => {
     const queryClient = createTestQueryClient();
     const pathOptions = { path: { behandlingId: BEHANDLING_ID } };
 
     queryClient.setQueryData(behandlingForhandsvarselQueryKey(pathOptions), forhåndsvarselResponse);
     queryClient.setQueryData(hentForhåndsvarselTekstQueryKey(pathOptions), lagVarselbrevtekster());
     queryClient.setQueryData(behandlingFaktaQueryKey(pathOptions), lagFaktaOmFeilutbetaling());
-
-    return render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider>
                 <QueryClientProvider client={queryClient}>
@@ -100,9 +97,6 @@ describe('Forhåndsvarsel', () => {
     const sendKnapp = (): HTMLElement =>
         screen.getByRole('button', { name: 'Send forhåndsvarselet' });
 
-    const visBrevetKnapp = (): HTMLElement | null =>
-        screen.queryByRole('button', { name: 'Vis brevet' });
-
     test('Viser spørsmål om forhåndsvarsel', () => {
         renderForhåndsvarsel();
 
@@ -128,10 +122,22 @@ describe('Forhåndsvarsel', () => {
         expect(sendKnapp()).toBeInTheDocument();
     });
 
+    /** TODO legg til test for "Lagre og gå videre" når setIkkePersistertKomponent er implementert
+
+    test('Viser "Lagre og gå til neste" når Nei er valgt', async () => {
+        renderForhåndsvarsel();
+
+        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Nei' }));
+
+        expect(nesteKnapp()).toHaveTextContent('Lagre og gå til neste');
+    }); 
+
+    */
+
     test('Viser ikke "Vis brevet" før Ja er valgt', () => {
         renderForhåndsvarsel();
 
-        expect(visBrevetKnapp()).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Vis brevet' })).not.toBeInTheDocument();
     });
 
     test('Viser "Vis brevet" når Ja er valgt', async () => {
@@ -139,16 +145,16 @@ describe('Forhåndsvarsel', () => {
 
         await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
 
-        expect(visBrevetKnapp()).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
     });
 
-    test('Viser feilmelding ved submit uten valg', async () => {
+    test('Viser feilmelding ved trykk på "Neste" uten valg', async () => {
         renderForhåndsvarsel();
 
         await user.click(nesteKnapp());
 
         expect(
-            await screen.findByText('Du må velge om det skal sendes forhåndsvarsel')
+            screen.getByText('Du må velge om det skal sendes forhåndsvarsel')
         ).toBeInTheDocument();
     });
 
@@ -174,7 +180,7 @@ describe('Forhåndsvarsel', () => {
 
         await user.click(sendKnapp());
 
-        expect(await screen.findByText('Du må fylle inn en verdi')).toBeInTheDocument();
+        expect(screen.getByText('Du må fylle inn en verdi')).toBeInTheDocument();
     });
 
     test('Viser read-only radio med Ja valgt når varsel er sendt', () => {

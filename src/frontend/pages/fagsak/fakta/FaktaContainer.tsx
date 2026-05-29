@@ -4,7 +4,7 @@ import { Heading, VStack } from '@navikt/ds-react';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
 import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
 import { RessursStatus } from '~/typer/ressurs';
@@ -29,6 +29,35 @@ export const FaktaContainer: FC = () => {
 
     const harFeil = fakta?.status !== RessursStatus.Suksess;
 
+    const forrigeAriaLabel = behandling.harVerge
+        ? 'Gå tilbake til vergesteget'
+        : harBrevmottakerSteg
+          ? 'Gå tilbake til brevmottakersteget'
+          : undefined;
+    const onForrige = behandling.harVerge || harBrevmottakerSteg ? navigerTilForrige : undefined;
+
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FAKTA'),
+        forrigeAriaLabel: forrigeAriaLabel,
+        onForrige: onForrige,
+        isLoading: senderInn,
+    };
+
+    useActionBar(
+        harFeil
+            ? {
+                  ...fellesActionBarConfig,
+                  skjulNeste: true,
+              }
+            : {
+                  ...fellesActionBarConfig,
+                  onNeste: sendInnSkjema,
+                  nesteAriaLabel: harForhåndsvarselSteg
+                      ? 'Gå videre til forhåndsvarselsteget'
+                      : 'Gå videre til foreldelsessteget',
+              }
+    );
+
     return (
         <>
             {fakta?.status === RessursStatus.Suksess ? (
@@ -45,27 +74,6 @@ export const FaktaContainer: FC = () => {
             ) : (
                 <DataLastIkkeSuksess ressurser={[fakta]} />
             )}
-            <ActionBar
-                stegtekst={actionBarStegtekst('FAKTA')}
-                forrigeAriaLabel={
-                    behandling.harVerge
-                        ? 'Gå tilbake til vergesteget'
-                        : harBrevmottakerSteg
-                          ? 'Gå tilbake til brevmottakersteget'
-                          : undefined
-                }
-                nesteAriaLabel={
-                    harForhåndsvarselSteg
-                        ? 'Gå videre til forhåndsvarselsteget'
-                        : 'Gå videre til foreldelsessteget'
-                }
-                onForrige={
-                    behandling.harVerge || harBrevmottakerSteg ? navigerTilForrige : undefined
-                }
-                onNeste={sendInnSkjema}
-                isLoading={senderInn}
-                skjulNeste={harFeil}
-            />
         </>
     );
 };

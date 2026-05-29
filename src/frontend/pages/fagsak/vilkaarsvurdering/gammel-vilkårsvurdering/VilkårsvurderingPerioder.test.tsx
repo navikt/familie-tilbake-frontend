@@ -1,4 +1,4 @@
-import type { ByRoleMatcher, ByRoleOptions, RenderResult } from '@testing-library/react';
+import type { ByRoleMatcher, ByRoleOptions } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { Ressurs } from '~/typer/ressurs';
@@ -8,7 +8,7 @@ import type {
 } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -71,14 +71,14 @@ const setupMocks = (): void => {
     }));
 };
 
-const renderVilkårsvurderingPerioder = (): RenderResult => {
+const renderVilkårsvurderingPerioder = (): void => {
     const skjemaData = perioder.map((periode, index) => ({
         index: `idx_fpsd_${index}`,
         ...periode,
     }));
     const behandling = lagBehandling();
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider
@@ -125,9 +125,9 @@ describe('VilkårsvurderingPerioder', () => {
     });
 
     test('Skal bytte periode når det ikke er ulagrede endringer', async () => {
-        const { getAllByRole } = renderVilkårsvurderingPerioder();
+        renderVilkårsvurderingPerioder();
 
-        const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
+        const andrePeriodeButton = findPeriodButton(screen.getAllByRole, '01.05.2020');
         if (!andrePeriodeButton) {
             throw new Error('Andre periode button ikke funnet');
         }
@@ -137,88 +137,95 @@ describe('VilkårsvurderingPerioder', () => {
     });
 
     test('Skal vise modal ved bytte av periode med ulagrede endringer', async () => {
-        const { getByText, getAllByRole, getByLabelText } = renderVilkårsvurderingPerioder();
+        renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
+        const begrunnelseInput = screen.getByLabelText(
+            'Begrunn hvorfor du valgte vilkåret ovenfor'
+        );
         await user.type(begrunnelseInput, 'Test begrunnelse som ikke er lagret');
 
-        const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
+        const andrePeriodeButton = findPeriodButton(screen.getAllByRole, '01.05.2020');
         if (!andrePeriodeButton) {
             throw new Error('Andre periode button ikke funnet');
         }
 
         await user.click(andrePeriodeButton);
 
-        expect(getByText(modalTekst)).toBeInTheDocument();
+        expect(screen.getByText(modalTekst)).toBeInTheDocument();
     });
 
     test('Skal bytte uten å lagre når "Fortsett uten å lagre" klikkes', async () => {
-        const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
-            renderVilkårsvurderingPerioder();
+        renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
+        const begrunnelseInput = screen.getByLabelText(
+            'Begrunn hvorfor du valgte vilkåret ovenfor'
+        );
         await user.type(begrunnelseInput, 'Test begrunnelse som ikke er lagret');
 
-        const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
+        const andrePeriodeButton = findPeriodButton(screen.getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
         }
 
-        expect(getByText(modalTekst)).toBeInTheDocument();
-        await user.click(getByRole('button', { name: 'Fortsett uten å lagre' }));
+        expect(screen.getByText(modalTekst)).toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: 'Fortsett uten å lagre' }));
 
         expect(andrePeriodeButton).toHaveAttribute('aria-current', 'true');
-        expect(queryByText(modalTekst)).not.toBeInTheDocument();
+        expect(screen.queryByText(modalTekst)).not.toBeInTheDocument();
     });
 
     test('Skal lagre og bytte når "Lagre og bytt periode" klikkes', async () => {
-        const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
-            renderVilkårsvurderingPerioder();
+        renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
+        const begrunnelseInput = screen.getByLabelText(
+            'Begrunn hvorfor du valgte vilkåret ovenfor'
+        );
         await user.type(begrunnelseInput, 'Gyldig begrunnelse');
 
         await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         );
 
-        await user.click(getByRole('radio', { name: 'Nei' }));
-        const godTroBegrunnelseInput = getByLabelText('Begrunn hvorfor beløpet ikke er i behold');
+        await user.click(screen.getByRole('radio', { name: 'Nei' }));
+        const godTroBegrunnelseInput = screen.getByLabelText(
+            'Begrunn hvorfor beløpet ikke er i behold'
+        );
         await user.type(godTroBegrunnelseInput, 'Beløp vurdering');
 
-        const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
+        const andrePeriodeButton = findPeriodButton(screen.getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
         }
 
-        expect(getByText(modalTekst)).toBeInTheDocument();
-        await user.click(getByRole('button', { name: 'Lagre og bytt periode' }));
+        expect(screen.getByText(modalTekst)).toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: 'Lagre og bytt periode' }));
 
         expect(andrePeriodeButton).toHaveAttribute('aria-current', 'true');
-        expect(queryByText(modalTekst)).not.toBeInTheDocument();
+        expect(screen.queryByText(modalTekst)).not.toBeInTheDocument();
     });
 
     test('Skal lukke modal og forbli på nåværende periode når "Lukk" klikkes', async () => {
-        const { getByText, getByRole, getAllByRole, getByLabelText, queryByText } =
-            renderVilkårsvurderingPerioder();
+        renderVilkårsvurderingPerioder();
 
-        const begrunnelseInput = getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor');
+        const begrunnelseInput = screen.getByLabelText(
+            'Begrunn hvorfor du valgte vilkåret ovenfor'
+        );
         await user.type(begrunnelseInput, 'Test begrunnelse');
 
-        const førstePeriodeButton = findPeriodButton(getAllByRole, '01.01.2020');
-        const andrePeriodeButton = findPeriodButton(getAllByRole, '01.05.2020');
+        const førstePeriodeButton = findPeriodButton(screen.getAllByRole, '01.01.2020');
+        const andrePeriodeButton = findPeriodButton(screen.getAllByRole, '01.05.2020');
         if (andrePeriodeButton) {
             await user.click(andrePeriodeButton);
         }
 
-        expect(getByText(modalTekst)).toBeInTheDocument();
-        await user.click(getByRole('button', { name: 'Lukk' }));
+        expect(screen.getByText(modalTekst)).toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: 'Lukk' }));
 
         expect(førstePeriodeButton).toHaveAttribute('aria-current', 'true');
-        expect(queryByText(modalTekst)).not.toBeInTheDocument();
+        expect(screen.queryByText(modalTekst)).not.toBeInTheDocument();
         expect(begrunnelseInput).toHaveValue('Test begrunnelse');
     });
 });
