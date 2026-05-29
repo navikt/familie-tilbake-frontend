@@ -23,8 +23,8 @@ import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
 import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
+import { useActionBar } from '~/hooks/useActionBar';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import { ModalWrapper } from '~/komponenter/modal/ModalWrapper';
 import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
@@ -280,6 +280,17 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
 
+    useActionBar({
+        stegtekst: actionBarStegtekst('VILKÅRSVURDERING'),
+        forrigeTekst: harUlagredeData ? 'Lagre og gå til forrige' : 'Forrige',
+        nesteTekst: harUlagredeData ? 'Lagre og gå til neste' : 'Neste',
+        forrigeAriaLabel: `${harUlagredeData ? 'Lagre og gå' : 'Gå'} tilbake til foreldelsessteget`,
+        nesteAriaLabel: `${harUlagredeData ? 'Lagre og gå' : 'Gå'} videre til vedtakssteget`,
+        onForrige: () => handleNavigering(PeriodeHandling.GåTilForrigeSteg),
+        onNeste: () => handleNavigering(PeriodeHandling.GåTilNesteSteg),
+        disableNeste: (!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet,
+    });
+
     if (sendInnSkjemaMutation.isPending) {
         return (
             <div className="min-w-[20rem]" aria-live="polite">
@@ -449,18 +460,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         </Button>
                     )}
                 </HStack>
-                <ActionBar
-                    stegtekst={actionBarStegtekst('VILKÅRSVURDERING')}
-                    forrigeAriaLabel="Gå tilbake til foreldelsessteget"
-                    nesteAriaLabel="Gå videre til vedtakssteget"
-                    onNeste={() => handleNavigering(PeriodeHandling.GåTilNesteSteg)}
-                    onForrige={() => handleNavigering(PeriodeHandling.GåTilForrigeSteg)}
-                    nesteTekst={harUlagredeData ? 'Lagre og gå til neste' : 'Neste'}
-                    forrigeTekst={harUlagredeData ? 'Lagre og gå til forrige' : 'Forrige'}
-                    // Foreldede perioder blir ikke riktig validert, derfor de disables her. Opprettet bug i trello for dette.
-                    // https://trello.com/c/CEfUALXj/369-ved-trykk-p%C3%A5-neste-steg-i-vilk%C3%A5rsvurderingen-ved-foreldet-steg-s%C3%A5-er-det-en-feil-i-valideringen-som-sier-at-perioden-mangler-vil
-                    disableNeste={(!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet}
-                />
                 {sendInnSkjemaMutation.isError && (
                     <FeilModal
                         feil={sendInnSkjemaMutation.error}

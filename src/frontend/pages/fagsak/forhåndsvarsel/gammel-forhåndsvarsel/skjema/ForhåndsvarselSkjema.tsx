@@ -13,7 +13,7 @@ import { useEffect, useEffectEvent, useRef } from 'react';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { useActionBar } from '~/hooks/useActionBar';
 import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
 import {
@@ -244,6 +244,32 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
         (skalSendesForhåndsvarsel === SkalSendesForhåndsvarsel.Nei &&
             begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG');
 
+    const fellesActionBarConfig = {
+        stegtekst: actionBarStegtekst('FORHÅNDSVARSEL'),
+        nesteTekst: getNesteKnappTekst(submitAction),
+        onForrige: navigerTilForrige,
+        forrigeAriaLabel: 'Gå til fakta om feilutbetaling',
+        isLoading:
+            sendForhåndsvarselMutation.isPending ||
+            sendBrukeruttalelseMutation.isPending ||
+            sendUnntakMutation?.isPending,
+    };
+
+    useActionBar(
+        formId
+            ? {
+                  type: 'submit',
+                  formId: formId,
+                  nesteAriaLabel: getNesteKnappTekst(submitAction),
+                  ...fellesActionBarConfig,
+              }
+            : {
+                  onNeste: navigerTilNeste,
+                  nesteAriaLabel: 'Gå videre til foreldelsessteget',
+                  ...fellesActionBarConfig,
+              }
+    );
+
     return (
         <VStack gap="space-24">
             <SkalSendeSkjema
@@ -264,28 +290,6 @@ export const ForhåndsvarselSkjema: FC<Props> = ({
                     />
                 </FormProvider>
             )}
-
-            <ActionBar
-                stegtekst={actionBarStegtekst('FORHÅNDSVARSEL')}
-                nesteTekst={getNesteKnappTekst(submitAction)}
-                isLoading={
-                    sendForhåndsvarselMutation.isPending ||
-                    sendBrukeruttalelseMutation.isPending ||
-                    sendUnntakMutation?.isPending
-                }
-                forrigeAriaLabel="Gå til fakta om feilutbetaling"
-                onForrige={navigerTilForrige}
-                nesteAriaLabel={getNesteKnappTekst(submitAction)}
-                {...(formId
-                    ? {
-                          type: 'submit' as const,
-                          formId: formId,
-                      }
-                    : {
-                          type: 'button' as const,
-                          onNeste: navigerTilNeste,
-                      })}
-            />
 
             {mutations.map(({ key, mutation }) => {
                 if (mutation?.isError) {

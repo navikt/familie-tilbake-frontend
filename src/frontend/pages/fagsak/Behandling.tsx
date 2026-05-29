@@ -1,9 +1,8 @@
 import type { FC, ReactNode, RefObject } from 'react';
-import type { BehandlingsstegsinfoDto, VenteårsakEnum } from '~/generated';
+import type { BehandlingsstegsinfoDto } from '~/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, Link, LocalAlert } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { BodyShort, Button, Link, LocalAlert, VStack } from '@navikt/ds-react';
 import { Suspense, useLayoutEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
@@ -12,13 +11,16 @@ import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
 import { ToggleName } from '~/context/toggles';
 import { useToggles } from '~/context/TogglesContext';
+import { useActionBar } from '~/hooks/useActionBar';
 import { ActionBar } from '~/komponenter/action-bar/ActionBar';
+import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
 import { StegErrorBoundary } from '~/komponenter/error-boundary/StegErrorBoundary';
 import { lazyImportMedRetry } from '~/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
 import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
 import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
 import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
+import { useActionBarConfig } from '~/stores/actionBarStore';
 import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
 import { venteårsaker } from '~/typer/behandling';
 import { formatterDatostring } from '~/utils';
@@ -85,8 +87,20 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
 
 const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
 
+/**
+ * Leaf-komponent som viser ActionBar fra storen.
+ * Må være en separat komponent slik at store-subscriptions IKKE befinner seg
+ * i en forfedre-komponent til stegene — ellers vil steg-komponentene re-rendre
+ * hver gang storen oppdateres og skape en uendelig løkke med useActionBar.
+ */
+const GlobalActionBar: FC = () => {
+    const config = useActionBarConfig();
+    return config ? <ActionBar {...config} /> : <ActionBarSkeleton />;
+};
+
 type BehandlingLayoutProps = {
     children: ReactNode;
+    skalHaActionBar: boolean;
     visHøyremeny?: boolean;
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
@@ -95,9 +109,13 @@ const BehandlingLayout: FC<BehandlingLayoutProps> = ({
     children,
     visHøyremeny = true,
     dialogRef,
+    skalHaActionBar,
 }) => (
     <>
-        <div className="flex-1 overflow-auto">{children}</div>
+        <div className="flex-1 overflow-auto min-h-0 justify-between flex flex-col">
+            {children}
+            {skalHaActionBar && <GlobalActionBar />}
+        </div>
         {visHøyremeny && <Sidebar dialogRef={dialogRef} />}
     </>
 );
@@ -107,7 +125,7 @@ type HenlagtBehandlingProps = {
 };
 
 const HenlagtBehandling: FC<HenlagtBehandlingProps> = ({ dialogRef }) => (
-    <BehandlingLayout dialogRef={dialogRef}>
+    <BehandlingLayout dialogRef={dialogRef} skalHaActionBar={false}>
         <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
             <BodyShort size="small">Behandlingen er henlagt</BodyShort>
         </section>
@@ -118,18 +136,19 @@ type VenterPåKravgrunnlagBehandlingProps = {
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
+const VenterPåKravgrunnlagActionBar: FC = () => {
+    useActionBar({
+        stegtekst: 'På vent',
+        forrigeAriaLabel: undefined,
+        onForrige: undefined,
+        skjulNeste: true,
+    });
+    return null;
+};
+
 const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> = ({ dialogRef }) => (
-    <BehandlingLayout dialogRef={dialogRef}>
-        <section className="px-6 text-center" aria-label="Venter på kravgrunnlag">
-            <ActionBar
-                stegtekst="På vent"
-                skjulNeste
-                forrigeAriaLabel={undefined}
-                nesteAriaLabel="Neste"
-                onNeste={() => null}
-                onForrige={undefined}
-            />
-        </section>
+    <BehandlingLayout dialogRef={dialogRef} skalHaActionBar>
+        <VenterPåKravgrunnlagActionBar />
     </BehandlingLayout>
 );
 
@@ -138,34 +157,36 @@ type HistoriskBehandlingProps = {
 };
 
 const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({ dialogRef }) => (
-    <BehandlingLayout dialogRef={dialogRef} visHøyremeny={false}>
-        <Suspense fallback="Historiske vurderinger laster...">
-            <HistoriskeVurderingermeny />
-        </Suspense>
-        <Routes>
-            <Route
-                path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
-                element={
-                    <HistoriskFaktaProvider>
-                        <Suspense fallback="Historisk fakta laster...">
-                            <HistoriskFaktaContainer />
-                        </Suspense>
-                    </HistoriskFaktaProvider>
-                }
-            />
-            <Route
-                path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
-                element={
-                    <HistoriskVilkårsvurderingProvider>
-                        <Suspense fallback="Historisk vilkårsvurdering laster...">
-                            <HistoriskVilkårsvurderingContainer />
-                        </Suspense>
-                    </HistoriskVilkårsvurderingProvider>
-                }
-            />
-            <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
-            <Route path="*" element={<IkkeFunnet />} />
-        </Routes>
+    <BehandlingLayout dialogRef={dialogRef} visHøyremeny={false} skalHaActionBar={false}>
+        <VStack gap="space-20">
+            <Suspense fallback="Historiske vurderinger laster...">
+                <HistoriskeVurderingermeny />
+            </Suspense>
+            <Routes>
+                <Route
+                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
+                    element={
+                        <HistoriskFaktaProvider>
+                            <Suspense fallback="Historisk fakta laster...">
+                                <HistoriskFaktaContainer />
+                            </Suspense>
+                        </HistoriskFaktaProvider>
+                    }
+                />
+                <Route
+                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
+                    element={
+                        <HistoriskVilkårsvurderingProvider>
+                            <Suspense fallback="Historisk vilkårsvurdering laster...">
+                                <HistoriskVilkårsvurderingContainer />
+                            </Suspense>
+                        </HistoriskVilkårsvurderingProvider>
+                    }
+                />
+                <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+                <Route path="*" element={<IkkeFunnet />} />
+            </Routes>
+        </VStack>
     </BehandlingLayout>
 );
 
@@ -194,11 +215,9 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
     return (
         <>
             <section
-                /* Trekker fra høyde fra header (48), padding (16+16 + 16) og action baren (66), hvis det er vente grunn blir det ytterligere 62 */
-                className={classNames(
-                    'flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-162px)]',
-                    { 'max-h-[calc(100vh-224px)]': !!ventegrunn }
-                )}
+                /* Trekker fra høyde fra header (48) og padding oppe og nede (16+16).
+                   Hvis det er ventegrunn legges det til ytterligere 62 */
+                className={`flex flex-col gap-4 flex-1 min-h-0 ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'}`}
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
                 <div className="flex flex-row gap-2 ax-lg:block justify-between">
@@ -299,6 +318,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                         <Route path="*" element={<IkkeFunnet />} />
                     </Routes>
                 </section>
+                <GlobalActionBar />
             </section>
 
             <Sidebar dialogRef={dialogRef} />
@@ -313,12 +333,6 @@ const Behandling: FC = () => {
     const location = useLocation();
     const dialogRef = useRef<HTMLDialogElement>(null);
 
-    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
-    const ønsketSide = location.pathname.split('/')[7];
-    const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
-    const erØnsketSideGyldig =
-        !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
-
     if (behandling.erBehandlingHenlagt) {
         return <HenlagtBehandling dialogRef={dialogRef} />;
     }
@@ -327,10 +341,15 @@ const Behandling: FC = () => {
         return <VenterPåKravgrunnlagBehandling dialogRef={dialogRef} />;
     }
 
+    const ønsketSide = location.pathname.split('/')[7];
+    const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     if (erHistoriskeVerdier) {
         return <HistoriskBehandling dialogRef={dialogRef} />;
     }
 
+    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const erØnsketSideGyldig =
+        !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
     if (!erØnsketSideGyldig) {
         const aktivSide = aktivtSteg
             ? utledBehandlingSide(aktivtSteg.behandlingssteg)
@@ -344,11 +363,8 @@ const Behandling: FC = () => {
     return <AktivBehandling dialogRef={dialogRef} />;
 };
 
-const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string => {
-    return `Behandlingen er satt på vent: ${
-        venteårsaker[ventegrunn.venteårsak as VenteårsakEnum]
-    }. Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist as string)}`;
-};
+const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string =>
+    `Behandlingen er satt på vent${ventegrunn.venteårsak ? `: ${venteårsaker[ventegrunn.venteårsak]}` : ''}.${ventegrunn.tidsfrist ? ` Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist)}` : ''}`;
 
 export const BehandlingContainer: FC = () => {
     const { ventegrunn, innholdsbredde } = useBehandlingState();
@@ -359,26 +375,24 @@ export const BehandlingContainer: FC = () => {
     return (
         <>
             {ventegrunn && (
-                <LocalAlert status="announcement" className="w-full">
-                    <LocalAlert.Header>
-                        <LocalAlert.Title>{venteBeskjed(ventegrunn)}</LocalAlert.Title>
-                    </LocalAlert.Header>
-                </LocalAlert>
+                <div className="px-4 py-2 bg-ax-neutral-100">
+                    <LocalAlert status="announcement" size="small">
+                        <LocalAlert.Header>
+                            <LocalAlert.Title>{venteBeskjed(ventegrunn)}</LocalAlert.Title>
+                        </LocalAlert.Header>
+                    </LocalAlert>
+                </div>
             )}
             {ventegrunn && !visVenteModal && (
                 <PåVentModal ventegrunn={ventegrunn} onClose={() => setVisVenteModal(true)} />
             )}
+            {/* Trekker fra høyde fra header (48). Hvis det er
+            ventegrunn legges det til ytterligere 62 */}
             <div
-                className={classNames(
-                    'grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 min-h-screen',
-                    {
-                        venter: !!ventegrunn,
-                    }
-                )}
+                className={`grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 ${ventegrunn ? 'min-h-[calc(100vh-100px)]' : 'min-h-[calc(100vh-48px)]'}`}
             >
                 <Behandling />
             </div>
-
             {globalAlerts.map((alert, index) => (
                 <FixedAlert
                     key={alert.id}

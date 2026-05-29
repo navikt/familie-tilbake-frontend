@@ -40,7 +40,7 @@
     "classnames": "2.5.1",
     "compression": "1.8.1",
     "connect-redis": "9.0.0",
-    "constate": "3.3.3",
+    "constate": "4.0.0",
     "cookie-parser": "1.4.7",
     "countries-list": "3.3.0",
     "date-fns": "4.3.0",

@@ -208,7 +208,7 @@ const beløpSomTilbakekreves = (): HTMLElement =>
 
 // Knapper
 const gåVidereKnapp = (): HTMLElement =>
-    screen.getByRole('button', { name: 'Gå videre til vedtakssteget' });
+    screen.getByRole('button', { name: 'Lagre og gå videre til vedtakssteget' });
 
 // Feilmeldinger
 const særligGrunnFeil = (): HTMLElement[] =>
