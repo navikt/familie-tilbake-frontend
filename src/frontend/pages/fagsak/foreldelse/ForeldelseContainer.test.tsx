@@ -302,6 +302,13 @@ describe('ForeldelseContainer', () => {
         expect(andrePeriodeValgt()).toBeInTheDocument();
     });
 
+    test('Skal vise "Neste"-knapp etter bekreft uten endring', async () => {
+        setupMock(lagForeldelseResponse({ foreldetPerioder: [førsteVurdertePeriode] }));
+        renderForeldelseContainer({ behandlet: true });
+        await user.click(await screen.findByRole('button', bekreftPeriodeTekst));
+        expect(gåVidereKnapp()).toBeInTheDocument();
+    });
+
     describe('Knappetekst på neste/forrige', () => {
         const ikkeForeldetPeriode = {
             ...foreldelsesperioder[0],

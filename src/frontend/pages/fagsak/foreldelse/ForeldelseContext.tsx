@@ -94,7 +94,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             ? 'FORHÅNDSVARSEL'
             : 'FAKTA'
     );
-    console.log('valgt periode', valgtPeriode);
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FORELDELSE'));
         const autoutført = erStegAutoutført('FORELDELSE');
@@ -183,6 +182,15 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         setValgtPeriode(nyePerioder[0]);
     };
 
+    const erTom = (val: string | null | undefined): boolean => {
+        return val === null || val === undefined || val === '';
+    };
+
+    const erForskjellig = (a: string | null | undefined, b: string | null | undefined): boolean => {
+        if (erTom(a) && erTom(b)) return false;
+        return a !== b;
+    };
+
     const harEndretOpplysninger = (): boolean => {
         if (foreldelse?.status === RessursStatus.Suksess) {
             const hentetPerioder = foreldelse.data.foreldetPerioder;
@@ -197,8 +205,8 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                     skjemaPeriode.begrunnelse !== periode?.begrunnelse ||
                     skjemaPeriode.foreldelsesvurderingstype !==
                         periode?.foreldelsesvurderingstype ||
-                    skjemaPeriode.foreldelsesfrist !== periode?.foreldelsesfrist ||
-                    skjemaPeriode.oppdagelsesdato !== periode?.oppdagelsesdato
+                    erForskjellig(skjemaPeriode.foreldelsesfrist, periode?.foreldelsesfrist) ||
+                    erForskjellig(skjemaPeriode.oppdagelsesdato, periode?.oppdagelsesdato)
                 );
             });
         }
