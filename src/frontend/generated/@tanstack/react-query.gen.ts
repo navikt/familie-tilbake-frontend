@@ -5,7 +5,6 @@ import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
 import {
-    alleSakerOver4Rettsgebyr,
     angreSammenslåing,
     angreSendTilBeslutter,
     annulerKravgrunnlag,
@@ -84,8 +83,6 @@ import {
     utsettUttalelseFrist,
 } from '../sdk.gen';
 import type {
-    AlleSakerOver4RettsgebyrData,
-    AlleSakerOver4RettsgebyrResponse,
     AngreSammenslåingData,
     AngreSammenslåingResponse,
     AngreSendTilBeslutterData,
@@ -1733,31 +1730,6 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
             finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey(
                 options
             ),
-    });
-
-export const alleSakerOver4RettsgebyrQueryKey = (options?: Options<AlleSakerOver4RettsgebyrData>) =>
-    createQueryKey('alleSakerOver4Rettsgebyr', options);
-
-/**
- * Finner saker over 4 rettsgebyr
- */
-export const alleSakerOver4RettsgebyrOptions = (options?: Options<AlleSakerOver4RettsgebyrData>) =>
-    queryOptions<
-        AlleSakerOver4RettsgebyrResponse,
-        AxiosError<DefaultError>,
-        AlleSakerOver4RettsgebyrResponse,
-        ReturnType<typeof alleSakerOver4RettsgebyrQueryKey>
-    >({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await alleSakerOver4Rettsgebyr({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true,
-            });
-            return data;
-        },
-        queryKey: alleSakerOver4RettsgebyrQueryKey(options),
     });
 
 export const featureTogglesQueryKey = (options?: Options<FeatureTogglesData>) =>

@@ -66,7 +66,7 @@ export const zForhaandsvarselInfo = z.object({
 
 export const zFritekst = z.string().min(3).max(3000);
 
-export const zIkkeVurdert = z.object({});
+export const zIkkeVurdert = z.record(z.string(), z.unknown());
 
 export const zLogginnslag = z.object({
     behandlingId: z.string(),
@@ -260,10 +260,22 @@ export const zForhaandsvarselUnntak = z.object({
     beskrivelse: z.string(),
 });
 
-export const zForhaandsvarselSteg = z.discriminatedUnion('type', [
-    zIkkeVurdert.extend({ type: z.literal('ikke_vurdert') }),
-    zForhaandsvarselErSendt.extend({ type: z.literal('sendt') }),
-    zForhaandsvarselUnntak.extend({ type: z.literal('unntak') }),
+export const zForhaandsvarselSteg = z.union([
+    z
+        .object({
+            type: z.literal('ikke_vurdert'),
+        })
+        .and(zIkkeVurdert),
+    z
+        .object({
+            type: z.literal('sendt'),
+        })
+        .and(zForhaandsvarselErSendt),
+    z
+        .object({
+            type: z.literal('unntak'),
+        })
+        .and(zForhaandsvarselUnntak),
 ]);
 
 export const zForhaandsvarselResponse = z.object({
@@ -395,10 +407,22 @@ export const zForhaandsvarselErSendtWritable = z.object({
     uttalelsesfrist: zUttalelsesfristWritable,
 });
 
-export const zForhaandsvarselStegWritable = z.discriminatedUnion('type', [
-    zIkkeVurdert.extend({ type: z.literal('ikke_vurdert') }),
-    zForhaandsvarselErSendtWritable.extend({ type: z.literal('sendt') }),
-    zForhaandsvarselUnntak.extend({ type: z.literal('unntak') }),
+export const zForhaandsvarselStegWritable = z.union([
+    z
+        .object({
+            type: z.literal('ikke_vurdert'),
+        })
+        .and(zIkkeVurdert),
+    z
+        .object({
+            type: z.literal('sendt'),
+        })
+        .and(zForhaandsvarselErSendtWritable),
+    z
+        .object({
+            type: z.literal('unntak'),
+        })
+        .and(zForhaandsvarselUnntak),
 ]);
 
 export const zForhaandsvarselResponseWritable = z.object({
