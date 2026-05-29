@@ -111,7 +111,7 @@ describe('Fakta om feilutbetaling', () => {
     });
 
     describe('Rettslig grunnlag', () => {
-        test('Forhåndsutfylt rettslig grunnlag fra backend', async () => {
+        test('Forhåndsutfylt rettslig grunnlag fra backend', () => {
             renderFakta();
 
             const bestemmelse = screen.getByRole('combobox', { name: 'Velg bestemmelse' });
@@ -123,7 +123,7 @@ describe('Fakta om feilutbetaling', () => {
             expect(grunnlag).toHaveValue('ANNET_FRITEKST');
         });
 
-        test('Defaults hentes fra input objekt', async () => {
+        test('Defaults hentes fra input objekt', () => {
             renderFakta({
                 vurdering: {
                     årsak: 'Svindel',
@@ -314,7 +314,7 @@ describe('Fakta om feilutbetaling', () => {
             );
         });
 
-        test('Viser fortsatt "Neste" dersom fakta ikke er ferdigvurdert, men uendret', async () => {
+        test('Viser fortsatt "Neste" dersom fakta ikke er ferdigvurdert, men uendret', () => {
             renderFakta({
                 ferdigvurdert: false,
             });
@@ -324,7 +324,7 @@ describe('Fakta om feilutbetaling', () => {
             expect(submitKnapp).toHaveTextContent('Neste');
         });
 
-        test('Viser nesteknapp dersom fakta er ferdigvurdert og uendret', async () => {
+        test('Viser nesteknapp dersom fakta er ferdigvurdert og uendret', () => {
             renderFakta({
                 ferdigvurdert: true,
                 vurdering: {
@@ -378,7 +378,7 @@ describe('Fakta om feilutbetaling', () => {
     });
 
     describe('Start på nytt', () => {
-        test('Skjemadata nullstilles når faktaOmFeilutbetaling oppdateres med tomme verdier', async () => {
+        test('Skjemadata nullstilles når faktaOmFeilutbetaling oppdateres med tomme verdier', () => {
             const utfyltFakta = faktaOmFeilutbetaling({
                 vurdering: {
                     årsak: 'Svindel',

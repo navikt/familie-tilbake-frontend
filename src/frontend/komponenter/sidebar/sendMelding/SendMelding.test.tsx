@@ -181,7 +181,7 @@ describe('SendMelding', () => {
         );
     });
 
-    test('Lesevisning - venter på svar på manuelt brev', async () => {
+    test('Lesevisning - venter på svar på manuelt brev', () => {
         setupMock();
 
         renderSendMelding(lagBehandling({ varselSendt: false }), 'NB', true);

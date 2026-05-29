@@ -670,7 +670,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(sjetteLeddInfoTekst()).toBeInTheDocument();
     });
 
-    test('Åpner vurdert periode - god tro - beløp i behold', async () => {
+    test('Åpner vurdert periode - god tro - beløp i behold', () => {
         const periode = lagVilkårsvurderingPeriodeSkjemaData({
             begrunnelse: 'Gitt i god tro',
             vilkårsvurderingsresultatInfo: {
@@ -693,7 +693,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(angiBeløpTilbakekreves()).toHaveValue('699');
     });
 
-    test('Åpner vurdert periode - mangelfulle - uaktsomt - under 4 rettsgebyr', async () => {
+    test('Åpner vurdert periode - mangelfulle - uaktsomt - under 4 rettsgebyr', () => {
         const periode = lagVilkårsvurderingPeriodeSkjemaData({
             begrunnelse: 'Gitt mangelfulle opplysninger',
             vilkårsvurderingsresultatInfo: {
@@ -741,7 +741,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         expect(screen.getByTestId('andelSomTilbakekrevesManuell')).toHaveValue('33');
     });
 
-    test('Viser særlige grunner og for over 4 rettsgebyr alternativ - uaktsomt', async () => {
+    test('Viser særlige grunner og for over 4 rettsgebyr alternativ - uaktsomt', () => {
         const periode = lagVilkårsvurderingPeriodeSkjemaData({
             begrunnelse: 'Gitt mangelfulle opplysninger',
             vilkårsvurderingsresultatInfo: {
@@ -776,7 +776,7 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
         særligeGrunnerGruppe();
     });
 
-    test('Viser ikke over 4 rettsgebyr alternativ for gammel modell', async () => {
+    test('Viser ikke over 4 rettsgebyr alternativ for gammel modell', () => {
         const periode = lagVilkårsvurderingPeriodeSkjemaData({
             begrunnelse: 'Gitt mangelfulle opplysninger',
             vilkårsvurderingsresultatInfo: {

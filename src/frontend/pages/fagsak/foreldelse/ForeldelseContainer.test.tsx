@@ -383,7 +383,7 @@ describe('ForeldelseContainer', () => {
         ).toBeEnabled();
     });
 
-    test('Vis autoutført', async () => {
+    test('Vis autoutført', () => {
         setupMock(lagForeldelseResponse({ foreldetPerioder: [] }));
         renderForeldelseContainer(lagBehandling(), false, false, true);
 
@@ -402,7 +402,7 @@ describe('ForeldelseContainer', () => {
             foreldelsesvurderingstype: 'IKKE_FORELDET',
         } satisfies ForeldelsePeriode;
 
-        test('Autoutført steg uten vurdering viser Neste/Forrige', async () => {
+        test('Autoutført steg uten vurdering viser Neste/Forrige', () => {
             setupMock(lagForeldelseResponse({ foreldetPerioder: [] }));
             renderForeldelseContainer(lagBehandling(), false, false, true);
 

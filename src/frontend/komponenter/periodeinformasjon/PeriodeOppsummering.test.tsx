@@ -21,7 +21,7 @@ describe('PeriodeOppsummering', () => {
         expect(screen.getByText('3 333')).toBeInTheDocument();
     });
 
-    test('Med hendelsetype og tester 4 måneder', async () => {
+    test('Med hendelsetype og tester 4 måneder', () => {
         renderPeriodeOppsummering('2021-01-01', '2021-04-30', 333, HendelseType.Annet);
 
         expect(screen.getByText('01.01.2021–30.04.2021')).toBeInTheDocument();

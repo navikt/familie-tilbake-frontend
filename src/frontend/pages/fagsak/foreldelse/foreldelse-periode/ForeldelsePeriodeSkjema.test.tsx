@@ -144,7 +144,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
 
-    test('Åpner vurdert periode med tilleggsfrist ', async () => {
+    test('Åpner vurdert periode med tilleggsfrist ', () => {
         renderForeldelsePeriodeSkjema(
             lagForeldelsePeriodeSkjemaData({
                 foreldelsesvurderingstype: 'TILLEGGSFRIST',

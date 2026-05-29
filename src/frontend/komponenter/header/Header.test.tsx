@@ -103,7 +103,7 @@ describe('Header', () => {
         expect(modiaLenke).toHaveAttribute('href', 'https://modia.nav.no');
     });
 
-    test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', async () => {
+    test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', () => {
         mockHentBrukerlenkeBaseUrl.mockResolvedValue({
             aInntektUrl: '',
             gosysBaseUrl: '',

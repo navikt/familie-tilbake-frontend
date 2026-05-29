@@ -218,7 +218,7 @@ describe('Brukeruttalelse', () => {
     });
 
     describe('Fylt uttalelse', () => {
-        test('Viser utfylte verdier når brukeruttalelse er fylt ut', async () => {
+        test('Viser utfylte verdier når brukeruttalelse er fylt ut', () => {
             vi.mocked(useForhåndsvarselQueries).mockReturnValue(
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: {
