@@ -359,14 +359,6 @@ export const zRessursListKravgrunnlagsinfo = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zRessursListString = z.object({
-    data: z.array(z.string()).nullish(),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.string().nullish(),
-    stacktrace: z.string().nullish(),
-});
-
 export const zRessursMapStringBoolean = z.object({
     data: z.record(z.string(), z.boolean()).nullish(),
     status: zStatusEnum,
@@ -1102,7 +1094,7 @@ export const zRessursListAvsnitt = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zTypeEnum3 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV']);
+export const zTypeEnum3 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV', 'AUTOMATISK_VURDERING']);
 
 export const zAktørEnum = z.enum(['SAKSBEHANDLER', 'BESLUTTER', 'VEDTAKSLØSNING']);
 
@@ -2035,11 +2027,6 @@ export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOp
     z.object({
         fagsystem: zSchemaEnum2,
     });
-
-/**
- * OK
- */
-export const zAlleSakerOver4RettsgebyrResponse = zRessursListString;
 
 /**
  * OK
