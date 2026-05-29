@@ -38,10 +38,16 @@ const utledValgtPeriode = (
         skjemaPerioder.length > 0 &&
         (behandlingStatus === 'FATTER_VEDTAK' || behandlingStatus === 'AVSLUTTET');
 
+    const sisteVurdertePeriode = [...skjemaPerioder]
+        .reverse()
+        .find(periode => periode.foreldelsesvurderingstype !== 'IKKE_VURDERT');
+
     if (førsteUbehandletPeriode) {
         return førsteUbehandletPeriode;
     } else if (skalViseÅpentVurderingspanel) {
         return skjemaPerioder[0];
+    } else if (sisteVurdertePeriode) {
+        return sisteVurdertePeriode;
     }
     return undefined;
 };
@@ -75,11 +81,11 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const queryClient = useQueryClient();
     const [foreldelse, setForeldelse] = useState<Ressurs<ForeldelseResponse>>();
     const [skjemaData, setSkjemaData] = useState<ForeldelsePeriodeSkjemeData[]>([]);
-    const [erAutoutført, setErAutoutført] = useState<boolean>();
-    const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
+    const [erAutoutført, setErAutoutført] = useState(false);
+    const [stegErBehandlet, setStegErBehandlet] = useState(false);
     const [valgtPeriode, setValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
-    const [allePerioderBehandlet, setAllePerioderBehandlet] = useState<boolean>(false);
-    const [senderInn, setSenderInn] = useState<boolean>(false);
+    const [allePerioderBehandlet, setAllePerioderBehandlet] = useState(false);
+    const [senderInn, setSenderInn] = useState(false);
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
 
     const navigerTilNeste = useStegNavigering('VILKÅRSVURDERING');
@@ -88,7 +94,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             ? 'FORHÅNDSVARSEL'
             : 'FAKTA'
     );
-
+    console.log('valgt periode', valgtPeriode);
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FORELDELSE'));
         const autoutført = erStegAutoutført('FORELDELSE');

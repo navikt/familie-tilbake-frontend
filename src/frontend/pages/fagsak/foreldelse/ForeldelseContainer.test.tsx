@@ -93,6 +93,21 @@ const setupMock = (foreldelse: ForeldelseResponse): void => {
     }));
 };
 
+const førsteVurdertePeriode = {
+    ...foreldelsesperioder[0],
+    begrunnelse: 'Begrunnelse 1',
+    foreldelsesvurderingstype: 'FORELDET',
+    foreldelsesfrist: '2021-01-01',
+} satisfies ForeldelsePeriode;
+
+const andreVurdertePeriode = {
+    ...foreldelsesperioder[1],
+    begrunnelse: 'Begrunnelse 2',
+    foreldelsesvurderingstype: 'TILLEGGSFRIST',
+    foreldelsesfrist: '2021-01-01',
+    oppdagelsesdato: '2020-12-24',
+} satisfies ForeldelsePeriode;
+
 const gåTilbakeKnapp = (): HTMLElement =>
     screen.getByRole('button', { name: 'Gå tilbake til faktasteget' });
 
@@ -129,6 +144,8 @@ const førstePeriodeKnappeTekst = {
 const andrePeriodeKnappeTekst = {
     name: 'Suksess fra 01.05.2020 til 30.06.2020',
 };
+const førstePeriodeValgt = (): HTMLElement => screen.getByText('01.01.2020–31.03.2020');
+const andrePeriodeValgt = (): HTMLElement => screen.getByText('01.05.2020–30.06.2020');
 
 const oppdagelsesdato = (): HTMLElement =>
     screen.getByLabelText('Dato for når feilutbetaling ble oppdaget');
@@ -147,9 +164,7 @@ describe('ForeldelseContainer', () => {
         renderForeldelseContainer({});
 
         expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
-        expect(screen.getByText('3 måneder')).toBeInTheDocument();
-        expect(screen.getByText('1 333')).toBeInTheDocument();
+        expect(førstePeriodeValgt()).toBeInTheDocument();
 
         expect(gåVidereKnapp()).toBeDisabled();
 
@@ -164,9 +179,7 @@ describe('ForeldelseContainer', () => {
 
         expect(lagreOgGåVidereKnapp()).toBeDisabled();
 
-        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
-        expect(screen.getByText('2 måneder')).toBeInTheDocument();
-        expect(screen.getByText('1 333')).toBeInTheDocument();
+        expect(andrePeriodeValgt()).toBeInTheDocument();
 
         await user.click(bekreftPeriodeKnapp());
         expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
@@ -184,38 +197,23 @@ describe('ForeldelseContainer', () => {
 
     test('Vis utfylt', async () => {
         const foreldelseResponse = lagForeldelseResponse({
-            foreldetPerioder: [
-                {
-                    ...foreldelsesperioder[0],
-                    begrunnelse: 'Begrunnelse 1',
-                    foreldelsesvurderingstype: 'FORELDET',
-                    foreldelsesfrist: '2021-01-01',
-                },
-                {
-                    ...foreldelsesperioder[1],
-                    begrunnelse: 'Begrunnelse 2',
-                    foreldelsesvurderingstype: 'TILLEGGSFRIST',
-                    foreldelsesfrist: '2021-01-01',
-                    oppdagelsesdato: '2020-12-24',
-                },
-            ],
+            foreldetPerioder: [førsteVurdertePeriode, andreVurdertePeriode],
         });
         setupMock(foreldelseResponse);
 
         renderForeldelseContainer({ behandlet: true });
-        expect(screen.queryByText('Detaljer for valgt periode')).not.toBeInTheDocument();
 
         await user.click(await screen.findByRole('button', førstePeriodeKnappeTekst));
 
         expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(førstePeriodeValgt()).toBeInTheDocument();
         expect(jaForeldetRadio()).toBeChecked();
         expect(begrunnelseTekstfelt()).toHaveValue('Begrunnelse 1');
         expect(foreldelsesfrist()).toHaveValue('01.01.2021');
 
         await user.click(screen.getByRole('button', andrePeriodeKnappeTekst));
 
-        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(andrePeriodeValgt()).toBeInTheDocument();
         expect(begrunnelseTekstfelt()).toHaveValue('Begrunnelse 2');
         expect(neiTilleggsfristRadio()).toBeChecked();
         expect(foreldelsesfrist()).toHaveValue('01.01.2021');
@@ -248,7 +246,7 @@ describe('ForeldelseContainer', () => {
         });
 
         expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(screen.getByText('01.01.2020–31.03.2020')).toBeInTheDocument();
+        expect(førstePeriodeValgt()).toBeInTheDocument();
         expect(begrunnelseTekstfelt()).toHaveValue('Begrunnelse 1');
         expect(jaForeldetRadio()).toBeChecked();
         expect(foreldelsesfrist()).toHaveValue('01.01.2021');
@@ -262,7 +260,7 @@ describe('ForeldelseContainer', () => {
         await user.click(screen.getByRole('button', andrePeriodeKnappeTekst));
 
         expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(screen.getByText('01.05.2020–30.06.2020')).toBeInTheDocument();
+        expect(andrePeriodeValgt()).toBeInTheDocument();
         expect(begrunnelseTekstfelt()).toHaveValue('Begrunnelse 2');
         expect(neiTilleggsfristRadio()).toBeChecked();
         expect(oppdagelsesdato()).toHaveValue('24.12.2020');
@@ -283,6 +281,25 @@ describe('ForeldelseContainer', () => {
         const automatiskTekst =
             'Perioden blir automatisk vurdert dersom det er mer enn 6 måneder til den er foreldet.';
         expect(screen.getByText(automatiskTekst)).toBeInTheDocument();
+    });
+
+    test('Viser vurdert periode som standard', async () => {
+        setupMock(lagForeldelseResponse({ foreldetPerioder: [førsteVurdertePeriode] }));
+        renderForeldelseContainer({ behandlet: true });
+
+        expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(førstePeriodeValgt()).toBeInTheDocument();
+    });
+
+    test('Vurderte perioder viser siste vurderte periode', async () => {
+        const foreldelseResponse = lagForeldelseResponse({
+            foreldetPerioder: [førsteVurdertePeriode, andreVurdertePeriode],
+        });
+        setupMock(foreldelseResponse);
+        renderForeldelseContainer({ behandlet: true });
+
+        expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(andrePeriodeValgt()).toBeInTheDocument();
     });
 
     describe('Knappetekst på neste/forrige', () => {
