@@ -3,7 +3,7 @@ import type { Ressurs } from '~/typer/ressurs';
 import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import { FagsakContext } from '~/context/FagsakContext';
@@ -48,7 +48,7 @@ describe('VilkårsvurderingContainer', () => {
         setupMock();
         const behandling = lagBehandling();
 
-        const { getByText } = render(
+        render(
             <FagsakContext value={lagFagsak()}>
                 <QueryClientProvider client={queryClient}>
                     <TestBehandlingProvider
@@ -65,8 +65,8 @@ describe('VilkårsvurderingContainer', () => {
             </FagsakContext>
         );
 
-        await waitFor(() => {
-            expect(getByText('Automatisk vurdert. Alle perioder er foreldet.')).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByText('Automatisk vurdert. Alle perioder er foreldet.')
+        ).toBeInTheDocument();
     });
 });

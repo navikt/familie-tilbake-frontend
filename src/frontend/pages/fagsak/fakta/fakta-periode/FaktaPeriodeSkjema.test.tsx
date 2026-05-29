@@ -1,10 +1,9 @@
 import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
-import type { RenderResult } from '@testing-library/react';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { Ressurs } from '~/typer/ressurs';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { HendelseUndertype, HendelseType } from '~/kodeverk';
@@ -41,10 +40,10 @@ vi.mock('~/api/behandling', () => ({
 const renderComponent = (
     periode: FaktaPeriodeSkjemaData,
     hendelseTyper: HendelseType[] | undefined
-): RenderResult => {
+): void => {
     const behandling = lagBehandling();
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling}>
@@ -78,11 +77,9 @@ describe('FaktaPeriodeSkjema', () => {
     test('Skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', async () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);
 
-        await waitFor(() => {
-            const selectElement = screen.getByTestId('perioder.0.årsak');
-            expect(selectElement).toBeInTheDocument();
-            expect(screen.getByText('Annet')).toBeInTheDocument();
-        });
+        const selectElement = await screen.findByTestId('perioder.0.årsak');
+        expect(selectElement).toBeInTheDocument();
+        expect(screen.getByText('Annet')).toBeInTheDocument();
     });
 
     test('Skal sette default verdi i underårsak-select når hendelsestype er valgt og det kun er én undertype', async () => {
@@ -93,19 +90,15 @@ describe('FaktaPeriodeSkjema', () => {
         };
         renderComponent(periodeWithValue, [HendelseType.Annet]);
 
-        await waitFor(() => {
-            const underSelectElement = screen.getByTestId('perioder.0.underårsak');
-            expect(underSelectElement).toHaveValue(HendelseUndertype.AnnetFritekst);
-        });
+        const underSelectElement = await screen.findByTestId('perioder.0.underårsak');
+        expect(underSelectElement).toHaveValue(HendelseUndertype.AnnetFritekst);
     });
 
     test('Skal velge "-" som default når det er flere elementer i hendelseTyper lista', async () => {
         const multipleHendelseTyper = [HendelseType.Annet, HendelseType.Dødsfall];
         renderComponent(mockPeriode, multipleHendelseTyper);
 
-        await waitFor(() => {
-            const selectElement = screen.getByTestId('perioder.0.årsak');
-            expect(selectElement).toHaveValue('-');
-        });
+        const selectElement = await screen.findByTestId('perioder.0.årsak');
+        expect(selectElement).toHaveValue('-');
     });
 });

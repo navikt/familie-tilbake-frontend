@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { FaktaOmFeilutbetaling } from '~/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -28,9 +27,9 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-const renderForhåndsvarselSkjema = (): RenderResult => {
+const renderForhåndsvarselSkjema = (): void => {
     const behandling = lagBehandlingDto();
-    const result = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -47,15 +46,13 @@ const renderForhåndsvarselSkjema = (): RenderResult => {
     const jaRadioButton = sendForhåndsvarselFieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
-
-    return result;
 };
 
-const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
+const renderForhåndsvarselSkjemaSendt = (): void => {
     vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueriesSendt());
 
     const behandling = lagBehandlingDto();
-    const result = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -72,8 +69,6 @@ const renderForhåndsvarselSkjemaSendt = (): RenderResult => {
     const jaRadioButton = sendForhåndsvarselFieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
-
-    return result;
 };
 
 describe('ForhåndsvarselSkjema', () => {
@@ -84,37 +79,37 @@ describe('ForhåndsvarselSkjema', () => {
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
-    test('Viser riktig tittel når varsel ikke er sendt', async () => {
+    test('Viser riktig tittel når varsel ikke er sendt', () => {
         renderForhåndsvarselSkjema();
 
         expect(
-            await screen.findByRole('heading', {
+            screen.getByRole('heading', {
                 name: 'Opprett forhåndsvarsel',
                 level: 2,
             })
         ).toBeInTheDocument();
     });
 
-    test('Viser riktig tittel når varsel er sendt', async () => {
+    test('Viser riktig tittel når varsel er sendt', () => {
         renderForhåndsvarselSkjemaSendt();
 
         expect(
-            await screen.findByRole('heading', { name: 'Forhåndsvarsel', level: 1 })
+            screen.getByRole('heading', { name: 'Forhåndsvarsel', level: 1 })
         ).toBeInTheDocument();
     });
 
-    test('Viser brevinnhold og fritekstfelt', async () => {
+    test('Viser brevinnhold og fritekstfelt', () => {
         renderForhåndsvarselSkjema();
 
-        expect(await screen.findByText('Dette har skjedd')).toBeInTheDocument();
+        expect(screen.getByText('Dette har skjedd')).toBeInTheDocument();
         expect(screen.getByText('Legg til utdypende tekst')).toBeInTheDocument();
     });
 
-    test('Viser Brukeruttalelse når varsel er sendt', async () => {
+    test('Viser Brukeruttalelse når varsel er sendt', () => {
         renderForhåndsvarselSkjemaSendt();
 
         expect(
-            await screen.findByText('Har brukeren uttalt seg etter forhåndsvarselet ble sendt?')
+            screen.getByText('Har brukeren uttalt seg etter forhåndsvarselet ble sendt?')
         ).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Forhåndsvisning' })).not.toBeInTheDocument();
     });
@@ -139,7 +134,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato: string): FaktaOmFeilutbetaling =>
         ferdigvurdert: false,
     }) satisfies FaktaOmFeilutbetaling;
 
-const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
+const renderMedFaktaData = (vedtaksdato: string): void => {
     const behandling = lagBehandlingDto();
     const queryClient = createTestQueryClient();
 
@@ -148,7 +143,7 @@ const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
     });
     queryClient.setQueryData(queryKey, lagFaktaOmFeilutbetaling(vedtaksdato));
 
-    const renderForhåndsvarsel = render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={queryClient}>
@@ -165,8 +160,6 @@ const renderMedFaktaData = (vedtaksdato: string): RenderResult => {
     const jaRadioButton = fieldset.querySelector('input[value="ja"]');
     if (!jaRadioButton) throw new Error('Could not find "Ja" radio button');
     fireEvent.click(jaRadioButton);
-
-    return renderForhåndsvarsel;
 };
 
 describe('Stønadstekst', () => {
@@ -176,18 +169,18 @@ describe('Stønadstekst', () => {
         vi.mocked(useForhåndsvarselMutations).mockReturnValue(lagForhåndsvarselMutations());
     });
 
-    test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', async () => {
-        const { getByRole } = renderMedFaktaData('2025-09-05');
+    test('Initialiserer fritekst med stønadstekst basert på vedtaksdato', () => {
+        renderMedFaktaData('2025-09-05');
 
-        expect(getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
+        expect(screen.getByRole('textbox', { name: 'Legg til utdypende tekst' })).toHaveValue(
             'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
         );
     });
 
-    test('Overskriver ikke fritekst som brukeren har skrevet', async () => {
-        const { getByRole } = renderMedFaktaData('2025-09-05');
+    test('Overskriver ikke fritekst som brukeren har skrevet', () => {
+        renderMedFaktaData('2025-09-05');
 
-        const textarea = getByRole('textbox', { name: 'Legg til utdypende tekst' });
+        const textarea = screen.getByRole('textbox', { name: 'Legg til utdypende tekst' });
         expect(textarea).toHaveValue(
             'Det er gjort en endring i saken din 5. september 2025. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.'
         );

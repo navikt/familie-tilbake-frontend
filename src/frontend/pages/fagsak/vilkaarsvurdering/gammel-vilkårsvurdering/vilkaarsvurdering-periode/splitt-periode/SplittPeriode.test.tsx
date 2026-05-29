@@ -1,6 +1,6 @@
 import type { UserEvent } from '@testing-library/user-event';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -20,7 +20,7 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
 
     test('Åpning av modal', async () => {
         const behandling = lagBehandling();
-        const { getByLabelText, getByRole, queryAllByText, queryByText } = render(
+        render(
             <HttpProvider>
                 <TestBehandlingProvider behandling={behandling}>
                     <SplittPeriode
@@ -31,15 +31,17 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
             </HttpProvider>
         );
 
-        expect(getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
-        expect(queryByText('01.01.2021 - 30.04.2021')).not.toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
+        expect(screen.queryByText('01.01.2021 - 30.04.2021')).not.toBeInTheDocument();
 
-        await user.click(getByRole('button', { name: 'Del opp perioden' }));
+        await user.click(screen.getByRole('button', { name: 'Del opp perioden' }));
 
-        expect(queryAllByText('Del opp perioden')).toHaveLength(2);
-        expect(queryByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
-        expect(getByRole('heading', { name: 'Del opp perioden' })).toBeInTheDocument();
-        expect(getByLabelText('Angi t.o.m. måned for første periode')).toBeInTheDocument();
-        expect(getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue('januar 2021');
+        expect(screen.getAllByText('Del opp perioden')).toHaveLength(2);
+        expect(screen.getByText('01.01.2021 - 30.04.2021')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Del opp perioden' })).toBeInTheDocument();
+        expect(screen.getByLabelText('Angi t.o.m. måned for første periode')).toBeInTheDocument();
+        expect(screen.getByLabelText('Angi t.o.m. måned for første periode')).toHaveValue(
+            'januar 2021'
+        );
     });
 });

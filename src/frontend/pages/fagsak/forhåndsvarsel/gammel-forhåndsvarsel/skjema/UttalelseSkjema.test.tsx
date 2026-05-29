@@ -1,5 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
-
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -26,12 +24,12 @@ vi.mock('../useForhåndsvarselMutations', () => ({
     mapHarBrukerUttaltSegFraApiDto: vi.fn(),
 }));
 
-const renderBrukeruttalelse = (): RenderResult => {
+const renderBrukeruttalelse = (): void => {
     const behandling = lagBehandlingDto({
         varselSendt: true,
     });
 
-    return render(
+    render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={createTestQueryClient()}>
@@ -73,7 +71,7 @@ describe('Brukeruttalelse', () => {
         expect(neiOptions).toHaveLength(2);
     });
 
-    test('Viser uttalelsesfelter når Ja er valgt', async () => {
+    test('Viser uttalelsesfelter når Ja er valgt', () => {
         renderBrukeruttalelse();
 
         expect(screen.queryByLabelText('Når uttalte brukeren seg?')).not.toBeInTheDocument();
@@ -88,12 +86,12 @@ describe('Brukeruttalelse', () => {
         const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
         fireEvent.click(jaRadio);
 
-        expect(await screen.findByLabelText('Når uttalte brukeren seg?')).toBeInTheDocument();
+        expect(screen.getByLabelText('Når uttalte brukeren seg?')).toBeInTheDocument();
         expect(screen.getByLabelText('Hvordan uttalte brukeren seg?')).toBeInTheDocument();
         expect(screen.getByLabelText('Beskriv hva brukeren har uttalt seg om')).toBeInTheDocument();
     });
 
-    test('Viser beskrivelse for "Hvordan uttalte brukeren seg?" feltet', async () => {
+    test('Viser beskrivelse for "Hvordan uttalte brukeren seg?" feltet', () => {
         renderBrukeruttalelse();
 
         const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
@@ -103,11 +101,11 @@ describe('Brukeruttalelse', () => {
         fireEvent.click(jaRadio);
 
         expect(
-            await screen.findByText('For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss')
+            screen.getByText('For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss')
         ).toBeInTheDocument();
     });
 
-    test('Viser kommentarfelt når Nei er valgt', async () => {
+    test('Viser kommentarfelt når Nei er valgt', () => {
         renderBrukeruttalelse();
 
         expect(screen.queryByLabelText('Kommentar til valget over')).not.toBeInTheDocument();
@@ -118,7 +116,7 @@ describe('Brukeruttalelse', () => {
         const neiRadio = within(brukeruttalelseFieldset).getByLabelText('Nei');
         fireEvent.click(neiRadio);
 
-        expect(await screen.findByLabelText('Kommentar til valget over')).toBeInTheDocument();
+        expect(screen.getByLabelText('Kommentar til valget over')).toBeInTheDocument();
     });
 
     test('Deaktiverer Nei-alternativet når opprinnelig frist ikke er utgått', () => {
@@ -220,7 +218,7 @@ describe('Brukeruttalelse', () => {
     });
 
     describe('Fylt uttalelse', () => {
-        test('Viser utfylte verdier når brukeruttalelse er fylt ut', async () => {
+        test('Viser utfylte verdier når brukeruttalelse er fylt ut', () => {
             vi.mocked(useForhåndsvarselQueries).mockReturnValue(
                 lagForhåndsvarselQueries({
                     forhåndsvarselInfo: {
@@ -240,17 +238,17 @@ describe('Brukeruttalelse', () => {
                 })
             );
 
-            const { findByRole } = renderBrukeruttalelse();
+            renderBrukeruttalelse();
 
-            const uttalelsesdato = await findByRole('textbox', {
+            const uttalelsesdato = screen.getByRole('textbox', {
                 name: 'Når uttalte brukeren seg?',
             });
             expect(uttalelsesdato).toHaveValue('15.06.2023');
-            const hvordanUttalteSeg = await findByRole('textbox', {
+            const hvordanUttalteSeg = screen.getByRole('textbox', {
                 name: 'Hvordan uttalte brukeren seg?',
             });
             expect(hvordanUttalteSeg).toHaveValue('Telefon');
-            const beskrivelse = await findByRole('textbox', {
+            const beskrivelse = screen.getByRole('textbox', {
                 name: 'Beskriv hva brukeren har uttalt seg om',
             });
             expect(beskrivelse).toHaveValue('Brukeren forklarte situasjonen');
@@ -261,7 +259,7 @@ describe('Brukeruttalelse', () => {
         test('skal vise feilmelding når ingen alternativ er valgt', async () => {
             renderBrukeruttalelse();
 
-            const nesteKnapp = await screen.findByRole('button', { name: 'Neste' });
+            const nesteKnapp = screen.getByRole('button', { name: 'Neste' });
             fireEvent.click(nesteKnapp);
 
             const brukeruttalelseFieldset = screen.getByRole('radiogroup', {
@@ -285,7 +283,7 @@ describe('Brukeruttalelse', () => {
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
                 fireEvent.click(jaRadio);
 
-                const nesteKnapp = await screen.findByRole('button', {
+                const nesteKnapp = screen.getByRole('button', {
                     name: 'Lagre og gå til neste',
                 });
                 fireEvent.click(nesteKnapp);
@@ -304,7 +302,7 @@ describe('Brukeruttalelse', () => {
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
                 fireEvent.click(jaRadio);
 
-                const datoInput = await screen.findByLabelText('Når uttalte brukeren seg?');
+                const datoInput = screen.getByLabelText('Når uttalte brukeren seg?');
                 fireEvent.blur(datoInput);
 
                 expect(
@@ -321,7 +319,7 @@ describe('Brukeruttalelse', () => {
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
                 fireEvent.click(jaRadio);
 
-                const nesteKnapp = await screen.findByRole('button', {
+                const nesteKnapp = screen.getByRole('button', {
                     name: 'Lagre og gå til neste',
                 });
                 fireEvent.click(nesteKnapp);
@@ -357,13 +355,13 @@ describe('Brukeruttalelse', () => {
                 const jaRadio = within(brukeruttalelseFieldset).getByLabelText('Ja');
                 await user.click(jaRadio);
 
-                await screen.findByLabelText('Når uttalte brukeren seg?');
+                screen.getByLabelText('Når uttalte brukeren seg?');
 
                 const kalenderKnapp = screen.getAllByRole('button', { name: 'Åpne datovelger' });
                 const uttalelsesKalenderKnapp = kalenderKnapp[0];
                 await user.click(uttalelsesKalenderKnapp);
 
-                const nesteMånedKnapp = await screen.findByRole('button', {
+                const nesteMånedKnapp = screen.getByRole('button', {
                     name: /gå til neste måned/i,
                 });
                 expect(nesteMånedKnapp).toBeDisabled();

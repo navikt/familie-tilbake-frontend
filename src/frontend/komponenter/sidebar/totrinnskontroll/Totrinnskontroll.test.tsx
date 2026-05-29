@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { BehandlingDto } from '~/generated';
@@ -6,7 +5,7 @@ import type { Ressurs } from '~/typer/ressurs';
 import type { Totrinnkontroll } from '~/typer/totrinnTyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor, within } from '@testing-library/react';
+import { render, within, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -32,9 +31,9 @@ vi.mock('~/api/behandling', () => ({
 const renderTotrinnskontroll = (
     behandling: BehandlingDto,
     stateOverrides: BehandlingStateContextOverrides = {}
-): RenderResult => {
+): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
                 <TestBehandlingProvider behandling={behandling} stateOverrides={stateOverrides}>
@@ -66,6 +65,16 @@ const setupMocks = (totrinnkontroll: Totrinnkontroll): void => {
     }));
 };
 
+const godkjennKnapp = (): HTMLElement =>
+    screen.getByRole('button', {
+        name: 'Godkjenn vedtaket',
+    });
+
+const sendTilSaksbehandlerKnapp = (): HTMLElement =>
+    screen.getByRole('button', {
+        name: 'Send til saksbehandler',
+    });
+
 describe('Totrinnskontroll', () => {
     let user: UserEvent;
     beforeEach(() => {
@@ -82,47 +91,22 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true })
-        );
+        renderTotrinnskontroll(lagBehandling({ kanEndres: true }));
 
-        await waitFor(() => {
-            expect(getByText('Fakta')).toBeInTheDocument();
-        });
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
 
-        expect(getAllByRole('link')).toHaveLength(3);
+        expect(screen.getByText('Vilkårsvurdering')).toBeInTheDocument();
+        expect(screen.getByText('Vedtak')).toBeInTheDocument();
+        expect(screen.getAllByRole('link')).toHaveLength(3);
 
-        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
-        expect(getByText('Vedtak')).toBeInTheDocument();
+        expect(godkjennKnapp()).toBeDisabled();
+        expect(sendTilSaksbehandlerKnapp()).toBeDisabled();
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Godkjenn vedtaket',
-                })
-            ).toBeDisabled();
-        });
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_2-true'));
 
-        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
-
-        expect(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        ).toBeEnabled();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        );
+        await user.click(godkjennKnapp());
     });
 
     test('Vis og fyll ut - sender tilbake', async () => {
@@ -134,62 +118,30 @@ describe('Totrinnskontroll', () => {
                 lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
             ],
         });
-        const { getByText, getByRole, getByTestId, getAllByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true })
-        );
+        renderTotrinnskontroll(lagBehandling({ kanEndres: true }));
 
-        await waitFor(() => {
-            expect(getByText('Fakta')).toBeInTheDocument();
-        });
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse')).toBeInTheDocument();
+        expect(screen.getByText('Vilkårsvurdering')).toBeInTheDocument();
+        expect(screen.getByText('Vedtak')).toBeInTheDocument();
+        expect(screen.getAllByRole('link')).toHaveLength(4);
 
-        expect(getAllByRole('link')).toHaveLength(4);
+        expect(godkjennKnapp()).toBeDisabled();
+        expect(sendTilSaksbehandlerKnapp()).toBeDisabled();
 
-        expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
-        expect(getByText('Vedtak')).toBeInTheDocument();
-
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Godkjenn vedtaket',
-                })
-            ).toBeDisabled();
-        });
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
-
-        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_3-false'));
-
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeDisabled();
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_2-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_3-false'));
 
         await user.type(
-            getByRole('textbox', {
+            screen.getByRole('textbox', {
                 name: 'Begrunnelse',
             }),
             'Vurder på nytt!!!!'
         );
 
-        expect(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        ).toBeEnabled();
-
-        await user.click(
-            getByRole('button', {
-                name: 'Send til saksbehandler',
-            })
-        );
+        await user.click(sendTilSaksbehandlerKnapp());
     });
 
     test('Vis utfylt - sendt tilbake', async () => {
@@ -202,36 +154,31 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            lagBehandling(),
-            { erBehandlingReturnertFraBeslutter: (): boolean => true }
-        );
-
-        await waitFor(() => {
-            expect(getByText('Fakta')).toBeInTheDocument();
+        renderTotrinnskontroll(lagBehandling(), {
+            erBehandlingReturnertFraBeslutter: (): boolean => true,
         });
 
-        expect(getAllByRole('link')).toHaveLength(4);
-
-        expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
-        expect(getByText('Vedtak')).toBeInTheDocument();
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse')).toBeInTheDocument();
+        expect(screen.getByText('Vilkårsvurdering')).toBeInTheDocument();
+        expect(screen.getByText('Vedtak')).toBeInTheDocument();
+        expect(screen.getAllByRole('link')).toHaveLength(4);
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Godkjenn vedtaket',
             })
         ).not.toBeInTheDocument();
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Send til saksbehandler',
             })
         ).not.toBeInTheDocument();
 
-        expect(getAllByText('Godkjent')).toHaveLength(2);
-        expect(getAllByText('Vurder på nytt')).toHaveLength(2);
-        expect(getByText('Foreldelse må vurderes på nytt')).toBeInTheDocument();
-        expect(getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
+        expect(screen.getAllByText('Godkjent')).toHaveLength(2);
+        expect(screen.getAllByText('Vurder på nytt')).toHaveLength(2);
+        expect(screen.getByText('Foreldelse må vurderes på nytt')).toBeInTheDocument();
+        expect(screen.getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
     });
 
     test('Vis utfylt - foreslått på nytt - lesevisning (rolle saksbehandler)', async () => {
@@ -244,35 +191,29 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getAllByText, getAllByRole, queryByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: false })
-        );
+        renderTotrinnskontroll(lagBehandling({ kanEndres: false }));
 
-        await waitFor(() => {
-            expect(getByText('Fakta')).toBeInTheDocument();
-        });
-
-        expect(getAllByRole('link')).toHaveLength(4);
-
-        expect(getByText('Foreldelse')).toBeInTheDocument();
-        expect(getByText('Vilkårsvurdering')).toBeInTheDocument();
-        expect(getByText('Vedtak')).toBeInTheDocument();
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+        expect(screen.getByText('Foreldelse')).toBeInTheDocument();
+        expect(screen.getByText('Vilkårsvurdering')).toBeInTheDocument();
+        expect(screen.getByText('Vedtak')).toBeInTheDocument();
+        expect(screen.getAllByRole('link')).toHaveLength(4);
 
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Godkjenn vedtaket',
             })
         ).not.toBeInTheDocument();
         expect(
-            queryByRole('button', {
+            screen.queryByRole('button', {
                 name: 'Send til saksbehandler',
             })
         ).not.toBeInTheDocument();
 
-        expect(getAllByText('Godkjent')).toHaveLength(2);
-        expect(getAllByText('Vurder på nytt')).toHaveLength(2);
-        expect(getByText('Foreldelse må vurderes på nytt')).toBeInTheDocument();
-        expect(getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
+        expect(screen.getAllByText('Godkjent')).toHaveLength(2);
+        expect(screen.getAllByText('Vurder på nytt')).toHaveLength(2);
+        expect(screen.getByText('Foreldelse må vurderes på nytt')).toBeInTheDocument();
+        expect(screen.getByText('Vedtaket må vurderes på nytt')).toBeInTheDocument();
     });
 
     test('Viser bekreftelsesmodal når bruker klikker Godkjenn vedtaket', async () => {
@@ -284,33 +225,21 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true, erNyModell: true })
-        );
+        renderTotrinnskontroll(lagBehandling({ kanEndres: true, erNyModell: true }));
 
-        await waitFor(() => {
-            expect(getByText('Fakta')).toBeInTheDocument();
-        });
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_2-true'));
 
-        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-        expect(queryByRole('dialog')).not.toBeInTheDocument();
+        await user.click(godkjennKnapp());
 
-        await user.click(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        );
-
-        await waitFor(() => {
-            expect(getByRole('dialog')).toBeInTheDocument();
-        });
-
-        expect(getByText('Denne handlingen kan ikke angres.')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+        expect(screen.getByText('Denne handlingen kan ikke angres.')).toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Avbryt',
             })
         ).toBeInTheDocument();
@@ -325,25 +254,17 @@ describe('Totrinnskontroll', () => {
             ],
         });
 
-        const { getByText, getByRole, getByTestId, queryByRole } = renderTotrinnskontroll(
-            lagBehandling({ kanEndres: true })
-        );
+        renderTotrinnskontroll(lagBehandling({ kanEndres: true }));
 
-        await waitFor(() => {
-            expect(getByText('Fakta')).toBeInTheDocument();
-        });
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
 
-        await user.click(getByTestId('stegetGodkjent_idx_steg_0-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_1-true'));
-        await user.click(getByTestId('stegetGodkjent_idx_steg_2-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_2-true'));
 
-        await user.click(
-            getByRole('button', {
-                name: 'Godkjenn vedtaket',
-            })
-        );
+        await user.click(godkjennKnapp());
 
-        const modal = await waitFor(() => getByRole('dialog'));
+        const modal = screen.getByRole('dialog');
 
         await user.click(
             within(modal).getByRole('button', {
@@ -351,8 +272,6 @@ describe('Totrinnskontroll', () => {
             })
         );
 
-        await waitFor(() => {
-            expect(queryByRole('dialog')).not.toBeInTheDocument();
-        });
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 });

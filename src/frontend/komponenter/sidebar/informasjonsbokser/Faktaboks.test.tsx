@@ -1,5 +1,4 @@
 import type { TagProps } from '@navikt/ds-react';
-import type { RenderResult } from '@testing-library/react';
 import type {
     BehandlingDto,
     BehandlingsresultatstypeEnum,
@@ -20,9 +19,9 @@ import { Faktaboks } from './Faktaboks';
 const renderFaktaboks = (
     delvisBehandling: Partial<BehandlingDto> = {},
     ytelsestypeOverride: Ytelsetype = Ytelsetype.Barnetrygd
-): RenderResult => {
+): void => {
     const behandling = lagBehandling(delvisBehandling);
-    return render(
+    render(
         <FagsakContext value={lagFagsak({ ytelsestype: ytelsestypeOverride })}>
             <TestBehandlingProvider behandling={behandling}>
                 <Faktaboks />

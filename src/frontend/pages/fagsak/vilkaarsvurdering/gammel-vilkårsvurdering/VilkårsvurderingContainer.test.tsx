@@ -1,4 +1,3 @@
-import type { RenderResult } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { BehandlingDto } from '~/generated';
@@ -9,7 +8,7 @@ import type {
 } from '~/typer/tilbakekrevingstyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -77,9 +76,9 @@ const setupUseBehandlingApiMock = (vilkårsvurdering: VilkårsvurderingResponse)
     }));
 };
 
-const renderVilkårsvurderingContainer = (behandling: BehandlingDto): RenderResult => {
+const renderVilkårsvurderingContainer = (behandling: BehandlingDto): void => {
     const queryClient = createTestQueryClient();
-    return render(
+    render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak({ ytelsestype: 'BARNETRYGD' })}>
                 <TestBehandlingProvider
@@ -111,30 +110,25 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        const { getByText, getByRole, getByLabelText, getByTestId, queryAllByText, queryByText } =
-            renderVilkårsvurderingContainer(lagBehandling());
+        renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
         await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            screen.getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
             'Begrunnelse vilkårene 1'
         );
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Neste periode',
             })
         );
 
-        await waitFor(() => {
-            expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
-        });
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
@@ -144,60 +138,60 @@ describe('VilkårsvurderingContainer', () => {
         );
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Neste periode',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(2);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
         await user.type(
-            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
+            screen.getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
             'Begrunnelse aktsomhet 1'
         );
         await user.click(
-            getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
+            screen.getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
         );
 
         expect(
-            getByText(
+            screen.getByText(
                 'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         expect(
-            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
+            screen.queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
         ).not.toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Neste periode',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(1);
+        expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.click(
-            getByRole('radio', {
+            screen.getByRole('radio', {
                 name: 'Nei',
             })
         );
 
         expect(
-            queryByText('Når 6. ledd anvendes må alle perioder behandles likt')
+            screen.getByText('Når 6. ledd anvendes må alle perioder behandles likt')
         ).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Neste periode',
             })
         );
 
-        expect(getByText(andrePeriode, { selector: 'p' })).toBeInTheDocument();
+        expect(screen.getByText(andrePeriode, { selector: 'p' })).toBeInTheDocument();
 
         await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            screen.getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
             'Begrunnelse vilkårene 2'
         );
         await user.click(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
@@ -206,46 +200,46 @@ describe('VilkårsvurderingContainer', () => {
             )
         );
         await user.type(
-            getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
+            screen.getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor'),
             'Begrunnelse aktsomhet 2'
         );
         await user.click(
-            getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
+            screen.getByLabelText('Mottaker burde forstått at utbetalingen skyldtes en feil')
         );
         expect(
-            getByText(
+            screen.getByText(
                 'Totalbeløpet kan være under 4 ganger rettsgebyret (6. ledd). Skal det tilbakekreves?'
             )
         ).toBeInTheDocument();
         await user.click(
-            getByRole('radio', {
+            screen.getByRole('radio', {
                 name: 'Ja',
             })
         );
 
-        expect(getByText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
+        expect(screen.getByText('Begrunn resultatet av vurderingen ovenfor')).toBeInTheDocument();
 
         await user.type(
-            getByLabelText('Begrunn resultatet av vurderingen ovenfor'),
+            screen.getByLabelText('Begrunn resultatet av vurderingen ovenfor'),
             'Begrunnelse særlige grunner 2'
         );
         await user.click(
-            getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
+            screen.getByLabelText('Graden av uaktsomhet hos den som kravet retter seg mot', {
                 selector: 'input',
             })
         );
-        await user.click(getByTestId('harGrunnerTilReduksjon_Nei'));
+        await user.click(screen.getByTestId('harGrunnerTilReduksjon_Nei'));
 
-        expect(getByText('100%')).toBeInTheDocument();
+        expect(screen.getByText('100%')).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Lagre og gå videre til vedtakssteget',
             })
         );
-        expect(queryAllByText('Feltet må fylles ut')).toHaveLength(0);
+        expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(
-            queryByText(
+            screen.getByText(
                 'Totalbeløpet kan være under 4 rettsgebyr. Dersom 6.ledd skal anvendes for å frafalle tilbakekrevingen, må denne anvendes likt på alle periodene.'
             )
         ).toBeInTheDocument();
@@ -253,67 +247,67 @@ describe('VilkårsvurderingContainer', () => {
 
     test('Vis og fyll ut perioder og send inn - god tro - bruker kopiering', async () => {
         setupUseBehandlingApiMock(lagVilkårsvurderingResponse({ perioder }));
-        const { getByText, getByRole, getByLabelText } =
-            renderVilkårsvurderingContainer(lagBehandling());
+        renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode)).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
         await user.type(
-            getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
+            screen.getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor'),
             'Begrunnelse1'
         );
         await user.click(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         );
         await user.click(
-            getByRole('radio', {
+            screen.getByRole('radio', {
                 name: 'Nei',
             })
         );
-        await user.type(getByLabelText('Begrunn hvorfor beløpet ikke er i behold'), 'Begrunnelse2');
+        await user.type(
+            screen.getByLabelText('Begrunn hvorfor beløpet ikke er i behold'),
+            'Begrunnelse2'
+        );
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Neste periode',
             })
         );
 
-        expect(getByText(andrePeriode)).toBeInTheDocument();
+        expect(screen.getByText(andrePeriode)).toBeInTheDocument();
         await user.selectOptions(
-            getByRole('combobox', {
+            screen.getByRole('combobox', {
                 name: 'Kopier vilkårsvurdering fra',
             }),
             førstePeriode
         );
-        expect(getByText('Er beløpet i behold?')).toBeInTheDocument();
-        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+        expect(screen.getByText('Er beløpet i behold?')).toBeInTheDocument();
+        expect(screen.getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             `${perioder[0].begrunnelse}Begrunnelse1`
         );
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
         expect(
-            getByRole('radio', {
+            screen.getByRole('radio', {
                 name: 'Nei',
             })
         ).toBeChecked();
-        expect(getByLabelText('Begrunn hvorfor beløpet ikke er i behold')).toHaveValue(
+        expect(screen.getByLabelText('Begrunn hvorfor beløpet ikke er i behold')).toHaveValue(
             'Begrunnelse2'
         );
 
-        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        const tilbakekrevdBeløp = screen.getByLabelText('Beløp som skal tilbakekreves');
         expect(tilbakekrevdBeløp).toHaveValue('0');
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Lagre og gå videre til vedtakssteget',
             })
         );
@@ -347,18 +341,15 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText, getByTestId } =
-            renderVilkårsvurderingContainer(lagBehandling());
+        renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
-        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+        expect(screen.getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             'Begrunnelse vilkår 1'
         );
         expect(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
@@ -366,42 +357,44 @@ describe('VilkårsvurderingContainer', () => {
                 }
             )
         ).toBeChecked();
-        expect(getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')).toHaveTextContent(
-            'Begrunnelse aktsomhet 1'
-        );
-        expect(getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil')).toBeChecked();
+        expect(
+            screen.getByLabelText('Begrunn hvorfor du valgte alternativet ovenfor')
+        ).toHaveTextContent('Begrunnelse aktsomhet 1');
+        expect(
+            screen.getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil')
+        ).toBeChecked();
 
-        expect(getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
+        expect(screen.getByTestId('skalDetTilleggesRenter_Nei')).toBeChecked();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         );
 
         expect(
-            getByText(andrePeriode, {
+            screen.getByText(andrePeriode, {
                 selector: 'p',
             })
         ).toBeInTheDocument();
 
-        expect(getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
+        expect(screen.getByLabelText('Begrunn hvorfor du valgte vilkåret ovenfor')).toHaveValue(
             'Begrunnelse vilkår 2'
         );
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
-        expect(getByLabelText('Begrunn hvorfor beløpet ikke er i behold')).toHaveTextContent(
+        expect(screen.getByLabelText('Begrunn hvorfor beløpet ikke er i behold')).toHaveTextContent(
             'Begrunnelse god tro 2'
         );
-        expect(getByLabelText('Nei')).toBeChecked();
-        const tilbakekrevdBeløp = getByLabelText('Beløp som skal tilbakekreves');
+        expect(screen.getByLabelText('Nei')).toBeChecked();
+        const tilbakekrevdBeløp = screen.getByLabelText('Beløp som skal tilbakekreves');
         expect(tilbakekrevdBeløp).toHaveValue('0');
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Forrige periode',
             })
         );
@@ -437,16 +430,13 @@ describe('VilkårsvurderingContainer', () => {
             })
         );
 
-        const { getByText, getByRole, getByLabelText } =
-            renderVilkårsvurderingContainer(lagBehandling());
+        renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
-        });
+        expect(await screen.findByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
 
-        expect(getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
+        expect(screen.getByText('Begrunnelse vilkår 1')).toBeInTheDocument();
         expect(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
@@ -455,52 +445,52 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).toBeChecked();
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).not.toBeChecked();
 
-        expect(getByText('Begrunnelse aktsomhet 1')).toBeInTheDocument();
+        expect(screen.getByText('Begrunnelse aktsomhet 1')).toBeInTheDocument();
         expect(
-            getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil', {
+            screen.getByLabelText('Mottaker forsto at utbetalingen skyldtes en feil', {
                 selector: 'input',
             })
         ).toBeChecked();
         expect(
-            getByLabelText('Mottaker må ha forstått at utbetalingen skyldtes en feil', {
+            screen.getByLabelText('Mottaker må ha forstått at utbetalingen skyldtes en feil', {
                 selector: 'input',
                 exact: false,
             })
         ).not.toBeChecked();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.01.2020 til 31.03.2020',
             })
         ).toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeInTheDocument();
 
         await user.click(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         );
 
-        expect(getByText(andrePeriode, { selector: 'p' })).toBeInTheDocument();
-        expect(getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
+        expect(screen.getByText(andrePeriode, { selector: 'p' })).toBeInTheDocument();
+        expect(screen.getByText('Begrunnelse vilkår 2')).toBeInTheDocument();
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
         ).toBeChecked();
         expect(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
@@ -508,27 +498,27 @@ describe('VilkårsvurderingContainer', () => {
                 }
             )
         ).not.toBeChecked();
-        expect(getByText('Begrunnelse god tro 2')).toBeInTheDocument();
+        expect(screen.getByText('Begrunnelse god tro 2')).toBeInTheDocument();
         expect(
-            getByLabelText('Nei', {
+            screen.getByLabelText('Nei', {
                 selector: 'input',
                 exact: true,
             })
         ).toBeChecked();
         expect(
-            getByLabelText('Ja', {
+            screen.getByLabelText('Ja', {
                 selector: 'input',
                 exact: true,
             })
         ).not.toBeChecked();
 
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeInTheDocument();
         expect(
-            getByRole('button', {
+            screen.getByRole('button', {
                 name: 'Suksess fra 01.05.2020 til 30.06.2020',
             })
         ).toBeInTheDocument();
@@ -546,20 +536,17 @@ describe('VilkårsvurderingContainer', () => {
             ],
         });
         setupUseBehandlingApiMock(vilkårsvurderingResponse);
-        const { getByText, getByRole, getByLabelText } =
-            renderVilkårsvurderingContainer(lagBehandling());
+        renderVilkårsvurderingContainer(lagBehandling());
 
-        await waitFor(() => {
-            expect(
-                getByRole('button', {
-                    name: 'Nøytral fra 01.01.2020 til 31.03.2020',
-                })
-            ).toBeInTheDocument();
-        });
-
-        expect(getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
         expect(
-            getByLabelText(
+            await screen.findByRole('button', {
+                name: 'Nøytral fra 01.01.2020 til 31.03.2020',
+            })
+        ).toBeInTheDocument();
+
+        expect(screen.getByText(førstePeriode, { selector: 'p' })).toBeInTheDocument();
+        expect(
+            screen.getByLabelText(
                 'Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil',
                 {
                     selector: 'input',
@@ -568,7 +555,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).not.toBeChecked();
         expect(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt feilaktige opplysninger',
                 {
                     selector: 'input',
@@ -577,7 +564,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).not.toBeChecked();
         expect(
-            getByLabelText(
+            screen.getByLabelText(
                 'Mottaker har forårsaket feilutbetalingen ved forsett eller uaktsomt gitt mangelfulle opplysninger',
                 {
                     selector: 'input',
@@ -586,7 +573,7 @@ describe('VilkårsvurderingContainer', () => {
             )
         ).not.toBeChecked();
         expect(
-            getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
+            screen.getByLabelText('Mottaker har mottatt beløpet i aktsom god tro', {
                 selector: 'input',
                 exact: false,
             })
