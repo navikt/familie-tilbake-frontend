@@ -410,14 +410,6 @@ export type RessursListKravgrunnlagsinfo = {
     stacktrace?: string | null;
 };
 
-export type RessursListString = {
-    data?: Array<string> | null;
-    status: StatusEnum;
-    melding: string;
-    frontendFeilmelding?: string | null;
-    stacktrace?: string | null;
-};
-
 export type RessursMapStringBoolean = {
     data?: {
         [key: string]: boolean;
@@ -1257,7 +1249,7 @@ export type UnderavsnittstypeEnum =
     | 'SÆRLIGEGRUNNER'
     | 'SÆRLIGEGRUNNER_ANNET';
 
-export type TypeEnum3 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV';
+export type TypeEnum3 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
 
 export type AktørEnum = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
 
@@ -2476,23 +2468,6 @@ export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppg
      */
     200: unknown;
 };
-
-export type AlleSakerOver4RettsgebyrData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/forvaltning/alle-over-4-rettsgebyr';
-};
-
-export type AlleSakerOver4RettsgebyrResponses = {
-    /**
-     * OK
-     */
-    200: RessursListString;
-};
-
-export type AlleSakerOver4RettsgebyrResponse =
-    AlleSakerOver4RettsgebyrResponses[keyof AlleSakerOver4RettsgebyrResponses];
 
 export type FeatureTogglesData = {
     body?: never;

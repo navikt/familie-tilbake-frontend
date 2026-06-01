@@ -5,11 +5,13 @@ import { ExpansionCard, Table } from '@navikt/ds-react';
 
 import { formatterDatostring, formatCurrencyNoKr } from '~/utils';
 
-const vurderingstekster: Record<BeregningsresultatVurdering, string> = {
+const vurderingstekster: Record<BeregningsresultatVurdering | string, string> = {
     Forsett: 'Forsett',
     GrovUaktsomhet: 'Grov uaktsom',
     Uaktsomhet: 'Uaktsom',
     GodTro: 'God tro',
+    Forstod: 'Forsto',
+    BurdeForstått: 'Burde forstått',
 };
 
 type Props = {
