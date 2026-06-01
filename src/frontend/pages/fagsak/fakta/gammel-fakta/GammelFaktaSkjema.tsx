@@ -1,4 +1,4 @@
-import type { FaktaSkjemaData } from './typer/fakta';
+import type { FaktaSkjemaData } from './fakta';
 import type { FC } from 'react';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 

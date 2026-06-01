@@ -1,4 +1,4 @@
-import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../typer/fakta';
+import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../fakta';
 import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';

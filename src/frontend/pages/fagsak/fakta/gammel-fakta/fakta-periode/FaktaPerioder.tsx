@@ -1,4 +1,4 @@
-import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { FaktaPeriodeSkjemaData } from '../fakta';
 import type { FC } from 'react';
 
 import { Table } from '@navikt/ds-react';
