@@ -1,4 +1,4 @@
-import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { FaktaPeriodeSkjemaData } from '../fakta';
 import type { ChangeEvent, FC } from 'react';
 import type { HendelseType, HendelseUndertype } from '~/kodeverk';
 
@@ -7,7 +7,7 @@ import { useEffect, useMemo } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '~/kodeverk';
-import { useFakta } from '~/pages/fagsak/fakta/FaktaContext';
+import { useFakta } from '~/pages/fagsak/fakta/gammel-fakta/FaktaContext';
 import { formatterDatostring, formatCurrencyNoKr } from '~/utils';
 
 type Props = {
