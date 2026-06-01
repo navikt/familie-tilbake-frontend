@@ -1,4 +1,4 @@
-import type { FaktaPeriodeSkjemaData } from '../typer/fakta';
+import type { FaktaPeriodeSkjemaData } from '../fakta';
 import type { BehandlingApiHook } from '~/api/behandling';
 import type { Ressurs } from '~/typer/ressurs';
 
@@ -7,7 +7,7 @@ import { render, screen } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { HendelseUndertype, HendelseType } from '~/kodeverk';
-import { FaktaProvider } from '~/pages/fagsak/fakta/FaktaContext';
+import { FaktaProvider } from '~/pages/fagsak/fakta/gammel-fakta/FaktaContext';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';

@@ -32,9 +32,9 @@ import {
 } from '~/utils/sider';
 
 import { Fakta } from './fakta/Fakta';
-import { HistoriskFaktaProvider } from './fakta/fakta-periode/historikk/HistoriskFaktaContext';
-import { FaktaProvider } from './fakta/FaktaContext';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
+import { HistoriskFaktaProvider } from './fakta/gammel-fakta/fakta-periode/historikk/HistoriskFaktaContext';
+import { FaktaProvider } from './fakta/gammel-fakta/FaktaContext';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/gammel-forhåndsvarsel/ForhåndsvarselSkeleton';
 import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
@@ -47,9 +47,12 @@ const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./brevmottaker/Brevmottakere'),
     'Brevmottakere'
 );
-const FaktaContainer = lazyImportMedRetry(() => import('./fakta/FaktaContainer'), 'FaktaContainer');
+const FaktaContainer = lazyImportMedRetry(
+    () => import('./fakta/gammel-fakta/FaktaContainer'),
+    'FaktaContainer'
+);
 const HistoriskFaktaContainer = lazyImportMedRetry(
-    () => import('./fakta/fakta-periode/historikk/HistoriskFaktaContainer'),
+    () => import('./fakta/gammel-fakta/fakta-periode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
 );
 const GammelForhåndsvarsel = lazyImportMedRetry(

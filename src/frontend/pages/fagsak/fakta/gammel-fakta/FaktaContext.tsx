@@ -4,7 +4,7 @@
  * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
  * synkronisering.
  */
-import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './typer/fakta';
+import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './fakta';
 import type { HendelseType, HendelseUndertype } from '~/kodeverk';
 import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '~/typer/api';
 import type { FaktaResponse, VurderingAvBrukersUttalelse } from '~/typer/tilbakekrevingstyper';
