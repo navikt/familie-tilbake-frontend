@@ -2,15 +2,18 @@ import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
 
 import { Link, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 
+import { Brukeruttalelse } from './Brukeruttalelse';
+
 export const Unntak: FC = () => {
     const { behandlingILesemodus } = useBehandlingState();
-    const { register, formState } = useFormContext<IkkeVurdertFormData>();
+    const { register, formState, control } = useFormContext<IkkeVurdertFormData>();
     const { errors } = formState;
     const { name, ...radioProps } = register('begrunnelseForUnntak');
+    const begrunnelseForUnntak = useWatch({ control, name: 'begrunnelseForUnntak' });
 
     return (
         <VStack gap="space-24">
@@ -65,6 +68,9 @@ export const Unntak: FC = () => {
                 resize
                 error={'beskrivelse' in errors ? errors.beskrivelse?.message : undefined}
             />
+            {begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && (
+                <Brukeruttalelse varselErSendt={false} />
+            )}
         </VStack>
     );
 };
