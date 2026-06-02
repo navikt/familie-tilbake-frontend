@@ -120,27 +120,27 @@ describe('Header', () => {
     });
 
     describe('RolleTag', () => {
-        test('Viser "Veileder"-rolletag', async () => {
+        test('Viser "Veileder"-rolletag', () => {
             useBehandlingStore.setState({ rolle: 'VEILEDER', erNyModell: true });
             renderHeader();
 
-            expect(await screen.findByText('Veileder')).toBeInTheDocument();
+            expect(screen.getByText('Veileder')).toBeInTheDocument();
         });
 
-        test('Viser "Beslutter"-rolletag', async () => {
+        test('Viser "Beslutter"-rolletag', () => {
             useBehandlingStore.setState({ rolle: 'BESLUTTER', erNyModell: true });
             renderHeader();
 
-            expect(await screen.findByText('Beslutter')).toBeInTheDocument();
+            expect(screen.getByText('Beslutter')).toBeInTheDocument();
         });
 
-        test('Viser "Saksbehandler"-rolletag', async () => {
+        test('Viser "Saksbehandler"-rolletag', () => {
             useBehandlingStore.setState({ rolle: 'SAKSBEHANDLER', erNyModell: true });
             renderHeader();
-            expect(await screen.findByText('Saksbehandler')).toBeInTheDocument();
+            expect(screen.getByText('Saksbehandler')).toBeInTheDocument();
         });
 
-        test('Viser ingen rolletag ved gammel modell', async () => {
+        test('Viser ingen rolletag ved gammel modell', () => {
             useBehandlingStore.setState({ rolle: 'SAKSBEHANDLER', erNyModell: false });
             renderHeader();
             expect(screen.queryByText('Saksbehandler')).not.toBeInTheDocument();
