@@ -1,11 +1,19 @@
-import type { Toggles } from './toggles';
-
 import createUseContext from 'constate';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useHttp } from '~/api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
 import { hentFrontendFeilmelding } from '~/utils';
+
+export enum ToggleName {
+    Vilkårsvurdering = 'tilbakekreving-frontend.nytt-vilkaarsvurderingssteg',
+    Vedtaksbrev = 'tilbakekreving-frontend.nytt-vedtaksbrev',
+    Forhaandsvarsel = 'familie-tilbake-frontend.forhaandsvarselsteg',
+}
+
+type Toggles = {
+    [key: string]: boolean;
+};
 
 const [TogglesProvider, useToggles] = createUseContext(() => {
     const [toggles, setToggles] = useState<Toggles>({});

@@ -155,7 +155,7 @@ const StatusTag: FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
     );
 };
 
-export const RESULTAT_META: Record<BehandlingsresultatstypeEnum, TagProps['data-color']> = {
+const RESULTAT_META: Record<BehandlingsresultatstypeEnum, TagProps['data-color']> = {
     HENLAGT: 'danger',
     HENLAGT_FEILOPPRETTET: 'danger',
     HENLAGT_FEILOPPRETTET_MED_BREV: 'danger',

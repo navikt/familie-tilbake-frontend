@@ -9,7 +9,6 @@ import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '~/api/brukerlenker';
 import { useHttp } from '~/api/http/HttpProvider';
 import { useApp } from '~/context/AppContext';
 import { useTheme } from '~/context/ThemeContext';
-import { Fagsystem } from '~/kodeverk';
 import { useBehandlingStore } from '~/stores/behandlingStore';
 import { useFagsakStore } from '~/stores/fagsakStore';
 import { erHistoriskSide } from '~/utils/sider';
@@ -63,7 +62,7 @@ export const Header: FC = () => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (fagsystem === Fagsystem.TS) {
+        if (fagsystem === 'TS') {
             return `/redirect/fagsystem/${fagsystem}/ekstern/person/${eksternFagsakId}`;
         }
         return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;

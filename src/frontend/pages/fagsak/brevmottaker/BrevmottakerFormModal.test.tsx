@@ -4,7 +4,6 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '~/context/FagsakContext';
-import { Ytelsetype } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
@@ -35,7 +34,7 @@ const renderBrevmottakerFormModal = async (
     };
 
     render(
-        <FagsakContext value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+        <FagsakContext value={lagFagsak({ ytelsestype: 'BARNETILSYN' })}>
             <TestBehandlingProvider behandling={lagBehandling()}>
                 <BrevmottakerFormModal {...defaultProps} />
             </TestBehandlingProvider>
@@ -160,7 +159,7 @@ describe('BrevmottakerFormModal', () => {
 
         test('Viser ikke modal når visBrevmottakerModal er false', () => {
             render(
-                <FagsakContext value={lagFagsak({ ytelsestype: Ytelsetype.Barnetilsyn })}>
+                <FagsakContext value={lagFagsak({ ytelsestype: 'BARNETILSYN' })}>
                     <TestBehandlingProvider behandling={lagBehandling()}>
                         <BrevmottakerFormModal
                             visBrevmottakerModal={false}

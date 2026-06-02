@@ -3,12 +3,12 @@ import type {
     BehandlingDto,
     BehandlingsresultatstypeEnum,
     BehandlingstatusEnum,
+    SchemaEnum4,
 } from '~/generated';
 
 import { render, screen } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
-import { Ytelsetype } from '~/kodeverk';
 import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
 import { lagBehandling } from '~/testdata/behandlingFactory';
 import { lagFagsak } from '~/testdata/fagsakFactory';
@@ -18,7 +18,7 @@ import { Faktaboks } from './Faktaboks';
 
 const renderFaktaboks = (
     delvisBehandling: Partial<BehandlingDto> = {},
-    ytelsestypeOverride: Ytelsetype = Ytelsetype.Barnetrygd
+    ytelsestypeOverride: SchemaEnum4 = 'BARNETRYGD'
 ): void => {
     const behandling = lagBehandling(delvisBehandling);
     render(
@@ -32,10 +32,10 @@ const renderFaktaboks = (
 
 describe('Faktaboks', () => {
     test('Viser heading med ytelsestype', () => {
-        renderFaktaboks({}, Ytelsetype.Barnetrygd);
+        renderFaktaboks({}, 'BARNETRYGD');
         expect(
             screen.getByRole('heading', {
-                name: `Tilbakekreving av ${Ytelsetype.Barnetrygd.toLocaleLowerCase()}`,
+                name: `Tilbakekreving av ${'BARNETRYGD'.toLocaleLowerCase()}`,
             })
         ).toBeInTheDocument();
     });

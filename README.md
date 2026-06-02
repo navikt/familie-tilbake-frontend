@@ -176,6 +176,7 @@ pnpm test:watch     # Watch-modus
 - **Prettier** for formatering
 - **Husky** + **lint-staged** kjører lint og formatering automatisk ved commit
 - Path alias `~/` peker til `src/frontend/` — dype relative imports (`../../../`) er blokkert via ESLint
+- Kjør `npx knip` for å se ubrukt kode. Satt opp med `./knip.config.ts`.
 
 ## Relaterte repoer
 

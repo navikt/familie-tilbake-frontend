@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { FagsakDto } from '~/generated';
+import type { FagsakDto, SchemaEnum2 as Fagsystem } from '~/generated';
 import type { Error as ModellError } from '~/generated-new';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -7,7 +7,6 @@ import { createContext, use } from 'react';
 import { useParams } from 'react-router';
 
 import { hentFagsak } from '~/generated/sdk.gen';
-import { Fagsystem } from '~/kodeverk';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
 
@@ -29,10 +28,7 @@ export class FagsakIkkeStøttetError extends Error {
 
 export const FagsakProvider = ({ children }: Props): ReactElement => {
     const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
-    const fagsystem =
-        fagsystemParam == 'KS'
-            ? Fagsystem[fagsystemParam satisfies keyof typeof Fagsystem]
-            : (fagsystemParam as Fagsystem);
+    const fagsystem = fagsystemParam == 'KS' ? 'KONT' : (fagsystemParam as Fagsystem);
 
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, eksternFagsakId],

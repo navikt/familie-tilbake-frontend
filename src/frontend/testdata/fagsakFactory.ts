@@ -1,13 +1,10 @@
 import type { FagsakDto, FrontendBrukerDto } from '~/generated';
 
-import { Fagsystem, Ytelsetype } from '~/kodeverk';
-import { Målform } from '~/typer/målform';
-
 export const lagFagsak = (overrides: Partial<FagsakDto> = {}): FagsakDto => ({
     eksternFagsakId: 'id-1',
-    ytelsestype: Ytelsetype.Overgangsstønad,
-    fagsystem: Fagsystem.EF,
-    språkkode: Målform.Nb,
+    ytelsestype: 'OVERGANGSSTØNAD',
+    fagsystem: 'EF',
+    språkkode: 'NB',
     bruker: lagBruker(),
     behandlinger: [],
     institusjon: undefined,

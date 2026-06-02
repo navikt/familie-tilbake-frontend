@@ -28,7 +28,7 @@ export type BehandlingStateContextOverrides = {
     setInnholdsbredde?: BehandlingStateContextType['setInnholdsbredde'];
 };
 
-export const lagBehandlingStateContext = (
+const lagBehandlingStateContext = (
     overrides: BehandlingStateContextOverrides = {},
     ulagretEndringer?: UseUlagretEndringerReturn
 ): BehandlingStateContextType => {
