@@ -877,6 +877,7 @@ export type BehandlingDto = {
     begrunnelseForTilbakekreving?: string | null;
     saksbehandlingstype: SaksbehandlingstypeEnum;
     erNyModell: boolean;
+    innloggetRolle: InnloggetRolleEnum;
 };
 
 export type BehandlingsstegsinfoDto = {
@@ -1457,6 +1458,8 @@ export type SaksbehandlingstypeEnum =
     | 'ORDINÆR'
     | 'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP'
     | 'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR';
+
+export type InnloggetRolleEnum = 'VEILEDER' | 'SAKSBEHANDLER' | 'BESLUTTER' | 'INGEN';
 
 export type BehandlingsstegstatusEnum =
     | 'VENTER'

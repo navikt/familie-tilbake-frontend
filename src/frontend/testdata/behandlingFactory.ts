@@ -37,6 +37,7 @@ export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): Behandlin
     støtterManuelleBrevmottakere: false,
     harManuelleBrevmottakere: false,
     begrunnelseForTilbakekreving: undefined,
+    innloggetRolle: 'INGEN',
     ...overrides,
 });
 

@@ -294,6 +294,7 @@ export type {
     HentVurdertVilkårsvurderingResponses,
     HistorikkinnslagDto,
     Info,
+    InnloggetRolleEnum,
     Institusjon,
     InstitusjonDto,
     Journalpost,
