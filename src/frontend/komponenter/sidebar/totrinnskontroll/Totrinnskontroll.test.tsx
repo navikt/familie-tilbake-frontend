@@ -65,10 +65,10 @@ const setupMocks = (totrinnkontroll: Totrinnkontroll): void => {
     }));
 };
 
-const godkjennKnapp = (): HTMLElement =>
-    screen.getByRole('button', {
-        name: 'Godkjenn vedtaket',
-    });
+const godkjennTekst = {
+    name: 'Godkjenn vedtaket',
+};
+const godkjennKnapp = (): HTMLElement => screen.getByRole('button', godkjennTekst);
 
 const sendTilSaksbehandlerKnapp = (): HTMLElement =>
     screen.getByRole('button', {
@@ -99,7 +99,7 @@ describe('Totrinnskontroll', () => {
         expect(screen.getByText('Vedtak')).toBeInTheDocument();
         expect(screen.getAllByRole('link')).toHaveLength(3);
 
-        expect(godkjennKnapp()).toBeDisabled();
+        expect(await screen.findByRole('button', godkjennTekst)).toBeDisabled();
         expect(sendTilSaksbehandlerKnapp()).toBeDisabled();
 
         await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
