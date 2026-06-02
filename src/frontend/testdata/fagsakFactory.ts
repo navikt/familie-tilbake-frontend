@@ -1,7 +1,6 @@
 import type { FagsakDto, FrontendBrukerDto } from '~/generated';
 
 import { Fagsystem, Ytelsetype } from '~/kodeverk';
-import { Kjønn } from '~/typer/bruker';
 import { Målform } from '~/typer/målform';
 
 export const lagFagsak = (overrides: Partial<FagsakDto> = {}): FagsakDto => ({
@@ -20,6 +19,6 @@ const lagBruker = (overrides: Partial<FrontendBrukerDto> = {}): FrontendBrukerDt
     personIdent: '12345678901',
     dødsdato: undefined,
     fødselsdato: '1990-01-01',
-    kjønn: Kjønn.Kvinne,
+    kjønn: 'KVINNE',
     ...overrides,
 });

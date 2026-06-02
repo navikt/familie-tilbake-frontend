@@ -7,11 +7,6 @@ import { useHttp } from '~/api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '~/typer/ressurs';
 import { hentFrontendFeilmelding } from '~/utils';
 
-export type TogglesHook = {
-    toggles: Toggles;
-    feilmelding: string;
-};
-
 const [TogglesProvider, useToggles] = createUseContext(() => {
     const [toggles, setToggles] = useState<Toggles>({});
     const [feilmelding, setFeilmelding] = useState<string>('');

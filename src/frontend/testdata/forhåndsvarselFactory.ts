@@ -68,14 +68,6 @@ export const lagForhåndsvarselQueriesSendt = (
         ...overrides,
     });
 
-export type PreNoticeMutations = Omit<
-    UseForhåndsvarselMutationsReturn,
-    | 'forhåndsvisning'
-    | 'sendBrukeruttalelseMutation'
-    | 'sendForhåndsvarselMutation'
-    | 'sendUtsettUttalelseFristMutation'
->;
-
 export const lagForhåndsvarselMutations = (): UseForhåndsvarselMutationsReturn =>
     ({
         sendForhåndsvarsel: vi.fn(),
