@@ -118,4 +118,32 @@ describe('Header', () => {
             })
         ).not.toBeInTheDocument();
     });
+
+    describe('RolleTag', () => {
+        test('Viser "Veileder"-rolletag', () => {
+            useBehandlingStore.setState({ rolle: 'VEILEDER', erNyModell: true });
+            renderHeader();
+
+            expect(screen.getByText('Veileder')).toBeInTheDocument();
+        });
+
+        test('Viser "Beslutter"-rolletag', () => {
+            useBehandlingStore.setState({ rolle: 'BESLUTTER', erNyModell: true });
+            renderHeader();
+
+            expect(screen.getByText('Beslutter')).toBeInTheDocument();
+        });
+
+        test('Viser "Saksbehandler"-rolletag', () => {
+            useBehandlingStore.setState({ rolle: 'SAKSBEHANDLER', erNyModell: true });
+            renderHeader();
+            expect(screen.getByText('Saksbehandler')).toBeInTheDocument();
+        });
+
+        test('Viser ingen rolletag ved gammel modell', () => {
+            useBehandlingStore.setState({ rolle: 'SAKSBEHANDLER', erNyModell: false });
+            renderHeader();
+            expect(screen.queryByText('Saksbehandler')).not.toBeInTheDocument();
+        });
+    });
 });

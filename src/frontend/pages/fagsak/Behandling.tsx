@@ -3,7 +3,7 @@ import type { BehandlingsstegsinfoDto } from '~/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Link, LocalAlert, VStack } from '@navikt/ds-react';
-import { Suspense, useLayoutEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
 import { useBehandling } from '~/context/BehandlingContext';
@@ -21,6 +21,7 @@ import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
 import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
 import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
 import { useActionBarConfig } from '~/stores/actionBarStore';
+import { useBehandlingStore } from '~/stores/behandlingStore';
 import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
 import { venteårsaker } from '~/typer/behandling';
 import { formatterDatostring } from '~/utils';
@@ -333,8 +334,19 @@ const Behandling: FC = () => {
     const { fagsystem, eksternFagsakId } = useFagsak();
     const behandling = useBehandling();
     const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
+    const { setRolle, setErNyModell } = useBehandlingStore();
     const location = useLocation();
     const dialogRef = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        setErNyModell(behandling.erNyModell);
+        setRolle(behandling.innloggetRolle);
+
+        return (): void => {
+            setErNyModell(false);
+            setRolle('INGEN');
+        };
+    }, [behandling.erNyModell, behandling.innloggetRolle, setErNyModell, setRolle]);
 
     if (behandling.erBehandlingHenlagt) {
         return <HenlagtBehandling dialogRef={dialogRef} />;
