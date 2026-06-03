@@ -158,8 +158,6 @@ export const Forhåndsvarsel: FC = () => {
                 path: { behandlingId },
                 body: { tekstFraSaksbehandler: data.tekstFraSaksbehandler },
             });
-        } else if (!isDirty) {
-            navigerTilNeste();
         } else if (data.begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && data.brukeruttalelse) {
             lagreUnntakMedUttalelse.mutate({
                 unntak: {
@@ -187,30 +185,46 @@ export const Forhåndsvarsel: FC = () => {
         onForrige: navigerTilForrige,
     };
 
-    useActionBar(
-        erRedigerbarForhåndsvarselFlyt
-            ? {
-                  type: 'submit' as const,
-                  formId: FORHÅNDSVARSEL_FORM_ID,
-                  ...fellesActionBarConfig,
-                  isLoading:
-                      sendVarselbrev.isPending ||
-                      lagreUnntak.isPending ||
-                      lagreUnntakMedUttalelse.isPending,
-                  // TODO legg til "Lagre og gå videre" når setIkkePersistertKomponent er lagt til
-                  ...(valg === 'send' && { nesteTekst: 'Send forhåndsvarselet' }),
-                  nesteAriaLabel:
-                      valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
-              }
-            : {
-                  type: 'submit' as const,
-                  formId: BRUKERUTTALELSE_FORM_ID,
-                  ...fellesActionBarConfig,
-                  isLoading: lagreBrukeruttalelse.isPending,
-                  // TODO legg til "Lagre og gå videre til foreldelsessteget" når setIkkePersistertKomponent er lagt til
-                  nesteAriaLabel: 'Gå videre til foreldelsessteget',
-              }
-    );
+    const erUnntakUtenKravTilBrukeruttalelse =
+        forhåndsvarselSteg.type === 'unntak' &&
+        forhåndsvarselSteg.begrunnelseForUnntak !== 'ÅPENBART_UNØDVENDIG';
+
+    const skalSubmitteSkjema = isDirty || !erUnntakUtenKravTilBrukeruttalelse;
+
+    const sendEllerLagreForhåndsvarselConfig = {
+        type: 'submit' as const,
+        formId: FORHÅNDSVARSEL_FORM_ID,
+        ...fellesActionBarConfig,
+        isLoading:
+            sendVarselbrev.isPending || lagreUnntak.isPending || lagreUnntakMedUttalelse.isPending,
+        // TODO legg til "Lagre og gå videre" når setIkkePersistertKomponent er lagt til
+        ...(valg === 'send' && { nesteTekst: 'Send forhåndsvarselet' }),
+        nesteAriaLabel:
+            valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
+    };
+
+    const navigerTilNesteConfig = {
+        ...fellesActionBarConfig,
+        onNeste: navigerTilNeste,
+        nesteAriaLabel: 'Gå videre til foreldelsessteget',
+    };
+
+    const lagreBrukeruttalelseConfig = {
+        type: 'submit' as const,
+        formId: BRUKERUTTALELSE_FORM_ID,
+        ...fellesActionBarConfig,
+        isLoading: lagreBrukeruttalelse.isPending,
+        // TODO legg til "Lagre og gå videre til foreldelsessteget" når setIkkePersistertKomponent er lagt til
+        nesteAriaLabel: 'Gå videre til foreldelsessteget',
+    };
+
+    const actionBarConfig = erRedigerbarForhåndsvarselFlyt
+        ? skalSubmitteSkjema
+            ? sendEllerLagreForhåndsvarselConfig
+            : navigerTilNesteConfig
+        : lagreBrukeruttalelseConfig;
+
+    useActionBar(actionBarConfig);
 
     return (
         <VStack gap="space-24">
