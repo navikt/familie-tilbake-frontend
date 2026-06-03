@@ -8,7 +8,6 @@ import { useApp } from '~/context/AppContext';
 import { useBehandling } from '~/context/BehandlingContext';
 import { useBehandlingState } from '~/context/BehandlingStateContext';
 import { useFagsak } from '~/context/FagsakContext';
-import { Fagsystem } from '~/kodeverk';
 
 import { EndreEnhet } from './endre-enhet/EndreEnhet';
 import { Gjenoppta } from './gjenoppta/Gjenoppta';
@@ -39,7 +38,7 @@ export const Behandlingsmeny: FC = () => {
     const erBehandlingenAktiv =
         behandling.status !== 'AVSLUTTET' && !vedtakFattetEllerFattes && behandling.kanEndres;
     const erSattPåvent = behandling.erBehandlingPåVent || ventegrunn;
-    const kanEndreEnhet = fagsystem === Fagsystem.BA;
+    const kanEndreEnhet = fagsystem === 'BA';
     return (
         <ActionMenu open={holdMenyenÅpen} onOpenChange={setHoldMenyenÅpen}>
             <ActionMenu.Trigger>

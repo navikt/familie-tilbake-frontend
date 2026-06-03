@@ -7,7 +7,6 @@ import { Suspense } from 'react';
 
 import { BehandlingProvider } from '~/context/BehandlingContext';
 import { FagsakContext } from '~/context/FagsakContext';
-import { Fagsystem } from '~/kodeverk';
 import {
     lagBehandling,
     lagBrevmottakerSteg,
@@ -45,7 +44,7 @@ const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): voi
             <FagsakContext
                 value={lagFagsak({
                     eksternFagsakId: '123',
-                    fagsystem: Fagsystem.BA,
+                    fagsystem: 'BA',
                 })}
             >
                 <Suspense fallback={<div>Loading...</div>}>

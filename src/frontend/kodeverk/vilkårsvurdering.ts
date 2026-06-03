@@ -6,13 +6,6 @@ export enum Vilkårsresultat {
     Udefinert = 'UDEFINERT',
 }
 
-export const vilkårsresultatTyper = [
-    Vilkårsresultat.ForstoBurdeForstått,
-    Vilkårsresultat.FeilOpplysningerFraBruker,
-    Vilkårsresultat.MangelfulleOpplysningerFraBruker,
-    Vilkårsresultat.GodTro,
-];
-
 export enum Aktsomhet {
     Forsettlig = 'FORSETT',
     GrovtUaktsomt = 'GROV_UAKTSOMHET',
