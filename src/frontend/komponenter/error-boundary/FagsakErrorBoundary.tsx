@@ -3,7 +3,7 @@ import type { ErrorInfo, ReactNode } from 'react';
 import { BodyLong, BodyShort, Button, Heading, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';
 
-import { FagsakIkkeStøttetError } from '~/context/FagsakContext';
+import { FagsakIkkeStøttetError } from '@/context/FagsakContext';
 
 type Props = {
     children: ReactNode;

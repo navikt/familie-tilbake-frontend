@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import type { Beregningsresultat, BeregningsresultatVurdering } from '~/generated-new/types.gen';
+import type { Beregningsresultat, BeregningsresultatVurdering } from '@/generated-new/types.gen';
 
 import { ExpansionCard, Table } from '@navikt/ds-react';
 
-import { formatterDatostring, formatCurrencyNoKr } from '~/utils';
+import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 
 const vurderingstekster: Record<BeregningsresultatVurdering | string, string> = {
     Forsett: 'Forsett',

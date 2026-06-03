@@ -1,25 +1,25 @@
 import type { FC } from 'react';
-import type { Skjema } from '~/hooks/skjema';
+import type { Skjema } from '@/hooks/skjema';
 
-import { Checkbox, CheckboxGroup, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
+import { Checkbox, CheckboxGroup, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { Valideringsstatus } from '~/hooks/skjema';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { Valideringsstatus } from '@/hooks/skjema';
 import {
     Aktsomhet,
     SærligeGrunner,
-    særligegrunner,
     særligeGrunnerTyper,
+    særligegrunner,
     Vilkårsresultat,
-} from '~/kodeverk';
+} from '@/kodeverk';
+import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import {
+    type JaNeiOption,
     jaNeiOptions,
     OptionJA,
     OptionNEI,
-    type JaNeiOption,
     type VilkårsvurderingSkjemaDefinisjon,
-} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
-import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
+} from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { ReduksjonAvBeløpSkjema } from './ReduksjonAvBeløpSkjema';
 

@@ -1,4 +1,4 @@
-import type { FrontendBrukerDto } from '~/generated';
+import type { FrontendBrukerDto } from '@/generated';
 
 import { hentAlder } from './dateUtils';
 

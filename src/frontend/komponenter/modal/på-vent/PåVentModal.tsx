@@ -1,17 +1,17 @@
 import type { FC } from 'react';
-import type { BehandlingsstegsinfoDto } from '~/generated';
+import type { BehandlingsstegsinfoDto } from '@/generated';
 
 import { BodyLong, BodyShort, Button, Heading, LocalAlert, Modal, Select } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, addMonths } from 'date-fns';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { Valideringsstatus } from '~/hooks/skjema';
-import { Datovelger } from '~/komponenter/datovelger/Datovelger';
-import { manuelleVenteÅrsaker, venteårsaker } from '~/typer/behandling';
-import { dateBeforeToday } from '~/utils';
-import { dagensDato } from '~/utils/dato';
+import { useBehandling } from '@/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { Valideringsstatus } from '@/hooks/skjema';
+import { Datovelger } from '@/komponenter/datovelger/Datovelger';
+import { manuelleVenteÅrsaker, venteårsaker } from '@/typer/behandling';
+import { dateBeforeToday } from '@/utils';
+import { dagensDato } from '@/utils/dato';
 
 import { usePåVentBehandling } from './PåVentContext';
 

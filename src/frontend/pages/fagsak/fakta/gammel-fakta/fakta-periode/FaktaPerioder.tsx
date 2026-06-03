@@ -1,10 +1,10 @@
-import type { FaktaPeriodeSkjemaData } from '../fakta';
 import type { FC } from 'react';
+import type { FaktaPeriodeSkjemaData } from '../fakta';
 
 import { Table } from '@navikt/ds-react';
 
-import { useFagsak } from '~/context/FagsakContext';
-import { hentHendelseTyper } from '~/kodeverk';
+import { useFagsak } from '@/context/FagsakContext';
+import { hentHendelseTyper } from '@/kodeverk';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 

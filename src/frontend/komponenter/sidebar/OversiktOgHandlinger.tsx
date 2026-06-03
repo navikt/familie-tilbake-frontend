@@ -9,8 +9,8 @@ import {
 import { ToggleGroup } from '@navikt/ds-react';
 import { useState } from 'react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 
 import { Menysider, OversiktOgHandlingerInnhold } from './OversiktOgHandlingerInnhold';
 
@@ -26,6 +26,7 @@ export const HistorikkOgDokumenter: FC = () => {
     const aktivSide = erGyldigValg ? valgtSide : defaultSide;
 
     return (
+        // biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO a11y – aria-label på element uten rolle, ikke flagget av tidligere ESLint-oppsett
         <div
             className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"
             aria-label="Oversikt og handlinger over historikk, dokumenter, sending av brev og fatte vedtak."

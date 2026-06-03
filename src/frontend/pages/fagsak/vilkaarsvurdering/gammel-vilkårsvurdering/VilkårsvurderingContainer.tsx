@@ -2,8 +2,8 @@ import type { FC } from 'react';
 
 import { BodyLong, Heading, VStack } from '@navikt/ds-react';
 
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '~/typer/ressurs';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '@/typer/ressurs';
 
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
 import { VilkårsvurderingPerioder } from './VilkårsvurderingPerioder';

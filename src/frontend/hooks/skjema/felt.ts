@@ -1,4 +1,5 @@
-/* eslint-disable @eslint-react/set-state-in-effect, react-hooks/set-state-in-effect, @eslint-react/exhaustive-deps, react-hooks/exhaustive-deps --
+// biome-ignore-all lint/correctness/useExhaustiveDependencies: useCallback/useMemo bruker bevisst et subsett av avhengighetene; løses ved migrering til react-hook-form
+/*
  * useFelt er en generisk skjemahook hvor feltstate og synlighet (`erSynlig`) synkroniseres
  * mot avhengighetene via en useEffect. Å fjerne disse setState-kallene krever en større
  * refaktor av skjemaløsningen — typisk migrering til react-hook-form + zod, som allerede
@@ -10,15 +11,16 @@
  * (flere indre funksjoner er ikke selv memoisert). Dette løses ved migrering til
  * react-hook-form. Se også på om useEffect-bruken her er en bug eller tiltenkt funksjonalitet.
  */
+
+import type { ChangeEvent } from 'react';
 import type {
+    Avhengigheter,
     Felt,
     FeltState,
     NavBaseSkjemaProps,
     NavInputProps,
     ValiderFelt,
-    Avhengigheter,
 } from './typer';
-import type { ChangeEvent } from 'react';
 
 import deepEqual from 'deep-equal';
 import { useCallback, useEffect, useMemo, useState } from 'react';

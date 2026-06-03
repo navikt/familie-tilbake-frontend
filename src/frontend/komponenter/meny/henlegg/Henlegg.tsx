@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '~/generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstypeEnum } from '@/generated';
 
 import { CircleSlashIcon } from '@navikt/aksel-icons';
 import { ActionMenu } from '@navikt/ds-react';
 import { useRef } from 'react';
 
-import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandling } from '@/context/BehandlingContext';
 
 import { HenleggModal } from './henleggModal/HenleggModal';
 

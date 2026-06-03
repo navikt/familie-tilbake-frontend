@@ -1,11 +1,11 @@
-import type { ForeldelsesvurderingstypeEnum } from '~/generated/types.gen';
+import type { ForeldelsesvurderingstypeEnum } from '@/generated/types.gen';
 import type {
+    Aktsomhet,
     HendelseType,
     HendelseUndertype,
-    Vilkårsresultat,
-    Aktsomhet,
     SærligeGrunner,
-} from '~/kodeverk';
+    Vilkårsresultat,
+} from '@/kodeverk';
 
 export enum Tilbakekrevingsvalg {
     OpprettTilbakekrevingMedVarsel = 'OPPRETT_TILBAKEKREVING_MED_VARSEL',

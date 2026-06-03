@@ -1,14 +1,14 @@
-import type { FaktaPeriodeSkjemaData } from '../fakta';
 import type { ChangeEvent, FC } from 'react';
-import type { HendelseType, HendelseUndertype } from '~/kodeverk';
+import type { HendelseType, HendelseUndertype } from '@/kodeverk';
+import type { FaktaPeriodeSkjemaData } from '../fakta';
 
 import { BodyShort, Select, Table, VStack } from '@navikt/ds-react';
 import { useEffect, useMemo } from 'react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '~/kodeverk';
-import { useFakta } from '~/pages/fagsak/fakta/gammel-fakta/FaktaContext';
-import { formatterDatostring, formatCurrencyNoKr } from '~/utils';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hendelsetyper, hendelseundertyper, hentHendelseUndertyper } from '@/kodeverk';
+import { useFakta } from '@/pages/fagsak/fakta/gammel-fakta/FaktaContext';
+import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 
 type Props = {
     periode: FaktaPeriodeSkjemaData;
@@ -33,7 +33,7 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [hendelseTyper]);
 
     const hendelseUnderTyper = useMemo(() => {
@@ -49,7 +49,7 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [hendelseUnderTyper]);
 
     const onChangeÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {

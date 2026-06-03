@@ -5,14 +5,14 @@ import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-re
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 
-import { useHttp } from '~/api/http/HttpProvider';
-import { useApp } from '~/context/AppContext';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { AlertType, ToastTyper } from '~/komponenter/toast/typer';
-import { type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { useStegNavigering } from '~/utils/sider';
+import { useHttp } from '@/api/http/HttpProvider';
+import { useApp } from '@/context/AppContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { AlertType, ToastTyper } from '@/komponenter/toast/typer';
+import { type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { useStegNavigering } from '@/utils/sider';
 
 import { MODAL_BREDDE } from '../utils';
 

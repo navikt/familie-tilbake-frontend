@@ -1,17 +1,17 @@
 import type { FC, RefObject } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type { z } from 'zod';
-import type { FristUtsettelseDto } from '~/generated';
+import type { FristUtsettelseDto } from '@/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Modal, Textarea, DatePicker, useDatepicker, VStack } from '@navikt/ds-react';
+import { Button, DatePicker, Modal, Textarea, useDatepicker, VStack } from '@navikt/ds-react';
 import { useMemo, useState } from 'react';
-import { useForm, get } from 'react-hook-form';
+import { get, useForm } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { MODAL_BREDDE } from '~/komponenter/meny/utils';
-import { utsettUttalelseFristSchema } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
-import { dateTilIsoDatoString } from '~/utils/dato';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { MODAL_BREDDE } from '@/komponenter/meny/utils';
+import { utsettUttalelseFristSchema } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+import { dateTilIsoDatoString } from '@/utils/dato';
 
 type UtsettFristFormData = z.infer<typeof utsettUttalelseFristSchema>;
 

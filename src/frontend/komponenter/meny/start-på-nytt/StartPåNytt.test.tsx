@@ -5,11 +5,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { FagsakContext } from '@/context/FagsakContext';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { StartPåNytt } from './StartPåNytt';
 

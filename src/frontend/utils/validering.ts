@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 
-import { feil, type FeltState, ok } from '~/hooks/skjema';
+import { type FeltState, feil, ok } from '@/hooks/skjema';
 
 import { isNumeric } from './miscUtils';
 
@@ -51,7 +51,7 @@ const _validerMinLength =
             : `Du må skrive minst ${length} tegn`;
     };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: FeltState<any> brukes generisk på tvers av felttyper
 export const erFeltetEmpty = (felt: FeltState<any>): FeltState<any> => {
     return !isEmpty(felt.verdi)
         ? ok(felt)

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { GamleVedtaksresultat } from '~/kodeverk';
+import type { GamleVedtaksresultat } from '@/kodeverk';
 
 import {
     BodyLong,
@@ -13,16 +13,16 @@ import {
 } from '@navikt/ds-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useActionBar } from '~/hooks/useActionBar';
-import { useSammenslåPerioder } from '~/hooks/useSammenslåPerioder';
-import { gamleVedtaksresultater } from '~/kodeverk';
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { RessursStatus } from '~/typer/ressurs';
-import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { useSammenslåPerioder } from '@/hooks/useSammenslåPerioder';
+import { gamleVedtaksresultater } from '@/kodeverk';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesmodal';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { RessursStatus } from '@/typer/ressurs';
+import { HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { ForhåndsvisVedtaksbrev } from './forhåndsvis-vedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -84,7 +84,7 @@ export const VedtakContainer: FC = () => {
             setErPerioderSammenslått(!!sammenslåttResponse);
         };
         hentInitialData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, []);
 
     useEffect(() => {

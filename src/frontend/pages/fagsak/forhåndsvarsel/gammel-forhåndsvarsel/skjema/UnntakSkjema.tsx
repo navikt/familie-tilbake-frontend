@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+import type { ForhåndsvarselFormData } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
-import { RadioGroup, Radio, Textarea, Link } from '@navikt/ds-react';
+import { Link, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 
 export const Unntak: FC = () => {
     const methods = useFormContext<ForhåndsvarselFormData>();

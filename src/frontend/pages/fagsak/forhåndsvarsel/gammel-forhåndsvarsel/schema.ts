@@ -3,11 +3,11 @@ import type {
     ForhåndsvarselDto,
     ForhåndsvarselUnntakDto,
     Uttalelsesdetaljer,
-} from '~/generated';
+} from '@/generated';
 
 import { z } from 'zod';
 
-import { zBegrunnelseForUnntakEnum } from '~/generated/zod.gen';
+import { zBegrunnelseForUnntakEnum } from '@/generated/zod.gen';
 
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',

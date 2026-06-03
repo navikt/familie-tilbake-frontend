@@ -1,6 +1,6 @@
-import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
-import type { BestillBrevDto, RessursByte } from '~/generated';
+import type { BestillBrevDto, RessursByte } from '@/generated';
+import type { IkkeVurdertFormData } from './schema';
 
 import { EyeIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
@@ -8,10 +8,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { forhåndsvisBrevMutation } from '~/generated/@tanstack/react-query.gen';
-import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
+import { useBehandling } from '@/context/BehandlingContext';
+import { forhåndsvisBrevMutation } from '@/generated/@tanstack/react-query.gen';
+import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 
 const lagForhåndsvisningBody = (behandlingId: string, fritekst: string): BestillBrevDto => ({
     behandlingId,

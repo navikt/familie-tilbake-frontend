@@ -3,9 +3,9 @@ import type { FC } from 'react';
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
 
-import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
-import { SidebarSkeleton } from '~/komponenter/sidebar/SidebarSkeleton';
-import { StegflytSkeleton } from '~/komponenter/stegflyt/StegflytSkeleton';
+import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
+import { SidebarSkeleton } from '@/komponenter/sidebar/SidebarSkeleton';
+import { StegflytSkeleton } from '@/komponenter/stegflyt/StegflytSkeleton';
 
 export const BehandlingSkeleton: FC = () => {
     return (

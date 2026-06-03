@@ -1,18 +1,18 @@
-import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
 import type { ChangeHandler, SubmitHandler } from 'react-hook-form';
-import type { Section, Varselbrevtekst } from '~/generated';
+import type { Section, Varselbrevtekst } from '@/generated';
+import type { IkkeVurdertFormData } from './schema';
 
 import { BodyLong, Box, Heading, Textarea, VStack } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { Fragment, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentForhåndsvarselTekstOptions } from '~/generated/@tanstack/react-query.gen';
-import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
-import { formatterDatostringLangt } from '~/utils/dateUtils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentForhåndsvarselTekstOptions } from '@/generated/@tanstack/react-query.gen';
+import { behandlingFaktaOptions } from '@/generated-new/@tanstack/react-query.gen';
+import { formatterDatostringLangt } from '@/utils/dateUtils';
 
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { Unntak } from './Unntak';

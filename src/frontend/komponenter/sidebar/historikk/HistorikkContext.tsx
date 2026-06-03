@@ -1,15 +1,15 @@
-import type { HistorikkInnslag } from '~/typer/historikk';
-import type { SynligSteg } from '~/utils/sider';
+import type { HistorikkInnslag } from '@/typer/historikk';
+import type { SynligSteg } from '@/utils/sider';
 
 import createUseContext from 'constate';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { useHttp } from '~/api/http/HttpProvider';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useFagsak } from '~/context/FagsakContext';
-import { Menysider } from '~/komponenter/sidebar/OversiktOgHandlingerInnhold';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '~/typer/ressurs';
+import { useHttp } from '@/api/http/HttpProvider';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useFagsak } from '@/context/FagsakContext';
+import { Menysider } from '@/komponenter/sidebar/OversiktOgHandlingerInnhold';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@/typer/ressurs';
 
 type Props = {
     valgtMenyside: Menysider;
@@ -26,11 +26,11 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
         if (valgtMenyside === Menysider.Historikk) {
             hentHistorikkinnslag();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling, valgtMenyside]);
 
     const hentHistorikkinnslag = (): void => {
-        // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
+        // setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
         setHistorikkInnslag(byggHenterRessurs());
         request<void, HistorikkInnslag[]>({
             method: 'GET',

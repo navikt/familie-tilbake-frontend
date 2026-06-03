@@ -1,12 +1,12 @@
-import type { UnderavsnittSkjemaData } from './typer/vedtak';
 import type { ChangeEvent, FC } from 'react';
+import type { UnderavsnittSkjemaData } from './typer/vedtak';
 
 import { PlusCircleIcon } from '@navikt/aksel-icons';
 import { BodyShort, Link, Textarea, VStack } from '@navikt/ds-react';
 import { useState } from 'react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { isEmpty, validerTekstMaksLengde } from '~/utils';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { isEmpty, validerTekstMaksLengde } from '@/utils';
 
 import { useVedtak } from './VedtakContext';
 

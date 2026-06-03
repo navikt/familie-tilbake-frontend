@@ -2,9 +2,9 @@ import type { FC } from 'react';
 
 import { useEffect, useState } from 'react';
 
-import { useHttp } from '~/api/http/HttpProvider';
-import { useBehandling } from '~/context/BehandlingContext';
-import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
+import { useHttp } from '@/api/http/HttpProvider';
+import { useBehandling } from '@/context/BehandlingContext';
+import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -12,8 +12,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '~/typer/ressurs';
-import { base64ToArrayBuffer } from '~/utils';
+} from '@/typer/ressurs';
+import { base64ToArrayBuffer } from '@/utils';
 
 type Props = {
     journalpostId: string | undefined;
@@ -51,7 +51,7 @@ export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) 
                 );
             }
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandlingId, journalpostId, dokumentId]);
 
     return (

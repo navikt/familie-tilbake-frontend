@@ -1,7 +1,7 @@
-import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { VedtaksbrevData, VedtaksbrevDataWritable } from '~/generated-new';
+import type { VedtaksbrevData, VedtaksbrevDataWritable } from '@/generated-new';
+import type { VedtaksbrevFormData } from './schema';
 
 import {
     Button,
@@ -17,12 +17,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandling } from '@/context/BehandlingContext';
 import {
     behandlingOppdaterVedtaksbrevMutation,
     vedtaksbrevLagSvgVedtaksbrevMutation,
-} from '~/generated-new/@tanstack/react-query.gen';
-import { fraIsoStringTilDatoOgKlokkeslett } from '~/utils/dato';
+} from '@/generated-new/@tanstack/react-query.gen';
+import { fraIsoStringTilDatoOgKlokkeslett } from '@/utils/dato';
 
 import { vedtaksbrevResolver } from './schema';
 import {

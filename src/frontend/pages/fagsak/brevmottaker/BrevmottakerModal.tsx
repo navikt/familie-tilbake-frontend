@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Brevmottaker, ManuellBrevmottakerResponsDto } from '~/generated';
+import type { Brevmottaker, ManuellBrevmottakerResponsDto } from '@/generated';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 import { mapBrevmottakerToFormData } from './schema/schema';

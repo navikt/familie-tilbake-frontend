@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { Button } from '@navikt/ds-react';
 import { useEffect } from 'react';
 
-import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
+import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 
 import { useForhåndsvisVedtaksbrev } from './useForhåndsvisVedtaksbrev';
 
@@ -20,7 +20,7 @@ export const ForhåndsvisVedtaksbrev: FC = () => {
         if (visModal) {
             hentVedtaksbrev();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [visModal]);
 
     return (

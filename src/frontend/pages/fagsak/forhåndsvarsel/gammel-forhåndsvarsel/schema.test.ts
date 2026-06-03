@@ -1,8 +1,8 @@
 import {
     forhåndsvarselSchema,
-    uttalelseSchema,
     HarUttaltSeg,
     SkalSendesForhåndsvarsel,
+    uttalelseSchema,
 } from './schema';
 
 describe('Overskriving av feilmeldinger i forhåndsvarsel-skjema', () => {

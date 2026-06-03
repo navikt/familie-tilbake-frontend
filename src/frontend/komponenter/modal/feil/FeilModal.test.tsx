@@ -1,10 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
-import { Feil } from '~/api/feil';
-import { FagsakContext } from '~/context/FagsakContext';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
+import { Feil } from '@/api/feil';
+import { FagsakContext } from '@/context/FagsakContext';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
 
 import { FeilModal } from './FeilModal';
 

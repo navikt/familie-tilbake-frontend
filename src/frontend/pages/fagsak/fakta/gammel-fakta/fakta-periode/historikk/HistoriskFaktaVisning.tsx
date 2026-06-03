@@ -1,13 +1,13 @@
-import type { FaktaSkjemaData } from '../../fakta';
 import type { FC } from 'react';
-import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
+import type { FaktaResponse } from '@/typer/tilbakekrevingstyper';
+import type { FaktaSkjemaData } from '../../fakta';
 
 import { BodyShort, HGrid, HStack, Table, VStack } from '@navikt/ds-react';
 
-import { FaktaPeriodeSkjema } from '~/pages/fagsak/fakta/gammel-fakta/fakta-periode/FaktaPeriodeSkjema';
-import { FaktaRevurdering } from '~/pages/fagsak/fakta/gammel-fakta/FaktaRevurdering';
-import { harBrukerUttaltSegValgTilTekst } from '~/typer/tilbakekrevingstyper';
-import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
+import { FaktaRevurdering } from '@/pages/fagsak/fakta/gammel-fakta/FaktaRevurdering';
+import { FaktaPeriodeSkjema } from '@/pages/fagsak/fakta/gammel-fakta/fakta-periode/FaktaPeriodeSkjema';
+import { harBrukerUttaltSegValgTilTekst } from '@/typer/tilbakekrevingstyper';
+import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 
 type Props = {
     skjemaData: FaktaSkjemaData;

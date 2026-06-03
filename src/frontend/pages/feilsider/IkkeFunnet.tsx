@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { BugIcon } from '@navikt/aksel-icons';
-import { BodyShort, Box, Heading, Link, Page, VStack, List } from '@navikt/ds-react';
+import { BodyShort, Box, Heading, Link, List, Page, VStack } from '@navikt/ds-react';
 
 export const IkkeFunnet: FC = () => {
     return (

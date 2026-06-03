@@ -1,16 +1,16 @@
-import type { User } from '../typer';
-import type { TexasClient } from './texas';
-import type { Userinfo } from '../../typer/entraid';
 import type { AxiosResponse } from 'axios';
 import type { Request, Response } from 'express';
+import type { Userinfo } from '../../typer/entraid';
+import type { User } from '../typer';
+import type { TexasClient } from './texas';
 
 import axios from 'axios';
 
-import { utledAccessToken } from './authenticate';
 import { appConfig } from '../../config';
 import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';
+import { utledAccessToken } from './authenticate';
 
 export const hentBrukerprofil = (texasClient: TexasClient) => {
     return async (req: Request, res: Response): Promise<void> => {

@@ -1,4 +1,3 @@
-import type { OppdaterFaktaOmFeilutbetalingSchema } from './schema';
 import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
@@ -13,7 +12,8 @@ import type {
     OppdaterFaktaOmFeilutbetaling,
     OppdaterFaktaPeriode,
     Options,
-} from '~/generated-new';
+} from '@/generated-new';
+import type { OppdaterFaktaOmFeilutbetalingSchema } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 // import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
@@ -28,19 +28,18 @@ import {
     Textarea,
     useDatepicker,
 } from '@navikt/ds-react';
-import { useMutation } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { parseISO } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { useActionBar } from '~/hooks/useActionBar';
-import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
-import { dateTilIsoDatoString } from '~/utils/dato';
-import { useStegNavigering } from '~/utils/sider';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { useActionBar } from '@/hooks/useActionBar';
+import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
+import { dateTilIsoDatoString } from '@/utils/dato';
+import { useStegNavigering } from '@/utils/sider';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 
@@ -141,7 +140,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
 
     const dataForPeriode = (id: string): FaktaPeriode =>
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: perioden finnes garantert siden id kommer fra samme kall
         perioder.find(periode => periode.id === id)! as FaktaPeriode;
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = data => {
         oppdaterMutation.mutate(

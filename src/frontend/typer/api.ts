@@ -1,13 +1,13 @@
-import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
 import type {
     BehandlingsresultatstypeEnum,
     BehandlingsstegEnum,
     ForeldelsesvurderingstypeEnum,
     VenteårsakEnum,
-} from '~/generated';
-import type { DokumentMal, HendelseType, HendelseUndertype, Vilkårsresultat } from '~/kodeverk';
-import type { Vergetype } from '~/kodeverk/verge';
-import type { IsoDatoString } from '~/utils/dato';
+} from '@/generated';
+import type { DokumentMal, HendelseType, HendelseUndertype, Vilkårsresultat } from '@/kodeverk';
+import type { Vergetype } from '@/kodeverk/verge';
+import type { IsoDatoString } from '@/utils/dato';
+import type { Aktsomhetsvurdering, GodTro, Periode } from './tilbakekrevingstyper';
 
 export type PeriodeFaktaStegPayload = {
     periode: Periode;

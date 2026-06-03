@@ -4,15 +4,15 @@ import type {
     BehandlingsresultatstypeEnum,
     BehandlingstatusEnum,
     SchemaEnum4,
-} from '~/generated';
+} from '@/generated';
 
 import { render, screen } from '@testing-library/react';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { behandlingsstatuser, behandlingsresultater, behandlingsårsaker } from '~/typer/behandling';
+import { FagsakContext } from '@/context/FagsakContext';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@/typer/behandling';
 
 import { Faktaboks } from './Faktaboks';
 

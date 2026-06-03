@@ -1,44 +1,44 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { BehandlingApiHook } from '~/api/behandling';
-import type { BehandlingDto } from '~/generated';
-import type { SammenslåttPeriodeHook } from '~/hooks/useSammenslåPerioder';
-import type { Ressurs } from '~/typer/ressurs';
+import type { BehandlingApiHook } from '@/api/behandling';
+import type { BehandlingDto } from '@/generated';
+import type { SammenslåttPeriodeHook } from '@/hooks/useSammenslåPerioder';
+import type { Ressurs } from '@/typer/ressurs';
 import type {
-    BeregningsresultatPeriode,
     Beregningsresultat,
+    BeregningsresultatPeriode,
     VedtaksbrevAvsnitt,
-} from '~/typer/vedtakTyper';
+} from '@/typer/vedtakTyper';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { Underavsnittstype, Vurdering } from '~/kodeverk';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
+import { FagsakContext } from '@/context/FagsakContext';
+import { Underavsnittstype, Vurdering } from '@/kodeverk';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
 import {
     lagOppsummeringAvsnitt,
     lagPeriode2Avsnitt,
     lagPeriodeAvsnitt,
     lagVedaksbrevUnderavsnitt,
-} from '~/testdata/vedtakFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
-import { RessursStatus } from '~/typer/ressurs';
-import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
+} from '@/testdata/vedtakFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
+import { RessursStatus } from '@/typer/ressurs';
+import { HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
 
 import { VedtakContainer } from './VedtakContainer';
 import { VedtakProvider } from './VedtakContext';
 
 const mockUseBehandlingApi = vi.fn();
-vi.mock('~/api/behandling', () => ({
+vi.mock('@/api/behandling', () => ({
     useBehandlingApi: (): BehandlingApiHook => mockUseBehandlingApi(),
 }));
 
 const mockUseSammenslåPerioder = vi.fn();
-vi.mock('~/hooks/useSammenslåPerioder', () => ({
+vi.mock('@/hooks/useSammenslåPerioder', () => ({
     useSammenslåPerioder: (): SammenslåttPeriodeHook => mockUseSammenslåPerioder(),
 }));
 

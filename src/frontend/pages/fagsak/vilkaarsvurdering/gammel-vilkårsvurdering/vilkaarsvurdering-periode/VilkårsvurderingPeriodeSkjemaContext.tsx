@@ -1,24 +1,24 @@
+import type { Skjema } from '@/hooks/skjema';
+import type { Aktsomhetsvurdering, GodTro, SærligeGrunnerDto } from '@/typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
-import type { Skjema } from '~/hooks/skjema';
-import type { Aktsomhetsvurdering, GodTro, SærligeGrunnerDto } from '~/typer/tilbakekrevingstyper';
 
 import {
     type Avhengigheter,
-    feil,
     type FeltState,
+    feil,
     ok,
     useFelt,
     useSkjema,
     Valideringsstatus,
-} from '~/hooks/skjema';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
-import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
+} from '@/hooks/skjema';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@/kodeverk';
+import { SkalUnnlates } from '@/typer/tilbakekrevingstyper';
 import {
-    parseStringToNumber,
     erFeltetEmpty,
+    parseStringToNumber,
     validerNummerFelt,
     validerTekstFeltMaksLengde,
-} from '~/utils';
+} from '@/utils';
 
 export const EGENDEFINERT = 'Egendefinert';
 export const ANDELER = ['30', '50', '70', EGENDEFINERT];
@@ -506,5 +506,6 @@ type VilkårsvurderingSkjemaDefinisjon = {
     grovtUaktsomIlleggeRenter: JaNeiOption | '';
 };
 
-export { useVilkårsvurderingPeriodeSkjema };
 export type { VilkårsvurderingSkjemaDefinisjon };
+
+export { useVilkårsvurderingPeriodeSkjema };

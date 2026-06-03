@@ -1,32 +1,33 @@
-/* eslint-disable @eslint-react/set-state-in-effect --
+/*
  * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
  * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
  * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
  * synkronisering.
  */
-import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
+
 import type {
     ForeslåVedtakStegPayload,
     ForhåndsvisVedtaksbrev,
     Fritekstavsnitt,
     PeriodeMedTekst,
-} from '~/typer/api';
-import type { Beregningsresultat, VedtaksbrevAvsnitt } from '~/typer/vedtakTyper';
+} from '@/typer/api';
+import type { Beregningsresultat, VedtaksbrevAvsnitt } from '@/typer/vedtakTyper';
+import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { useBehandlingApi } from '~/api/behandling';
-import { useDokumentApi } from '~/api/dokument';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { Avsnittstype, Underavsnittstype } from '~/kodeverk';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { isEmpty, validerTekstMaksLengde } from '~/utils';
-import { useStegNavigering } from '~/utils/sider';
+import { useBehandlingApi } from '@/api/behandling';
+import { useDokumentApi } from '@/api/dokument';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { Avsnittstype, Underavsnittstype } from '@/kodeverk';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { isEmpty, validerTekstMaksLengde } from '@/utils';
+import { useStegNavigering } from '@/utils/sider';
 
 const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[] => {
     // @ts-expect-error - klager på periode men er trygt p.g.s. filtreringen
@@ -63,18 +64,16 @@ const hentPerioderMedTekst = (skjemaData: AvsnittSkjemaData[]): PeriodeMedTekst[
                     fom: avs.fom,
                     tom: avs.tom,
                 },
-                faktaAvsnitt: fakta && !!fakta.fritekst ? fakta.fritekst : undefined,
+                faktaAvsnitt: fakta && fakta.fritekst ? fakta.fritekst : undefined,
                 foreldelseAvsnitt:
-                    foreldelse && !!foreldelse.fritekst ? foreldelse.fritekst : undefined,
+                    foreldelse && foreldelse.fritekst ? foreldelse.fritekst : undefined,
                 særligeGrunnerAvsnitt:
-                    særligeGrunner && !!særligeGrunner.fritekst
-                        ? særligeGrunner.fritekst
-                        : undefined,
+                    særligeGrunner && særligeGrunner.fritekst ? særligeGrunner.fritekst : undefined,
                 særligeGrunnerAnnetAvsnitt:
-                    sæerligeGrunnerAnnet && !!sæerligeGrunnerAnnet.fritekst
+                    sæerligeGrunnerAnnet && sæerligeGrunnerAnnet.fritekst
                         ? sæerligeGrunnerAnnet.fritekst
                         : undefined,
-                vilkårAvsnitt: vilkår && !!vilkår.fritekst ? vilkår.fritekst : undefined,
+                vilkårAvsnitt: vilkår && vilkår.fritekst ? vilkår.fritekst : undefined,
             };
         });
     return perioderMedTekst;
@@ -101,7 +100,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     useEffect(() => {
         hentBeregningsresultat();
         hentVedtaksbrevtekster();
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -338,4 +337,4 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
     };
 });
 
-export { VedtakProvider, useVedtak };
+export { useVedtak, VedtakProvider };

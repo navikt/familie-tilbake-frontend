@@ -1,4 +1,4 @@
-import type { InnloggetRolleEnum } from '~/generated';
+import type { InnloggetRolleEnum } from '@/generated';
 
 import { create } from 'zustand';
 

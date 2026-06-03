@@ -2,12 +2,12 @@ import type { FC } from 'react';
 
 import { Heading, VStack } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useActionBar } from '~/hooks/useActionBar';
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
-import { RessursStatus } from '~/typer/ressurs';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { Steginformasjon } from '@/komponenter/steginformasjon/StegInformasjon';
+import { RessursStatus } from '@/typer/ressurs';
 
 import { useFakta } from './FaktaContext';
 import { GammelFaktaSkjema } from './GammelFaktaSkjema';

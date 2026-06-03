@@ -1,24 +1,24 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { DokumentApiHook } from '~/api/dokument';
-import type { BehandlingDto, SpråkkodeEnum } from '~/generated';
+import type { DokumentApiHook } from '@/api/dokument';
+import type { BehandlingDto, SpråkkodeEnum } from '@/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { DokumentMal } from '~/kodeverk';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
-import { RessursStatus } from '~/typer/ressurs';
+import { FagsakContext } from '@/context/FagsakContext';
+import { DokumentMal } from '@/kodeverk';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
+import { RessursStatus } from '@/typer/ressurs';
 
 import { SendMelding } from './SendMelding';
 import { SendMeldingProvider } from './SendMeldingContext';
 
 const mockUseDokumentApi = vi.fn();
-vi.mock('~/api/dokument', () => ({
+vi.mock('@/api/dokument', () => ({
     useDokumentApi: (): DokumentApiHook => mockUseDokumentApi(),
 }));
 

@@ -1,34 +1,35 @@
-/* eslint-disable @eslint-react/set-state-in-effect --
+/*
  * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
  * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
  * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
  * synkronisering.
  */
-import type { PeriodeHandling } from './typer/periodeHandling';
-import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
+
 import type { AxiosError } from 'axios';
 import type { RefObject } from 'react';
-import type { VilkårdsvurderingStegPayload } from '~/typer/api';
-import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
+import type { VilkårdsvurderingStegPayload } from '@/typer/api';
+import type { VilkårsvurderingResponse } from '@/typer/tilbakekrevingstyper';
+import type { PeriodeHandling } from './typer/periodeHandling';
+import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useRef, useState } from 'react';
 
-import { useBehandlingApi } from '~/api/behandling';
-import { Feil } from '~/api/feil';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useFagsak } from '~/context/FagsakContext';
+import { useBehandlingApi } from '@/api/behandling';
+import { Feil } from '@/api/feil';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useFagsak } from '@/context/FagsakContext';
 import {
     behandlingHentVedtaksbrevQueryKey,
     behandlingHentVedtaksresultatQueryKey,
-} from '~/generated-new/@tanstack/react-query.gen';
-import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
-import { sorterFeilutbetaltePerioder } from '~/utils';
-import { useStegNavigering } from '~/utils/sider';
+} from '@/generated-new/@tanstack/react-query.gen';
+import { Aktsomhet, Vilkårsresultat } from '@/kodeverk';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { SkalUnnlates } from '@/typer/tilbakekrevingstyper';
+import { sorterFeilutbetaltePerioder } from '@/utils';
+import { useStegNavigering } from '@/utils/sider';
 
 export type VilkårsvurderingHook = {
     containerRef: RefObject<HTMLDivElement | null>;
@@ -94,7 +95,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         setErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
         setKanIlleggeRenter(kanIleggeRenter);
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -129,7 +130,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             );
             setBehandletPerioder(behandletPerioder);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentVilkårsvurdering = (): void => {
@@ -326,4 +327,4 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     };
 });
 
-export { VilkårsvurderingProvider, useVilkårsvurdering };
+export { useVilkårsvurdering, VilkårsvurderingProvider };

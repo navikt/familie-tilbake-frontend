@@ -1,5 +1,5 @@
-import type { ForhåndsvarselFormData } from './schema';
 import type { FC } from 'react';
+import type { ForhåndsvarselFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon } from '@navikt/aksel-icons';
@@ -9,18 +9,18 @@ import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { isoStringTilDate } from '~/utils/dato';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { isoStringTilDate } from '@/utils/dato';
 
 import { Fristinfo } from './Fristinfo';
 import { forhåndsvarselSchema, getDefaultValues, SkalSendesForhåndsvarsel } from './schema';
 import { ForhåndsvarselSkjema } from './skjema/ForhåndsvarselSkjema';
+import { UtsettFristModal } from './UtsettFristModal';
 import { useForhåndsvarselMutations } from './useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from './useForhåndsvarselQueries';
-import { UtsettFristModal } from './UtsettFristModal';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();

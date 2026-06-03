@@ -2,8 +2,8 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import { useState } from 'react';
 
-import { useDokumentApi } from '~/api/dokument';
-import { useSendMelding } from '~/komponenter/sidebar/sendMelding/SendMeldingContext';
+import { useDokumentApi } from '@/api/dokument';
+import { useSendMelding } from '@/komponenter/sidebar/sendMelding/SendMeldingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -11,8 +11,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '~/typer/ressurs';
-import { base64ToArrayBuffer } from '~/utils';
+} from '@/typer/ressurs';
+import { base64ToArrayBuffer } from '@/utils';
 
 type ForhåndsvisBrevHook = {
     visModal: boolean;

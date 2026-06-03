@@ -1,11 +1,11 @@
-import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import type { ApiRessurs, Ressurs } from '~/typer/ressurs';
-import type { Saksbehandler } from '~/typer/saksbehandler';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { ApiRessurs, Ressurs } from '@/typer/ressurs';
+import type { Saksbehandler } from '@/typer/saksbehandler';
 
 import constate from 'constate';
 import { useState } from 'react';
 
-import { preferredAxios, håndterApiRespons } from './axios';
+import { håndterApiRespons, preferredAxios } from './axios';
 
 export interface FamilieRequestConfig<SkjemaData> extends AxiosRequestConfig {
     data?: SkjemaData;

@@ -2,12 +2,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-vi.mock('~/api/brukerlenker');
+vi.mock('@/api/brukerlenker');
 
-import { hentBrukerlenkeBaseUrl, hentAInntektUrl } from '~/api/brukerlenker';
-import { useBehandlingStore } from '~/stores/behandlingStore';
-import { useFagsakStore } from '~/stores/fagsakStore';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
+import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '@/api/brukerlenker';
+import { useBehandlingStore } from '@/stores/behandlingStore';
+import { useFagsakStore } from '@/stores/fagsakStore';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { Header } from './Header';
 

@@ -1,4 +1,4 @@
-import { RessursStatus, type Ressurs } from '~/typer/ressurs';
+import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 
 import { hentFrontendFeilmelding } from './ressursUtils';
 

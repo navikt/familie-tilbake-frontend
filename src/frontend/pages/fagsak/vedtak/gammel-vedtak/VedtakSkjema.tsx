@@ -1,9 +1,9 @@
-import type { AvsnittSkjemaData } from './typer/vedtak';
 import type { FC } from 'react';
+import type { AvsnittSkjemaData } from './typer/vedtak';
 
 import { Heading, LocalAlert } from '@navikt/ds-react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 
 import { AvsnittSkjema, avsnittKey } from './AvsnittSkjema';
 

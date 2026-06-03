@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { type ActionBarConfig, useActionBarStore } from '~/stores/actionBarStore';
+import { type ActionBarConfig, useActionBarStore } from '@/stores/actionBarStore';
 
 /**
  * Hook for å deklarere ActionBar-konfigurasjon for et steg.

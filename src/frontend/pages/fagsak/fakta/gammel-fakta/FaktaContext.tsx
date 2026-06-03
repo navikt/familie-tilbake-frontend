@@ -1,31 +1,32 @@
-/* eslint-disable @eslint-react/set-state-in-effect --
+/*
  * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
  * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
  * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
  * synkronisering.
  */
+
+import type { HendelseType, HendelseUndertype } from '@/kodeverk';
+import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '@/typer/api';
+import type { FaktaResponse, VurderingAvBrukersUttalelse } from '@/typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData, Feilmelding } from './fakta';
-import type { HendelseType, HendelseUndertype } from '~/kodeverk';
-import type { FaktaStegPayload, PeriodeFaktaStegPayload } from '~/typer/api';
-import type { FaktaResponse, VurderingAvBrukersUttalelse } from '~/typer/tilbakekrevingstyper';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { useBehandlingApi } from '~/api/behandling';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
+import { useBehandlingApi } from '@/api/behandling';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
 import {
     DefinertFeilmelding,
     definerteFeilmeldinger,
     sorterFeilutbetaltePerioder,
     validerTekstMaksLengde,
-} from '~/utils';
-import { useStegNavigering } from '~/utils/sider';
+} from '@/utils';
+import { useStegNavigering } from '@/utils/sider';
 
 const _validerTekst3000 = validerTekstMaksLengde(3000);
 
@@ -64,7 +65,7 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FAKTA'));
         hentFakta();
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {

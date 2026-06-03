@@ -1,19 +1,19 @@
 import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
-import type { InnloggetRolleEnum } from '~/generated';
+import type { InnloggetRolleEnum } from '@/generated';
 
 import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
 import { Dropdown, HStack, InternalHeader, Spacer, Tag } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '~/api/brukerlenker';
-import { useHttp } from '~/api/http/HttpProvider';
-import { useApp } from '~/context/AppContext';
-import { useTheme } from '~/context/ThemeContext';
-import { useBehandlingStore } from '~/stores/behandlingStore';
-import { useFagsakStore } from '~/stores/fagsakStore';
-import { erHistoriskSide } from '~/utils/sider';
+import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '@/api/brukerlenker';
+import { useHttp } from '@/api/http/HttpProvider';
+import { useApp } from '@/context/AppContext';
+import { useTheme } from '@/context/ThemeContext';
+import { useBehandlingStore } from '@/stores/behandlingStore';
+import { useFagsakStore } from '@/stores/fagsakStore';
+import { erHistoriskSide } from '@/utils/sider';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
 

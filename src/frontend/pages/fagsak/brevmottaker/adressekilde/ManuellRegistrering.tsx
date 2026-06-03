@@ -1,12 +1,12 @@
 import type { FC } from 'react';
-import type { Land } from '~/komponenter/landvelger/Landvelger';
+import type { Land } from '@/komponenter/landvelger/Landvelger';
 
 import { Fieldset, HStack, LocalAlert, TextField, VStack } from '@navikt/ds-react';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useFormContext, get } from 'react-hook-form';
+import { get, useFormContext } from 'react-hook-form';
 
-import { Landvelger } from '~/komponenter/landvelger/Landvelger';
-import { MottakerType } from '~/typer/Brevmottaker';
+import { Landvelger } from '@/komponenter/landvelger/Landvelger';
+import { MottakerType } from '@/typer/Brevmottaker';
 
 type Props = {
     preutfyltNavn?: string;

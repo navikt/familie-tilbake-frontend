@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { HendelseType } from '~/kodeverk';
+import { HendelseType } from '@/kodeverk';
 
 import { PeriodeOppsummering } from './PeriodeOppsummering';
 

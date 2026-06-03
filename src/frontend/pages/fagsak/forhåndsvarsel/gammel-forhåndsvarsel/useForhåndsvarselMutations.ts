@@ -1,38 +1,38 @@
-import type { ForhåndsvarselFormData, UttalelseFormData } from './schema';
 import type { DefaultError, UseMutationResult } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import type {
-    BestillBrevDto,
-    BrukeruttalelseDto,
     BestillBrevData,
-    FristUtsettelseDto,
-    Options,
+    BestillBrevDto,
     BestillBrevResponse,
-    LagreBrukeruttalelseData,
-    LagreBrukeruttalelseResponse,
-    UtsettUttalelseFristData,
-    UtsettUttalelseFristResponse,
+    BrukeruttalelseDto,
+    ForhåndsvarselUnntakData,
+    ForhåndsvarselUnntakDto,
+    ForhåndsvarselUnntakResponse,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponse,
-    ForhåndsvarselUnntakDto,
-    ForhåndsvarselUnntakData,
-    ForhåndsvarselUnntakResponse,
-} from '~/generated';
-import type { Ressurs } from '~/typer/ressurs';
+    FristUtsettelseDto,
+    LagreBrukeruttalelseData,
+    LagreBrukeruttalelseResponse,
+    Options,
+    UtsettUttalelseFristData,
+    UtsettUttalelseFristResponse,
+} from '@/generated';
+import type { Ressurs } from '@/typer/ressurs';
+import type { ForhåndsvarselFormData, UttalelseFormData } from './schema';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { Feil } from '~/api/feil';
-import { useBehandling } from '~/context/BehandlingContext';
+import { Feil } from '@/api/feil';
+import { useBehandling } from '@/context/BehandlingContext';
 import {
     bestillBrevMutation,
+    forhåndsvarselUnntakMutation,
     forhåndsvisBrevMutation,
+    hentBehandlingQueryKey,
     lagreBrukeruttalelseMutation,
     utsettUttalelseFristMutation,
-    forhåndsvarselUnntakMutation,
-    hentBehandlingQueryKey,
-} from '~/generated/@tanstack/react-query.gen';
-import { useStegNavigering } from '~/utils/sider';
+} from '@/generated/@tanstack/react-query.gen';
+import { useStegNavigering } from '@/utils/sider';
 
 import { HarUttaltSeg, SkalSendesForhåndsvarsel } from './schema';
 

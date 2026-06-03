@@ -7,15 +7,15 @@ import type {
     VergeDto,
     VergeStegPayload,
     VilkårdsvurderingStegPayload,
-} from '~/typer/api';
-import type { Ressurs } from '~/typer/ressurs';
+} from '@/typer/api';
+import type { Ressurs } from '@/typer/ressurs';
 import type {
     FaktaResponse,
     ForeldelseResponse,
     VilkårsvurderingResponse,
-} from '~/typer/tilbakekrevingstyper';
-import type { Totrinnkontroll } from '~/typer/totrinnTyper';
-import type { Beregningsresultat, VedtaksbrevAvsnitt } from '~/typer/vedtakTyper';
+} from '@/typer/tilbakekrevingstyper';
+import type { Totrinnkontroll } from '@/typer/totrinnTyper';
+import type { Beregningsresultat, VedtaksbrevAvsnitt } from '@/typer/vedtakTyper';
 
 import { useHttp } from './http/HttpProvider';
 

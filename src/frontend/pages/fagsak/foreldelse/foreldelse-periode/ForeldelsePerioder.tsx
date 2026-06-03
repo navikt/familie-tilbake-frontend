@@ -1,10 +1,10 @@
-import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
-import type { ForeldelsePeriode } from '~/typer/tilbakekrevingstyper';
+import type { ForeldelsePeriode } from '@/typer/tilbakekrevingstyper';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
-import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
-import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
+import { TilbakeTidslinje } from '@/komponenter/tilbake-tidslinje/TilbakeTidslinje';
+import { useForeldelse } from '@/pages/fagsak/foreldelse/ForeldelseContext';
 
 import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 

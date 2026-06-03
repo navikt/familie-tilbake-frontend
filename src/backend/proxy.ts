@@ -1,6 +1,6 @@
-import type { TexasClient } from './backend/auth/texas';
 import type { NextFunction, Request, Response } from 'express';
 import type { ClientRequest, IncomingMessage } from 'http';
+import type { TexasClient } from './backend/auth/texas';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
@@ -18,7 +18,7 @@ const restream = (proxyReq: ClientRequest, req: IncomingMessage): void => {
     }
 };
 
-// eslint-disable-next-line
+// biome-ignore lint/suspicious/noExplicitAny: proxy-middleware mangler presis type
 export const doProxy: any = (target: string) => {
     return createProxyMiddleware({
         changeOrigin: true,

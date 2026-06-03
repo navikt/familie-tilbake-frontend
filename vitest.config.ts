@@ -9,7 +9,7 @@ export default defineConfig({
     cacheDir: '.vitest-cache',
     resolve: {
         alias: {
-            '~': frontendPath,
+            '@': frontendPath,
         },
     },
     test: {

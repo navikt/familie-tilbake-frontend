@@ -2,11 +2,12 @@ import type { FC } from 'react';
 
 import { BodyShort, Heading, Skeleton, Table } from '@navikt/ds-react';
 
-import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
+import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 
 export const FaktaSkeleton: FC = () => {
     return (
         <>
+            {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO a11y – aria-label på element uten rolle, ikke flagget av tidligere ESLint-oppsett */}
             <div className="flex flex-col gap-6" aria-label="Fakta om feilutbetaling">
                 <Heading size="medium">Fakta om feilutbetalingen</Heading>
                 <section

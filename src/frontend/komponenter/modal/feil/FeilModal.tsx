@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { Feil } from '~/api/feil';
+import type { Feil } from '@/api/feil';
 
 import { XMarkOctagonFillIcon } from '@navikt/aksel-icons';
-import { Button, Heading, Link, List, Modal, VStack, Box } from '@navikt/ds-react';
+import { Box, Button, Heading, Link, List, Modal, VStack } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useFagsak } from '~/context/FagsakContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useFagsak } from '@/context/FagsakContext';
 
 import { hentFeilObjekt } from './feilObjekt';
 import { hentStatus } from './hentStatus';

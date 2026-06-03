@@ -1,18 +1,18 @@
+import type { FaktaResponse } from '@/typer/tilbakekrevingstyper';
 import type { FaktaPeriodeSkjemaData, FaktaSkjemaData } from '../../fakta';
-import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { useBehandlingApi } from '~/api/behandling';
-import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingApi } from '@/api/behandling';
+import { useBehandling } from '@/context/BehandlingContext';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
     type Ressurs,
-} from '~/typer/ressurs';
-import { sorterFeilutbetaltePerioder } from '~/utils';
+} from '@/typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '@/utils';
 
 const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
     const behandling = useBehandling();
@@ -23,7 +23,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
 
     useEffect(() => {
         hentFakta();
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     const setInaktivFakta = (inaktivFakta?: FaktaResponse): void => {
@@ -55,7 +55,7 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
     const { gjerInaktiveFaktaKall } = useBehandlingApi();
 
     const hentFakta = (): void => {
-        // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
+        // setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
         setInaktiveFakta(byggHenterRessurs());
         gjerInaktiveFaktaKall(behandling.behandlingId)
             .then((respons: Ressurs<FaktaResponse[]>) => {

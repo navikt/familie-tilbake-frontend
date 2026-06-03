@@ -1,14 +1,14 @@
+import type { ForeldelsesvurderingstypeEnum } from '@/generated';
 import type { VilkårsvurderingPeriodeSkjemaData } from './typer/vilkårsvurdering';
-import type { ForeldelsesvurderingstypeEnum } from '~/generated';
 
 import { BodyShort, LocalAlert, type TimelinePeriodProps } from '@navikt/ds-react';
-import { useEffect, useState, type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
-import { Vilkårsresultat } from '~/kodeverk';
-import { TilbakeTidslinje } from '~/komponenter/tilbake-tidslinje/TilbakeTidslinje';
+import { Vilkårsresultat } from '@/kodeverk';
+import { TilbakeTidslinje } from '@/komponenter/tilbake-tidslinje/TilbakeTidslinje';
 
-import { VilkårsvurderingPeriodeSkjema } from './vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjema';
 import { useVilkårsvurdering } from './VilkårsvurderingContext';
+import { VilkårsvurderingPeriodeSkjema } from './vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjema';
 
 const finnPeriodeStatus = (
     periode: VilkårsvurderingPeriodeSkjemaData

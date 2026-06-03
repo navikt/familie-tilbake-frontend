@@ -1,22 +1,22 @@
-import type { FaktaOmFeilutbetaling } from '~/generated-new';
+import type { FaktaOmFeilutbetaling } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { behandlingFaktaQueryKey } from '~/generated-new/@tanstack/react-query.gen';
-import { Forhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/Forhåndsvarsel';
-import { useForhåndsvarselMutations } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
+import { FagsakContext } from '@/context/FagsakContext';
+import { behandlingFaktaQueryKey } from '@/generated-new/@tanstack/react-query.gen';
+import { Forhåndsvarsel } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/Forhåndsvarsel';
+import { useForhåndsvarselMutations } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
 import {
+    lagForhåndsvarselMutations,
     lagForhåndsvarselQueries,
     lagForhåndsvarselQueriesSendt,
-    lagForhåndsvarselMutations,
-} from '~/testdata/forhåndsvarselFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
+} from '@/testdata/forhåndsvarselFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 vi.mock('../useForhåndsvarselQueries', () => ({
     useForhåndsvarselQueries: vi.fn(),

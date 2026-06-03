@@ -2,8 +2,8 @@ import type { FC } from 'react';
 
 import { parseISO } from 'date-fns';
 
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '~/typer/ressurs';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '@/typer/ressurs';
 
 import { useHistorikk } from './HistorikkContext';
 import { HistorikkInnslag } from './HistorikkInnslag';

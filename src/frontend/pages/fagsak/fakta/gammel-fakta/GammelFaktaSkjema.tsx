@@ -1,6 +1,6 @@
-import type { FaktaSkjemaData } from './fakta';
 import type { FC } from 'react';
-import type { FaktaResponse } from '~/typer/tilbakekrevingstyper';
+import type { FaktaResponse } from '@/typer/tilbakekrevingstyper';
+import type { FaktaSkjemaData } from './fakta';
 
 import {
     BodyShort,
@@ -15,15 +15,15 @@ import {
     VStack,
 } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { HendelseType } from '~/kodeverk';
-import { HarBrukerUttaltSegValg } from '~/typer/tilbakekrevingstyper';
-import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { HendelseType } from '@/kodeverk';
+import { HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
+import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 
-import { FaktaPerioder } from './fakta-periode/FaktaPerioder';
 import { useFakta } from './FaktaContext';
 import { FaktaRevurdering } from './FaktaRevurdering';
+import { FaktaPerioder } from './fakta-periode/FaktaPerioder';
 
 type Props = {
     skjemaData: FaktaSkjemaData;

@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react';
-import type { Saksbehandler } from '~/typer/saksbehandler';
+import type { Saksbehandler } from '@/typer/saksbehandler';
 
 import { getCurrentScope, showReportDialog } from '@sentry/browser';
 import { captureException, withScope } from '@sentry/core';
 import { Component } from 'react';
 
-import { apiLoggFeil } from '~/api/axios';
-import { Serverfeil } from '~/pages/feilsider/serverfeil';
+import { apiLoggFeil } from '@/api/axios';
+import { Serverfeil } from '@/pages/feilsider/serverfeil';
 
 type Props = {
     autentisertSaksbehandler?: Saksbehandler;
@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
         return { hasError: true };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: React componentDidCatch gir utypet error/info
     componentDidCatch(error: any, info: any): void {
         console.log(error, info);
 

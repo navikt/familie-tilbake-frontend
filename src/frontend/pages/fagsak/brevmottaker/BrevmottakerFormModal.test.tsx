@@ -3,27 +3,24 @@ import type { UserEvent } from '@testing-library/user-event';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { MottakerType } from '~/typer/Brevmottaker';
+import { FagsakContext } from '@/context/FagsakContext';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { MottakerType } from '@/typer/Brevmottaker';
 
 import { BrevmottakerFormModal } from './BrevmottakerFormModal';
 
 const mockLagreBrevmottaker = vi.fn().mockResolvedValue({ success: true });
 
-vi.mock('~/hooks/useBrevmottakerApi', () => ({
+vi.mock('@/hooks/useBrevmottakerApi', () => ({
     useBrevmottakerApi: vi.fn(() => ({
         lagreBrevmottaker: mockLagreBrevmottaker,
     })),
 }));
 
 const renderBrevmottakerFormModal = async (
-    props: {
-        mode?: 'endre' | 'leggTil';
-        visBrevmottakerModal?: boolean;
-    } = {}
+    props: { mode?: 'endre' | 'leggTil'; visBrevmottakerModal?: boolean } = {}
 ): Promise<void> => {
     const defaultProps = {
         visBrevmottakerModal: true,

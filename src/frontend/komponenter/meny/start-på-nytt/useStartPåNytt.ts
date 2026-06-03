@@ -4,14 +4,14 @@ import type { RefObject } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 
-import { Feil } from '~/api/feil';
-import { useHttp, type FamilieRequest } from '~/api/http/HttpProvider';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { behandlingFaktaQueryKey } from '~/generated-new/@tanstack/react-query.gen';
-import { RessursStatus, type Ressurs } from '~/typer/ressurs';
-import { useStegNavigering } from '~/utils/sider';
+import { Feil } from '@/api/feil';
+import { type FamilieRequest, useHttp } from '@/api/http/HttpProvider';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { behandlingFaktaQueryKey } from '@/generated-new/@tanstack/react-query.gen';
+import { type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { useStegNavigering } from '@/utils/sider';
 
 const startPåNytt = async (
     request: FamilieRequest,

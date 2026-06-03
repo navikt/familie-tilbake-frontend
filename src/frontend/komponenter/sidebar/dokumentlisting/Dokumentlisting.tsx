@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { HenterData } from '~/komponenter/datalast/HenterData';
-import { RessursStatus } from '~/typer/ressurs';
-import { hentDatoRegistrertSendt } from '~/utils';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { HenterData } from '@/komponenter/datalast/HenterData';
+import { RessursStatus } from '@/typer/ressurs';
+import { hentDatoRegistrertSendt } from '@/utils';
 
 import { useDokumentlisting } from './DokumentlistingContext';
 import { JournalpostVisning } from './Journalpostvisning';

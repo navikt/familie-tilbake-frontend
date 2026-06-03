@@ -2,7 +2,7 @@ import type { FC, RefObject } from 'react';
 
 import { BodyLong, Button, Modal } from '@navikt/ds-react';
 
-import { MODAL_BREDDE } from '~/komponenter/meny/utils';
+import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 
 type BekreftelsesmodalTekster = {
     overskrift: string;

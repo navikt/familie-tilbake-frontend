@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import type { RessursByte } from '~/generated';
+import type { RessursByte } from '@/generated';
 
-import { Modal, Loader, Heading, LocalAlert } from '@navikt/ds-react';
+import { Heading, Loader, LocalAlert, Modal } from '@navikt/ds-react';
 
-import { type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { handlePdfData } from '~/utils/pdfUtils';
+import { type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { handlePdfData } from '@/utils/pdfUtils';
 
 type Props = {
     onRequestClose: () => void;
@@ -44,7 +44,7 @@ const Dokument: FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) =
             );
         case RessursStatus.Suksess: {
             // backend skal aldri svare med null som data for kall som har status suksess
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            // biome-ignore lint/style/noNonNullAssertion: backend svarer aldri med null data ved suksess
             const pdfSrc = handlePdfData(pdfdata.data!);
             return (
                 <iframe

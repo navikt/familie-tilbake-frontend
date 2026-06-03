@@ -1,6 +1,6 @@
-import type { TexasConfig } from './typer';
 import type { Express, Request, Response, Router } from 'express';
 import type { Counter, Registry } from 'prom-client';
+import type { TexasConfig } from './typer';
 
 import express from 'express';
 
@@ -10,11 +10,11 @@ import { konfigurerMetrikker } from './metrikker';
 import konfigurerRouter from './router';
 import { hentErforbindelsenTilValkeyTilgjengelig } from './utils';
 
+export { Counter } from 'prom-client';
+
 export * from './auth/authenticate';
 export * from './typer';
 export * from './utils';
-
-export { Counter } from 'prom-client';
 
 type App = {
     app: Express;

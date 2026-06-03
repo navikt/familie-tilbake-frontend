@@ -1,18 +1,18 @@
+import type { VilkårsvurderingResponse } from '@/typer/tilbakekrevingstyper';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
-import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { useBehandlingApi } from '~/api/behandling';
-import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandlingApi } from '@/api/behandling';
+import { useBehandling } from '@/context/BehandlingContext';
 import {
     byggFeiletRessurs,
     byggHenterRessurs,
     byggTomRessurs,
     type Ressurs,
-} from '~/typer/ressurs';
-import { sorterFeilutbetaltePerioder } from '~/utils';
+} from '@/typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '@/utils';
 
 const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = createUseContext(() => {
     const behandling = useBehandling();
@@ -23,7 +23,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
 
     useEffect(() => {
         hentVilkårsvurdering();
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     const setInaktivVilkårsvurdering = (
@@ -47,7 +47,7 @@ const [HistoriskVilkårsvurderingProvider, useHistoriskVilkårsvurdering] = crea
     const { gjerInaktiveVilkårsvurderingerKall } = useBehandlingApi();
 
     const hentVilkårsvurdering = (): void => {
-        // eslint-disable-next-line @eslint-react/set-state-in-effect -- setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
+        // setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
         setInaktiveVilkårsvurderinger(byggHenterRessurs());
         gjerInaktiveVilkårsvurderingerKall(behandling.behandlingId)
             .then((respons: Ressurs<VilkårsvurderingResponse[]>) => {

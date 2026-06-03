@@ -3,12 +3,12 @@ import type { FC } from 'react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-import { BehandlingProvider, finnBehandlingId } from '~/context/BehandlingContext';
-import { BehandlingStateProvider } from '~/context/BehandlingStateContext';
-import { useFagsak } from '~/context/FagsakContext';
-import { UlagretDataModal } from '~/komponenter/modal/UlagretDataModal';
-import { useBehandlingStore } from '~/stores/behandlingStore';
-import { useFagsakStore } from '~/stores/fagsakStore';
+import { BehandlingProvider, finnBehandlingId } from '@/context/BehandlingContext';
+import { BehandlingStateProvider } from '@/context/BehandlingStateContext';
+import { useFagsak } from '@/context/FagsakContext';
+import { UlagretDataModal } from '@/komponenter/modal/UlagretDataModal';
+import { useBehandlingStore } from '@/stores/behandlingStore';
+import { useFagsakStore } from '@/stores/fagsakStore';
 
 import { BehandlingContainer } from './Behandling';
 
@@ -36,7 +36,7 @@ export const FagsakContainer: FC = () => {
             setPersonIdent(undefined);
             resetFagsak();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [fagsystem, eksternFagsakId, bruker.personIdent, eksternBrukId]);
 
     if (!behandlingId) {

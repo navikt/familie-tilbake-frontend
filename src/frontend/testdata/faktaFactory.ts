@@ -1,9 +1,9 @@
 import {
-    HarBrukerUttaltSegValg,
-    Tilbakekrevingsvalg,
     type FaktaPeriode,
     type FaktaResponse,
-} from '~/typer/tilbakekrevingstyper';
+    HarBrukerUttaltSegValg,
+    Tilbakekrevingsvalg,
+} from '@/typer/tilbakekrevingstyper';
 
 export const lagFaktaPeriode = (overrides?: Partial<FaktaPeriode>): FaktaPeriode => ({
     periode: { fom: '2021-01-01', tom: '2021-04-30' },

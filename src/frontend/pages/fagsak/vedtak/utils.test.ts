@@ -1,5 +1,5 @@
+import type { Avsnitt, VedtaksbrevData, Vedtaksresultat } from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
-import type { Avsnitt, VedtaksbrevData, Vedtaksresultat } from '~/generated-new';
 
 import { describe, expect, test } from 'vitest';
 
@@ -96,7 +96,7 @@ describe('tilVedtaksbrevDataWritable', () => {
 
         const resultat = tilVedtaksbrevDataWritable(vedtaksbrevData, lagFormData());
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // biome-ignore lint/correctness/noUnusedVariables: destrukturering for å utelate felter
         const { sistOppdatert, hovedavsnitt, avsnitt, ...statiskeFelter } = vedtaksbrevData;
         expect(resultat).toMatchObject(statiskeFelter);
         expect(resultat.hovedavsnitt.hjemler).toEqual(vedtaksbrevData.hovedavsnitt.hjemler);

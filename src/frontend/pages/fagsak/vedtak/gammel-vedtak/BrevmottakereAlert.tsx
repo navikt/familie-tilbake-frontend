@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { Brevmottaker } from '~/generated';
+import type { Brevmottaker } from '@/generated';
 
 import { MagnifyingGlassIcon } from '@navikt/aksel-icons';
 import { Button, LocalAlert } from '@navikt/ds-react';
 
-import { BrevmottakerListe } from '~/komponenter/brevmottaker-liste/BrevmottakerListe';
-import { useStegNavigering } from '~/utils/sider';
+import { BrevmottakerListe } from '@/komponenter/brevmottaker-liste/BrevmottakerListe';
+import { useStegNavigering } from '@/utils/sider';
 
 type Props = {
     brevmottakere: Brevmottaker[];

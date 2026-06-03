@@ -1,12 +1,12 @@
 import type { FC } from 'react';
-import type { HenleggelseSkjemaDefinisjon } from '~/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
+import type { Skjema } from '@/hooks/skjema';
+import type { HenleggelseSkjemaDefinisjon } from '@/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { Detail, Link } from '@navikt/ds-react';
 import { useEffect } from 'react';
 
-import { type Skjema } from '~/hooks/skjema';
-import { PdfVisningModal } from '~/komponenter/pdf-visning-modal/PdfVisningModal';
+import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 
 import { useForhåndsvisHenleggelsesbrev } from './useForhåndsvisHenleggelsesbrev';
 
@@ -28,7 +28,7 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
         if (visModal) {
             hentBrev();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [visModal]);
 
     return kanForhåndsvise ? (

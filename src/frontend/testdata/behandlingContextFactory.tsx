@@ -1,13 +1,13 @@
 import type { FC, ReactNode } from 'react';
-import type { BehandlingStateContextType } from '~/context/BehandlingStateContext';
-import type { BehandlingDto } from '~/generated';
-import type { UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
+import type { BehandlingStateContextType } from '@/context/BehandlingStateContext';
+import type { BehandlingDto } from '@/generated';
+import type { UseUlagretEndringerReturn } from '@/hooks/useUlagretEndringer';
 
-import { BehandlingContext } from '~/context/BehandlingContext';
-import { BehandlingStateContext } from '~/context/BehandlingStateContext';
-import { useUlagretEndringer } from '~/hooks/useUlagretEndringer';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
-import { useActionBarConfig } from '~/stores/actionBarStore';
+import { BehandlingContext } from '@/context/BehandlingContext';
+import { BehandlingStateContext } from '@/context/BehandlingStateContext';
+import { useUlagretEndringer } from '@/hooks/useUlagretEndringer';
+import { ActionBar } from '@/komponenter/action-bar/ActionBar';
+import { useActionBarConfig } from '@/stores/actionBarStore';
 
 import { lagBehandling } from './behandlingFactory';
 
@@ -48,12 +48,15 @@ const lagBehandlingStateContext = (
         setIkkePersistertKomponent:
             overrides.setIkkePersistertKomponent ??
             ulagretEndringer?.setIkkePersistertKomponent ??
+            // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi i testdata
             ((): void => {}),
         nullstillIkkePersisterteKomponenter:
             overrides.nullstillIkkePersisterteKomponenter ??
             ulagretEndringer?.nullstillIkkePersisterteKomponenter ??
+            // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi i testdata
             ((): void => {}),
         innholdsbredde: overrides.innholdsbredde ?? 800,
+        // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi i testdata
         setInnholdsbredde: overrides.setInnholdsbredde ?? ((): void => {}),
     };
 };

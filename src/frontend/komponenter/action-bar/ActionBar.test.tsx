@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
+import { FagsakContext } from '@/context/FagsakContext';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
 
 import { ActionBar } from './ActionBar';
 

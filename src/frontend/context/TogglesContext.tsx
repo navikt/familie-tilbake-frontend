@@ -1,9 +1,9 @@
 import createUseContext from 'constate';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useHttp } from '~/api/http/HttpProvider';
-import { type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { hentFrontendFeilmelding } from '~/utils';
+import { useHttp } from '@/api/http/HttpProvider';
+import { type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { hentFrontendFeilmelding } from '@/utils';
 
 export enum ToggleName {
     Vilkårsvurdering = 'tilbakekreving-frontend.nytt-vilkaarsvurderingssteg',
@@ -39,7 +39,7 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
                 }
             })
             .catch(() => {
-                // eslint-disable-next-line @eslint-react/set-state-in-effect -- False positive: setState skjer i .catch og er derfor asynkront. Bør uansett migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
+                // False positive: setState skjer i .catch og er derfor asynkront. Bør uansett migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
                 setFeilmelding('Kunne ikke hente toggles');
             });
     }, [request]);

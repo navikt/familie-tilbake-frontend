@@ -1,15 +1,15 @@
 import type { FC } from 'react';
 
 import { Heading, Tag, VStack } from '@navikt/ds-react';
-import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
-import { useBehandling } from '~/context/BehandlingContext';
+import { useBehandling } from '@/context/BehandlingContext';
 import {
     behandlingFaktaOptions,
     behandlingFaktaQueryKey,
     behandlingOppdaterFaktaMutation,
-} from '~/generated-new/@tanstack/react-query.gen';
-import { formatCurrencyNoKr, formatterDatostring } from '~/utils';
+} from '@/generated-new/@tanstack/react-query.gen';
+import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 
 import { FaktaSkjema } from './FaktaSkjema';
 

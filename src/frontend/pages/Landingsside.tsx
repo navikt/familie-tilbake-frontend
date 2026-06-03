@@ -2,8 +2,8 @@ import type { FC } from 'react';
 
 import { BodyLong, Heading, Tag } from '@navikt/ds-react';
 
-import LandingssideImageUrl from '~/images/dokumenter.svg';
-import { Image } from '~/komponenter/image/Image';
+import LandingssideImageUrl from '@/images/dokumenter.svg';
+import { Image } from '@/komponenter/image/Image';
 
 const ytelser = [
     'Arbeidsavklaringspenger',

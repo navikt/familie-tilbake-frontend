@@ -1,13 +1,13 @@
-import type { VedtaksbrevFormData } from './schema';
 import type { TextareaProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { FieldPath, SubmitHandler } from 'react-hook-form';
-import type { Avsnitt, PakrevdBegrunnelse, VedtaksbrevData } from '~/generated-new';
+import type { Avsnitt, PakrevdBegrunnelse, VedtaksbrevData } from '@/generated-new';
+import type { VedtaksbrevFormData } from './schema';
 
 import { Textarea } from '@navikt/ds-react';
 import { get, useFormContext } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 
 import { VEDTAKSBREV_FORM_ID } from './Vedtaksbrev';
 

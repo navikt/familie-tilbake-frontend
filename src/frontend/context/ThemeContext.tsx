@@ -27,6 +27,7 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue>({
     theme: 'light',
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi for context
     toggleTheme: () => {},
 });
 

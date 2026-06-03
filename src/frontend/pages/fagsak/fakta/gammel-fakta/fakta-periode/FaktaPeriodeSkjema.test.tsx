@@ -1,24 +1,24 @@
+import type { BehandlingApiHook } from '@/api/behandling';
+import type { Ressurs } from '@/typer/ressurs';
 import type { FaktaPeriodeSkjemaData } from '../fakta';
-import type { BehandlingApiHook } from '~/api/behandling';
-import type { Ressurs } from '~/typer/ressurs';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { HendelseUndertype, HendelseType } from '~/kodeverk';
-import { FaktaProvider } from '~/pages/fagsak/fakta/gammel-fakta/FaktaContext';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { lagFaktaPeriode } from '~/testdata/faktaFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
-import { RessursStatus } from '~/typer/ressurs';
-import { HarBrukerUttaltSegValg, type FaktaResponse } from '~/typer/tilbakekrevingstyper';
+import { FagsakContext } from '@/context/FagsakContext';
+import { HendelseType, HendelseUndertype } from '@/kodeverk';
+import { FaktaProvider } from '@/pages/fagsak/fakta/gammel-fakta/FaktaContext';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { lagFaktaPeriode } from '@/testdata/faktaFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
+import { RessursStatus } from '@/typer/ressurs';
+import { type FaktaResponse, HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
 
 import { FaktaPeriodeSkjema } from './FaktaPeriodeSkjema';
 
-vi.mock('~/api/behandling', () => ({
+vi.mock('@/api/behandling', () => ({
     useBehandlingApi: (): Partial<BehandlingApiHook> => ({
         gjerFaktaKall: vi.fn().mockResolvedValue({
             status: RessursStatus.Suksess,

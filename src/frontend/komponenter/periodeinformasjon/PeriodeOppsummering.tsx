@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import type { HendelseType } from '~/kodeverk';
+import type { HendelseType } from '@/kodeverk';
 
 import { BodyShort } from '@navikt/ds-react';
 
-import { hendelsetyper } from '~/kodeverk';
-import { formatterDatostring, hentPeriodelengde, formatCurrencyNoKr } from '~/utils';
+import { hendelsetyper } from '@/kodeverk';
+import { formatCurrencyNoKr, formatterDatostring, hentPeriodelengde } from '@/utils';
 
 type Props = {
     fom: string;

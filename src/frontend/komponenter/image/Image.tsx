@@ -1,4 +1,4 @@
-import type { FC, MouseEvent, KeyboardEvent } from 'react';
+import type { FC, KeyboardEvent, MouseEvent } from 'react';
 
 import { useCallback, useState } from 'react';
 
@@ -42,7 +42,8 @@ export const Image: FC<Props> = ({
     const imgSource = srcHover && isHovering ? srcHover : src;
 
     const image = (
-        <img // eslint-disable-line jsx-a11y/no-noninteractive-element-interactions
+        // biome-ignore lint/a11y/noNoninteractiveElementInteractions: hover/fokus-håndtering på bilde er tilsiktet
+        <img
             src={imgSource}
             alt={altText}
             onMouseOver={onFocus}

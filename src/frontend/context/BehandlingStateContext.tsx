@@ -1,10 +1,10 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '~/generated/types.gen';
+import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '@/generated/types.gen';
 
 import { createContext, use, useMemo, useState } from 'react';
 
-import { useUlagretEndringer, type UseUlagretEndringerReturn } from '~/hooks/useUlagretEndringer';
-import { SYNLIGE_STEG } from '~/utils/sider';
+import { type UseUlagretEndringerReturn, useUlagretEndringer } from '@/hooks/useUlagretEndringer';
+import { SYNLIGE_STEG } from '@/utils/sider';
 
 import { useBehandling } from './BehandlingContext';
 

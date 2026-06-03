@@ -1,4 +1,4 @@
-import type { Vedtaksresultat } from '~/generated-new';
+import type { Vedtaksresultat } from '@/generated-new';
 
 export const vedtaksresultater: Record<Vedtaksresultat, string> = {
     FullTilbakebetaling: 'Full tilbakebetaling',

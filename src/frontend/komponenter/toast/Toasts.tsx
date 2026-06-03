@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { useApp } from '~/context/AppContext';
+import { useApp } from '@/context/AppContext';
 
 import { Toast } from './Toast';
 

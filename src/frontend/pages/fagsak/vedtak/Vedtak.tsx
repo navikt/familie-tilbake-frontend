@@ -1,26 +1,26 @@
-import type { VedtaksbrevFormData } from './schema';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
+import type { VedtaksbrevFormData } from './schema';
 
 import { Heading, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import {
     behandlingForeslaaVedtakMutation,
     behandlingHentVedtaksbrevOptions,
     behandlingHentVedtaksresultatOptions,
-} from '~/generated-new/@tanstack/react-query.gen';
-import { useActionBar } from '~/hooks/useActionBar';
-import { vedtaksresultater } from '~/kodeverk';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { useStegNavigering } from '~/utils/sider';
+} from '@/generated-new/@tanstack/react-query.gen';
+import { useActionBar } from '@/hooks/useActionBar';
+import { vedtaksresultater } from '@/kodeverk';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { useStegNavigering } from '@/utils/sider';
 
 import { vedtaksresultatFarger } from './utils';
-import { Vedtaksbrev, VEDTAKSBREV_FORM_ID } from './Vedtaksbrev';
 import { VedtakSkeleton } from './VedtakSkeleton';
+import { VEDTAKSBREV_FORM_ID, Vedtaksbrev } from './Vedtaksbrev';
 import { Vedtakstabell } from './Vedtakstabell';
 import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
 

@@ -1,6 +1,6 @@
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
-import type { PeriodeSkjemaData } from '~/typer/periodeSkjemaData';
+import type { PeriodeSkjemaData } from '@/typer/periodeSkjemaData';
 
 import {
     BodyShort,
@@ -13,8 +13,8 @@ import {
 } from '@navikt/ds-react';
 import { endOfMonth, subMonths } from 'date-fns';
 
-import { formatterDatoDDMMYYYY, formatterDatostring } from '~/utils';
-import { dateTilIsoDatoString, isoStringTilDate } from '~/utils/dato';
+import { formatterDatoDDMMYYYY, formatterDatostring } from '@/utils';
+import { dateTilIsoDatoString, isoStringTilDate } from '@/utils/dato';
 
 type Props = {
     periode: PeriodeSkjemaData;

@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import type { KjønnEnum } from '~/generated';
+import type { KjønnEnum } from '@/generated';
 
 import {
     BagdeIcon,
@@ -12,8 +12,8 @@ import {
 } from '@navikt/aksel-icons';
 import { CopyButton, ExpansionCard, Tag } from '@navikt/ds-react';
 
-import { useFagsak } from '~/context/FagsakContext';
-import { formatterDatostring, hentAlder } from '~/utils';
+import { useFagsak } from '@/context/FagsakContext';
+import { formatterDatostring, hentAlder } from '@/utils';
 
 import { ICON_PROPS } from '../utils';
 
@@ -82,6 +82,7 @@ export const BrukerInformasjon: FC<Props> = ({ open, onToggle }) => {
                         <BagdeIcon {...ICON_PROPS} />
                         {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
                     </dt>
+                    {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO a11y – aria-label på element uten rolle, ikke flagget av tidligere ESLint-oppsett */}
                     <dd
                         className="text-ax-medium flex flex-row gap-2 items-center"
                         aria-label={formatterPersonIdent(bruker.personIdent).split('').join(' ')}
@@ -119,6 +120,7 @@ export const BrukerInformasjon: FC<Props> = ({ open, onToggle }) => {
                                 <Buildings2Icon {...ICON_PROPS} />
                                 Org.nummer
                             </dt>
+                            {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO a11y – aria-label på element uten rolle, ikke flagget av tidligere ESLint-oppsett */}
                             <dd
                                 className="text-ax-medium flex flex-row gap-2 items-center"
                                 aria-label={institusjon.organisasjonsnummer.split('').join(' ')}

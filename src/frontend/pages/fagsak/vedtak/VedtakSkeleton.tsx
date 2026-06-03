@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { Heading, HStack, Skeleton, VStack } from '@navikt/ds-react';
 
-import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
+import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 
 export const VedtakSkeleton: FC = () => {
     return (

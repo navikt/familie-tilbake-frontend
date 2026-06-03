@@ -11,12 +11,12 @@ import {
     VStack,
 } from '@navikt/ds-react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useActionBar } from '~/hooks/useActionBar';
-import { Vergetype, vergetyper } from '~/kodeverk/verge';
-import { HenterData } from '~/komponenter/datalast/HenterData';
-import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
-import { hentFrontendFeilmelding } from '~/utils';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { Vergetype, vergetyper } from '@/kodeverk/verge';
+import { HenterData } from '@/komponenter/datalast/HenterData';
+import { Steginformasjon } from '@/komponenter/steginformasjon/StegInformasjon';
+import { hentFrontendFeilmelding } from '@/utils';
 
 import { useVerge } from './VergeContext';
 

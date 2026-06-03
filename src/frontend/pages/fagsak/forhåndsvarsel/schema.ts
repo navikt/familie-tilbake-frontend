@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { zVarslingsunntak } from '~/generated-new/zod.gen';
+import { zVarslingsunntak } from '@/generated-new/zod.gen';
 
 import { brukeruttalelseFelter } from './brukeruttalelseSchema';
 

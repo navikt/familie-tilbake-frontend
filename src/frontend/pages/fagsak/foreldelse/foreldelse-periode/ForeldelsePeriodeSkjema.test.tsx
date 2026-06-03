@@ -1,13 +1,13 @@
-import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 import type { ByRoleMatcher, ByRoleOptions } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { ForeldelseHook } from '~/pages/fagsak/foreldelse/ForeldelseContext';
+import type { ForeldelseHook } from '@/pages/fagsak/foreldelse/ForeldelseContext';
+import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagForeldelsePeriodeSkjemaData } from '~/testdata/foreldelseFactory';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagForeldelsePeriodeSkjemaData } from '@/testdata/foreldelseFactory';
 
 import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 

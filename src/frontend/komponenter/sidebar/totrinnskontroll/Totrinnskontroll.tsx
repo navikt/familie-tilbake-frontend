@@ -1,16 +1,16 @@
-import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 import type { FC, MouseEvent } from 'react';
-import type { SynligSteg } from '~/utils/sider';
+import type { SynligSteg } from '@/utils/sider';
+import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 
-import { BodyShort, Button, Link, LocalAlert, Radio, Textarea, RadioGroup } from '@navikt/ds-react';
+import { BodyShort, Button, Link, LocalAlert, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
-import { Steginformasjon } from '~/komponenter/steginformasjon/StegInformasjon';
-import { behandlingssteg } from '~/typer/behandling';
-import { RessursStatus } from '~/typer/ressurs';
-import { finnSideForSteg } from '~/utils/sider';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesmodal';
+import { Steginformasjon } from '@/komponenter/steginformasjon/StegInformasjon';
+import { behandlingssteg } from '@/typer/behandling';
+import { RessursStatus } from '@/typer/ressurs';
+import { finnSideForSteg } from '@/utils/sider';
 
 import { useTotrinnskontroll } from './TotrinnskontrollContext';
 import {

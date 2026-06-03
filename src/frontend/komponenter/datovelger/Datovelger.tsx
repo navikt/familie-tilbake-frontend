@@ -1,11 +1,11 @@
 import type { FC, ReactNode } from 'react';
-import type { Felt } from '~/hooks/skjema';
+import type { Felt } from '@/hooks/skjema';
 
 import { DatePicker, useDatepicker } from '@navikt/ds-react';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
 import { useState } from 'react';
 
-import { dagensDato, Datoformat } from '~/utils/dato';
+import { Datoformat, dagensDato } from '@/utils/dato';
 
 type Props = {
     felt: Felt<Date | undefined>;

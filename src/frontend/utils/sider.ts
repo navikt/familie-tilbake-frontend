@@ -1,9 +1,9 @@
-import type { BehandlingDto, BehandlingsstegEnum, BehandlingsstegsinfoDto } from '~/generated';
+import type { BehandlingDto, BehandlingsstegEnum, BehandlingsstegsinfoDto } from '@/generated';
 
 import { useNavigate } from 'react-router';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useFagsak } from '~/context/FagsakContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useFagsak } from '@/context/FagsakContext';
 
 export type SynligSteg = {
     href: string;

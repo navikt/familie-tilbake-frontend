@@ -1,17 +1,17 @@
 import type { FC } from 'react';
-import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { VilkårsvurderingSkjemaDefinisjon } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
-import { Aktsomhet, aktsomheter, Vilkårsresultat } from '~/kodeverk';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { type Skjema, Valideringsstatus } from '@/hooks/skjema';
+import { Aktsomhet, aktsomheter, Vilkårsresultat } from '@/kodeverk';
+import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import {
     OptionJA,
     OptionNEI,
-} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
-import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
+} from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { GradForsettSkjema } from './GradForsettSkjema';
 import { GradUaktsomhetSkjema } from './GradUaktsomhetSkjema';

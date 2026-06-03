@@ -1,10 +1,10 @@
-import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
+import type { IkkeVurdertFormData } from './schema';
 
 import { Link, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 
 import { Brukeruttalelse } from './Brukeruttalelse';
 

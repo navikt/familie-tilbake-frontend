@@ -1,40 +1,40 @@
 import type { FC, ReactNode, RefObject } from 'react';
-import type { BehandlingsstegsinfoDto } from '~/generated';
+import type { BehandlingsstegsinfoDto } from '@/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, Link, LocalAlert, VStack } from '@navikt/ds-react';
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useFagsak } from '~/context/FagsakContext';
-import { ToggleName, useToggles } from '~/context/TogglesContext';
-import { useActionBar } from '~/hooks/useActionBar';
-import { ActionBar } from '~/komponenter/action-bar/ActionBar';
-import { ActionBarSkeleton } from '~/komponenter/action-bar/ActionBarSkeleton';
-import { StegErrorBoundary } from '~/komponenter/error-boundary/StegErrorBoundary';
-import { lazyImportMedRetry } from '~/komponenter/feilInnlasting/FeilInnlasting';
-import { FixedAlert } from '~/komponenter/fixedAlert/FixedAlert';
-import { PåVentModal } from '~/komponenter/modal/på-vent/PåVentModal';
-import { Stegflyt } from '~/komponenter/stegflyt/Stegflyt';
-import { IkkeFunnet } from '~/pages/feilsider/IkkeFunnet';
-import { useActionBarConfig } from '~/stores/actionBarStore';
-import { useBehandlingStore } from '~/stores/behandlingStore';
-import { useGlobalAlerts, useLukkGlobalAlert } from '~/stores/globalAlertStore';
-import { venteårsaker } from '~/typer/behandling';
-import { formatterDatostring } from '~/utils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useFagsak } from '@/context/FagsakContext';
+import { ToggleName, useToggles } from '@/context/TogglesContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { ActionBar } from '@/komponenter/action-bar/ActionBar';
+import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
+import { StegErrorBoundary } from '@/komponenter/error-boundary/StegErrorBoundary';
+import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting';
+import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
+import { PåVentModal } from '@/komponenter/modal/på-vent/PåVentModal';
+import { Stegflyt } from '@/komponenter/stegflyt/Stegflyt';
+import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
+import { useActionBarConfig } from '@/stores/actionBarStore';
+import { useBehandlingStore } from '@/stores/behandlingStore';
+import { useGlobalAlerts, useLukkGlobalAlert } from '@/stores/globalAlertStore';
+import { venteårsaker } from '@/typer/behandling';
+import { formatterDatostring } from '@/utils';
 import {
     erHistoriskSide,
     erØnsketSideTilgjengelig,
     SYNLIGE_STEG,
     utledBehandlingSide,
-} from '~/utils/sider';
+} from '@/utils/sider';
 
 import { Fakta } from './fakta/Fakta';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
-import { HistoriskFaktaProvider } from './fakta/gammel-fakta/fakta-periode/historikk/HistoriskFaktaContext';
 import { FaktaProvider } from './fakta/gammel-fakta/FaktaContext';
+import { HistoriskFaktaProvider } from './fakta/gammel-fakta/fakta-periode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
 import { ForhåndsvarselSkeleton } from './forhåndsvarsel/gammel-forhåndsvarsel/ForhåndsvarselSkeleton';
 import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
@@ -79,7 +79,9 @@ const VilkårsvurderingContainer = lazyImportMedRetry(
 );
 const HistoriskVilkårsvurderingContainer = lazyImportMedRetry(
     () =>
-        import('./vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer'),
+        import(
+            './vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContainer'
+        ),
     'HistoriskVilkårsvurderingContainer'
 );
 const Sidebar = lazyImportMedRetry(() => import('../../komponenter/sidebar/Sidebar'), 'Sidebar');

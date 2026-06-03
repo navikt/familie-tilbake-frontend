@@ -1,10 +1,9 @@
 import type { BrukeruttalelseFormData } from './brukeruttalelseSchema';
 import type { FC } from 'react';
-import type { SubmitHandler } from 'react-hook-form';
-import type { ForhaandsvarselErSendt, Uttalelse } from '~/generated-new';
+import type { ForhaandsvarselErSendt, Uttalelse } from '@/generated-new';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
 import { Brukeruttalelse } from './Brukeruttalelse';
 import { brukeruttalelseSchema, tilUttalelseSkjema } from './brukeruttalelseSchema';

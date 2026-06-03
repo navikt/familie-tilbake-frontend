@@ -2,8 +2,8 @@ import type { FC } from 'react';
 
 import { InlineMessage, LocalAlert } from '@navikt/ds-react';
 
-import { Serverfeil } from '~/pages/feilsider/serverfeil';
-import { type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { Serverfeil } from '@/pages/feilsider/serverfeil';
+import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 
 import { HenterData } from './HenterData';
 

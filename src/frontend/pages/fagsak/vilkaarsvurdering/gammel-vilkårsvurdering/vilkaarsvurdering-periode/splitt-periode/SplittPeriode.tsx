@@ -1,14 +1,14 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC } from 'react';
-import type { BeregnSplittetPeriodeRespons, Periode } from '~/typer/tilbakekrevingstyper';
+import type { BeregnSplittetPeriodeRespons, Periode } from '@/typer/tilbakekrevingstyper';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../../typer/vilkårsvurdering';
 
 import { SplitHorizontalIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { DelOppPeriode, useDelOppPeriode } from '~/komponenter/modal/del-opp-periode';
-import { flyttDatoISODateStr } from '~/utils';
+import { DelOppPeriode, useDelOppPeriode } from '@/komponenter/modal/del-opp-periode';
+import { flyttDatoISODateStr } from '@/utils';
 
 const konverterPeriode = (periode: VilkårsvurderingPeriodeSkjemaData): TimelinePeriodProps => {
     return {
@@ -69,13 +69,13 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
                             erSplittet: true,
                         },
                     ];
-                    // eslint-disable-next-line @eslint-react/set-state-in-effect -- False positive: kalles i en bruker-callback via useDelOppPeriode, ikke i en useEffect. Ville bli løst ved migrering til react-hook-form.
+                    // False positive: kalles i en bruker-callback via useDelOppPeriode, ikke i en useEffect. Ville bli løst ved migrering til react-hook-form.
                     setSplittetPerioder(nyePerioder);
                     setTidslinjeRader([
                         [konverterPeriode(nyePerioder[0]), konverterPeriode(nyePerioder[1])],
                     ]);
                 } else {
-                    // eslint-disable-next-line @eslint-react/set-state-in-effect -- Se kommentar over.
+                    // Se kommentar over.
                     setSplittetPerioder([periode]);
                     setSplittDato(periode.periode.fom);
                 }
@@ -114,7 +114,7 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
         if (periode.periode.fom) {
             onChangeDato(periode.periode.fom);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode.periode.fom]);
 
     return periode && tidslinjeRader ? (

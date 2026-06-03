@@ -4,9 +4,9 @@ import { LeaveIcon } from '@navikt/aksel-icons';
 import { BodyLong, Heading, HStack, Link, VStack } from '@navikt/ds-react';
 import { useLocation } from 'react-router';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useFagsak } from '~/context/FagsakContext';
-import { Behandlingsmeny } from '~/komponenter/meny/Meny';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useFagsak } from '@/context/FagsakContext';
+import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 
 export const HistoriskeVurderingermeny: FC = () => {
     const { eksternBrukId } = useBehandling();

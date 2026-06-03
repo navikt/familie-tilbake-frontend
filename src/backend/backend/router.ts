@@ -1,5 +1,5 @@
-import type { TexasClient } from './auth/texas';
 import type { Router } from 'express';
+import type { TexasClient } from './auth/texas';
 
 import express from 'express';
 

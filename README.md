@@ -107,8 +107,9 @@ TILBAKE_SCOPE=api://dev-gcp.tilbake.familie-tilbake/.default
 | `pnpm build:server` | Kompiler backend med TypeScript |
 | `pnpm test` | Kjør tester med Vitest |
 | `pnpm test:watch` | Kjør tester i watch-modus |
-| `pnpm lint` | Kjør ESLint |
-| `pnpm lint:fix` | Kjør ESLint med automatisk fiks |
+| `pnpm lint` | Kjør Biome (lint + format-sjekk + import-sortering) |
+| `pnpm lint:fix` | Kjør Biome med automatisk fiks |
+| `pnpm format` | Formater koden med Biome |
 | `pnpm generate-types` | Generer TypeScript-typer, React Query hooks og Zod-schemas fra OpenAPI-spec |
 
 ## Prosjektstruktur
@@ -172,10 +173,10 @@ pnpm test:watch     # Watch-modus
 
 ## Kodekvalitet
 
-- **ESLint** med TypeScript ESLint, React, JSX a11y og Prettier-plugins
-- **Prettier** for formatering
-- **Husky** + **lint-staged** kjører lint og formatering automatisk ved commit
-- Path alias `~/` peker til `src/frontend/` — dype relative imports (`../../../`) er blokkert via ESLint
+- **Biome** for linting, formatering og import-sortering (erstatter ESLint + Prettier)
+- **Husky** + **lint-staged** kjører Biome automatisk ved commit
+- `pnpm typecheck` kjører `tsc --noEmit` (Biome typesjekker ikke)
+- Path alias `@/` peker til `src/frontend/` — dype relative imports (`../../../`) er blokkert via Biome (`noRestrictedImports`)
 - Kjør `npx knip` for å se ubrukt kode. Satt opp med `./knip.config.ts`.
 
 ## Relaterte repoer

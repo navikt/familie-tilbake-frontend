@@ -1,22 +1,22 @@
 import type { FC } from 'react';
-import type { Brevmottaker } from '~/typer/Brevmottaker';
+import type { Brevmottaker } from '@/typer/Brevmottaker';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Modal, VStack, Button, Fieldset, Select } from '@navikt/ds-react';
+import { Alert, Button, Fieldset, Modal, Select, VStack } from '@navikt/ds-react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useBrevmottakerApi } from '~/hooks/useBrevmottakerApi';
-import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '~/typer/Brevmottaker';
+import { useBrevmottakerApi } from '@/hooks/useBrevmottakerApi';
+import { AdresseKilde, MottakerType, mottakerTypeVisningsnavn } from '@/typer/Brevmottaker';
 
 import { BrukerMedUtenlandskAdresse } from './mottaker/BrukerMedUtenlandskAdresse';
 import { Dødsbo } from './mottaker/Dødsbo';
 import { Fullmektig } from './mottaker/Fullmektig';
 import { Verge } from './mottaker/Verge';
 import {
+    type BrevmottakerFormData,
     brevmottakerFormDataInputSchema,
     brevmottakerFormDataSchema,
-    type BrevmottakerFormData,
 } from './schema/schema';
 
 type BrevmottakerFormModalProps = {

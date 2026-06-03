@@ -1,10 +1,10 @@
-import type { HenleggelseSkjemaDefinisjon } from '~/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
+import type { Skjema } from '@/hooks/skjema';
+import type { HenleggelseSkjemaDefinisjon } from '@/komponenter/meny/henlegg/henleggModal/HenleggModalContext';
 
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
-import { useDokumentApi } from '~/api/dokument';
-import { useBehandling } from '~/context/BehandlingContext';
-import { type Skjema } from '~/hooks/skjema';
+import { useDokumentApi } from '@/api/dokument';
+import { useBehandling } from '@/context/BehandlingContext';
 import {
     byggDataRessurs,
     byggFeiletRessurs,
@@ -12,8 +12,8 @@ import {
     byggTomRessurs,
     type Ressurs,
     RessursStatus,
-} from '~/typer/ressurs';
-import { base64ToArrayBuffer } from '~/utils';
+} from '@/typer/ressurs';
+import { base64ToArrayBuffer } from '@/utils';
 
 type ForhåndsvisHenleggelsesbrevHook = {
     visModal: boolean;

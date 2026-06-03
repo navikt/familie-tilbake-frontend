@@ -1,7 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { Varselbrevtekst } from '~/generated';
-import type { UseForhåndsvarselMutationsReturn } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
-import type { UseForhåndsvarselQueriesReturn } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
+import type { Varselbrevtekst } from '@/generated';
+import type { UseForhåndsvarselMutationsReturn } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
+import type { UseForhåndsvarselQueriesReturn } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
 
 import { vi } from 'vitest';
 

@@ -1,5 +1,5 @@
-import type { SessionKonfigurasjon } from '../typer';
 import type { Express, RequestHandler } from 'express';
+import type { SessionKonfigurasjon } from '../typer';
 
 import { RedisStore } from 'connect-redis';
 import session from 'express-session';
@@ -12,7 +12,7 @@ import {
     settErforbindelsenTilValkeyTilgjengelig,
 } from '../utils';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Redis-klient mangler presise typer
 const redisClientForAiven = (sessionKonfigurasjon: SessionKonfigurasjon): any => {
     const pingHvertFjerdeMinutt = 1000 * 60 * 4; // Connection blir ugyldig etter fem minutter, pinger derfor hvert fjerde minutt
     const redisClient = createClient({

@@ -1,20 +1,20 @@
 import type { FC } from 'react';
-import type { Skjema } from '~/hooks/skjema';
-import type { VilkårsvurderingSkjemaDefinisjon } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import type { Skjema } from '@/hooks/skjema';
+import type { VilkårsvurderingSkjemaDefinisjon } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { BodyShort, Label, Select, TextField } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { Aktsomhet, Vilkårsresultat } from '~/kodeverk';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { Aktsomhet, Vilkårsresultat } from '@/kodeverk';
+import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import {
     ANDELER,
     EGENDEFINERT,
     OptionJA,
     OptionNEI,
-} from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
-import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
-import { formatCurrencyNoKr, isEmpty, isNumeric } from '~/utils';
+} from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
+import { formatCurrencyNoKr, isEmpty, isNumeric } from '@/utils';
 
 import { TilleggesRenterRadioGroup } from './TilleggesRenterRadioGroup';
 

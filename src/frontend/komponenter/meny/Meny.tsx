@@ -4,10 +4,10 @@ import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button } from '@navikt/ds-react';
 import { useState } from 'react';
 
-import { useApp } from '~/context/AppContext';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useFagsak } from '~/context/FagsakContext';
+import { useApp } from '@/context/AppContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useFagsak } from '@/context/FagsakContext';
 
 import { EndreEnhet } from './endre-enhet/EndreEnhet';
 import { Gjenoppta } from './gjenoppta/Gjenoppta';
@@ -51,7 +51,7 @@ export const Behandlingsmeny: FC = () => {
                 </Button>
             </ActionMenu.Trigger>
 
-            <ActionMenu.Content onClick={() => setHoldMenyenÅpen(true)}>
+            <ActionMenu.Content onClick={(): void => setHoldMenyenÅpen(true)}>
                 <ActionMenu.Group aria-label="Menyvalg">
                     {behandling.kanRevurderingOpprettes && !behandling.erNyModell && <Revurder />}
 

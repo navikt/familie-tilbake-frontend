@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { Journalpost } from '~/typer/journalføring';
+import type { Journalpost } from '@/typer/journalføring';
 
 import { Detail } from '@navikt/ds-react';
 
-import { DokumentIkon } from '~/komponenter/ikoner';
-import { Journalposttype } from '~/typer/journalføring';
-import { formatterDatoOgTid, hentDatoRegistrertSendt } from '~/utils';
+import { DokumentIkon } from '@/komponenter/ikoner';
+import { Journalposttype } from '@/typer/journalføring';
+import { formatterDatoOgTid, hentDatoRegistrertSendt } from '@/utils';
 
 import { Dokumentvisning } from './Dokumentvisning';
 

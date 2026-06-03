@@ -1,6 +1,6 @@
 import type { Duration } from 'date-fns';
-import type { JournalpostRelevantDato } from '~/typer/journalføring';
-import type { FaktaPeriode } from '~/typer/tilbakekrevingstyper';
+import type { JournalpostRelevantDato } from '@/typer/journalføring';
+import type { FaktaPeriode } from '@/typer/tilbakekrevingstyper';
 
 import {
     add,
@@ -15,7 +15,7 @@ import {
     parseISO,
 } from 'date-fns';
 
-import { JournalpostDatotype } from '~/typer/journalføring';
+import { JournalpostDatotype } from '@/typer/journalføring';
 
 import { isEmpty } from './validering';
 

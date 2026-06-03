@@ -4,7 +4,7 @@ import { UNSAFE_Combobox } from '@navikt/ds-react';
 import { countries } from 'countries-list';
 import { useMemo } from 'react';
 
-import { norskLandnavn } from '~/utils/land';
+import { norskLandnavn } from '@/utils/land';
 
 export type Land = {
     alpha2: string;

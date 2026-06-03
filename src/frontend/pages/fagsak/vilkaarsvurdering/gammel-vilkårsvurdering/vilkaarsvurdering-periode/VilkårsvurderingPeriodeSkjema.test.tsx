@@ -1,21 +1,21 @@
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { UserEvent } from '@testing-library/user-event';
-import type { BehandlingDto } from '~/generated';
-import type { VilkårsvurderingHook } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
+import type { BehandlingDto } from '@/generated';
+import type { VilkårsvurderingHook } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagBehandling } from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { lagVilkårsvurderingPeriodeSkjemaData } from '~/testdata/vilkårsvurderingFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
-import { SkalUnnlates } from '~/typer/tilbakekrevingstyper';
+import { FagsakContext } from '@/context/FagsakContext';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@/kodeverk';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { lagVilkårsvurderingPeriodeSkjemaData } from '@/testdata/vilkårsvurderingFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
+import { SkalUnnlates } from '@/typer/tilbakekrevingstyper';
 
 import { VilkårsvurderingPeriodeSkjema } from './VilkårsvurderingPeriodeSkjema';
 

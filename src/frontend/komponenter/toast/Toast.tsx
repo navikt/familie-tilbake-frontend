@@ -1,10 +1,10 @@
-import type { Toast as TToast } from './typer';
 import type { FC } from 'react';
+import type { Toast as TToast } from './typer';
 
 import { LocalAlert } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
-import { useApp } from '~/context/AppContext';
+import { useApp } from '@/context/AppContext';
 
 export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
     const { toasts, setToasts } = useApp();
@@ -23,7 +23,6 @@ export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }
     useEffect(() => {
         const timer = setTimeout(
             () => {
-                // eslint-disable-next-line
                 const { [toastId]: fjernetToast, ...resterendeToast } = toasts;
                 setToasts(resterendeToast);
             },

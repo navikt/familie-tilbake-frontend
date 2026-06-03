@@ -1,13 +1,13 @@
+import type { FC } from 'react';
 import type {
     JaNeiOption,
     VilkårsvurderingSkjemaDefinisjon,
 } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { FC } from 'react';
 
-import { Radio, Textarea, TextField, RadioGroup } from '@navikt/ds-react';
+import { Radio, RadioGroup, Textarea, TextField } from '@navikt/ds-react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { type Skjema, Valideringsstatus } from '@/hooks/skjema';
 
 import { jaNeiOptions, OptionJA } from './VilkårsvurderingPeriodeSkjemaContext';
 

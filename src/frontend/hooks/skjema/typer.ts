@@ -1,7 +1,6 @@
 import type { ChangeEvent, ReactNode } from 'react';
-import type { FamilieRequestConfig } from '~/api/http/HttpProvider';
-
-import { type Ressurs } from '~/typer/ressurs';
+import type { FamilieRequestConfig } from '@/api/http/HttpProvider';
+import type { Ressurs } from '@/typer/ressurs';
 
 export type FeltState<Verdi> = {
     feilmelding: ReactNode;
@@ -51,7 +50,7 @@ export enum Valideringsstatus {
     IkkeValidert = 'IKKE_VALIDERT',
 }
 
-// eslint-disable-next-line
+// biome-ignore lint/suspicious/noExplicitAny: generisk avhengighetsmap med vilkårlige verdier
 export type Avhengigheter = { [key: string]: any };
 export type ValiderFelt<Verdi> = (
     felt: FeltState<Verdi>,

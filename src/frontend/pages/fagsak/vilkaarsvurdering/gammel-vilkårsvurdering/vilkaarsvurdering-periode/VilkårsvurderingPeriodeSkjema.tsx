@@ -1,6 +1,6 @@
-import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
-import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { ChangeEvent, FC } from 'react';
+import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
+import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 
 import {
     BodyShort,
@@ -19,18 +19,19 @@ import { useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
 import { useEffect } from 'react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { type Skjema, Valideringsstatus } from '~/hooks/skjema';
-import { useActionBar } from '~/hooks/useActionBar';
-import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '~/kodeverk';
-import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
-import { ModalWrapper } from '~/komponenter/modal/ModalWrapper';
-import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
-import { useVilkårsvurdering } from '~/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
-import { formatterDatostring, isEmpty } from '~/utils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { type Skjema, Valideringsstatus } from '@/hooks/skjema';
+import { useActionBar } from '@/hooks/useActionBar';
+import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@/kodeverk';
+import { FeilModal } from '@/komponenter/modal/feil/FeilModal';
+import { ModalWrapper } from '@/komponenter/modal/ModalWrapper';
+import { PeriodeOppsummering } from '@/komponenter/periodeinformasjon/PeriodeOppsummering';
+import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
+import { formatterDatostring, isEmpty } from '@/utils';
 
+import { PeriodeHandling } from '../typer/periodeHandling';
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
 import { SplittPeriode } from './splitt-periode/SplittPeriode';
@@ -42,7 +43,6 @@ import {
     OptionNEI,
     useVilkårsvurderingPeriodeSkjema,
 } from './VilkårsvurderingPeriodeSkjemaContext';
-import { PeriodeHandling } from '../typer/periodeHandling';
 
 const settSkjemadataFraPeriode = (
     skjema: Skjema<VilkårsvurderingSkjemaDefinisjon, string>,
@@ -178,7 +178,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter]);
 
     const handleForlatUtenÅLagre = (): void => {

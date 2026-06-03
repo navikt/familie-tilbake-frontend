@@ -1,5 +1,5 @@
+import type { ForeldelsesvurderingstypeEnum } from '@/generated';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
-import type { ForeldelsesvurderingstypeEnum } from '~/generated';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import {
@@ -14,14 +14,14 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect, type FC, type ReactNode } from 'react';
+import { type FC, type ReactNode, useEffect } from 'react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { Valideringsstatus } from '~/hooks/skjema/typer';
-import { Datovelger } from '~/komponenter/datovelger/Datovelger';
-import { PeriodeOppsummering } from '~/komponenter/periodeinformasjon/PeriodeOppsummering';
-import { useForeldelse } from '~/pages/fagsak/foreldelse/ForeldelseContext';
-import { isoStringTilDate } from '~/utils/dato';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { Valideringsstatus } from '@/hooks/skjema/typer';
+import { Datovelger } from '@/komponenter/datovelger/Datovelger';
+import { PeriodeOppsummering } from '@/komponenter/periodeinformasjon/PeriodeOppsummering';
+import { useForeldelse } from '@/pages/fagsak/foreldelse/ForeldelseContext';
+import { isoStringTilDate } from '@/utils/dato';
 
 import { useForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjemaContext';
 import { SplittPeriode } from './splitt-periode/SplittPeriode';
@@ -47,7 +47,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
         skjema.felter.oppdagelsesdato.onChange(
             periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode]);
 
     const erForeldet = skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET';

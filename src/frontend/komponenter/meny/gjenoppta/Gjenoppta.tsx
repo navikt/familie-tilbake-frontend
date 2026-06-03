@@ -5,9 +5,9 @@ import { ActionMenu, BodyLong, Button, ErrorMessage, Modal } from '@navikt/ds-re
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { usePåVentBehandling } from '~/komponenter/modal/på-vent/PåVentContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
 
 import { MODAL_BREDDE } from '../utils';
 

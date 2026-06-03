@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import type { ActionBarConfig } from '~/stores/actionBarStore';
+import type { ActionBarConfig } from '@/stores/actionBarStore';
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
-import { Behandlingsmeny } from '~/komponenter/meny/Meny';
+import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 
 export const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',

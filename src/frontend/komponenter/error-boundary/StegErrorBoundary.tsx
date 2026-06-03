@@ -1,5 +1,5 @@
 import type { ErrorInfo, ReactNode } from 'react';
-import type { SynligSteg } from '~/utils/sider';
+import type { SynligSteg } from '@/utils/sider';
 
 import { Button, Heading, Link, List, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';

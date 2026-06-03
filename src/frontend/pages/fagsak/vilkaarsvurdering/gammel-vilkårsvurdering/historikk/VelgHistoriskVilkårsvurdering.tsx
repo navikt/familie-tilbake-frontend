@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import type { VilkårsvurderingResponse } from '~/typer/tilbakekrevingstyper';
+import type { VilkårsvurderingResponse } from '@/typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
 
-import { formatterDatoOgTidstring } from '~/utils';
+import { formatterDatoOgTidstring } from '@/utils';
 
 type Props = {
     inaktiveVilkårsvurderinger: VilkårsvurderingResponse[];

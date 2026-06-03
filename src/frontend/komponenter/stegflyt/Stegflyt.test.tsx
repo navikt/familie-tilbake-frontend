@@ -1,21 +1,21 @@
 import type { Location } from 'react-router';
-import type { BehandlingDto } from '~/generated';
+import type { BehandlingDto } from '@/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Suspense } from 'react';
 
-import { BehandlingProvider } from '~/context/BehandlingContext';
-import { FagsakContext } from '~/context/FagsakContext';
+import { BehandlingProvider } from '@/context/BehandlingContext';
+import { FagsakContext } from '@/context/FagsakContext';
 import {
     lagBehandling,
     lagBrevmottakerSteg,
     lagFaktaSteg,
     lagForeldelseSteg,
     lagVilkårsvurderingSteg,
-} from '~/testdata/behandlingFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { createTestQueryClient, setBehandlingQueryData } from '~/testutils/queryTestUtils';
+} from '@/testdata/behandlingFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { createTestQueryClient, setBehandlingQueryData } from '@/testutils/queryTestUtils';
 
 import { Stegflyt } from './Stegflyt';
 

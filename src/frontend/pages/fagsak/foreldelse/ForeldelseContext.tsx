@@ -1,26 +1,27 @@
-/* eslint-disable @eslint-react/set-state-in-effect --
+/*
  * Flere useEffect-blokker utleder lokal state fra backend-hentet Ressurs<T> (klassisk
  * fetch-pattern). En ordentlig løsning krever migrering av disse kallene til TanStack
  * Query (useQuery) slik at server state håndteres deklarativt uten useEffect-basert
  * synkronisering.
  */
+
+import type { BehandlingstatusEnum } from '@/generated';
+import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '@/typer/api';
+import type { ForeldelseResponse } from '@/typer/tilbakekrevingstyper';
 import type { ForeldelsePeriodeSkjemeData } from './typer/foreldelse';
-import type { BehandlingstatusEnum } from '~/generated';
-import type { ForeldelseStegPayload, PeriodeForeldelseStegPayload } from '~/typer/api';
-import type { ForeldelseResponse } from '~/typer/tilbakekrevingstyper';
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';
 
-import { useBehandlingApi } from '~/api/behandling';
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { hentBehandlingQueryKey } from '~/generated/@tanstack/react-query.gen';
-import { behandlingHentVedtaksresultatQueryKey } from '~/generated-new/@tanstack/react-query.gen';
-import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
-import { sorterFeilutbetaltePerioder } from '~/utils';
-import { useStegNavigering } from '~/utils/sider';
+import { useBehandlingApi } from '@/api/behandling';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { behandlingHentVedtaksresultatQueryKey } from '@/generated-new/@tanstack/react-query.gen';
+import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { sorterFeilutbetaltePerioder } from '@/utils';
+import { useStegNavigering } from '@/utils/sider';
 
 const utledValgtPeriode = (
     skjemaPerioder: ForeldelsePeriodeSkjemeData[],
@@ -101,7 +102,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         if (!autoutført) {
             hentForeldelse();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -132,7 +133,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 setValgtPeriode(valgtForeldelsePeriode);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [foreldelse]);
 
     useEffect(() => {
@@ -142,7 +143,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             );
             setAllePerioderBehandlet(!nokonUbehandlet);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentForeldelse = (): void => {

@@ -1,6 +1,6 @@
-import type { TexasClient } from './backend/auth/texas';
-import type { Response, Request, Router } from 'express';
+import type { Request, Response, Router } from 'express';
 import type { ViteDevServer } from 'vite';
+import type { TexasClient } from './backend/auth/texas';
 
 import fs from 'fs';
 import path from 'path';
@@ -9,7 +9,7 @@ import { createServer as createViteServer } from 'vite';
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { logRequest } from './backend/utils';
 import { aInntektUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
-import { logError, LogLevel } from './logging/logging';
+import { LogLevel, logError } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 let vite: ViteDevServer;

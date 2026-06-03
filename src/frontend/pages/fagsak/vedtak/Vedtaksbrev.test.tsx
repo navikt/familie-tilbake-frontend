@@ -1,10 +1,9 @@
-import type { Avsnitt, Brevmottaker, VedtaksbrevData } from '~/generated-new';
+import type { Avsnitt, Brevmottaker, VedtaksbrevData } from '@/generated-new';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { screen } from '@testing-library/react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 

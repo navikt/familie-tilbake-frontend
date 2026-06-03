@@ -1,18 +1,18 @@
 import type { FC } from 'react';
 import type { FieldErrors, SubmitHandler } from 'react-hook-form';
-import type { Section, Varselbrevtekst } from '~/generated';
-import type { ForhåndsvarselFormData } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+import type { Section, Varselbrevtekst } from '@/generated';
+import type { ForhåndsvarselFormData } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
 import { BodyLong, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { Fragment, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { behandlingFaktaOptions } from '~/generated-new/@tanstack/react-query.gen';
-import { SkalSendesForhåndsvarsel } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
-import { formatterDatostringLangt } from '~/utils/dateUtils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { behandlingFaktaOptions } from '@/generated-new/@tanstack/react-query.gen';
+import { SkalSendesForhåndsvarsel } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+import { formatterDatostringLangt } from '@/utils/dateUtils';
 
 import { Unntak } from './UnntakSkjema';
 

@@ -3,8 +3,8 @@ import type { FC, MouseEventHandler, RefObject } from 'react';
 import { Modal } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useLavViewportHøyde } from '~/hooks/useLavViewportHøyde';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useLavViewportHøyde } from '@/hooks/useLavViewportHøyde';
 
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './informasjonsbokser/Faktaboks';

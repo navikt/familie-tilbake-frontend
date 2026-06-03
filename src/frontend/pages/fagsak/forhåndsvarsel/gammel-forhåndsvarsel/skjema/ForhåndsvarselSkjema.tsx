@@ -1,33 +1,33 @@
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { ForhåndsvarselDto } from '~/generated';
+import type { ForhåndsvarselDto } from '@/generated';
 import type {
     ForhåndsvarselFormData,
-    UttalelseFormData,
     HarUttaltSeg,
-} from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+    UttalelseFormData,
+} from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { VStack } from '@navikt/ds-react';
 import { useEffect, useEffectEvent, useRef } from 'react';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useActionBar } from '~/hooks/useActionBar';
-import { Bekreftelsesmodal } from '~/komponenter/modal/bekreftelse/Bekreftelsesmodal';
-import { FeilModal } from '~/komponenter/modal/feil/FeilModal';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesmodal';
+import { FeilModal } from '@/komponenter/modal/feil/FeilModal';
 import {
     getUttalelseValues,
     getUttalelseValuesBasertPåValg,
     SkalSendesForhåndsvarsel,
     uttalelseSchema,
-} from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+} from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 import {
     extractErrorFromMutationError,
     useForhåndsvarselMutations,
-} from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
-import { useForhåndsvarselQueries } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
+} from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
+import { useForhåndsvarselQueries } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 
 import { SkalSendeSkjema } from './SkalSendeSkjema';
 import { UttalelseSkjema } from './UttalelseSkjema';

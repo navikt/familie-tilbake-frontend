@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { BrevmottakerFormData } from '~/pages/fagsak/brevmottaker/schema/schema';
+import type { BrevmottakerFormData } from '@/pages/fagsak/brevmottaker/schema/schema';
 
 import { Radio, RadioGroup, TextField, VStack } from '@navikt/ds-react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { ManuellRegistrering } from '~/pages/fagsak/brevmottaker/adressekilde/ManuellRegistrering';
-import { AdresseKilde, MottakerType } from '~/typer/Brevmottaker';
+import { ManuellRegistrering } from '@/pages/fagsak/brevmottaker/adressekilde/ManuellRegistrering';
+import { AdresseKilde, MottakerType } from '@/typer/Brevmottaker';
 
 export const Verge: FC = () => {
     const { register, watch, control, formState } = useFormContext<BrevmottakerFormData>();

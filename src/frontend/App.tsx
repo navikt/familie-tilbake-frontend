@@ -1,14 +1,14 @@
-import type { Saksbehandler } from './typer/saksbehandler';
 import type { FC } from 'react';
+import type { Saksbehandler } from './typer/saksbehandler';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense, useEffect, useState } from 'react';
 import {
     createBrowserRouter,
     createRoutesFromElements,
-    RouterProvider,
-    Route,
     Outlet,
+    Route,
+    RouterProvider,
 } from 'react-router';
 
 import { hentInnloggetBruker } from './api/saksbehandler';
@@ -22,8 +22,8 @@ import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting'
 import { Header } from './komponenter/header/Header';
 import { Toasts } from './komponenter/toast/Toasts';
 import { BehandlingSkeleton } from './pages/fagsak/BehandlingSkeleton';
-import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
+import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { configureZod } from './utils/zodConfig';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');

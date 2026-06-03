@@ -2,15 +2,15 @@ import type { FC } from 'react';
 
 import { BodyLong, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { useActionBar } from '~/hooks/useActionBar';
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '~/typer/ressurs';
-import { finnDatoRelativtTilNå } from '~/utils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '@/typer/ressurs';
+import { finnDatoRelativtTilNå } from '@/utils';
 
-import { ForeldelsePerioder } from './foreldelse-periode/ForeldelsePerioder';
 import { useForeldelse } from './ForeldelseContext';
+import { ForeldelsePerioder } from './foreldelse-periode/ForeldelsePerioder';
 
 const forrigeAriaLabel = (finnesForhåndsvarsel: boolean, skalLagre: boolean): string => {
     if (finnesForhåndsvarsel && skalLagre) {

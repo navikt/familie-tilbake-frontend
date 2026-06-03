@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { ForhåndsvarselDto } from '~/generated';
+import type { ForhåndsvarselDto } from '@/generated';
 
 import { ClockIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, Button, VStack } from '@navikt/ds-react';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { formatterDatostring } from '~/utils';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { formatterDatostring } from '@/utils';
 
 type Props = {
     forhåndsvarselInfo: ForhåndsvarselDto;

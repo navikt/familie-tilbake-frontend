@@ -1,5 +1,5 @@
-import type { TexasClient } from './texas';
 import type { NextFunction, Request, Response } from 'express';
+import type { TexasClient } from './texas';
 
 import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';

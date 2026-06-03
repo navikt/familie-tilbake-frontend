@@ -1,8 +1,6 @@
-import type { BrukeruttalelseFormData } from './brukeruttalelseSchema';
-import type { IkkeVurdertFormData } from './schema';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { ForhaandsvarselUnntak, Uttalelse } from '~/generated-new';
+import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack, VStack } from '@navikt/ds-react';
@@ -10,29 +8,31 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 import {
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
-} from '~/generated-new';
+    ForhaandsvarselUnntak,
+    Uttalelse,
+} from '@/generated-new';
 import {
     behandlingForhandsvarselOptions,
     behandlingForhandsvarselQueryKey,
     behandlingLagreBrukersuttalelseMutation,
     behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
-} from '~/generated-new/@tanstack/react-query.gen';
-import { useActionBar } from '~/hooks/useActionBar';
-import { useVisGlobalAlert } from '~/stores/globalAlertStore';
-import { useStegNavigering } from '~/utils/sider';
+} from '@/generated-new/@tanstack/react-query.gen';
+import { useActionBar } from '@/hooks/useActionBar';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { useStegNavigering } from '@/utils/sider';
 
-import { tilUttalelsePayload, tilUttalelseSkjema } from './brukeruttalelseSchema';
+import { BrukeruttalelseFormData, tilUttalelsePayload, tilUttalelseSkjema } from './brukeruttalelseSchema';
 import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
-import { ikkeVurdertSchema } from './schema';
 import { BRUKERUTTALELSE_FORM_ID, SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
+import { ikkeVurdertSchema } from './schema';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();

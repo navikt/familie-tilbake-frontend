@@ -1,12 +1,12 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { FagsakDto, SchemaEnum2 as Fagsystem } from '~/generated';
-import type { Error as ModellError } from '~/generated-new';
+import type { FagsakDto, SchemaEnum2 as Fagsystem } from '@/generated';
+import type { Error as ModellError } from '@/generated-new';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use } from 'react';
 import { useParams } from 'react-router';
 
-import { hentFagsak } from '~/generated/sdk.gen';
+import { hentFagsak } from '@/generated/sdk.gen';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
 
@@ -39,7 +39,7 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
             const result = await hentFagsak({
                 path: {
                     fagsystem: fagsystem,
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    // biome-ignore lint/style/noNonNullAssertion: eksternFagsakId er garantert satt her
                     eksternFagsakId: eksternFagsakId!,
                 },
             }).catch(e => {

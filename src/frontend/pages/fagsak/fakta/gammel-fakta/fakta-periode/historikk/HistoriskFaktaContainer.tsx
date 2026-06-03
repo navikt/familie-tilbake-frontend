@@ -2,8 +2,8 @@ import type { FC } from 'react';
 
 import { LocalAlert, VStack } from '@navikt/ds-react';
 
-import { DataLastIkkeSuksess } from '~/komponenter/datalast/DataLastIkkeSuksess';
-import { RessursStatus } from '~/typer/ressurs';
+import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
+import { RessursStatus } from '@/typer/ressurs';
 
 import { useHistoriskFakta } from './HistoriskFaktaContext';
 import { HistoriskFaktaVisning } from './HistoriskFaktaVisning';

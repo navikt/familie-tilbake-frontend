@@ -1,6 +1,6 @@
 import type { TagProps } from '@navikt/ds-react';
 import type { ComponentType, FC } from 'react';
-import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '~/generated';
+import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '@/generated';
 
 import {
     Buildings3Icon,
@@ -16,10 +16,10 @@ import {
 } from '@navikt/aksel-icons';
 import { ExpansionCard, Tag } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useFagsak } from '~/context/FagsakContext';
-import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '~/typer/behandling';
-import { formatterDatostring } from '~/utils';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useFagsak } from '@/context/FagsakContext';
+import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@/typer/behandling';
+import { formatterDatostring } from '@/utils';
 
 import { ICON_PROPS } from '../utils';
 

@@ -1,4 +1,4 @@
-import type { FagsakDto, FrontendBrukerDto } from '~/generated';
+import type { FagsakDto, FrontendBrukerDto } from '@/generated';
 
 export const lagFagsak = (overrides: Partial<FagsakDto> = {}): FagsakDto => ({
     eksternFagsakId: 'id-1',

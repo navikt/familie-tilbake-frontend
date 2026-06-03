@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { UttalelseFormData } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+import type { UttalelseFormData } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
 
 import {
-    RadioGroup,
-    Radio,
     DatePicker,
-    TextField,
+    Radio,
+    RadioGroup,
     Textarea,
+    TextField,
     useDatepicker,
 } from '@navikt/ds-react';
 import { addDays } from 'date-fns/addDays';
@@ -16,9 +16,9 @@ import { parseISO } from 'date-fns/parseISO';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { get, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { HarUttaltSeg } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
-import { dateTilIsoDatoString } from '~/utils/dato';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { HarUttaltSeg } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/schema';
+import { dateTilIsoDatoString } from '@/utils/dato';
 
 type Props = {
     handleUttalelseSubmit: SubmitHandler<UttalelseFormData>;

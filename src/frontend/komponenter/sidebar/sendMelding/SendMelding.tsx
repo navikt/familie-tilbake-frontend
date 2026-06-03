@@ -2,11 +2,11 @@ import type { ChangeEvent, FC } from 'react';
 
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 
-import { useBehandling } from '~/context/BehandlingContext';
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { DokumentMal, dokumentMaler } from '~/kodeverk';
-import { BrevmottakerListe } from '~/komponenter/brevmottaker-liste/BrevmottakerListe';
-import { LabelMedSpråk } from '~/komponenter/label-med-språk/LabelMedSpråk';
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { DokumentMal, dokumentMaler } from '@/kodeverk';
+import { BrevmottakerListe } from '@/komponenter/brevmottaker-liste/BrevmottakerListe';
+import { LabelMedSpråk } from '@/komponenter/label-med-språk/LabelMedSpråk';
 
 import { ForhåndsvisBrev } from './forhåndsvis-brev/ForhåndsvisBrev';
 import { useSendMelding } from './SendMeldingContext';

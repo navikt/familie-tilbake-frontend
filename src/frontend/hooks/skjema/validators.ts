@@ -1,5 +1,5 @@
-import type { FeltState } from './typer';
 import type { ReactNode } from 'react';
+import type { FeltState } from './typer';
 
 import { Valideringsstatus } from './typer';
 

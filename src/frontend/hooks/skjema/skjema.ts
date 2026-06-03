@@ -1,10 +1,10 @@
+import type { FamilieRequestConfig } from '@/api/http/HttpProvider';
 import type { Felt, FeltState, FieldDictionary, Skjema, UseSkjemaVerdi } from './typer';
-import type { FamilieRequestConfig } from '~/api/http/HttpProvider';
 
 import { useState } from 'react';
 
-import { useHttp } from '~/api/http/HttpProvider';
-import { byggHenterRessurs, byggTomRessurs, type Ressurs, RessursStatus } from '~/typer/ressurs';
+import { useHttp } from '@/api/http/HttpProvider';
+import { byggHenterRessurs, byggTomRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
 
 import { Valideringsstatus } from './typer';
 

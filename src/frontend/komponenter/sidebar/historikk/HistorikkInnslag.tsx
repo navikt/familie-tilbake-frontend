@@ -1,16 +1,16 @@
-import type { FC, ReactNode, MouseEvent } from 'react';
-import type { BehandlingsstegEnum } from '~/generated';
-import type { HistorikkInnslag as THistorikkInnslag } from '~/typer/historikk';
+import type { FC, MouseEvent, ReactNode } from 'react';
+import type { BehandlingsstegEnum } from '@/generated';
+import type { HistorikkInnslag as THistorikkInnslag } from '@/typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
 import { BodyLong, BodyShort, Detail, Label, Link } from '@navikt/ds-react';
 import { useState } from 'react';
 
-import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '~/komponenter/ikoner';
-import { HentDokument } from '~/komponenter/sidebar/HentDokument';
-import { Aktør, aktører, Historikkinnslagstype } from '~/typer/historikk';
-import { formatterDatoOgTidstring } from '~/utils';
-import { finnSideForSteg } from '~/utils/sider';
+import { BeslutterIkon, SaksbehandlerIkon, SystemIkon } from '@/komponenter/ikoner';
+import { HentDokument } from '@/komponenter/sidebar/HentDokument';
+import { Aktør, aktører, Historikkinnslagstype } from '@/typer/historikk';
+import { formatterDatoOgTidstring } from '@/utils';
+import { finnSideForSteg } from '@/utils/sider';
 
 import { useHistorikk } from './HistorikkContext';
 

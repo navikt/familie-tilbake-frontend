@@ -1,6 +1,6 @@
 import type { TimelinePeriodProps } from '@navikt/ds-react';
 import type { FC, JSX } from 'react';
-import type { ForeldelsesvurderingstypeEnum } from '~/generated';
+import type { ForeldelsesvurderingstypeEnum } from '@/generated';
 
 import {
     CheckmarkCircleFillIcon,
@@ -12,7 +12,7 @@ import {
 } from '@navikt/aksel-icons';
 import { Timeline } from '@navikt/ds-react';
 
-import { formatterDatoDDMMYYYY } from '~/utils/dateUtils';
+import { formatterDatoDDMMYYYY } from '@/utils/dateUtils';
 
 const ikon = (
     status: TimelinePeriodProps['status'],

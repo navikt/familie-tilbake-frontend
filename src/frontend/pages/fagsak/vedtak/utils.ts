@@ -1,4 +1,3 @@
-import type { VedtaksbrevFormData } from './schema';
 import type { TagProps } from '@navikt/ds-react';
 import type {
     RotElementUpdateItem,
@@ -7,7 +6,8 @@ import type {
     VedtaksbrevDataWritable,
     VedtaksbrevRedigerbareDataUpdate,
     Vedtaksresultat,
-} from '~/generated-new';
+} from '@/generated-new';
+import type { VedtaksbrevFormData } from './schema';
 
 type RentekstElement = { type: 'rentekst'; tekst: string };
 
@@ -66,7 +66,7 @@ export const tilVedtaksbrevDataWritable = (
     vedtaksbrevData: VedtaksbrevData,
     formData: VedtaksbrevFormData
 ): VedtaksbrevDataWritable => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // biome-ignore lint/correctness/noUnusedVariables: destrukturering for å utelate felter
     const { sistOppdatert: _, hovedavsnitt, avsnitt, ...statiskeData } = vedtaksbrevData;
     return {
         ...statiskeData,

@@ -1,4 +1,4 @@
-import type { Beregningsresultat } from '~/generated-new/types.gen';
+import type { Beregningsresultat } from '@/generated-new/types.gen';
 
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';

@@ -1,10 +1,10 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { BehandlingsoppsummeringDto, BehandlingDto } from '~/generated/types.gen';
+import type { BehandlingDto, BehandlingsoppsummeringDto } from '@/generated/types.gen';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use, useMemo } from 'react';
 
-import { hentBehandlingOptions } from '~/generated/@tanstack/react-query.gen';
+import { hentBehandlingOptions } from '@/generated/@tanstack/react-query.gen';
 
 export const finnBehandlingId = (
     behandlinger: BehandlingsoppsummeringDto[],
