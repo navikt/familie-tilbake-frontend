@@ -25,6 +25,7 @@ export const SendtVarsel: FC<SendtVarselProps> = ({
 
     const methods = useForm<BrukeruttalelseFormData>({
         resolver: zodResolver(brukeruttalelseSchema),
+        shouldUnregister: true,
         defaultValues: {
             brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
         },

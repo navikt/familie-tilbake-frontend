@@ -56,6 +56,7 @@ export const Forhåndsvarsel: FC = () => {
 
     const methods = useForm<IkkeVurdertFormData>({
         resolver: zodResolver(ikkeVurdertSchema),
+        shouldUnregister: true,
         defaultValues:
             forhåndsvarselSteg.type === 'unntak'
                 ? {
