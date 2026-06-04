@@ -1,4 +1,4 @@
-import type { Uttalelse } from '~/generated-new';
+import type { Uttalelse } from '@/generated-new';
 
 import { z } from 'zod';
 

@@ -13,8 +13,8 @@ import { useBehandlingState } from '@/context/BehandlingStateContext';
 import {
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
-    ForhaandsvarselUnntak,
-    Uttalelse,
+    type ForhaandsvarselUnntak,
+    type Uttalelse,
 } from '@/generated-new';
 import {
     behandlingForhandsvarselOptions,
@@ -27,7 +27,11 @@ import { useActionBar } from '@/hooks/useActionBar';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { useStegNavigering } from '@/utils/sider';
 
-import { BrukeruttalelseFormData, tilUttalelsePayload, tilUttalelseSkjema } from './brukeruttalelseSchema';
+import {
+    type BrukeruttalelseFormData,
+    tilUttalelsePayload,
+    tilUttalelseSkjema,
+} from './brukeruttalelseSchema';
 import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
 import { BRUKERUTTALELSE_FORM_ID, SendtVarsel } from './SendtVarsel';
@@ -60,11 +64,11 @@ export const Forhåndsvarsel: FC = () => {
         defaultValues:
             forhåndsvarselSteg.type === 'unntak'
                 ? {
-                    valg: 'unntak',
-                    begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
-                    beskrivelse: forhåndsvarselSteg.beskrivelse,
-                    brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
-                }
+                      valg: 'unntak',
+                      begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
+                      beskrivelse: forhåndsvarselSteg.beskrivelse,
+                      brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
+                  }
                 : undefined,
     });
 
@@ -125,6 +129,7 @@ export const Forhåndsvarsel: FC = () => {
             });
         },
         onSuccess: etterVellykketLagring,
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke lagre unntak',
@@ -137,6 +142,7 @@ export const Forhåndsvarsel: FC = () => {
     const lagreBrukeruttalelse = useMutation({
         ...behandlingLagreBrukersuttalelseMutation(),
         onSuccess: etterVellykketLagring,
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke lagre brukeruttalelse',
@@ -146,7 +152,9 @@ export const Forhåndsvarsel: FC = () => {
         },
     });
 
-    const onSubmitBrukeruttalelse: SubmitHandler<BrukeruttalelseFormData> = data => {
+    const onSubmitBrukeruttalelse: SubmitHandler<BrukeruttalelseFormData> = (
+        data: BrukeruttalelseFormData
+    ): void => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
             body: tilUttalelsePayload(data.brukeruttalelse, 'sendt'),

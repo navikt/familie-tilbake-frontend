@@ -1,8 +1,9 @@
-import type { BrukeruttalelseFormData } from './brukeruttalelseSchema';
 import type { FC } from 'react';
+import type { BrukeruttalelseFormData } from './brukeruttalelseSchema';
 
 import {
     DatePicker,
+    type DateValidationT,
     Radio,
     RadioGroup,
     Textarea,
@@ -16,15 +17,15 @@ import { parseISO } from 'date-fns/parseISO';
 import { useMemo, useState } from 'react';
 import { get, useFormContext, useWatch } from 'react-hook-form';
 
-import { useBehandlingState } from '~/context/BehandlingStateContext';
-import { dateTilIsoDatoString } from '~/utils/dato';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { dateTilIsoDatoString } from '@/utils/dato';
 
 type Props = {
     varselErSendt: boolean;
     fristForUttalelse?: string;
 };
 
-export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }) => {
+export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
         register,
@@ -51,13 +52,13 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse })
     } = useDatepicker({
         toDate: iDag,
         defaultSelected: valgtUttalelsesdato ? parseISO(valgtUttalelsesdato) : undefined,
-        onDateChange: async date => {
+        onDateChange: async (date: Date | undefined): Promise<void> => {
             setValue('brukeruttalelse.uttalelsesdato', dateTilIsoDatoString(date), {
                 shouldDirty: true,
             });
             await trigger('brukeruttalelse.uttalelsesdato');
         },
-        onValidate: val => {
+        onValidate: (val: DateValidationT): void => {
             setUttalelsesdatoFeil(val.isAfter ? 'Datoen kan ikke være i fremtiden' : undefined);
         },
     });
@@ -93,7 +94,9 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse })
                             size="small"
                             {...register('brukeruttalelse.uttalelsesdato')}
                             {...datepickerInputProps}
-                            onBlur={async event => {
+                            onBlur={async (
+                                event: React.FocusEvent<HTMLInputElement, Element>
+                            ): Promise<void> => {
                                 datepickerOnBlur?.(event);
                                 await trigger('brukeruttalelse.uttalelsesdato');
                             }}

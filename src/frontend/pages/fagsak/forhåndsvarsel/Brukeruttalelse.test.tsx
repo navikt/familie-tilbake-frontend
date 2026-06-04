@@ -1,21 +1,21 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { RessursVarselbrevtekst } from '~/generated';
-import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '~/generated-new';
+import type { RessursVarselbrevtekst } from '@/generated';
+import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { Suspense } from 'react';
 
-import { FagsakContext } from '~/context/FagsakContext';
-import { hentForhåndsvarselTekstQueryKey } from '~/generated/@tanstack/react-query.gen';
+import { FagsakContext } from '@/context/FagsakContext';
+import { hentForhåndsvarselTekstQueryKey } from '@/generated/@tanstack/react-query.gen';
 import {
     behandlingFaktaQueryKey,
     behandlingForhandsvarselQueryKey,
-} from '~/generated-new/@tanstack/react-query.gen';
-import { TestBehandlingProvider } from '~/testdata/behandlingContextFactory';
-import { lagFagsak } from '~/testdata/fagsakFactory';
-import { createTestQueryClient } from '~/testutils/queryTestUtils';
+} from '@/generated-new/@tanstack/react-query.gen';
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 
