@@ -17,7 +17,11 @@ type Props = {
     harFlerePerioder: boolean;
 };
 
-export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning, harFlerePerioder }) => {
+export const GradUaktsomhetSkjema: FC<Props> = ({
+    skjema,
+    erLesevisning,
+    harFlerePerioder,
+}: Props) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
     const ugyldifSimpelTilbakekrevBeløpUnder4Rettsgebyr =
@@ -41,7 +45,7 @@ export const GradUaktsomhetSkjema: FC<Props> = ({ skjema, erLesevisning, harFler
                                     ? skjema.felter.unnlates4Rettsgebyr.feilmelding?.toString()
                                     : ''
                             }
-                            onChange={(val: SkalUnnlates) => {
+                            onChange={(val: SkalUnnlates): void => {
                                 skjema.felter.unnlates4Rettsgebyr.validerOgSettFelt(val);
                                 setIkkePersistertKomponent(`vilkårsvurdering`);
                             }}

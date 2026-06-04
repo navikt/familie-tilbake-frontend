@@ -99,10 +99,10 @@ if (!process.env.TILBAKE_SCOPE) {
 }
 
 export const buildPath = 'dist';
-export const proxyUrl = env.proxyUrl;
-export const aInntektUrl = env.aInntektUrl;
-export const gosysBaseUrl = env.gosysUrl;
-export const modiaBaseUrl = env.modiaUrl;
+export const proxyUrl: string = env.proxyUrl;
+export const aInntektUrl: string = env.aInntektUrl;
+export const gosysBaseUrl: string = env.gosysUrl;
+export const modiaBaseUrl: string = env.modiaUrl;
 
 export const redirectRecords: Record<string, string> = {
     '/redirect/fagsystem/BA': env.baSakUrl,

@@ -19,7 +19,7 @@ export const Revurder: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={() => ref.current?.showModal()}
+                onSelect={(): void => ref.current?.showModal()}
                 className="text-xl cursor-pointer"
                 icon={<FileResetIcon aria-hidden />}
             >
@@ -31,7 +31,7 @@ export const Revurder: FC = () => {
                 header={{
                     heading: 'Revurder tilbakekreving',
                 }}
-                onClose={() => nullstillSkjema()}
+                onClose={(): void => nullstillSkjema()}
                 className={MODAL_BREDDE}
             >
                 <Modal.Body className="flex flex-col gap-4">
@@ -63,7 +63,7 @@ export const Revurder: FC = () => {
                     <Button
                         variant="secondary"
                         key="avbryt"
-                        onClick={() => {
+                        onClick={(): void => {
                             nullstillSkjema();
                             ref.current?.close();
                         }}

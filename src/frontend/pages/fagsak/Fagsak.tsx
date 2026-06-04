@@ -22,6 +22,7 @@ export const FagsakContainer: FC = () => {
 
     const behandlingId = eksternBrukId ? finnBehandlingId(behandlinger, eksternBrukId) : undefined;
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (eksternBrukId) {
             setBehandlingId(eksternBrukId);
@@ -33,10 +34,8 @@ export const FagsakContainer: FC = () => {
 
         return (): void => {
             setBehandlingId(undefined);
-            setPersonIdent(undefined);
             resetFagsak();
         };
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [fagsystem, eksternFagsakId, bruker.personIdent, eksternBrukId]);
 
     if (!behandlingId) {

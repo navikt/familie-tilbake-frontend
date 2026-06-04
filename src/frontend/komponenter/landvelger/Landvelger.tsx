@@ -24,7 +24,7 @@ export const Landvelger: FC<Props> = ({
     valgtLandkode,
     håndterLandValgt,
     error,
-}) => {
+}: Props) => {
     const landListe = useMemo(() => {
         return Object.entries(countries)
             .filter(([alpha2]) => !eksluderLandkoder.includes(alpha2))
@@ -50,7 +50,7 @@ export const Landvelger: FC<Props> = ({
                 value: alpha2,
                 label: navn,
             }))}
-            onToggleSelected={(alpha2: Land['alpha2']) => håndterLandValgt({ alpha2 })}
+            onToggleSelected={(alpha2: Land['alpha2']): void => håndterLandValgt({ alpha2 })}
             error={error}
             shouldAutocomplete
         />

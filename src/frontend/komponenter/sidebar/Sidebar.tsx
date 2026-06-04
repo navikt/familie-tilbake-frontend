@@ -14,7 +14,7 @@ type Props = {
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-export const Sidebar: FC<Props> = ({ dialogRef }) => {
+export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { ventegrunn } = useBehandlingState();
     const erLavHøyde = useLavViewportHøyde();
 
@@ -44,7 +44,9 @@ export const Sidebar: FC<Props> = ({ dialogRef }) => {
         return (): void => mq.removeEventListener('change', lukkModalenHvisStørreEnnLg);
     }, [dialogRef]);
 
-    const handleKlikkUtenforModal: MouseEventHandler<HTMLDialogElement> = e => {
+    const handleKlikkUtenforModal: MouseEventHandler<HTMLDialogElement> = (
+        e: React.MouseEvent<HTMLDialogElement, MouseEvent>
+    ): void => {
         if (e.target === e.currentTarget) {
             (e.currentTarget as HTMLDialogElement).close();
         }
@@ -59,11 +61,15 @@ export const Sidebar: FC<Props> = ({ dialogRef }) => {
             >
                 <Faktaboks
                     open={kortTilstand.faktaboksÅpen}
-                    onToggle={åpen => setKortTilstand(prev => ({ ...prev, faktaboksÅpen: åpen }))}
+                    onToggle={(åpen: boolean): void =>
+                        setKortTilstand(prev => ({ ...prev, faktaboksÅpen: åpen }))
+                    }
                 />
                 <BrukerInformasjon
                     open={kortTilstand.brukerInfoÅpen}
-                    onToggle={åpen => setKortTilstand(prev => ({ ...prev, brukerInfoÅpen: åpen }))}
+                    onToggle={(åpen: boolean): void =>
+                        setKortTilstand(prev => ({ ...prev, brukerInfoÅpen: åpen }))
+                    }
                 />
                 <HistorikkOgDokumenter />
             </aside>

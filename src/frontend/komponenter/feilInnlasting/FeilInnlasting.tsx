@@ -14,7 +14,7 @@ const FeilInnlasting: FC<Props> = ({ komponentNavn }: Props) => {
                 Feil ved innlasting av {komponentNavn}
             </Heading>
             <p>Det oppstod en feil under innlasting av komponenten. Vennligst prøv igjen senere.</p>
-            <Button variant="secondary" onClick={() => window.location.reload()}>
+            <Button variant="secondary" onClick={(): void => window.location.reload()}>
                 Last siden på nytt
             </Button>
         </VStack>

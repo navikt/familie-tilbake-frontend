@@ -17,7 +17,7 @@ type Props = {
     onBekreft: () => void;
 };
 
-export const Bekreftelsesmodal: FC<Props> = ({ dialogRef, tekster, onBekreft, laster }) => {
+export const Bekreftelsesmodal: FC<Props> = ({ dialogRef, tekster, onBekreft, laster }: Props) => {
     const { overskrift, brødtekst, bekreftTekst } = tekster;
     return (
         <Modal ref={dialogRef} header={{ heading: overskrift }} className={MODAL_BREDDE}>
@@ -26,7 +26,7 @@ export const Bekreftelsesmodal: FC<Props> = ({ dialogRef, tekster, onBekreft, la
                 <Button onClick={onBekreft} loading={laster} disabled={laster}>
                     {bekreftTekst}
                 </Button>
-                <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
+                <Button variant="secondary" onClick={(): void => dialogRef.current?.close()}>
                     Avbryt
                 </Button>
             </Modal.Footer>

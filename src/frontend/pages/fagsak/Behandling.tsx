@@ -115,7 +115,7 @@ const BehandlingLayout: FC<BehandlingLayoutProps> = ({
     visHøyremeny = true,
     dialogRef,
     skalHaActionBar,
-}) => (
+}: BehandlingLayoutProps) => (
     <>
         <div className="flex-1 overflow-auto min-h-0 justify-between flex flex-col">
             {children}
@@ -129,7 +129,7 @@ type HenlagtBehandlingProps = {
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const HenlagtBehandling: FC<HenlagtBehandlingProps> = ({ dialogRef }) => (
+const HenlagtBehandling: FC<HenlagtBehandlingProps> = ({ dialogRef }: HenlagtBehandlingProps) => (
     <BehandlingLayout dialogRef={dialogRef} skalHaActionBar={false}>
         <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
             <BodyShort size="small">Behandlingen er henlagt</BodyShort>
@@ -151,7 +151,9 @@ const VenterPåKravgrunnlagActionBar: FC = () => {
     return null;
 };
 
-const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> = ({ dialogRef }) => (
+const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> = ({
+    dialogRef,
+}: VenterPåKravgrunnlagBehandlingProps) => (
     <BehandlingLayout dialogRef={dialogRef} skalHaActionBar>
         <VenterPåKravgrunnlagActionBar />
     </BehandlingLayout>
@@ -161,7 +163,9 @@ type HistoriskBehandlingProps = {
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({ dialogRef }) => (
+const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({
+    dialogRef,
+}: HistoriskBehandlingProps) => (
     <BehandlingLayout dialogRef={dialogRef} visHøyremeny={false} skalHaActionBar={false}>
         <VStack gap="space-20">
             <Suspense fallback="Historiske vurderinger laster...">
@@ -199,7 +203,7 @@ type AktivBehandlingProps = {
     dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
-const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
+const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlingProps) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
     const { ventegrunn, setInnholdsbredde } = useBehandlingState();
@@ -233,7 +237,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }) => {
                             <SidebarRightIcon title="Åpne informasjonspanelet" fontSize="1.5rem" />
                         }
                         className="lg:hidden"
-                        onClick={() => dialogRef.current?.showModal()}
+                        onClick={(): void => dialogRef.current?.showModal()}
                     >
                         Åpne
                     </Button>
@@ -400,7 +404,7 @@ export const BehandlingContainer: FC = () => {
                 </div>
             )}
             {ventegrunn && !visVenteModal && (
-                <PåVentModal ventegrunn={ventegrunn} onClose={() => setVisVenteModal(true)} />
+                <PåVentModal ventegrunn={ventegrunn} onClose={(): void => setVisVenteModal(true)} />
             )}
             {/* Trekker fra høyde fra header (48). Hvis det er
             ventegrunn legges det til ytterligere 62 */}
@@ -417,7 +421,7 @@ export const BehandlingContainer: FC = () => {
                     title={alert.title}
                     width={innholdsbredde}
                     stackIndex={index}
-                    onClose={() => lukkGlobalAlert(alert.id)}
+                    onClose={(): void => lukkGlobalAlert(alert.id)}
                 >
                     {(alert.message || alert.visPortenLenke) && (
                         <>

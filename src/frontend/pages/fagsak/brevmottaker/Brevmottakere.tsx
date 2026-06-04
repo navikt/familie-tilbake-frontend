@@ -19,7 +19,7 @@ import { useStegNavigering } from '@/utils/sider';
 
 import { BrevmottakerModal } from './BrevmottakerModal';
 
-export type BrevmottakerProps = {
+type Props = {
     brevmottaker: TBrevmottaker;
     erStandardMottaker?: boolean;
     brevmottakerId: string;
@@ -28,14 +28,14 @@ export type BrevmottakerProps = {
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
-const Brevmottaker: FC<BrevmottakerProps> = ({
+const Brevmottaker: FC<Props> = ({
     brevmottaker,
     brevmottakerId,
     erStandardMottaker,
     antallBrevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
-}) => {
+}: Props) => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
     const { fjernManuellBrevmottaker } = useBehandlingApi();
@@ -73,7 +73,9 @@ const Brevmottaker: FC<BrevmottakerProps> = ({
                         <>
                             <Button
                                 variant="tertiary"
-                                onClick={() => fjernBrevMottakerOgOppdaterState(brevmottakerId)}
+                                onClick={(): void =>
+                                    fjernBrevMottakerOgOppdaterState(brevmottakerId)
+                                }
                                 size="small"
                                 icon={<TrashIcon />}
                             >
@@ -305,7 +307,7 @@ export const Brevmottakere: FC = () => {
                         variant="tertiary"
                         size="small"
                         icon={<PlusCircleIcon />}
-                        onClick={() => {
+                        onClick={(): void => {
                             setBrevmottakerIdTilEndring(undefined);
                             setVisBrevmottakerModal(true);
                         }}

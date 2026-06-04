@@ -1,5 +1,11 @@
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { ForhåndsvarselDto, RessursByte, Varselbrevtekst } from '@/generated';
+import type {
+    ForhåndsvarselDto,
+    RessursByte,
+    RessursForhåndsvarselDto,
+    RessursVarselbrevtekst,
+    Varselbrevtekst,
+} from '@/generated';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
@@ -34,7 +40,8 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
                     behandlingId: behandling.behandlingId,
                 },
             }),
-        select: data => data.data?.data ?? undefined,
+        select: ({ data }: { data: RessursForhåndsvarselDto | undefined }) =>
+            data?.data ?? undefined,
     });
 
     const varselErSendt = !!forhåndsvarselInfoQuery.data?.varselbrevDto?.varselbrevSendtTid;
@@ -55,7 +62,7 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
             },
         }),
         enabled: !!dokumentInfoQuery.data?.journalpostId && !!dokumentInfoQuery.data?.dokumentId,
-        select: (blob): RessursByte => ({
+        select: (blob: Blob | File): RessursByte => ({
             data: URL.createObjectURL(new Blob([blob], { type: 'application/pdf' })),
             status: 'SUKSESS',
             melding: 'OK',
@@ -70,7 +77,7 @@ export const useForhåndsvarselQueries = (): UseForhåndsvarselQueriesReturn => 
                     behandlingId: behandling.behandlingId,
                 },
             }),
-        select: data => data.data?.data ?? undefined,
+        select: ({ data }: { data: RessursVarselbrevtekst | undefined }) => data?.data ?? undefined,
     });
 
     return {

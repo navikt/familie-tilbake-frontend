@@ -18,7 +18,7 @@ export const Image: FC<Props> = ({
     onClick = (): undefined => undefined,
     onKeyDown,
     className,
-}) => {
+}: Props) => {
     const [isHovering, setIsHovering] = useState(false);
 
     const onFocus = useCallback((): void => {

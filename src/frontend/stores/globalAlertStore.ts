@@ -23,7 +23,7 @@ const skalAutoLukke = (status: LocalAlertProps['status']): boolean =>
 
 export const useGlobalAlertStore = create<GlobalAlertState>((set, get) => ({
     alerts: [],
-    visAlert: (alert): void => {
+    visAlert: (alert: Omit<GlobalAlert, 'id'>): void => {
         const id = crypto.randomUUID();
         set(() => ({ alerts: [{ ...alert, id }] }));
 
@@ -33,7 +33,7 @@ export const useGlobalAlertStore = create<GlobalAlertState>((set, get) => ({
             }, autoLukkEtterMs);
         }
     },
-    lukkAlert: (id): void => {
+    lukkAlert: (id: string): void => {
         set(state => ({ alerts: state.alerts.filter(alert => alert.id !== id) }));
     },
 }));

@@ -4,6 +4,7 @@ import type { UttalelseFormData } from '@/pages/fagsak/forhåndsvarsel/gammel-fo
 
 import {
     DatePicker,
+    type DateValidationT,
     Radio,
     RadioGroup,
     Textarea,
@@ -30,7 +31,7 @@ export const UttalelseSkjema: FC<Props> = ({
     handleUttalelseSubmit,
     varselErSendt,
     fristForUttalelse,
-}) => {
+}: Props) => {
     const methods = useFormContext<UttalelseFormData>();
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
     const { behandlingILesemodus } = useBehandlingState();
@@ -56,12 +57,12 @@ export const UttalelseSkjema: FC<Props> = ({
         defaultSelected: methods.getValues('uttalelsesDetaljer.0.uttalelsesdato')
             ? parseISO(methods.getValues('uttalelsesDetaljer.0.uttalelsesdato'))
             : undefined,
-        onDateChange: async date => {
+        onDateChange: async (date: Date | undefined): Promise<void> => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('uttalelsesDetaljer.0.uttalelsesdato', dateString);
             await methods.trigger('uttalelsesDetaljer.0.uttalelsesdato');
         },
-        onValidate: val => {
+        onValidate: (val: DateValidationT): void => {
             if (val.isAfter) {
                 setUttalelsesdatoFeil('Datoen kan ikke være i fremtiden');
             } else {
@@ -119,7 +120,9 @@ export const UttalelseSkjema: FC<Props> = ({
                                 size="small"
                                 {...methods.register(`uttalelsesDetaljer.${index}.uttalelsesdato`)}
                                 {...datepickerInputProps}
-                                onBlur={async event => {
+                                onBlur={async (
+                                    event: React.FocusEvent<HTMLInputElement, Element>
+                                ): Promise<void> => {
                                     datepickerOnBlur?.(event);
                                     await methods.trigger(
                                         `uttalelsesDetaljer.${index}.uttalelsesdato`

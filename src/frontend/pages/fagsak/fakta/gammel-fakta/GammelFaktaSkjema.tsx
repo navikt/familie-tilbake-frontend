@@ -30,7 +30,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
+export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }: Props) => {
     const behandling = useBehandling();
     const {
         oppdaterBegrunnelse,
@@ -87,7 +87,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                         <Checkbox
                             size="small"
                             checked={behandlePerioderSamlet}
-                            onChange={() => {
+                            onChange={(): void => {
                                 setIkkePersistertKomponent('fakta');
                                 settBehandlePerioderSamlet(!behandlePerioderSamlet);
                             }}
@@ -109,7 +109,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                     description="Tekst som er her fra før, kommer fra fagsystemet. Legg gjerne til/rediger tekst."
                     readOnly={behandlingILesemodus}
                     value={skjemaData.begrunnelse ? skjemaData.begrunnelse : ''}
-                    onChange={e => {
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement, Element>): void => {
                         setIkkePersistertKomponent('fakta');
                         oppdaterBegrunnelse(e.target.value);
                     }}
@@ -133,7 +133,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                             visFeilmeldinger &&
                             feilmeldinger?.find(meld => meld.gjelderBrukerHarUttaltSeg)?.melding
                         }
-                        onChange={(val: HarBrukerUttaltSegValg) => {
+                        onChange={(val: HarBrukerUttaltSegValg): void => {
                             setIkkePersistertKomponent('fakta');
                             oppdaterBrukerHarUttaltSeg(val);
                         }}
@@ -174,7 +174,9 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }) => {
                                     ? skjemaData.vurderingAvBrukersUttalelse?.beskrivelse
                                     : ''
                             }
-                            onChange={e => {
+                            onChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement, Element>
+                            ): void => {
                                 setIkkePersistertKomponent('fakta');
                                 oppdaterBeskrivelseBrukerHarUttaltSeg(e.target.value);
                             }}

@@ -22,11 +22,11 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
     const navigate = useNavigate();
     const { request } = useHttp();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (valgtMenyside === Menysider.Historikk) {
             hentHistorikkinnslag();
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling, valgtMenyside]);
 
     const hentHistorikkinnslag = (): void => {

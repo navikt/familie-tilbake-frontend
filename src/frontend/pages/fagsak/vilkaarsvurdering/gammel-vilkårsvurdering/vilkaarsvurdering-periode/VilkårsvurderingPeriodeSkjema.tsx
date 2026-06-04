@@ -122,7 +122,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     perioder,
     pendingPeriode,
     settPendingPeriode,
-}) => {
+}: Props) => {
     const {
         kanIlleggeRenter,
         oppdaterPeriode,
@@ -174,11 +174,11 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         }
     }, [harUlagredeData, pendingPeriode, settValgtPeriode, settPendingPeriode]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         skjema.felter.feilutbetaltBeløpPeriode.onChange(periode.feilutbetaltBeløp);
         skjema.felter.totalbeløpUnder4Rettsgebyr.onChange(erTotalbeløpUnder4Rettsgebyr);
         settSkjemadataFraPeriode(skjema, periode, kanIlleggeRenter);
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode, erTotalbeløpUnder4Rettsgebyr, kanIlleggeRenter]);
 
     const handleForlatUtenÅLagre = (): void => {
@@ -328,7 +328,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         <Select
                             className="w-60"
                             name="perioderForKopi"
-                            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                            onChange={(event: ChangeEvent<HTMLSelectElement>): void =>
                                 onKopierPeriode(event)
                             }
                             label={<Detail>Kopier vilkårsvurdering fra</Detail>}
@@ -369,7 +369,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                                     ? skjema.felter.vilkårsresultatvurdering.feilmelding?.toString()
                                     : ''
                             }
-                            onChange={(val: Vilkårsresultat) => {
+                            onChange={(val: Vilkårsresultat): void => {
                                 skjema.felter.vilkårsresultatvurdering.validerOgSettFelt(val);
                                 setIkkePersistertKomponent('vilkårsvurdering');
                             }}
@@ -413,7 +413,9 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             maxLength={3000}
                             readOnly={erLesevisning}
                             value={skjema.felter.vilkårsresultatBegrunnelse.verdi}
-                            onChange={(event: { target: { value: string } }) => {
+                            onChange={(
+                                event: ChangeEvent<HTMLTextAreaElement, HTMLTextAreaElement>
+                            ): void => {
                                 skjema.felter.vilkårsresultatBegrunnelse.validerOgSettFelt(
                                     event.target.value
                                 );
@@ -439,7 +441,9 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     {!erFørstePeriode && (
                         <Button
                             variant="secondary"
-                            onClick={() => handleNavigering(PeriodeHandling.ForrigePeriode)}
+                            onClick={(): Promise<void | (() => void)> =>
+                                handleNavigering(PeriodeHandling.ForrigePeriode)
+                            }
                             loading={sendInnSkjemaMutation.isPending}
                             aria-live="polite"
                             size="small"
@@ -450,7 +454,9 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     )}
                     {!erSistePeriode && (
                         <Button
-                            onClick={() => handleNavigering(PeriodeHandling.NestePeriode)}
+                            onClick={(): Promise<void | (() => void)> =>
+                                handleNavigering(PeriodeHandling.NestePeriode)
+                            }
                             loading={sendInnSkjemaMutation.isPending}
                             aria-live="polite"
                             size="small"

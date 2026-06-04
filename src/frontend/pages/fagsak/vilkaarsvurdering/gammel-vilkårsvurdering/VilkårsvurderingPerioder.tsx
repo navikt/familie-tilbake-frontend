@@ -58,7 +58,10 @@ type Props = {
     erTotalbeløpUnder4Rettsgebyr: boolean;
 };
 
-export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUnder4Rettsgebyr }) => {
+export const VilkårsvurderingPerioder: FC<Props> = ({
+    perioder,
+    erTotalbeløpUnder4Rettsgebyr,
+}: Props) => {
     const { valgtPeriode, settValgtPeriode, behandletPerioder, valideringsFeilmelding } =
         useVilkårsvurdering();
     const [pendingPeriode, setPendingPeriode] = useState<
@@ -71,7 +74,7 @@ export const VilkårsvurderingPerioder: FC<Props> = ({ perioder, erTotalbeløpUn
         if (!valgtPeriode && perioder && perioder.length > 0) {
             settValgtPeriode(perioder[0]);
         }
-    }, [perioder, valgtPeriode, tidslinjeRader, settValgtPeriode]);
+    }, [perioder, valgtPeriode, settValgtPeriode]);
 
     const onSelectPeriode = (periode: TimelinePeriodProps): void => {
         const periodeFom = periode.start.toISOString().substring(0, 10);

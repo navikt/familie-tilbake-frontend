@@ -13,7 +13,7 @@ type Props = {
     dokument: DokumentInfo;
 };
 
-export const Dokumentvisning: FC<Props> = ({ journalpost, dokument }) => {
+export const Dokumentvisning: FC<Props> = ({ journalpost, dokument }: Props) => {
     const [visDokument, setVisDokument] = useState<boolean>(false);
 
     return (
@@ -24,7 +24,9 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument }) => {
                 <>
                     <Link
                         href="#"
-                        onClick={(e: MouseEvent) => {
+                        onClick={(
+                            e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>
+                        ): void => {
                             e.preventDefault();
                             setVisDokument(true);
                         }}
@@ -36,7 +38,7 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument }) => {
                         <HentDokument
                             journalpostId={journalpost.journalpostId}
                             dokumentId={dokument.dokumentInfoId}
-                            onClose={() => setVisDokument(false)}
+                            onClose={(): void => setVisDokument(false)}
                         />
                     )}
                 </>

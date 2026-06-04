@@ -71,11 +71,17 @@ const TestActionBar: FC = () => {
     return actionBarConfig ? <ActionBar {...actionBarConfig} /> : null;
 };
 
-export const TestBehandlingProvider: FC<{
+type Props = {
     behandling?: BehandlingDto;
     stateOverrides?: BehandlingStateContextOverrides;
     children: ReactNode;
-}> = ({ behandling, stateOverrides = {}, children }) => {
+};
+
+export const TestBehandlingProvider: FC<Props> = ({
+    behandling,
+    stateOverrides = {},
+    children,
+}: Props) => {
     const ulagretEndringer = useUlagretEndringer();
     const behandlingValue = behandling ?? lagBehandling();
     const stateValue = lagBehandlingStateContext(stateOverrides, ulagretEndringer);

@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import type { RessursByte } from '@/generated';
 import type { ForhåndsvarselFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,7 +8,14 @@ import { Button, Heading, HStack } from '@navikt/ds-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+    type EventType,
+    FormProvider,
+    type FormState,
+    type InternalFieldName,
+    useForm,
+    useWatch,
+} from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -46,7 +54,13 @@ export const Forhåndsvarsel: FC = () => {
 
     methods.subscribe({
         formState: { isDirty: true },
-        callback: data => {
+        callback: (
+            data: Partial<FormState<ForhåndsvarselFormData>> & {
+                values: ForhåndsvarselFormData;
+                name?: InternalFieldName;
+                type?: EventType;
+            }
+        ): void => {
             if (data.isDirty) {
                 setIkkePersistertKomponent('forhåndsvarsel');
             } else {
@@ -83,7 +97,7 @@ export const Forhåndsvarsel: FC = () => {
                     },
                 },
                 {
-                    onSuccess: data => {
+                    onSuccess: (data: RessursByte) => {
                         queryClient.setQueryData(currentQueryKey, data);
                         setShowModal(true);
                     },
@@ -153,7 +167,7 @@ export const Forhåndsvarsel: FC = () => {
                 <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
                     <Fristinfo
                         forhåndsvarselInfo={forhåndsvarselInfo}
-                        onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
+                        onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
                     />
                 </div>
             )}
@@ -167,7 +181,7 @@ export const Forhåndsvarsel: FC = () => {
                 <PdfVisningModal
                     åpen
                     pdfdata={pdfData}
-                    onRequestClose={() => setShowModal(false)}
+                    onRequestClose={(): void => setShowModal(false)}
                 />
             )}
             <UtsettFristModal

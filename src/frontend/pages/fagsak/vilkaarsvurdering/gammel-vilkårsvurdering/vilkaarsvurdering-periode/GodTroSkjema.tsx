@@ -16,7 +16,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }: Props) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
 
     const ugyldigErBeløpetIBeholdValgt =
@@ -40,7 +40,7 @@ export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                         ? skjema.felter.erBeløpetIBehold.feilmelding?.toString()
                         : ''
                 }
-                onChange={(val: JaNeiOption) => {
+                onChange={(val: JaNeiOption): void => {
                     skjema.felter.erBeløpetIBehold.validerOgSettFelt(val);
                     setIkkePersistertKomponent(`vilkårsvurdering`);
                 }}
@@ -72,7 +72,7 @@ export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                             ? skjema.felter.aktsomhetBegrunnelse.verdi
                             : ''
                     }
-                    onChange={(event: { target: { value: string } }) => {
+                    onChange={(event: { target: { value: string } }): void => {
                         skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
                         setIkkePersistertKomponent('vilkårsvurdering');
                     }}
@@ -89,7 +89,7 @@ export const GodTroSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                     readOnly={erLesevisning}
                     aria-live="polite"
                     size="small"
-                    onChange={event => {
+                    onChange={(event: { target: { value: string } }): void => {
                         skjema.felter.godTroTilbakekrevesBeløp.validerOgSettFelt(
                             event.target.value
                         );

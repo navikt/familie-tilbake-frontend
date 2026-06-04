@@ -21,7 +21,7 @@ import {
 } from '@/utils';
 
 export const EGENDEFINERT = 'Egendefinert';
-export const ANDELER = ['30', '50', '70', EGENDEFINERT];
+export const ANDELER: string[] = ['30', '50', '70', EGENDEFINERT];
 
 export type JaNeiOption = {
     verdi: boolean;
@@ -37,7 +37,7 @@ export const OptionNEI: JaNeiOption = {
     label: 'Nei',
 };
 
-export const jaNeiOptions = [OptionJA, OptionNEI];
+export const jaNeiOptions: JaNeiOption[] = [OptionJA, OptionNEI];
 
 export const finnJaNeiOption = (verdi?: boolean): JaNeiOption | undefined => {
     return jaNeiOptions.find(opt => opt.verdi === verdi);

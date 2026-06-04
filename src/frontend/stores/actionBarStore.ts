@@ -60,7 +60,7 @@ type ActionBarState = {
 
 export const useActionBarStore = create<ActionBarState>(set => ({
     config: null,
-    registrer: (config): void => set({ config }),
+    registrer: (config: ActionBarConfig): void => set({ config }),
     avregistrer: (): void => set({ config: null }),
 }));
 

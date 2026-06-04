@@ -16,25 +16,23 @@ export const ForhåndsvisVedtaksbrev: FC = () => {
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisVedtaksbrev();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (visModal) {
             hentVedtaksbrev();
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [visModal]);
 
     return (
         <>
-            <Button variant="tertiary" onClick={() => kanViseForhåndsvisning()}>
+            <Button variant="tertiary" onClick={(): void => kanViseForhåndsvisning()}>
                 Forhåndsvis vedtaksbrev
             </Button>
             {visModal && (
                 <PdfVisningModal
                     åpen={visModal}
                     pdfdata={hentetForhåndsvisning}
-                    onRequestClose={() => {
-                        nullstillHentetForhåndsvisning();
-                    }}
+                    onRequestClose={(): void => nullstillHentetForhåndsvisning()}
                 />
             )}
         </>

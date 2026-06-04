@@ -19,7 +19,7 @@ export const GradForsettSkjema: FC<Props> = ({
     skjema,
     erLesevisning,
     skalIkkeViseNårNyModellOgForstodBurdeForstått,
-}) => {
+}: Props) => {
     const { kanIlleggeRenter } = useVilkårsvurdering();
     const erValgtResultatTypeForstoBurdeForstått =
         skjema.felter.vilkårsresultatvurdering.verdi === Vilkårsresultat.ForstoBurdeForstått;

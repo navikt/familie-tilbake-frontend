@@ -9,7 +9,7 @@ type Props = {
     label: string;
 };
 
-const LabelMedSpråk: FC<Props> = ({ label }) => {
+const LabelMedSpråk: FC<Props> = ({ label }: Props) => {
     const { språkkode } = useFagsak();
 
     return (

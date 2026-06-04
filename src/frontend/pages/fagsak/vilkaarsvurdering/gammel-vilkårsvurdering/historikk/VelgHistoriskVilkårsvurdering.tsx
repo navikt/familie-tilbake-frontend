@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { ChangeEvent, FC } from 'react';
 import type { VilkårsvurderingResponse } from '@/typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
@@ -14,12 +14,12 @@ type Props = {
 export const VelgHistoriskVilkårsvurdering: FC<Props> = ({
     inaktiveVilkårsvurderinger,
     setInaktivVilkårsvurdering,
-}) => {
+}: Props) => {
     return (
         <Select
-            onChange={e => {
+            onChange={(event: ChangeEvent<HTMLSelectElement, HTMLSelectElement>): void => {
                 const valgtVurdering = inaktiveVilkårsvurderinger.find(
-                    vurdering => vurdering.opprettetTid === e.target.value
+                    vurdering => vurdering.opprettetTid === event.target.value
                 );
                 setInaktivVilkårsvurdering(valgtVurdering);
             }}

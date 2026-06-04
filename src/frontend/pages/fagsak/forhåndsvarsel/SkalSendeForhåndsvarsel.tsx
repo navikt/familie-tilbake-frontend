@@ -18,7 +18,7 @@ export const SkalSendeForhåndsvarsel: FC<Props> = ({
     value,
     error,
     ...radioProps
-}) => (
+}: Props) => (
     <RadioGroup
         name={name}
         legend="Skal det sendes forhåndsvarsel om tilbakekreving?"

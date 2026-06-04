@@ -57,7 +57,7 @@ type Props = {
     onSelectPeriode: (periode: TimelinePeriodProps) => void;
 };
 
-export const TilbakeTidslinje: FC<Props> = ({ rader, onSelectPeriode }) => {
+export const TilbakeTidslinje: FC<Props> = ({ rader, onSelectPeriode }: Props) => {
     return (
         <Timeline>
             {rader.map(rad => (
@@ -71,7 +71,7 @@ export const TilbakeTidslinje: FC<Props> = ({ rader, onSelectPeriode }) => {
                             status={periode.status}
                             isActive={periode.isActive}
                             aria-label={periodeTekst(periode)}
-                            onClick={() => onSelectPeriode(periode)}
+                            onClick={(): void => onSelectPeriode(periode)}
                         >
                             {periodeTekst(periode)}
                         </Timeline.Period>

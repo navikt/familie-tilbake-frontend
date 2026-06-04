@@ -12,7 +12,7 @@ type Props = {
     perioder: FaktaPeriodeSkjemaData[];
 };
 
-export const FaktaPerioder: FC<Props> = ({ perioder }) => {
+export const FaktaPerioder: FC<Props> = ({ perioder }: Props) => {
     const { ytelsestype, institusjon } = useFagsak();
     const hendelsestyper = hentHendelseTyper(ytelsestype, !!institusjon);
 

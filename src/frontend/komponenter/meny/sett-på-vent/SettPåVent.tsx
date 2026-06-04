@@ -40,7 +40,7 @@ export const SettPåVent: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={() => dialogRef.current?.showModal()}
+                onSelect={(): void => dialogRef.current?.showModal()}
                 icon={<TimerPauseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
@@ -83,13 +83,13 @@ export const SettPåVent: FC = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={() => onBekreft(behandlingId)}>
+                    <Button key="bekreft" onClick={(): void => onBekreft(behandlingId)}>
                         Sett på vent
                     </Button>
                     <Button
                         variant="secondary"
                         key="avbryt"
-                        onClick={() => {
+                        onClick={(): void => {
                             tilbakestillFelterTilDefault();
                             dialogRef.current?.close();
                         }}

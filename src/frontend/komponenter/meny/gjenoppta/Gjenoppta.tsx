@@ -27,7 +27,7 @@ export const Gjenoppta: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={() => dialogRef.current?.showModal()}
+                onSelect={(): void => dialogRef.current?.showModal()}
                 className="text-xl cursor-pointer"
                 icon={<TimerStartIcon aria-hidden />}
             >
@@ -47,13 +47,16 @@ export const Gjenoppta: FC = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={() => onOkTaAvVent(behandling.behandlingId)}>
+                    <Button
+                        key="bekreft"
+                        onClick={(): void => onOkTaAvVent(behandling.behandlingId)}
+                    >
                         Gjenoppta
                     </Button>
                     <Button
                         variant="secondary"
                         key="avbryt"
-                        onClick={() => dialogRef.current?.close()}
+                        onClick={(): void => dialogRef.current?.close()}
                     >
                         Avbryt
                     </Button>

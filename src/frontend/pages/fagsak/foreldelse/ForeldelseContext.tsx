@@ -95,6 +95,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             ? 'FORHÅNDSVARSEL'
             : 'FAKTA'
     );
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FORELDELSE'));
         const autoutført = erStegAutoutført('FORELDELSE');
@@ -102,9 +103,9 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         if (!autoutført) {
             hentForeldelse();
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (foreldelse?.status === RessursStatus.Suksess) {
             const foreldetPerioder = foreldelse.data.foreldetPerioder;
@@ -133,9 +134,9 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                 setValgtPeriode(valgtForeldelsePeriode);
             }
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [foreldelse]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (skjemaData) {
             const nokonUbehandlet = skjemaData.some(
@@ -143,7 +144,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
             );
             setAllePerioderBehandlet(!nokonUbehandlet);
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentForeldelse = (): void => {

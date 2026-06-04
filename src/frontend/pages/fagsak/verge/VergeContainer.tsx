@@ -69,7 +69,9 @@ export const VergeContainer: FC = () => {
                         label="Vergetype"
                         readOnly={behandlingILesemodus}
                         value={skjema.felter.vergetype.verdi}
-                        onChange={event => onChangeVergeType(event)}
+                        onChange={(
+                            event: ChangeEvent<HTMLSelectElement, HTMLSelectElement>
+                        ): void => onChangeVergeType(event)}
                     >
                         <option disabled={true} value="">
                             Velg vergetype
@@ -89,7 +91,9 @@ export const VergeContainer: FC = () => {
                                 label="Navn"
                                 readOnly={behandlingILesemodus}
                                 value={skjema.felter.navn.verdi}
-                                onChange={event => {
+                                onChange={(
+                                    event: ChangeEvent<HTMLInputElement, HTMLInputElement>
+                                ): void => {
                                     skjema.felter.navn.validerOgSettFelt(event.target.value);
                                     setIkkePersistertKomponent('verge');
                                 }}
@@ -102,7 +106,9 @@ export const VergeContainer: FC = () => {
                                     label="Organisasjonsnummer"
                                     readOnly={behandlingILesemodus}
                                     value={skjema.felter.organisasjonsnummer.verdi}
-                                    onChange={event => {
+                                    onChange={(
+                                        event: ChangeEvent<HTMLInputElement, HTMLInputElement>
+                                    ): void => {
                                         skjema.felter.organisasjonsnummer.validerOgSettFelt(
                                             event.target.value
                                         );
@@ -117,7 +123,9 @@ export const VergeContainer: FC = () => {
                                     label="Fødselsnummer"
                                     readOnly={behandlingILesemodus}
                                     value={skjema.felter.fødselsnummer.verdi}
-                                    onChange={event => {
+                                    onChange={(
+                                        event: ChangeEvent<HTMLInputElement, HTMLInputElement>
+                                    ): void => {
                                         skjema.felter.fødselsnummer.validerOgSettFelt(
                                             event.target.value
                                         );
@@ -132,7 +140,7 @@ export const VergeContainer: FC = () => {
                         label="Begrunn endringene"
                         value={skjema.felter.begrunnelse.verdi}
                         readOnly={behandlingILesemodus}
-                        onChange={event => {
+                        onChange={(event: ChangeEvent<HTMLTextAreaElement, Element>): void => {
                             skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
                             setIkkePersistertKomponent('verge');
                         }}

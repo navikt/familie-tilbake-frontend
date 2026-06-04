@@ -18,7 +18,7 @@ type Props = {
     innslag: THistorikkInnslag;
 };
 
-export const HistorikkInnslag: FC<Props> = ({ innslag }) => {
+export const HistorikkInnslag: FC<Props> = ({ innslag }: Props) => {
     const { navigerTilSide } = useHistorikk();
     const [visDokument, setVisDokument] = useState<boolean>(false);
 
@@ -98,7 +98,7 @@ export const HistorikkInnslag: FC<Props> = ({ innslag }) => {
                     <HentDokument
                         journalpostId={innslag.journalpostId}
                         dokumentId={innslag.dokumentId}
-                        onClose={() => setVisDokument(false)}
+                        onClose={(): void => setVisDokument(false)}
                     />
                 )}
             </div>

@@ -339,7 +339,7 @@ export const hendelseundertyper: Record<HendelseUndertype, string> = {
     [HendelseUndertype.BarnStartetPåSkolen]: 'Barn startet på skolen',
 };
 
-const undertyper = {
+const undertyper: Record<string, HendelseUndertype[]> = {
     // Felles
     ANNET: [HendelseUndertype.AnnetFritekst],
     DØDSFALL: [HendelseUndertype.BarnDød, HendelseUndertype.BrukerDød],

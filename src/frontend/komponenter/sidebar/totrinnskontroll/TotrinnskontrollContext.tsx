@@ -66,11 +66,11 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const [feilmelding, setFeilmelding] = useState<string>('');
     const [laster, setLaster] = useState(false);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
         setErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
         hentTotrinnkontroll();
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -92,6 +92,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         }
     }, [totrinnkontroll]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Vurder å fjerne nonUsedKey og finne en annen måte å trigge validering på når skjemaData oppdateres.
     useEffect(() => {
         const stegIkkeVurdert = skjemaData.some(totrinn => !totrinn.godkjent);
         const alleGodkjent =

@@ -19,7 +19,7 @@ export const ActionBar: FC<ActionBarConfig> = ({
     skjulNeste = false,
     disableNeste = false,
     type = 'button',
-}) => {
+}: ActionBarConfig) => {
     return (
         <nav
             className="flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between min-w-96"
@@ -64,7 +64,7 @@ export const ActionBar: FC<ActionBarConfig> = ({
                                 size="small"
                                 form={formId}
                                 loading={isLoading}
-                                onClick={() => {
+                                onClick={(): void => {
                                     if (onNeste && type !== 'submit') onNeste();
                                 }}
                                 aria-label={nesteAriaLabel}

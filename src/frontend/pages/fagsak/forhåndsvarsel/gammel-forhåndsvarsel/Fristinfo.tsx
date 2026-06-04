@@ -12,7 +12,7 @@ type Props = {
     onUtsettFrist: () => void;
 };
 
-export const Fristinfo: FC<Props> = ({ forhåndsvarselInfo, onUtsettFrist }) => {
+export const Fristinfo: FC<Props> = ({ forhåndsvarselInfo, onUtsettFrist }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const opprinneligFrist = forhåndsvarselInfo.varselbrevDto?.opprinneligFristForUttalelse;
     const nyFrist = forhåndsvarselInfo.utsettUttalelseFrist?.nyFrist;

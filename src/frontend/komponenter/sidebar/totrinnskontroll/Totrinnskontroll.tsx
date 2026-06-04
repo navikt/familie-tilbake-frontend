@@ -1,4 +1,4 @@
-import type { FC, MouseEvent } from 'react';
+import type { ChangeEvent, FC, MouseEvent } from 'react';
 import type { SynligSteg } from '@/utils/sider';
 import type { TotrinnGodkjenningOption } from './typer/totrinnSkjemaTyper';
 
@@ -40,6 +40,7 @@ export const Totrinnskontroll: FC = () => {
     const { aktivtSteg } = useBehandlingState();
     const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Skal skrives om senere. Skal ikke bruke useEffect for å trigge ny render.
     useEffect(() => {
         // console.log('bør no trigge re-rendring');
     }, [nonUsedKey]);
@@ -92,8 +93,10 @@ export const Totrinnskontroll: FC = () => {
                         <div key={totrinnSteg.behandlingssteg} className="flex flex-col gap-1">
                             <Link
                                 href="#"
-                                onMouseDown={(e: MouseEvent) => e.preventDefault()}
-                                onClick={() => navigerTilSide(side as SynligSteg)}
+                                onMouseDown={(
+                                    e: MouseEvent<Element, globalThis.MouseEvent>
+                                ): void => e.preventDefault()}
+                                onClick={(): void => navigerTilSide(side as SynligSteg)}
                             >
                                 {behandlingssteg[totrinnSteg.behandlingssteg]}
                             </Link>
@@ -113,7 +116,7 @@ export const Totrinnskontroll: FC = () => {
                                     }`}
                                     hideLegend
                                     value={totrinnSteg.godkjent}
-                                    onChange={(val: TotrinnGodkjenningOption) =>
+                                    onChange={(val: TotrinnGodkjenningOption): void =>
                                         oppdaterGodkjenning(totrinnSteg.index, val)
                                     }
                                     error={totrinnSteg.feilmelding ? totrinnSteg.feilmelding : null}
@@ -138,7 +141,7 @@ export const Totrinnskontroll: FC = () => {
                                     readOnly={erLesevisning}
                                     value={totrinnSteg.begrunnelse || ''}
                                     maxLength={2000}
-                                    onChange={event =>
+                                    onChange={(event: ChangeEvent<HTMLTextAreaElement>): void =>
                                         oppdaterBegrunnelse(totrinnSteg.index, event.target.value)
                                     }
                                     error={
@@ -155,7 +158,7 @@ export const Totrinnskontroll: FC = () => {
                     <div className="flex flex-row-reverse">
                         <Button
                             size="small"
-                            onClick={() => bekreftelsesmodalRef.current?.showModal()}
+                            onClick={(): void => bekreftelsesmodalRef.current?.showModal()}
                             loading={senderInn}
                             disabled={senderInn || disableBekreft || sendTilSaksbehandler}
                         >
@@ -163,7 +166,7 @@ export const Totrinnskontroll: FC = () => {
                         </Button>
                         <Button
                             size="small"
-                            onClick={() => sendInnSkjema()}
+                            onClick={async (): Promise<void> => await sendInnSkjema()}
                             loading={senderInn}
                             disabled={senderInn || disableBekreft || !sendTilSaksbehandler}
                         >
@@ -178,7 +181,9 @@ export const Totrinnskontroll: FC = () => {
                         brødtekst: 'Denne handlingen kan ikke angres.',
                         bekreftTekst: 'Godkjenn vedtaket',
                     }}
-                    onBekreft={() => sendInnSkjema(() => bekreftelsesmodalRef.current?.close())}
+                    onBekreft={async (): Promise<void> =>
+                        await sendInnSkjema(() => bekreftelsesmodalRef.current?.close())
+                    }
                     laster={senderInn}
                 />
             </div>

@@ -34,7 +34,7 @@ export const EndreEnhet: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={() => dialogRef.current?.showModal()}
+                onSelect={(): void => dialogRef.current?.showModal()}
                 className="text-xl cursor-pointer"
                 icon={<Buildings3Icon aria-hidden />}
             >
@@ -85,7 +85,7 @@ export const EndreEnhet: FC = () => {
                     <Button
                         variant="secondary"
                         key="avbryt"
-                        onClick={() => {
+                        onClick={(): void => {
                             nullstillSkjema();
                             dialogRef.current?.close();
                         }}

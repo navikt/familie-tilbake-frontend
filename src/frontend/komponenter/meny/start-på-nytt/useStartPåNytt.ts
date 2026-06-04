@@ -57,7 +57,7 @@ export const useStartPåNytt = (): StartPåNyttHook => {
                 finnesHttpStatusKode && response.httpStatusCode ? response.httpStatusCode : 500
             );
         },
-        onSuccess: async response => {
+        onSuccess: async (response: Ressurs<string>) => {
             if (response.status === RessursStatus.Suksess) {
                 await queryClient.refetchQueries({
                     queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),

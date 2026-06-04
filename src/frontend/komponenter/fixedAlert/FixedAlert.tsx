@@ -23,7 +23,7 @@ export const FixedAlert: FC<Props> = ({
     stackIndex = 0,
     onClose,
     ...props
-}) => {
+}: Props) => {
     const bottomPosition = baseBottom + stackIndex * (alertHeight + alertGap);
     const alertWidth = width && width > distanceToParent ? width - distanceToParent : undefined;
 

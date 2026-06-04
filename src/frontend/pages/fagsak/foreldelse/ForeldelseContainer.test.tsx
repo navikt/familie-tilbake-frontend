@@ -93,14 +93,14 @@ const setupMock = (foreldelse: ForeldelseResponse): void => {
     }));
 };
 
-const førsteVurdertePeriode = {
+const førsteVurdertePeriode: ForeldelsePeriode = {
     ...foreldelsesperioder[0],
     begrunnelse: 'Begrunnelse 1',
     foreldelsesvurderingstype: 'FORELDET',
     foreldelsesfrist: '2021-01-01',
 } satisfies ForeldelsePeriode;
 
-const andreVurdertePeriode = {
+const andreVurdertePeriode: ForeldelsePeriode = {
     ...foreldelsesperioder[1],
     begrunnelse: 'Begrunnelse 2',
     foreldelsesvurderingstype: 'TILLEGGSFRIST',

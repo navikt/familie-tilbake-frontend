@@ -19,7 +19,7 @@ type Props = {
     journalpost: Journalpost;
 };
 
-export const JournalpostVisning: FC<Props> = ({ journalpost }) => {
+export const JournalpostVisning: FC<Props> = ({ journalpost }: Props) => {
     const datoRegistrertSendt = hentDatoRegistrertSendt(
         journalpost.relevanteDatoer,
         journalpost.journalposttype

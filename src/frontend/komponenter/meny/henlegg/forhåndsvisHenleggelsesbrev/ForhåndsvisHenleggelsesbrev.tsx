@@ -15,7 +15,7 @@ type Props = {
     kanForhåndsvise: boolean;
 };
 
-export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvise }) => {
+export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvise }: Props) => {
     const {
         hentetForhåndsvisning,
         hentBrev,
@@ -24,11 +24,11 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
         nullstillHentetForhåndsvisning,
     } = useForhåndsvisHenleggelsesbrev({ skjema });
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (visModal) {
             hentBrev();
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [visModal]);
 
     return kanForhåndsvise ? (
@@ -36,8 +36,10 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
             <Detail>Informer søker: </Detail>
             <Link
                 href="#"
-                onMouseDown={e => e.preventDefault()}
-                onClick={e => {
+                onMouseDown={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void =>
+                    e.preventDefault()
+                }
+                onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
                     e.preventDefault();
                     setVisModal(true);
                 }}
@@ -49,7 +51,7 @@ export const ForhåndsvisHenleggelsesBrev: FC<Props> = ({ skjema, kanForhåndsvi
                 <PdfVisningModal
                     åpen={visModal}
                     pdfdata={hentetForhåndsvisning}
-                    onRequestClose={() => {
+                    onRequestClose={(): void => {
                         nullstillHentetForhåndsvisning();
                         setVisModal(false);
                     }}

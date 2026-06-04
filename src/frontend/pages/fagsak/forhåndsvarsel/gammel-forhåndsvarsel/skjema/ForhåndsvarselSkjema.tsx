@@ -40,7 +40,7 @@ type Props = {
 export const ForhåndsvarselSkjema: FC<Props> = ({
     forhåndsvarselInfo,
     skalSendesForhåndsvarsel,
-}) => {
+}: Props) => {
     const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const visGlobalAlert = useVisGlobalAlert();
     const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);

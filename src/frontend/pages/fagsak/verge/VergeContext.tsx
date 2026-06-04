@@ -52,6 +52,7 @@ const [VergeProvider, useVerge] = createUseContext(() => {
         useBehandlingState();
     const navigerTilNeste = useStegNavigering('FAKTA');
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (behandling.harVerge) {
             setStegErBehandlet(erStegBehandlet('VERGE'));
@@ -59,7 +60,6 @@ const [VergeProvider, useVerge] = createUseContext(() => {
             setHenterData(true);
             hentVerge();
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     const hentVerge = (): void => {

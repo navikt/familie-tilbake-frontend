@@ -16,7 +16,7 @@ type Props = {
     onSubmit: SubmitHandler<VedtaksbrevFormData>;
 };
 
-export const VedtaksbrevSkjema: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
+export const VedtaksbrevSkjema: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => {
     const { handleSubmit } = useFormContext<VedtaksbrevFormData>();
 
     return (
@@ -33,10 +33,8 @@ export const VedtaksbrevSkjema: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     );
 };
 
-const AvsnittFelter: FC<{ avsnitt: Avsnitt; avsnittIndex: number }> = ({
-    avsnitt,
-    avsnittIndex,
-}) => {
+type AvsnittProps = { avsnitt: Avsnitt; avsnittIndex: number };
+const AvsnittFelter: FC<AvsnittProps> = ({ avsnitt, avsnittIndex }: AvsnittProps) => {
     const påkrevdeBegrunnelser = avsnitt.underavsnitt.filter(
         (el): el is PakrevdBegrunnelse & { type: 'påkrevd_begrunnelse' } =>
             el.type === 'påkrevd_begrunnelse'
@@ -65,7 +63,7 @@ type TekstFeltProps = Omit<TextareaProps, 'error' | 'name' | 'ref' | 'value'> & 
     name: FieldPath<VedtaksbrevFormData>;
 };
 
-const TekstFelt: FC<TekstFeltProps> = ({ name, ...props }) => {
+const TekstFelt: FC<TekstFeltProps> = ({ name, ...props }: TekstFeltProps) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
         register,

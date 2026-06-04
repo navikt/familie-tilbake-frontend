@@ -9,7 +9,7 @@ type Props = {
     ytelser?: YtelseInfo[];
 };
 
-export const TilbakekrevingAktivitetTabell: FC<Props> = ({ ytelser }) => {
+export const TilbakekrevingAktivitetTabell: FC<Props> = ({ ytelser }: Props) => {
     return ytelser && ytelser.length > 0 ? (
         <Table size="small">
             <Table.Header>

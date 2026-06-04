@@ -46,11 +46,11 @@ export const ForhåndsvisVarselbrev: FC = () => {
                 body: lagForhåndsvisningBody(behandlingId, fritekst),
             },
             {
-                onSuccess: data => {
+                onSuccess: (data: RessursByte) => {
                     queryClient.setQueryData(queryKey, data);
                     setVisModal(true);
                 },
-                onError: error => {
+                onError: (error: Error) => {
                     visGlobalAlert({
                         title: 'Kunne ikke forhåndsvise forhåndsvarsel',
                         message: error.message,
@@ -75,7 +75,11 @@ export const ForhåndsvisVarselbrev: FC = () => {
                 Vis brevet
             </Button>
             {visModal && pdfData && (
-                <PdfVisningModal åpen pdfdata={pdfData} onRequestClose={() => setVisModal(false)} />
+                <PdfVisningModal
+                    åpen
+                    pdfdata={pdfData}
+                    onRequestClose={(): void => setVisModal(false)}
+                />
             )}
         </>
     );

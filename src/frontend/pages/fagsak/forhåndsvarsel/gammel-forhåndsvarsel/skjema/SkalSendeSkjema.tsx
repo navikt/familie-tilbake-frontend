@@ -33,7 +33,7 @@ export const SkalSendeSkjema: FC<Props> = ({
     varselbrevtekster,
     varselErSendt,
     handleForhåndsvarselSubmit,
-}) => {
+}: Props) => {
     const maksAntallTegn = 4000;
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();

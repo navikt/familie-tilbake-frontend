@@ -1,4 +1,5 @@
 import type { ChangeEvent, FC } from 'react';
+import type { FeltState } from '@/hooks/skjema';
 
 import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
 
@@ -43,7 +44,7 @@ export const SendMelding: FC = () => {
                     label="Mal"
                     readOnly={behandlingILesemodus}
                     value={skjema.felter.maltype.verdi}
-                    onChange={event => onChangeMal(event)}
+                    onChange={(event: ChangeEvent<HTMLSelectElement>): void => onChangeMal(event)}
                 >
                     <option disabled value="">
                         Velg brev
@@ -63,7 +64,7 @@ export const SendMelding: FC = () => {
                         aria-label={tekstfeltLabel(skjema.felter.maltype.verdi)}
                         readOnly={behandlingILesemodus}
                         value={skjema.felter.fritekst.verdi}
-                        onChange={event =>
+                        onChange={(event: ChangeEvent<HTMLTextAreaElement>): FeltState<string> =>
                             skjema.felter.fritekst.validerOgSettFelt(event.target.value)
                         }
                         maxLength={3000}
@@ -72,7 +73,7 @@ export const SendMelding: FC = () => {
                 <div className="flex flex-row-reverse gap-2">
                     <Button
                         size="small"
-                        onClick={() => sendBrev()}
+                        onClick={(): void => sendBrev()}
                         loading={senderInn}
                         disabled={!kanSende}
                     >

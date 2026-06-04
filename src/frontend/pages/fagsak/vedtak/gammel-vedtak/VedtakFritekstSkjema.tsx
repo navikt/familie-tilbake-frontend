@@ -20,7 +20,7 @@ export const VedtakFritekstSkjema: FC<Props> = ({
     avsnittIndex,
     underavsnitt,
     maximumLength = 4000,
-}) => {
+}: Props) => {
     const { oppdaterUnderavsnitt } = useVedtak();
     const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
     const { fritekst, fritekstPåkrevet, index, harFeil, feilmelding } = underavsnitt;
@@ -51,11 +51,11 @@ export const VedtakFritekstSkjema: FC<Props> = ({
                 <Link
                     role="button"
                     data-testid={`legg-til-fritekst-${avsnittIndex}-${index}`}
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
                         e.preventDefault();
                         setFritekstfeltErSynlig(true);
                     }}
-                    onKeyUp={e => {
+                    onKeyUp={(e: React.KeyboardEvent<HTMLAnchorElement>): void => {
                         const key = e.code || e.keyCode;
                         if (key === 'Space' || key === 'Enter' || key === 32 || key === 13) {
                             setFritekstfeltErSynlig(true);
@@ -77,7 +77,7 @@ export const VedtakFritekstSkjema: FC<Props> = ({
                     maxLength={maximumLength}
                     minLength={3}
                     value={fritekst ? fritekst : ''}
-                    onChange={event => onChange(event)}
+                    onChange={(event: ChangeEvent<HTMLTextAreaElement>): void => onChange(event)}
                     error={harFeil ? feilmelding : null}
                 />
             )}

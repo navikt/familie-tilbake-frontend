@@ -7,7 +7,7 @@ type Props = {
     infotekst: string;
 };
 
-export const Steginformasjon: FC<Props> = ({ behandletSteg, infotekst }) => {
+export const Steginformasjon: FC<Props> = ({ behandletSteg, infotekst }: Props) => {
     return !behandletSteg ? (
         <InlineMessage status="info" size="small">
             {infotekst}

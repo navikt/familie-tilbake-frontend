@@ -10,7 +10,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-export const FaktaRevurdering: FC<Props> = ({ fakta }) => {
+export const FaktaRevurdering: FC<Props> = ({ fakta }: Props) => {
     return fakta ? (
         <VStack gap="space-24">
             <Heading level="2" size="small">

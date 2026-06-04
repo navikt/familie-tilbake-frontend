@@ -40,7 +40,7 @@ export const særligegrunner: Record<SærligeGrunner, string> = {
     [SærligeGrunner.Annet]: 'Annet',
 };
 
-export const særligeGrunnerTyper = [
+export const særligeGrunnerTyper: SærligeGrunner[] = [
     SærligeGrunner.GradAvUaktsomhet,
     SærligeGrunner.HeltEllerDelvisNavsFeil,
     SærligeGrunner.StørrelseBeløp,

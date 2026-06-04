@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 import type { FC } from 'react';
-import type { SubmitHandler } from 'react-hook-form';
+import type { EventType, FormState, InternalFieldName, SubmitHandler } from 'react-hook-form';
 import type {
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
@@ -20,6 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
     // Button,
     DatePicker,
+    type DateValidationT,
     Heading,
     Radio,
     RadioGroup,
@@ -43,11 +44,31 @@ import { useStegNavigering } from '@/utils/sider';
 
 import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
 
+type FaktaOmFeilUtbetalingForm = {
+    vurdering: {
+        oppdaget: {
+            av: 'NAV' | 'BRUKER';
+            dato: string;
+            beskrivelse: string;
+        };
+        årsak: string | null;
+    };
+    perioder?:
+        | {
+              id: string;
+              rettsligGrunnlag: {
+                  bestemmelse: string;
+                  grunnlag: string;
+              }[];
+          }[]
+        | undefined;
+};
+
 type Props = {
     faktaOmFeilutbetaling: FaktaOmFeilutbetaling;
 };
 
-export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
+export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
     const { behandlingId } = useBehandling();
     const { behandlingILesemodus } = useBehandlingState();
     const { actionBarStegtekst, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
@@ -104,12 +125,12 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
         defaultSelected: faktaOmFeilutbetaling.vurdering.oppdaget?.dato
             ? parseISO(faktaOmFeilutbetaling.vurdering.oppdaget.dato)
             : undefined,
-        onDateChange: async date => {
+        onDateChange: async (date: Date | undefined): Promise<void> => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('vurdering.oppdaget.dato', dateString, { shouldDirty: true });
             await methods.trigger('vurdering.oppdaget.dato');
         },
-        onValidate: val => {
+        onValidate: (val: DateValidationT): void => {
             if (val.isAfter) {
                 setUttalelsesdatoFeil('Datoen kan ikke være i fremtiden');
             } else {
@@ -124,10 +145,17 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
     >({
         mutationKey: ['oppdaterFakta'],
     });
+
     useEffect(() => {
         const unsubscribe = methods.subscribe({
             formState: { isDirty: true },
-            callback: data => {
+            callback: (
+                data: Partial<FormState<FaktaOmFeilUtbetalingForm>> & {
+                    values: FaktaOmFeilUtbetalingForm;
+                    name?: InternalFieldName;
+                    type?: EventType;
+                }
+            ): void => {
                 if (data.isDirty) {
                     setIkkePersistertKomponent('fakta');
                 } else {
@@ -142,11 +170,13 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
         // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
         // biome-ignore lint/style/noNonNullAssertion: perioden finnes garantert siden id kommer fra samme kall
         perioder.find(periode => periode.id === id)! as FaktaPeriode;
-    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = data => {
+    const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = (
+        data: OppdaterFaktaOmFeilutbetaling
+    ): void => {
         oppdaterMutation.mutate(
             { body: data, path: { behandlingId } },
             {
-                onSuccess: async data => {
+                onSuccess: async (data: FaktaOmFeilutbetaling) => {
                     nullstillIkkePersisterteKomponenter();
                     if (data.ferdigvurdert) {
                         await queryClient.refetchQueries({
@@ -252,7 +282,9 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }) => {
                             readOnly={behandlingILesemodus}
                             {...methods.register('vurdering.oppdaget.dato')}
                             {...datepickerInputProps}
-                            onBlur={async event => {
+                            onBlur={async (
+                                event: React.FocusEvent<HTMLInputElement>
+                            ): Promise<void> => {
                                 datepickerOnBlur?.(event);
                                 await methods.trigger('vurdering.oppdaget.dato');
                             }}
@@ -307,7 +339,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
     periodeInfo,
     muligeRettsligGrunnlag,
     erSiste,
-}) => {
+}: PeriodeRadProps) => {
     const { behandlingILesemodus } = useBehandlingState();
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(

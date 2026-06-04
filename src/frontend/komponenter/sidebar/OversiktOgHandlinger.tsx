@@ -34,7 +34,7 @@ export const HistorikkOgDokumenter: FC = () => {
             <ToggleGroup
                 data-color="neutral"
                 value={aktivSide}
-                onChange={value => setValgtSide(value as Menysider)}
+                onChange={(value: string): void => setValgtSide(value as Menysider)}
                 size="small"
                 fill
                 className="sticky top-0"

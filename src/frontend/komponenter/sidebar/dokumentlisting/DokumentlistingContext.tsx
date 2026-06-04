@@ -18,11 +18,11 @@ const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
         const [journalposter, setJournalposter] = useState<Ressurs<Journalpost[]>>();
         const { request } = useHttp();
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
         useEffect(() => {
             if (valgtMenyside === Menysider.Dokumenter) {
                 hentDokumentlisting();
             }
-            // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
         }, [behandlingId, valgtMenyside]);
 
         const hentDokumentlisting = (): void => {

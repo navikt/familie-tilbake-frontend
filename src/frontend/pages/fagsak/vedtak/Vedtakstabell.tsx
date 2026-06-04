@@ -18,7 +18,7 @@ type Props = {
     beregningsresultat: Beregningsresultat;
 };
 
-export const Vedtakstabell: FC<Props> = ({ beregningsresultat }) => {
+export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
     const { beregningsresultatsperioder } = beregningsresultat;
 
     const totalFeilutbetalt = beregningsresultatsperioder.reduce(

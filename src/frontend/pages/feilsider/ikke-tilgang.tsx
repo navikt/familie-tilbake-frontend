@@ -18,7 +18,7 @@ export const IkkeTilgang: FC = () => {
                             Du er ikke lenger innlogget. Last siden på nytt for å logge inn igjen.
                         </BodyShort>
                     </div>
-                    <Button onClick={() => location.reload()}>Last siden på nytt</Button>
+                    <Button onClick={(): void => location.reload()}>Last siden på nytt</Button>
                 </VStack>
             </Box>
         </Page.Block>

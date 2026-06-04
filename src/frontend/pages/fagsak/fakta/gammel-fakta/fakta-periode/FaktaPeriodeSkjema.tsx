@@ -22,24 +22,25 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
     hendelseTyper,
     index,
     erHistoriskVisning,
-}) => {
+}: Props) => {
     const { oppdaterUnderårsakPåPeriode, visFeilmeldinger, feilmeldinger, oppdaterÅrsakPåPeriode } =
         useFakta();
     const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         const skalAutoVelgeHendelsestype = !periode.hendelsestype && hendelseTyper?.length === 1;
         if (skalAutoVelgeHendelsestype) {
             oppdaterÅrsakPåPeriode(periode, hendelseTyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [hendelseTyper]);
 
     const hendelseUnderTyper = useMemo(() => {
         return periode.hendelsestype ? hentHendelseUndertyper(periode.hendelsestype) : [];
     }, [periode.hendelsestype]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         const skalAutoVelgeUnderType =
             !periode.hendelsesundertype &&
@@ -49,7 +50,6 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
             oppdaterUnderårsakPåPeriode(periode, hendelseUnderTyper[0]);
             setIkkePersistertKomponent('fakta');
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [hendelseUnderTyper]);
 
     const onChangeÅrsak = (e: ChangeEvent<HTMLSelectElement>): void => {
@@ -84,7 +84,9 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
                             data-testid={`perioder.${index}.årsak`}
                             label="Årsak"
                             hideLabel
-                            onChange={event => onChangeÅrsak(event)}
+                            onChange={(
+                                event: React.ChangeEvent<HTMLSelectElement, Element>
+                            ): void => onChangeÅrsak(event)}
                             value={periode.hendelsestype || '-'}
                             error={
                                 visFeilmeldinger &&
@@ -117,7 +119,9 @@ export const FaktaPeriodeSkjema: FC<Props> = ({
                                 data-testid={`perioder.${index}.underårsak`}
                                 label="Underårsak"
                                 hideLabel
-                                onChange={event => onChangeUnderÅrsak(event)}
+                                onChange={(
+                                    event: React.ChangeEvent<HTMLSelectElement, Element>
+                                ): void => onChangeUnderÅrsak(event)}
                                 value={periode.hendelsesundertype || '-'}
                                 error={
                                     visFeilmeldinger &&

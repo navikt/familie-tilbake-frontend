@@ -12,7 +12,7 @@ type Props = {
     åpen: boolean;
 };
 
-export const PdfVisningModal: FC<Props> = ({ onRequestClose, pdfdata, åpen }) => {
+export const PdfVisningModal: FC<Props> = ({ onRequestClose, pdfdata, åpen }: Props) => {
     return (
         <Modal
             open={åpen}
@@ -26,7 +26,11 @@ export const PdfVisningModal: FC<Props> = ({ onRequestClose, pdfdata, åpen }) =
     );
 };
 
-const Dokument: FC<{ pdfdata: Ressurs<string> | RessursByte }> = ({ pdfdata }) => {
+type DokumentProps = {
+    pdfdata: Ressurs<string> | RessursByte;
+};
+
+const Dokument: FC<DokumentProps> = ({ pdfdata }: DokumentProps) => {
     switch (pdfdata.status) {
         case RessursStatus.Henter:
             return (

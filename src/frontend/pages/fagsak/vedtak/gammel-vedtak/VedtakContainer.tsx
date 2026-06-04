@@ -76,6 +76,7 @@ export const VedtakContainer: FC = () => {
         hentVedtaksbrevtekster();
     };
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         const hentInitialData = async (): Promise<void> => {
             await hentErPerioderLike();
@@ -84,9 +85,9 @@ export const VedtakContainer: FC = () => {
             setErPerioderSammenslått(!!sammenslåttResponse);
         };
         hentInitialData();
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, []);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         // Skal trigge re-rendring
     }, [nonUsedKey]);
@@ -230,7 +231,9 @@ export const VedtakContainer: FC = () => {
                         brødtekst: undefined,
                         bekreftTekst: 'Send til godkjenning',
                     }}
-                    onBekreft={() => sendInnSkjema(() => bekreftelsesmodalRef.current?.close())}
+                    onBekreft={async (): Promise<void> =>
+                        await sendInnSkjema(() => bekreftelsesmodalRef.current?.close())
+                    }
                     laster={senderInn}
                 />
             </VStack>

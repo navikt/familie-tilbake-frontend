@@ -7,7 +7,7 @@ type Props = {
     størrelse?: '2xlarge' | 'large';
 };
 
-export const HenterData: FC<Props> = ({ beskrivelse, størrelse = '2xlarge' }) => {
+export const HenterData: FC<Props> = ({ beskrivelse, størrelse = '2xlarge' }: Props) => {
     return (
         <div className="p-3 text-center">
             <BodyLong>{beskrivelse}</BodyLong>

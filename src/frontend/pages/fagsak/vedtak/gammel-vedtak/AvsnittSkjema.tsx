@@ -44,7 +44,7 @@ type Props = {
     erRevurderingBortfaltBeløp: boolean;
 };
 
-export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp }) => {
+export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp }: Props) => {
     const harPåkrevetFritekstMenIkkeUtfylt = skalVisesÅpen(avsnitt);
     const [erEkspandert, setErEkspandert] = useState(harPåkrevetFritekstMenIkkeUtfylt);
     const { behandlingILesemodus } = useBehandlingState();
@@ -78,7 +78,7 @@ export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp 
     return (
         <ExpansionCard
             open={erEkspandert}
-            onToggle={() => setErEkspandert(prevState => !prevState)}
+            onToggle={(): void => setErEkspandert(prevState => !prevState)}
             aria-label={avsnitt.overskrift ?? 'ekspanderbart panel'}
             size="small"
         >

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { ChangeEvent, FC } from 'react';
 import type { Skjema } from '@/hooks/skjema';
 import type { VilkårsvurderingSkjemaDefinisjon } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
@@ -23,7 +23,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }: Props) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
     const { valgtPeriode, kanIlleggeRenter } = useVilkårsvurdering();
@@ -60,7 +60,9 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                                 id="andelSomTilbakekreves"
                                 aria-label="Angi andel som skal tilbakekreves"
                                 readOnly={erLesevisning}
-                                onChange={event => {
+                                onChange={(
+                                    event: ChangeEvent<HTMLSelectElement, Element>
+                                ): void => {
                                     skjema.felter.uaktsomAndelTilbakekreves.validerOgSettFelt(
                                         event.target.value
                                     );
@@ -90,7 +92,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                                 id="andelSomTilbakekrevesManuell"
                                 aria-label="Angi andel som skal tilbakekreves - fritekst"
                                 readOnly={erLesevisning}
-                                onChange={event => {
+                                onChange={(event: ChangeEvent<HTMLInputElement>): void => {
                                     skjema.felter.uaktsomAndelTilbakekrevesManuelt.validerOgSettFelt(
                                         event.target.value
                                     );
@@ -112,7 +114,7 @@ export const ReduksjonAvBeløpSkjema: FC<Props> = ({ skjema, erLesevisning }) =>
                             aria-live="polite"
                             readOnly={erLesevisning}
                             value={skjema.felter.uaktsomTilbakekrevesBeløp.verdi}
-                            onChange={event => {
+                            onChange={(event: ChangeEvent<HTMLInputElement, Element>): void => {
                                 skjema.felter.uaktsomTilbakekrevesBeløp.validerOgSettFelt(
                                     event.target.value
                                 );

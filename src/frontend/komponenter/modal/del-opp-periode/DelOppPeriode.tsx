@@ -36,7 +36,7 @@ export const DelOppPeriode: FC<Props> = ({
     onChangeDato,
     onSubmit,
     feilmelding,
-}) => {
+}: Props) => {
     const { monthpickerProps, inputProps } = useMonthpicker({
         fromDate: isoStringTilDate(periode.periode.fom),
         toDate: subMonths(isoStringTilDate(periode.periode.tom), 1),
@@ -54,7 +54,7 @@ export const DelOppPeriode: FC<Props> = ({
                     }}
                     portal
                     width="medium"
-                    onClose={() => settVisModal(false)}
+                    onClose={(): void => settVisModal(false)}
                 >
                     <Modal.Body className="flex flex-col gap-4">
                         <Label size="small">Periode</Label>
@@ -98,7 +98,7 @@ export const DelOppPeriode: FC<Props> = ({
                         <Button
                             variant="tertiary"
                             key="avbryt"
-                            onClick={() => settVisModal(false)}
+                            onClick={(): void => settVisModal(false)}
                             size="small"
                         >
                             Lukk

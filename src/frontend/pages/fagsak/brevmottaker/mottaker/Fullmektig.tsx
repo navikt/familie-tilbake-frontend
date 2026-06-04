@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
 import type { BrevmottakerFormData } from '@/pages/fagsak/brevmottaker/schema/schema';
 
 import { Radio, RadioGroup, TextField, VStack } from '@navikt/ds-react';
@@ -17,7 +17,8 @@ export const Fullmektig: FC = () => {
             <Controller
                 name="fullmektig.adresseKilde"
                 control={control}
-                render={({ field, fieldState }) => (
+                // biome-ignore lint/suspicious/noExplicitAny: Vet ikke hva addresseKilde-typen er i runtime, og det er mye overhead å type denne eksplisitt. --- IGNORE ---
+                render={({ field, fieldState }: { field: any; fieldState: any }): JSX.Element => (
                     <RadioGroup
                         legend="Adresse"
                         value={field.value || ''}

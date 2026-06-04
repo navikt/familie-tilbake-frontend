@@ -66,7 +66,6 @@ export const tilVedtaksbrevDataWritable = (
     vedtaksbrevData: VedtaksbrevData,
     formData: VedtaksbrevFormData
 ): VedtaksbrevDataWritable => {
-    // biome-ignore lint/correctness/noUnusedVariables: destrukturering for å utelate felter
     const { sistOppdatert: _, hovedavsnitt, avsnitt, ...statiskeData } = vedtaksbrevData;
     return {
         ...statiskeData,

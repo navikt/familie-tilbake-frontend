@@ -35,10 +35,10 @@ export const StartPåNytt: FC = () => {
                     </BodyLong>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={() => mutate()} loading={isPending}>
+                    <Button onClick={(): void => mutate()} loading={isPending}>
                         Start på nytt
                     </Button>
-                    <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
+                    <Button variant="secondary" onClick={(): void => dialogRef.current?.close()}>
                         Avbryt
                     </Button>
                 </Modal.Footer>

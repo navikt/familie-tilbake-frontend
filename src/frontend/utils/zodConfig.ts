@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 export const configureZod = (): void => {
     z.config({
-        customError: issue => {
+        // biome-ignore lint/suspicious/noExplicitAny: Kan være av typen $ZodIssue
+        customError: (issue: any): string | undefined => {
             if (issue.code === 'too_small' && issue.minimum == 1) return `Du må fylle inn en verdi`;
             if (issue.code === 'too_small') return `Du må fylle inn minst ${issue.minimum} tegn`;
             if (issue.code === 'too_big') return `Du må fylle inn færre enn ${issue.maximum} tegn`;

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Skjema } from '@/hooks/skjema';
+import type { FeltState, Skjema } from '@/hooks/skjema';
 
 import { Checkbox, CheckboxGroup, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 
@@ -28,7 +28,7 @@ type Props = {
     erLesevisning: boolean;
 };
 
-export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
+export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }: Props) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { kanIlleggeRenter } = useVilkårsvurdering();
 
@@ -63,7 +63,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                 {...skjema.felter.særligeGrunner.hentNavBaseSkjemaProps(skjema.visFeilmeldinger)}
                 size="small"
                 legend="Hvilke særlige grunner kan være aktuelle i denne saken?"
-                onChange={(val: SærligeGrunner[]) => onChangeSærligeGrunner(val)}
+                onChange={(val: SærligeGrunner[]): void => onChangeSærligeGrunner(val)}
                 value={skjema.felter.særligeGrunner.verdi}
                 readOnly={erLesevisning}
                 aria-live="polite"
@@ -89,7 +89,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                     aria-live="polite"
                     readOnly={erLesevisning}
                     value={skjema.felter.særligeGrunnerAnnetBegrunnelse.verdi}
-                    onChange={event => {
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement, Element>): void => {
                         skjema.felter.særligeGrunnerAnnetBegrunnelse.validerOgSettFelt(
                             event.target.value
                         );
@@ -111,7 +111,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                         ? skjema.felter.harGrunnerTilReduksjon.feilmelding?.toString()
                         : ''
                 }
-                onChange={(val: JaNeiOption) => {
+                onChange={(val: JaNeiOption): FeltState<'' | JaNeiOption> => {
                     skjema.felter.grovtUaktsomIlleggeRenter.validerOgSettFelt(
                         utledGrovtUaktsomIlleggeRenterVerdi()
                     );
@@ -142,7 +142,7 @@ export const SærligeGrunnerSkjema: FC<Props> = ({ skjema, erLesevisning }) => {
                 resize
                 readOnly={erLesevisning}
                 value={skjema.felter.særligeGrunnerBegrunnelse.verdi}
-                onChange={event => {
+                onChange={(event: React.ChangeEvent<HTMLTextAreaElement, Element>): void => {
                     skjema.felter.særligeGrunnerBegrunnelse.validerOgSettFelt(event.target.value);
                     setIkkePersistertKomponent(`vilkårsvurdering`);
                 }}

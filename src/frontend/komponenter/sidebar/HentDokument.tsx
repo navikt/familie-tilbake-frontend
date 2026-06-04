@@ -21,7 +21,7 @@ type Props = {
     onClose: () => void;
 };
 
-export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) => {
+export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }: Props) => {
     const [hentetDokument, setHentetDokument] = useState<Ressurs<string>>(() =>
         byggHenterRessurs()
     );
@@ -29,6 +29,7 @@ export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) 
     const { behandlingId } = useBehandling();
     const { request } = useHttp();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         request<void, string>({
             method: 'GET',
@@ -51,14 +52,13 @@ export const HentDokument: FC<Props> = ({ journalpostId, dokumentId, onClose }) 
                 );
             }
         });
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandlingId, journalpostId, dokumentId]);
 
     return (
         <PdfVisningModal
             åpen={visModal}
             pdfdata={hentetDokument}
-            onRequestClose={() => {
+            onRequestClose={(): void => {
                 setHentetDokument(byggTomRessurs());
                 setVisModal(false);
                 onClose();

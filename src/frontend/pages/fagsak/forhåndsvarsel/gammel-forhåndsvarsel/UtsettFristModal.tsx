@@ -4,7 +4,15 @@ import type { z } from 'zod';
 import type { FristUtsettelseDto } from '@/generated';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, DatePicker, Modal, Textarea, useDatepicker, VStack } from '@navikt/ds-react';
+import {
+    Button,
+    DatePicker,
+    type DateValidationT,
+    Modal,
+    Textarea,
+    useDatepicker,
+    VStack,
+} from '@navikt/ds-react';
 import { useMemo, useState } from 'react';
 import { get, useForm } from 'react-hook-form';
 
@@ -21,7 +29,7 @@ type Props = {
     laster: boolean;
 };
 
-export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }) => {
+export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const [nyFristFeil, setNyFristFeil] = useState<string | undefined>(undefined);
     const iDag = useMemo(() => new Date(), []);
@@ -43,12 +51,12 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
         inputProps: { onBlur: datepickerOnBlur, ...datepickerInputProps },
     } = useDatepicker({
         fromDate: iDag,
-        onDateChange: date => {
+        onDateChange: (date: Date | undefined) => {
             const dateString = dateTilIsoDatoString(date);
             methods.setValue('nyFrist', dateString);
             methods.trigger('nyFrist');
         },
-        onValidate: val => {
+        onValidate: (val: DateValidationT) => {
             if (val.isBefore) {
                 setNyFristFeil('Fristen kan ikke være i fortiden');
             } else {
@@ -57,7 +65,10 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
         },
     });
 
-    const handleSubmit: SubmitHandler<UtsettFristFormData> = data => {
+    const handleSubmit: SubmitHandler<UtsettFristFormData> = (data: {
+        nyFrist: string;
+        begrunnelse: string;
+    }) => {
         onUtsettFrist({
             nyFrist: data.nyFrist,
             begrunnelse: data.begrunnelse,
@@ -83,7 +94,9 @@ export const UtsettFristModal: FC<Props> = ({ dialogRef, onUtsettFrist, laster }
                             <DatePicker.Input
                                 size="small"
                                 {...datepickerInputProps}
-                                onBlur={async event => {
+                                onBlur={async (
+                                    event: React.FocusEvent<HTMLInputElement, Element>
+                                ): Promise<void> => {
                                     datepickerOnBlur?.(event);
                                     await methods.trigger('nyFrist');
                                 }}

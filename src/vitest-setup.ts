@@ -22,7 +22,7 @@ Object.assign(global, { TextEncoder });
 
 const crypto = new Crypto();
 Object.defineProperty(global, 'crypto', {
-    get() {
+    get(): Crypto {
         return crypto;
     },
 });

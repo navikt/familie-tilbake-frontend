@@ -60,11 +60,11 @@ export const Forhåndsvarsel: FC = () => {
         defaultValues:
             forhåndsvarselSteg.type === 'unntak'
                 ? {
-                      valg: 'unntak',
-                      begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
-                      beskrivelse: forhåndsvarselSteg.beskrivelse,
-                      brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
-                  }
+                    valg: 'unntak',
+                    begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
+                    beskrivelse: forhåndsvarselSteg.beskrivelse,
+                    brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
+                }
                 : undefined,
     });
 
@@ -82,6 +82,7 @@ export const Forhåndsvarsel: FC = () => {
     const sendVarselbrev = useMutation({
         ...behandlingSendVarselbrevMutation(),
         onSuccess: etterVellykketLagring,
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende forhåndsvarsel',
@@ -94,6 +95,7 @@ export const Forhåndsvarsel: FC = () => {
     const lagreUnntak = useMutation({
         ...behandlingLagreForhaandsvarselUnntakMutation(),
         onSuccess: etterVellykketLagring,
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke lagre unntak',
@@ -151,7 +153,7 @@ export const Forhåndsvarsel: FC = () => {
         });
     };
 
-    const onSubmit: SubmitHandler<IkkeVurdertFormData> = data => {
+    const onSubmit: SubmitHandler<IkkeVurdertFormData> = (data: IkkeVurdertFormData): void => {
         if (data.valg === 'send') {
             //TODO: trenger en bekreftelsesmodal her
             sendVarselbrev.mutate({

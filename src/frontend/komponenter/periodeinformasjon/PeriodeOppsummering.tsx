@@ -13,7 +13,7 @@ type Props = {
     hendelsetype?: HendelseType;
 };
 
-export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype }) => {
+export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype }: Props) => {
     return (
         <div className="flex gap-4 flex-wrap">
             <BodyShort

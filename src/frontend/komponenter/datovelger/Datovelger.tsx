@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import type { Felt } from '@/hooks/skjema';
 
-import { DatePicker, useDatepicker } from '@navikt/ds-react';
+import { DatePicker, type DateValidationT, useDatepicker } from '@navikt/ds-react';
 import { addDays, format, startOfDay, subDays } from 'date-fns';
 import { useState } from 'react';
 
@@ -72,7 +72,7 @@ export const Datovelger: FC<Props> = ({
         },
         fromDate: hentFromDate(),
         toDate: hentToDate(),
-        onValidate: val => {
+        onValidate: (val: DateValidationT) => {
             if (val.isBefore) {
                 nullstillOgSettFeilmelding(Feilmelding.FørMinDato);
             } else if (val.isAfter) {

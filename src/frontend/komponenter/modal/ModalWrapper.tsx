@@ -23,7 +23,7 @@ export const ModalWrapper: FC<Props> = ({
     onClose,
     aksjonsknapper,
     children,
-}) => {
+}: Props) => {
     return (
         visModal && (
             <Modal

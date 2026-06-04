@@ -15,7 +15,10 @@ export const OptionIkkeGodkjent = {
     label: 'Vurder på nytt',
 };
 
-export const totrinnGodkjenningOptions = [OptionGodkjent, OptionIkkeGodkjent];
+export const totrinnGodkjenningOptions: TotrinnGodkjenningOption[] = [
+    OptionGodkjent,
+    OptionIkkeGodkjent,
+];
 
 export type TotrinnStegSkjemaData = {
     index: string;

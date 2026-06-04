@@ -8,7 +8,7 @@ type Props = {
     type: Journalposttype;
 };
 
-const DokumentIkon: FC<Props> = ({ type }) => {
+const DokumentIkon: FC<Props> = ({ type }: Props) => {
     return (
         <div className="bg-ax-neutral-400A w-6.5 h-6.5 rounded-full inline-flex items-center justify-center">
             {type === Journalposttype.I && (

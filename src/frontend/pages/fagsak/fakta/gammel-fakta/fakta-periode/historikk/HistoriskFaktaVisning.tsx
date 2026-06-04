@@ -14,7 +14,7 @@ type Props = {
     fakta: FaktaResponse;
 };
 
-export const HistoriskFaktaVisning: FC<Props> = ({ skjemaData, fakta }) => {
+export const HistoriskFaktaVisning: FC<Props> = ({ skjemaData, fakta }: Props) => {
     return (
         <HGrid columns={2} gap="space-40">
             <VStack gap="space-24">

@@ -1,6 +1,11 @@
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { VedtaksbrevData, VedtaksbrevDataWritable } from '@/generated-new';
+import type {
+    Options,
+    VedtaksbrevData,
+    VedtaksbrevDataWritable,
+    VedtaksbrevLagSvgVedtaksbrevData,
+} from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
 
 import {
@@ -13,7 +18,7 @@ import {
     Tag,
     VStack,
 } from '@navikt/ds-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type MutationFunctionContext, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -52,7 +57,7 @@ type Props = {
 
 export const VEDTAKSBREV_FORM_ID = 'vedtaksbrev-skjema';
 
-export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
+export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
 
@@ -72,7 +77,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
     const forhåndsvisningMutation = useMutation({
         mutationKey: ['lagPdf'],
         ...originalMutation,
-        onSuccess: async data => {
+        onSuccess: async (data: Blob | File) => {
             const blob = data as Blob;
             const tekst = await blob.text();
             const respons = JSON.parse(tekst) as { page_count: number; pages: string[] };
@@ -81,7 +86,10 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
             );
             setPdfSider(siderSomBase64);
         },
-        onMutate: async (variables, context) => {
+        onMutate: async (
+            variables: Options<VedtaksbrevLagSvgVedtaksbrevData>,
+            context: MutationFunctionContext
+        ) => {
             await queryClient.cancelQueries({ queryKey: ['lagPdf'] });
             onMutate?.(variables, context);
         },
@@ -199,7 +207,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                                     <Button
                                         variant="secondary"
                                         size="small"
-                                        onClick={() => {
+                                        onClick={(): void => {
                                             forhåndsvisningMutation.reset();
                                             debouncedUpdate();
                                         }}

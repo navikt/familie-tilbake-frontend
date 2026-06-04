@@ -26,7 +26,11 @@ vi.mock('@/api/http/HttpProvider', () => ({
     }),
 }));
 
-const wrapper: FC<{ children: ReactNode }> = ({ children }) => (
+type WrapperProps = {
+    children: ReactNode;
+};
+
+const wrapper: FC<WrapperProps> = ({ children }: WrapperProps) => (
     <QueryClientProvider client={createTestQueryClient()}>
         <MemoryRouter>
             <FagsakContext value={lagFagsak()}>

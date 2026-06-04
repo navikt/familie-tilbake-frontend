@@ -42,7 +42,7 @@ type Props = {
     perioder: ForeldelsePeriodeSkjemeData[];
 };
 
-export const ForeldelsePerioder: FC<Props> = ({ perioder }) => {
+export const ForeldelsePerioder: FC<Props> = ({ perioder }: Props) => {
     const { valgtPeriode, setValgtPeriode } = useForeldelse();
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 

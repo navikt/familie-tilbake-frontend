@@ -6,10 +6,16 @@ import { useEffect, useRef } from 'react';
 
 import { useApp } from '@/context/AppContext';
 
-export const Toast: FC<{ toastId: string; toast: TToast }> = ({ toastId, toast }) => {
+type Props = {
+    toastId: string;
+    toast: TToast;
+};
+
+export const Toast: FC<Props> = ({ toastId, toast }: Props) => {
     const { toasts, setToasts } = useApp();
     const toastRef = useRef<HTMLDivElement>(null);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         (toastRef.current as HTMLSpanElement).focus();
     }, [toastRef]);

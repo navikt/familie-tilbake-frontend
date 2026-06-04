@@ -11,7 +11,7 @@ type Props = {
     brevmottakere: Brevmottaker[];
 };
 
-export const BrevmottakereAlert: FC<Props> = ({ brevmottakere }) => {
+export const BrevmottakereAlert: FC<Props> = ({ brevmottakere }: Props) => {
     const navigerTilBrevmottakerSteg = useStegNavigering('BREVMOTTAKER');
     return (
         brevmottakere &&

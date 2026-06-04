@@ -10,7 +10,7 @@ type Props = {
     perioder: BeregningsresultatPeriode[];
 };
 
-export const VedtakPerioder: FC<Props> = ({ perioder }) => {
+export const VedtakPerioder: FC<Props> = ({ perioder }: Props) => {
     return (
         <Table size="small">
             <Table.Header>

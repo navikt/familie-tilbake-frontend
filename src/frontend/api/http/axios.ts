@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse, AxiosStatic } from 'axios';
 import type { ApiRessurs, Ressurs } from '@/typer/ressurs';
 import type { Saksbehandler } from '@/typer/saksbehandler';
 
@@ -9,7 +9,7 @@ import { RessursStatus } from '@/typer/ressurs';
 import { erServerFeil } from '@/utils/httpUtils';
 
 axios.defaults.baseURL = window.location.origin;
-export const preferredAxios = axios;
+export const preferredAxios: AxiosStatic = axios;
 
 type ApiRespons<T> = {
     defaultFeilmelding?: string;

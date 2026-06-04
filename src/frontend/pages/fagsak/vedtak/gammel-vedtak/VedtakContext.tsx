@@ -97,10 +97,10 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         useBehandlingApi();
     const { lagreUtkastVedtaksbrev } = useDokumentApi();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         hentBeregningsresultat();
         hentVedtaksbrevtekster();
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -128,6 +128,7 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
         }
     }, [vedtaksbrevavsnitt]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         const påkrevetIkkeUtfylt = skjemaData.some(avs =>
             avs.underavsnittsliste.some(uavs => !!uavs.fritekstPåkrevet && isEmpty(uavs.fritekst))

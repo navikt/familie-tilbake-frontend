@@ -14,7 +14,7 @@ type Props = {
     prefix: string;
 };
 
-export const ManuellRegistrering: FC<Props> = ({ preutfyltNavn, mottakerType, prefix }) => {
+export const ManuellRegistrering: FC<Props> = ({ preutfyltNavn, mottakerType, prefix }: Props) => {
     const {
         register,
         watch,

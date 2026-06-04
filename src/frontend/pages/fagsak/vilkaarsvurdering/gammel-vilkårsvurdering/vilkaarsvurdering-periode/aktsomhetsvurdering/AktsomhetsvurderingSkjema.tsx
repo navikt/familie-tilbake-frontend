@@ -1,11 +1,11 @@
-import type { FC } from 'react';
+import type { ChangeEvent, FC } from 'react';
 import type { VilkårsvurderingSkjemaDefinisjon } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/vilkaarsvurdering-periode/VilkårsvurderingPeriodeSkjemaContext';
 
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
-import { type Skjema, Valideringsstatus } from '@/hooks/skjema';
+import { type FeltState, type Skjema, Valideringsstatus } from '@/hooks/skjema';
 import { Aktsomhet, aktsomheter, Vilkårsresultat } from '@/kodeverk';
 import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import {
@@ -26,7 +26,7 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({
     skjema,
     erLesevisning,
     harFlerePerioder,
-}) => {
+}: Props) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
     const { kanIlleggeRenter } = useVilkårsvurdering();
@@ -60,7 +60,7 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({
                         ? skjema.felter.aktsomhetVurdering.feilmelding?.toString()
                         : ''
                 }
-                onChange={(val: Aktsomhet) => {
+                onChange={(val: Aktsomhet): FeltState<'' | Aktsomhet> => {
                     if (
                         val === Aktsomhet.Forsettlig &&
                         skjema.felter.forstoIlleggeRenter.verdi === ''
@@ -137,7 +137,7 @@ export const AktsomhetsvurderingSkjema: FC<Props> = ({
                         ? skjema.felter.aktsomhetBegrunnelse.verdi
                         : ''
                 }
-                onChange={(event: { target: { value: string } }) => {
+                onChange={(event: ChangeEvent<HTMLTextAreaElement, HTMLTextAreaElement>): void => {
                     skjema.felter.aktsomhetBegrunnelse.validerOgSettFelt(event.target.value);
                     setIkkePersistertKomponent('vilkårsvurdering');
                 }}

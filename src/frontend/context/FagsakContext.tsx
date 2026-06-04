@@ -32,7 +32,8 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
 
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, eksternFagsakId],
-        retry: (count, error) => {
+        // biome-ignore lint/suspicious/noExplicitAny: error-objektet kan ha ulik form avhengig av feilen som oppstår, og er utypet i SDK-et
+        retry: (count: number, error: any) => {
             return count < 4 && !(error instanceof FagsakIkkeStøttetError);
         },
         queryFn: async () => {

@@ -41,7 +41,7 @@ type Props = {
     onToggle?: (open: boolean) => void;
 };
 
-export const BrukerInformasjon: FC<Props> = ({ open, onToggle }) => {
+export const BrukerInformasjon: FC<Props> = ({ open, onToggle }: Props) => {
     const { bruker, institusjon } = useFagsak();
 
     const erKontrollert = open !== undefined;

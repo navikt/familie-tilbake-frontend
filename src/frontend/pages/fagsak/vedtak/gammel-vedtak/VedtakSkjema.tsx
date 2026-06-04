@@ -17,7 +17,7 @@ export const VedtakSkjema: FC<Props> = ({
     avsnitter,
     erRevurderingBortfaltBeløp,
     harBrukerUttaltSeg,
-}) => {
+}: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     return (
         <>

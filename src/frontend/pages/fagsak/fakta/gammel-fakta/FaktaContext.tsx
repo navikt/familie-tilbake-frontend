@@ -62,10 +62,10 @@ const [FaktaProvider, useFakta] = createUseContext(() => {
         useBehandlingState();
     const { gjerFaktaKall, sendInnFakta } = useBehandlingApi();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FAKTA'));
         hentFakta();
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {

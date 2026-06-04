@@ -21,7 +21,7 @@ const redisClientForAiven = (sessionKonfigurasjon: SessionKonfigurasjon): any =>
         username: sessionKonfigurasjon.valkeyBrukernavn,
         password: sessionKonfigurasjon.valkeyPassord,
         socket: {
-            reconnectStrategy: attempts => {
+            reconnectStrategy: (attempts: number): number => {
                 if (attempts >= 100 && hentErforbindelsenTilValkeyTilgjengelig()) {
                     settErforbindelsenTilValkeyTilgjengelig(false);
                 }

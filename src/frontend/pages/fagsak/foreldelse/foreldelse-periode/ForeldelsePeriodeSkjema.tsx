@@ -30,7 +30,7 @@ type Props = {
     periode: ForeldelsePeriodeSkjemeData;
 };
 
-export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
+export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
     const { erAutoutført, oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
@@ -38,6 +38,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
     const { behandlingILesemodus, setIkkePersistertKomponent } = useBehandlingState();
     const erLesevisning = behandlingILesemodus || !!erAutoutført;
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
         skjema.felter.foreldelsesvurderingstype.onChange(periode?.foreldelsesvurderingstype || '');
@@ -47,7 +48,6 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
         skjema.felter.oppdagelsesdato.onChange(
             periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
         );
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode]);
 
     const erForeldet = skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET';
@@ -145,7 +145,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                             ? skjema.felter.foreldelsesvurderingstype.feilmelding?.toString()
                             : ''
                     }
-                    onChange={(val: ForeldelsesvurderingstypeEnum) => {
+                    onChange={(val: ForeldelsesvurderingstypeEnum): void => {
                         skjema.felter.foreldelsesvurderingstype.validerOgSettFelt(val);
                         setIkkePersistertKomponent('foreldelse');
                     }}
@@ -170,7 +170,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                     minRows={3}
                     readOnly={erLesevisning}
                     value={skjema.felter.begrunnelse.verdi}
-                    onChange={event => {
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>): void => {
                         skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
                         setIkkePersistertKomponent('foreldelse');
                     }}
@@ -185,7 +185,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                             visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
                             readOnly={erLesevisning}
                             kanKunVelgeFortid
-                            settIkkePersistertKomponent={() =>
+                            settIkkePersistertKomponent={(): void =>
                                 setIkkePersistertKomponent('foreldelse')
                             }
                         />
@@ -202,7 +202,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
                                 }
                                 visFeilmeldinger={ugyldigForeldelsesfristValgt}
                                 readOnly={erLesevisning}
-                                settIkkePersistertKomponent={() =>
+                                settIkkePersistertKomponent={(): void =>
                                     setIkkePersistertKomponent('foreldelse')
                                 }
                             />
@@ -213,7 +213,11 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }) => {
 
                 {!erLesevisning && (
                     <div className="flex justify-start">
-                        <Button size="small" className="w-40" onClick={() => onBekreft(periode)}>
+                        <Button
+                            size="small"
+                            className="w-40"
+                            onClick={(): void => onBekreft(periode)}
+                        >
                             Bekreft periode
                         </Button>
                     </div>

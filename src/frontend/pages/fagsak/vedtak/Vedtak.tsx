@@ -58,6 +58,7 @@ export const Vedtak: FC = () => {
                 status: 'success',
             });
         },
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende til godkjenning',

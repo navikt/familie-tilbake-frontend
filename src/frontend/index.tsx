@@ -8,7 +8,7 @@ import { initGrafanaFaro } from './utils/grafanaFaro';
 
 import './index.css';
 
-const environment = window.location.hostname;
+const environment: string = window.location.hostname;
 
 if (process.env.NODE_ENV !== 'development') {
     Sentry.init({

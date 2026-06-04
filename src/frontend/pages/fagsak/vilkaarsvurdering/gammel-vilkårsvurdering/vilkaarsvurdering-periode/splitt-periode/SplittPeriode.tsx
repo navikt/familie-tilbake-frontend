@@ -27,7 +27,7 @@ type Props = {
     ) => void;
 };
 
-export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
+export const SplittPeriode: FC<Props> = ({ periode, onBekreft }: Props) => {
     const [splittetPerioder, setSplittetPerioder] = useState<VilkårsvurderingPeriodeSkjemaData[]>();
     const {
         visModal,
@@ -110,11 +110,11 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
         }
     };
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (periode.periode.fom) {
             onChangeDato(periode.periode.fom);
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [periode.periode.fom]);
 
     return periode && tidslinjeRader ? (
@@ -122,7 +122,7 @@ export const SplittPeriode: FC<Props> = ({ periode, onBekreft }) => {
             <Button
                 size="xsmall"
                 variant="tertiary"
-                onClick={() => setVisModal(true)}
+                onClick={(): void => setVisModal(true)}
                 icon={<SplitHorizontalIcon aria-hidden />}
             >
                 Del opp perioden

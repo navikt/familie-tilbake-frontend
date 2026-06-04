@@ -18,7 +18,7 @@ type Props = {
     årsaker: BehandlingsresultatstypeEnum[];
 };
 
-export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }) => {
+export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }: Props) => {
     const { type } = useBehandling();
     const { skjema, visFritekst, onBekreft, nullstillSkjema, kanForhåndsvise } = useHenleggSkjema({
         lukkModal: () => dialogRef.current?.close(),
@@ -81,9 +81,9 @@ export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }) => {
                         label={<LabelMedSpråk label="Fritekst til brev" />}
                         aria-label="Fritekst til brev"
                         value={skjema.felter.fritekst.verdi}
-                        onChange={event =>
-                            skjema.felter.fritekst.validerOgSettFelt(event.target.value)
-                        }
+                        onChange={(event: ChangeEvent<HTMLTextAreaElement, Element>): void => {
+                            skjema.felter.fritekst.validerOgSettFelt(event.target.value);
+                        }}
                         readOnly={false}
                         maxLength={1500}
                     />
@@ -92,9 +92,9 @@ export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }) => {
                     {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
                     label="Begrunnelse"
                     value={skjema.felter.begrunnelse.verdi}
-                    onChange={event =>
-                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value)
-                    }
+                    onChange={(event: ChangeEvent<HTMLTextAreaElement, Element>): void => {
+                        skjema.felter.begrunnelse.validerOgSettFelt(event.target.value);
+                    }}
                     readOnly={false}
                     maxLength={200}
                 />
@@ -112,7 +112,7 @@ export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }) => {
                 <Button
                     variant="secondary"
                     key="avbryt"
-                    onClick={() => {
+                    onClick={(): void => {
                         nullstillSkjema();
                         dialogRef.current?.close();
                     }}

@@ -93,10 +93,7 @@ describe('tilFormData', () => {
 describe('tilVedtaksbrevDataWritable', () => {
     test('kopierer statiske felter og utelater sistOppdatert', () => {
         const vedtaksbrevData = lagVedtaksbrevData();
-
         const resultat = tilVedtaksbrevDataWritable(vedtaksbrevData, lagFormData());
-
-        // biome-ignore lint/correctness/noUnusedVariables: destrukturering for å utelate felter
         const { sistOppdatert, hovedavsnitt, avsnitt, ...statiskeFelter } = vedtaksbrevData;
         expect(resultat).toMatchObject(statiskeFelter);
         expect(resultat.hovedavsnitt.hjemler).toEqual(vedtaksbrevData.hovedavsnitt.hjemler);

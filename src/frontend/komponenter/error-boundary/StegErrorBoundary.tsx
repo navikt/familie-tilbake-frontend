@@ -88,9 +88,7 @@ export class StegErrorBoundary extends Component<Props, State> {
                         <Button
                             variant="secondary"
                             size="small"
-                            onClick={() => {
-                                this.setState({ hasError: false, error: null });
-                            }}
+                            onClick={(): void => this.setState({ hasError: false, error: null })}
                         >
                             Prøv på nytt
                         </Button>

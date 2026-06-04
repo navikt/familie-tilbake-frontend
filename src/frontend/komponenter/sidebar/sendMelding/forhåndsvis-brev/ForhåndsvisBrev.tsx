@@ -22,11 +22,11 @@ export const ForhåndsvisBrev: FC<Props> = () => {
     } = useForhåndsvisBrev();
     const { kanSendeSkjema } = useSendMelding();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (visModal) {
             hentBrev();
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [visModal]);
 
     return (
@@ -34,7 +34,7 @@ export const ForhåndsvisBrev: FC<Props> = () => {
             <Button
                 size="small"
                 variant="tertiary"
-                onClick={() => {
+                onClick={(): void => {
                     if (kanSendeSkjema()) {
                         setVisModal(true);
                     }
@@ -46,7 +46,7 @@ export const ForhåndsvisBrev: FC<Props> = () => {
                 <PdfVisningModal
                     åpen={visModal}
                     pdfdata={hentetForhåndsvisning}
-                    onRequestClose={() => {
+                    onRequestClose={(): void => {
                         nullstillHentetForhåndsvisning();
                         setVisModal(false);
                     }}

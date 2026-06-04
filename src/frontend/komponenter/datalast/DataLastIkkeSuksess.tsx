@@ -19,7 +19,7 @@ export const DataLastIkkeSuksess: FC<Props> = ({
     spinnerStørrelse,
     henteBeskrivelse,
     visFeilSide,
-}) => {
+}: Props) => {
     const filtrerteRessurser = ressurser.filter(ressurs => ressurs !== undefined);
     const ingenTilgangRessurs = filtrerteRessurser.find(
         ressurs => ressurs.status === RessursStatus.IkkeTilgang

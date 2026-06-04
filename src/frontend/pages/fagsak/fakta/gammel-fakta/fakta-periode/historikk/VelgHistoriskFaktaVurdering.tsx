@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { ChangeEvent, FC } from 'react';
 import type { FaktaResponse } from '@/typer/tilbakekrevingstyper';
 
 import { Select } from '@navikt/ds-react';
@@ -11,10 +11,13 @@ type Props = {
     setInaktivFakta: (valgtFakta?: FaktaResponse) => void;
 };
 
-export const VelgHistoriskFaktaVurdering: FC<Props> = ({ inaktiveFakta, setInaktivFakta }) => {
+export const VelgHistoriskFaktaVurdering: FC<Props> = ({
+    inaktiveFakta,
+    setInaktivFakta,
+}: Props) => {
     return (
         <Select
-            onChange={e => {
+            onChange={(e: ChangeEvent<HTMLSelectElement, Element>): void => {
                 const valgtVurdering = inaktiveFakta.find(
                     fakta => fakta.opprettetTid === e.target.value
                 );

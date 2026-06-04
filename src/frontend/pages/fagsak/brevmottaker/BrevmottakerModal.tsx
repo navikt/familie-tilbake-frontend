@@ -13,7 +13,7 @@ const hentEksisterendeBrevmottaker = (
     return manuellMottaker?.brevmottaker;
 };
 
-type BrevmottakerModalProps = {
+type Props = {
     visBrevmottakerModal: boolean;
     brevmottakerIdTilEndring: string | undefined;
     brevmottakere: ManuellBrevmottakerResponsDto[];
@@ -21,13 +21,13 @@ type BrevmottakerModalProps = {
     settBrevmottakerIdTilEndring: (id: string | undefined) => void;
 };
 
-export const BrevmottakerModal: FC<BrevmottakerModalProps> = ({
+export const BrevmottakerModal: FC<Props> = ({
     visBrevmottakerModal,
     brevmottakerIdTilEndring,
     brevmottakere,
     settVisBrevmottakerModal,
     settBrevmottakerIdTilEndring,
-}) => {
+}: Props) => {
     if (!visBrevmottakerModal) {
         return null;
     }

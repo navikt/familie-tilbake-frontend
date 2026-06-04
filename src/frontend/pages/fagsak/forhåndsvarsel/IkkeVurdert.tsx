@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { ChangeHandler, SubmitHandler } from 'react-hook-form';
-import type { Section, Varselbrevtekst } from '@/generated';
+import type { RessursVarselbrevtekst, Section, Varselbrevtekst } from '@/generated';
 import type { IkkeVurdertFormData } from './schema';
 
 import { BodyLong, Box, Heading, Textarea, VStack } from '@navikt/ds-react';
@@ -30,7 +30,7 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
     return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
 };
 
-export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
+export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();
 
@@ -47,7 +47,8 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
 
     const { data: varselbrevtekster } = useQuery({
         ...hentForhåndsvarselTekstOptions({ path: { behandlingId } }),
-        select: (data): Varselbrevtekst | undefined => data.data ?? undefined,
+        select: (data: RessursVarselbrevtekst): Varselbrevtekst | undefined =>
+            data.data ?? undefined,
     });
 
     const { data: faktaOmFeilutbetaling } = useQuery(
@@ -66,7 +67,9 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }) => {
 
     const { onChange, ...radioProps } = register('valg');
 
-    const handleValgChange: ChangeHandler = async event => {
+    const handleValgChange: ChangeHandler = async (event: {
+        target: { value: 'send' | 'unntak' };
+    }): Promise<void> => {
         await onChange(event);
         onValgEndring?.(event.target.value as 'send' | 'unntak');
     };

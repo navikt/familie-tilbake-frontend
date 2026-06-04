@@ -28,7 +28,7 @@ type Props = {
     onToggle?: (open: boolean) => void;
 };
 
-export const Faktaboks: FC<Props> = ({ open, onToggle }) => {
+export const Faktaboks: FC<Props> = ({ open, onToggle }: Props) => {
     const behandling = useBehandling();
     const { ytelsestype } = useFagsak();
 
@@ -101,7 +101,12 @@ export const Faktaboks: FC<Props> = ({ open, onToggle }) => {
     );
 };
 
-const STATUS_META = {
+type StatusMeta = {
+    dataColor: TagProps['data-color'];
+    icon: ComponentType;
+};
+
+const STATUS_META: Record<BehandlingstatusEnum, StatusMeta> = {
     OPPRETTET: {
         dataColor: 'neutral',
         icon: FilePlusIcon,
@@ -130,15 +135,13 @@ const STATUS_META = {
         dataColor: 'success',
         icon: FileCheckmarkIcon,
     },
-} satisfies Record<
-    BehandlingstatusEnum,
-    {
-        dataColor: TagProps['data-color'];
-        icon: ComponentType;
-    }
->;
+} satisfies Record<BehandlingstatusEnum, StatusMeta>;
 
-const StatusTag: FC<{ status: BehandlingstatusEnum }> = ({ status }) => {
+type StatusProps = {
+    status: BehandlingstatusEnum;
+};
+
+const StatusTag: FC<StatusProps> = ({ status }: StatusProps) => {
     const { dataColor, icon: StatusIkon } = STATUS_META[status];
     return (
         <>
@@ -169,7 +172,11 @@ const RESULTAT_META: Record<BehandlingsresultatstypeEnum, TagProps['data-color']
     FULL_TILBAKEBETALING: 'info',
 };
 
-const ResultatTag: FC<{ resultat: BehandlingsresultatstypeEnum }> = ({ resultat }) => {
+type ResultatProps = {
+    resultat: BehandlingsresultatstypeEnum;
+};
+
+const ResultatTag: FC<ResultatProps> = ({ resultat }: ResultatProps) => {
     const dataColor = RESULTAT_META[resultat];
     return (
         <>

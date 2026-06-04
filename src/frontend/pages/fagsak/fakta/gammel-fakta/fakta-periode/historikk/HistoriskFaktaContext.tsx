@@ -21,9 +21,9 @@ const [HistoriskFaktaProvider, useHistoriskFakta] = createUseContext(() => {
     const [skjemaData, setSkjemaData] = useState<FaktaSkjemaData>();
     const [fakta, setFakta] = useState<FaktaResponse>();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         hentFakta();
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     const setInaktivFakta = (inaktivFakta?: FaktaResponse): void => {

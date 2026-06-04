@@ -91,11 +91,11 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
     const navigerTilForrige = useStegNavigering('FORELDELSE');
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         setErAutoutført(erStegAutoutført('VILKÅRSVURDERING'));
         hentVilkårsvurdering();
         setKanIlleggeRenter(kanIleggeRenter);
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [behandling]);
 
     useEffect(() => {
@@ -119,6 +119,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         }
     }, [vilkårsvurdering]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         if (skjemaData) {
             const behandletPerioder = skjemaData.filter(
@@ -130,7 +131,6 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
             );
             setBehandletPerioder(behandletPerioder);
         }
-        // biome-ignore lint/correctness/useExhaustiveDependencies: TODO: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     }, [valgtPeriode]);
 
     const hentVilkårsvurdering = (): void => {
@@ -260,7 +260,13 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
         { payload: VilkårdsvurderingStegPayload; handling: PeriodeHandling }
     >({
         mutationKey: ['sendInnVilkårsvurdering'],
-        mutationFn: async ({ payload, handling }) => {
+        mutationFn: async ({
+            payload,
+            handling,
+        }: {
+            payload: VilkårdsvurderingStegPayload;
+            handling: PeriodeHandling;
+        }) => {
             setValideringsFeilmelding(undefined);
             if (!validererTotaltBeløpMot4Rettsgebyr()) {
                 return undefined;

@@ -20,7 +20,7 @@ type Props = {
     onClose: () => void;
 };
 
-export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
+export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }: Props) => {
     const { behandlingId, saksbehandlingstype, kanEndres } = useBehandling();
     const queryClient = useQueryClient();
 
@@ -144,7 +144,7 @@ export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
             <Modal.Footer>
                 <Button
                     key="bekreft"
-                    onClick={() => onBekreft(behandlingId)}
+                    onClick={(): void => onBekreft(behandlingId)}
                     disabled={uendret}
                     size="small"
                 >
@@ -153,7 +153,7 @@ export const PåVentModal: FC<Props> = ({ ventegrunn, onClose }) => {
                 <Button
                     variant="tertiary"
                     key="avbryt"
-                    onClick={() => onOkTaAvVent(behandlingId)}
+                    onClick={(): void => onOkTaAvVent(behandlingId)}
                     size="small"
                     disabled={!kanEndres || venterPåKravgrunnlag}
                 >

@@ -138,7 +138,7 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                     <Button
                         variant="secondary"
                         key="avbryt"
-                        onClick={() => dialogRef.current?.close()}
+                        onClick={(): void => dialogRef.current?.close()}
                     >
                         Avbryt
                     </Button>

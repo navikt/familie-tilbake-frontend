@@ -8,7 +8,7 @@ type Props = {
     behandlingId?: string;
 };
 
-export const Serverfeil: FC<Props> = ({ httpStatus, fagsakId, behandlingId }) => {
+export const Serverfeil: FC<Props> = ({ httpStatus, fagsakId, behandlingId }: Props) => {
     return (
         <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-32">
@@ -67,7 +67,9 @@ export const Serverfeil: FC<Props> = ({ httpStatus, fagsakId, behandlingId }) =>
                                 </div>
                             )}
 
-                            <Button onClick={() => location.reload()}>Last siden på nytt</Button>
+                            <Button onClick={(): void => location.reload()}>
+                                Last siden på nytt
+                            </Button>
                         </VStack>
                     </VStack>
                 </HGrid>

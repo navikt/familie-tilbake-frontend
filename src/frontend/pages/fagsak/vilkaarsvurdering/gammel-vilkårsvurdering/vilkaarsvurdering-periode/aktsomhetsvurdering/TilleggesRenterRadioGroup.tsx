@@ -23,7 +23,7 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
     readOnly,
     erFeilaktigEllerMangelfull,
     visFeilmeldingerForSkjema,
-}) => {
+}: Props) => {
     const { setIkkePersistertKomponent } = useBehandlingState();
     const { erNyModell } = useBehandling();
 
@@ -40,7 +40,7 @@ export const TilleggesRenterRadioGroup: FC<Props> = ({
                 felt.valideringsstatus === Valideringsstatus.Feil &&
                 felt.feilmelding
             }
-            onChange={(val: JaNeiOption) => {
+            onChange={(val: JaNeiOption): void => {
                 felt.validerOgSettFelt(val);
                 setIkkePersistertKomponent(`vilkårsvurdering`);
             }}
