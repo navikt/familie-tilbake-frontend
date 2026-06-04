@@ -102,14 +102,13 @@ TILBAKE_SCOPE=api://dev-gcp.tilbake.familie-tilbake/.default
 | Kommando | Beskrivelse |
 | --- | --- |
 | `pnpm start:dev` | Kompiler backend og start utviklingsserver |
-| `pnpm build` | Lint + produksjonsbygg (server + klient) |
+| `pnpm build` | Sjekk (Biome) + produksjonsbygg (server + klient) |
 | `pnpm build:client` | Bygg frontend med Vite |
 | `pnpm build:server` | Kompiler backend med TypeScript |
 | `pnpm test` | Kjør tester med Vitest |
 | `pnpm test:watch` | Kjør tester i watch-modus |
-| `pnpm lint` | Kjør Biome (lint + format-sjekk + import-sortering) |
-| `pnpm lint:fix` | Kjør Biome med automatisk fiks |
-| `pnpm format` | Formater koden med Biome |
+| `pnpm check` | Kjør Biome read-only: linting + formatsjekk + import-sortering (skriver ingenting) |
+| `pnpm check:fix` | Kjør Biome med automatisk fiks: formatterer, fikser lint-regler (safe) og sorterer imports |
 | `pnpm generate-types` | Generer TypeScript-typer, React Query hooks og Zod-schemas fra OpenAPI-spec |
 
 ## Prosjektstruktur
