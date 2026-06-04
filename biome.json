@@ -119,6 +119,7 @@
 				"noNamespace": "error",
 				"noNonNullAssertion": "error",
 				"noRestrictedImports": {
+					"level": "error",
 					"options": {
 						"patterns": [
 							{
