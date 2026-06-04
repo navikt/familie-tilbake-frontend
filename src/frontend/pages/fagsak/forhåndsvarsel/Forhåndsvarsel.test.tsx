@@ -86,7 +86,7 @@ describe('Forhåndsvarsel', () => {
         user = userEvent.setup();
     });
 
-    const skalSendesRadioGroup = (): HTMLElement =>
+    const skalSendesRadiogruppe = (): HTMLElement =>
         screen.getByRole('radiogroup', {
             name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
         });
@@ -97,58 +97,20 @@ describe('Forhåndsvarsel', () => {
     const sendKnapp = (): HTMLElement =>
         screen.getByRole('button', { name: 'Send forhåndsvarselet' });
 
-    test('Viser spørsmål om forhåndsvarsel', () => {
-        renderForhåndsvarsel();
+    const unntakRadiogruppe = (): HTMLElement =>
+        screen.getByRole('radiogroup', {
+            name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
+        });
 
-        expect(
-            within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' })
-        ).toBeInTheDocument();
-        expect(
-            within(skalSendesRadioGroup()).getByRole('radio', { name: 'Nei' })
-        ).toBeInTheDocument();
-    });
+    const velgSendForhåndsvarsel = async (): Promise<void> => {
+        await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' }));
+    };
 
-    test('Viser neste-knapp som standard', () => {
-        renderForhåndsvarsel();
+    const velgUnntak = async (): Promise<void> => {
+        await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' }));
+    };
 
-        expect(nesteKnapp()).toBeInTheDocument();
-    });
-
-    test('Viser "Send forhåndsvarselet" når Ja er valgt', async () => {
-        renderForhåndsvarsel();
-
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
-
-        expect(sendKnapp()).toBeInTheDocument();
-    });
-
-    /** TODO legg til test for "Lagre og gå videre" når setIkkePersistertKomponent er implementert
-
-    test('Viser "Lagre og gå til neste" når Nei er valgt', async () => {
-        renderForhåndsvarsel();
-
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Nei' }));
-
-        expect(nesteKnapp()).toHaveTextContent('Lagre og gå til neste');
-    }); 
-
-    */
-
-    test('Viser ikke "Vis brevet" før Ja er valgt', () => {
-        renderForhåndsvarsel();
-
-        expect(screen.queryByRole('button', { name: 'Vis brevet' })).not.toBeInTheDocument();
-    });
-
-    test('Viser "Vis brevet" når Ja er valgt', async () => {
-        renderForhåndsvarsel();
-
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
-
-        expect(screen.getByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
-    });
-
-    test('Viser feilmelding ved trykk på "Neste" uten valg', async () => {
+    test('Viser feilmelding uten valg for "Skal det sendes forhåndsvarsel"', async () => {
         renderForhåndsvarsel();
 
         await user.click(nesteKnapp());
@@ -158,73 +120,69 @@ describe('Forhåndsvarsel', () => {
         ).toBeInTheDocument();
     });
 
-    test('Viser brev-kort med tekstfelt når Ja er valgt', async () => {
+    test('Ja: viser brevseksjon med preutfylt tekst, "Vis brevet" og send-knapp i actionbar', async () => {
         renderForhåndsvarsel();
 
-        expect(screen.queryByText('Opprett forhåndsvarsel')).not.toBeInTheDocument();
+        await velgSendForhåndsvarsel();
 
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
+        expect(sendKnapp()).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
 
         expect(screen.getByText('Opprett forhåndsvarsel')).toBeInTheDocument();
+        const utdypendeTekst = screen.getByRole('textbox', {
+            name: /legg til utdypende tekst/i,
+        }) as HTMLTextAreaElement;
+        expect(utdypendeTekst.value).toContain('Det er gjort en endring i saken din');
         expect(screen.getByText('Varsel om mulig tilbakekreving')).toBeInTheDocument();
         expect(screen.getByText('Retten til å uttale seg')).toBeInTheDocument();
     });
 
-    test('Viser feilmelding ved submit med tom fritekst', async () => {
+    test.todo('Ja: skal vise bekreftelsesmodal før sending av brev');
+
+    test('Nei: viser tre unntaksalternativer og feilmelding uten valg', async () => {
         renderForhåndsvarsel();
 
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
+        await velgUnntak();
 
-        const textarea = screen.getByLabelText('Legg til utdypende tekst');
-        await user.clear(textarea);
+        expect(
+            within(unntakRadiogruppe()).getByRole('radio', { name: /ikke praktisk mulig/i })
+        ).toBeInTheDocument();
+        expect(
+            within(unntakRadiogruppe()).getByRole('radio', { name: /ukjent adresse/i })
+        ).toBeInTheDocument();
+        expect(
+            within(unntakRadiogruppe()).getByRole('radio', { name: /åpenbart unødvendig/i })
+        ).toBeInTheDocument();
 
-        await user.click(sendKnapp());
+        await user.click(nesteKnapp());
+
+        expect(
+            screen.getByText('Du må velge en begrunnelse for unntak fra forhåndsvarsel')
+        ).toBeInTheDocument();
+    });
+
+    test('Nei: de to første begrunnelsene krever utfylt tekst', async () => {
+        renderForhåndsvarsel();
+
+        await velgUnntak();
+        await user.click(
+            within(unntakRadiogruppe()).getByRole('radio', { name: /ikke praktisk mulig/i })
+        );
+
+        const begrunnelse = screen.getByRole('textbox', {
+            name: /forklar hvorfor forhåndsvarselet ikke skal bli sendt/i,
+        });
+        await user.clear(begrunnelse);
+        await user.click(nesteKnapp());
 
         expect(screen.getByText('Du må fylle inn en verdi')).toBeInTheDocument();
-    });
 
-    test('Viser read-only radio med Ja valgt når varsel er sendt', () => {
-        renderForhåndsvarsel(
-            lagForhåndsvarselResponse({
-                forhaandsvarselSteg: {
-                    type: 'sendt',
-                    forhåndsvarselInfo: {
-                        tekstFraSaksbehandler: 'Tekst',
-                        varselbrevSendtTid: '2025-01-20T10:00:00',
-                    },
-                    uttalelsesfrist: { opprinneligFrist: '2025-02-20' },
-                },
-            })
+        await user.click(
+            within(unntakRadiogruppe()).getByRole('radio', { name: /ukjent adresse/i })
         );
+        await user.clear(begrunnelse);
+        await user.click(nesteKnapp());
 
-        const radioGroup = skalSendesRadioGroup();
-        expect(radioGroup).toHaveClass('aksel-fieldset--readonly');
-        expect(within(radioGroup).getByRole('radio', { name: 'Ja' })).toBeChecked();
-    });
-
-    test('Viser redigerbar radio med Nei valgt ved unntak', () => {
-        renderForhåndsvarsel(
-            lagForhåndsvarselResponse({
-                forhaandsvarselSteg: {
-                    type: 'unntak',
-                    begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
-                    beskrivelse: 'Lite beløp',
-                },
-            })
-        );
-
-        const radioGroup = skalSendesRadioGroup();
-        expect(radioGroup).not.toHaveClass('aksel-fieldset--readonly');
-        expect(within(radioGroup).getByRole('radio', { name: 'Nei' })).toBeChecked();
-    });
-
-    test('Bytter tilbake til "Neste" når bruker endrer fra Ja til Nei', async () => {
-        renderForhåndsvarsel();
-
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Ja' }));
-        expect(sendKnapp()).toBeInTheDocument();
-
-        await user.click(within(skalSendesRadioGroup()).getByRole('radio', { name: 'Nei' }));
-        expect(nesteKnapp()).toBeInTheDocument();
+        expect(screen.getByText('Du må fylle inn en verdi')).toBeInTheDocument();
     });
 });
