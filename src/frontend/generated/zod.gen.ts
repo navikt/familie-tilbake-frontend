@@ -1495,6 +1495,8 @@ export const zSaksbehandlingstypeEnum = z.enum([
     'AUTOMATISK_IKKE_INNKREVING_UNDER_4X_RETTSGEBYR',
 ]);
 
+export const zInnloggetRolleEnum = z.enum(['VEILEDER', 'SAKSBEHANDLER', 'BESLUTTER', 'INGEN']);
+
 export const zBehandlingsstegstatusEnum = z.enum([
     'VENTER',
     'KLAR',
@@ -1553,6 +1555,7 @@ export const zBehandlingDto = z.object({
     begrunnelseForTilbakekreving: z.string().nullish(),
     saksbehandlingstype: zSaksbehandlingstypeEnum,
     erNyModell: z.boolean(),
+    innloggetRolle: zInnloggetRolleEnum,
 });
 
 export const zRessursBehandlingDto = z.object({

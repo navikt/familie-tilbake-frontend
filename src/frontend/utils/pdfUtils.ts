@@ -1,6 +1,6 @@
 import { base64ToArrayBuffer } from './miscUtils';
 
-export const createPdfBlobUrl = (base64Data: string): string => {
+const createPdfBlobUrl = (base64Data: string): string => {
     const blob = new Blob([base64ToArrayBuffer(base64Data)], {
         type: 'application/pdf',
     });

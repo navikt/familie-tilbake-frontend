@@ -1,7 +1,9 @@
+import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
+import type { InnloggetRolleEnum } from '~/generated';
 
 import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
-import { Dropdown, InternalHeader, Spacer } from '@navikt/ds-react';
+import { Dropdown, HStack, InternalHeader, Spacer, Tag } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -9,12 +11,21 @@ import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '~/api/brukerlenker';
 import { useHttp } from '~/api/http/HttpProvider';
 import { useApp } from '~/context/AppContext';
 import { useTheme } from '~/context/ThemeContext';
-import { Fagsystem } from '~/kodeverk';
 import { useBehandlingStore } from '~/stores/behandlingStore';
 import { useFagsakStore } from '~/stores/fagsakStore';
 import { erHistoriskSide } from '~/utils/sider';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
+
+const rolleMapper: Record<
+    InnloggetRolleEnum,
+    { label: string; dataColor: TagProps['data-color'] } | undefined
+> = {
+    SAKSBEHANDLER: { label: 'Saksbehandler', dataColor: 'info' },
+    VEILEDER: { label: 'Veileder', dataColor: 'brand-beige' },
+    BESLUTTER: { label: 'Beslutter', dataColor: 'meta-purple' },
+    INGEN: undefined,
+};
 
 export const Header: FC = () => {
     const { innloggetSaksbehandler } = useApp();
@@ -23,7 +34,7 @@ export const Header: FC = () => {
         queryFn: hentBrukerlenkeBaseUrl,
     });
     const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};
-    const { behandlingId } = useBehandlingStore();
+    const { behandlingId, rolle, erNyModell } = useBehandlingStore();
     const { fagsystem, eksternFagsakId, personIdent } = useFagsakStore();
 
     const { request } = useHttp();
@@ -63,7 +74,7 @@ export const Header: FC = () => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (fagsystem === Fagsystem.TS) {
+        if (fagsystem === 'TS') {
             return `/redirect/fagsystem/${fagsystem}/ekstern/person/${eksternFagsakId}`;
         }
         return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;
@@ -77,6 +88,15 @@ export const Header: FC = () => {
             </InternalHeader.Title>
             <Høytidspynt />
             <Spacer />
+
+            {rolleMapper[rolle] && erNyModell && (
+                <HStack align="center" paddingInline="space-16">
+                    <Tag data-color={rolleMapper[rolle].dataColor} variant="moderate" size="small">
+                        {rolleMapper[rolle].label}
+                    </Tag>
+                </HStack>
+            )}
+
             {harGyldigLenke && (
                 <Dropdown>
                     <InternalHeader.Button as={Dropdown.Toggle}>

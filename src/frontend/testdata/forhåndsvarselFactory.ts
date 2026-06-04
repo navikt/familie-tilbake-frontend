@@ -1,11 +1,11 @@
-import type { UseQueryResult, UseSuspenseQueryResult } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
 import type { Varselbrevtekst } from '~/generated';
 import type { UseForhåndsvarselMutationsReturn } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
 import type { UseForhåndsvarselQueriesReturn } from '~/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
 
 import { vi } from 'vitest';
 
-export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
+const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
     ({
         data,
         isLoading: false,
@@ -15,17 +15,6 @@ export const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
         isPending: false,
         refetch: vi.fn(),
     }) as unknown as UseQueryResult<T | undefined>;
-
-export const lagMockSuspenseQuery = <T>(data: T): UseSuspenseQueryResult<T, Error> =>
-    ({
-        data,
-        isLoading: false,
-        error: null,
-        isError: false,
-        isSuccess: true,
-        isPending: false,
-        refetch: vi.fn(),
-    }) as unknown as UseSuspenseQueryResult<T, Error>;
 
 export const lagForhåndsvarselQueries = (
     overrides: Partial<UseForhåndsvarselQueriesReturn> = {}
@@ -67,14 +56,6 @@ export const lagForhåndsvarselQueriesSendt = (
         },
         ...overrides,
     });
-
-export type PreNoticeMutations = Omit<
-    UseForhåndsvarselMutationsReturn,
-    | 'forhåndsvisning'
-    | 'sendBrukeruttalelseMutation'
-    | 'sendForhåndsvarselMutation'
-    | 'sendUtsettUttalelseFristMutation'
->;
 
 export const lagForhåndsvarselMutations = (): UseForhåndsvarselMutationsReturn =>
     ({

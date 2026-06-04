@@ -5,7 +5,6 @@ import { render, screen } from '@testing-library/react';
 
 import { FagsakContext } from '~/context/FagsakContext';
 import { lagFagsak } from '~/testdata/fagsakFactory';
-import { Kjønn } from '~/typer/bruker';
 
 import { BrukerInformasjon } from './BrukerInformasjon';
 
@@ -21,7 +20,7 @@ const baseBruker = (override: Partial<FrontendBrukerDto> = {}): FrontendBrukerDt
     navn: 'Ola Nordmann',
     fødselsdato: '1990-05-17',
     dødsdato: undefined,
-    kjønn: Kjønn.Mann,
+    kjønn: 'MANN',
     personIdent: '01020312345',
     ...override,
 });

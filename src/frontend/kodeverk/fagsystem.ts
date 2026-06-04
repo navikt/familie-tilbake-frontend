@@ -2,24 +2,6 @@ import type { SchemaEnum4 } from '~/generated';
 
 import { HendelseType } from './rettsligGrunnlag';
 
-export enum Fagsystem {
-    BA = 'BA',
-    EF = 'EF',
-    KS = 'KONT',
-    TS = 'TS',
-    AAP = 'AAP',
-}
-
-export enum Ytelsetype {
-    Barnetrygd = 'BARNETRYGD',
-    Overgangsstønad = 'OVERGANGSSTØNAD',
-    Barnetilsyn = 'BARNETILSYN',
-    Skolepenger = 'SKOLEPENGER',
-    Kontantstøtte = 'KONTANTSTØTTE',
-    Tilleggsstønad = 'TILLEGGSSTØNAD',
-    Arbeidsavklaringspenger = 'ARBEIDSAVKLARINGSPENGER',
-}
-
 const hendelseTyperForYtelse: Record<string, HendelseType[]> = {
     BARNETRYGD: [
         HendelseType.BorMedSøker,
@@ -76,9 +58,9 @@ const hendelseTyperForYtelse: Record<string, HendelseType[]> = {
 
 export const hentHendelseTyper = (ytelse: SchemaEnum4, erInstitusjon: boolean): HendelseType[] => {
     if (
-        (erInstitusjon && ytelse === Ytelsetype.Barnetrygd) ||
-        ytelse === Ytelsetype.Tilleggsstønad ||
-        ytelse === Ytelsetype.Arbeidsavklaringspenger
+        (erInstitusjon && ytelse === 'BARNETRYGD') ||
+        ytelse === 'TILLEGGSSTØNAD' ||
+        ytelse === 'ARBEIDSAVKLARINGSPENGER'
     ) {
         return [HendelseType.Annet];
     }

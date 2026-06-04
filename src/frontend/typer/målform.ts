@@ -1,9 +1,6 @@
-export enum Målform {
-    Nb = 'NB',
-    Nn = 'NN',
-}
+import type { SpråkkodeEnum } from '~/generated/types.gen';
 
-export const målform: Record<Målform, string> = {
-    [Målform.Nb]: 'Bokmål',
-    [Målform.Nn]: 'Nynorsk',
+export const målform: Record<SpråkkodeEnum, string> = {
+    NB: 'Bokmål',
+    NN: 'Nynorsk',
 };

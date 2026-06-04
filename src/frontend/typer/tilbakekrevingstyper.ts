@@ -25,7 +25,7 @@ export type Periode = {
     tom: string;
 };
 
-export type FeilutbetalingPeriode = {
+type FeilutbetalingPeriode = {
     periode: Periode;
     feilutbetaltBeløp: number;
 };
