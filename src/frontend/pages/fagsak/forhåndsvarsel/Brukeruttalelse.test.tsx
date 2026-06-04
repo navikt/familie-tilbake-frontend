@@ -80,20 +80,26 @@ const renderForhåndsvarsel = (forhåndsvarselResponse: ForhaandsvarselResponse)
     );
 };
 
+const uttalelseRadiogruppe = (legend: RegExp): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: legend,
+    });
+
+const uttalelseEtterSendtForhåndsvarselRadiogruppe = (): HTMLElement =>
+    uttalelseRadiogruppe(/har brukeren uttalt seg etter forhåndsvarselet ble sendt\?/i);
+
+const uttalelseRadiogruppeVedUnntak = (): HTMLElement =>
+    uttalelseRadiogruppe(/har brukeren uttalt seg\?/i);
+
+const nesteKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
+
 describe('Brukeruttalelse i forhåndsvarsel', () => {
     let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
     });
-
-    const uttalelseRadiogruppe = (legend: RegExp): HTMLElement =>
-        screen.getByRole('radiogroup', {
-            name: legend,
-        });
-
-    const nesteKnapp = (): HTMLElement =>
-        screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
 
     test('Sendt brev: viser spørsmål med Ja/Nei', () => {
         renderForhåndsvarsel(
@@ -109,9 +115,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
             })
         );
 
-        const radiogruppe = uttalelseRadiogruppe(
-            /har brukeren uttalt seg etter forhåndsvarselet ble sendt\?/i
-        );
+        const radiogruppe = uttalelseEtterSendtForhåndsvarselRadiogruppe();
 
         expect(within(radiogruppe).getByRole('radio', { name: 'Ja' })).toBeInTheDocument();
         expect(within(radiogruppe).getByRole('radio', { name: 'Nei' })).toBeInTheDocument();
@@ -131,9 +135,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
             })
         );
 
-        const radiogruppe = uttalelseRadiogruppe(
-            /har brukeren uttalt seg etter forhåndsvarselet ble sendt\?/i
-        );
+        const radiogruppe = uttalelseEtterSendtForhåndsvarselRadiogruppe();
 
         expect(within(radiogruppe).getByRole('radio', { name: 'Nei' })).toBeDisabled();
     });
@@ -152,9 +154,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
             })
         );
 
-        const radiogruppe = uttalelseRadiogruppe(
-            /har brukeren uttalt seg etter forhåndsvarselet ble sendt\?/i
-        );
+        const radiogruppe = uttalelseEtterSendtForhåndsvarselRadiogruppe();
 
         expect(within(radiogruppe).getByRole('radio', { name: 'Ja' })).toBeEnabled();
         expect(within(radiogruppe).getByRole('radio', { name: 'Nei' })).toBeEnabled();
@@ -175,9 +175,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         );
 
         await user.click(
-            within(
-                uttalelseRadiogruppe(/har brukeren uttalt seg etter forhåndsvarselet ble sendt\?/i)
-            ).getByRole('radio', {
+            within(uttalelseEtterSendtForhåndsvarselRadiogruppe()).getByRole('radio', {
                 name: 'Ja',
             })
         );
@@ -208,9 +206,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         );
 
         await user.click(
-            within(
-                uttalelseRadiogruppe(/har brukeren uttalt seg etter forhåndsvarselet ble sendt\?/i)
-            ).getByRole('radio', {
+            within(uttalelseEtterSendtForhåndsvarselRadiogruppe()).getByRole('radio', {
                 name: 'Nei',
             })
         );
@@ -231,7 +227,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
             })
         );
 
-        const radiogruppe = uttalelseRadiogruppe(/har brukeren uttalt seg\?/i);
+        const radiogruppe = uttalelseRadiogruppeVedUnntak();
         expect(within(radiogruppe).getByRole('radio', { name: 'Ja' })).toBeInTheDocument();
         expect(within(radiogruppe).getByRole('radio', { name: 'Nei' })).toBeInTheDocument();
 
@@ -252,7 +248,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         );
 
         await user.click(
-            within(uttalelseRadiogruppe(/har brukeren uttalt seg\?/i)).getByRole('radio', {
+            within(uttalelseRadiogruppeVedUnntak()).getByRole('radio', {
                 name: 'Ja',
             })
         );
@@ -276,7 +272,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         );
 
         await user.click(
-            within(uttalelseRadiogruppe(/har brukeren uttalt seg\?/i)).getByRole('radio', {
+            within(uttalelseRadiogruppeVedUnntak()).getByRole('radio', {
                 name: 'Nei',
             })
         );
