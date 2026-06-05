@@ -2,7 +2,6 @@ import type { FC } from 'react';
 
 import { Heading, Tag, VStack } from '@navikt/ds-react';
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
-import classNames from 'classnames';
 
 import { useBehandling } from '~/context/BehandlingContext';
 import {
@@ -34,21 +33,14 @@ export const Fakta: FC = () => {
             <VStack gap="space-24" aria-label="Fakta om feilutbetaling">
                 <Heading size="medium">Fakta om feilutbetalingen</Heading>
                 <section
-                    className={classNames('flex md:flex-row flex-col flex-col-3 w-full gap-6', {
-                        'flex-col-4': faktaOmFeilutbetaling.tidligereVarsletBeløp,
-                    })}
+                    className={`flex md:flex-row flex-col ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-col-4' : 'flex-col-3'} w-full gap-6`}
                     aria-label="Feilutbetaling og revurdering"
                 >
                     <div
-                        className={classNames('grid grid-cols-4 md:grid-cols-2 gap-4 flex-1', {
-                            'flex-2': faktaOmFeilutbetaling.tidligereVarsletBeløp,
-                        })}
+                        className={`grid grid-cols-4 md:grid-cols-2 gap-4 ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-2' : 'flex-1'}`}
                     >
                         <div
-                            className={classNames(
-                                'flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle col-span-1',
-                                { 'col-span-2': !faktaOmFeilutbetaling.tidligereVarsletBeløp }
-                            )}
+                            className={`flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'col-span-1' : 'col-span-2'}`}
                         >
                             <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
                             <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">

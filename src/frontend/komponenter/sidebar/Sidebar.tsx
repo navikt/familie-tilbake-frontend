@@ -1,7 +1,6 @@
 import type { FC, MouseEventHandler, RefObject } from 'react';
 
 import { Modal } from '@navikt/ds-react';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -56,9 +55,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }) => {
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className={classNames('flex-col gap-4 hidden ax-lg:flex max-h-[calc(100vh-80px)]', {
-                    'max-h-[calc(100vh-142px)]': !!ventegrunn,
-                })}
+                className={`flex-col gap-4 hidden ax-lg:flex ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'}`}
             >
                 <Faktaboks
                     open={kortTilstand.faktaboksÅpen}

@@ -1,7 +1,6 @@
 import type { AvsnittSkjemaData, UnderavsnittSkjemaData } from './typer/vedtak';
 
 import { BodyLong, ExpansionCard, Heading, VStack } from '@navikt/ds-react';
-import classNames from 'classnames';
 import { useState, type FC } from 'react';
 
 import { useBehandlingState } from '~/context/BehandlingStateContext';
@@ -93,11 +92,13 @@ export const AvsnittSkjema: FC<Props> = ({ avsnitt, erRevurderingBortfaltBeløp 
             </ExpansionCard.Header>
 
             <ExpansionCard.Content
-                className={classNames(
-                    !behandlingILesemodus && harPåkrevetFritekstMenIkkeUtfylt
-                        ? 'border-l-4 border-ax-border-danger'
-                        : ''
-                )}
+                className={`
+                    ${
+                        !behandlingILesemodus && harPåkrevetFritekstMenIkkeUtfylt
+                            ? 'border-l-4 border-ax-border-danger'
+                            : ''
+                    }
+                `}
             >
                 {bulletpoints.length > 0 && (
                     <ul>
