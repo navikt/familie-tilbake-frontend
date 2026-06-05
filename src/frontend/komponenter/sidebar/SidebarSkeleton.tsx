@@ -2,7 +2,6 @@ import type { FC } from 'react';
 
 import { BagdeIcon, Buildings3Icon, CalendarIcon, CandleIcon } from '@navikt/aksel-icons';
 import { CopyButton, ExpansionCard, Skeleton } from '@navikt/ds-react';
-import classNames from 'classnames';
 
 import { ICON_PROPS } from './utils';
 
@@ -10,9 +9,7 @@ export const SidebarSkeleton: FC = () => {
     return (
         <aside
             aria-label="Laster informasjon om tilbakekrevingen og bruker"
-            className={classNames(
-                'flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]'
-            )}
+            className="flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]"
         >
             <ExpansionCard
                 defaultOpen

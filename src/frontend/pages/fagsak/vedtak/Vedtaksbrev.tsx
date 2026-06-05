@@ -14,7 +14,6 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import classNames from 'classnames';
 import { Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -159,14 +158,10 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                     }
                 >
                     <section
-                        className={classNames(
-                            'col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle flex flex-col',
-                            {
-                                /* Må trekke fra høyden på alt annet enn den hvite boksen for å gi den en korrekt høyde */
-                                'h-[calc(100vh-17.8rem)] overflow-hidden':
-                                    forhåndsvisningMutation.isError,
-                            }
-                        )}
+                        className={
+                            /* Må trekke fra høyden på alt annet enn den hvite boksen for å gi den en korrekt høyde */
+                            `col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle flex flex-col ${forhåndsvisningMutation.isError ? 'h-[calc(100vh-17.8rem)] overflow-hidden' : ''}`
+                        }
                     >
                         {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                             <HStack
@@ -183,14 +178,11 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }) => {
                             </HStack>
                         )}
                         <div
-                            className={classNames(
-                                'flex-1 flex justify-center overflow-auto rounded-b-xl',
-                                forhåndsvisningMutation.isError ? 'items-center' : 'items-start',
-                                {
-                                    'border-t border-ax-border-neutral-subtle':
-                                        !forhåndsvisningMutation.isError,
-                                }
-                            )}
+                            className={`flex-1 flex justify-center overflow-auto rounded-b-xl ${forhåndsvisningMutation.isError ? 'items-center' : 'items-start'} ${
+                                !forhåndsvisningMutation.isError
+                                    ? 'border-t border-ax-border-neutral-subtle'
+                                    : ''
+                            }`}
                         >
                             {forhåndsvisningMutation.isError && (
                                 <VStack
