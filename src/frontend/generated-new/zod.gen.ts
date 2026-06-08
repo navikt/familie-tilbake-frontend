@@ -7,6 +7,8 @@ export const zBeregningsresultatVurdering = z.enum([
     'Forsett',
     'Uaktsomhet',
     'GrovUaktsomhet',
+    'BurdeForstått',
+    'Forstod',
 ]);
 
 export const zBeregningsresultatsperiode = z.object({
@@ -101,6 +103,11 @@ export const zOppsummeringsdata = z.object({
     perioder: z.array(zOppsummertPeriode),
     sumFeilutbetaltBeløp: z.string(),
     sumTilbakekrevesBeløpEtterSkatt: z.string(),
+});
+
+export const zPeriode = z.object({
+    fom: z.iso.date(),
+    tom: z.iso.date(),
 });
 
 export const zRentekstElement = z.object({
@@ -281,6 +288,11 @@ export const zForhaandsvarselSteg = z.union([
 export const zForhaandsvarselResponse = z.object({
     forhaandsvarselSteg: zForhaandsvarselSteg,
     brukeruttalelse: zUttalelse.nullable(),
+});
+
+export const zUnntak = z.object({
+    begrunnelseForUnntak: zVarslingsunntak,
+    beskrivelse: z.string(),
 });
 
 export const zVedtaksbrevRedigerbareData = z.object({
@@ -495,7 +507,7 @@ export const zBehandlingSendVarselbrevPath = z.object({
     behandlingId: z.uuid(),
 });
 
-export const zBehandlingLagreForhaandsvarselUnntakBody = zForhaandsvarselUnntak;
+export const zBehandlingLagreForhaandsvarselUnntakBody = zUnntak;
 
 export const zBehandlingLagreForhaandsvarselUnntakPath = z.object({
     behandlingId: z.uuid(),
@@ -557,6 +569,21 @@ export const zBehandlingHentVedtaksresultatPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
+
+export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingVilkaarsvurderingsperioderResponse = z.array(zPeriode);
+
+export const zBehandlingSplittPeriodeBody = z.iso.date();
+
+export const zBehandlingSplittPeriodePath = z.object({
+    behandlingId: z.uuid(),
+});
 
 export const zBehandlingHentDokumentInfoPath = z.object({
     behandlingId: z.uuid(),

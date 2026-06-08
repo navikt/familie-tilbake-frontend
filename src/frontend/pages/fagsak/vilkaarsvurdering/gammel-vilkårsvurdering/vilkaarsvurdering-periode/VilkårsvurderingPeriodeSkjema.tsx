@@ -15,13 +15,14 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
 import { useEffect } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { behandlingVilkaarsvurderingsperioderOptions } from '@/generated-new/@tanstack/react-query.gen';
 import { type Skjema, Valideringsstatus } from '@/hooks/skjema';
 import { useActionBar } from '@/hooks/useActionBar';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@/kodeverk';
@@ -32,6 +33,7 @@ import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vi
 import { formatterDatostring, isEmpty } from '@/utils';
 
 import { DelPeriode } from '../../del-periode/DelPeriode';
+import { kanSplitte } from '../../utils';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
@@ -137,6 +139,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         settValgtPeriode,
         erAllePerioderBehandlet,
         erAutoutført,
+        hentVilkårsvurdering,
     } = useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = behandlingILesemodus || !!erAutoutført;
@@ -153,6 +156,10 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         actionBarStegtekst,
     } = useBehandlingState();
     const queryClient = useQueryClient();
+
+    const { data: vilkårsvurderingsperioder } = useQuery(
+        behandlingVilkaarsvurderingsperioderOptions({ path: { behandlingId } })
+    );
 
     const visUlagretDataModal = !!pendingPeriode && harUlagredeData;
 
@@ -277,9 +284,13 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         periode: VilkårsvurderingPeriodeSkjemaData,
         erLesevisning: boolean
     ): boolean => {
-        const fom = parseISO(periode.periode.fom);
-        const tom = parseISO(periode.periode.tom);
-        return !erLesevisning && !periode.foreldet && differenceInMonths(tom, fom) >= 1;
+        const kanSplittePeriodeINyModell = vilkårsvurderingsperioder
+            ? kanSplitte(periode.periode, vilkårsvurderingsperioder)
+            : false;
+        const kanPeriodenSplittes = erNyModell
+            ? kanSplittePeriodeINyModell
+            : differenceInMonths(parseISO(periode.periode.tom), parseISO(periode.periode.fom)) >= 1;
+        return !erLesevisning && !periode.foreldet && kanPeriodenSplittes;
     };
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
@@ -305,6 +316,14 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     if (!periode) return null;
 
+    const vilkårsperioderForPeriode = (vilkårsvurderingsperioder ?? [])
+        .filter(
+            vilkårsperiode =>
+                vilkårsperiode.fom >= periode.periode.fom &&
+                vilkårsperiode.tom <= periode.periode.tom
+        )
+        .sort((a, b) => a.fom.localeCompare(b.fom));
+
     return (
         <>
             <VStack gap="space-24">
@@ -314,10 +333,13 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     </Heading>
                     {kanSplittePeriode(periode, erLesevisning) &&
                         (erNyModell ? (
-                            <DelPeriode periode={periode.periode} />
+                            <DelPeriode
+                                periode={periode.periode}
+                                vilkårsperioder={vilkårsperioderForPeriode}
+                                hentVilkårsvurdering={hentVilkårsvurdering}
+                            />
                         ) : (
                             <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
-                            // <DelPeriode periode={periode.periode} />
                         ))}
                 </HStack>
                 <PeriodeOppsummering

@@ -34,6 +34,7 @@ import { useStegNavigering } from '@/utils/sider';
 export type VilkårsvurderingHook = {
     containerRef: RefObject<HTMLDivElement | null>;
     vilkårsvurdering: Ressurs<VilkårsvurderingResponse> | undefined;
+    hentVilkårsvurdering: () => void;
     stegErBehandlet: boolean;
     erAutoutført: boolean | undefined;
     kanIlleggeRenter: boolean;
@@ -314,6 +315,7 @@ const [VilkårsvurderingProvider, useVilkårsvurdering] = createUseContext(() =>
     return {
         containerRef,
         vilkårsvurdering,
+        hentVilkårsvurdering,
         erAutoutført,
         kanIlleggeRenter,
         skjemaData,
