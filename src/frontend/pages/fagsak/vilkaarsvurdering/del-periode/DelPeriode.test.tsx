@@ -1,5 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
@@ -41,7 +42,7 @@ describe('DelPeriode', () => {
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
     });
 
-    test('Skal vise innholdet i modal', async () => {
+    test('Skal vise beskrivelse, tidslinje, datepicker og knapper i modal', async () => {
         renderDelPeriode();
 
         delOppKnapp().click();
@@ -51,8 +52,6 @@ describe('DelPeriode', () => {
 
         const tidslinjeRad = screen.getByLabelText('01.01.2024 til 31.01.2024');
         expect(tidslinjeRad).toBeInTheDocument();
-        expect(screen.getByText('Info fra 01.01.2024 til 14.01.2024')).toBeInTheDocument();
-        expect(screen.getByText('Info fra 15.01.2024 til 31.01.2024')).toBeInTheDocument();
 
         expect(screen.getByLabelText('Velg dato')).toHaveValue('15.01.2024');
 
@@ -60,7 +59,41 @@ describe('DelPeriode', () => {
         expect(screen.getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
     });
 
-    // test('Skal vise to perioder i tidslinjen når dato er valgt', async () => {});
+    test('Skal vise to perioder i tidslinjen', async () => {
+        renderDelPeriode();
 
-    // test('Skal vise feilmelding hvis man trykker del periode uten å velge dato', async () => {});
+        delOppKnapp().click();
+
+        expect(await screen.findByText('Info fra 01.01.2024 til 14.01.2024')).toBeInTheDocument();
+        expect(screen.getByText('Info fra 15.01.2024 til 31.01.2024')).toBeInTheDocument();
+    });
+
+    test('Skal vise feilmelding hvis man trykker del periode uten å velge dato', async () => {
+        const user = userEvent.setup();
+        renderDelPeriode();
+
+        await user.click(delOppKnapp());
+
+        const datoInput = await screen.findByLabelText('Velg dato');
+        await user.clear(datoInput);
+        await user.click(screen.getByRole('button', { name: 'Del opp perioden' }));
+
+        expect(screen.getByText('Du må velge en dato')).toBeInTheDocument();
+    });
+
+    test('Skal kun ha andre periode sin fom tilgjengelig i datepicker', async () => {
+        const user = userEvent.setup();
+        renderDelPeriode();
+
+        await user.click(delOppKnapp());
+        await user.click(await screen.findByRole('button', { name: 'Åpne datovelger' }));
+
+        const dagKnapper = screen
+            .getAllByRole('button')
+            .filter((knapp): knapp is HTMLButtonElement => /^\d+$/.test(knapp.textContent ?? ''));
+        const valgbareDager = dagKnapper.filter(knapp => !knapp.disabled);
+
+        expect(valgbareDager).toHaveLength(1);
+        expect(valgbareDager[0]).toHaveTextContent('15');
+    });
 });
