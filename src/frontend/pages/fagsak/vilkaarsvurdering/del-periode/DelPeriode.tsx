@@ -11,7 +11,7 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { format, parseISO, subDays } from 'date-fns';
+import { format, isValid, parseISO, subDays } from 'date-fns';
 import { type FC, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -83,7 +83,8 @@ export const DelPeriode: FC<Props> = ({
         toDate: new Date(periode.tom),
         defaultSelected: standardSplittDato ? parseISO(standardSplittDato) : undefined,
         disabled: [
-            (dato: Date): boolean => !valgbareSplittDatoer.includes(format(dato, 'yyyy-MM-dd')),
+            (dato: Date): boolean =>
+                !isValid(dato) || !valgbareSplittDatoer.includes(format(dato, 'yyyy-MM-dd')),
         ],
         onDateChange: (dato: Date | undefined) => {
             setValgtDato(dato);
