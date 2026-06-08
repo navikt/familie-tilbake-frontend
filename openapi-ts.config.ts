@@ -28,7 +28,13 @@ export default defineConfig([
         input: 'https://tilbakekreving-backend.intern.dev.nav.no/v3/api-docs',
         output: {
             path: 'src/frontend/generated',
-            postProcess: ['prettier'],
+            postProcess: [
+                {
+                    name: 'Biome (Format)',
+                    command: 'biome',
+                    args: ['format', '--write', '--config-path', './biome.generated.json', '{{path}}'],
+                },
+            ],
         },
     },
     {
@@ -36,7 +42,13 @@ export default defineConfig([
         input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/2b268ecb4fe0c2ce3a155f5034b3ea4fbd1b7e5e/tsp-output/schema/openapi.yaml',
         output: {
             path: 'src/frontend/generated-new',
-            postProcess: ['prettier'],
+            postProcess: [
+                {
+                    name: 'Biome (Format)',
+                    command: 'biome',
+                    args: ['format', '--write', '--config-path', './biome.generated.json', '{{path}}'],
+                },
+            ],
         },
     },
 ] satisfies UserConfig[]);
