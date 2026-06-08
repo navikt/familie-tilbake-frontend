@@ -42,9 +42,15 @@ import type {
     BehandlingSendVarselbrevData,
     BehandlingSendVarselbrevErrors,
     BehandlingSendVarselbrevResponses,
+    BehandlingSplittPeriodeData,
+    BehandlingSplittPeriodeErrors,
+    BehandlingSplittPeriodeResponses,
     BehandlingUtsettUttalelsesfristData,
     BehandlingUtsettUttalelsesfristErrors,
     BehandlingUtsettUttalelsesfristResponses,
+    BehandlingVilkaarsvurderingsperioderData,
+    BehandlingVilkaarsvurderingsperioderErrors,
+    BehandlingVilkaarsvurderingsperioderResponses,
     VedtaksbrevLagSvgVedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevResponses,
 } from './types.gen';
@@ -275,6 +281,40 @@ export const behandlingHentVedtaksresultat = <ThrowOnError extends boolean = fal
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/vedtak/resultat',
         ...options,
+    });
+
+export const behandlingVilkaarsvurderingsperioder = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingVilkaarsvurderingsperioderData, ThrowOnError>
+): RequestResult<
+    BehandlingVilkaarsvurderingsperioderResponses,
+    BehandlingVilkaarsvurderingsperioderErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).get<
+        BehandlingVilkaarsvurderingsperioderResponses,
+        BehandlingVilkaarsvurderingsperioderErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/perioder',
+        ...options,
+    });
+
+export const behandlingSplittPeriode = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingSplittPeriodeData, ThrowOnError>
+): RequestResult<BehandlingSplittPeriodeResponses, BehandlingSplittPeriodeErrors, ThrowOnError> =>
+    (options.client ?? client).post<
+        BehandlingSplittPeriodeResponses,
+        BehandlingSplittPeriodeErrors,
+        ThrowOnError
+    >({
+        bodySerializer: null,
+        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/splitt',
+        ...options,
+        headers: {
+            'Content-Type': 'text/plain',
+            ...options.headers,
+        },
     });
 
 export const behandlingHentDokumentInfo = <ThrowOnError extends boolean = false>(
