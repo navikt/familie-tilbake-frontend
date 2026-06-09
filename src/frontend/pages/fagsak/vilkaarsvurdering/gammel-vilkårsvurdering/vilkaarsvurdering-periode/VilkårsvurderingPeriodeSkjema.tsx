@@ -17,7 +17,7 @@ import {
 } from '@navikt/ds-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -33,7 +33,7 @@ import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vi
 import { formatterDatostring, isEmpty } from '@/utils';
 
 import { DelPeriode } from '../../del-periode/DelPeriode';
-import { kanSplitte } from '../../utils';
+import { kanSplitte } from '../../del-periode/utils';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
@@ -280,18 +280,22 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const erFørstePeriode = periode.index === perioder[0].index;
 
-    const kanSplittePeriode = (
-        periode: VilkårsvurderingPeriodeSkjemaData,
-        erLesevisning: boolean
-    ): boolean => {
-        const kanSplittePeriodeINyModell = vilkårsvurderingsperioder
-            ? kanSplitte(periode.periode, vilkårsvurderingsperioder)
-            : false;
-        const kanPeriodenSplittes = erNyModell
-            ? kanSplittePeriodeINyModell
-            : differenceInMonths(parseISO(periode.periode.tom), parseISO(periode.periode.fom)) >= 1;
-        return !erLesevisning && !periode.foreldet && kanPeriodenSplittes;
-    };
+    const kanSplittePeriode = useMemo(
+        () =>
+            (periode: VilkårsvurderingPeriodeSkjemaData, erLesevisning: boolean): boolean => {
+                const kanSplittePeriodeINyModell = vilkårsvurderingsperioder
+                    ? kanSplitte(periode.periode, vilkårsvurderingsperioder)
+                    : false;
+                const kanPeriodenSplittes = erNyModell
+                    ? kanSplittePeriodeINyModell
+                    : differenceInMonths(
+                          parseISO(periode.periode.tom),
+                          parseISO(periode.periode.fom)
+                      ) >= 1;
+                return !erLesevisning && !periode.foreldet && kanPeriodenSplittes;
+            },
+        [vilkårsvurderingsperioder, erNyModell]
+    );
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
 

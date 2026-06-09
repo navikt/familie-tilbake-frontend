@@ -10,16 +10,19 @@ import {
     Timeline,
     type TimelinePeriodProps,
     useDatepicker,
+    VStack,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { format, formatDate, isValid, parseISO, subDays } from 'date-fns';
-import { type FC, useRef, useState } from 'react';
+import { format, formatDate, isValid, parseISO } from 'date-fns';
+import { type FC, useMemo, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSplittPeriodeMutation } from '@/generated-new/@tanstack/react-query.gen';
 import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils';
+
+import { hentSplittedePerioder } from './utils';
 
 type Props = {
     periode: Periode;
@@ -46,6 +49,12 @@ export const DelPeriode: FC<Props> = ({
     );
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
+    const splittedePerioder = useMemo(
+        () => hentSplittedePerioder(periode, vilkårsperioder, valgtDato),
+        [periode, vilkårsperioder, valgtDato]
+    );
+    const førsteSplittetPeriode = splittedePerioder[0];
+    const andreSplittetPeriode = splittedePerioder[1];
     const fellesProps = {
         icon: <CalendarFillIcon aria-hidden />,
         status: 'info',
@@ -56,13 +65,13 @@ export const DelPeriode: FC<Props> = ({
                   {
                       id: '1',
                       start: new Date(periode.fom),
-                      end: subDays(valgtDato, 1),
+                      end: new Date(førsteSplittetPeriode.tom),
                       ...fellesProps,
                   },
                   {
                       id: '2',
                       start: valgtDato,
-                      end: new Date(periode.tom),
+                      end: new Date(andreSplittetPeriode.tom),
                       ...fellesProps,
                       isActive: true,
                   },
@@ -100,7 +109,7 @@ export const DelPeriode: FC<Props> = ({
         onSuccess: () => {
             hentVilkårsvurdering();
             visGlobalAlert({
-                title: 'Perioden ble delt opp',
+                title: 'Perioden er delt opp',
                 status: 'success',
             });
             delPeriodeRef.current?.close();
@@ -143,11 +152,6 @@ export const DelPeriode: FC<Props> = ({
                 closeOnBackdropClick
             >
                 <Modal.Body className="flex flex-col gap-4">
-                    <HStack gap="space-32">
-                        <span>Periode</span>
-                        <span className="font-semibold">{`${formatterDatostring(periode.fom)}–${formatterDatostring(periode.tom)}`}</span>
-                    </HStack>
-
                     <Timeline className="pb-4">
                         <Timeline.Row label="">
                             {tidslinjeRader[0].map(periode => (
@@ -156,10 +160,27 @@ export const DelPeriode: FC<Props> = ({
                         </Timeline.Row>
                     </Timeline>
 
+                    {førsteSplittetPeriode && andreSplittetPeriode && (
+                        <VStack gap="space-8">
+                            <HStack gap="space-32">
+                                <span>Periode 1</span>
+                                <span className="font-semibold">
+                                    {`${formatterDatostring(førsteSplittetPeriode.fom)}–${formatterDatostring(førsteSplittetPeriode.tom)}`}
+                                </span>
+                            </HStack>
+                            <HStack gap="space-32">
+                                <span>Periode 2</span>
+                                <span className="font-semibold">
+                                    {`${formatterDatostring(andreSplittetPeriode.fom)}–${formatterDatostring(andreSplittetPeriode.tom)}`}
+                                </span>
+                            </HStack>
+                        </VStack>
+                    )}
+
                     <DatePicker {...datepickerProps}>
                         <DatePicker.Input
                             {...inputProps}
-                            label="Velg dato"
+                            label="Velg fra og med dato for den nye perioden"
                             size="small"
                             error={feilmelding}
                         />

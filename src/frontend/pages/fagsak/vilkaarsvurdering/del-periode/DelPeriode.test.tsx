@@ -42,18 +42,22 @@ describe('DelPeriode', () => {
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
     });
 
-    test('Skal vise beskrivelse, tidslinje, datepicker og knapper i modal', async () => {
+    test('Skal vise tidslinje, nye perioder, datepicker og knapper i modal', async () => {
         renderDelPeriode();
 
         delOppKnapp().click();
 
-        expect(await screen.findByText('Periode')).toBeInTheDocument();
-        expect(screen.getByText('01.01.2024–31.01.2024')).toBeInTheDocument();
-
-        const tidslinjeRad = screen.getByLabelText('01.01.2024 til 31.01.2024');
+        const tidslinjeRad = await screen.findByLabelText('01.01.2024 til 31.01.2024');
         expect(tidslinjeRad).toBeInTheDocument();
 
-        expect(screen.getByLabelText('Velg dato')).toHaveValue('15.01.2024');
+        expect(screen.getByText('Periode 1')).toBeInTheDocument();
+        expect(screen.getByText('01.01.2024–14.01.2024')).toBeInTheDocument();
+        expect(screen.getByText('Periode 2')).toBeInTheDocument();
+        expect(screen.getByText('15.01.2024–31.01.2024')).toBeInTheDocument();
+
+        expect(screen.getByLabelText('Velg fra og med dato for den nye perioden')).toHaveValue(
+            '15.01.2024'
+        );
 
         expect(screen.getByRole('button', { name: 'Avbryt' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
@@ -74,7 +78,7 @@ describe('DelPeriode', () => {
 
         await user.click(delOppKnapp());
 
-        const datoInput = await screen.findByLabelText('Velg dato');
+        const datoInput = await screen.findByLabelText('Velg fra og med dato for den nye perioden');
         await user.clear(datoInput);
         await user.click(screen.getByRole('button', { name: 'Del opp perioden' }));
 
