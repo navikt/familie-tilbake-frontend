@@ -96,6 +96,7 @@ export const Forhåndsvarsel: FC = () => {
     const sendVarselbrev = useMutation({
         ...behandlingSendVarselbrevMutation(),
         onSuccess: oppdaterForhåndsvarselData,
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende forhåndsvarsel',
@@ -163,6 +164,7 @@ export const Forhåndsvarsel: FC = () => {
 
     const utsettFrist = useMutation({
         ...behandlingUtsettUttalelsesfristMutation(),
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onSuccess: async (data, variables) => {
             await queryClient.invalidateQueries({
                 queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
@@ -175,6 +177,7 @@ export const Forhåndsvarsel: FC = () => {
                 status: 'success',
             });
         },
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke utsette fristen',
@@ -191,7 +194,9 @@ export const Forhåndsvarsel: FC = () => {
         });
     };
 
-    const onSubmitBrukeruttalelse: SubmitHandler<BrukeruttalelseFormData> = data => {
+    const onSubmitBrukeruttalelse: SubmitHandler<BrukeruttalelseFormData> = (
+        data: BrukeruttalelseFormData
+    ) => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
             body: tilUttalelsePayload(data.brukeruttalelse, 'sendt'),
@@ -294,7 +299,7 @@ export const Forhåndsvarsel: FC = () => {
                     <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
                         <Fristinfo
                             uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
-                            onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
+                            onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
                         />
                     </div>
 

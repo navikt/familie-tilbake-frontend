@@ -12,7 +12,7 @@ type Props = {
     onUtsettFrist: () => void;
 };
 
-export const Fristinfo: FC<Props> = ({ uttalelsesfrist, onUtsettFrist }) => {
+export const Fristinfo: FC<Props> = ({ uttalelsesfrist, onUtsettFrist }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { opprinneligFrist, nyFrist } = uttalelsesfrist;
 

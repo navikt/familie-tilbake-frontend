@@ -22,12 +22,6 @@ import { formatterDatostring } from '@/utils';
 
 import { Forhåndsvarsel } from './Forhåndsvarsel';
 
-const mockNavigate = vi.fn();
-
-vi.mock('react-router', () => ({
-    useNavigate: (): ReturnType<typeof vi.fn> => mockNavigate,
-}));
-
 vi.mock('@/generated-new/sdk.gen', async () => {
     const actual = await vi.importActual('@/generated-new/sdk.gen');
     return {
@@ -115,58 +109,55 @@ const renderSendtForhåndsvarsel = (nyFrist?: string): void => {
     renderForhåndsvarsel(lagSendtForhåndsvarselResponse(nyFrist));
 };
 
+const skalSendesRadiogruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
+    });
+
+const nesteKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
+
+const sendKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Send forhåndsvarselet' });
+
+const unntakRadiogruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
+    });
+
+const utsettFristKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Utsett frist' });
+
+const forventFristerIFristboks = (opprinneligFrist: string, nyFrist?: string): void => {
+    if (nyFrist) {
+        expect(screen.getByText('Opprinnelig frist')).toBeInTheDocument();
+        expect(screen.getByText('Ny frist for uttalelse')).toBeInTheDocument();
+        expect(screen.getByText(formatterDatostring(opprinneligFrist))).toBeInTheDocument();
+        expect(screen.getByText(formatterDatostring(nyFrist))).toBeInTheDocument();
+        return;
+    }
+
+    expect(screen.getByText('Frist for uttalelse')).toBeInTheDocument();
+    expect(screen.getByText(formatterDatostring(opprinneligFrist))).toBeInTheDocument();
+};
+
+const åpneUtsettFristModal = async (user: UserEvent): Promise<HTMLElement> => {
+    await user.click(utsettFristKnapp());
+    return screen.findByRole('dialog', { name: 'Utsett frist for uttalelse' });
+};
+
+const velgSendForhåndsvarsel = async (user: UserEvent): Promise<void> => {
+    await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' }));
+};
+
+const velgUnntak = async (user: UserEvent): Promise<void> => {
+    await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' }));
+};
+
 describe('Forhåndsvarsel', () => {
     let user: UserEvent;
 
     beforeEach(() => {
         user = userEvent.setup();
-        mockNavigate.mockReset();
     });
-
-    const skalSendesRadiogruppe = (): HTMLElement =>
-        screen.getByRole('radiogroup', {
-            name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
-        });
-
-    const nesteKnapp = (): HTMLElement =>
-        screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
-
-    const sendKnapp = (): HTMLElement =>
-        screen.getByRole('button', { name: 'Send forhåndsvarselet' });
-
-    const unntakRadiogruppe = (): HTMLElement =>
-        screen.getByRole('radiogroup', {
-            name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
-        });
-
-    const utsettFristKnapp = (): HTMLElement =>
-        screen.getByRole('button', { name: 'Utsett frist' });
-
-    const forventFristerIFristboks = (opprinneligFrist: string, nyFrist?: string): void => {
-        if (nyFrist) {
-            expect(screen.getByText('Opprinnelig frist')).toBeInTheDocument();
-            expect(screen.getByText('Ny frist for uttalelse')).toBeInTheDocument();
-            expect(screen.getByText(formatterDatostring(opprinneligFrist))).toBeInTheDocument();
-            expect(screen.getByText(formatterDatostring(nyFrist))).toBeInTheDocument();
-            return;
-        }
-
-        expect(screen.getByText('Frist for uttalelse')).toBeInTheDocument();
-        expect(screen.getByText(formatterDatostring(opprinneligFrist))).toBeInTheDocument();
-    };
-
-    const åpneUtsettFristModal = async (): Promise<HTMLElement> => {
-        await user.click(utsettFristKnapp());
-        return screen.findByRole('dialog', { name: 'Utsett frist for uttalelse' });
-    };
-
-    const velgSendForhåndsvarsel = async (): Promise<void> => {
-        await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' }));
-    };
-
-    const velgUnntak = async (): Promise<void> => {
-        await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' }));
-    };
 
     test('Viser feilmelding uten valg for "Skal det sendes forhåndsvarsel"', async () => {
         renderForhåndsvarsel();
@@ -181,7 +172,7 @@ describe('Forhåndsvarsel', () => {
     test('Ja: viser brevseksjon med preutfylt tekst, "Vis brevet" og send-knapp i actionbar', async () => {
         renderForhåndsvarsel();
 
-        await velgSendForhåndsvarsel();
+        await velgSendForhåndsvarsel(user);
 
         expect(sendKnapp()).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Vis brevet' })).toBeInTheDocument();
@@ -197,14 +188,14 @@ describe('Forhåndsvarsel', () => {
 
     test.todo('Ja: skal vise bekreftelsesmodal før sending av brev');
 
-    test('Ja: navigerer ikke til neste steg etter sending av varselbrev', async () => {
+    test('Ja: forblir på forhåndsvarsel-steget etter sending av varselbrev', async () => {
         renderForhåndsvarsel();
 
-        await velgSendForhåndsvarsel();
+        await velgSendForhåndsvarsel(user);
         await user.click(sendKnapp());
 
         expect(behandlingSendVarselbrev).toHaveBeenCalled();
-        expect(mockNavigate).not.toHaveBeenCalled();
+        expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
     });
 
     test('Sendt varsel: viser opprinnelig frist i fristboksen', () => {
@@ -214,32 +205,33 @@ describe('Forhåndsvarsel', () => {
         forventFristerIFristboks(opprinneligFrist);
     });
 
-    test('Sendt varsel: bruker kan klikke utsett frist og modal viser dato- og begrunnelsesfelt', async () => {
-        renderSendtForhåndsvarsel();
+    describe('UtsettFristModal', () => {
+        test('Sendt varsel: bruker kan klikke utsett frist og modal viser dato- og begrunnelsesfelt', async () => {
+            renderSendtForhåndsvarsel();
 
-        const dialog = await åpneUtsettFristModal();
+            const dialog = await åpneUtsettFristModal(user);
 
-        expect(dialog).toBeInTheDocument();
-        expect(
-            within(dialog).getByRole('textbox', { name: 'Sett ny dato for frist' })
-        ).toBeInTheDocument();
-        expect(
-            within(dialog).getByRole('textbox', { name: 'Begrunnelse for utsatt frist' })
-        ).toBeInTheDocument();
-    });
+            expect(
+                within(dialog).getByRole('textbox', { name: 'Sett ny dato for frist' })
+            ).toBeInTheDocument();
+            expect(
+                within(dialog).getByRole('textbox', { name: 'Begrunnelse for utsatt frist' })
+            ).toBeInTheDocument();
+        });
 
-    test('Sendt varsel: ny frist vises under opprinnelig frist', () => {
-        const opprinneligFrist = '2025-01-22';
-        const nyFrist = '2025-01-29';
-        renderSendtForhåndsvarsel(nyFrist);
+        test('Sendt varsel: ny frist vises under opprinnelig frist', () => {
+            const opprinneligFrist = '2025-01-22';
+            const nyFrist = '2025-01-29';
+            renderSendtForhåndsvarsel(nyFrist);
 
-        forventFristerIFristboks(opprinneligFrist, nyFrist);
+            forventFristerIFristboks(opprinneligFrist, nyFrist);
+        });
     });
 
     test('Nei: viser tre unntaksalternativer og feilmelding uten valg', async () => {
         renderForhåndsvarsel();
 
-        await velgUnntak();
+        await velgUnntak(user);
 
         expect(
             within(unntakRadiogruppe()).getByRole('radio', { name: /ikke praktisk mulig/i })
@@ -261,7 +253,7 @@ describe('Forhåndsvarsel', () => {
     test('Nei: de to første begrunnelsene krever utfylt tekst', async () => {
         renderForhåndsvarsel();
 
-        await velgUnntak();
+        await velgUnntak(user);
         await user.click(
             within(unntakRadiogruppe()).getByRole('radio', { name: /ikke praktisk mulig/i })
         );
