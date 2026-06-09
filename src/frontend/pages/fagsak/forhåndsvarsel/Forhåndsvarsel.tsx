@@ -5,7 +5,7 @@ import type { IkkeVurdertFormData } from './schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -14,6 +14,7 @@ import {
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
     type ForhaandsvarselUnntak,
+    type UpdateUttalelsesfrist,
     type Uttalelse,
 } from '@/generated-new';
 import {
@@ -22,9 +23,11 @@ import {
     behandlingLagreBrukersuttalelseMutation,
     behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
+    behandlingUtsettUttalelsesfristMutation,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { useActionBar } from '@/hooks/useActionBar';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { formatterDatostring } from '@/utils';
 import { useStegNavigering } from '@/utils/sider';
 
 import {
@@ -33,10 +36,12 @@ import {
     tilUttalelseSkjema,
 } from './brukeruttalelseSchema';
 import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
+import { Fristinfo } from './Fristinfo';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
 import { BRUKERUTTALELSE_FORM_ID, SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { ikkeVurdertSchema } from './schema';
+import { UtsettFristModal } from './UtsettFristModal';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
@@ -45,6 +50,7 @@ export const Forhåndsvarsel: FC = () => {
     const navigerTilForrige = useStegNavigering('FAKTA');
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
+    const utsettFristModalRef = useRef<HTMLDialogElement>(null);
 
     const { data: response } = useSuspenseQuery(
         behandlingForhandsvarselOptions({
@@ -76,17 +82,20 @@ export const Forhåndsvarsel: FC = () => {
         formState: { isDirty },
     } = methods;
 
-    const etterVellykketLagring = async (): Promise<void> => {
+    const oppdaterForhåndsvarselData = async (): Promise<void> => {
         await queryClient.invalidateQueries({
             queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
         });
+    };
+
+    const etterVellykketLagring = async (): Promise<void> => {
+        await oppdaterForhåndsvarselData();
         navigerTilNeste();
     };
 
     const sendVarselbrev = useMutation({
         ...behandlingSendVarselbrevMutation(),
-        onSuccess: etterVellykketLagring,
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
+        onSuccess: oppdaterForhåndsvarselData,
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende forhåndsvarsel',
@@ -152,9 +161,37 @@ export const Forhåndsvarsel: FC = () => {
         },
     });
 
-    const onSubmitBrukeruttalelse: SubmitHandler<BrukeruttalelseFormData> = (
-        data: BrukeruttalelseFormData
-    ): void => {
+    const utsettFrist = useMutation({
+        ...behandlingUtsettUttalelsesfristMutation(),
+        onSuccess: async (data, variables) => {
+            await queryClient.invalidateQueries({
+                queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
+            });
+            utsettFristModalRef.current?.close();
+            const nyFrist = variables.body?.nyFrist ?? data.nyFrist;
+            const formatertDato = nyFrist ? formatterDatostring(nyFrist) : '';
+            visGlobalAlert({
+                title: `Fristen for uttalelse er utsatt til ${formatertDato}`,
+                status: 'success',
+            });
+        },
+        onError: error => {
+            visGlobalAlert({
+                title: 'Kunne ikke utsette fristen',
+                message: error.message,
+                status: 'error',
+            });
+        },
+    });
+
+    const sendUtsettFrist = (payload: UpdateUttalelsesfrist): void => {
+        utsettFrist.mutate({
+            path: { behandlingId },
+            body: payload,
+        });
+    };
+
+    const onSubmitBrukeruttalelse: SubmitHandler<BrukeruttalelseFormData> = data => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
             body: tilUttalelsePayload(data.brukeruttalelse, 'sendt'),
@@ -236,6 +273,9 @@ export const Forhåndsvarsel: FC = () => {
 
     useActionBar(actionBarConfig);
 
+    const skalViseFristinfo =
+        forhåndsvarselSteg.type === 'sendt' || forhåndsvarselSteg.type === 'unntak';
+
     return (
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
@@ -247,22 +287,38 @@ export const Forhåndsvarsel: FC = () => {
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
                 </FormProvider>
             ) : (
-                <>
+                <div
+                    className={`grid grid-cols-1 gap-6 items-start ${skalViseFristinfo ? ' lg:grid-cols-[1fr_18rem]' : ''}`}
+                >
                     <Heading size="medium">Forhåndsvarsel</Heading>
-                    <SkalSendeForhåndsvarsel
-                        name="valg"
-                        value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
-                        readOnly
-                    />
-                    {forhåndsvarselSteg.type === 'sendt' && (
-                        <SendtVarsel
-                            {...forhåndsvarselSteg}
-                            brukeruttalelse={brukeruttalelse}
-                            onSubmit={onSubmitBrukeruttalelse}
+                    <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
+                        <Fristinfo
+                            uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
+                            onUtsettFrist={() => utsettFristModalRef.current?.showModal()}
                         />
-                    )}
-                </>
+                    </div>
+
+                    <VStack gap="space-24">
+                        <SkalSendeForhåndsvarsel
+                            name="valg"
+                            value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
+                            readOnly
+                        />
+                        {forhåndsvarselSteg.type === 'sendt' && (
+                            <SendtVarsel
+                                {...forhåndsvarselSteg}
+                                brukeruttalelse={brukeruttalelse}
+                                onSubmit={onSubmitBrukeruttalelse}
+                            />
+                        )}
+                    </VStack>
+                </div>
             )}
+            <UtsettFristModal
+                dialogRef={utsettFristModalRef}
+                onUtsettFrist={sendUtsettFrist}
+                laster={utsettFrist.isPending}
+            />
         </VStack>
     );
 };
