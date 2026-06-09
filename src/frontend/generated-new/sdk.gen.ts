@@ -308,11 +308,10 @@ export const behandlingSplittPeriode = <ThrowOnError extends boolean = false>(
         BehandlingSplittPeriodeErrors,
         ThrowOnError
     >({
-        bodySerializer: null,
         url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/splitt',
         ...options,
         headers: {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'application/json',
             ...options.headers,
         },
     });

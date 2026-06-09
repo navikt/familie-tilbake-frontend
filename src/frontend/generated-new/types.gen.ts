@@ -266,6 +266,10 @@ export type Signatur = {
     besluttendeSaksbehandler: string | null;
 };
 
+export type SplittPeriode = {
+    splittFra: string;
+};
+
 export type Standardtekst = {
     tittel: string;
     underavsnitt: Array<Element>;
@@ -879,7 +883,7 @@ export type BehandlingVilkaarsvurderingsperioderResponse =
     BehandlingVilkaarsvurderingsperioderResponses[keyof BehandlingVilkaarsvurderingsperioderResponses];
 
 export type BehandlingSplittPeriodeData = {
-    body: string;
+    body: SplittPeriode;
     path: {
         behandlingId: string;
     };
