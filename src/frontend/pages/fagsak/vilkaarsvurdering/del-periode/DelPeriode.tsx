@@ -12,7 +12,7 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { format, formatISO, isValid, parseISO, subDays } from 'date-fns';
+import { format, formatDate, isValid, parseISO, subDays } from 'date-fns';
 import { type FC, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -122,7 +122,7 @@ export const DelPeriode: FC<Props> = ({
         }
         splittPeriode.mutate({
             path: { behandlingId },
-            body: { splittFra: formatISO(valgtDato) } satisfies SplittPeriode,
+            body: { splittFra: formatDate(valgtDato, 'yyyy-MM-dd') } satisfies SplittPeriode,
         });
     };
 
