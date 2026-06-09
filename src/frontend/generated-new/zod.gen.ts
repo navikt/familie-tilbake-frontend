@@ -176,6 +176,10 @@ export const zSignatur = z.object({
     besluttendeSaksbehandler: z.string().nullable(),
 });
 
+export const zSplittPeriode = z.object({
+    splittFra: z.iso.date(),
+});
+
 export const zStandardtekst = z.object({
     tittel: z.string(),
     underavsnitt: z.array(zElement),
@@ -579,7 +583,7 @@ export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
  */
 export const zBehandlingVilkaarsvurderingsperioderResponse = z.array(zPeriode);
 
-export const zBehandlingSplittPeriodeBody = z.iso.date();
+export const zBehandlingSplittPeriodeBody = zSplittPeriode;
 
 export const zBehandlingSplittPeriodePath = z.object({
     behandlingId: z.uuid(),

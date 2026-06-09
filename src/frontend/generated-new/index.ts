@@ -146,6 +146,7 @@ export type {
     RotElementWritable,
     SendForhaandsvarsel,
     Signatur,
+    SplittPeriode,
     Standardtekst,
     UnderavsnittElement,
     Unntak,

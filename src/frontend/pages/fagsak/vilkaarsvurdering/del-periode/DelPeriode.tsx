@@ -1,4 +1,5 @@
 import type { Periode } from '@/generated';
+import type { SplittPeriode } from '@/generated-new';
 
 import { CalendarFillIcon } from '@navikt/aksel-icons';
 import {
@@ -11,7 +12,7 @@ import {
     useDatepicker,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { format, isValid, parseISO, subDays } from 'date-fns';
+import { format, formatISO, isValid, parseISO, subDays } from 'date-fns';
 import { type FC, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -121,7 +122,7 @@ export const DelPeriode: FC<Props> = ({
         }
         splittPeriode.mutate({
             path: { behandlingId },
-            body: valgtDato.toISOString(),
+            body: { splittFra: formatISO(valgtDato) } satisfies SplittPeriode,
         });
     };
 
