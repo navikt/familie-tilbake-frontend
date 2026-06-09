@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
+import type { Options } from '@/generated-new/sdk.gen';
 import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +12,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import {
+    type BehandlingUtsettUttalelsesfristData,
+    type BehandlingUtsettUttalelsesfristResponse,
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
     type ForhaandsvarselUnntak,
@@ -164,8 +167,10 @@ export const Forhåndsvarsel: FC = () => {
 
     const utsettFrist = useMutation({
         ...behandlingUtsettUttalelsesfristMutation(),
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onSuccess: async (data, variables) => {
+        onSuccess: async (
+            data: BehandlingUtsettUttalelsesfristResponse,
+            variables: Options<BehandlingUtsettUttalelsesfristData>
+        ): Promise<void> => {
             await queryClient.invalidateQueries({
                 queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
             });
