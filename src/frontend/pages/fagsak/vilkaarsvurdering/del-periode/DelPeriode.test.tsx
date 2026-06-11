@@ -1,3 +1,5 @@
+import type { Periode } from '@/generated';
+
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -17,13 +19,21 @@ const vilkårsperioder = [
     { fom: '2024-01-15', tom: '2024-01-31' },
 ];
 
-const renderDelPeriode = (): void => {
+type RenderDelPeriodeProps = {
+    periodeProp?: Periode;
+    vilkårsperioderProp?: Periode[];
+};
+
+const renderDelPeriode = ({
+    periodeProp = periode,
+    vilkårsperioderProp = vilkårsperioder,
+}: RenderDelPeriodeProps = {}): void => {
     render(
         <QueryClientProvider client={createTestQueryClient()}>
             <TestBehandlingProvider>
                 <DelPeriode
-                    periode={periode}
-                    vilkårsperioder={vilkårsperioder}
+                    periode={periodeProp}
+                    vilkårsperioder={vilkårsperioderProp}
                     hentVilkårsvurdering={(): void => undefined}
                 />
             </TestBehandlingProvider>
@@ -32,6 +42,10 @@ const renderDelPeriode = (): void => {
 };
 
 const delOppKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Del opp' });
+const delOppPeriodenKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Del opp perioden' });
+const velgDatoTekst = 'Velg fra og med dato for den nye perioden';
+const velgDatoDatePicker = (): HTMLElement => screen.getByLabelText(velgDatoTekst);
 
 describe('DelPeriode', () => {
     test('Skal vise modal når knapp trykkes', async () => {
@@ -55,12 +69,10 @@ describe('DelPeriode', () => {
         expect(screen.getByText('Periode 2')).toBeInTheDocument();
         expect(screen.getByText('15.01.2024–31.01.2024')).toBeInTheDocument();
 
-        expect(screen.getByLabelText('Velg fra og med dato for den nye perioden')).toHaveValue(
-            '15.01.2024'
-        );
+        expect(velgDatoDatePicker()).toHaveValue('15.01.2024');
 
         expect(screen.getByRole('button', { name: 'Avbryt' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
+        expect(delOppPeriodenKnapp()).toBeInTheDocument();
     });
 
     test('Skal vise to perioder i tidslinjen', async () => {
@@ -78,9 +90,9 @@ describe('DelPeriode', () => {
 
         await user.click(delOppKnapp());
 
-        const datoInput = await screen.findByLabelText('Velg fra og med dato for den nye perioden');
+        const datoInput = await screen.findByLabelText(velgDatoTekst);
         await user.clear(datoInput);
-        await user.click(screen.getByRole('button', { name: 'Del opp perioden' }));
+        await user.click(delOppPeriodenKnapp());
 
         expect(screen.getByText('Du må velge en dato')).toBeInTheDocument();
     });
@@ -99,5 +111,40 @@ describe('DelPeriode', () => {
 
         expect(valgbareDager).toHaveLength(1);
         expect(valgbareDager[0]).toHaveTextContent('15');
+    });
+
+    test('Skal filtrere vilkårsperioder som ligger utenfor perioden', async () => {
+        const user = userEvent.setup();
+        const periode = {
+            fom: '2024-01-10',
+            tom: '2024-01-25',
+        };
+
+        const vilkårsperioderMedPerioderUtenfor = [
+            { fom: '2024-01-01', tom: '2024-01-09' }, // Før perioden
+            { fom: '2024-01-10', tom: '2024-01-17' }, // Innenfor
+            { fom: '2024-01-18', tom: '2024-01-25' }, // Innenfor
+            { fom: '2024-01-26', tom: '2024-01-31' }, // Etter perioden
+        ] satisfies Periode[];
+
+        renderDelPeriode({
+            periodeProp: periode,
+            vilkårsperioderProp: vilkårsperioderMedPerioderUtenfor,
+        });
+
+        await user.click(delOppKnapp());
+
+        // Skal bare vise de to periodene innenfor
+        expect(screen.getByText('Periode 1')).toBeInTheDocument();
+        expect(screen.getByText('10.01.2024–17.01.2024')).toBeInTheDocument();
+        expect(screen.getByText('Periode 2')).toBeInTheDocument();
+        expect(screen.getByText('18.01.2024–25.01.2024')).toBeInTheDocument();
+
+        // Skal ikke inneholde periodene utenfor
+        expect(screen.queryByText('01.01.2024–09.01.2024')).not.toBeInTheDocument();
+        expect(screen.queryByText('26.01.2024–31.01.2024')).not.toBeInTheDocument();
+
+        // standardSplittDato skal være den andre filtrerte perioden
+        expect(velgDatoDatePicker()).toHaveValue('18.01.2024');
     });
 });

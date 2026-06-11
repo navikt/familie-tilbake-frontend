@@ -39,10 +39,12 @@ export const DelPeriode: FC<Props> = ({
     const { behandlingId } = useBehandling();
     const visGlobalAlert = useVisGlobalAlert();
 
-    // Man kan kun splitte på fom-datoene til vilkårsperiodene, men ikke på den første
-    // periodens fom (som er lik hele periodens fom).
-    const valgbareSplittDatoer = vilkårsperioder.slice(1).map(vilkårsperiode => vilkårsperiode.fom);
-    const standardSplittDato = vilkårsperioder[1]?.fom;
+    const perioderInnenforPeriode = useMemo(
+        () => vilkårsperioder.filter(({ fom, tom }) => fom >= periode.fom && tom <= periode.tom),
+        [vilkårsperioder, periode]
+    );
+    const valgbareSplittDatoer = perioderInnenforPeriode.slice(1).map(({ fom }) => fom);
+    const standardSplittDato = perioderInnenforPeriode[1]?.fom;
 
     const [valgtDato, setValgtDato] = useState<Date | undefined>(
         standardSplittDato ? parseISO(standardSplittDato) : undefined
@@ -50,43 +52,41 @@ export const DelPeriode: FC<Props> = ({
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
     const splittedePerioder = useMemo(
-        () => hentSplittedePerioder(periode, vilkårsperioder, valgtDato),
-        [periode, vilkårsperioder, valgtDato]
+        () => hentSplittedePerioder(periode, perioderInnenforPeriode, valgtDato),
+        [periode, perioderInnenforPeriode, valgtDato]
     );
     const førsteSplittetPeriode = splittedePerioder[0];
     const andreSplittetPeriode = splittedePerioder[1];
-    const fellesProps = {
+
+    const fellesForPerioder = {
         icon: <CalendarFillIcon aria-hidden />,
         status: 'info',
     } satisfies Partial<TimelinePeriodProps>;
-    const tidslinjeRader = valgtDato
-        ? [
-              [
-                  {
-                      id: '1',
-                      start: new Date(periode.fom),
-                      end: new Date(førsteSplittetPeriode.tom),
-                      ...fellesProps,
-                  },
-                  {
-                      id: '2',
-                      start: valgtDato,
-                      end: new Date(andreSplittetPeriode.tom),
-                      ...fellesProps,
-                      isActive: true,
-                  },
-              ] satisfies TimelinePeriodProps[],
-          ]
-        : [
-              [
-                  {
-                      id: '1',
-                      start: new Date(periode.fom),
-                      end: new Date(periode.tom),
-                      ...fellesProps,
-                  },
-              ] satisfies TimelinePeriodProps[],
-          ];
+
+    const tidslinjePerioder = valgtDato
+        ? ([
+              {
+                  id: '1',
+                  start: new Date(periode.fom),
+                  end: new Date(førsteSplittetPeriode.tom),
+                  ...fellesForPerioder,
+              },
+              {
+                  id: '2',
+                  start: valgtDato,
+                  end: new Date(andreSplittetPeriode.tom),
+                  ...fellesForPerioder,
+                  isActive: true,
+              },
+          ] satisfies TimelinePeriodProps[])
+        : ([
+              {
+                  id: '1',
+                  start: new Date(periode.fom),
+                  end: new Date(periode.tom),
+                  ...fellesForPerioder,
+              },
+          ] satisfies TimelinePeriodProps[]);
 
     const { datepickerProps, inputProps } = useDatepicker({
         fromDate: new Date(periode.fom),
@@ -154,7 +154,7 @@ export const DelPeriode: FC<Props> = ({
                 <Modal.Body className="flex flex-col gap-4">
                     <Timeline className="pb-4">
                         <Timeline.Row label="">
-                            {tidslinjeRader[0].map(periode => (
+                            {tidslinjePerioder.map(periode => (
                                 <Timeline.Period key={periode.id} {...periode} />
                             ))}
                         </Timeline.Row>
