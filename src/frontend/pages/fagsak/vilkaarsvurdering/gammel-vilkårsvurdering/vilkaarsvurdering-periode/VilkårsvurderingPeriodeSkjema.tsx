@@ -320,14 +320,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     if (!periode) return null;
 
-    const vilkårsperioderForPeriode = (vilkårsvurderingsperioder ?? [])
-        .filter(
-            vilkårsperiode =>
-                vilkårsperiode.fom >= periode.periode.fom &&
-                vilkårsperiode.tom <= periode.periode.tom
-        )
-        .sort((a, b) => a.fom.localeCompare(b.fom));
-
     return (
         <>
             <VStack gap="space-24">
@@ -339,7 +331,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         (erNyModell ? (
                             <DelPeriode
                                 periode={periode.periode}
-                                vilkårsperioder={vilkårsperioderForPeriode}
+                                vilkårsperioder={vilkårsvurderingsperioder ?? []}
                                 hentVilkårsvurdering={hentVilkårsvurdering}
                             />
                         ) : (

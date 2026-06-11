@@ -116,6 +116,27 @@ describe('Vilkårsvurdering - utils', () => {
                 expect(resultat[0].tom).toBe('2026-07-31');
                 expect(resultat[1].fom).toBe('2026-08-01');
             });
+
+            test('splittDato på andre fom gir tredje periodes tom i andre resultatsperiode', () => {
+                const periode = {
+                    fom: '2026-03-02',
+                    tom: '2026-05-29',
+                } satisfies Periode;
+                const vilkårsperioder = [
+                    { fom: '2026-03-02', tom: '2026-03-13' } satisfies Periode,
+                    { fom: '2026-05-04', tom: '2026-05-15' } satisfies Periode,
+                    { fom: '2026-05-18', tom: '2026-05-29' } satisfies Periode,
+                ];
+                const splittDato = new Date('2026-05-04');
+
+                const resultat = hentSplittedePerioder(periode, vilkårsperioder, splittDato);
+
+                expect(resultat).toHaveLength(2);
+                expect(resultat[0].fom).toBe('2026-03-02');
+                expect(resultat[0].tom).toBe('2026-03-13');
+                expect(resultat[1].fom).toBe('2026-05-04');
+                expect(resultat[1].tom).toBe('2026-05-29');
+            });
         });
 
         describe('returnerer tom array når', () => {

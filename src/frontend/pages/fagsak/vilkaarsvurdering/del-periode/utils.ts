@@ -38,7 +38,7 @@ export const hentSplittedePerioder = (
     vilkårsperioder: Periode[],
     splittDato: Date | undefined
 ): Periode[] => {
-    if (!splittDato) {
+    if (!splittDato || vilkårsperioder.length < 2) {
         return [];
     }
 
@@ -48,17 +48,25 @@ export const hentSplittedePerioder = (
         ({ fom, tom }) => fom >= periode.fom && tom <= periode.tom
     );
 
-    const periodeFørSplittDato = vilkårsperioderInnenfor.findLast(
-        ({ tom }) => tom <= splittDatoString
-    );
+    const vilkårsperioderFør = vilkårsperioderInnenfor.filter(({ tom }) => tom < splittDatoString);
 
-    const periodeEtterSplittDato = vilkårsperioderInnenfor.find(
+    const vilkårsperioderEtter = vilkårsperioderInnenfor.filter(
         ({ fom }) => fom >= splittDatoString
     );
 
-    if (!periodeFørSplittDato || !periodeEtterSplittDato) {
+    if (vilkårsperioderFør.length === 0 || vilkårsperioderEtter.length === 0) {
         return [];
     }
 
-    return [periodeFørSplittDato, periodeEtterSplittDato];
+    const førPeriode = {
+        fom: vilkårsperioderFør[0].fom,
+        tom: vilkårsperioderFør[vilkårsperioderFør.length - 1].tom,
+    } satisfies Periode;
+
+    const etterPeriode = {
+        fom: vilkårsperioderEtter[0].fom,
+        tom: vilkårsperioderEtter[vilkårsperioderEtter.length - 1].tom,
+    } satisfies Periode;
+
+    return [førPeriode, etterPeriode];
 };
