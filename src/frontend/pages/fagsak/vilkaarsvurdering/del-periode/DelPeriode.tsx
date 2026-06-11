@@ -40,7 +40,7 @@ export const DelPeriode: FC<Props> = ({
     const visGlobalAlert = useVisGlobalAlert();
 
     // Man kan kun splitte på fom-datoene til vilkårsperiodene, men ikke på den første
-    // periodens fom (som er lik hele periodens fom). Standardvalg er index 1.
+    // periodens fom (som er lik hele periodens fom).
     const valgbareSplittDatoer = vilkårsperioder.slice(1).map(vilkårsperiode => vilkårsperiode.fom);
     const standardSplittDato = vilkårsperioder[1]?.fom;
 
