@@ -27,12 +27,14 @@ import { hentSplittedePerioder } from './utils';
 type Props = {
     periode: Periode;
     vilkårsperioder: Periode[];
+    erVurdert: boolean;
     hentVilkårsvurdering: () => void;
 };
 
 export const DelPeriode: FC<Props> = ({
     periode,
     vilkårsperioder,
+    erVurdert,
     hentVilkårsvurdering,
 }: Props) => {
     const delPeriodeRef = useRef<HTMLDialogElement>(null);
@@ -60,6 +62,7 @@ export const DelPeriode: FC<Props> = ({
 
     const fellesForPerioder = {
         icon: <CalendarFillIcon aria-hidden />,
+        status: 'neutral',
     } satisfies Partial<TimelinePeriodProps>;
 
     const tidslinjePerioder = valgtDato
@@ -69,6 +72,7 @@ export const DelPeriode: FC<Props> = ({
                   start: new Date(periode.fom),
                   end: new Date(førsteSplittetPeriode.tom),
                   ...fellesForPerioder,
+                  status: erVurdert ? ('success' as const) : fellesForPerioder.status,
               },
               {
                   id: '2',
@@ -83,6 +87,7 @@ export const DelPeriode: FC<Props> = ({
                   start: new Date(periode.fom),
                   end: new Date(periode.tom),
                   ...fellesForPerioder,
+                  status: erVurdert ? ('success' as const) : fellesForPerioder.status,
               },
           ] satisfies TimelinePeriodProps[]);
 
@@ -152,11 +157,21 @@ export const DelPeriode: FC<Props> = ({
                 <Modal.Body className="flex flex-col gap-8">
                     <Timeline>
                         <Timeline.Row label="">
-                            {tidslinjePerioder.map((periode, indeks: number) => (
-                                <Timeline.Period key={periode.id} {...periode}>
-                                    {`Periode ${indeks + 1}: ${format(periode.start, 'dd.MM.yyyy')}–${format(periode.end, 'dd.MM.yyyy')}`}
-                                </Timeline.Period>
-                            ))}
+                            {tidslinjePerioder.map((periode, indeks: number) => {
+                                const erFørstePeriode = indeks === 0;
+                                return (
+                                    <Timeline.Period key={periode.id} {...periode}>
+                                        <VStack gap="space-4">
+                                            <span>{`Periode ${indeks + 1}: ${format(periode.start, 'dd.MM.yyyy')}–${format(periode.end, 'dd.MM.yyyy')}`}</span>
+                                            <span>
+                                                {erFørstePeriode && erVurdert
+                                                    ? 'Vurdert'
+                                                    : 'Ikke vurdert'}
+                                            </span>
+                                        </VStack>
+                                    </Timeline.Period>
+                                );
+                            })}
                         </Timeline.Row>
                     </Timeline>
 

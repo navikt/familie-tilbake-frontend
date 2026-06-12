@@ -334,6 +334,12 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                             <DelPeriode
                                 periode={periode.periode}
                                 vilkårsperioder={vilkårsvurderingsperioder ?? []}
+                                erVurdert={
+                                    !!periode.vilkårsvurderingsresultatInfo
+                                        ?.vilkårsvurderingsresultat &&
+                                    periode.vilkårsvurderingsresultatInfo
+                                        .vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert
+                                }
                                 hentVilkårsvurdering={hentVilkårsvurdering}
                             />
                         ) : (

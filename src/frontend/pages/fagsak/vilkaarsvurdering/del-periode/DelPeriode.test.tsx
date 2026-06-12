@@ -22,11 +22,13 @@ const vilkårsperioder = [
 type RenderDelPeriodeProps = {
     periodeProp?: Periode;
     vilkårsperioderProp?: Periode[];
+    erVurdert?: boolean;
 };
 
 const renderDelPeriode = ({
     periodeProp = periode,
     vilkårsperioderProp = vilkårsperioder,
+    erVurdert = false,
 }: RenderDelPeriodeProps = {}): void => {
     render(
         <QueryClientProvider client={createTestQueryClient()}>
@@ -34,6 +36,7 @@ const renderDelPeriode = ({
                 <DelPeriode
                     periode={periodeProp}
                     vilkårsperioder={vilkårsperioderProp}
+                    erVurdert={erVurdert}
                     hentVilkårsvurdering={(): void => undefined}
                 />
             </TestBehandlingProvider>
@@ -150,5 +153,47 @@ describe('DelPeriode', () => {
 
         // standardSplittDato skal være den andre filtrerte perioden
         expect(velgDatoDatePicker()).toHaveValue('18.01.2024');
+    });
+
+    test('Skal vise "Vurdert" i popover for periode 1 når perioden er vurdert', async () => {
+        const user = userEvent.setup();
+        renderDelPeriode({ erVurdert: true });
+
+        await user.click(delOppKnapp());
+
+        const periode1Knapp = await screen.findByRole('button', {
+            name: /Suksess fra 01.01.2024 til 14.01.2024/,
+        });
+        await user.click(periode1Knapp);
+
+        expect(await screen.findByText('Vurdert')).toBeInTheDocument();
+    });
+
+    test('Skal vise "Ikke vurdert" i popover for periode 1 når perioden ikke er vurdert', async () => {
+        const user = userEvent.setup();
+        renderDelPeriode({ erVurdert: false });
+
+        await user.click(delOppKnapp());
+
+        const periode1Knapp = await screen.findByRole('button', {
+            name: /Nøytral fra 01.01.2024 til 14.01.2024/,
+        });
+        await user.click(periode1Knapp);
+
+        expect(await screen.findByText('Ikke vurdert')).toBeInTheDocument();
+    });
+
+    test('Skal vise "Ikke vurdert" i popover for periode 2 alltid', async () => {
+        const user = userEvent.setup();
+        renderDelPeriode({ erVurdert: true });
+
+        await user.click(delOppKnapp());
+
+        const periode2Knapp = await screen.findByRole('button', {
+            name: /Nøytral fra 15.01.2024 til 31.01.2024/,
+        });
+        await user.click(periode2Knapp);
+
+        expect(await screen.findByText('Ikke vurdert')).toBeInTheDocument();
     });
 });
