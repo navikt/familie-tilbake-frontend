@@ -219,6 +219,11 @@ export type Periode = {
     tom: string;
 };
 
+export type PeriodeInfo = {
+    periodeId: string;
+    periode: Periode;
+};
+
 export type RentekstElement = {
     tekst: string;
 };
@@ -876,7 +881,7 @@ export type BehandlingVilkaarsvurderingsperioderResponses = {
     /**
      * The request has succeeded.
      */
-    200: Array<Periode>;
+    200: Array<PeriodeInfo>;
 };
 
 export type BehandlingVilkaarsvurderingsperioderResponse =

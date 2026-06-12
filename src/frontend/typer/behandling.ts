@@ -1,8 +1,8 @@
 import type {
     BehandlingsresultatstypeEnum,
-    BehandlingsstegEnum,
     BehandlingstatusEnum,
     GetårsakstypeEnum,
+    StegEnum,
     VenteårsakEnum,
 } from '@/generated';
 
@@ -39,7 +39,7 @@ export const behandlingsresultater: Record<BehandlingsresultatstypeEnum, string>
     IKKE_FASTSATT: 'Ikke fastsatt',
 };
 
-export const behandlingssteg: Record<BehandlingsstegEnum, string> = {
+export const behandlingssteg: Record<StegEnum, string> = {
     VARSEL: 'Varsel',
     GRUNNLAG: 'Kravgrunnlag',
     VERGE: 'Verge',

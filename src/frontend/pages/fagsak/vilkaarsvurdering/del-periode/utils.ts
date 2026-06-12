@@ -14,11 +14,8 @@ import { formatDate } from 'date-fns/format';
 export const kanSplitte = (periode: Periode, vilkårsperioder: Periode[]): boolean => {
     if (vilkårsperioder.length < 2) return false;
 
-    const periodeFom = periode.fom;
-    const periodeTom = periode.tom;
-
     const antallPerioderInnenfor = vilkårsperioder.filter(
-        vilkårsperiode => vilkårsperiode.fom >= periodeFom && vilkårsperiode.tom <= periodeTom
+        ({ fom, tom }) => fom >= periode.fom && tom <= periode.tom
     ).length;
 
     return antallPerioderInnenfor >= 2;

@@ -1,8 +1,8 @@
 import type {
     BehandlingDto,
-    BehandlingsstegEnum,
     BehandlingsstegsinfoDto,
     BehandlingsstegstatusEnum,
+    StegEnum,
 } from '@/generated';
 
 export const lagBehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
@@ -48,7 +48,7 @@ export type StegValg = {
 };
 
 const lagSteg = (
-    steg: BehandlingsstegEnum,
+    steg: StegEnum,
     defaultStatus: BehandlingsstegstatusEnum,
     valg: StegValg = {}
 ): BehandlingsstegsinfoDto => ({

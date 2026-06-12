@@ -137,6 +137,7 @@ export type {
     PakrevdBegrunnelseUpdateItem,
     PakrevdBegrunnelseWritable,
     Periode,
+    PeriodeInfo,
     RentekstElement,
     ResultatEnum,
     RettsligGrunnlag,

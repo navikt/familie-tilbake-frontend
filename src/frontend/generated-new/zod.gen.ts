@@ -110,6 +110,11 @@ export const zPeriode = z.object({
     tom: z.iso.date(),
 });
 
+export const zPeriodeInfo = z.object({
+    periodeId: z.uuid(),
+    periode: zPeriode,
+});
+
 export const zRentekstElement = z.object({
     tekst: z.string().min(3).max(3000),
 });
@@ -581,7 +586,7 @@ export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
 /**
  * The request has succeeded.
  */
-export const zBehandlingVilkaarsvurderingsperioderResponse = z.array(zPeriode);
+export const zBehandlingVilkaarsvurderingsperioderResponse = z.array(zPeriodeInfo);
 
 export const zBehandlingSplittPeriodeBody = zSplittPeriode;
 
