@@ -60,7 +60,6 @@ export const DelPeriode: FC<Props> = ({
 
     const fellesForPerioder = {
         icon: <CalendarFillIcon aria-hidden />,
-        status: 'info',
     } satisfies Partial<TimelinePeriodProps>;
 
     const tidslinjePerioder = valgtDato
@@ -76,7 +75,6 @@ export const DelPeriode: FC<Props> = ({
                   start: valgtDato,
                   end: new Date(andreSplittetPeriode.tom),
                   ...fellesForPerioder,
-                  isActive: true,
               },
           ] satisfies TimelinePeriodProps[])
         : ([
@@ -151,25 +149,30 @@ export const DelPeriode: FC<Props> = ({
                 className={MODAL_BREDDE}
                 closeOnBackdropClick
             >
-                <Modal.Body className="flex flex-col gap-4">
-                    <Timeline className="pb-4">
+                <Modal.Body className="flex flex-col gap-8">
+                    <Timeline>
                         <Timeline.Row label="">
-                            {tidslinjePerioder.map(periode => (
-                                <Timeline.Period key={periode.id} {...periode} />
+                            {tidslinjePerioder.map((periode, indeks: number) => (
+                                <Timeline.Period key={periode.id} {...periode}>
+                                    {`Periode ${indeks + 1}: ${format(periode.start, 'dd.MM.yyyy')}–${format(periode.end, 'dd.MM.yyyy')}`}
+                                </Timeline.Period>
                             ))}
                         </Timeline.Row>
                     </Timeline>
 
                     {førsteSplittetPeriode && andreSplittetPeriode && (
-                        <VStack gap="space-8">
+                        <VStack
+                            gap="space-8"
+                            className="bg-ax-bg-info-moderate p-4 rounded-xl border border-ax-bg-info-strong"
+                        >
                             <HStack gap="space-32">
-                                <span>Periode 1</span>
+                                Periode 1
                                 <span className="font-semibold">
                                     {`${formatterDatostring(førsteSplittetPeriode.fom)}–${formatterDatostring(førsteSplittetPeriode.tom)}`}
                                 </span>
                             </HStack>
                             <HStack gap="space-32">
-                                <span>Periode 2</span>
+                                Periode 2
                                 <span className="font-semibold">
                                     {`${formatterDatostring(andreSplittetPeriode.fom)}–${formatterDatostring(andreSplittetPeriode.tom)}`}
                                 </span>
@@ -180,7 +183,7 @@ export const DelPeriode: FC<Props> = ({
                     <DatePicker {...datepickerProps}>
                         <DatePicker.Input
                             {...inputProps}
-                            label="Velg fra og med dato for den nye perioden"
+                            label="Velg fra og med dato for periode 2"
                             size="small"
                             error={feilmelding}
                         />

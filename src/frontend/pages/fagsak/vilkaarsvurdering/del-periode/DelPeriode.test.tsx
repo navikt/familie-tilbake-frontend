@@ -44,7 +44,7 @@ const renderDelPeriode = ({
 const delOppKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Del opp' });
 const delOppPeriodenKnapp = (): HTMLElement =>
     screen.getByRole('button', { name: 'Del opp perioden' });
-const velgDatoTekst = 'Velg fra og med dato for den nye perioden';
+const velgDatoTekst = 'Velg fra og med dato for periode 2';
 const velgDatoDatePicker = (): HTMLElement => screen.getByLabelText(velgDatoTekst);
 
 describe('DelPeriode', () => {
@@ -80,8 +80,12 @@ describe('DelPeriode', () => {
 
         delOppKnapp().click();
 
-        expect(await screen.findByText('Info fra 01.01.2024 til 14.01.2024')).toBeInTheDocument();
-        expect(screen.getByText('Info fra 15.01.2024 til 31.01.2024')).toBeInTheDocument();
+        expect(
+            await screen.findByRole('button', { name: /Nøytral fra 01.01.2024 til 14.01.2024/ })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: /Nøytral fra 15.01.2024 til 31.01.2024/ })
+        ).toBeInTheDocument();
     });
 
     test('Skal vise feilmelding hvis man trykker del periode uten å velge dato', async () => {
