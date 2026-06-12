@@ -2,7 +2,7 @@ import type { UserEvent } from '@testing-library/user-event';
 import type { RessursVarselbrevtekst } from '@/generated';
 import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '@/generated-new';
 
-import { QueryClientProvider } from '@tanstack/react-query';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -13,6 +13,8 @@ import { hentForhåndsvarselTekstQueryKey } from '@/generated/@tanstack/react-qu
 import {
     behandlingFaktaQueryKey,
     behandlingForhandsvarselQueryKey,
+    behandlingHentDokumentInfoOptions,
+    behandlingHentDokumentOptions,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { behandlingSendVarselbrev } from '@/generated-new/sdk.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
@@ -27,6 +29,26 @@ vi.mock('@/generated-new/sdk.gen', async () => {
     return {
         ...actual,
         behandlingSendVarselbrev: vi.fn().mockResolvedValue({ data: undefined }),
+    };
+});
+
+vi.mock('@/komponenter/pdf-visning-modal/PdfVisningModal', () => ({
+    PdfVisningModal: ({ åpen, onRequestClose }: { åpen: boolean; onRequestClose: () => void }) =>
+        åpen ? (
+            <dialog open onClose={onRequestClose}>
+                <iframe title="Dokument" src="blob:mock-pdf" />
+                <button onClick={onRequestClose}>Lukk</button>
+            </dialog>
+        ) : null,
+}));
+
+vi.mock('@/generated/@tanstack/react-query.gen', async () => {
+    const actual = await vi.importActual('@/generated/@tanstack/react-query.gen');
+    return {
+        ...actual,
+        forhåndsvisBrevMutation: vi.fn(() => ({
+            mutationFn: async () => ({ data: 'mock-pdf-blob', status: 'SUKSESS', melding: 'OK' }),
+        })),
     };
 });
 
@@ -85,13 +107,43 @@ const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselRespo
     brukeruttalelse: null,
 });
 
-const renderForhåndsvarsel = (forhåndsvarselResponse = lagForhåndsvarselResponse()): void => {
+const opprettQueryClientMedForhåndsvarselData = (
+    forhåndsvarselResponse: ForhaandsvarselResponse
+): QueryClient => {
     const queryClient = createTestQueryClient();
     const pathOptions = { path: { behandlingId: BEHANDLING_ID } };
 
     queryClient.setQueryData(behandlingForhandsvarselQueryKey(pathOptions), forhåndsvarselResponse);
     queryClient.setQueryData(hentForhåndsvarselTekstQueryKey(pathOptions), lagVarselbrevtekster());
     queryClient.setQueryData(behandlingFaktaQueryKey(pathOptions), lagFaktaOmFeilutbetaling());
+
+    return queryClient;
+};
+
+const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
+    const journalpostId = 'jp-123';
+    const dokumentId = 'dok-456';
+
+    queryClient.setQueryData(
+        behandlingHentDokumentInfoOptions({
+            path: { behandlingId: BEHANDLING_ID, dokumentType: 'VARSELBREV' },
+        }).queryKey,
+        { journalpostId, dokumentId }
+    );
+
+    queryClient.setQueryData(
+        behandlingHentDokumentOptions({
+            path: {
+                behandlingId: BEHANDLING_ID,
+                journalpostId,
+                dokumentInfoId: dokumentId,
+            },
+        }).queryKey,
+        new Blob(['PDF content'], { type: 'application/pdf' })
+    );
+};
+
+const renderMedQueryClient = (queryClient: QueryClient): void => {
     render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider>
@@ -105,8 +157,17 @@ const renderForhåndsvarsel = (forhåndsvarselResponse = lagForhåndsvarselRespo
     );
 };
 
+const renderForhåndsvarsel = (forhåndsvarselResponse = lagForhåndsvarselResponse()): void => {
+    const queryClient = opprettQueryClientMedForhåndsvarselData(forhåndsvarselResponse);
+    renderMedQueryClient(queryClient);
+};
+
 const renderSendtForhåndsvarsel = (nyFrist?: string): void => {
-    renderForhåndsvarsel(lagSendtForhåndsvarselResponse(nyFrist));
+    const queryClient = opprettQueryClientMedForhåndsvarselData(
+        lagSendtForhåndsvarselResponse(nyFrist)
+    );
+    leggTilSendtDokumentData(queryClient);
+    renderMedQueryClient(queryClient);
 };
 
 const skalSendesRadiogruppe = (): HTMLElement =>
@@ -152,6 +213,10 @@ const velgUnntak = async (user: UserEvent): Promise<void> => {
     await user.click(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' }));
 };
 
+const visBrevKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Vis brevet' });
+
+const ventPåPdfModal = async (): Promise<HTMLElement> => screen.findByRole('dialog');
+
 describe('Forhåndsvarsel', () => {
     let user: UserEvent;
 
@@ -196,6 +261,56 @@ describe('Forhåndsvarsel', () => {
 
         expect(behandlingSendVarselbrev).toHaveBeenCalled();
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
+    });
+
+    describe('Forhåndsvis varselbrev', () => {
+        test('burde vise "Vis brevet"-knapp når forhåndsvarsel skal sendes', async () => {
+            renderForhåndsvarsel();
+
+            await velgSendForhåndsvarsel(user);
+
+            expect(visBrevKnapp()).toBeInTheDocument();
+        });
+
+        test('burde åpne PDF-modal ved klikk på "Vis brevet"', async () => {
+            renderForhåndsvarsel();
+
+            await velgSendForhåndsvarsel(user);
+            await user.click(visBrevKnapp());
+
+            expect(await ventPåPdfModal()).toBeInTheDocument();
+        });
+
+        test('burde ikke vise "Vis brevet"-knapp når forhåndsvarsel ikke skal sendes', async () => {
+            renderForhåndsvarsel();
+
+            await velgUnntak(user);
+
+            expect(screen.queryByRole('button', { name: 'Vis brevet' })).not.toBeInTheDocument();
+        });
+    });
+
+    describe('Vis sendt varselbrev', () => {
+        test('burde vise "Vis brevet"-knapp når varsel er sendt', () => {
+            renderSendtForhåndsvarsel();
+
+            expect(visBrevKnapp()).toBeInTheDocument();
+        });
+
+        test('burde åpne PDF-modal ved klikk på "Vis brevet" når varsel er sendt', async () => {
+            renderSendtForhåndsvarsel();
+
+            const knapp = visBrevKnapp();
+            await user.click(knapp);
+
+            expect(await ventPåPdfModal()).toBeInTheDocument();
+        });
+
+        test('burde ikke vise "Vis brevet"-knapp når varsel ikke er sendt', () => {
+            renderForhåndsvarsel();
+
+            expect(screen.queryByRole('button', { name: 'Vis brevet' })).not.toBeInTheDocument();
+        });
     });
 
     test('Sendt varsel: viser opprinnelig frist i fristboksen', () => {

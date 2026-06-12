@@ -13,3 +13,6 @@ export const handlePdfData = (data: string): string => {
     }
     return createPdfBlobUrl(data);
 };
+
+export const lagPdfBlobUrl = (blob: Blob | File): string =>
+    URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
