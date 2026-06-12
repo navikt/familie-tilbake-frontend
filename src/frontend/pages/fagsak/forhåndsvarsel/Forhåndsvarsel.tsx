@@ -45,6 +45,7 @@ import { BRUKERUTTALELSE_FORM_ID, SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { ikkeVurdertSchema } from './schema';
 import { UtsettFristModal } from './UtsettFristModal';
+import { VisSendtVarselbrev } from './VisSendtVarselbrev';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
@@ -300,7 +301,10 @@ export const Forhåndsvarsel: FC = () => {
                 <div
                     className={`grid grid-cols-1 gap-6 items-start ${skalViseFristinfo ? ' lg:grid-cols-[1fr_18rem]' : ''}`}
                 >
-                    <Heading size="medium">Forhåndsvarsel</Heading>
+                    <HStack align="center" gap="space-16">
+                        <Heading size="medium">Forhåndsvarsel</Heading>
+                        {forhåndsvarselSteg.type === 'sendt' && <VisSendtVarselbrev />}
+                    </HStack>
                     <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
                         <Fristinfo
                             uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
