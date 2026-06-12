@@ -7,7 +7,7 @@
  * arkitektur.
  */
 
-import type { BehandlingsstegEnum } from '@/generated';
+import type { StegEnum } from '@/generated';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '@/typer/api';
 import type { Totrinnkontroll } from '@/typer/totrinnTyper';
 import type { SynligSteg } from '@/utils/sider';
@@ -37,7 +37,7 @@ const finnTotrinnGodkjenningOption = (verdi?: boolean): TotrinnGodkjenningOption
 
 const validerTekst2000 = validerTekstMaksLengde(2000);
 
-const stegRekkefølge: BehandlingsstegEnum[] = [
+const stegRekkefølge: StegEnum[] = [
     'FAKTA',
     'FORHÅNDSVARSEL',
     'FORELDELSE',
@@ -83,7 +83,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                         const stegInfo = totrinn.find(tt => tt.behandlingssteg === steg);
                         return {
                             index: `idx_steg_${index}`,
-                            behandlingssteg: stegInfo?.behandlingssteg as BehandlingsstegEnum,
+                            behandlingssteg: stegInfo?.behandlingssteg as StegEnum,
                             godkjent: finnTotrinnGodkjenningOption(stegInfo?.godkjent),
                             begrunnelse: stegInfo?.begrunnelse,
                         };

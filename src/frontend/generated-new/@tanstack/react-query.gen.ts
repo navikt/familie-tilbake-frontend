@@ -18,7 +18,9 @@ import {
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
     behandlingSendVarselbrev,
+    behandlingSplittPeriode,
     behandlingUtsettUttalelsesfrist,
+    behandlingVilkaarsvurderingsperioder,
     type Options,
     vedtaksbrevLagSvgVedtaksbrev,
 } from '../sdk.gen';
@@ -58,9 +60,14 @@ import type {
     BehandlingOppdaterVedtaksbrevResponse,
     BehandlingSendVarselbrevData,
     BehandlingSendVarselbrevError,
+    BehandlingSplittPeriodeData,
+    BehandlingSplittPeriodeError,
     BehandlingUtsettUttalelsesfristData,
     BehandlingUtsettUttalelsesfristError,
     BehandlingUtsettUttalelsesfristResponse,
+    BehandlingVilkaarsvurderingsperioderData,
+    BehandlingVilkaarsvurderingsperioderError,
+    BehandlingVilkaarsvurderingsperioderResponse,
     VedtaksbrevLagSvgVedtaksbrevData,
     VedtaksbrevLagSvgVedtaksbrevResponse,
 } from '../types.gen';
@@ -408,6 +415,55 @@ export const behandlingHentVedtaksresultatOptions = (
         },
         queryKey: behandlingHentVedtaksresultatQueryKey(options),
     });
+
+export const behandlingVilkaarsvurderingsperioderQueryKey = (
+    options: Options<BehandlingVilkaarsvurderingsperioderData>
+) => createQueryKey('behandlingVilkaarsvurderingsperioder', options);
+
+export const behandlingVilkaarsvurderingsperioderOptions = (
+    options: Options<BehandlingVilkaarsvurderingsperioderData>
+) =>
+    queryOptions<
+        BehandlingVilkaarsvurderingsperioderResponse,
+        AxiosError<BehandlingVilkaarsvurderingsperioderError>,
+        BehandlingVilkaarsvurderingsperioderResponse,
+        ReturnType<typeof behandlingVilkaarsvurderingsperioderQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingVilkaarsvurderingsperioder({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingVilkaarsvurderingsperioderQueryKey(options),
+    });
+
+export const behandlingSplittPeriodeMutation = (
+    options?: Partial<Options<BehandlingSplittPeriodeData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingSplittPeriodeError>,
+    Options<BehandlingSplittPeriodeData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingSplittPeriodeError>,
+        Options<BehandlingSplittPeriodeData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingSplittPeriode({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
 
 export const behandlingHentDokumentInfoQueryKey = (
     options: Options<BehandlingHentDokumentInfoData>

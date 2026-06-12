@@ -32,21 +32,33 @@ export default defineConfig([
                 {
                     name: 'Biome (Format)',
                     command: 'biome',
-                    args: ['format', '--write', '--config-path', './biome.generated.json', '{{path}}'],
+                    args: [
+                        'format',
+                        '--write',
+                        '--config-path',
+                        './biome.generated.json',
+                        '{{path}}',
+                    ],
                 },
             ],
         },
     },
     {
         ...defaultConfig,
-        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/2b268ecb4fe0c2ce3a155f5034b3ea4fbd1b7e5e/tsp-output/schema/openapi.yaml',
+        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/08f43eee6b7325a281640d1c823151e9cd4c97ea/tsp-output/schema/openapi.yaml',
         output: {
             path: 'src/frontend/generated-new',
             postProcess: [
                 {
                     name: 'Biome (Format)',
                     command: 'biome',
-                    args: ['format', '--write', '--config-path', './biome.generated.json', '{{path}}'],
+                    args: [
+                        'format',
+                        '--write',
+                        '--config-path',
+                        './biome.generated.json',
+                        '{{path}}',
+                    ],
                 },
             ],
         },

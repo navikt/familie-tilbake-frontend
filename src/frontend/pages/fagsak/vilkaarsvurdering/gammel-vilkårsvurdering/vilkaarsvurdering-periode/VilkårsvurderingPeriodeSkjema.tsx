@@ -1,4 +1,5 @@
 import type { ChangeEvent, FC } from 'react';
+import type { PeriodeInfo } from '@/generated-new';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 
@@ -15,13 +16,14 @@ import {
     Textarea,
     VStack,
 } from '@navikt/ds-react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
+import { behandlingVilkaarsvurderingsperioderOptions } from '@/generated-new/@tanstack/react-query.gen';
 import { type Skjema, Valideringsstatus } from '@/hooks/skjema';
 import { useActionBar } from '@/hooks/useActionBar';
 import { Aktsomhet, SærligeGrunner, Vilkårsresultat } from '@/kodeverk';
@@ -31,6 +33,8 @@ import { PeriodeOppsummering } from '@/komponenter/periodeinformasjon/PeriodeOpp
 import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import { formatterDatostring, isEmpty } from '@/utils';
 
+import { DelPeriode } from '../../del-periode/DelPeriode';
+import { kanSplitte } from '../../del-periode/utils';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
@@ -136,6 +140,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         settValgtPeriode,
         erAllePerioderBehandlet,
         erAutoutført,
+        hentVilkårsvurdering,
     } = useVilkårsvurdering();
     const { behandlingILesemodus } = useBehandlingState();
     const erLesevisning = behandlingILesemodus || !!erAutoutført;
@@ -144,7 +149,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
             oppdaterPeriode(oppdatertPeriode);
         }
     );
-    const { behandlingId, behandlingsstegsinfo } = useBehandling();
+    const { behandlingId, behandlingsstegsinfo, erNyModell } = useBehandling();
     const {
         setIkkePersistertKomponent,
         harUlagredeData,
@@ -152,6 +157,11 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         actionBarStegtekst,
     } = useBehandlingState();
     const queryClient = useQueryClient();
+
+    const { data: vilkårsvurderingsperioder } = useQuery({
+        ...behandlingVilkaarsvurderingsperioderOptions({ path: { behandlingId } }),
+        select: (data: PeriodeInfo[]) => data.map(({ periode }) => periode),
+    });
 
     const visUlagretDataModal = !!pendingPeriode && harUlagredeData;
 
@@ -272,11 +282,22 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const erFørstePeriode = periode.index === perioder[0].index;
 
-    const kanSplittePeriode = (periode: VilkårsvurderingPeriodeSkjemaData): boolean => {
-        const fom = parseISO(periode.periode.fom);
-        const tom = parseISO(periode.periode.tom);
-        return differenceInMonths(tom, fom) >= 1;
-    };
+    const kanSplittePeriode = useMemo(
+        () =>
+            (periode: VilkårsvurderingPeriodeSkjemaData, erLesevisning: boolean): boolean => {
+                const kanSplittePeriodeINyModell = vilkårsvurderingsperioder
+                    ? kanSplitte(periode.periode, vilkårsvurderingsperioder)
+                    : false;
+                const kanPeriodenSplittes = erNyModell
+                    ? kanSplittePeriodeINyModell
+                    : differenceInMonths(
+                          parseISO(periode.periode.tom),
+                          parseISO(periode.periode.fom)
+                      ) >= 1;
+                return !erLesevisning && !periode.foreldet && kanPeriodenSplittes;
+            },
+        [vilkårsvurderingsperioder, erNyModell]
+    );
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
 
@@ -308,9 +329,22 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
-                    {!erLesevisning && !periode.foreldet && kanSplittePeriode(periode) && (
-                        <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
-                    )}
+                    {kanSplittePeriode(periode, erLesevisning) &&
+                        (erNyModell ? (
+                            <DelPeriode
+                                periode={periode.periode}
+                                vilkårsperioder={vilkårsvurderingsperioder ?? []}
+                                erVurdert={
+                                    !!periode.vilkårsvurderingsresultatInfo
+                                        ?.vilkårsvurderingsresultat &&
+                                    periode.vilkårsvurderingsresultatInfo
+                                        .vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert
+                                }
+                                hentVilkårsvurdering={hentVilkårsvurdering}
+                            />
+                        ) : (
+                            <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
+                        ))}
                 </HStack>
                 <PeriodeOppsummering
                     fom={periode.periode.fom}

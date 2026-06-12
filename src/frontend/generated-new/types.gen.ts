@@ -23,7 +23,13 @@ export type Beregningsresultat = {
     vedtaksresultat: Vedtaksresultat;
 };
 
-export type BeregningsresultatVurdering = 'GodTro' | 'Forsett' | 'Uaktsomhet' | 'GrovUaktsomhet';
+export type BeregningsresultatVurdering =
+    | 'GodTro'
+    | 'Forsett'
+    | 'Uaktsomhet'
+    | 'GrovUaktsomhet'
+    | 'BurdeForstått'
+    | 'Forstod';
 
 export type Beregningsresultatsperiode = {
     fom: string;
@@ -208,6 +214,16 @@ export type PakrevdBegrunnelseUpdateItem = {
     underavsnitt: Array<Element>;
 };
 
+export type Periode = {
+    fom: string;
+    tom: string;
+};
+
+export type PeriodeInfo = {
+    periodeId: string;
+    periode: Periode;
+};
+
 export type RentekstElement = {
     tekst: string;
 };
@@ -255,6 +271,10 @@ export type Signatur = {
     besluttendeSaksbehandler: string | null;
 };
 
+export type SplittPeriode = {
+    splittFra: string;
+};
+
 export type Standardtekst = {
     tittel: string;
     underavsnitt: Array<Element>;
@@ -263,6 +283,11 @@ export type Standardtekst = {
 export type UnderavsnittElement = {
     tittel: string;
     underavsnitt: Array<Element>;
+};
+
+export type Unntak = {
+    begrunnelseForUnntak: Varslingsunntak;
+    beskrivelse: string;
 };
 
 export type UpdateUttalelsesfrist = {
@@ -603,7 +628,7 @@ export type BehandlingSendVarselbrevResponses = {
 };
 
 export type BehandlingLagreForhaandsvarselUnntakData = {
-    body: ForhaandsvarselUnntak;
+    body: Unntak;
     path: {
         behandlingId: string;
     };
@@ -828,6 +853,69 @@ export type BehandlingHentVedtaksresultatResponses = {
 
 export type BehandlingHentVedtaksresultatResponse =
     BehandlingHentVedtaksresultatResponses[keyof BehandlingHentVedtaksresultatResponses];
+
+export type BehandlingVilkaarsvurderingsperioderData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/perioder';
+};
+
+export type BehandlingVilkaarsvurderingsperioderErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingVilkaarsvurderingsperioderError =
+    BehandlingVilkaarsvurderingsperioderErrors[keyof BehandlingVilkaarsvurderingsperioderErrors];
+
+export type BehandlingVilkaarsvurderingsperioderResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Array<PeriodeInfo>;
+};
+
+export type BehandlingVilkaarsvurderingsperioderResponse =
+    BehandlingVilkaarsvurderingsperioderResponses[keyof BehandlingVilkaarsvurderingsperioderResponses];
+
+export type BehandlingSplittPeriodeData = {
+    body: SplittPeriode;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/splitt';
+};
+
+export type BehandlingSplittPeriodeErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingSplittPeriodeError =
+    BehandlingSplittPeriodeErrors[keyof BehandlingSplittPeriodeErrors];
+
+export type BehandlingSplittPeriodeResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
 
 export type BehandlingHentDokumentInfoData = {
     body?: never;

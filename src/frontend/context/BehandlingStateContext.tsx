@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { BehandlingsstegEnum, BehandlingsstegsinfoDto } from '@/generated/types.gen';
+import type { BehandlingsstegsinfoDto, StegEnum } from '@/generated/types.gen';
 
 import { createContext, use, useMemo, useState } from 'react';
 
@@ -17,9 +17,9 @@ export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     aktivtSteg: BehandlingsstegsinfoDto | undefined;
     ventegrunn: BehandlingsstegsinfoDto | undefined;
     harKravgrunnlag: boolean;
-    actionBarStegtekst: (valgtSteg: BehandlingsstegEnum) => string | undefined;
-    erStegBehandlet: (steg: BehandlingsstegEnum) => boolean;
-    erStegAutoutført: (steg: BehandlingsstegEnum) => boolean;
+    actionBarStegtekst: (valgtSteg: StegEnum) => string | undefined;
+    erStegBehandlet: (steg: StegEnum) => boolean;
+    erStegAutoutført: (steg: StegEnum) => boolean;
     erBehandlingReturnertFraBeslutter: () => boolean;
     harVærtPåFatteVedtakSteget: () => boolean;
     innholdsbredde: number;
@@ -87,7 +87,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         return undefined;
     }, [aktivtSteg]);
 
-    const actionBarStegtekst = (valgtSteg: BehandlingsstegEnum): string | undefined => {
+    const actionBarStegtekst = (valgtSteg: StegEnum): string | undefined => {
         const antallSynligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => {
             if (
                 steg === 'VERGE' ||
@@ -106,7 +106,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         return `Steg ${aktivtStegnummer} av ${antallSynligeSteg.length}`;
     };
 
-    const erStegBehandlet = (steg: BehandlingsstegEnum): boolean => {
+    const erStegBehandlet = (steg: StegEnum): boolean => {
         return behandling.behandlingsstegsinfo.some(
             stegInfo =>
                 stegInfo.behandlingssteg === steg && erStegUtført(stegInfo.behandlingsstegstatus)
@@ -125,7 +125,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         return harVærtPåFatteVedtak && erNoenStegTilbakeført;
     };
 
-    const erStegAutoutført = (steg: BehandlingsstegEnum): boolean => {
+    const erStegAutoutført = (steg: StegEnum): boolean => {
         const behandlingSteg = behandling.behandlingsstegsinfo?.find(
             stegInfo => stegInfo.behandlingssteg === steg
         );
