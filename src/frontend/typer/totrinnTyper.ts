@@ -1,7 +1,7 @@
-import type { BehandlingsstegEnum } from '@/generated';
+import type { StegEnum } from '@/generated';
 
 export type TotrinnsStegInfo = {
-    behandlingssteg: BehandlingsstegEnum;
+    behandlingssteg: StegEnum;
     godkjent?: boolean;
     begrunnelse?: string;
 };

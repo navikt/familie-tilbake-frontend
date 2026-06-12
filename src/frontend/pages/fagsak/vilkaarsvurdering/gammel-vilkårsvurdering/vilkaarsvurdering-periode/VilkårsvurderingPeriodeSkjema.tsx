@@ -1,4 +1,5 @@
 import type { ChangeEvent, FC } from 'react';
+import type { PeriodeInfo } from '@/generated-new';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 
@@ -157,9 +158,10 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     } = useBehandlingState();
     const queryClient = useQueryClient();
 
-    const { data: vilkårsvurderingsperioder } = useQuery(
-        behandlingVilkaarsvurderingsperioderOptions({ path: { behandlingId } })
-    );
+    const { data: vilkårsvurderingsperioder } = useQuery({
+        ...behandlingVilkaarsvurderingsperioderOptions({ path: { behandlingId } }),
+        select: (data: PeriodeInfo[]) => data.map(({ periode }) => periode),
+    });
 
     const visUlagretDataModal = !!pendingPeriode && harUlagredeData;
 

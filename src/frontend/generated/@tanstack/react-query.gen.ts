@@ -12,6 +12,7 @@ import {
     beregnBeløp,
     bestillBrev,
     byttEnhet,
+    dumpFagsak,
     erPerioderLike,
     erPerioderSammenslått,
     featureToggles,
@@ -97,6 +98,8 @@ import type {
     BestillBrevResponse,
     ByttEnhetData,
     ByttEnhetResponse,
+    DumpFagsakData,
+    DumpFagsakResponse,
     ErPerioderLikeData,
     ErPerioderLikeResponse,
     ErPerioderSammenslåttData,
@@ -1039,6 +1042,29 @@ export const ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveMutatio
     > = {
         mutationFn: async fnOptions => {
             const { data } = await ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
+ * Henter hele JSON-objektet for en sak
+ */
+export const dumpFagsakMutation = (
+    options?: Partial<Options<DumpFagsakData>>
+): UseMutationOptions<DumpFagsakResponse, AxiosError<DefaultError>, Options<DumpFagsakData>> => {
+    const mutationOptions: UseMutationOptions<
+        DumpFagsakResponse,
+        AxiosError<DefaultError>,
+        Options<DumpFagsakData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await dumpFagsak({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,
