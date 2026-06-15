@@ -17,7 +17,7 @@ import {
 } from '@navikt/ds-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -281,25 +281,18 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const erFørstePeriode = periode.index === perioder[0].index;
 
-    const kanSplittePeriode = useMemo(
-        () =>
-            (periode: VilkårsvurderingPeriodeSkjemaData, erLesevisning: boolean): boolean => {
-                const kanSplittePeriodeINyModell = vilkårsvurderingsperioder
-                    ? kanSplitte(
-                          periode.periode,
-                          vilkårsvurderingsperioder.map(({ periode }) => periode)
-                      )
-                    : false;
-                const kanPeriodenSplittes = erNyModell
-                    ? kanSplittePeriodeINyModell
-                    : differenceInMonths(
-                          parseISO(periode.periode.tom),
-                          parseISO(periode.periode.fom)
-                      ) >= 1;
-                return !erLesevisning && !periode.foreldet && kanPeriodenSplittes;
-            },
-        [vilkårsvurderingsperioder, erNyModell]
-    );
+    const kanSplitteIGammelModell =
+        !erLesevisning &&
+        !periode.foreldet &&
+        differenceInMonths(parseISO(periode.periode.tom), parseISO(periode.periode.fom)) >= 1;
+
+    const kanSplitteINyModell =
+        !erLesevisning &&
+        !periode.foreldet &&
+        kanSplitte(
+            periode.periode,
+            vilkårsvurderingsperioder?.map(({ periode }) => periode)
+        );
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
 
@@ -331,23 +324,23 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     <Heading size="small" level="2">
                         Detaljer for valgt periode
                     </Heading>
-                    {kanSplittePeriode(periode, erLesevisning) &&
-                        (erNyModell ? (
-                            <DelPeriode
-                                periode={periode.periode}
-                                // Vil aldri være undefined siden kanSplittePeriode vil returnere false hvis vilkårsvurderingsperioder er undefined
-                                vilkårsperioder={vilkårsvurderingsperioder ?? []}
-                                erVurdert={
-                                    !!periode.vilkårsvurderingsresultatInfo
-                                        ?.vilkårsvurderingsresultat &&
-                                    periode.vilkårsvurderingsresultatInfo
-                                        .vilkårsvurderingsresultat !== Vilkårsresultat.Udefinert
-                                }
-                                hentVilkårsvurdering={hentVilkårsvurdering}
-                            />
-                        ) : (
-                            <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
-                        ))}
+                    {kanSplitteINyModell && (
+                        <DelPeriode
+                            periode={periode.periode}
+                            // Vil aldri være undefined siden kanSplitteINyModell vil returnere false hvis vilkårsvurderingsperioder er undefined
+                            vilkårsperioder={vilkårsvurderingsperioder ?? []}
+                            erVurdert={
+                                !!periode.vilkårsvurderingsresultatInfo
+                                    ?.vilkårsvurderingsresultat &&
+                                periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat !==
+                                    Vilkårsresultat.Udefinert
+                            }
+                            hentVilkårsvurdering={hentVilkårsvurdering}
+                        />
+                    )}
+                    {kanSplitteIGammelModell && (
+                        <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
+                    )}
                 </HStack>
                 <PeriodeOppsummering
                     fom={periode.periode.fom}

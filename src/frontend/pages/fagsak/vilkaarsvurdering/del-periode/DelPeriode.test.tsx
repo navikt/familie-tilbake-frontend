@@ -85,10 +85,10 @@ describe('DelPeriode', () => {
         delOppKnapp().click();
 
         expect(
-            await screen.findByRole('button', { name: /Nøytral fra 01.01.2024 til 14.01.2024/ })
+            await screen.findByRole('button', { name: /fra 01.01.2024 til 14.01.2024/ })
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('button', { name: /Nøytral fra 15.01.2024 til 31.01.2024/ })
+            screen.getByRole('button', { name: /fra 15.01.2024 til 31.01.2024/ })
         ).toBeInTheDocument();
     });
 
@@ -163,7 +163,7 @@ describe('DelPeriode', () => {
         await user.click(delOppKnapp());
 
         const periode1Knapp = await screen.findByRole('button', {
-            name: /Suksess fra 01.01.2024 til 14.01.2024/,
+            name: /fra 01.01.2024 til 14.01.2024/,
         });
         await user.click(periode1Knapp);
 
@@ -177,7 +177,7 @@ describe('DelPeriode', () => {
         await user.click(delOppKnapp());
 
         const periode1Knapp = await screen.findByRole('button', {
-            name: /Nøytral fra 01.01.2024 til 14.01.2024/,
+            name: /fra 01.01.2024 til 14.01.2024/,
         });
         await user.click(periode1Knapp);
 
@@ -191,7 +191,7 @@ describe('DelPeriode', () => {
         await user.click(delOppKnapp());
 
         const periode2Knapp = await screen.findByRole('button', {
-            name: /Nøytral fra 15.01.2024 til 31.01.2024/,
+            name: /fra 15.01.2024 til 31.01.2024/,
         });
         await user.click(periode2Knapp);
 

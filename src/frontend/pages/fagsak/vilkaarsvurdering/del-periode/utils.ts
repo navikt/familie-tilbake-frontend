@@ -1,6 +1,6 @@
 import type { Periode } from '@/generated';
 
-import { formatDate } from 'date-fns/format';
+import { format } from 'date-fns';
 
 /**
  * Sjekker om en periode kan splittes basert på antall vilkårsperioder innenfor.
@@ -11,8 +11,8 @@ import { formatDate } from 'date-fns/format';
  * @param vilkårsperioder Alle vilkårsperiodene for hele behandlingen
  * @returns true hvis periode kan splittes (2+ vilkårsperioder innenfor)
  */
-export const kanSplitte = (periode: Periode, vilkårsperioder: Periode[]): boolean => {
-    if (vilkårsperioder.length < 2) return false;
+export const kanSplitte = (periode: Periode, vilkårsperioder: Periode[] | undefined): boolean => {
+    if (!vilkårsperioder || vilkårsperioder.length < 2) return false;
 
     const antallPerioderInnenfor = vilkårsperioder.filter(
         ({ fom, tom }) => fom >= periode.fom && tom <= periode.tom
@@ -39,7 +39,7 @@ export const hentSplittedePerioder = (
         return [];
     }
 
-    const splittDatoString = formatDate(splittDato, 'yyyy-MM-dd');
+    const splittDatoString = format(splittDato, 'yyyy-MM-dd');
 
     const vilkårsperioderInnenfor = vilkårsperioder.filter(
         ({ fom, tom }) => fom >= periode.fom && tom <= periode.tom

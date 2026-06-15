@@ -3,6 +3,7 @@ import type { PeriodeInfo, SplittPeriode } from '@/generated-new';
 
 import { CalendarFillIcon } from '@navikt/aksel-icons';
 import {
+    Box,
     Button,
     DatePicker,
     HStack,
@@ -195,10 +196,7 @@ export const DelPeriode: FC<Props> = ({
                     </Timeline>
 
                     {førsteSplittetPeriode && andreSplittetPeriode && (
-                        <VStack
-                            gap="space-8"
-                            className="bg-ax-bg-info-moderate p-4 rounded-xl border border-ax-bg-info-strong"
-                        >
+                        <Box className="bg-ax-bg-info-moderate p-4 rounded-xl border border-ax-bg-info-strong">
                             <HStack gap="space-32">
                                 Periode 1
                                 <span className="font-semibold">
@@ -211,7 +209,7 @@ export const DelPeriode: FC<Props> = ({
                                     {`${formatterDatostring(andreSplittetPeriode.fom)}–${formatterDatostring(andreSplittetPeriode.tom)}`}
                                 </span>
                             </HStack>
-                        </VStack>
+                        </Box>
                     )}
 
                     <DatePicker {...datepickerProps}>
