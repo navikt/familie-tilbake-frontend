@@ -161,6 +161,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     const { data: vilkårsvurderingsperioder } = useQuery({
         ...behandlingVilkaarsvurderingsperioderOptions({ path: { behandlingId } }),
         select: (data: PeriodeInfo[]) => data.map(({ periode }) => periode),
+        enabled: erNyModell,
     });
 
     const visUlagretDataModal = !!pendingPeriode && harUlagredeData;
