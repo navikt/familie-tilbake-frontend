@@ -18,6 +18,7 @@ import {
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
     behandlingSendVarselbrev,
+    behandlingSlaaSammenPerioder,
     behandlingSplittPeriode,
     behandlingUtsettUttalelsesfrist,
     behandlingVilkaarsvurderingsperioder,
@@ -60,6 +61,8 @@ import type {
     BehandlingOppdaterVedtaksbrevResponse,
     BehandlingSendVarselbrevData,
     BehandlingSendVarselbrevError,
+    BehandlingSlaaSammenPerioderData,
+    BehandlingSlaaSammenPerioderError,
     BehandlingSplittPeriodeData,
     BehandlingSplittPeriodeError,
     BehandlingUtsettUttalelsesfristData,
@@ -440,6 +443,30 @@ export const behandlingVilkaarsvurderingsperioderOptions = (
         },
         queryKey: behandlingVilkaarsvurderingsperioderQueryKey(options),
     });
+
+export const behandlingSlaaSammenPerioderMutation = (
+    options?: Partial<Options<BehandlingSlaaSammenPerioderData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingSlaaSammenPerioderError>,
+    Options<BehandlingSlaaSammenPerioderData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingSlaaSammenPerioderError>,
+        Options<BehandlingSlaaSammenPerioderData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingSlaaSammenPerioder({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
 
 export const behandlingSplittPeriodeMutation = (
     options?: Partial<Options<BehandlingSplittPeriodeData>>

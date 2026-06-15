@@ -1,5 +1,5 @@
 import type { Periode } from '@/generated';
-import type { SplittPeriode } from '@/generated-new';
+import type { PeriodeInfo, SplittPeriode } from '@/generated-new';
 
 import { CalendarFillIcon } from '@navikt/aksel-icons';
 import {
@@ -13,7 +13,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { format, formatDate, isValid, parseISO } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { type FC, useMemo, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -26,7 +26,7 @@ import { hentSplittedePerioder } from './utils';
 
 type Props = {
     periode: Periode;
-    vilkårsperioder: Periode[];
+    vilkårsperioder: PeriodeInfo[];
     erVurdert: boolean;
     hentVilkårsvurdering: () => void;
 };
@@ -42,11 +42,16 @@ export const DelPeriode: FC<Props> = ({
     const visGlobalAlert = useVisGlobalAlert();
 
     const perioderInnenforPeriode = useMemo(
-        () => vilkårsperioder.filter(({ fom, tom }) => fom >= periode.fom && tom <= periode.tom),
+        () =>
+            vilkårsperioder.filter(
+                ({ periode: { fom, tom } }) => fom >= periode.fom && tom <= periode.tom
+            ),
         [vilkårsperioder, periode]
     );
-    const valgbareSplittDatoer = perioderInnenforPeriode.slice(1).map(({ fom }) => fom);
-    const standardSplittDato = perioderInnenforPeriode[1]?.fom;
+    const valgbareSplittDatoer = perioderInnenforPeriode
+        .slice(1)
+        .map(({ periode: { fom } }) => fom);
+    const standardSplittDato = perioderInnenforPeriode[1]?.periode.fom;
 
     const [valgtDato, setValgtDato] = useState<Date | undefined>(
         standardSplittDato ? parseISO(standardSplittDato) : undefined
@@ -54,7 +59,12 @@ export const DelPeriode: FC<Props> = ({
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
     const splittedePerioder = useMemo(
-        () => hentSplittedePerioder(periode, perioderInnenforPeriode, valgtDato),
+        () =>
+            hentSplittedePerioder(
+                periode,
+                perioderInnenforPeriode.map(({ periode }) => periode),
+                valgtDato
+            ),
         [periode, perioderInnenforPeriode, valgtDato]
     );
     const førsteSplittetPeriode = splittedePerioder[0];
@@ -132,9 +142,18 @@ export const DelPeriode: FC<Props> = ({
             setFeilmelding('Du må velge en dato');
             return;
         }
+        const valgtPeriodeId = perioderInnenforPeriode.find(
+            ({ periode }) => periode.fom === format(valgtDato, 'yyyy-MM-dd')
+        )?.periodeId;
+        if (!valgtPeriodeId) {
+            setFeilmelding('Fant ikke perioden for valgt dato');
+            return;
+        }
         splittPeriode.mutate({
             path: { behandlingId },
-            body: { splittFra: formatDate(valgtDato, 'yyyy-MM-dd') } satisfies SplittPeriode,
+            body: {
+                vilkårsvurderingId: valgtPeriodeId,
+            } satisfies SplittPeriode,
         });
     };
 

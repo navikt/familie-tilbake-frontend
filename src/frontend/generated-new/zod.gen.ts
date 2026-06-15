@@ -171,6 +171,11 @@ export const zOppdaterFaktaPeriode = z.object({
     rettsligGrunnlag: z.array(zRettsligGrunnlag).min(1),
 });
 
+export const zSammenslaaing = z.object({
+    vilkårsvurderingId: z.uuid(),
+    slåesSammenMedId: z.uuid(),
+});
+
 export const zSendForhaandsvarsel = z.object({
     tekstFraSaksbehandler: z.string(),
 });
@@ -182,7 +187,7 @@ export const zSignatur = z.object({
 });
 
 export const zSplittPeriode = z.object({
-    splittFra: z.iso.date(),
+    vilkårsvurderingId: z.uuid(),
 });
 
 export const zStandardtekst = z.object({
@@ -587,6 +592,12 @@ export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingVilkaarsvurderingsperioderResponse = z.array(zPeriodeInfo);
+
+export const zBehandlingSlaaSammenPerioderBody = zSammenslaaing;
+
+export const zBehandlingSlaaSammenPerioderPath = z.object({
+    behandlingId: z.uuid(),
+});
 
 export const zBehandlingSplittPeriodeBody = zSplittPeriode;
 

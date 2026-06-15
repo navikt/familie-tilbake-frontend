@@ -1,5 +1,4 @@
 import type { ChangeEvent, FC } from 'react';
-import type { PeriodeInfo } from '@/generated-new';
 import type { VilkårsvurderingPeriodeSkjemaData } from '../typer/vilkårsvurdering';
 import type { VilkårsvurderingSkjemaDefinisjon } from './VilkårsvurderingPeriodeSkjemaContext';
 
@@ -160,7 +159,6 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
 
     const { data: vilkårsvurderingsperioder } = useQuery({
         ...behandlingVilkaarsvurderingsperioderOptions({ path: { behandlingId } }),
-        select: (data: PeriodeInfo[]) => data.map(({ periode }) => periode),
         enabled: erNyModell,
     });
 
@@ -287,7 +285,10 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         () =>
             (periode: VilkårsvurderingPeriodeSkjemaData, erLesevisning: boolean): boolean => {
                 const kanSplittePeriodeINyModell = vilkårsvurderingsperioder
-                    ? kanSplitte(periode.periode, vilkårsvurderingsperioder)
+                    ? kanSplitte(
+                          periode.periode,
+                          vilkårsvurderingsperioder.map(({ periode }) => periode)
+                      )
                     : false;
                 const kanPeriodenSplittes = erNyModell
                     ? kanSplittePeriodeINyModell
@@ -334,6 +335,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         (erNyModell ? (
                             <DelPeriode
                                 periode={periode.periode}
+                                // Vil aldri være undefined siden kanSplittePeriode vil returnere false hvis vilkårsvurderingsperioder er undefined
                                 vilkårsperioder={vilkårsvurderingsperioder ?? []}
                                 erVurdert={
                                     !!periode.vilkårsvurderingsresultatInfo

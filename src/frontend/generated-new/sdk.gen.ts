@@ -42,6 +42,9 @@ import type {
     BehandlingSendVarselbrevData,
     BehandlingSendVarselbrevErrors,
     BehandlingSendVarselbrevResponses,
+    BehandlingSlaaSammenPerioderData,
+    BehandlingSlaaSammenPerioderErrors,
+    BehandlingSlaaSammenPerioderResponses,
     BehandlingSplittPeriodeData,
     BehandlingSplittPeriodeErrors,
     BehandlingSplittPeriodeResponses,
@@ -298,6 +301,26 @@ export const behandlingVilkaarsvurderingsperioder = <ThrowOnError extends boolea
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/perioder',
         ...options,
+    });
+
+export const behandlingSlaaSammenPerioder = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingSlaaSammenPerioderData, ThrowOnError>
+): RequestResult<
+    BehandlingSlaaSammenPerioderResponses,
+    BehandlingSlaaSammenPerioderErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).post<
+        BehandlingSlaaSammenPerioderResponses,
+        BehandlingSlaaSammenPerioderErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/sammenslå',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 
 export const behandlingSplittPeriode = <ThrowOnError extends boolean = false>(

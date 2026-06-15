@@ -1,4 +1,5 @@
 import type { Periode } from '@/generated';
+import type { PeriodeInfo } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
@@ -14,14 +15,14 @@ const periode = {
     tom: '2024-01-31',
 };
 
-const vilkårsperioder = [
-    { fom: '2024-01-01', tom: '2024-01-14' },
-    { fom: '2024-01-15', tom: '2024-01-31' },
+const vilkårsperioder: PeriodeInfo[] = [
+    { periodeId: '1', periode: { fom: '2024-01-01', tom: '2024-01-14' } },
+    { periodeId: '2', periode: { fom: '2024-01-15', tom: '2024-01-31' } },
 ];
 
 type RenderDelPeriodeProps = {
     periodeProp?: Periode;
-    vilkårsperioderProp?: Periode[];
+    vilkårsperioderProp?: PeriodeInfo[];
     erVurdert?: boolean;
 };
 
@@ -128,11 +129,11 @@ describe('DelPeriode', () => {
         };
 
         const vilkårsperioderMedPerioderUtenfor = [
-            { fom: '2024-01-01', tom: '2024-01-09' }, // Før perioden
-            { fom: '2024-01-10', tom: '2024-01-17' }, // Innenfor
-            { fom: '2024-01-18', tom: '2024-01-25' }, // Innenfor
-            { fom: '2024-01-26', tom: '2024-01-31' }, // Etter perioden
-        ] satisfies Periode[];
+            { periodeId: '1', periode: { fom: '2024-01-01', tom: '2024-01-09' } }, // Før perioden
+            { periodeId: '2', periode: { fom: '2024-01-10', tom: '2024-01-17' } }, // Innenfor
+            { periodeId: '3', periode: { fom: '2024-01-18', tom: '2024-01-25' } }, // Innenfor
+            { periodeId: '4', periode: { fom: '2024-01-26', tom: '2024-01-31' } }, // Etter perioden
+        ] satisfies PeriodeInfo[];
 
         renderDelPeriode({
             periodeProp: periode,

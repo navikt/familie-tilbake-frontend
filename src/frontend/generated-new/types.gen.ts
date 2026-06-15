@@ -261,6 +261,11 @@ export type RotElementUpdateItem =
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseUpdateItem);
 
+export type Sammenslaaing = {
+    vilkårsvurderingId: string;
+    slåesSammenMedId: string;
+};
+
 export type SendForhaandsvarsel = {
     tekstFraSaksbehandler: string;
 };
@@ -272,7 +277,7 @@ export type Signatur = {
 };
 
 export type SplittPeriode = {
-    splittFra: string;
+    vilkårsvurderingId: string;
 };
 
 export type Standardtekst = {
@@ -886,6 +891,36 @@ export type BehandlingVilkaarsvurderingsperioderResponses = {
 
 export type BehandlingVilkaarsvurderingsperioderResponse =
     BehandlingVilkaarsvurderingsperioderResponses[keyof BehandlingVilkaarsvurderingsperioderResponses];
+
+export type BehandlingSlaaSammenPerioderData = {
+    body: Sammenslaaing;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/sammenslå';
+};
+
+export type BehandlingSlaaSammenPerioderErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingSlaaSammenPerioderError =
+    BehandlingSlaaSammenPerioderErrors[keyof BehandlingSlaaSammenPerioderErrors];
+
+export type BehandlingSlaaSammenPerioderResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
 
 export type BehandlingSplittPeriodeData = {
     body: SplittPeriode;
