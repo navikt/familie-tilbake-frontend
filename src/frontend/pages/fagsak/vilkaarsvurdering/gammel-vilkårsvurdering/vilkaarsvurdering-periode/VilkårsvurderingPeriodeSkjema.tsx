@@ -282,11 +282,13 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
     const erFørstePeriode = periode.index === perioder[0].index;
 
     const kanSplitteIGammelModell =
+        !erNyModell &&
         !erLesevisning &&
         !periode.foreldet &&
         differenceInMonths(parseISO(periode.periode.tom), parseISO(periode.periode.fom)) >= 1;
 
     const kanSplitteINyModell =
+        erNyModell &&
         !erLesevisning &&
         !periode.foreldet &&
         kanSplitte(

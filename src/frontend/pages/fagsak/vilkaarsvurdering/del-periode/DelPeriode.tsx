@@ -21,6 +21,7 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSplittPeriodeMutation } from '@/generated-new/@tanstack/react-query.gen';
 import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { hentFeilmeldingFraError } from '@/typer/ressurs';
 import { formatterDatostring } from '@/utils';
 
 import { hentSplittedePerioder } from './utils';
@@ -132,7 +133,7 @@ export const DelPeriode: FC<Props> = ({
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke dele opp perioden',
-                message: error.message,
+                message: hentFeilmeldingFraError(error),
                 status: 'error',
             });
         },
