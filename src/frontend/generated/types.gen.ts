@@ -51,6 +51,331 @@ export type OppdaterBehandlendeEnhetRequest = {
     nyEnhet: string;
 };
 
+export type AktsomhetsvurderingEntity = {
+    vurderingType: VurderingTypeEnum;
+    begrunnelse?: string | null;
+    beløpIBehold?: GodTroEntity | null;
+    aktsomhet?: VurdertAktsomhetEntity | null;
+    feilaktigEllerMangelfull?: FeilaktigEllerMangelfullEnum;
+    forrigePeriodeId?: string | null;
+};
+
+export type AktørEntity = {
+    aktørType: AktørTypeEnum;
+    ident: string;
+};
+
+export type BehandlerEntity = {
+    type: TypeEnum2;
+    ident: string;
+};
+
+export type BehandlingEntity = {
+    id: string;
+    tilbakekrevingId: string;
+    type: TypeEnum3;
+    opprettet: string;
+    sistEndret: string;
+    enhet?: EnhetEntity | null;
+    revurderingsårsak?: RevurderingsårsakEnum;
+    ansvarligSaksbehandler: BehandlerEntity;
+    eksternFagsakBehandlingRef: HistorikkReferanseEntityUuid;
+    kravgrunnlagRef: HistorikkReferanseEntityUuid;
+    foreldelsestegEntity: ForeldelsesstegEntity;
+    faktastegEntity: FaktastegEntity;
+    vilkårsvurderingstegEntity: VilkårsvurderingstegEntity;
+    foreslåVedtakStegEntity: ForeslåVedtakStegEntity;
+    fatteVedtakStegEntity: FatteVedtakStegEntity;
+    forhåndsvarselEntity: ForhåndsvarselEntity;
+    forrigeBehandlingsstatus: ForrigeBehandlingsstatusEnum;
+};
+
+export type BeløpEntity = {
+    id: string;
+    kravgrunnlagPeriodeId: string;
+    klassekode: string;
+    klassetype: string;
+    opprinneligUtbetalingsbeløp: number;
+    nyttBeløp: number;
+    tilbakekrevesBeløp: number;
+    skatteprosent: number;
+};
+
+export type BrevEntity = {
+    id: string;
+    tilbakekrevingRef: string;
+    brevtype: BrevtypeEnum;
+    varselbrevEntity?: VarselbrevEntity | null;
+    vedtaksbrevEntity?: VedtaksbrevEntity | null;
+};
+
+export type BrukerEntity = {
+    id: string;
+    tilbakekrevingRef: string;
+    aktørEntity: AktørEntity;
+    språkkode?: SpråkkodeEnum;
+    navn?: string | null;
+    fødselsdato?: string | null;
+    kjønn?: KjønnEnum;
+    dødsdato?: string | null;
+};
+
+export type BrukeruttalelseEntity = {
+    id: string;
+    behandlingRef: string;
+    uttalelseVurdering: UttalelseVurderingEnum;
+    uttalelseInfoEntity?: UttalelseInfoEntity | null;
+    kommentar?: string | null;
+    trengerNyVurdering: boolean;
+};
+
+export type DatoperiodeEntity = {
+    fom: string;
+    tom: string;
+};
+
+export type EksternFagsakBehandlingEntity = {
+    id: string;
+    eksternFagsakRef: string;
+    type: TypeEnum4;
+    eksternId: string;
+    revurderingsårsak?: RevurderingsårsakEnum2;
+    getårsakTilFeilutbetaling?: string;
+    vedtaksdato?: string | null;
+    utvidedePerioder?: Array<UtvidetPeriodeEntity> | null;
+};
+
+export type EksternFagsakEntity = {
+    id: string;
+    tilbakekrevingRef: string;
+    eksternId: string;
+    ytelseEntity: YtelseEntity;
+    behandlinger: Array<EksternFagsakBehandlingEntity>;
+};
+
+export type EnhetEntity = {
+    kode: string;
+    navn: string;
+};
+
+export type FaktaPeriodeEntity = {
+    id: string;
+    faktavurderingRef: string;
+    periode: DatoperiodeEntity;
+    rettsligGrunnlag: RettsligGrunnlagEnum;
+    rettsligGrunnlagUnderkategori: RettsligGrunnlagUnderkategoriEnum;
+};
+
+export type FaktastegEntity = {
+    id: string;
+    behandlingRef: string;
+    perioder: Array<FaktaPeriodeEntity>;
+    getårsakTilFeilutbetaling: string;
+    uttalelse: UttalelseEnum;
+    vurderingAvBrukersUttalelse?: string | null;
+    oppdaget?: OppdagetEntity | null;
+    trengerNyVurdering: boolean;
+};
+
+export type FatteVedtakStegEntity = {
+    id: string;
+    behandlingRef: string;
+    vurderteStegEntities: Array<VurdertStegEntity>;
+    ansvarligBeslutter?: BehandlerEntity | null;
+};
+
+export type ForeldelseperiodeEntity = {
+    id: string;
+    foreldelsesvurderingRef: string;
+    periode: DatoperiodeEntity;
+    foreldelsesvurdering: ForeldelsesvurderingEntity;
+};
+
+export type ForeldelsesstegEntity = {
+    id: string;
+    behandlingRef: string;
+    vurdertePerioder: Array<ForeldelseperiodeEntity>;
+    trengerNyVurdering: boolean;
+};
+
+export type ForeldelsesvurderingEntity = {
+    type: TypeEnum5;
+    begrunnelse?: string | null;
+    frist?: string | null;
+    oppdaget?: string | null;
+};
+
+export type ForeslåVedtakStegEntity = {
+    id: string;
+    behandlingRef: string;
+    vurdert: boolean;
+    trengerNyVurdering: boolean;
+};
+
+export type ForhåndsvarselEntity = {
+    brukeruttalelseEntity?: BrukeruttalelseEntity | null;
+    forhåndsvarselUnntakEntity?: ForhåndsvarselUnntakEntity | null;
+    uttalelsesfristEntity?: UttalelsesfristEntity | null;
+};
+
+export type ForhåndsvarselUnntakEntity = {
+    id: string;
+    behandlingRef: string;
+    begrunnelseForUnntak: BegrunnelseForUnntakEnum;
+    beskrivelse: string;
+    trengerNyVurdering: boolean;
+};
+
+export type GodTroEntity = {
+    periodeRef: string;
+    begrunnelse: string;
+    beholdType: BeholdTypeEnum;
+    beløp?: number | null;
+};
+
+export type HistorikkReferanseEntityUuid = {
+    id: string;
+};
+
+export type KravgrunnlagHendelseEntity = {
+    id: string;
+    tilbakekrevingId: string;
+    vedtakId: number;
+    kravstatuskode: KravstatuskodeEnum;
+    fagsystemVedtaksdato?: string | null;
+    vedtakGjelder: AktørEntity;
+    utbetalesTil: AktørEntity;
+    skalBeregneRenter: boolean;
+    ansvarligEnhet: string;
+    kontrollfelt: string;
+    kravgrunnlagId: string;
+    referanse: string;
+    perioder: Array<KravgrunnlagPeriodeEntity>;
+};
+
+export type KravgrunnlagPeriodeEntity = {
+    id: string;
+    kravgrunnlagId: string;
+    periode: DatoperiodeEntity;
+    månedligSkattebeløp: number;
+    beløp: Array<BeløpEntity>;
+};
+
+export type OppdagetEntity = {
+    id: string;
+    faktavurderingRef: string;
+    av: AvEnum;
+    dato: string;
+    beskrivelse: string;
+};
+
+export type SkalReduseresEntity = {
+    type: TypeEnum6;
+    prosentdel?: number | null;
+};
+
+export type SærligGrunnEntity = {
+    type: TypeEnum7;
+    annetBegrunnelse?: string | null;
+};
+
+export type SærligeGrunnerEntity = {
+    periodeRef: string;
+    begrunnelse: string;
+    grunner: Array<SærligGrunnEntity>;
+    skalReduseres: SkalReduseresEntity;
+};
+
+export type TilbakekrevingEntity = {
+    id: string;
+    nåværendeTilstand: SchemaEnum;
+    eksternFagsak: EksternFagsakEntity;
+    behandlingHistorikkEntities: Array<BehandlingEntity>;
+    kravgrunnlagHistorikkEntities: Array<KravgrunnlagHendelseEntity>;
+    brevHistorikkEntities: Array<BrevEntity>;
+    opprettet: string;
+    nestePåminnelse?: string | null;
+    opprettelsesvalg: OpprettelsesvalgEnum;
+    bruker?: BrukerEntity | null;
+};
+
+export type UttalelseInfoEntity = {
+    id: string;
+    brukeruttalelseRef: string;
+    uttalelsesdato: string;
+    hvorBrukerenUttalteSeg: string;
+    uttalelseBeskrivelse: string;
+};
+
+export type UttalelsesfristEntity = {
+    id: string;
+    behandlingRef: string;
+    opprinneligFrist: string;
+    nyFrist?: string | null;
+    begrunnelse?: string | null;
+};
+
+export type UtvidetPeriodeEntity = {
+    id: string;
+    eksternFagsakBehandlingRef: string;
+    kravgrunnlagPeriode: DatoperiodeEntity;
+    vedtaksperiode: DatoperiodeEntity;
+};
+
+export type VarselbrevEntity = {
+    id: string;
+    kravgrunnlagRef: HistorikkReferanseEntityUuid;
+    journalpostId?: string | null;
+    dokumentInfoId?: string | null;
+    sendtTid: string;
+    ansvarligSaksbehandlerIdent: string;
+    fristForUttalelse?: string | null;
+    tekstFraSaksbehandler: string;
+};
+
+export type VedtaksbrevEntity = {
+    id: string;
+    journalpostId?: string | null;
+    dokumentInfoId?: string | null;
+    sendtTid: string;
+};
+
+export type VilkårsvurderingsperiodeEntity = {
+    id: string;
+    vurderingRef: string;
+    periode: DatoperiodeEntity;
+    begrunnelseForTilbakekreving?: string | null;
+    vurdering: AktsomhetsvurderingEntity;
+};
+
+export type VilkårsvurderingstegEntity = {
+    id: string;
+    behandlingRef: string;
+    vurderinger: Array<VilkårsvurderingsperiodeEntity>;
+    trengerNyVurdering: boolean;
+};
+
+export type VurdertAktsomhetEntity = {
+    periodeRef: string;
+    aktsomhetType: AktsomhetTypeEnum;
+    begrunnelse: string;
+    skalIleggesRenter?: boolean | null;
+    særligGrunner?: SærligeGrunnerEntity | null;
+    kanUnnlates?: KanUnnlatesEnum;
+};
+
+export type VurdertStegEntity = {
+    id: string;
+    totrinnsvurderingRef: string;
+    steg: StegEnum;
+    vurdering: VurderingEnum;
+    begrunnelse?: string | null;
+};
+
+export type YtelseEntity = {
+    type: TypeEnum8;
+};
+
 export type Datoperiode = {
     fom: string;
     tom: string;
@@ -73,7 +398,7 @@ export type PeriodeMedTekstDto = {
 };
 
 export type BrukeruttalelseDto = {
-    harBrukerUttaltSeg: HarBrukerUttaltSegEnum;
+    harBrukerUttaltSeg: UttalelseVurderingEnum;
     uttalelsesdetaljer?: Array<Uttalelsesdetaljer> | null;
     kommentar?: string | null;
 };
@@ -98,7 +423,7 @@ export type FristUtsettelseDto = {
 };
 
 export type ForhåndsvarselUnntakDto = {
-    begrunnelseForUnntak: BegrunnelseForUnntakEnum;
+    begrunnelseForUnntak: BegrunnelseForUnntakEnum2;
     beskrivelse: string;
 };
 
@@ -133,7 +458,7 @@ export type ForhåndsvisVarselbrevRequest = {
     behandlendeEnhetId?: string | null;
     behandlendeEnhetsNavn: string;
     saksbehandlerIdent?: string | null;
-    språkkode: SpråkkodeEnum;
+    språkkode: SpråkkodeEnum2;
     vedtaksdato?: string | null;
     feilutbetaltePerioderDto: FeilutbetaltePerioderDto;
     fagsystem: SchemaEnum2;
@@ -225,8 +550,8 @@ export type BrevmottakerstegDto = {
 
 export type FaktaFeilutbetalingsperiodeDto = {
     periode: Datoperiode;
-    hendelsestype: HendelsestypeEnum;
-    hendelsesundertype: HendelsesundertypeEnum;
+    hendelsestype: RettsligGrunnlagEnum;
+    hendelsesundertype: RettsligGrunnlagUnderkategoriEnum;
 };
 
 export type ForeldelsesperiodeDto = {
@@ -244,7 +569,7 @@ export type GodTroDto = {
 };
 
 export type SærligGrunnDto = {
-    særligGrunn: SærligGrunnEnum;
+    særligGrunn: TypeEnum7;
     begrunnelse?: string | null;
 };
 
@@ -265,12 +590,12 @@ export type VilkårsvurderingsperiodeDto = {
 };
 
 export type VurderingAvBrukersUttalelseDto = {
-    harBrukerUttaltSeg: HarBrukerUttaltSegEnum2;
+    harBrukerUttaltSeg: HarBrukerUttaltSegEnum;
     beskrivelse?: string | null;
 };
 
 export type VurdertTotrinnDto = {
-    behandlingssteg: BehandlingsstegEnum;
+    behandlingssteg: StegEnum;
     godkjent: boolean;
     begrunnelse?: string | null;
 };
@@ -308,7 +633,7 @@ export type OpprettTilbakekrevingRequest = {
     eksternId: string;
     behandlingstype?: BehandlingstypeEnum;
     manueltOpprettet: boolean;
-    språkkode: SpråkkodeEnum;
+    språkkode: SpråkkodeEnum2;
     enhetId: string;
     enhetsnavn: string;
     saksbehandlerIdent: string;
@@ -440,7 +765,7 @@ export type RessursListFagsystemVedtak = {
 export type BehandlingsoppsummeringDto = {
     behandlingId: string;
     eksternBrukId: string;
-    type: TypeEnum2;
+    type: TypeEnum3;
     status: StatusEnum2;
 };
 
@@ -448,7 +773,7 @@ export type FagsakDto = {
     eksternFagsakId: string;
     ytelsestype: SchemaEnum4;
     fagsystem: SchemaEnum2;
-    språkkode: SpråkkodeEnum;
+    språkkode: SpråkkodeEnum2;
     bruker: FrontendBrukerDto;
     behandlinger: Array<BehandlingsoppsummeringDto>;
     institusjon?: InstitusjonDto | null;
@@ -458,7 +783,7 @@ export type FrontendBrukerDto = {
     personIdent: string;
     navn: string;
     fødselsdato?: string | null;
-    kjønn: KjønnEnum;
+    kjønn: KjønnEnum2;
     dødsdato?: string | null;
 };
 
@@ -492,7 +817,7 @@ export type Behandling = {
     opprettetTidspunkt: string;
     aktiv: boolean;
     getårsak?: GetårsakstypeEnum;
-    type: TypeEnum2;
+    type: TypeEnum3;
     status: StatusEnum3;
     vedtaksdato?: string | null;
     resultat?: ResultatEnum;
@@ -601,7 +926,7 @@ export type RessursListManuellBrevmottakerResponsDto = {
 
 export type HistorikkinnslagDto = {
     behandlingId: string;
-    type: TypeEnum3;
+    type: TypeEnum9;
     aktør: AktørEnum;
     aktørIdent: string;
     tittel: string;
@@ -660,7 +985,7 @@ export type VurdertGodTroDto = {
 };
 
 export type VurdertSærligGrunnDto = {
-    særligGrunn: SærligGrunnEnum;
+    særligGrunn: TypeEnum7;
     begrunnelse?: string | null;
 };
 
@@ -674,7 +999,7 @@ export type VurdertVilkårsvurderingDto = {
 export type VurdertVilkårsvurderingsperiodeDto = {
     periode: Datoperiode;
     feilutbetaltBeløp: number;
-    hendelsestype: HendelsestypeEnum;
+    hendelsestype: RettsligGrunnlagEnum;
     reduserteBeløper: Array<RedusertBeløpDto>;
     aktiviteter: Array<AktivitetDto>;
     vilkårsvurderingsresultatInfo?: VurdertVilkårsvurderingsresultatDto | null;
@@ -705,7 +1030,7 @@ export type RessursTotrinnsvurderingDto = {
 };
 
 export type Totrinnsstegsinfo = {
-    behandlingssteg: BehandlingsstegEnum;
+    behandlingssteg: StegEnum;
     godkjent?: boolean | null;
     begrunnelse?: string | null;
 };
@@ -797,8 +1122,8 @@ export type FaktaFeilutbetalingDto = {
 export type FeilutbetalingsperiodeDto = {
     periode: Datoperiode;
     feilutbetaltBeløp: number;
-    hendelsestype?: HendelsestypeEnum2;
-    hendelsesundertype?: HendelsesundertypeEnum2;
+    hendelsestype?: HendelsestypeEnum;
+    hendelsesundertype?: HendelsesundertypeEnum;
 };
 
 export type RessursFaktaFeilutbetalingDto = {
@@ -849,7 +1174,7 @@ export type BehandlingDto = {
     eksternBrukId: string;
     behandlingId: string;
     erBehandlingHenlagt: boolean;
-    type: TypeEnum2;
+    type: TypeEnum3;
     status: StatusEnum2;
     opprettetDato: string;
     avsluttetDato?: string | null;
@@ -870,7 +1195,7 @@ export type BehandlingDto = {
     behandlingsstegsinfo: Array<BehandlingsstegsinfoDto>;
     fagsystemsbehandlingId: string;
     eksternFagsakId: string;
-    behandlingsårsakstype?: BehandlingsårsakstypeEnum;
+    behandlingsårsakstype?: RevurderingsårsakEnum;
     støtterManuelleBrevmottakere: boolean;
     harManuelleBrevmottakere: boolean;
     manuelleBrevmottakere: Array<ManuellBrevmottakerResponsDto>;
@@ -881,7 +1206,7 @@ export type BehandlingDto = {
 };
 
 export type BehandlingsstegsinfoDto = {
-    behandlingssteg: BehandlingsstegEnum;
+    behandlingssteg: StegEnum;
     behandlingsstegstatus: BehandlingsstegstatusEnum;
     venteårsak?: VenteårsakEnum2;
     tidsfrist?: string | null;
@@ -970,7 +1295,46 @@ export type BehandlingsresultatstypeEnum =
     | 'DELVIS_TILBAKEBETALING'
     | 'FULL_TILBAKEBETALING';
 
-export type HarBrukerUttaltSegEnum =
+export type VurderingTypeEnum =
+    | 'IKKE_VURDERT'
+    | 'IKKE_FORÅRSAKET_AV_BRUKER_FORSTOD'
+    | 'IKKE_FORÅRSAKET_AV_BRUKER_BURDE_FORSTÅTT'
+    | 'IKKE_FORÅRSAKET_AV_BRUKER_GOD_TRO'
+    | 'FORÅRSAKET_AV_BRUKER'
+    | 'KOPIERT_VURDERING';
+
+export type FeilaktigEllerMangelfullEnum = 'FEILAKTIG' | 'MANGELFULL';
+
+export type AktørTypeEnum = 'Person' | 'Organisasjon' | 'Samhandler' | 'Applikasjonsbruker';
+
+export type TypeEnum2 = 'SAKSBEHANDLER' | 'VEDTAKSLØSNING';
+
+export type TypeEnum3 = 'TILBAKEKREVING' | 'REVURDERING_TILBAKEKREVING';
+
+export type RevurderingsårsakEnum =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+
+export type ForrigeBehandlingsstatusEnum =
+    | 'OPPRETTET'
+    | 'TIL_FORHÅNDSVARSEL'
+    | 'TIL_BEHANDLING'
+    | 'FATTER_VEDTAK'
+    | 'JOURNALFØRER_VEDTAK'
+    | 'DISTRIUBERER_VEDTAK'
+    | 'IVERKSETTER_VEDTAK'
+    | 'AVSLUTTET';
+
+export type BrevtypeEnum = 'VARSEL_BREV' | 'VARSELBREV' | 'VEDTAKSBREV';
+
+export type SpråkkodeEnum = 'NB' | 'NN';
+
+export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
+
+export type UttalelseVurderingEnum =
     | 'JA_ETTER_FORHÅNDSVARSEL'
     | 'NEI_ETTER_FORHÅNDSVARSEL'
     | 'UNNTAK_ALLEREDE_UTTALT_SEG'
@@ -978,7 +1342,229 @@ export type HarBrukerUttaltSegEnum =
     | 'JA'
     | 'NEI';
 
+export type TypeEnum4 = 'BEHANDLING' | 'UKJENT';
+
+export type RevurderingsårsakEnum2 = 'NYE_OPPLYSNINGER' | 'KORRIGERING' | 'KLAGE' | 'UKJENT';
+
+export type RettsligGrunnlagEnum =
+    | 'ANNET'
+    | 'BOR_MED_SØKER'
+    | 'BOSATT_I_RIKET'
+    | 'LOVLIG_OPPHOLD'
+    | 'DØDSFALL'
+    | 'DELT_BOSTED'
+    | 'BARNS_ALDER'
+    | 'MEDLEMSKAP'
+    | 'OPPHOLD_I_NORGE'
+    | 'ENSLIG_FORSØRGER'
+    | 'OVERGANGSSTØNAD'
+    | 'YRKESRETTET_AKTIVITET'
+    | 'STØNADSPERIODE'
+    | 'INNTEKT'
+    | 'PENSJONSYTELSER'
+    | 'STØNAD_TIL_BARNETILSYN'
+    | 'SKOLEPENGER'
+    | 'SATSER'
+    | 'SMÅBARNSTILLEGG'
+    | 'MEDLEMSKAP_BA'
+    | 'UTVIDET'
+    | 'VILKÅR_BARN'
+    | 'VILKÅR_SØKER'
+    | 'BARN_I_FOSTERHJEM_ELLER_INSTITUSJON'
+    | 'KONTANTSTØTTENS_STØRRELSE'
+    | 'STØTTEPERIODE'
+    | 'UTBETALING'
+    | 'KONTANTSTØTTE_FOR_ADOPTERTE_BARN'
+    | 'ANNET_KS';
+
+export type RettsligGrunnlagUnderkategoriEnum =
+    | 'ANNET_FRITEKST'
+    | 'BOR_IKKE_MED_BARN'
+    | 'BARN_FLYTTET_FRA_NORGE'
+    | 'BRUKER_FLYTTET_FRA_NORGE'
+    | 'BARN_BOR_IKKE_I_NORGE'
+    | 'BRUKER_BOR_IKKE_I_NORGE'
+    | 'UTEN_OPPHOLDSTILLATELSE'
+    | 'BARN_DØD'
+    | 'BRUKER_DØD'
+    | 'ENIGHET_OM_OPPHØR_DELT_BOSTED'
+    | 'UENIGHET_OM_OPPHØR_DELT_BOSTED'
+    | 'BARN_OVER_18_ÅR'
+    | 'BARN_OVER_6_ÅR'
+    | 'MEDLEM_SISTE_5_ÅR'
+    | 'LOVLIG_OPPHOLD'
+    | 'BRUKER_IKKE_OPPHOLD_I_NORGE'
+    | 'BARN_IKKE_OPPHOLD_I_NORGE'
+    | 'OPPHOLD_UTLAND_6_UKER_ELLER_MER'
+    | 'UGIFT'
+    | 'SEPARERT_SKILT'
+    | 'SAMBOER'
+    | 'NYTT_BARN_SAMME_PARTNER'
+    | 'ENDRET_SAMVÆRSORDNING'
+    | 'BARN_FLYTTET'
+    | 'NÆRE_BOFORHOLD'
+    | 'FORELDRE_LEVER_SAMMEN'
+    | 'BARN_8_ÅR'
+    | 'BARN_FYLT_1_ÅR'
+    | 'UTDANNING'
+    | 'ETABLERER_EGEN_VIRKSOMHET'
+    | 'HOVEDPERIODE_3_ÅR'
+    | 'UTVIDELSE_UTDANNING'
+    | 'UTVIDELSE_SÆRLIG_TILSYNSKREVENDE_BARN'
+    | 'UTVIDELSE_FORBIGÅENDE_SYKDOM'
+    | 'PÅVENTE_AV_SKOLESTART_STARTET_IKKE'
+    | 'PÅVENTE_SKOLESTART_STARTET_TIDLIGERE'
+    | 'PÅVENTE_ARBEIDSTILBUD_STARTET_IKKE'
+    | 'PÅVENTE_ARBEIDSTILBUD_STARTET_TIDLIGERE'
+    | 'PÅVENTE_BARNETILSYN_IKKE_HA_TILSYN'
+    | 'PÅVENTE_BARNETILSYN_STARTET_TIDLIGERE'
+    | 'ARBEIDSSØKER'
+    | 'REELL_ARBEIDSSØKER'
+    | 'ARBEIDSINNTEKT_FÅTT_INNTEKT'
+    | 'ARBEIDSINNTEKT_ENDRET_INNTEKT'
+    | 'ANDRE_FOLKETRYGDYTELSER'
+    | 'SELVSTENDIG_NÆRINGSDRIVENDE_FÅTT_INNTEKT'
+    | 'SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT'
+    | 'UFØRETRYGD'
+    | 'GJENLEVENDE_EKTEFELLE'
+    | 'ARBEID'
+    | 'EGEN_VIRKSOMHET'
+    | 'TILSYNSUTGIFTER_OPPHØRT'
+    | 'TILSYNSUTGIFTER_ENDRET'
+    | 'FORBIGÅENDE_SYKDOM'
+    | 'ETTER_4_SKOLEÅR_UTGIFTENE_OPPHØRT'
+    | 'ETTER_4_SKOLEÅR_ENDRET_ARBEIDSTID'
+    | 'INNTEKT_OVER_6G'
+    | 'KONTANTSTØTTE'
+    | 'ØKT_KONTANTSTØTTE'
+    | 'IKKE_RETT_TIL_OVERGANGSSTØNAD'
+    | 'SLUTTET_I_UTDANNING'
+    | 'IKKE_ARBEID'
+    | 'SMÅBARNSTILLEGG_OVERGANGSSTØNAD'
+    | 'SATSENDRING'
+    | 'SMÅBARNSTILLEGG_3_ÅR'
+    | 'BRUKER_OG_BARN_FLYTTET_FRA_NORGE'
+    | 'BRUKER_OG_BARN_BOR_IKKE_I_NORGE'
+    | 'FLYTTET_SAMMEN'
+    | 'UTENLANDS_IKKE_MEDLEM'
+    | 'MEDLEMSKAP_OPPHØRT'
+    | 'ANNEN_FORELDER_IKKE_MEDLEM'
+    | 'ANNEN_FORELDER_OPPHØRT_MEDLEMSKAP'
+    | 'FLERE_UTENLANDSOPPHOLD'
+    | 'BOSATT_IKKE_MEDLEM'
+    | 'GIFT'
+    | 'NYTT_BARN'
+    | 'SAMBOER_12_MÅNEDER'
+    | 'FLYTTET_SAMMEN_ANNEN_FORELDER'
+    | 'FLYTTET_SAMMEN_EKTEFELLE'
+    | 'FLYTTET_SAMMEN_SAMBOER'
+    | 'GIFT_IKKE_EGEN_HUSHOLDNING'
+    | 'SAMBOER_IKKE_EGEN_HUSHOLDNING'
+    | 'EKTEFELLE_AVSLUTTET_SONING'
+    | 'SAMBOER_AVSLUTTET_SONING'
+    | 'EKTEFELLE_INSTITUSJON'
+    | 'SAMBOER_INSTITUSJON'
+    | 'BARN_IKKE_BOSATT'
+    | 'BARN_IKKE_OPPHOLDSTILLATELSE'
+    | 'BARN_OVER_2_ÅR'
+    | 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN'
+    | 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
+    | 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN'
+    | 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
+    | 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN'
+    | 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
+    | 'BARN_BOR_IKKE_HOS_SØKER'
+    | 'UTENLANDSOPPHOLD_OVER_3_MÅNEDER'
+    | 'SØKER_FLYTTET_FRA_NORGE'
+    | 'SØKER_IKKE_BOSATT'
+    | 'SØKER_IKKE_OPPHOLDSTILLATELSE'
+    | 'SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER'
+    | 'BARN_I_FOSTERHJEM'
+    | 'BARN_I_INSTITUSJON'
+    | 'FULLTIDSPLASS_BARNEHAGE'
+    | 'DELTIDSPLASS_BARNEHAGEPLASS'
+    | 'ØKT_TIMEANTALL_I_BARNEHAGE'
+    | 'BARN_2_ÅR'
+    | 'DELT_BOSTED_AVTALE_OPPHØRT'
+    | 'DOBBELUTBETALING'
+    | 'MER_ENN_11_MÅNEDER'
+    | 'BARN_STARTET_PÅ_SKOLEN';
+
+export type UttalelseEnum = 'Ja' | 'Nei' | 'IkkeAktuelt' | 'IkkeVurdert';
+
+export type TypeEnum5 =
+    | 'IKKE_FORELDET'
+    | 'TILLEGGSFRIST'
+    | 'FORELDET'
+    | 'IKKE_VURDERT'
+    | 'AUTOMATISK_IKKE_FORELDET';
+
 export type BegrunnelseForUnntakEnum =
+    | 'IKKE_PRAKTISK_MULIG'
+    | 'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING'
+    | 'ÅPENBART_UNØDVENDIG'
+    | 'ALLEREDE_UTTALET_SEG';
+
+export type BeholdTypeEnum = 'JA' | 'NEI';
+
+export type KravstatuskodeEnum =
+    | 'ANNULERT'
+    | 'ANNULLERT_OMG'
+    | 'AVSLUTTET'
+    | 'BEHANDLET'
+    | 'ENDRET'
+    | 'FEIL'
+    | 'MANUELL'
+    | 'NY'
+    | 'SPERRET';
+
+export type AvEnum = 'Nav' | 'Bruker';
+
+export type TypeEnum6 = 'Ja' | 'Nei';
+
+export type TypeEnum7 =
+    | 'GRAD_AV_UAKTSOMHET'
+    | 'HELT_ELLER_DELVIS_NAVS_FEIL'
+    | 'STØRRELSE_BELØP'
+    | 'TID_FRA_UTBETALING'
+    | 'ANNET';
+
+export type OpprettelsesvalgEnum = 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL';
+
+export type AktsomhetTypeEnum =
+    | 'SIMPEL_UAKTSOMHET'
+    | 'GROV_UAKTSOMHET'
+    | 'FORSETT'
+    | 'IKKE_UTVIST_SKYLD';
+
+export type KanUnnlatesEnum = 'UNNLATES' | 'SKAL_IKKE_UNNLATES' | 'OVER_4_RETTSGEBYR';
+
+export type StegEnum =
+    | 'VARSEL'
+    | 'FORHÅNDSVARSEL'
+    | 'GRUNNLAG'
+    | 'BREVMOTTAKER'
+    | 'VERGE'
+    | 'FAKTA'
+    | 'FORELDELSE'
+    | 'VILKÅRSVURDERING'
+    | 'FORESLÅ_VEDTAK'
+    | 'FATTE_VEDTAK'
+    | 'IVERKSETT_VEDTAK'
+    | 'AVSLUTTET';
+
+export type VurderingEnum = 'IKKE_VURDERT' | 'GODKJENT' | 'UNDERKJENT';
+
+export type TypeEnum8 =
+    | 'BARNETRYGD'
+    | 'TILLEGGSSTØNAD'
+    | 'KONTANTSTØTTE'
+    | 'OVERGANGSSTØNAD'
+    | 'INFOTRYGD'
+    | 'ARBEIDSAVKLARINGSPENGER'
+    | 'TILTAKSPENGER';
+
+export type BegrunnelseForUnntakEnum2 =
     | 'IKKE_PRAKTISK_MULIG'
     | 'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING'
     | 'ÅPENBART_UNØDVENDIG';
@@ -989,7 +1575,7 @@ export type BrevmalkodeEnum =
     | 'VARSEL'
     | 'KORRIGERT_VARSEL';
 
-export type SpråkkodeEnum = 'NB' | 'NN';
+export type SpråkkodeEnum2 = 'NB' | 'NN';
 
 export type VergetypeEnum2 =
     | 'VERGE_FOR_BARN'
@@ -1002,6 +1588,121 @@ export type VergetypeEnum2 =
 export type AktsomhetEnum = 'FORSETT' | 'GROV_UAKTSOMHET' | 'SIMPEL_UAKTSOMHET';
 
 export type Unnlates4RettsgebyrEnum = 'UNNLATES' | 'TILBAKEKREVES' | 'OVER_4_RETTSGEBYR';
+
+export type ForeldelsesvurderingstypeEnum =
+    | 'IKKE_VURDERT'
+    | 'FORELDET'
+    | 'IKKE_FORELDET'
+    | 'TILLEGGSFRIST';
+
+export type VilkårsvurderingsresultatEnum =
+    | 'FORSTO_BURDE_FORSTÅTT'
+    | 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER'
+    | 'FEIL_OPPLYSNINGER_FRA_BRUKER'
+    | 'GOD_TRO'
+    | 'UDEFINERT';
+
+export type HarBrukerUttaltSegEnum = 'JA' | 'NEI' | 'IKKE_AKTUELT' | 'IKKE_VURDERT';
+
+export type TilbakekrevingsvalgEnum =
+    | 'OPPRETT_TILBAKEKREVING_MED_VARSEL'
+    | 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL'
+    | 'OPPRETT_TILBAKEKREVING_AUTOMATISK'
+    | 'IGNORER_TILBAKEKREVING';
+
+export type RegelverkEnum = 'NASJONAL' | 'EØS';
+
+export type BehandlingstypeEnum = 'TILBAKEKREVING' | 'REVURDERING_TILBAKEKREVING';
+
+export type GetårsakstypeEnum =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+
+export type BehandlingstatusEnum =
+    | 'AVSLUTTET'
+    | 'FATTER_VEDTAK'
+    | 'IVERKSETTER_VEDTAK'
+    | 'OPPRETTET'
+    | 'UTREDES'
+    | 'JOURNALFØR_VEDTAK'
+    | 'DISTRIUBER_VEDTAK';
+
+export type FagsystemTypeEnum = 'TILBAKEKREVING';
+
+export type StatusEnum2 =
+    | 'AVSLUTTET'
+    | 'FATTER_VEDTAK'
+    | 'IVERKSETTER_VEDTAK'
+    | 'OPPRETTET'
+    | 'UTREDES'
+    | 'JOURNALFØR_VEDTAK'
+    | 'DISTRIUBER_VEDTAK';
+
+export type KjønnEnum2 = 'MANN' | 'KVINNE' | 'UKJENT';
+
+export type StatusEnum3 =
+    | 'AVSLUTTET'
+    | 'FATTER_VEDTAK'
+    | 'IVERKSETTER_VEDTAK'
+    | 'OPPRETTET'
+    | 'UTREDES';
+
+export type ResultatEnum =
+    | 'INGEN_TILBAKEBETALING'
+    | 'DELVIS_TILBAKEBETALING'
+    | 'FULL_TILBAKEBETALING'
+    | 'HENLAGT';
+
+export type AvsnittstypeEnum =
+    | 'OPPSUMMERING'
+    | 'PERIODE'
+    | 'SAMMENSLÅTT_PERIODE'
+    | 'TILLEGGSINFORMASJON';
+
+export type UnderavsnittstypeEnum =
+    | 'FAKTA'
+    | 'FORELDELSE'
+    | 'VILKÅR'
+    | 'SÆRLIGEGRUNNER'
+    | 'SÆRLIGEGRUNNER_ANNET';
+
+export type TypeEnum9 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
+
+export type AktørEnum = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
+
+export type Unnlates4RettsgebyrEnum2 = 'UNNLATES' | 'TILBAKEKREVES' | 'OVER_4_RETTSGEBYR';
+
+export type VilkårsvurderingsresultatEnum2 =
+    | 'FORSTO_BURDE_FORSTÅTT'
+    | 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER'
+    | 'FEIL_OPPLYSNINGER_FRA_BRUKER'
+    | 'GOD_TRO'
+    | 'UDEFINERT';
+
+export type JournalposttypeEnum = 'I' | 'U' | 'N';
+
+export type JournalstatusEnum =
+    | 'MOTTATT'
+    | 'JOURNALFOERT'
+    | 'FERDIGSTILT'
+    | 'EKSPEDERT'
+    | 'UNDER_ARBEID'
+    | 'FEILREGISTRERT'
+    | 'UTGAAR'
+    | 'AVBRUTT'
+    | 'UKJENT_BRUKER'
+    | 'RESERVERT'
+    | 'OPPLASTING_DOKUMENT'
+    | 'UKJENT';
+
+export type ForeldelsesvurderingstypeEnum2 =
+    | 'IKKE_VURDERT'
+    | 'FORELDET'
+    | 'IKKE_FORELDET'
+    | 'TILLEGGSFRIST';
 
 export type HendelsestypeEnum =
     | 'ANNET'
@@ -1147,288 +1848,6 @@ export type HendelsesundertypeEnum =
     | 'MER_ENN_11_MÅNEDER'
     | 'BARN_STARTET_PÅ_SKOLEN';
 
-export type ForeldelsesvurderingstypeEnum =
-    | 'IKKE_VURDERT'
-    | 'FORELDET'
-    | 'IKKE_FORELDET'
-    | 'TILLEGGSFRIST';
-
-export type SærligGrunnEnum =
-    | 'GRAD_AV_UAKTSOMHET'
-    | 'HELT_ELLER_DELVIS_NAVS_FEIL'
-    | 'STØRRELSE_BELØP'
-    | 'TID_FRA_UTBETALING'
-    | 'ANNET';
-
-export type VilkårsvurderingsresultatEnum =
-    | 'FORSTO_BURDE_FORSTÅTT'
-    | 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER'
-    | 'FEIL_OPPLYSNINGER_FRA_BRUKER'
-    | 'GOD_TRO'
-    | 'UDEFINERT';
-
-export type HarBrukerUttaltSegEnum2 = 'JA' | 'NEI' | 'IKKE_AKTUELT' | 'IKKE_VURDERT';
-
-export type BehandlingsstegEnum =
-    | 'VARSEL'
-    | 'FORHÅNDSVARSEL'
-    | 'GRUNNLAG'
-    | 'BREVMOTTAKER'
-    | 'VERGE'
-    | 'FAKTA'
-    | 'FORELDELSE'
-    | 'VILKÅRSVURDERING'
-    | 'FORESLÅ_VEDTAK'
-    | 'FATTE_VEDTAK'
-    | 'IVERKSETT_VEDTAK'
-    | 'AVSLUTTET';
-
-export type TilbakekrevingsvalgEnum =
-    | 'OPPRETT_TILBAKEKREVING_MED_VARSEL'
-    | 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL'
-    | 'OPPRETT_TILBAKEKREVING_AUTOMATISK'
-    | 'IGNORER_TILBAKEKREVING';
-
-export type RegelverkEnum = 'NASJONAL' | 'EØS';
-
-export type BehandlingstypeEnum = 'TILBAKEKREVING' | 'REVURDERING_TILBAKEKREVING';
-
-export type GetårsakstypeEnum =
-    | 'REVURDERING_KLAGE_NFP'
-    | 'REVURDERING_KLAGE_KA'
-    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
-    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
-    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
-
-export type BehandlingstatusEnum =
-    | 'AVSLUTTET'
-    | 'FATTER_VEDTAK'
-    | 'IVERKSETTER_VEDTAK'
-    | 'OPPRETTET'
-    | 'UTREDES'
-    | 'JOURNALFØR_VEDTAK'
-    | 'DISTRIUBER_VEDTAK';
-
-export type FagsystemTypeEnum = 'TILBAKEKREVING';
-
-export type TypeEnum2 = 'TILBAKEKREVING' | 'REVURDERING_TILBAKEKREVING';
-
-export type StatusEnum2 =
-    | 'AVSLUTTET'
-    | 'FATTER_VEDTAK'
-    | 'IVERKSETTER_VEDTAK'
-    | 'OPPRETTET'
-    | 'UTREDES'
-    | 'JOURNALFØR_VEDTAK'
-    | 'DISTRIUBER_VEDTAK';
-
-export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
-
-export type StatusEnum3 =
-    | 'AVSLUTTET'
-    | 'FATTER_VEDTAK'
-    | 'IVERKSETTER_VEDTAK'
-    | 'OPPRETTET'
-    | 'UTREDES';
-
-export type ResultatEnum =
-    | 'INGEN_TILBAKEBETALING'
-    | 'DELVIS_TILBAKEBETALING'
-    | 'FULL_TILBAKEBETALING'
-    | 'HENLAGT';
-
-export type AvsnittstypeEnum =
-    | 'OPPSUMMERING'
-    | 'PERIODE'
-    | 'SAMMENSLÅTT_PERIODE'
-    | 'TILLEGGSINFORMASJON';
-
-export type UnderavsnittstypeEnum =
-    | 'FAKTA'
-    | 'FORELDELSE'
-    | 'VILKÅR'
-    | 'SÆRLIGEGRUNNER'
-    | 'SÆRLIGEGRUNNER_ANNET';
-
-export type TypeEnum3 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
-
-export type AktørEnum = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
-
-export type Unnlates4RettsgebyrEnum2 = 'UNNLATES' | 'TILBAKEKREVES' | 'OVER_4_RETTSGEBYR';
-
-export type VilkårsvurderingsresultatEnum2 =
-    | 'FORSTO_BURDE_FORSTÅTT'
-    | 'MANGELFULLE_OPPLYSNINGER_FRA_BRUKER'
-    | 'FEIL_OPPLYSNINGER_FRA_BRUKER'
-    | 'GOD_TRO'
-    | 'UDEFINERT';
-
-export type JournalposttypeEnum = 'I' | 'U' | 'N';
-
-export type JournalstatusEnum =
-    | 'MOTTATT'
-    | 'JOURNALFOERT'
-    | 'FERDIGSTILT'
-    | 'EKSPEDERT'
-    | 'UNDER_ARBEID'
-    | 'FEILREGISTRERT'
-    | 'UTGAAR'
-    | 'AVBRUTT'
-    | 'UKJENT_BRUKER'
-    | 'RESERVERT'
-    | 'OPPLASTING_DOKUMENT'
-    | 'UKJENT';
-
-export type ForeldelsesvurderingstypeEnum2 =
-    | 'IKKE_VURDERT'
-    | 'FORELDET'
-    | 'IKKE_FORELDET'
-    | 'TILLEGGSFRIST';
-
-export type HendelsestypeEnum2 =
-    | 'ANNET'
-    | 'BOR_MED_SØKER'
-    | 'BOSATT_I_RIKET'
-    | 'LOVLIG_OPPHOLD'
-    | 'DØDSFALL'
-    | 'DELT_BOSTED'
-    | 'BARNS_ALDER'
-    | 'MEDLEMSKAP'
-    | 'OPPHOLD_I_NORGE'
-    | 'ENSLIG_FORSØRGER'
-    | 'OVERGANGSSTØNAD'
-    | 'YRKESRETTET_AKTIVITET'
-    | 'STØNADSPERIODE'
-    | 'INNTEKT'
-    | 'PENSJONSYTELSER'
-    | 'STØNAD_TIL_BARNETILSYN'
-    | 'SKOLEPENGER'
-    | 'SATSER'
-    | 'SMÅBARNSTILLEGG'
-    | 'MEDLEMSKAP_BA'
-    | 'UTVIDET'
-    | 'VILKÅR_BARN'
-    | 'VILKÅR_SØKER'
-    | 'BARN_I_FOSTERHJEM_ELLER_INSTITUSJON'
-    | 'KONTANTSTØTTENS_STØRRELSE'
-    | 'STØTTEPERIODE'
-    | 'UTBETALING'
-    | 'KONTANTSTØTTE_FOR_ADOPTERTE_BARN'
-    | 'ANNET_KS';
-
-export type HendelsesundertypeEnum2 =
-    | 'ANNET_FRITEKST'
-    | 'BOR_IKKE_MED_BARN'
-    | 'BARN_FLYTTET_FRA_NORGE'
-    | 'BRUKER_FLYTTET_FRA_NORGE'
-    | 'BARN_BOR_IKKE_I_NORGE'
-    | 'BRUKER_BOR_IKKE_I_NORGE'
-    | 'UTEN_OPPHOLDSTILLATELSE'
-    | 'BARN_DØD'
-    | 'BRUKER_DØD'
-    | 'ENIGHET_OM_OPPHØR_DELT_BOSTED'
-    | 'UENIGHET_OM_OPPHØR_DELT_BOSTED'
-    | 'BARN_OVER_18_ÅR'
-    | 'BARN_OVER_6_ÅR'
-    | 'MEDLEM_SISTE_5_ÅR'
-    | 'LOVLIG_OPPHOLD'
-    | 'BRUKER_IKKE_OPPHOLD_I_NORGE'
-    | 'BARN_IKKE_OPPHOLD_I_NORGE'
-    | 'OPPHOLD_UTLAND_6_UKER_ELLER_MER'
-    | 'UGIFT'
-    | 'SEPARERT_SKILT'
-    | 'SAMBOER'
-    | 'NYTT_BARN_SAMME_PARTNER'
-    | 'ENDRET_SAMVÆRSORDNING'
-    | 'BARN_FLYTTET'
-    | 'NÆRE_BOFORHOLD'
-    | 'FORELDRE_LEVER_SAMMEN'
-    | 'BARN_8_ÅR'
-    | 'BARN_FYLT_1_ÅR'
-    | 'UTDANNING'
-    | 'ETABLERER_EGEN_VIRKSOMHET'
-    | 'HOVEDPERIODE_3_ÅR'
-    | 'UTVIDELSE_UTDANNING'
-    | 'UTVIDELSE_SÆRLIG_TILSYNSKREVENDE_BARN'
-    | 'UTVIDELSE_FORBIGÅENDE_SYKDOM'
-    | 'PÅVENTE_AV_SKOLESTART_STARTET_IKKE'
-    | 'PÅVENTE_SKOLESTART_STARTET_TIDLIGERE'
-    | 'PÅVENTE_ARBEIDSTILBUD_STARTET_IKKE'
-    | 'PÅVENTE_ARBEIDSTILBUD_STARTET_TIDLIGERE'
-    | 'PÅVENTE_BARNETILSYN_IKKE_HA_TILSYN'
-    | 'PÅVENTE_BARNETILSYN_STARTET_TIDLIGERE'
-    | 'ARBEIDSSØKER'
-    | 'REELL_ARBEIDSSØKER'
-    | 'ARBEIDSINNTEKT_FÅTT_INNTEKT'
-    | 'ARBEIDSINNTEKT_ENDRET_INNTEKT'
-    | 'ANDRE_FOLKETRYGDYTELSER'
-    | 'SELVSTENDIG_NÆRINGSDRIVENDE_FÅTT_INNTEKT'
-    | 'SELVSTENDIG_NÆRINGSDRIVENDE_ENDRET_INNTEKT'
-    | 'UFØRETRYGD'
-    | 'GJENLEVENDE_EKTEFELLE'
-    | 'ARBEID'
-    | 'EGEN_VIRKSOMHET'
-    | 'TILSYNSUTGIFTER_OPPHØRT'
-    | 'TILSYNSUTGIFTER_ENDRET'
-    | 'FORBIGÅENDE_SYKDOM'
-    | 'ETTER_4_SKOLEÅR_UTGIFTENE_OPPHØRT'
-    | 'ETTER_4_SKOLEÅR_ENDRET_ARBEIDSTID'
-    | 'INNTEKT_OVER_6G'
-    | 'KONTANTSTØTTE'
-    | 'ØKT_KONTANTSTØTTE'
-    | 'IKKE_RETT_TIL_OVERGANGSSTØNAD'
-    | 'SLUTTET_I_UTDANNING'
-    | 'IKKE_ARBEID'
-    | 'SMÅBARNSTILLEGG_OVERGANGSSTØNAD'
-    | 'SATSENDRING'
-    | 'SMÅBARNSTILLEGG_3_ÅR'
-    | 'BRUKER_OG_BARN_FLYTTET_FRA_NORGE'
-    | 'BRUKER_OG_BARN_BOR_IKKE_I_NORGE'
-    | 'FLYTTET_SAMMEN'
-    | 'UTENLANDS_IKKE_MEDLEM'
-    | 'MEDLEMSKAP_OPPHØRT'
-    | 'ANNEN_FORELDER_IKKE_MEDLEM'
-    | 'ANNEN_FORELDER_OPPHØRT_MEDLEMSKAP'
-    | 'FLERE_UTENLANDSOPPHOLD'
-    | 'BOSATT_IKKE_MEDLEM'
-    | 'GIFT'
-    | 'NYTT_BARN'
-    | 'SAMBOER_12_MÅNEDER'
-    | 'FLYTTET_SAMMEN_ANNEN_FORELDER'
-    | 'FLYTTET_SAMMEN_EKTEFELLE'
-    | 'FLYTTET_SAMMEN_SAMBOER'
-    | 'GIFT_IKKE_EGEN_HUSHOLDNING'
-    | 'SAMBOER_IKKE_EGEN_HUSHOLDNING'
-    | 'EKTEFELLE_AVSLUTTET_SONING'
-    | 'SAMBOER_AVSLUTTET_SONING'
-    | 'EKTEFELLE_INSTITUSJON'
-    | 'SAMBOER_INSTITUSJON'
-    | 'BARN_IKKE_BOSATT'
-    | 'BARN_IKKE_OPPHOLDSTILLATELSE'
-    | 'BARN_OVER_2_ÅR'
-    | 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN'
-    | 'DEN_ANDRE_FORELDEREN_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
-    | 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN'
-    | 'SØKER_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
-    | 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN'
-    | 'BEGGE_FORELDRENE_IKKE_MEDLEM_FOLKETRYGDEN_ELLER_EØS'
-    | 'BARN_BOR_IKKE_HOS_SØKER'
-    | 'UTENLANDSOPPHOLD_OVER_3_MÅNEDER'
-    | 'SØKER_FLYTTET_FRA_NORGE'
-    | 'SØKER_IKKE_BOSATT'
-    | 'SØKER_IKKE_OPPHOLDSTILLATELSE'
-    | 'SØKER_IKKE_OPPHOLDSTILLATELSE_I_MER_ENN_12_MÅNEDER'
-    | 'BARN_I_FOSTERHJEM'
-    | 'BARN_I_INSTITUSJON'
-    | 'FULLTIDSPLASS_BARNEHAGE'
-    | 'DELTIDSPLASS_BARNEHAGEPLASS'
-    | 'ØKT_TIMEANTALL_I_BARNEHAGE'
-    | 'BARN_2_ÅR'
-    | 'DELT_BOSTED_AVTALE_OPPHØRT'
-    | 'DOBBELUTBETALING'
-    | 'MER_ENN_11_MÅNEDER'
-    | 'BARN_STARTET_PÅ_SKOLEN';
-
 export type VedtaksresultatEnum =
     | 'FULL_TILBAKEBETALING'
     | 'DELVIS_TILBAKEBETALING'
@@ -1446,13 +1865,6 @@ export type ResultatstypeEnum =
     | 'INGEN_TILBAKEBETALING'
     | 'DELVIS_TILBAKEBETALING'
     | 'FULL_TILBAKEBETALING';
-
-export type BehandlingsårsakstypeEnum =
-    | 'REVURDERING_KLAGE_NFP'
-    | 'REVURDERING_KLAGE_KA'
-    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
-    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
-    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
 
 export type SaksbehandlingstypeEnum =
     | 'ORDINÆR'
@@ -2010,6 +2422,24 @@ export type FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveResponse
      */
     200: unknown;
 };
+
+export type DumpFagsakData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/dump/{behandlingId}';
+};
+
+export type DumpFagsakResponses = {
+    /**
+     * OK
+     */
+    200: TilbakekrevingEntity;
+};
+
+export type DumpFagsakResponse = DumpFagsakResponses[keyof DumpFagsakResponses];
 
 export type SimulerMottakAvKravgrunnlagData = {
     body: string;

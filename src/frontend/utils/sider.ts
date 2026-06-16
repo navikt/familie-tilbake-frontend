@@ -1,4 +1,4 @@
-import type { BehandlingDto, BehandlingsstegEnum, BehandlingsstegsinfoDto } from '@/generated';
+import type { BehandlingDto, BehandlingsstegsinfoDto, StegEnum } from '@/generated';
 
 import { useNavigate } from 'react-router';
 
@@ -8,7 +8,7 @@ import { useFagsak } from '@/context/FagsakContext';
 export type SynligSteg = {
     href: string;
     navn: string;
-    steg: BehandlingsstegEnum;
+    steg: StegEnum;
 };
 
 export type SynligeStegType =
@@ -85,7 +85,7 @@ export const erSidenAktiv = (synligSteg: SynligSteg, behandling: BehandlingDto):
     return sjekkOmSidenErAktiv(synligSteg, behandling.behandlingsstegsinfo);
 };
 
-export const visSide = (steg: BehandlingsstegEnum, behandling: BehandlingDto): boolean => {
+export const visSide = (steg: StegEnum, behandling: BehandlingDto): boolean => {
     if (steg === 'BREVMOTTAKER') {
         return behandling.behandlingsstegsinfo
             .filter(({ behandlingsstegstatus }) => behandlingsstegstatus !== 'TILBAKEFØRT')
@@ -101,7 +101,7 @@ export const visSide = (steg: BehandlingsstegEnum, behandling: BehandlingDto): b
     return true;
 };
 
-export const utledBehandlingSide = (steg: BehandlingsstegEnum): SynligSteg | undefined => {
+export const utledBehandlingSide = (steg: StegEnum): SynligSteg | undefined => {
     switch (steg) {
         case 'FATTE_VEDTAK':
             return SYNLIGE_STEG.FAKTA;
@@ -143,6 +143,6 @@ export const erØnsketSideTilgjengelig = (
     return !!funnetØnsketSide;
 };
 
-export const finnSideForSteg = (behandlingssteg: BehandlingsstegEnum): SynligSteg | undefined => {
+export const finnSideForSteg = (behandlingssteg: StegEnum): SynligSteg | undefined => {
     return Object.values(SYNLIGE_STEG).find(({ steg }) => steg === behandlingssteg);
 };

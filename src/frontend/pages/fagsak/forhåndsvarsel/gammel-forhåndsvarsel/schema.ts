@@ -7,7 +7,7 @@ import type {
 
 import { z } from 'zod';
 
-import { zBegrunnelseForUnntakEnum } from '@/generated/zod.gen';
+import { zBegrunnelseForUnntakEnum2 } from '@/generated/zod.gen';
 
 export enum SkalSendesForhåndsvarsel {
     Ja = 'ja',
@@ -138,7 +138,7 @@ const getOpprettValues = (forhåndsvarselInfo?: ForhåndsvarselDto): Forhåndsva
 
 const unntakSchema = z.object({
     skalSendesForhåndsvarsel: z.literal(SkalSendesForhåndsvarsel.Nei),
-    begrunnelseForUnntak: z.enum(zBegrunnelseForUnntakEnum.enum, {
+    begrunnelseForUnntak: z.enum(zBegrunnelseForUnntakEnum2.enum, {
         error: 'Du må velge en begrunnelse for unntak fra forhåndsvarsel',
     }),
     beskrivelse: fritekstSchema,
