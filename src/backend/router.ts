@@ -1,4 +1,5 @@
 import type { Request, Response, Router } from 'express';
+import type { Server } from 'http';
 import type { ViteDevServer } from 'vite';
 import type { TexasClient } from './backend/auth/texas';
 
@@ -15,6 +16,10 @@ import { prometheusTellere } from './metrikker';
 let vite: ViteDevServer;
 const isProd = process.env.NODE_ENV === 'production';
 
+export const lukkVite = async (): Promise<void> => {
+    await vite?.close();
+};
+
 const getHtmlInnholdProd = (): string => {
     return fs.readFileSync(path.join(process.cwd(), buildPath, 'index.html'), 'utf-8');
 };
@@ -29,7 +34,11 @@ const getHtmlInnholdDev = async (url: string): Promise<string> => {
     return htmlInnhold;
 };
 
-export default async (texasClient: TexasClient, router: Router): Promise<Router> => {
+export default async (
+    texasClient: TexasClient,
+    router: Router,
+    httpServer: Server
+): Promise<Router> => {
     router.get('/version', (_: Request, res: Response) => {
         res.status(200).send({ status: 'SUKSESS', data: appConfig.version }).end();
     });
@@ -48,7 +57,9 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
     if (!isProd) {
         vite = await createViteServer({
             root: path.join(process.cwd(), 'src/frontend'),
-            server: { middlewareMode: true },
+            // Kjør HMR-WebSocket over BFF-ens egen HTTP-server i stedet for en
+            // separat port (24678). Da kan vi aldri få "Port 24678 already in use".
+            server: { middlewareMode: true, hmr: { server: httpServer } },
             appType: 'custom',
         });
         router.use(vite.middlewares);

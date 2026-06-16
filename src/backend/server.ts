@@ -3,6 +3,7 @@ import type { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import expressStaticGzip from 'express-static-gzip';
+import { createServer } from 'http';
 import path from 'path';
 
 import backend from './backend';
@@ -12,12 +13,15 @@ import { appConfig, proxyUrl, sessionConfig, texasConfig } from './config';
 import { logInfo } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 import { attachToken, doProxy, doRedirectProxy } from './proxy';
-import setupRouter from './router';
+import setupRouter, { lukkVite } from './router';
 
 (async (): Promise<void> => {
     const port = 8000;
 
     const { app, texasClient, router } = backend(texasConfig, prometheusTellere);
+
+    // Opprett HTTP-serveren eksplisitt slik at Vites HMR kan dele den (se router.ts).
+    const server = createServer(app);
 
     if (process.env.NODE_ENV === 'production') {
         app.use('/assets', expressStaticGzip(path.join(process.cwd(), 'dist/assets'), {}));
@@ -43,14 +47,15 @@ import setupRouter from './router';
     // Sett opp express og router etter proxy. Spesielt viktig med tanke på større payloads
     app.use(json({ limit: '200mb' }));
     app.use(urlencoded({ limit: '200mb', extended: true }));
-    app.use('/', await setupRouter(texasClient, router));
+    app.use('/', await setupRouter(texasClient, router, server));
 
-    const server = app.listen(port, '0.0.0.0', () => {
+    server.listen(port, '0.0.0.0', () => {
         logInfo(`Server startet på port ${port}. Build version: ${appConfig.version}.`);
     });
 
     process.on('SIGTERM', () => {
         logInfo('SIGTERM signal received: closing HTTP server');
+        void lukkVite();
         server.close(() => {
             logInfo('HTTP server closed');
         });
