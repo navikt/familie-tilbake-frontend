@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { BodyLong, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
+import { BodyLong, Heading, HStack, Link, LocalAlert, Tag, VStack } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -64,9 +64,23 @@ export const ForeldelseContainer: FC = () => {
         isLoading: senderInn,
     });
 
+    const erAllePerioderAutomatiskVurdert =
+        foreldelse?.status === RessursStatus.Suksess &&
+        foreldelse?.data?.foreldetPerioder.every(
+            periode => periode.foreldelsesvurderingstype === 'AUTOMATISK_VURDERT_IKKE_FORELDET'
+        );
+
     return (
         <VStack gap="space-24">
-            <Heading size="medium">Foreldelse</Heading>
+            <HStack justify="space-between">
+                <Heading size="medium">Foreldelse</Heading>
+                {erAllePerioderAutomatiskVurdert && (
+                    <Tag variant="moderate" data-color="success">
+                        Automatisk vurdert ikke foreldet
+                    </Tag>
+                )}
+            </HStack>
+
             {erAutoutført ? (
                 <LocalAlert status="success" className="min-w-80" size="small">
                     <LocalAlert.Header>

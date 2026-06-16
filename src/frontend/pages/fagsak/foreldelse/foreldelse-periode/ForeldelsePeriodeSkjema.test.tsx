@@ -1,9 +1,8 @@
-import type { ByRoleMatcher, ByRoleOptions } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { ForeldelseHook } from '@/pages/fagsak/foreldelse/ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
@@ -27,6 +26,37 @@ const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): vo
     );
 };
 
+const erPeriodenForeldetRadioGruppe = (): HTMLElement =>
+    screen.getByRole('radiogroup', {
+        name: 'Er perioden foreldet?',
+    });
+const foreldetRadio = (): HTMLElement =>
+    within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
+        name: 'Ja, perioden er foreldet',
+    });
+const ikkeForeldetRadio = (): HTMLElement =>
+    within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
+        name: 'Nei, perioden er ikke foreldet',
+    });
+const tilleggsfristRadio = (): HTMLElement =>
+    within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
+        name: 'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder',
+    });
+const automatiskVurdertRadio = (): HTMLElement =>
+    within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
+        name: 'Automatisk vurdert ikke foreldet',
+    });
+
+const foreldelsesfristDato = (): HTMLElement =>
+    screen.getByRole('textbox', {
+        name: 'Foreldelsesfrist',
+    });
+const oppdagelsesdatoTekst = 'Dato for når feilutbetaling ble oppdaget';
+const oppdagelsesdato = (): HTMLElement =>
+    screen.getByRole('textbox', {
+        name: oppdagelsesdatoTekst,
+    });
+
 describe('ForeldelsePeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
@@ -34,117 +64,86 @@ describe('ForeldelsePeriodeSkjema', () => {
         vi.clearAllMocks();
     });
 
-    const bekreftPeriodeKnapp = (
-        getByRole: (role: ByRoleMatcher, options?: ByRoleOptions | undefined) => HTMLElement
-    ): HTMLElement =>
-        getByRole('button', {
+    const bekreftPeriodeKnapp = (): HTMLElement =>
+        screen.getByRole('button', {
             name: 'Bekreft periode',
         });
 
-    test('Vurderer periode ikke foreldet ', async () => {
+    test('Vurderer periode ikke foreldet', async () => {
         renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(screen.queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(2);
 
-        await user.click(screen.getByLabelText('Nei, perioden er ikke foreldet'));
-
+        await user.click(ikkeForeldetRadio());
         expect(screen.queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
-
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
 
         await user.type(screen.getByLabelText('Begrunn valget over'), 'begrunnelse');
 
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Vurderer periode foreldet ', async () => {
+    test('Vurderer periode foreldet', async () => {
         renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
 
         expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
         expect(screen.queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
 
-        await user.click(screen.getByLabelText('Ja, perioden er foreldet'));
+        await user.click(foreldetRadio());
+        expect(foreldelsesfristDato()).toBeInTheDocument();
 
-        expect(
-            screen.getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            })
-        ).toBeInTheDocument();
-
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(screen.getAllByText('Du må velge en gyldig dato')).toHaveLength(1);
 
         await user.type(screen.getByLabelText('Begrunn valget over'), 'begrunnelse');
-        await user.type(
-            screen.getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            }),
-            '14.09.2020'
-        );
-
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
+        await user.type(foreldelsesfristDato(), '14.09.2020');
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
         expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
     });
 
-    test('Vurderer periode til å bruke tilleggsfrist ', async () => {
+    test('Vurderer periode til å bruke tilleggsfrist', async () => {
         renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData());
-
         expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Foreldelsesfrist')).not.toBeInTheDocument();
-        expect(
-            screen.queryByLabelText('Dato for når feilutbetaling ble oppdaget')
-        ).not.toBeInTheDocument();
 
-        await user.click(
-            screen.getByLabelText(
-                'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder'
-            )
-        );
+        await user.click(tilleggsfristRadio());
+        expect(foreldelsesfristDato()).toBeInTheDocument();
+        expect(oppdagelsesdato()).toBeInTheDocument();
 
-        expect(
-            screen.getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            })
-        ).toBeInTheDocument();
-        expect(
-            screen.getByLabelText('Dato for når feilutbetaling ble oppdaget')
-        ).toBeInTheDocument();
-
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.getAllByText('Feltet må fylles ut')).toHaveLength(1);
         expect(screen.getAllByText('Du må velge en gyldig dato')).toHaveLength(2);
 
         await user.type(screen.getByLabelText('Begrunn valget over'), 'begrunnelse');
-        await user.type(
-            screen.getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            }),
-            '14.09.2020'
-        );
-        await user.type(
-            screen.getByLabelText('Dato for når feilutbetaling ble oppdaget'),
-            '14.06.2020'
-        );
+        await user.type(foreldelsesfristDato(), '14.09.2020');
+        await user.type(oppdagelsesdato(), '14.06.2020');
 
-        await user.click(bekreftPeriodeKnapp(screen.getByRole));
+        await user.click(bekreftPeriodeKnapp());
         expect(screen.queryAllByText('Feltet må fylles ut')).toHaveLength(0);
         expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
 
-    test('Åpner vurdert periode med tilleggsfrist ', () => {
+    test('Åpner vurdert periode med automatisk vurdert ikke foreldet - radio er valgt og disabled', () => {
+        renderForeldelsePeriodeSkjema(
+            lagForeldelsePeriodeSkjemaData({
+                foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
+                begrunnelse: 'Automatisk vurdert',
+            })
+        );
+
+        expect(automatiskVurdertRadio()).toBeChecked();
+        expect(automatiskVurdertRadio()).toBeDisabled();
+    });
+
+    test('Åpner vurdert periode med tilleggsfrist', () => {
         renderForeldelsePeriodeSkjema(
             lagForeldelsePeriodeSkjemaData({
                 foreldelsesvurderingstype: 'TILLEGGSFRIST',
@@ -155,30 +154,12 @@ describe('ForeldelsePeriodeSkjema', () => {
         );
 
         expect(screen.getByText('Detaljer for valgt periode')).toBeInTheDocument();
-        expect(
-            screen.getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            })
-        ).toBeInTheDocument();
-        expect(
-            screen.getByLabelText('Dato for når feilutbetaling ble oppdaget')
-        ).toBeInTheDocument();
+        expect(foreldelsesfristDato()).toBeInTheDocument();
+        expect(oppdagelsesdato()).toBeInTheDocument();
 
         expect(screen.getByLabelText('Begrunn valget over')).toHaveValue('Vurdert');
-        expect(
-            screen.getByLabelText(
-                'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder'
-            )
-        ).toBeChecked();
-        expect(
-            screen.getByLabelText('Foreldelsesfrist', {
-                selector: 'input',
-                exact: false,
-            })
-        ).toHaveValue('04.12.2019');
-        expect(screen.getByLabelText('Dato for når feilutbetaling ble oppdaget')).toHaveValue(
-            '18.09.2019'
-        );
+        expect(tilleggsfristRadio()).toBeChecked();
+        expect(foreldelsesfristDato()).toHaveValue('04.12.2019');
+        expect(oppdagelsesdato()).toHaveValue('18.09.2019');
     });
 });

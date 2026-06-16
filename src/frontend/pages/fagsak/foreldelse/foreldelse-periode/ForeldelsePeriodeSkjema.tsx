@@ -159,6 +159,14 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                     <Radio key="TILLEGGSFRIST" name="foreldet" value="TILLEGGSFRIST">
                         Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder
                     </Radio>
+                    <Radio
+                        key="AUTOMATISK_VURDERT_IKKE_FORELDET"
+                        name="foreldet"
+                        value="AUTOMATISK_VURDERT_IKKE_FORELDET"
+                        disabled
+                    >
+                        Automatisk vurdert ikke foreldet
+                    </Radio>
                 </RadioGroup>
                 <Textarea
                     {...skjema.felter.begrunnelse.hentNavInputProps(skjema.visFeilmeldinger)}
