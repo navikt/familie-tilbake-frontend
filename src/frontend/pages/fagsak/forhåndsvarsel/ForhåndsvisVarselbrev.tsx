@@ -1,5 +1,13 @@
+import type { DefaultError } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import type { FC } from 'react';
-import type { BestillBrevDto, RessursByte } from '@/generated';
+import type {
+    BestillBrevDto,
+    ForhåndsvisBrevData,
+    ForhåndsvisBrevResponse,
+    RessursByte,
+} from '@/generated';
+import type { Options } from '@/generated/sdk.gen';
 import type { IkkeVurdertFormData } from './schema';
 
 import { EyeIcon } from '@navikt/aksel-icons';
@@ -9,7 +17,6 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
-import { forhåndsvisBrevMutation } from '@/generated/@tanstack/react-query.gen';
 import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 
@@ -26,8 +33,12 @@ export const ForhåndsvisVarselbrev: FC = () => {
     const visGlobalAlert = useVisGlobalAlert();
     const [visModal, setVisModal] = useState(false);
 
-    const forhåndsvisning = useMutation({
-        ...forhåndsvisBrevMutation(),
+    const forhåndsvisning = useMutation<
+        ForhåndsvisBrevResponse,
+        AxiosError<DefaultError>,
+        Options<ForhåndsvisBrevData>
+    >({
+        mutationKey: ['forhåndsvisBrev'],
     });
 
     const forhåndsvis = (): void => {
