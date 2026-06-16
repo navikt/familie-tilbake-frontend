@@ -12,33 +12,32 @@ import {
 } from '@/generated-new/@tanstack/react-query.gen';
 import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 import { byggDataRessurs } from '@/typer/ressurs';
-import { lagPdfBlobUrl } from '@/utils/pdfUtils';
 
 export const VisSendtVarselbrev: FC = () => {
     const { behandlingId } = useBehandling();
     const [visModal, setVisModal] = useState(false);
 
-    const dokumentInfoQuery = useQuery({
+    const { data: { journalpostId, dokumentId } = {}, isLoading: dokumentInfoLaster } = useQuery({
         ...behandlingHentDokumentInfoOptions({
             path: { behandlingId, dokumentType: 'VARSELBREV' },
         }),
     });
 
-    const sendtDokumentQuery = useQuery({
+    const { data: sendtDokument, isLoading: sendtDokumentLaster } = useQuery({
         ...behandlingHentDokumentOptions({
             path: {
                 behandlingId,
-                journalpostId: dokumentInfoQuery.data?.journalpostId ?? '',
-                dokumentInfoId: dokumentInfoQuery.data?.dokumentId ?? '',
+                journalpostId: journalpostId ?? '',
+                dokumentInfoId: dokumentId ?? '',
             },
         }),
-        enabled: !!dokumentInfoQuery.data?.journalpostId && !!dokumentInfoQuery.data?.dokumentId,
+        enabled: !!journalpostId && !!dokumentId,
     });
 
     const varselbrevUrl = useMemo(() => {
-        if (!sendtDokumentQuery.data) return null;
-        return lagPdfBlobUrl(sendtDokumentQuery.data);
-    }, [sendtDokumentQuery.data]);
+        if (!sendtDokument) return null;
+        return URL.createObjectURL(new Blob([sendtDokument], { type: 'application/pdf' }));
+    }, [sendtDokument]);
 
     return (
         <>
@@ -46,15 +45,15 @@ export const VisSendtVarselbrev: FC = () => {
                 size="small"
                 variant="tertiary"
                 icon={<EyeIcon aria-hidden />}
-                loading={dokumentInfoQuery.isLoading || sendtDokumentQuery.isLoading}
+                loading={dokumentInfoLaster || sendtDokumentLaster}
                 disabled={!varselbrevUrl}
                 onClick={(): void => setVisModal(true)}
             >
                 Vis brevet
             </Button>
-            {visModal && varselbrevUrl && (
+            {varselbrevUrl && (
                 <PdfVisningModal
-                    åpen
+                    åpen={visModal}
                     pdfdata={byggDataRessurs(varselbrevUrl)}
                     onRequestClose={(): void => setVisModal(false)}
                 />
