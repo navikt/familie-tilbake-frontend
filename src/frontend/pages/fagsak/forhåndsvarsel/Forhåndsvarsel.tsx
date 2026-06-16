@@ -1,3 +1,4 @@
+import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type { Options } from '@/generated-new/sdk.gen';
@@ -5,13 +6,16 @@ import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack, VStack } from '@navikt/ds-react';
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { forhåndsvisBrevMutation } from '@/generated/@tanstack/react-query.gen';
 import {
+    type BehandlingSendVarselbrevData,
+    type BehandlingSendVarselbrevError,
     type BehandlingUtsettUttalelsesfristData,
     type BehandlingUtsettUttalelsesfristResponse,
     behandlingLagreBrukersuttalelse,
@@ -23,6 +27,8 @@ import {
 import {
     behandlingForhandsvarselOptions,
     behandlingForhandsvarselQueryKey,
+    behandlingHentDokumentInfoOptions,
+    behandlingHentDokumentOptions,
     behandlingLagreBrukersuttalelseMutation,
     behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
@@ -49,6 +55,35 @@ import { VisSendtVarselbrev } from './VisSendtVarselbrev';
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
+    const queryClient = useQueryClient();
+    const visGlobalAlert = useVisGlobalAlert();
+
+    queryClient.setMutationDefaults(['sendVarselbrev'], {
+        ...behandlingSendVarselbrevMutation(),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
+            });
+        },
+        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
+        onError: error => {
+            visGlobalAlert({
+                title: 'Kunne ikke sende forhåndsvarsel',
+                message: error.message,
+                status: 'error',
+            });
+        },
+    });
+
+    queryClient.setMutationDefaults(['forhåndsvisBrev'], {
+        ...forhåndsvisBrevMutation(),
+    });
+
+    return <ForhåndsvarselInnhold />;
+};
+
+export const ForhåndsvarselInnhold: FC = () => {
+    const { behandlingId } = useBehandling();
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilNeste = useStegNavigering('FORELDELSE');
     const navigerTilForrige = useStegNavigering('FAKTA');
@@ -64,6 +99,31 @@ export const Forhåndsvarsel: FC = () => {
 
     const { forhaandsvarselSteg: forhåndsvarselSteg, brukeruttalelse } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
+
+    const varselErSendt = forhåndsvarselSteg.type === 'sendt';
+
+    const { data: { journalpostId, dokumentId } = {}, isLoading: dokumentInfoLaster } = useQuery({
+        ...behandlingHentDokumentInfoOptions({
+            path: { behandlingId, dokumentType: 'VARSELBREV' },
+        }),
+        enabled: varselErSendt,
+    });
+
+    const { data: sendtDokument, isLoading: sendtDokumentLaster } = useQuery({
+        ...behandlingHentDokumentOptions({
+            path: {
+                behandlingId,
+                journalpostId: journalpostId ?? '',
+                dokumentInfoId: dokumentId ?? '',
+            },
+        }),
+        enabled: !!journalpostId && !!dokumentId,
+    });
+
+    const varselbrevUrl = useMemo(() => {
+        if (!sendtDokument) return null;
+        return URL.createObjectURL(new Blob([sendtDokument], { type: 'application/pdf' }));
+    }, [sendtDokument]);
 
     const erRedigerbarForhåndsvarselFlyt =
         forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
@@ -86,28 +146,19 @@ export const Forhåndsvarsel: FC = () => {
         formState: { isDirty },
     } = methods;
 
-    const oppdaterForhåndsvarselData = async (): Promise<void> => {
+    const etterVellykketLagring = async (): Promise<void> => {
         await queryClient.invalidateQueries({
             queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
         });
-    };
-
-    const etterVellykketLagring = async (): Promise<void> => {
-        await oppdaterForhåndsvarselData();
         navigerTilNeste();
     };
 
-    const sendVarselbrev = useMutation({
-        ...behandlingSendVarselbrevMutation(),
-        onSuccess: oppdaterForhåndsvarselData,
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
-            visGlobalAlert({
-                title: 'Kunne ikke sende forhåndsvarsel',
-                message: error.message,
-                status: 'error',
-            });
-        },
+    const sendVarselbrev = useMutation<
+        unknown,
+        AxiosError<BehandlingSendVarselbrevError>,
+        Options<BehandlingSendVarselbrevData>
+    >({
+        mutationKey: ['sendVarselbrev'],
     });
 
     const lagreUnntak = useMutation({
@@ -303,7 +354,12 @@ export const Forhåndsvarsel: FC = () => {
                 >
                     <HStack align="center" gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
-                        {forhåndsvarselSteg.type === 'sendt' && <VisSendtVarselbrev />}
+                        {forhåndsvarselSteg.type === 'sendt' && varselbrevUrl && (
+                            <VisSendtVarselbrev
+                                varselbrevUrl={varselbrevUrl}
+                                laster={dokumentInfoLaster || sendtDokumentLaster}
+                            />
+                        )}
                     </HStack>
                     <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
                         <Fristinfo

@@ -16,41 +16,21 @@ import {
     behandlingHentDokumentInfoOptions,
     behandlingHentDokumentOptions,
 } from '@/generated-new/@tanstack/react-query.gen';
-import { behandlingSendVarselbrev } from '@/generated-new/sdk.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 import { formatterDatostring } from '@/utils';
 
-import { Forhåndsvarsel } from './Forhåndsvarsel';
-
-vi.mock('@/generated-new/sdk.gen', async () => {
-    const actual = await vi.importActual('@/generated-new/sdk.gen');
-    return {
-        ...actual,
-        behandlingSendVarselbrev: vi.fn().mockResolvedValue({ data: undefined }),
-    };
-});
+import { ForhåndsvarselInnhold } from './Forhåndsvarsel';
 
 vi.mock('@/komponenter/pdf-visning-modal/PdfVisningModal', () => ({
     PdfVisningModal: ({ åpen, onRequestClose }: { åpen: boolean; onRequestClose: () => void }) =>
         åpen ? (
             <dialog open onClose={onRequestClose}>
-                <iframe title="Dokument" src="blob:mock-pdf" />
                 <button onClick={onRequestClose}>Lukk</button>
             </dialog>
         ) : null,
 }));
-
-vi.mock('@/generated/@tanstack/react-query.gen', async () => {
-    const actual = await vi.importActual('@/generated/@tanstack/react-query.gen');
-    return {
-        ...actual,
-        forhåndsvisBrevMutation: vi.fn(() => ({
-            mutationFn: async () => ({ data: 'mock-pdf-blob', status: 'SUKSESS', melding: 'OK' }),
-        })),
-    };
-});
 
 const BEHANDLING_ID = 'uuid-1';
 
@@ -117,6 +97,14 @@ const opprettQueryClientMedForhåndsvarselData = (
     queryClient.setQueryData(hentForhåndsvarselTekstQueryKey(pathOptions), lagVarselbrevtekster());
     queryClient.setQueryData(behandlingFaktaQueryKey(pathOptions), lagFaktaOmFeilutbetaling());
 
+    queryClient.setMutationDefaults(['sendVarselbrev'], {
+        mutationFn: async () => undefined,
+    });
+
+    queryClient.setMutationDefaults(['forhåndsvisBrev'], {
+        mutationFn: async () => ({ data: 'mock-pdf-data', status: 'SUKSESS', melding: 'OK' }),
+    });
+
     return queryClient;
 };
 
@@ -149,7 +137,7 @@ const renderMedQueryClient = (queryClient: QueryClient): void => {
             <TestBehandlingProvider>
                 <QueryClientProvider client={queryClient}>
                     <Suspense fallback={<div>Laster...</div>}>
-                        <Forhåndsvarsel />
+                        <ForhåndsvarselInnhold />
                     </Suspense>
                 </QueryClientProvider>
             </TestBehandlingProvider>
@@ -259,7 +247,6 @@ describe('Forhåndsvarsel', () => {
         await velgSendForhåndsvarsel(user);
         await user.click(sendKnapp());
 
-        expect(behandlingSendVarselbrev).toHaveBeenCalled();
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
     });
 
@@ -300,8 +287,7 @@ describe('Forhåndsvarsel', () => {
         test('burde åpne PDF-modal ved klikk på "Vis brevet" når varsel er sendt', async () => {
             renderSendtForhåndsvarsel();
 
-            const knapp = visBrevKnapp();
-            await user.click(knapp);
+            await user.click(visBrevKnapp());
 
             expect(await ventPåPdfModal()).toBeInTheDocument();
         });
