@@ -7,6 +7,7 @@ import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 import { Brukeruttalelse } from './Brukeruttalelse';
 import { brukeruttalelseSchema, tilUttalelseSkjema } from './brukeruttalelseSchema';
+import { useUlagretForhåndsvarsel } from './useUlagretForhåndsvarsel';
 
 export const BRUKERUTTALELSE_FORM_ID = 'brukeruttalelse-form';
 
@@ -25,6 +26,8 @@ export const SendtVarsel: FC<Props> = ({ brukeruttalelse, uttalelsesfrist, onSub
             brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
         },
     });
+
+    useUlagretForhåndsvarsel(methods);
 
     return (
         <FormProvider {...methods}>

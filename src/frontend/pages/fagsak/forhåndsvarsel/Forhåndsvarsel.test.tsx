@@ -239,13 +239,40 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByText('Retten til å uttale seg')).toBeInTheDocument();
     });
 
-    test.todo('Ja: skal vise bekreftelsesmodal før sending av brev');
+    test('Ja: skal vise bekreftelsesmodal før sending av brev', async () => {
+        renderForhåndsvarsel();
+
+        await velgSendForhåndsvarsel(user);
+        await user.click(sendKnapp());
+
+        const bekreftelsesmodal = await screen.findByRole('dialog', {
+            name: 'Send forhåndsvarselet',
+        });
+        expect(
+            within(bekreftelsesmodal).getByText(
+                'Er du sikker på at du vil sende forhåndsvarselet? Dette kan ikke angres.'
+            )
+        ).toBeInTheDocument();
+        expect(
+            within(bekreftelsesmodal).getByRole('button', { name: 'Send forhåndsvarselet' })
+        ).toBeInTheDocument();
+        expect(
+            within(bekreftelsesmodal).getByRole('button', { name: 'Avbryt' })
+        ).toBeInTheDocument();
+    });
 
     test('Ja: forblir på forhåndsvarsel-steget etter sending av varselbrev', async () => {
         renderForhåndsvarsel();
 
         await velgSendForhåndsvarsel(user);
         await user.click(sendKnapp());
+
+        const bekreftelsesmodal = await screen.findByRole('dialog', {
+            name: 'Send forhåndsvarselet',
+        });
+        await user.click(
+            within(bekreftelsesmodal).getByRole('button', { name: 'Send forhåndsvarselet' })
+        );
 
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
     });
