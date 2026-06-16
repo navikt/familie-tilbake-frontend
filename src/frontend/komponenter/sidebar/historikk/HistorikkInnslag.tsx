@@ -1,5 +1,5 @@
 import type { FC, MouseEvent, ReactNode } from 'react';
-import type { BehandlingsstegEnum } from '@/generated';
+import type { StegEnum } from '@/generated';
 import type { HistorikkInnslag as THistorikkInnslag } from '@/typer/historikk';
 
 import { ExternalLinkIcon } from '@navikt/aksel-icons';
@@ -24,7 +24,7 @@ export const HistorikkInnslag: FC<Props> = ({ innslag }: Props) => {
 
     const lagTittel = (): ReactNode => {
         if (innslag.type === Historikkinnslagstype.Skjermlenke && innslag.steg) {
-            const steg = innslag.steg as BehandlingsstegEnum;
+            const steg = innslag.steg as StegEnum;
             const side = finnSideForSteg(steg);
             return steg && side ? (
                 <Link

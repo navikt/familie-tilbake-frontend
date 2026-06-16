@@ -1,4 +1,4 @@
-import type { BehandlingsstegEnum } from '@/generated';
+import type { StegEnum } from '@/generated';
 
 export type TotrinnGodkjenningOption = {
     verdi: boolean;
@@ -22,7 +22,7 @@ export const totrinnGodkjenningOptions: TotrinnGodkjenningOption[] = [
 
 export type TotrinnStegSkjemaData = {
     index: string;
-    behandlingssteg: BehandlingsstegEnum;
+    behandlingssteg: StegEnum;
     godkjent: TotrinnGodkjenningOption | '';
     begrunnelse?: string;
     harFeilIBegrunnelse?: boolean;

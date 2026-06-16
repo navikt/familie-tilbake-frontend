@@ -7,6 +7,8 @@ export const zBeregningsresultatVurdering = z.enum([
     'Forsett',
     'Uaktsomhet',
     'GrovUaktsomhet',
+    'BurdeForstått',
+    'Forstod',
 ]);
 
 export const zBeregningsresultatsperiode = z.object({
@@ -103,6 +105,16 @@ export const zOppsummeringsdata = z.object({
     sumTilbakekrevesBeløpEtterSkatt: z.string(),
 });
 
+export const zPeriode = z.object({
+    fom: z.iso.date(),
+    tom: z.iso.date(),
+});
+
+export const zPeriodeInfo = z.object({
+    periodeId: z.uuid(),
+    periode: zPeriode,
+});
+
 export const zRentekstElement = z.object({
     tekst: z.string().min(3).max(3000),
 });
@@ -159,6 +171,11 @@ export const zOppdaterFaktaPeriode = z.object({
     rettsligGrunnlag: z.array(zRettsligGrunnlag).min(1),
 });
 
+export const zSammenslaaing = z.object({
+    vilkårsvurderingId: z.uuid(),
+    slåesSammenMedId: z.uuid(),
+});
+
 export const zSendForhaandsvarsel = z.object({
     tekstFraSaksbehandler: z.string(),
 });
@@ -167,6 +184,10 @@ export const zSignatur = z.object({
     enhetNavn: z.string(),
     ansvarligSaksbehandler: z.string(),
     besluttendeSaksbehandler: z.string().nullable(),
+});
+
+export const zSplittPeriode = z.object({
+    vilkårsvurderingId: z.uuid(),
 });
 
 export const zStandardtekst = z.object({
@@ -281,6 +302,11 @@ export const zForhaandsvarselSteg = z.union([
 export const zForhaandsvarselResponse = z.object({
     forhaandsvarselSteg: zForhaandsvarselSteg,
     brukeruttalelse: zUttalelse.nullable(),
+});
+
+export const zUnntak = z.object({
+    begrunnelseForUnntak: zVarslingsunntak,
+    beskrivelse: z.string(),
 });
 
 export const zVedtaksbrevRedigerbareData = z.object({
@@ -495,7 +521,7 @@ export const zBehandlingSendVarselbrevPath = z.object({
     behandlingId: z.uuid(),
 });
 
-export const zBehandlingLagreForhaandsvarselUnntakBody = zForhaandsvarselUnntak;
+export const zBehandlingLagreForhaandsvarselUnntakBody = zUnntak;
 
 export const zBehandlingLagreForhaandsvarselUnntakPath = z.object({
     behandlingId: z.uuid(),
@@ -557,6 +583,27 @@ export const zBehandlingHentVedtaksresultatPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
+
+export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingVilkaarsvurderingsperioderResponse = z.array(zPeriodeInfo);
+
+export const zBehandlingSlaaSammenPerioderBody = zSammenslaaing;
+
+export const zBehandlingSlaaSammenPerioderPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+export const zBehandlingSplittPeriodeBody = zSplittPeriode;
+
+export const zBehandlingSplittPeriodePath = z.object({
+    behandlingId: z.uuid(),
+});
 
 export const zBehandlingHentDokumentInfoPath = z.object({
     behandlingId: z.uuid(),

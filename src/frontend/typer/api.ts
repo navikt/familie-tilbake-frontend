@@ -1,7 +1,7 @@
 import type {
     BehandlingsresultatstypeEnum,
-    BehandlingsstegEnum,
     ForeldelsesvurderingstypeEnum,
+    StegEnum,
     VenteårsakEnum,
 } from '@/generated';
 import type { DokumentMal, HendelseType, HendelseUndertype, Vilkårsresultat } from '@/kodeverk';
@@ -67,7 +67,7 @@ export type ForeslåVedtakStegPayload = {
 };
 
 export type TotrinnsStegVurdering = {
-    behandlingssteg: BehandlingsstegEnum;
+    behandlingssteg: StegEnum;
     godkjent: boolean;
     begrunnelse?: string;
 };
