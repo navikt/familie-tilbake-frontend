@@ -1,26 +1,33 @@
-import type { FieldValues, UseFormReturn } from 'react-hook-form';
+import type { EventType, FieldValues, FormState, InternalFieldName } from 'react-hook-form';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 
-export const useUlagretForhåndsvarsel = <T extends FieldValues>(
-    methods: UseFormReturn<T>
-): void => {
+export const useUlagretForhåndsvarsel = (): void => {
     const { setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
 
-    const { isDirty } = methods.formState;
-    const forrigeDirty = useRef(isDirty);
+    const methods = useFormContext();
 
     useEffect(() => {
-        if (isDirty === forrigeDirty.current) return;
-        forrigeDirty.current = isDirty;
-
-        if (isDirty) {
-            setIkkePersistertKomponent('forhåndsvarsel');
-        } else {
-            nullstillIkkePersisterteKomponenter();
-        }
-    }, [isDirty, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter]);
+        const unsubscribe = methods.subscribe({
+            formState: { isDirty: true },
+            callback: (
+                data: Partial<FormState<FieldValues>> & {
+                    values: FieldValues;
+                    name?: InternalFieldName;
+                    type?: EventType;
+                }
+            ): void => {
+                if (data.isDirty) {
+                    setIkkePersistertKomponent('forhåndsvarsel');
+                } else {
+                    nullstillIkkePersisterteKomponenter();
+                }
+            },
+        });
+        return unsubscribe;
+    }, [methods, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter]);
 };

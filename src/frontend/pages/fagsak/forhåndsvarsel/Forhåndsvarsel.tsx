@@ -52,7 +52,6 @@ import { BRUKERUTTALELSE_FORM_ID, SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { ikkeVurdertSchema } from './schema';
 import { UtsettFristModal } from './UtsettFristModal';
-import { useUlagretForhåndsvarsel } from './useUlagretForhåndsvarsel';
 import { VisSendtVarselbrev } from './VisSendtVarselbrev';
 
 export const Forhåndsvarsel: FC = () => {
@@ -154,8 +153,6 @@ export const ForhåndsvarselInnhold: FC = () => {
     const {
         formState: { isDirty },
     } = methods;
-
-    useUlagretForhåndsvarsel(methods);
 
     const etterVellykketLagring = async (): Promise<void> => {
         await queryClient.invalidateQueries({
@@ -271,14 +268,6 @@ export const ForhåndsvarselInnhold: FC = () => {
         });
     };
 
-    const tilFeilAlert = (error: Error, title: string): void => {
-        visGlobalAlert({
-            title,
-            message: hentFeilmeldingFraError(error),
-            status: 'error',
-        });
-    };
-
     const onBekreftSending = (): void => {
         sendVarselbrev.mutate(
             {
@@ -292,7 +281,11 @@ export const ForhåndsvarselInnhold: FC = () => {
                 // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
                 onError: error => {
                     bekreftelsesmodalRef.current?.close();
-                    tilFeilAlert(error, 'Kunne ikke sende forhåndsvarsel');
+                    visGlobalAlert({
+                        title: 'Kunne ikke sende forhåndsvarsel',
+                        message: hentFeilmeldingFraError(error),
+                        status: 'error',
+                    });
                 },
             }
         );
