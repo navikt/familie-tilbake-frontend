@@ -52,7 +52,7 @@
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-hook-form": "7.79.0",
-    "react-router": "7.17.0",
+    "react-router": "7.18.0",
     "redis": "6.0.0",
     "tailwindcss": "4.3.1",
     "winston": "3.19.0",
