@@ -364,7 +364,7 @@ describe('ForeldelseContainer', () => {
         await user.click(periodeKnapp);
 
         const timelinePeriode = await screen.findByText(
-            'Automatisk vurdert ikke foreldet periode fra 01.01.2020 til 31.03.2020'
+            'Automatisk vurdert: ikke foreldet periode fra 01.01.2020 til 31.03.2020'
         );
         expect(timelinePeriode).toBeInTheDocument();
     });
@@ -382,6 +382,8 @@ describe('ForeldelseContainer', () => {
         renderForeldelseContainer({});
 
         const overskrift = await screen.findByRole('heading', { name: 'Foreldelse' });
-        expect(overskrift.nextElementSibling?.textContent).toBe('Automatisk vurdert ikke foreldet');
+        expect(overskrift.nextElementSibling?.textContent).toBe(
+            'Automatisk vurdert: Ikke foreldet'
+        );
     });
 });

@@ -44,7 +44,7 @@ const periodeStatus = (statusLabel: ForeldelsesvurderingstypeEnum | 'VURDERT'): 
         case 'VURDERT':
             return 'Vurdert';
         case 'AUTOMATISK_VURDERT_IKKE_FORELDET':
-            return 'Automatisk vurdert ikke foreldet';
+            return 'Automatisk vurdert: ikke foreldet';
         case 'IKKE_VURDERT':
         default:
             return 'Ikke vurdert';

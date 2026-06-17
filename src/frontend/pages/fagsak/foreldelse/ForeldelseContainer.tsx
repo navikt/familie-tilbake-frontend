@@ -76,7 +76,7 @@ export const ForeldelseContainer: FC = () => {
                 <Heading size="medium">Foreldelse</Heading>
                 {erAllePerioderAutomatiskVurdert && (
                     <Tag variant="moderate" data-color="success">
-                        Automatisk vurdert ikke foreldet
+                        Automatisk vurdert: Ikke foreldet
                     </Tag>
                 )}
             </HStack>

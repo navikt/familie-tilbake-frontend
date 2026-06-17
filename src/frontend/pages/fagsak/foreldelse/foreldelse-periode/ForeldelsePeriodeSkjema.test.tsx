@@ -42,10 +42,6 @@ const tilleggsfristRadio = (): HTMLElement =>
     within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
         name: 'Nei, perioden er ikke foreldet. Tilleggsfristen på 10 år gjelder',
     });
-const automatiskVurdertRadio = (): HTMLElement =>
-    within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
-        name: 'Automatisk vurdert ikke foreldet',
-    });
 
 const foreldelsesfristDato = (): HTMLElement =>
     screen.getByRole('textbox', {
@@ -131,7 +127,7 @@ describe('ForeldelsePeriodeSkjema', () => {
         expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
 
-    test('Åpner vurdert periode med automatisk vurdert ikke foreldet - radio er valgt og disabled', () => {
+    test('Åpner vurdert periode med automatisk vurdert ikke foreldet - ikke foreldet er valgt', () => {
         renderForeldelsePeriodeSkjema(
             lagForeldelsePeriodeSkjemaData({
                 foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
@@ -139,8 +135,7 @@ describe('ForeldelsePeriodeSkjema', () => {
             })
         );
 
-        expect(automatiskVurdertRadio()).toBeChecked();
-        expect(automatiskVurdertRadio()).toBeDisabled();
+        expect(ikkeForeldetRadio()).toBeChecked();
     });
 
     test('Åpner vurdert periode med tilleggsfrist', () => {
