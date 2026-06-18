@@ -41,7 +41,12 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
-        skjema.felter.foreldelsesvurderingstype.onChange(periode?.foreldelsesvurderingstype || '');
+        const foreldelsesvurderingstype = periode?.foreldelsesvurderingstype;
+        const vurderingstype =
+            foreldelsesvurderingstype === 'AUTOMATISK_VURDERT_IKKE_FORELDET'
+                ? 'IKKE_FORELDET'
+                : foreldelsesvurderingstype || '';
+        skjema.felter.foreldelsesvurderingstype.onChange(vurderingstype);
         skjema.felter.foreldelsesfrist.onChange(
             periode?.foreldelsesfrist ? isoStringTilDate(periode.foreldelsesfrist) : undefined
         );

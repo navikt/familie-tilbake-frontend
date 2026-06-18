@@ -363,6 +363,8 @@ export type {
     ManuellBrevmottakerResponsDto,
     MigrerAlleSakerData,
     MigrerAlleSakerResponses,
+    MottakersForståelseEntity,
+    MottakersForståelseEnum,
     OppdagetEntity,
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponse,

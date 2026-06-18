@@ -556,6 +556,8 @@ export const zVurderingTypeEnum = z.enum([
     'KOPIERT_VURDERING',
 ]);
 
+export const zKanUnnlatesEnum = z.enum(['UNNLATES', 'SKAL_IKKE_UNNLATES', 'OVER_4_RETTSGEBYR']);
+
 export const zFeilaktigEllerMangelfullEnum = z.enum(['FEILAKTIG', 'MANGELFULL']);
 
 export const zAktørTypeEnum = z.enum([
@@ -665,6 +667,7 @@ export const zEksternFagsakBehandlingEntity = z.object({
     getårsakTilFeilutbetaling: z.string().optional(),
     vedtaksdato: z.iso.date().nullish(),
     utvidedePerioder: z.array(zUtvidetPeriodeEntity).nullish(),
+    url: z.string().nullish(),
 });
 
 export const zRettsligGrunnlagEnum = z.enum([
@@ -916,6 +919,14 @@ export const zKravgrunnlagHendelseEntity = z.object({
     perioder: z.array(zKravgrunnlagPeriodeEntity),
 });
 
+export const zMottakersForståelseEnum = z.enum(['FORSTOD', 'BURDE_FORSTÅTT', 'MÅTTE_FORSTÅ']);
+
+export const zMottakersForståelseEntity = z.object({
+    periodeRef: z.uuid(),
+    mottakersForståelse: zMottakersForståelseEnum,
+    begrunnelse: z.string(),
+});
+
 export const zAvEnum = z.enum(['Nav', 'Bruker']);
 
 export const zOppdagetEntity = z.object({
@@ -987,22 +998,21 @@ export const zAktsomhetTypeEnum = z.enum([
     'IKKE_UTVIST_SKYLD',
 ]);
 
-export const zKanUnnlatesEnum = z.enum(['UNNLATES', 'SKAL_IKKE_UNNLATES', 'OVER_4_RETTSGEBYR']);
-
 export const zVurdertAktsomhetEntity = z.object({
     periodeRef: z.uuid(),
     aktsomhetType: zAktsomhetTypeEnum,
     begrunnelse: z.string(),
     skalIleggesRenter: z.boolean().nullish(),
-    særligGrunner: zSærligeGrunnerEntity.nullish(),
-    kanUnnlates: zKanUnnlatesEnum.optional(),
 });
 
 export const zAktsomhetsvurderingEntity = z.object({
     vurderingType: zVurderingTypeEnum,
+    mottakersForståelse: zMottakersForståelseEntity.nullish(),
     begrunnelse: z.string().nullish(),
     beløpIBehold: zGodTroEntity.nullish(),
     aktsomhet: zVurdertAktsomhetEntity.nullish(),
+    kanUnnlates: zKanUnnlatesEnum.optional(),
+    særligGrunner: zSærligeGrunnerEntity.nullish(),
     feilaktigEllerMangelfull: zFeilaktigEllerMangelfullEnum.optional(),
     forrigePeriodeId: z.uuid().nullish(),
 });
@@ -1259,6 +1269,7 @@ export const zAktsomhetDto = z.object({
 
 export const zForeldelsesvurderingstypeEnum = z.enum([
     'IKKE_VURDERT',
+    'AUTOMATISK_VURDERT_IKKE_FORELDET',
     'FORELDET',
     'IKKE_FORELDET',
     'TILLEGGSFRIST',
@@ -1451,6 +1462,7 @@ export const zFagsakDto = z.object({
     bruker: zFrontendBrukerDto,
     behandlinger: z.array(zBehandlingsoppsummeringDto),
     institusjon: zInstitusjonDto.nullish(),
+    fagsakBehandlingUrl: z.string().nullish(),
 });
 
 export const zRessursFagsakDto = z.object({
@@ -1671,6 +1683,7 @@ export const zRessursListJournalpost = z.object({
 
 export const zForeldelsesvurderingstypeEnum2 = z.enum([
     'IKKE_VURDERT',
+    'AUTOMATISK_VURDERT_IKKE_FORELDET',
     'FORELDET',
     'IKKE_FORELDET',
     'TILLEGGSFRIST',
