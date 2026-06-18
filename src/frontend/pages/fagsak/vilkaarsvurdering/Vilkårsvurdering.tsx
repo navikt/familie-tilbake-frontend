@@ -12,6 +12,7 @@ import {
     XMarkIcon,
 } from '@navikt/aksel-icons';
 import { Box, Heading, HStack, Tag, type TagProps, VStack } from '@navikt/ds-react';
+import { useState } from 'react';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
@@ -113,6 +114,7 @@ const perioder = Array.from({ length: 5 }, (_, i) => {
 });
 
 export const Vilkårsvurdering: FC = () => {
+    const [valgtPeriodeId, setValgtPeriodeId] = useState(0);
     return (
         <VStack gap="space-24" className="min-h-0 h-full">
             <HStack justify="space-between">
@@ -124,7 +126,7 @@ export const Vilkårsvurdering: FC = () => {
             </HStack>
             <div className="grid grid-cols-1 ax-md:grid-cols-3 gap-4 ax-md:h-full min-h-0">
                 {/* TODO child av section er egen komponent */}
-                <section className="col-span-1 ax-md:col-span-1 gap-2 flex flex-col overflow-y-auto min-h-0 scrollbar-stable">
+                <section className="col-span-1 ax-md:col-span-1 gap-2 flex flex-col overflow-y-auto min-h-0">
                     {/* TODO hent perioder */}
                     <HStack justify="space-between" align="center">
                         <Heading size="small" level="2">
@@ -133,48 +135,53 @@ export const Vilkårsvurdering: FC = () => {
                         {perioder.filter(periode => periode.vurdert).length} av {perioder.length}{' '}
                         vurdert
                     </HStack>
-                    {/* TODO forskjellig styling på uvalgt, hover og valgt periode, mapper alle periodene */}
-                    <div className="grid grid-cols-1 ax-sm:grid-cols-2 ax-md:grid-cols-1 gap-2">
-                        {perioder.map((periode, index) => (
-                            <Box
-                                key={periode.id}
-                                className={`rounded-xl p-4 gap-2 flex flex-col ${
-                                    index === 0
-                                        ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
-                                        : 'border border-ax-border-neutral-subtle'
-                                }`}
-                            >
-                                <HStack gap="space-8">
-                                    <Tag
-                                        variant="moderate"
-                                        icon={vurdering[periode.vurdering].icon}
-                                        size="small"
-                                        className="w-fit"
-                                        data-color={vurdering[periode.vurdering]['data-color']}
-                                    >
-                                        {vurdering[periode.vurdering].label}
-                                    </Tag>
-                                    {periode.resultat && (
+                    <ul className="grid grid-cols-1 ax-sm:grid-cols-2 ax-md:grid-cols-1 gap-2">
+                        {perioder.map(periode => (
+                            <li key={periode.id} className="flex min-h-11">
+                                <button
+                                    onClick={(): void => setValgtPeriodeId(periode.id)}
+                                    aria-pressed={periode.id === valgtPeriodeId}
+                                    aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}. Resultat: ${resultat[periode.resultat].label}. Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
+                                    className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
+                                        periode.id === valgtPeriodeId
+                                            ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft focus:ring-ax-focus-color'
+                                            : 'border border-ax-border-neutral-subtle hover:border-ax-border-neutral focus:ring-ax-focus-color'
+                                    }`}
+                                >
+                                    <HStack gap="space-8">
                                         <Tag
                                             variant="moderate"
-                                            icon={resultat[periode.resultat].icon}
+                                            icon={vurdering[periode.vurdering].icon}
                                             size="small"
                                             className="w-fit"
-                                            data-color={resultat[periode.resultat]['data-color']}
+                                            data-color={vurdering[periode.vurdering]['data-color']}
                                         >
-                                            {resultat[periode.resultat].label}
+                                            {vurdering[periode.vurdering].label}
                                         </Tag>
-                                    )}
-                                </HStack>
-                                <span className="font-ax-bold text-xl">
-                                    {periode.fom}–{periode.tom}
-                                </span>
-                                <span className="text-ax-text-brand-magenta">
-                                    Feilutbetalt: {formatCurrencyNoKr(periode.feilutbetalt)}
-                                </span>
-                            </Box>
+                                        {periode.resultat && (
+                                            <Tag
+                                                variant="moderate"
+                                                icon={resultat[periode.resultat].icon}
+                                                size="small"
+                                                className="w-fit"
+                                                data-color={
+                                                    resultat[periode.resultat]['data-color']
+                                                }
+                                            >
+                                                {resultat[periode.resultat].label}
+                                            </Tag>
+                                        )}
+                                    </HStack>
+                                    <span className="font-ax-bold text-xl">
+                                        {periode.fom}–{periode.tom}
+                                    </span>
+                                    <span className="font-semibold text-ax-text-brand-magenta">
+                                        Feilutbetalt: {formatCurrencyNoKr(periode.feilutbetalt)}
+                                    </span>
+                                </button>
+                            </li>
                         ))}
-                    </div>
+                    </ul>
                 </section>
                 {/* TODO child av section er egen komponent */}
                 <section className="col-span-1 ax-md:col-span-2 h-full">
