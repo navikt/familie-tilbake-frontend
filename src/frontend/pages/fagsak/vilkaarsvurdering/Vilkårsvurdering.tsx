@@ -11,6 +11,10 @@ import {
 import { Heading, HStack, Tag, type TagProps, VStack } from '@navikt/ds-react';
 import { useState } from 'react';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { useStegNavigering } from '@/utils/sider';
+
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
 import { VilkårsvurderingPeriodeListe } from './VilkårsvurderingPeriodeListe';
 
@@ -92,7 +96,19 @@ const perioder = Array.from({ length: 5 }, (_, i) => {
 });
 
 export const Vilkårsvurdering: FC = () => {
+    const { actionBarStegtekst } = useBehandlingState();
+    const navigerTilForrige = useStegNavigering('FORELDELSE');
+    const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
     const [valgtPeriodeId, setValgtPeriodeId] = useState(0);
+
+    useActionBar({
+        stegtekst: actionBarStegtekst('VILKÅRSVURDERING'),
+        forrigeAriaLabel: 'Gå tilbake til foreldelsessteget',
+        onForrige: navigerTilForrige,
+        nesteAriaLabel: 'Gå videre til vedtakssteget',
+        onNeste: navigerTilNeste,
+    });
+
     return (
         <VStack gap="space-24" className="min-h-0 h-full">
             <HStack justify="space-between">
