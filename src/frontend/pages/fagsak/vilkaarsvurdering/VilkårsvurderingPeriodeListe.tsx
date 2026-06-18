@@ -38,7 +38,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     onSelectPeriode,
 }: Props) => {
     return (
-        <section className="col-span-1 ax-md:col-span-1 gap-2 flex flex-col overflow-y-auto min-h-0">
+        <section className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2">
             <HStack justify="space-between" align="center">
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}

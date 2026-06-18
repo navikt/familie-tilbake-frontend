@@ -6,11 +6,11 @@ import { DelPeriode } from './del-periode/DelPeriode';
 
 export const VilkårsvurderingDetaljer: FC = () => {
     return (
-        <section className="col-span-1 ax-md:col-span-2 h-full">
-            <Box className="border border-ax-default rounded-xl border-ax-border-neutral-subtle h-full">
+        <section className="flex-2 min-h-0">
+            <Box className="border border-ax-default rounded-xl border-ax-border-neutral-subtle h-full flex flex-col">
                 <HStack
                     justify="space-between"
-                    className="border-b py-3 px-4 border-ax-border-neutral-subtle"
+                    className="border-b py-3 px-4 border-ax-border-neutral-subtle shrink-0"
                 >
                     <Heading size="small" level="2">
                         Periode: 01.01.2025–31.12.2025
@@ -27,7 +27,7 @@ export const VilkårsvurderingDetaljer: FC = () => {
                         }}
                     />
                 </HStack>
-                <div className="py-3 px-4">Innhold for periode</div>
+                <div className="py-3 px-4 overflow-y-auto">Innhold for periode</div>
             </Box>
         </section>
     );

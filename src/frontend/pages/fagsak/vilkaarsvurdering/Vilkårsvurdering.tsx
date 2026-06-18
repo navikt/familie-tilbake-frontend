@@ -102,7 +102,7 @@ export const Vilkårsvurdering: FC = () => {
                     Vurdert
                 </Tag>
             </HStack>
-            <div className="grid grid-cols-1 ax-md:grid-cols-3 gap-4 ax-md:h-full min-h-0">
+            <div className="flex flex-col ax-md:flex-row gap-4 min-h-0 h-full">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
                     valgtPeriodeId={valgtPeriodeId}
