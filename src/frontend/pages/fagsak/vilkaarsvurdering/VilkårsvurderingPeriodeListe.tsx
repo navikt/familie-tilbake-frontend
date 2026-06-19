@@ -38,7 +38,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     onSelectPeriode,
 }: Props) => {
     return (
-        <section className="flex-1 min-h-0 overflow-y-hidden scrollbar-stable hover:overflow-y-auto flex flex-col gap-2">
+        <section className="flex-1 min-h-0 scrollbar-stable flex flex-col gap-2 px-1">
             <HStack justify="space-between" align="center">
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}
@@ -54,8 +54,8 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}. Resultat: ${resultat[periode.resultat].label}. Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
                                 periode.id === valgtPeriodeId
-                                    ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft focus:ring-ax-focus-color'
-                                    : 'border border-ax-border-neutral-subtle hover:border-ax-border-neutral focus:ring-ax-focus-color'
+                                    ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
+                                    : 'border border-ax-border-neutral-subtle hover:border-ax-border-neutral'
                             }`}
                         >
                             <HStack gap="space-8">
