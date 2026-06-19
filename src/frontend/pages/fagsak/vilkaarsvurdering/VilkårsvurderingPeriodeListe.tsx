@@ -22,7 +22,7 @@ const resultat: Record<VedtaksresultatEnum, PeriodeTag> = {
     INGEN_TILBAKEBETALING: {
         label: 'Ingen tilbakebetaling',
         icon: <ArrowUndoIcon aria-hidden />,
-        'data-color': 'success',
+        'data-color': 'info',
     },
 };
 
@@ -38,7 +38,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     onSelectPeriode,
 }: Props) => {
     return (
-        <section className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2">
+        <section className="flex-1 min-h-0 overflow-y-hidden scrollbar-stable hover:overflow-y-auto flex flex-col gap-2">
             <HStack justify="space-between" align="center">
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}
