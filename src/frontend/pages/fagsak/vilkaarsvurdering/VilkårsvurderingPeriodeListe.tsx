@@ -10,19 +10,19 @@ import { type PeriodeTag, type Vilkårsperiode, vurdering } from './Vilkårsvurd
 
 const resultat: Record<VedtaksresultatEnum, PeriodeTag> = {
     FULL_TILBAKEBETALING: {
-        label: 'Full tilbakebetaling',
+        label: 'Full tilbakekreving',
         icon: <ArrowUndoIcon aria-hidden />,
         'data-color': 'brand-magenta',
     },
     DELVIS_TILBAKEBETALING: {
-        label: 'Delvis tilbakebetaling',
+        label: 'Delvis tilbakekreving',
         icon: <PercentIcon aria-hidden />,
         'data-color': 'meta-purple',
     },
     INGEN_TILBAKEBETALING: {
-        label: 'Ingen tilbakebetaling',
+        label: 'Ingen tilbakekreving',
         icon: <XMarkIcon aria-hidden />,
-        'data-color': 'info',
+        'data-color': 'success',
     },
 };
 
