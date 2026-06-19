@@ -11,17 +11,17 @@ import { type PeriodeTag, type Vilkårsperiode, vurdering } from './Vilkårsvurd
 const resultat: Record<VedtaksresultatEnum, PeriodeTag> = {
     FULL_TILBAKEBETALING: {
         label: 'Full tilbakebetaling',
-        icon: <XMarkIcon aria-hidden />,
+        icon: <ArrowUndoIcon aria-hidden />,
         'data-color': 'brand-magenta',
     },
     DELVIS_TILBAKEBETALING: {
         label: 'Delvis tilbakebetaling',
         icon: <PercentIcon aria-hidden />,
-        'data-color': 'meta-lime',
+        'data-color': 'meta-purple',
     },
     INGEN_TILBAKEBETALING: {
         label: 'Ingen tilbakebetaling',
-        icon: <ArrowUndoIcon aria-hidden />,
+        icon: <XMarkIcon aria-hidden />,
         'data-color': 'info',
     },
 };
@@ -83,7 +83,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             <span className="font-ax-bold text-xl">
                                 {periode.fom}–{periode.tom}
                             </span>
-                            <span className="font-semibold text-ax-text-brand-magenta">
+                            <span className="text-ax-text-brand-magenta">
                                 Feilutbetalt: {formatCurrencyNoKr(periode.feilutbetalt)}
                             </span>
                         </button>
