@@ -57,7 +57,7 @@ const renderForeldelseContainer = ({
     );
 };
 
-const foreldelsesperioder = [
+const foreldelsesperioder: ForeldelsePeriode[] = [
     lagForeldelsePeriode({
         feilutbetaltBeløp: 1333,
         periode: {
@@ -72,7 +72,7 @@ const foreldelsesperioder = [
             tom: '2020-06-30',
         },
     }),
-];
+] satisfies ForeldelsePeriode[];
 
 const setupMock = (foreldelse: ForeldelseResponse): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
@@ -106,6 +106,12 @@ const andreVurdertePeriode: ForeldelsePeriode = {
     foreldelsesvurderingstype: 'TILLEGGSFRIST',
     foreldelsesfrist: '2021-01-01',
     oppdagelsesdato: '2020-12-24',
+} satisfies ForeldelsePeriode;
+
+const automatiskVurdertPeriode: ForeldelsePeriode = {
+    ...foreldelsesperioder[0],
+    begrunnelse: 'Automatisk vurdert',
+    foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
 } satisfies ForeldelsePeriode;
 
 const gåTilbakeKnapp = (): HTMLElement =>
@@ -345,5 +351,39 @@ describe('ForeldelseContainer', () => {
             expect(await screen.findByRole('button', gåVidereTekst)).toBeInTheDocument();
             expect(gåTilbakeKnapp()).toBeInTheDocument();
         });
+    });
+
+    test('Tidslinje-periode for AUTOMATISK_VURDERT_IKKE_FORELDET har periodestatus success og riktig tekst', async () => {
+        setupMock(lagForeldelseResponse({ foreldetPerioder: [automatiskVurdertPeriode] }));
+        renderForeldelseContainer({ behandlet: true });
+
+        const periodeKnapp = await screen.findByRole('button', {
+            name: /fra 01.01.2020 til 31.03.2020/i,
+        });
+
+        await user.click(periodeKnapp);
+
+        const timelinePeriode = await screen.findByText(
+            'Automatisk vurdert: ikke foreldet periode fra 01.01.2020 til 31.03.2020'
+        );
+        expect(timelinePeriode).toBeInTheDocument();
+    });
+
+    test('Viser tag når alle perioder er AUTOMATISK_VURDERT_IKKE_FORELDET', async () => {
+        const alleAutomatiskVurdertePerioder = foreldelsesperioder.map(
+            periode =>
+                ({
+                    ...periode,
+                    foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
+                    begrunnelse: 'Automatisk vurdert',
+                }) satisfies ForeldelsePeriode
+        );
+        setupMock(lagForeldelseResponse({ foreldetPerioder: alleAutomatiskVurdertePerioder }));
+        renderForeldelseContainer({});
+
+        const overskrift = await screen.findByRole('heading', { name: 'Foreldelse' });
+        expect(overskrift.nextElementSibling?.textContent).toBe(
+            'Automatisk vurdert: Ikke foreldet'
+        );
     });
 });

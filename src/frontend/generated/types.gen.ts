@@ -53,9 +53,12 @@ export type OppdaterBehandlendeEnhetRequest = {
 
 export type AktsomhetsvurderingEntity = {
     vurderingType: VurderingTypeEnum;
+    mottakersForståelse?: MottakersForståelseEntity | null;
     begrunnelse?: string | null;
     beløpIBehold?: GodTroEntity | null;
     aktsomhet?: VurdertAktsomhetEntity | null;
+    kanUnnlates?: KanUnnlatesEnum;
+    særligGrunner?: SærligeGrunnerEntity | null;
     feilaktigEllerMangelfull?: FeilaktigEllerMangelfullEnum;
     forrigePeriodeId?: string | null;
 };
@@ -143,6 +146,7 @@ export type EksternFagsakBehandlingEntity = {
     getårsakTilFeilutbetaling?: string;
     vedtaksdato?: string | null;
     utvidedePerioder?: Array<UtvidetPeriodeEntity> | null;
+    url?: string | null;
 };
 
 export type EksternFagsakEntity = {
@@ -261,6 +265,12 @@ export type KravgrunnlagPeriodeEntity = {
     beløp: Array<BeløpEntity>;
 };
 
+export type MottakersForståelseEntity = {
+    periodeRef: string;
+    mottakersForståelse: MottakersForståelseEnum;
+    begrunnelse: string;
+};
+
 export type OppdagetEntity = {
     id: string;
     faktavurderingRef: string;
@@ -360,8 +370,6 @@ export type VurdertAktsomhetEntity = {
     aktsomhetType: AktsomhetTypeEnum;
     begrunnelse: string;
     skalIleggesRenter?: boolean | null;
-    særligGrunner?: SærligeGrunnerEntity | null;
-    kanUnnlates?: KanUnnlatesEnum;
 };
 
 export type VurdertStegEntity = {
@@ -777,6 +785,7 @@ export type FagsakDto = {
     bruker: FrontendBrukerDto;
     behandlinger: Array<BehandlingsoppsummeringDto>;
     institusjon?: InstitusjonDto | null;
+    fagsakBehandlingUrl?: string | null;
 };
 
 export type FrontendBrukerDto = {
@@ -1303,6 +1312,8 @@ export type VurderingTypeEnum =
     | 'FORÅRSAKET_AV_BRUKER'
     | 'KOPIERT_VURDERING';
 
+export type KanUnnlatesEnum = 'UNNLATES' | 'SKAL_IKKE_UNNLATES' | 'OVER_4_RETTSGEBYR';
+
 export type FeilaktigEllerMangelfullEnum = 'FEILAKTIG' | 'MANGELFULL';
 
 export type AktørTypeEnum = 'Person' | 'Organisasjon' | 'Samhandler' | 'Applikasjonsbruker';
@@ -1518,6 +1529,8 @@ export type KravstatuskodeEnum =
     | 'NY'
     | 'SPERRET';
 
+export type MottakersForståelseEnum = 'FORSTOD' | 'BURDE_FORSTÅTT' | 'MÅTTE_FORSTÅ';
+
 export type AvEnum = 'Nav' | 'Bruker';
 
 export type TypeEnum6 = 'Ja' | 'Nei';
@@ -1536,8 +1549,6 @@ export type AktsomhetTypeEnum =
     | 'GROV_UAKTSOMHET'
     | 'FORSETT'
     | 'IKKE_UTVIST_SKYLD';
-
-export type KanUnnlatesEnum = 'UNNLATES' | 'SKAL_IKKE_UNNLATES' | 'OVER_4_RETTSGEBYR';
 
 export type StegEnum =
     | 'VARSEL'
@@ -1591,6 +1602,7 @@ export type Unnlates4RettsgebyrEnum = 'UNNLATES' | 'TILBAKEKREVES' | 'OVER_4_RET
 
 export type ForeldelsesvurderingstypeEnum =
     | 'IKKE_VURDERT'
+    | 'AUTOMATISK_VURDERT_IKKE_FORELDET'
     | 'FORELDET'
     | 'IKKE_FORELDET'
     | 'TILLEGGSFRIST';
@@ -1700,6 +1712,7 @@ export type JournalstatusEnum =
 
 export type ForeldelsesvurderingstypeEnum2 =
     | 'IKKE_VURDERT'
+    | 'AUTOMATISK_VURDERT_IKKE_FORELDET'
     | 'FORELDET'
     | 'IKKE_FORELDET'
     | 'TILLEGGSFRIST';

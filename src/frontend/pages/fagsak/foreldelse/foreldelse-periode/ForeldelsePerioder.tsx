@@ -14,6 +14,7 @@ const finnPeriodeStatus = (periode: ForeldelsePeriode): TimelinePeriodProps['sta
             return 'warning';
         case 'TILLEGGSFRIST':
         case 'IKKE_FORELDET':
+        case 'AUTOMATISK_VURDERT_IKKE_FORELDET':
             return 'success';
         case 'IKKE_VURDERT':
         default:
