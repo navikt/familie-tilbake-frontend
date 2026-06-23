@@ -42,6 +42,7 @@ import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
 import { VilkårsvurderingProvider } from './vilkaarsvurdering/gammel-vilkårsvurdering/VilkårsvurderingContext';
 import { Vilkårsvurdering } from './vilkaarsvurdering/Vilkårsvurdering';
+import { VilkårsvurderingSkeleton } from './vilkaarsvurdering/VilkårsvurderingSkeleton';
 
 const BrevmottakerContainer = lazyImportMedRetry(
     () => import('./brevmottaker/Brevmottakere'),
@@ -290,7 +291,11 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                             element={
                                 behandling.erNyModell && toggles[ToggleName.Vilkårsvurdering] ? (
-                                    <Vilkårsvurdering />
+                                    <StegErrorBoundary steg={SYNLIGE_STEG.VILKÅRSVURDERING}>
+                                        <Suspense fallback={<VilkårsvurderingSkeleton />}>
+                                            <Vilkårsvurdering />
+                                        </Suspense>
+                                    </StegErrorBoundary>
                                 ) : (
                                     <VilkårsvurderingProvider>
                                         <VilkårsvurderingContainer />
