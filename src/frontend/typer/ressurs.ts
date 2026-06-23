@@ -90,5 +90,8 @@ export const byggFeiletRessurs = <T>(
 
 export const hentFeilmeldingFraError = (error: unknown, fallback = 'Ukjent feil'): string => {
     const axiosError = error as AxiosError<ApiRessurs<unknown>>;
-    return axiosError.response?.data?.frontendFeilmelding ?? axiosError.message ?? fallback;
+    const data = axiosError.response?.data;
+    return (
+        data?.frontendFeilmelding ?? (data as { melding?: string } | undefined)?.melding ?? fallback
+    );
 };

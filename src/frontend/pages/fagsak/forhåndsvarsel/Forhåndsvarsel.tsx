@@ -1,6 +1,5 @@
 import type { AxiosError } from 'axios';
 import type { FC } from 'react';
-import type { SubmitHandler } from 'react-hook-form';
 import type { Options } from '@/generated-new/sdk.gen';
 import type { IkkeVurdertFormData } from './schema';
 
@@ -8,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -35,7 +34,9 @@ import {
     behandlingUtsettUttalelsesfristMutation,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { useActionBar } from '@/hooks/useActionBar';
+import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { hentFeilmeldingFraError } from '@/typer/ressurs';
 import { formatterDatostring } from '@/utils';
 import { useStegNavigering } from '@/utils/sider';
 
@@ -64,12 +65,18 @@ export const Forhåndsvarsel: FC = () => {
             await queryClient.invalidateQueries({
                 queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
             });
+            visGlobalAlert({
+                title: 'Forhåndsvarsel er sendt',
+                message:
+                    'Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen for å uttale seg (3 uker) har gått ut.',
+                status: 'success',
+            });
         },
         // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke sende forhåndsvarsel',
-                message: error.message,
+                message: hentFeilmeldingFraError(error),
                 status: 'error',
             });
         },
@@ -90,6 +97,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
     const utsettFristModalRef = useRef<HTMLDialogElement>(null);
+    const bekreftelsesmodalRef = useRef<HTMLDialogElement>(null);
 
     const { data: response } = useSuspenseQuery(
         behandlingForhandsvarselOptions({
@@ -168,7 +176,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke lagre unntak',
-                message: error.message,
+                message: hentFeilmeldingFraError(error),
                 status: 'error',
             });
         },
@@ -198,7 +206,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke lagre unntak',
-                message: error.message,
+                message: hentFeilmeldingFraError(error),
                 status: 'error',
             });
         },
@@ -211,7 +219,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke lagre brukeruttalelse',
-                message: error.message,
+                message: hentFeilmeldingFraError(error),
                 status: 'error',
             });
         },
@@ -238,7 +246,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         onError: error => {
             visGlobalAlert({
                 title: 'Kunne ikke utsette fristen',
-                message: error.message,
+                message: hentFeilmeldingFraError(error),
                 status: 'error',
             });
         },
@@ -260,13 +268,32 @@ export const ForhåndsvarselInnhold: FC = () => {
         });
     };
 
+    const onBekreftSending = (): void => {
+        sendVarselbrev.mutate(
+            {
+                path: { behandlingId },
+                body: { tekstFraSaksbehandler: methods.getValues('tekstFraSaksbehandler') },
+            },
+            {
+                onSuccess: () => {
+                    bekreftelsesmodalRef.current?.close();
+                },
+                // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
+                onError: error => {
+                    bekreftelsesmodalRef.current?.close();
+                    visGlobalAlert({
+                        title: 'Kunne ikke sende forhåndsvarsel',
+                        message: hentFeilmeldingFraError(error),
+                        status: 'error',
+                    });
+                },
+            }
+        );
+    };
+
     const onSubmit: SubmitHandler<IkkeVurdertFormData> = (data: IkkeVurdertFormData): void => {
         if (data.valg === 'send') {
-            //TODO: trenger en bekreftelsesmodal her
-            sendVarselbrev.mutate({
-                path: { behandlingId },
-                body: { tekstFraSaksbehandler: data.tekstFraSaksbehandler },
-            });
+            bekreftelsesmodalRef.current?.showModal();
         } else if (data.begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && data.brukeruttalelse) {
             lagreUnntakMedUttalelse.mutate({
                 unntak: {
@@ -388,6 +415,17 @@ export const ForhåndsvarselInnhold: FC = () => {
                 dialogRef={utsettFristModalRef}
                 onUtsettFrist={sendUtsettFrist}
                 laster={utsettFrist.isPending}
+            />
+            <Bekreftelsesmodal
+                dialogRef={bekreftelsesmodalRef}
+                tekster={{
+                    overskrift: 'Send forhåndsvarselet',
+                    brødtekst:
+                        'Er du sikker på at du vil sende forhåndsvarselet? Dette kan ikke angres.',
+                    bekreftTekst: 'Send forhåndsvarselet',
+                }}
+                laster={sendVarselbrev.isPending}
+                onBekreft={onBekreftSending}
             />
         </VStack>
     );

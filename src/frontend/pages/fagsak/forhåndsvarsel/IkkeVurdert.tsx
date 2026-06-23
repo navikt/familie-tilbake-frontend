@@ -16,6 +16,7 @@ import { formatterDatostringLangt } from '@/utils/dateUtils';
 
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { Unntak } from './Unntak';
+import { useUlagretForhåndsvarsel } from './useUlagretForhåndsvarsel';
 
 export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
@@ -33,6 +34,8 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
 export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();
+
+    useUlagretForhåndsvarsel();
 
     const {
         register,
@@ -71,7 +74,7 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }: Props) => {
         target: { value: 'send' | 'unntak' };
     }): Promise<void> => {
         await onChange(event);
-        onValgEndring?.(event.target.value as 'send' | 'unntak');
+        onValgEndring?.(event.target.value);
     };
 
     return (

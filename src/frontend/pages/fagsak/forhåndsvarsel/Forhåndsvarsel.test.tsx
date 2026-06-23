@@ -168,6 +168,9 @@ const nesteKnapp = (): HTMLElement =>
 
 const sendKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Send forhåndsvarselet' });
 
+const bekreftelsesmodal = (): Promise<HTMLElement> =>
+    screen.findByRole('dialog', { name: 'Send forhåndsvarselet' });
+
 const unntakRadiogruppe = (): HTMLElement =>
     screen.getByRole('radiogroup', {
         name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
@@ -239,13 +242,32 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByText('Retten til å uttale seg')).toBeInTheDocument();
     });
 
-    test.todo('Ja: skal vise bekreftelsesmodal før sending av brev');
+    test('Ja: skal vise bekreftelsesmodal før sending av brev', async () => {
+        renderForhåndsvarsel();
+
+        await velgSendForhåndsvarsel(user);
+        await user.click(sendKnapp());
+
+        const modal = await bekreftelsesmodal();
+        expect(
+            within(modal).getByText(
+                'Er du sikker på at du vil sende forhåndsvarselet? Dette kan ikke angres.'
+            )
+        ).toBeInTheDocument();
+        expect(
+            within(modal).getByRole('button', { name: 'Send forhåndsvarselet' })
+        ).toBeInTheDocument();
+        expect(within(modal).getByRole('button', { name: 'Avbryt' })).toBeInTheDocument();
+    });
 
     test('Ja: forblir på forhåndsvarsel-steget etter sending av varselbrev', async () => {
         renderForhåndsvarsel();
 
         await velgSendForhåndsvarsel(user);
         await user.click(sendKnapp());
+
+        const modal = await bekreftelsesmodal();
+        await user.click(within(modal).getByRole('button', { name: 'Send forhåndsvarselet' }));
 
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
     });
