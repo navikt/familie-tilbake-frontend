@@ -78,12 +78,7 @@ const router = createBrowserRouter(
                 <Route path="*" element={<IkkeFunnet />} />
             </Route>
         </Route>
-    ),
-    {
-        future: {
-            v8_middlerware: true,
-        },
-    }
+    )
 );
 
 export const App: FC = () => {
