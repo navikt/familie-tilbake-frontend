@@ -15,12 +15,14 @@ import {
     behandlingHentVedtaksresultat,
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
+    behandlingLagreVilkaarsvurdering,
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
     behandlingSendVarselbrev,
     behandlingSlaaSammenPerioder,
     behandlingSplittPeriode,
     behandlingUtsettUttalelsesfrist,
+    behandlingVilkaarsvurdering,
     behandlingVilkaarsvurderingsperioder,
     type Options,
     vedtaksbrevLagSvgVedtaksbrev,
@@ -53,6 +55,9 @@ import type {
     BehandlingLagreBrukersuttalelseError,
     BehandlingLagreForhaandsvarselUnntakData,
     BehandlingLagreForhaandsvarselUnntakError,
+    BehandlingLagreVilkaarsvurderingData,
+    BehandlingLagreVilkaarsvurderingError,
+    BehandlingLagreVilkaarsvurderingResponse,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaError,
     BehandlingOppdaterFaktaResponse,
@@ -68,6 +73,9 @@ import type {
     BehandlingUtsettUttalelsesfristData,
     BehandlingUtsettUttalelsesfristError,
     BehandlingUtsettUttalelsesfristResponse,
+    BehandlingVilkaarsvurderingData,
+    BehandlingVilkaarsvurderingError,
+    BehandlingVilkaarsvurderingResponse,
     BehandlingVilkaarsvurderingsperioderData,
     BehandlingVilkaarsvurderingsperioderError,
     BehandlingVilkaarsvurderingsperioderResponse,
@@ -418,6 +426,55 @@ export const behandlingHentVedtaksresultatOptions = (
         },
         queryKey: behandlingHentVedtaksresultatQueryKey(options),
     });
+
+export const behandlingVilkaarsvurderingQueryKey = (
+    options: Options<BehandlingVilkaarsvurderingData>
+) => createQueryKey('behandlingVilkaarsvurdering', options);
+
+export const behandlingVilkaarsvurderingOptions = (
+    options: Options<BehandlingVilkaarsvurderingData>
+) =>
+    queryOptions<
+        BehandlingVilkaarsvurderingResponse,
+        AxiosError<BehandlingVilkaarsvurderingError>,
+        BehandlingVilkaarsvurderingResponse,
+        ReturnType<typeof behandlingVilkaarsvurderingQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingVilkaarsvurdering({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingVilkaarsvurderingQueryKey(options),
+    });
+
+export const behandlingLagreVilkaarsvurderingMutation = (
+    options?: Partial<Options<BehandlingLagreVilkaarsvurderingData>>
+): UseMutationOptions<
+    BehandlingLagreVilkaarsvurderingResponse,
+    AxiosError<BehandlingLagreVilkaarsvurderingError>,
+    Options<BehandlingLagreVilkaarsvurderingData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BehandlingLagreVilkaarsvurderingResponse,
+        AxiosError<BehandlingLagreVilkaarsvurderingError>,
+        Options<BehandlingLagreVilkaarsvurderingData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingLagreVilkaarsvurdering({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
 
 export const behandlingVilkaarsvurderingsperioderQueryKey = (
     options: Options<BehandlingVilkaarsvurderingsperioderData>

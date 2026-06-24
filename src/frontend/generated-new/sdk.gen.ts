@@ -33,6 +33,9 @@ import type {
     BehandlingLagreForhaandsvarselUnntakData,
     BehandlingLagreForhaandsvarselUnntakErrors,
     BehandlingLagreForhaandsvarselUnntakResponses,
+    BehandlingLagreVilkaarsvurderingData,
+    BehandlingLagreVilkaarsvurderingErrors,
+    BehandlingLagreVilkaarsvurderingResponses,
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaErrors,
     BehandlingOppdaterFaktaResponses,
@@ -51,6 +54,9 @@ import type {
     BehandlingUtsettUttalelsesfristData,
     BehandlingUtsettUttalelsesfristErrors,
     BehandlingUtsettUttalelsesfristResponses,
+    BehandlingVilkaarsvurderingData,
+    BehandlingVilkaarsvurderingErrors,
+    BehandlingVilkaarsvurderingResponses,
     BehandlingVilkaarsvurderingsperioderData,
     BehandlingVilkaarsvurderingsperioderErrors,
     BehandlingVilkaarsvurderingsperioderResponses,
@@ -284,6 +290,44 @@ export const behandlingHentVedtaksresultat = <ThrowOnError extends boolean = fal
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/vedtak/resultat',
         ...options,
+    });
+
+export const behandlingVilkaarsvurdering = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingVilkaarsvurderingData, ThrowOnError>
+): RequestResult<
+    BehandlingVilkaarsvurderingResponses,
+    BehandlingVilkaarsvurderingErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).get<
+        BehandlingVilkaarsvurderingResponses,
+        BehandlingVilkaarsvurderingErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering',
+        ...options,
+    });
+
+export const behandlingLagreVilkaarsvurdering = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingLagreVilkaarsvurderingData, ThrowOnError>
+): RequestResult<
+    BehandlingLagreVilkaarsvurderingResponses,
+    BehandlingLagreVilkaarsvurderingErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).post<
+        BehandlingLagreVilkaarsvurderingResponses,
+        BehandlingLagreVilkaarsvurderingErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 
 export const behandlingVilkaarsvurderingsperioder = <ThrowOnError extends boolean = false>(

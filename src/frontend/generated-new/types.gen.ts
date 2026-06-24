@@ -4,6 +4,17 @@ export type ClientOptions = {
     baseURL: 'https://raw.githubusercontent.com' | (string & {});
 };
 
+export type Aktsomhet =
+    | ({
+          aktsomhet: 'uaktsomt';
+      } & Uaktsomt)
+    | ({
+          aktsomhet: 'grovtUaktsomt';
+      } & GrovtUaktsomt)
+    | ({
+          aktsomhet: 'forsettlig';
+      } & Forsettlig);
+
 export type Avsnitt = {
     tittel: string;
     readonly forklaring: string;
@@ -17,6 +28,17 @@ export type AvsnittUpdateItem = {
     id: string;
     underavsnitt: Array<RotElementUpdateItem>;
 };
+
+export type BelopIBehold =
+    | ({
+          belopIBehold: 'ingenting';
+      } & Ingenting)
+    | ({
+          belopIBehold: 'hele';
+      } & Hele)
+    | ({
+          belopIBehold: 'deler';
+      } & Deler);
 
 export type Beregningsresultat = {
     beregningsresultatsperioder: Array<Beregningsresultatsperiode>;
@@ -52,6 +74,12 @@ export type Brevmottaker = {
     personIdent: string;
 };
 
+export type Deler = {
+    beløp: number;
+    begrunnelse: string;
+    reduksjon: Reduksjon;
+};
+
 export type DokumentInfo = {
     journalpostId: string | null;
     dokumentId: string | null;
@@ -66,6 +94,10 @@ export type Element = {
 export type Error = {
     tittel: string;
     melding: string;
+};
+
+export type Fakta = {
+    rettsligGrunnlag: Array<string>;
 };
 
 export type FaktaOmFeilutbetaling = {
@@ -99,6 +131,11 @@ export type Feilutbetaling = {
     revurdering: Revurdering;
 };
 
+export type ForaarsaketAvMottaker = {
+    begrunnelse: string;
+    aktsomhet: Aktsomhet;
+};
+
 export type ForhaandsvarselErSendt = {
     forhåndsvarselInfo: ForhaandsvarselInfo;
     uttalelsesfrist: Uttalelsesfrist;
@@ -130,7 +167,30 @@ export type ForhaandsvarselUnntak = {
     beskrivelse: string;
 };
 
+export type Forsettlig = {
+    begrunnelse: string;
+};
+
+export type ForstoEllerBurdeForstaatt = {
+    [key: string]: unknown;
+};
+
 export type Fritekst = string;
+
+export type GodTro = {
+    begrunnelse: string;
+    beløpIBehold: BelopIBehold;
+};
+
+export type GrovtUaktsomt = {
+    begrunnelse: string;
+    erDetSærligeGrunner: SaerligeGrunner;
+};
+
+export type Hele = {
+    begrunnelse: string;
+    reduksjon: Reduksjon;
+};
 
 export type Hovedavsnitt = {
     tittel: string;
@@ -148,6 +208,17 @@ export type IkkeVurdert = {
     [key: string]: unknown;
 };
 
+export type Ingenting = {
+    begrunnelse: string;
+};
+
+export type JaSaerligeGrunner = {
+    særligeGrunnerFor: Array<Moment>;
+    prosentReduksjon: number;
+    begrunnelse: string;
+    annetBegrunnelse: string | null;
+};
+
 export type Logginnslag = {
     behandlingId: string;
     opprettetTid: string;
@@ -162,9 +233,20 @@ export type Logginnslag = {
     };
 };
 
+export type Moment = {
+    moment: string;
+    readonly beskrivelse: string;
+};
+
 export type MuligeRettsligGrunnlag = {
     bestemmelse: BestemmelseEllerGrunnlag;
     grunnlag: Array<BestemmelseEllerGrunnlag>;
+};
+
+export type NeiSaerligeGrunner = {
+    særligeGrunnerMot: Array<Moment>;
+    begrunnelse: string;
+    annetBegrunnelse: string | null;
 };
 
 export type Oppdaget = {
@@ -224,6 +306,14 @@ export type PeriodeInfo = {
     periode: Periode;
 };
 
+export type Reduksjon =
+    | ({
+          reduksjon: 'skalReduseres';
+      } & SkalReduseres)
+    | ({
+          reduksjon: 'skalIkkeReduseres';
+      } & SkalIkkeReduseres);
+
 export type RentekstElement = {
     tekst: string;
 };
@@ -261,6 +351,14 @@ export type RotElementUpdateItem =
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseUpdateItem);
 
+export type SaerligeGrunner =
+    | ({
+          erDetSaerligeGrunner: 'nei';
+      } & NeiSaerligeGrunner)
+    | ({
+          erDetSaerligeGrunner: 'ja';
+      } & JaSaerligeGrunner);
+
 export type Sammenslaaing = {
     vilkårsvurderingId: string;
     slåesSammenMedId: string;
@@ -276,6 +374,28 @@ export type Signatur = {
     besluttendeSaksbehandler: string | null;
 };
 
+export type SkalIkkeReduseres = {
+    relevans: Array<Moment>;
+    annetBegrunnelse: string | null;
+    begrunnelse: string;
+};
+
+export type SkalIkkeUnnlates = {
+    begrunnelse: string;
+    erDetSærligeGrunner: SaerligeGrunner;
+};
+
+export type SkalReduseres = {
+    beløp: number;
+    relevans: Array<Moment>;
+    annetBegrunnelse: string | null;
+    begrunnelse: string;
+};
+
+export type SkalUnnlates = {
+    begrunnelse: string;
+};
+
 export type SplittPeriode = {
     vilkårsvurderingId: string;
 };
@@ -285,10 +405,23 @@ export type Standardtekst = {
     underavsnitt: Array<Element>;
 };
 
+export type Uaktsomt = {
+    begrunnelse: string;
+    unnlatelse: Unnlatelse;
+};
+
 export type UnderavsnittElement = {
     tittel: string;
     underavsnitt: Array<Element>;
 };
+
+export type Unnlatelse =
+    | ({
+          unnlatelse: 'skalUnnlates';
+      } & SkalUnnlates)
+    | ({
+          unnlatelse: 'skalIkkeUnnlates';
+      } & SkalIkkeUnnlates);
 
 export type Unntak = {
     begrunnelseForUnntak: Varslingsunntak;
@@ -355,6 +488,46 @@ export type Vedtaksresultat =
     | 'DelvisTilbakebetaling'
     | 'FullTilbakebetaling';
 
+export type Vilkaar = {
+    vilkårsperioder: Array<Vilkaarsperiode>;
+    readonly ferdigvurdert: boolean;
+    readonly momenterSærligeGrunner: Array<Moment>;
+    readonly momenterReduksjonGodTro: Array<Moment>;
+};
+
+export type Vilkaarsperiode = {
+    readonly feilutbetaltBeløp: number;
+    readonly delresultat: _0Enum | null;
+    readonly fakta: Fakta;
+    readonly simulertBeløp: number;
+    vilkårsvurdering: Vilkaarsvurdering;
+};
+
+export type Vilkaarsvurdering = {
+    id: string;
+    readonly periode: Periode;
+    readonly delbarePerioder: Array<PeriodeInfo>;
+    valg: VilkaarsvurderingValg;
+};
+
+export type VilkaarsvurderingIkkeVurdert = {
+    [key: string]: unknown;
+};
+
+export type VilkaarsvurderingValg =
+    | ({
+          vurdering: 'god_tro';
+      } & GodTro)
+    | ({
+          vurdering: 'forårsaket_av_mottaker';
+      } & ForaarsaketAvMottaker)
+    | ({
+          vurdering: 'forsto_eller_burde_forstått';
+      } & ForstoEllerBurdeForstaatt)
+    | ({
+          vurdering: 'ikke_vurdert';
+      } & VilkaarsvurderingIkkeVurdert);
+
 export type Vurdering = {
     årsak: Fritekst | null;
     oppdaget?: Oppdaget;
@@ -370,10 +543,45 @@ export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
 
+export type _0Enum = 'FULL_TILBAKEKREVING' | 'INGEN_TILBAKEKREVING' | 'DELVIS_TILBAKEKREVING';
+
+export type AktsomhetWritable =
+    | ({
+          aktsomhet: 'uaktsomt';
+      } & UaktsomtWritable)
+    | ({
+          aktsomhet: 'grovtUaktsomt';
+      } & GrovtUaktsomtWritable)
+    | ({
+          aktsomhet: 'forsettlig';
+      } & Forsettlig);
+
 export type AvsnittWritable = {
     tittel: string;
     id: string;
     underavsnitt: Array<RotElementWritable>;
+};
+
+export type BelopIBeholdWritable =
+    | ({
+          belopIBehold: 'ingenting';
+      } & Ingenting)
+    | ({
+          belopIBehold: 'hele';
+      } & HeleWritable)
+    | ({
+          belopIBehold: 'deler';
+      } & DelerWritable);
+
+export type DelerWritable = {
+    beløp: number;
+    begrunnelse: string;
+    reduksjon: ReduksjonWritable;
+};
+
+export type ForaarsaketAvMottakerWritable = {
+    begrunnelse: string;
+    aktsomhet: AktsomhetWritable;
 };
 
 export type ForhaandsvarselErSendtWritable = {
@@ -397,10 +605,42 @@ export type ForhaandsvarselStegWritable =
           type: 'unntak';
       } & ForhaandsvarselUnntak);
 
+export type GodTroWritable = {
+    begrunnelse: string;
+    beløpIBehold: BelopIBeholdWritable;
+};
+
+export type GrovtUaktsomtWritable = {
+    begrunnelse: string;
+    erDetSærligeGrunner: SaerligeGrunnerWritable;
+};
+
+export type HeleWritable = {
+    begrunnelse: string;
+    reduksjon: ReduksjonWritable;
+};
+
 export type HovedavsnittWritable = {
     tittel: string;
     underavsnitt: Array<RotElementWritable>;
     hjemler: string;
+};
+
+export type JaSaerligeGrunnerWritable = {
+    særligeGrunnerFor: Array<MomentWritable>;
+    prosentReduksjon: number;
+    begrunnelse: string;
+    annetBegrunnelse: string | null;
+};
+
+export type MomentWritable = {
+    moment: string;
+};
+
+export type NeiSaerligeGrunnerWritable = {
+    særligeGrunnerMot: Array<MomentWritable>;
+    begrunnelse: string;
+    annetBegrunnelse: string | null;
 };
 
 export type PakrevdBegrunnelseWritable = {
@@ -408,6 +648,14 @@ export type PakrevdBegrunnelseWritable = {
     begrunnelseType: string;
     underavsnitt: Array<Element>;
 };
+
+export type ReduksjonWritable =
+    | ({
+          reduksjon: 'skalReduseres';
+      } & SkalReduseresWritable)
+    | ({
+          reduksjon: 'skalIkkeReduseres';
+      } & SkalIkkeReduseresWritable);
 
 export type RotElementWritable =
     | ({
@@ -419,6 +667,45 @@ export type RotElementWritable =
     | ({
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseWritable);
+
+export type SaerligeGrunnerWritable =
+    | ({
+          erDetSaerligeGrunner: 'nei';
+      } & NeiSaerligeGrunnerWritable)
+    | ({
+          erDetSaerligeGrunner: 'ja';
+      } & JaSaerligeGrunnerWritable);
+
+export type SkalIkkeReduseresWritable = {
+    relevans: Array<MomentWritable>;
+    annetBegrunnelse: string | null;
+    begrunnelse: string;
+};
+
+export type SkalIkkeUnnlatesWritable = {
+    begrunnelse: string;
+    erDetSærligeGrunner: SaerligeGrunnerWritable;
+};
+
+export type SkalReduseresWritable = {
+    beløp: number;
+    relevans: Array<MomentWritable>;
+    annetBegrunnelse: string | null;
+    begrunnelse: string;
+};
+
+export type UaktsomtWritable = {
+    begrunnelse: string;
+    unnlatelse: UnnlatelseWritable;
+};
+
+export type UnnlatelseWritable =
+    | ({
+          unnlatelse: 'skalUnnlates';
+      } & SkalUnnlates)
+    | ({
+          unnlatelse: 'skalIkkeUnnlates';
+      } & SkalIkkeUnnlatesWritable);
 
 export type UttalelsesfristWritable = {
     nyFrist?: string;
@@ -441,6 +728,33 @@ export type VedtaksbrevRedigerbareDataWritable = {
     hovedavsnitt: HovedavsnittWritable;
     avsnitt: Array<AvsnittWritable>;
 };
+
+export type VilkaarWritable = {
+    vilkårsperioder: Array<VilkaarsperiodeWritable>;
+};
+
+export type VilkaarsperiodeWritable = {
+    vilkårsvurdering: VilkaarsvurderingWritable;
+};
+
+export type VilkaarsvurderingWritable = {
+    id: string;
+    valg: VilkaarsvurderingValgWritable;
+};
+
+export type VilkaarsvurderingValgWritable =
+    | ({
+          vurdering: 'god_tro';
+      } & GodTroWritable)
+    | ({
+          vurdering: 'forårsaket_av_mottaker';
+      } & ForaarsaketAvMottakerWritable)
+    | ({
+          vurdering: 'forsto_eller_burde_forstått';
+      } & ForstoEllerBurdeForstaatt)
+    | ({
+          vurdering: 'ikke_vurdert';
+      } & VilkaarsvurderingIkkeVurdert);
 
 export type BehandlingBehandlingsloggData = {
     body?: never;
@@ -858,6 +1172,72 @@ export type BehandlingHentVedtaksresultatResponses = {
 
 export type BehandlingHentVedtaksresultatResponse =
     BehandlingHentVedtaksresultatResponses[keyof BehandlingHentVedtaksresultatResponses];
+
+export type BehandlingVilkaarsvurderingData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering';
+};
+
+export type BehandlingVilkaarsvurderingErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingVilkaarsvurderingError =
+    BehandlingVilkaarsvurderingErrors[keyof BehandlingVilkaarsvurderingErrors];
+
+export type BehandlingVilkaarsvurderingResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Vilkaar;
+};
+
+export type BehandlingVilkaarsvurderingResponse =
+    BehandlingVilkaarsvurderingResponses[keyof BehandlingVilkaarsvurderingResponses];
+
+export type BehandlingLagreVilkaarsvurderingData = {
+    body: VilkaarWritable;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering';
+};
+
+export type BehandlingLagreVilkaarsvurderingErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingLagreVilkaarsvurderingError =
+    BehandlingLagreVilkaarsvurderingErrors[keyof BehandlingLagreVilkaarsvurderingErrors];
+
+export type BehandlingLagreVilkaarsvurderingResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Vilkaar;
+};
+
+export type BehandlingLagreVilkaarsvurderingResponse =
+    BehandlingLagreVilkaarsvurderingResponses[keyof BehandlingLagreVilkaarsvurderingResponses];
 
 export type BehandlingVilkaarsvurderingsperioderData = {
     body?: never;

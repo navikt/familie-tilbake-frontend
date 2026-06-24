@@ -61,14 +61,28 @@ export const zError = z.object({
     melding: z.string(),
 });
 
+export const zFakta = z.object({
+    rettsligGrunnlag: z.array(z.string()),
+});
+
 export const zForhaandsvarselInfo = z.object({
     tekstFraSaksbehandler: z.string(),
     varselbrevSendtTid: z.iso.date(),
 });
 
+export const zForsettlig = z.object({
+    begrunnelse: z.string(),
+});
+
+export const zForstoEllerBurdeForstaatt = z.record(z.string(), z.unknown());
+
 export const zFritekst = z.string().min(3).max(3000);
 
 export const zIkkeVurdert = z.record(z.string(), z.unknown());
+
+export const zIngenting = z.object({
+    begrunnelse: z.string(),
+});
 
 export const zLogginnslag = z.object({
     behandlingId: z.string(),
@@ -82,9 +96,30 @@ export const zLogginnslag = z.object({
     ekstraInfo: z.record(z.string(), z.unknown()),
 });
 
+export const zMoment = z.object({
+    moment: z.string(),
+    beskrivelse: z.string().readonly(),
+});
+
+export const zJaSaerligeGrunner = z.object({
+    særligeGrunnerFor: z.array(zMoment),
+    prosentReduksjon: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint8 to be >= 0' })
+        .max(255, { error: 'Invalid value: Expected uint8 to be <= 255' }),
+    begrunnelse: z.string(),
+    annetBegrunnelse: z.string().nullable(),
+});
+
 export const zMuligeRettsligGrunnlag = z.object({
     bestemmelse: zBestemmelseEllerGrunnlag,
     grunnlag: z.array(zBestemmelseEllerGrunnlag),
+});
+
+export const zNeiSaerligeGrunner = z.object({
+    særligeGrunnerMot: z.array(zMoment),
+    begrunnelse: z.string(),
+    annetBegrunnelse: z.string().nullable(),
 });
 
 export const zOppsummertPeriode = z.object({
@@ -171,6 +206,16 @@ export const zOppdaterFaktaPeriode = z.object({
     rettsligGrunnlag: z.array(zRettsligGrunnlag).min(1),
 });
 
+export const zSaerligeGrunner = z.discriminatedUnion('erDetSaerligeGrunner', [
+    zNeiSaerligeGrunner.extend({ erDetSaerligeGrunner: z.literal('nei') }),
+    zJaSaerligeGrunner.extend({ erDetSaerligeGrunner: z.literal('ja') }),
+]);
+
+export const zGrovtUaktsomt = z.object({
+    begrunnelse: z.string(),
+    erDetSærligeGrunner: zSaerligeGrunner,
+});
+
 export const zSammenslaaing = z.object({
     vilkårsvurderingId: z.uuid(),
     slåesSammenMedId: z.uuid(),
@@ -184,6 +229,61 @@ export const zSignatur = z.object({
     enhetNavn: z.string(),
     ansvarligSaksbehandler: z.string(),
     besluttendeSaksbehandler: z.string().nullable(),
+});
+
+export const zSkalIkkeReduseres = z.object({
+    relevans: z.array(zMoment),
+    annetBegrunnelse: z.string().nullable(),
+    begrunnelse: z.string(),
+});
+
+export const zSkalIkkeUnnlates = z.object({
+    begrunnelse: z.string(),
+    erDetSærligeGrunner: zSaerligeGrunner,
+});
+
+export const zSkalReduseres = z.object({
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    relevans: z.array(zMoment),
+    annetBegrunnelse: z.string().nullable(),
+    begrunnelse: z.string(),
+});
+
+export const zReduksjon = z.discriminatedUnion('reduksjon', [
+    zSkalReduseres.extend({ reduksjon: z.literal('skalReduseres') }),
+    zSkalIkkeReduseres.extend({ reduksjon: z.literal('skalIkkeReduseres') }),
+]);
+
+export const zDeler = z.object({
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    begrunnelse: z.string(),
+    reduksjon: zReduksjon,
+});
+
+export const zHele = z.object({
+    begrunnelse: z.string(),
+    reduksjon: zReduksjon,
+});
+
+export const zBelopIBehold = z.discriminatedUnion('belopIBehold', [
+    zIngenting.extend({ belopIBehold: z.literal('ingenting') }),
+    zHele.extend({ belopIBehold: z.literal('hele') }),
+    zDeler.extend({ belopIBehold: z.literal('deler') }),
+]);
+
+export const zGodTro = z.object({
+    begrunnelse: z.string(),
+    beløpIBehold: zBelopIBehold,
+});
+
+export const zSkalUnnlates = z.object({
+    begrunnelse: z.string(),
 });
 
 export const zSplittPeriode = z.object({
@@ -236,6 +336,27 @@ export const zAvsnittUpdateItem = z.object({
 export const zHovedavsnittUpdate = z.object({
     tittel: z.string().min(3).max(300),
     underavsnitt: z.array(zRotElementUpdateItem),
+});
+
+export const zUnnlatelse = z.discriminatedUnion('unnlatelse', [
+    zSkalUnnlates.extend({ unnlatelse: z.literal('skalUnnlates') }),
+    zSkalIkkeUnnlates.extend({ unnlatelse: z.literal('skalIkkeUnnlates') }),
+]);
+
+export const zUaktsomt = z.object({
+    begrunnelse: z.string(),
+    unnlatelse: zUnnlatelse,
+});
+
+export const zAktsomhet = z.discriminatedUnion('aktsomhet', [
+    zUaktsomt.extend({ aktsomhet: z.literal('uaktsomt') }),
+    zGrovtUaktsomt.extend({ aktsomhet: z.literal('grovtUaktsomt') }),
+    zForsettlig.extend({ aktsomhet: z.literal('forsettlig') }),
+]);
+
+export const zForaarsaketAvMottaker = z.object({
+    begrunnelse: z.string(),
+    aktsomhet: zAktsomhet,
 });
 
 export const zUpdateUttalelsesfrist = z.object({
@@ -331,6 +452,38 @@ export const zBeregningsresultat = z.object({
     vedtaksresultat: zVedtaksresultat,
 });
 
+export const zVilkaarsvurderingIkkeVurdert = z.record(z.string(), z.unknown());
+
+export const zVilkaarsvurderingValg = z.union([
+    z
+        .object({
+            vurdering: z.literal('god_tro'),
+        })
+        .and(zGodTro),
+    z
+        .object({
+            vurdering: z.literal('forårsaket_av_mottaker'),
+        })
+        .and(zForaarsaketAvMottaker),
+    z
+        .object({
+            vurdering: z.literal('forsto_eller_burde_forstått'),
+        })
+        .and(zForstoEllerBurdeForstaatt),
+    z
+        .object({
+            vurdering: z.literal('ikke_vurdert'),
+        })
+        .and(zVilkaarsvurderingIkkeVurdert),
+]);
+
+export const zVilkaarsvurdering = z.object({
+    id: z.uuid(),
+    periode: zPeriode.readonly(),
+    delbarePerioder: z.array(zPeriodeInfo).readonly(),
+    valg: zVilkaarsvurderingValg,
+});
+
 export const zYtelse = z.object({
     url: z.string(),
     ubestemtEntall: z.string(),
@@ -399,6 +552,55 @@ export const zFaktaOmFeilutbetaling = z.object({
     ferdigvurdert: z.boolean(),
 });
 
+export const z0Enum = z.enum([
+    'FULL_TILBAKEKREVING',
+    'INGEN_TILBAKEKREVING',
+    'DELVIS_TILBAKEKREVING',
+]);
+
+export const zVilkaarsperiode = z.object({
+    feilutbetaltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .readonly(),
+    delresultat: z0Enum.nullable(),
+    fakta: zFakta.readonly(),
+    simulertBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .readonly(),
+    vilkårsvurdering: zVilkaarsvurdering,
+});
+
+export const zVilkaar = z.object({
+    vilkårsperioder: z.array(zVilkaarsperiode),
+    ferdigvurdert: z.boolean().readonly(),
+    momenterSærligeGrunner: z.array(zMoment).readonly(),
+    momenterReduksjonGodTro: z.array(zMoment).readonly(),
+});
+
+export const zMomentWritable = z.object({
+    moment: z.string(),
+});
+
+export const zJaSaerligeGrunnerWritable = z.object({
+    særligeGrunnerFor: z.array(zMomentWritable),
+    prosentReduksjon: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint8 to be >= 0' })
+        .max(255, { error: 'Invalid value: Expected uint8 to be <= 255' }),
+    begrunnelse: z.string(),
+    annetBegrunnelse: z.string().nullable(),
+});
+
+export const zNeiSaerligeGrunnerWritable = z.object({
+    særligeGrunnerMot: z.array(zMomentWritable),
+    begrunnelse: z.string(),
+    annetBegrunnelse: z.string().nullable(),
+});
+
 export const zPakrevdBegrunnelseWritable = z.object({
     tittel: z.string(),
     begrunnelseType: z.string(),
@@ -421,6 +623,88 @@ export const zHovedavsnittWritable = z.object({
     tittel: z.string().min(3).max(300),
     underavsnitt: z.array(zRotElementWritable),
     hjemler: z.string(),
+});
+
+export const zSaerligeGrunnerWritable = z.discriminatedUnion('erDetSaerligeGrunner', [
+    zNeiSaerligeGrunnerWritable.extend({ erDetSaerligeGrunner: z.literal('nei') }),
+    zJaSaerligeGrunnerWritable.extend({ erDetSaerligeGrunner: z.literal('ja') }),
+]);
+
+export const zGrovtUaktsomtWritable = z.object({
+    begrunnelse: z.string(),
+    erDetSærligeGrunner: zSaerligeGrunnerWritable,
+});
+
+export const zSkalIkkeReduseresWritable = z.object({
+    relevans: z.array(zMomentWritable),
+    annetBegrunnelse: z.string().nullable(),
+    begrunnelse: z.string(),
+});
+
+export const zSkalIkkeUnnlatesWritable = z.object({
+    begrunnelse: z.string(),
+    erDetSærligeGrunner: zSaerligeGrunnerWritable,
+});
+
+export const zSkalReduseresWritable = z.object({
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    relevans: z.array(zMomentWritable),
+    annetBegrunnelse: z.string().nullable(),
+    begrunnelse: z.string(),
+});
+
+export const zReduksjonWritable = z.discriminatedUnion('reduksjon', [
+    zSkalReduseresWritable.extend({ reduksjon: z.literal('skalReduseres') }),
+    zSkalIkkeReduseresWritable.extend({ reduksjon: z.literal('skalIkkeReduseres') }),
+]);
+
+export const zDelerWritable = z.object({
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    begrunnelse: z.string(),
+    reduksjon: zReduksjonWritable,
+});
+
+export const zHeleWritable = z.object({
+    begrunnelse: z.string(),
+    reduksjon: zReduksjonWritable,
+});
+
+export const zBelopIBeholdWritable = z.discriminatedUnion('belopIBehold', [
+    zIngenting.extend({ belopIBehold: z.literal('ingenting') }),
+    zHeleWritable.extend({ belopIBehold: z.literal('hele') }),
+    zDelerWritable.extend({ belopIBehold: z.literal('deler') }),
+]);
+
+export const zGodTroWritable = z.object({
+    begrunnelse: z.string(),
+    beløpIBehold: zBelopIBeholdWritable,
+});
+
+export const zUnnlatelseWritable = z.discriminatedUnion('unnlatelse', [
+    zSkalUnnlates.extend({ unnlatelse: z.literal('skalUnnlates') }),
+    zSkalIkkeUnnlatesWritable.extend({ unnlatelse: z.literal('skalIkkeUnnlates') }),
+]);
+
+export const zUaktsomtWritable = z.object({
+    begrunnelse: z.string(),
+    unnlatelse: zUnnlatelseWritable,
+});
+
+export const zAktsomhetWritable = z.discriminatedUnion('aktsomhet', [
+    zUaktsomtWritable.extend({ aktsomhet: z.literal('uaktsomt') }),
+    zGrovtUaktsomtWritable.extend({ aktsomhet: z.literal('grovtUaktsomt') }),
+    zForsettlig.extend({ aktsomhet: z.literal('forsettlig') }),
+]);
+
+export const zForaarsaketAvMottakerWritable = z.object({
+    begrunnelse: z.string(),
+    aktsomhet: zAktsomhetWritable,
 });
 
 export const zUttalelsesfristWritable = z.object({
@@ -471,6 +755,42 @@ export const zVedtaksbrevDataWritable = z.object({
 export const zVedtaksbrevRedigerbareDataWritable = z.object({
     hovedavsnitt: zHovedavsnittWritable,
     avsnitt: z.array(zAvsnittWritable),
+});
+
+export const zVilkaarsvurderingValgWritable = z.union([
+    z
+        .object({
+            vurdering: z.literal('god_tro'),
+        })
+        .and(zGodTroWritable),
+    z
+        .object({
+            vurdering: z.literal('forårsaket_av_mottaker'),
+        })
+        .and(zForaarsaketAvMottakerWritable),
+    z
+        .object({
+            vurdering: z.literal('forsto_eller_burde_forstått'),
+        })
+        .and(zForstoEllerBurdeForstaatt),
+    z
+        .object({
+            vurdering: z.literal('ikke_vurdert'),
+        })
+        .and(zVilkaarsvurderingIkkeVurdert),
+]);
+
+export const zVilkaarsvurderingWritable = z.object({
+    id: z.uuid(),
+    valg: zVilkaarsvurderingValgWritable,
+});
+
+export const zVilkaarsperiodeWritable = z.object({
+    vilkårsvurdering: zVilkaarsvurderingWritable,
+});
+
+export const zVilkaarWritable = z.object({
+    vilkårsperioder: z.array(zVilkaarsperiodeWritable),
 });
 
 export const zBehandlingBehandlingsloggPath = z.object({
@@ -583,6 +903,26 @@ export const zBehandlingHentVedtaksresultatPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingHentVedtaksresultatResponse = zBeregningsresultat;
+
+export const zBehandlingVilkaarsvurderingPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingVilkaarsvurderingResponse = zVilkaar;
+
+export const zBehandlingLagreVilkaarsvurderingBody = zVilkaarWritable;
+
+export const zBehandlingLagreVilkaarsvurderingPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingLagreVilkaarsvurderingResponse = zVilkaar;
 
 export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
     behandlingId: z.uuid(),
