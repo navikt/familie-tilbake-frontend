@@ -1,35 +1,74 @@
 import type { FC } from 'react';
-import type { VedtaksresultatEnum } from '@/generated/types.gen';
+import type { _0Enum as VedtaksresultatEnum } from '@/generated-new';
+import type { PeriodeTag, Vilkårsperiode, Vurderingsstatus } from './typer';
 
-import { ArrowUndoIcon, PercentIcon, XMarkIcon } from '@navikt/aksel-icons';
+import {
+    ArrowUndoIcon,
+    HeadCloudIcon,
+    PercentIcon,
+    QuestionmarkCircleIcon,
+    SealCheckmarkIcon,
+    SealXMarkIcon,
+    XMarkIcon,
+} from '@navikt/aksel-icons';
 import { Heading, HStack, Tag } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
-import { type PeriodeTag, type Vilkårsperiode, vurdering } from './Vilkårsvurdering';
+import { erPeriodeVurdert } from './utils';
 
 const resultat: Record<VedtaksresultatEnum, PeriodeTag> = {
-    FULL_TILBAKEBETALING: {
+    FULL_TILBAKEKREVING: {
         label: 'Full tilbakekreving',
         icon: <ArrowUndoIcon aria-hidden />,
         'data-color': 'brand-magenta',
     },
-    DELVIS_TILBAKEBETALING: {
+    DELVIS_TILBAKEKREVING: {
         label: 'Delvis tilbakekreving',
         icon: <PercentIcon aria-hidden />,
         'data-color': 'meta-purple',
     },
-    INGEN_TILBAKEBETALING: {
+    INGEN_TILBAKEKREVING: {
         label: 'Ingen tilbakekreving',
         icon: <XMarkIcon aria-hidden />,
         'data-color': 'success',
     },
 };
 
+const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
+    IKKE_VURDERT: {
+        label: 'Ikke vurdert',
+        icon: <QuestionmarkCircleIcon aria-hidden />,
+        'data-color': 'neutral',
+    },
+    GOD_TRO: { label: 'God tro', icon: <SealCheckmarkIcon aria-hidden />, 'data-color': 'success' },
+    FORSETT: {
+        label: 'Forsett',
+        icon: <SealXMarkIcon aria-hidden />,
+        'data-color': 'brand-magenta',
+    },
+    GROVT_UAKTSOMHET: {
+        label: 'Grovt uaktsomt',
+        icon: <SealXMarkIcon aria-hidden />,
+        'data-color': 'warning',
+    },
+    UAKTSOMT: {
+        label: 'Uaktsomt',
+        icon: <SealXMarkIcon aria-hidden />,
+        'data-color': 'meta-purple',
+    },
+    FORSTO: { label: 'Forsto', icon: <HeadCloudIcon aria-hidden />, 'data-color': 'meta-lime' },
+    BURDE_FORSTÅTT: {
+        label: 'Burde forstått',
+        icon: <HeadCloudIcon aria-hidden />,
+        'data-color': 'brand-beige',
+    },
+};
+
 type Props = {
     perioder: Vilkårsperiode[];
-    valgtPeriodeId: number;
-    onSelectPeriode: (periodeId: number) => void;
+    valgtPeriodeId: string | undefined;
+    onSelectPeriode: (periodeId: string | undefined) => void;
 };
 
 export const VilkårsvurderingPeriodeListe: FC<Props> = ({
@@ -43,7 +82,8 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}
                 </Heading>
-                {perioder.filter(({ vurdert }) => vurdert).length} av {perioder.length} vurdert
+                {perioder.filter(periode => erPeriodeVurdert(periode)).length} av {perioder.length}{' '}
+                vurdert
             </HStack>
             <ul className="grid grid-cols-1 ax-sm:grid-cols-2 ax-md:grid-cols-1 gap-2">
                 {perioder.map(periode => (
@@ -51,7 +91,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                         <button
                             onClick={(): void => onSelectPeriode(periode.id)}
                             aria-pressed={periode.id === valgtPeriodeId}
-                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}. Resultat: ${resultat[periode.resultat].label}. Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
+                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}.${periode.resultat ? ` Resultat: ${resultat[periode.resultat].label}.` : ''} Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
                                 periode.id === valgtPeriodeId
                                     ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
@@ -86,6 +126,9 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             <span className="text-ax-text-brand-magenta">
                                 Feilutbetalt: {formatCurrencyNoKr(periode.feilutbetalt)}
                             </span>
+                            {periode.rettsligGrunnlag.length > 0 && (
+                                <span>{periode.rettsligGrunnlag.join(', ')}</span>
+                            )}
                         </button>
                     </li>
                 ))}
