@@ -15,6 +15,8 @@ type Props = {
 
 export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) => {
     const [krevesTilbake, setKrevesTilbake] = useState<KrevesTilbake>();
+    const [årsakerSkalKreves, setÅrsakerSkalKreves] = useState<string[]>([]);
+    const [årsakerSkalIkkeKreves, setÅrsakerSkalIkkeKreves] = useState<string[]>([]);
 
     return (
         <>
@@ -38,6 +40,8 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         name={`${navnPrefix}.årsakerSkalKreves`}
                         size="small"
                         className="max-w-xl"
+                        value={årsakerSkalKreves}
+                        onChange={setÅrsakerSkalKreves}
                     >
                         <Checkbox value="årsaken1">Størrelsen på beløpet</Checkbox>
                         <Checkbox value="årsaken2">
@@ -48,6 +52,14 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         </Checkbox>
                         <Checkbox value="årsaken4">Annet</Checkbox>
                     </CheckboxGroup>
+                    {årsakerSkalKreves.includes('årsaken4') && (
+                        <TextField
+                            label="Beskriv kort hva du legger i alternativet “Annet”"
+                            name={`${navnPrefix}.årsakerSkalKrevesAnnet`}
+                            size="small"
+                            className="max-w-xl"
+                        />
+                    )}
                     <Textarea
                         label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} skal kreves tilbake`}
                         name={`${navnPrefix}.begrunnelseSkalKreves`}
@@ -69,6 +81,8 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         name={`${navnPrefix}.årsakerSkalIkkeKreves`}
                         size="small"
                         className="max-w-xl"
+                        value={årsakerSkalIkkeKreves}
+                        onChange={setÅrsakerSkalIkkeKreves}
                     >
                         <Checkbox value="årsaken1">Hvor stort beløpet er</Checkbox>
                         <Checkbox value="årsaken2">
@@ -79,6 +93,14 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         </Checkbox>
                         <Checkbox value="årsaken4">Annet</Checkbox>
                     </CheckboxGroup>
+                    {årsakerSkalIkkeKreves.includes('årsaken4') && (
+                        <TextField
+                            label="Beskriv kort hva du legger i alternativet “Annet”"
+                            name={`${navnPrefix}.årsakerSkalIkkeKrevesAnnet`}
+                            size="small"
+                            className="max-w-xl"
+                        />
+                    )}
                     <Textarea
                         label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} ikke skal kreves tilbake`}
                         name={`${navnPrefix}.begrunnelseSkalIkkeKreves`}

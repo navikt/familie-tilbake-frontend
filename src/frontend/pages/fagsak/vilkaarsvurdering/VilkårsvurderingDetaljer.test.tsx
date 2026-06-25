@@ -94,6 +94,17 @@ const begrunnelseKrevesIkke = (beløpsbeskrivelse: Beløpsbeskrivelse): HTMLElem
         name: `Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} ikke skal kreves tilbake`,
     });
 
+const annetCheckbox = (gruppe: HTMLElement): HTMLElement =>
+    within(gruppe).getByRole('checkbox', { name: 'Annet' });
+const beskrivAnnetFinnes = async (): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: 'Beskriv kort hva du legger i alternativet “Annet”',
+    });
+const beskrivAnnetQuery = (): HTMLElement | null =>
+    screen.queryByRole('textbox', {
+        name: 'Beskriv kort hva du legger i alternativet “Annet”',
+    });
+
 describe('VilkårsvurderingDetaljer', () => {
     let user: UserEvent;
     beforeEach(() => {
@@ -181,6 +192,22 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(beløpTilbakekreves()).toBeInTheDocument();
             expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
             expect(screen.getByText('0 kroner')).toBeInTheDocument();
+        });
+
+        test('Annet-alternativ viser fritekstfelt', async () => {
+            renderVilkårsDetaljer();
+
+            user.click(godTroRadio());
+            expect(await begrunnelseGodTro()).toBeInTheDocument();
+
+            user.click(heleIBeholdRadio());
+            user.click(await krevesTilbakeJaRadio('hele beløpet'));
+
+            const gruppe = await årsakKrevesTilbakeCheckboxGroup('hele beløpet');
+            expect(beskrivAnnetQuery()).not.toBeInTheDocument();
+
+            user.click(annetCheckbox(gruppe));
+            expect(await beskrivAnnetFinnes()).toBeInTheDocument();
         });
     });
 });
