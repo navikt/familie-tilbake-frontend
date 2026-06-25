@@ -67,13 +67,13 @@ const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
 
 type Props = {
     perioder: Vilkårsperiode[];
-    valgtPeriodeId: string | undefined;
-    onSelectPeriode: (periodeId: string | undefined) => void;
+    valgtPeriode: Vilkårsperiode | undefined;
+    onSelectPeriode: (periode: Vilkårsperiode | undefined) => void;
 };
 
 export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     perioder,
-    valgtPeriodeId,
+    valgtPeriode,
     onSelectPeriode,
 }: Props) => {
     return (
@@ -89,11 +89,11 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                 {perioder.map(periode => (
                     <li key={periode.id} className="flex min-h-11">
                         <button
-                            onClick={(): void => onSelectPeriode(periode.id)}
-                            aria-pressed={periode.id === valgtPeriodeId}
-                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}.${periode.resultat ? ` Resultat: ${resultat[periode.resultat].label}.` : ''} Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
+                            onClick={(): void => onSelectPeriode(periode)}
+                            aria-pressed={periode.id === valgtPeriode?.id}
+                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}.${periode.resultat ? ` Resultat: ${resultat[periode.resultat].label}.` : ''} Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriode?.id ? ' Valgt.' : ''}`}
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
-                                periode.id === valgtPeriodeId
+                                periode.id === valgtPeriode?.id
                                     ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
                                     : 'border border-ax-border-neutral-subtle hover:border-ax-border-neutral'
                             }`}

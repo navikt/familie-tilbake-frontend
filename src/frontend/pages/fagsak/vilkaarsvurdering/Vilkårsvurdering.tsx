@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import type { Vilkaar } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
-import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
+import { DocPencilIcon, SealCheckmarkIcon } from '@navikt/aksel-icons';
+import { Heading, HStack, InlineMessage, Tag, VStack } from '@navikt/ds-react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
@@ -13,7 +14,7 @@ import { useActionBar } from '@/hooks/useActionBar';
 import { formatterDatostring } from '@/utils/dateUtils';
 import { useStegNavigering } from '@/utils/sider';
 
-import { finnStandardValgtPeriodeId, utledVurdering } from './utils';
+import { finnStandardValgtPeriode, utledVurdering } from './utils';
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
 import { VilkårsvurderingPeriodeListe } from './VilkårsvurderingPeriodeListe';
 
@@ -40,8 +41,8 @@ export const Vilkårsvurdering: FC = () => {
 
     const perioder = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
 
-    const [valgtPeriodeId, setValgtPeriodeId] = useState<string | undefined>(() =>
-        finnStandardValgtPeriodeId(perioder)
+    const [valgtPeriode, setValgtPeriode] = useState<Vilkårsperiode | undefined>(() =>
+        finnStandardValgtPeriode(perioder)
     );
 
     useActionBar({
@@ -55,20 +56,33 @@ export const Vilkårsvurdering: FC = () => {
     return (
         <VStack gap="space-24" className="min-h-0 h-full">
             <HStack justify="space-between">
-                <Heading size="medium">Vilkårsvurdering</Heading>
-                {vilkår.ferdigvurdert && (
-                    <Tag variant="moderate" data-color="success">
+                <HStack justify="space-between" align="center" gap="space-16">
+                    <Heading size="small">Vilkårsvurdering</Heading>
+                    <InlineMessage size="small" status="info" className="gap-1!">
+                        Intern vurdering (ikke synlig i vedtaksbrevet){' '}
+                    </InlineMessage>
+                </HStack>
+                {vilkår.ferdigvurdert ? (
+                    <Tag
+                        variant="moderate"
+                        data-color="success"
+                        icon={<SealCheckmarkIcon aria-hidden />}
+                    >
                         Vurdert
+                    </Tag>
+                ) : (
+                    <Tag variant="moderate" data-color="info" icon={<DocPencilIcon aria-hidden />}>
+                        Under vurdering
                     </Tag>
                 )}
             </HStack>
             <div className="flex flex-col ax-md:flex-row min-h-0 h-full">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
-                    valgtPeriodeId={valgtPeriodeId}
-                    onSelectPeriode={setValgtPeriodeId}
+                    valgtPeriode={valgtPeriode}
+                    onSelectPeriode={setValgtPeriode}
                 />
-                <VilkårsvurderingDetaljer />
+                <VilkårsvurderingDetaljer fom={valgtPeriode?.fom} tom={valgtPeriode?.tom} />
             </div>
         </VStack>
     );

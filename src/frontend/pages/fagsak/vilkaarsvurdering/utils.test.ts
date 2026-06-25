@@ -1,7 +1,7 @@
 import type { VilkaarsvurderingValg } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
-import { erPeriodeVurdert, finnStandardValgtPeriodeId, utledVurdering } from './utils';
+import { erPeriodeVurdert, finnStandardValgtPeriode, utledVurdering } from './utils';
 
 const godTro: VilkaarsvurderingValg = {
     vurdering: 'god_tro',
@@ -98,15 +98,15 @@ describe('Vilkårsvurdering - utils', () => {
         });
     });
 
-    describe('finnStandardValgtPeriodeId', () => {
+    describe('finnStandardValgtPeriode', () => {
         test('burde returnere undefined for tom liste', () => {
-            expect(finnStandardValgtPeriodeId([])).toBeUndefined();
+            expect(finnStandardValgtPeriode([])).toBeUndefined();
         });
 
         test('burde velge den eneste uvurderte perioden', () => {
             const perioder = [lagPeriode({ id: 'eneste', vurdering: 'IKKE_VURDERT' })];
 
-            expect(finnStandardValgtPeriodeId(perioder)).toBe('eneste');
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('eneste');
         });
 
         test('burde velge den eldste uvurderte perioden når flere er uvurdert', () => {
@@ -116,7 +116,7 @@ describe('Vilkårsvurdering - utils', () => {
                 lagPeriode({ id: 'mai', vurdering: 'IKKE_VURDERT' }),
             ];
 
-            expect(finnStandardValgtPeriodeId(perioder)).toBe('mars');
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('mars');
         });
 
         test('burde velge den eldste uvurderte perioden selv om nyere perioder er vurdert', () => {
@@ -126,7 +126,7 @@ describe('Vilkårsvurdering - utils', () => {
                 lagPeriode({ id: 'mai', vurdering: 'GOD_TRO' }),
             ];
 
-            expect(finnStandardValgtPeriodeId(perioder)).toBe('mars');
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('mars');
         });
 
         test('burde hoppe over uvurderte perioder som er eldre enn en vurdert periode i midten', () => {
@@ -136,7 +136,7 @@ describe('Vilkårsvurdering - utils', () => {
                 lagPeriode({ id: 'mai', vurdering: 'IKKE_VURDERT' }),
             ];
 
-            expect(finnStandardValgtPeriodeId(perioder)).toBe('april');
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('april');
         });
 
         test('burde velge nyeste (nederste) periode når alle er vurdert', () => {
@@ -146,7 +146,7 @@ describe('Vilkårsvurdering - utils', () => {
                 lagPeriode({ id: 'mai', vurdering: 'GOD_TRO' }),
             ];
 
-            expect(finnStandardValgtPeriodeId(perioder)).toBe('mai');
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('mai');
         });
     });
 });

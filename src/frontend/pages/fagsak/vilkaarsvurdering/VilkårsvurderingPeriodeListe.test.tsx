@@ -19,13 +19,13 @@ const lagPeriode = (overstyr: Partial<Vilkårsperiode> = {}): Vilkårsperiode =>
 
 const renderListe = (
     perioder: Vilkårsperiode[],
-    valgtPeriodeId: string | undefined = undefined,
-    onSelectPeriode: (periodeId: string | undefined) => void = vi.fn()
+    valgtPeriode: Vilkårsperiode | undefined = undefined,
+    onSelectPeriode: (periode: Vilkårsperiode | undefined) => void = vi.fn()
 ): void => {
     render(
         <VilkårsvurderingPeriodeListe
             perioder={perioder}
-            valgtPeriodeId={valgtPeriodeId}
+            valgtPeriode={valgtPeriode}
             onSelectPeriode={onSelectPeriode}
         />
     );
@@ -87,7 +87,10 @@ describe('VilkårsvurderingPeriodeListe', () => {
     });
 
     test('burde markere den valgte perioden med aria-pressed', () => {
-        renderListe([lagPeriode({ id: 'mars' }), lagPeriode({ id: 'april' })], 'april');
+        renderListe(
+            [lagPeriode({ id: 'mars' }), lagPeriode({ id: 'april' })],
+            lagPeriode({ id: 'april' })
+        );
 
         const valgtKnapp = screen.getByRole('button', { name: /Valgt\./ });
         expect(valgtKnapp).toHaveAttribute('aria-pressed', 'true');
@@ -112,7 +115,7 @@ describe('VilkårsvurderingPeriodeListe', () => {
 
         await userEvent.click(screen.getAllByRole('button')[1]);
 
-        expect(onSelectPeriode).toHaveBeenCalledExactlyOnceWith('april');
+        expect(onSelectPeriode).toHaveBeenCalledExactlyOnceWith(lagPeriode({ id: 'april' }));
     });
 
     test('burde vise rettslig grunnlag når det finnes', () => {

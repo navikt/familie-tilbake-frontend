@@ -34,13 +34,15 @@ export const erPeriodeVurdert = (periode: Vilkårsperiode): boolean =>
  *   ledes til neste periode som mangler vurdering.
  * - Hvis alle perioder er vurdert, velges den nyeste (nederste) perioden.
  */
-export const finnStandardValgtPeriodeId = (perioder: Vilkårsperiode[]): string | undefined => {
+export const finnStandardValgtPeriode = (
+    perioder: Vilkårsperiode[]
+): Vilkårsperiode | undefined => {
     if (perioder.length === 0) {
         return undefined;
     }
     const uvurderte = perioder.filter(periode => !erPeriodeVurdert(periode));
     if (uvurderte.length > 0) {
-        return uvurderte[0].id;
+        return uvurderte[0];
     }
-    return perioder[perioder.length - 1].id;
+    return perioder[perioder.length - 1];
 };
