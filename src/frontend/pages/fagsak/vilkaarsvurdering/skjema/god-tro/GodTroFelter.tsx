@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 
+import { Deler } from './Deler';
 import { Hele } from './Hele';
 import { Ingenting } from './Ingenting';
 
@@ -37,7 +38,7 @@ export const GodTroFelter: FC = () => {
 
             {beløpIBehold === 'hele' && <Hele />}
 
-            {beløpIBehold === 'deler' && <></>}
+            {beløpIBehold === 'deler' && <Deler />}
         </>
     );
 };
