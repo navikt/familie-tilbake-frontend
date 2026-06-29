@@ -4,6 +4,7 @@ import { type UserEvent, userEvent } from '@testing-library/user-event';
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
 
 type Beløpsbeskrivelse = 'hele beløpet' | 'deler av beløpet';
+type SærligeGrunnerRetning = 'for' | 'mot';
 
 const renderVilkårsDetaljer = (): void => {
     render(<VilkårsvurderingDetaljer fom="01.01.2023" tom="31.12.2023" />);
@@ -12,6 +13,14 @@ const renderVilkårsDetaljer = (): void => {
 const begrunnelseGodTro = async (): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
         name: 'Begrunn hvorfor du vurderer at mottaker har mottatt beløpet i aktsom god tro',
+    });
+const begrunnelseForårsaketAvMottakerForsett = async (): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: 'Begrunn hvorfor du vurderer at mottaker har handlet med forsett',
+    });
+const begrunnelseForårsaketAvMottakerGrovtUaktsom = async (): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: 'Begrunn hvorfor du vurderer at mottaker har handlet grovt uaktsomt',
     });
 
 const begrunnelseIngenting = async (): Promise<HTMLElement> =>
@@ -26,6 +35,50 @@ const vilkårRadioGroup = (): HTMLElement =>
 const godTroRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
         name: 'Mottaker har mottatt beløpet i aktsom god tro',
+    });
+const forårsaketAvMottakerRadio = (): HTMLElement =>
+    within(vilkårRadioGroup()).getByRole('radio', {
+        name: /Mottaker har forårsaket utbetalingen ved å forsettlig eller uaktsomt gi feilaktige eller mangelfulle opplysninger \(Første avsnitt andre setning\)/i,
+    });
+// const forstoEllerBurdeForståttRadio = (): HTMLElement =>
+//     within(vilkårRadioGroup()).getByRole('radio', {
+//         name: /Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil \(Første avsnitt første setning\)/i,
+//     });
+
+const aktsomhetRadioGroup = async (): Promise<HTMLElement> =>
+    await screen.findByRole('radiogroup', {
+        name: 'Vurder mottakers uaktsomhet i perioden',
+    });
+const forsettRadio = async (): Promise<HTMLElement> =>
+    within(await aktsomhetRadioGroup()).getByRole('radio', {
+        name: 'Forsett',
+    });
+const grovtUaktsomRadio = async (): Promise<HTMLElement> =>
+    within(await aktsomhetRadioGroup()).getByRole('radio', {
+        name: 'Grovt uaktsom',
+    });
+
+const særligeGrunnerRadioGroup = async (): Promise<HTMLElement> =>
+    await screen.findByRole('radiogroup', {
+        name: 'Er det særlige grunner til å redusere beløpet?',
+    });
+const særligeGrunnerJaRadio = async (): Promise<HTMLElement> =>
+    within(await særligeGrunnerRadioGroup()).getByRole('radio', { name: 'Ja' });
+const særligeGrunnerNeiRadio = async (): Promise<HTMLElement> =>
+    within(await særligeGrunnerRadioGroup()).getByRole('radio', { name: 'Nei' });
+const særligeGrunnerCheckboxGroup = async (retning: SærligeGrunnerRetning): Promise<HTMLElement> =>
+    await screen.findByRole('group', {
+        name: `Hvilke særlige grunner taler ${retning} å redusere beløpet?`,
+    });
+const begrunnelseSærligeGrunner = async (retning: SærligeGrunnerRetning): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: `Begrunn hvorfor du vurderer at det ${
+            retning === 'for' ? 'er' : 'ikke er'
+        } særlige grunner til å redusere beløpet`,
+    });
+const redusertBeløpSelect = async (): Promise<HTMLElement> =>
+    await screen.findByRole('combobox', {
+        name: 'Hvor mye skal beløpet reduseres?',
     });
 
 const beløpIBeholdRadioGroup = (): HTMLElement =>
@@ -137,7 +190,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await årsakKrevesTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
             expect(begrunnelseKreves('hele beløpet')).toBeInTheDocument();
             expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
-            expect(screen.getByText('10000 kroner')).toBeInTheDocument();
+            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Hele beløpet i behold - Kreves ikke tilbake', async () => {
@@ -171,7 +224,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await årsakKrevesTilbakeCheckboxGroup('deler av beløpet')).toBeInTheDocument();
             expect(begrunnelseKreves('deler av beløpet')).toBeInTheDocument();
             expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
-            expect(screen.getByText('10000 kroner')).toBeInTheDocument();
+            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Deler av beløpet i behold - Kreves ikke tilbake', async () => {
@@ -208,6 +261,78 @@ describe('VilkårsvurderingDetaljer', () => {
 
             user.click(annetCheckbox(gruppe));
             expect(await beskrivAnnetFinnes()).toBeInTheDocument();
+        });
+    });
+
+    describe('Forårsaket av mottaker', () => {
+        test('Forsett', async () => {
+            renderVilkårsDetaljer();
+            user.click(forårsaketAvMottakerRadio());
+            user.click(await forsettRadio());
+            expect(await begrunnelseForårsaketAvMottakerForsett()).toBeInTheDocument();
+            expect(screen.getByText('Renter')).toBeInTheDocument();
+            expect(screen.getByText('10 %')).toBeInTheDocument();
+            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
+        });
+
+        describe('Grovt uaktsom', () => {
+            const velgGrovtUaktsom = async (): Promise<void> => {
+                renderVilkårsDetaljer();
+                user.click(forårsaketAvMottakerRadio());
+                user.click(await grovtUaktsomRadio());
+                expect(await begrunnelseForårsaketAvMottakerGrovtUaktsom()).toBeInTheDocument();
+            };
+
+            test('Ja - særlige grunner skal redusere beløpet', async () => {
+                await velgGrovtUaktsom();
+
+                user.click(await særligeGrunnerJaRadio());
+                expect(await særligeGrunnerCheckboxGroup('for')).toBeInTheDocument();
+                expect(await begrunnelseSærligeGrunner('for')).toBeInTheDocument();
+
+                const select = await redusertBeløpSelect();
+                expect(within(select).getByRole('option', { name: '30 %' })).toBeInTheDocument();
+                expect(within(select).getByRole('option', { name: '50 %' })).toBeInTheDocument();
+                expect(within(select).getByRole('option', { name: '70 %' })).toBeInTheDocument();
+
+                expect(screen.getByText('Renter')).toBeInTheDocument();
+                expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+                expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
+            });
+
+            test('Nei - særlige grunner skal ikke redusere beløpet', async () => {
+                await velgGrovtUaktsom();
+
+                user.click(await særligeGrunnerNeiRadio());
+                expect(await særligeGrunnerCheckboxGroup('mot')).toBeInTheDocument();
+                expect(await begrunnelseSærligeGrunner('mot')).toBeInTheDocument();
+                expect(screen.queryByText('Renter')).not.toBeInTheDocument();
+                expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+                expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
+            });
+
+            test('Annet-alternativ viser fritekstfelt', async () => {
+                await velgGrovtUaktsom();
+
+                user.click(await særligeGrunnerJaRadio());
+                const gruppe = await særligeGrunnerCheckboxGroup('for');
+                expect(beskrivAnnetQuery()).not.toBeInTheDocument();
+
+                user.click(annetCheckbox(gruppe));
+                expect(await beskrivAnnetFinnes()).toBeInTheDocument();
+            });
+
+            test('Nei - Annet-alternativ viser fritekstfelt', async () => {
+                await velgGrovtUaktsom();
+
+                user.click(await særligeGrunnerNeiRadio());
+                const gruppe = await særligeGrunnerCheckboxGroup('mot');
+                expect(beskrivAnnetQuery()).not.toBeInTheDocument();
+
+                user.click(annetCheckbox(gruppe));
+                expect(await beskrivAnnetFinnes()).toBeInTheDocument();
+            });
         });
     });
 });

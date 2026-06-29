@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useState } from 'react';
 
+import { ForårsaketAvMottakerenFelter } from './forårsaket-av-mottakeren/ForårsaketAvMottakerenFelter';
 import { GodTroFelter } from './god-tro/GodTroFelter';
 
 type VilkårValg = 'forsto_eller_burde_forstått' | 'forårsaket_av_mottaker' | 'god_tro';
@@ -36,6 +37,8 @@ export const VilkårsvurderingSkjema: FC = () => {
             </RadioGroup>
 
             {valg === 'god_tro' && <GodTroFelter />}
+
+            {valg === 'forårsaket_av_mottaker' && <ForårsaketAvMottakerenFelter />}
         </form>
     );
 };
