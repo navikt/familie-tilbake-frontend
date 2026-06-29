@@ -3,6 +3,7 @@ import { type FC, useState } from 'react';
 
 import { Forsett } from './Forsett';
 import { GrovtUaktsom } from './GrovtUaktsom';
+import { Uaktsom } from './Uaktsom';
 
 export const ForårsaketAvMottakerenFelter: FC = () => {
     const [uaktsomhet, setUaktsomhet] = useState<string>();
@@ -23,6 +24,8 @@ export const ForårsaketAvMottakerenFelter: FC = () => {
             {uaktsomhet === 'grovt-uaktsom' && <GrovtUaktsom />}
 
             {uaktsomhet === 'forsett' && <Forsett />}
+
+            {uaktsomhet === 'uaktsom' && <Uaktsom />}
         </>
     );
 };

@@ -4,11 +4,11 @@ import { Textarea } from '@navikt/ds-react';
 
 import { SærligeGrunner } from './SærligeGrunner';
 
-export const GrovtUaktsom: FC = () => {
+export const Uaktsom: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor du vurderer at mottaker har handlet grovt uaktsomt"
+                label="Begrunn hvorfor du vurderer at mottaker har handlet uaktsomt"
                 size="small"
                 className="max-w-xl"
                 minRows={3}
