@@ -2,13 +2,13 @@ import type { FC } from 'react';
 
 import { Textarea } from '@navikt/ds-react';
 
-import { SærligeGrunner } from './SærligeGrunner';
+import { SærligeGrunner } from '../SærligeGrunner';
 
 export const Uaktsom: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor du vurderer at mottaker har handlet uaktsomt"
+                label="Begrunn hvorfor du vurderer at mottakeren har handlet uaktsomt"
                 size="small"
                 className="max-w-xl"
                 minRows={3}

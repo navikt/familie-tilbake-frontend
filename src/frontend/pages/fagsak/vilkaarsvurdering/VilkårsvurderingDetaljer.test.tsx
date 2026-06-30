@@ -31,11 +31,17 @@ const renderVilkårsDetaljer = (): void => {
 
 const begrunnelseGodTro = async (): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
-        name: 'Begrunn hvorfor du vurderer at mottaker har mottatt beløpet i aktsom god tro',
+        name: 'Begrunn hvorfor du vurderer at mottakeren har mottatt beløpet i aktsom god tro',
     });
 const begrunnelseForårsaketAvMottakeren = async (grad: Uaktsomhetsgrad): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
-        name: `Begrunn hvorfor du vurderer at mottaker har handlet ${grad}`,
+        name: `Begrunn hvorfor du vurderer at mottakeren har handlet ${grad}`,
+    });
+const begrunnelseForstoEllerBurdeForstått = async (
+    grad: 'forsto' | 'burde forstått'
+): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: `Begrunn hvorfor du vurderer at mottakeren ${grad} at utbetalingen skyldtes en feil`,
     });
 
 const begrunnelseIngenting = async (): Promise<HTMLElement> =>
@@ -49,20 +55,33 @@ const vilkårRadioGroup = (): HTMLElement =>
     });
 const godTroRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
-        name: 'Mottaker har mottatt beløpet i aktsom god tro',
+        name: 'Mottakeren har mottatt beløpet i aktsom god tro',
     });
 const forårsaketAvMottakerRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
-        name: /Mottaker har forårsaket utbetalingen ved å forsettlig eller uaktsomt gi feilaktige eller mangelfulle opplysninger \(Første avsnitt andre setning\)/i,
+        name: /Mottakeren har forårsaket utbetalingen ved å forsettlig eller uaktsomt gi feilaktige eller mangelfulle opplysninger \(Første avsnitt andre setning\)/i,
     });
-// const forstoEllerBurdeForståttRadio = (): HTMLElement =>
-//     within(vilkårRadioGroup()).getByRole('radio', {
-//         name: /Mottaker forsto eller burde forstått at utbetalingen skyldtes en feil \(Første avsnitt første setning\)/i,
-//     });
+const forstoEllerBurdeForståttRadio = (): HTMLElement =>
+    within(vilkårRadioGroup()).getByRole('radio', {
+        name: /Mottakeren forsto eller burde forstått at utbetalingen skyldtes en feil \(Første avsnitt første setning\)/i,
+    });
+
+const forståelseRadioGroup = async (): Promise<HTMLElement> =>
+    await screen.findByRole('radiogroup', {
+        name: 'Vurder mottakerens forståelse på utbetalingstidspunktet',
+    });
+const forstoRadio = async (): Promise<HTMLElement> =>
+    within(await forståelseRadioGroup()).getByRole('radio', {
+        name: 'Mottakeren forsto at utbetalingen skyldtes en feil',
+    });
+const burdeForståttRadio = async (): Promise<HTMLElement> =>
+    within(await forståelseRadioGroup()).getByRole('radio', {
+        name: 'Mottakeren burde forstått at utbetalingen skyldtes en feil',
+    });
 
 const aktsomhetRadioGroup = async (): Promise<HTMLElement> =>
     await screen.findByRole('radiogroup', {
-        name: 'Vurder mottakers uaktsomhet i perioden',
+        name: 'Vurder mottakerens uaktsomhet i perioden',
     });
 const forsettRadio = async (): Promise<HTMLElement> =>
     within(await aktsomhetRadioGroup()).getByRole('radio', {
@@ -95,9 +114,9 @@ const begrunnelseSærligeGrunner = async (retning: SærligeGrunnerRetning): Prom
             retning === 'for' ? 'er' : 'ikke er'
         } særlige grunner til å redusere beløpet`,
     });
-const redusertBeløpSelect = async (): Promise<HTMLElement> =>
-    await screen.findByRole('combobox', {
-        name: 'Hvor mye skal beløpet reduseres?',
+const reduksjonsprosentField = async (): Promise<HTMLElement> =>
+    await screen.findByRole('spinbutton', {
+        name: 'Hvor mange prosent skal beløpet reduseres?',
     });
 
 const beløpIBeholdRadioGroup = (): HTMLElement =>
@@ -129,7 +148,7 @@ const krevesTilbakeNeiRadio = async (beløpsbeskrivelse: Beløpsbeskrivelse): Pr
     within(await krevesTilbakeRadioGroup(beløpsbeskrivelse)).getByRole('radio', { name: 'Nei' });
 
 const beløpTilbakekreves = (): HTMLElement =>
-    screen.getByRole('textbox', {
+    screen.getByRole('spinbutton', {
         name: 'Hvor mange kroner skal kreves tilbake?',
     });
 const beløpIBehold = (): HTMLElement =>
@@ -181,6 +200,30 @@ describe('VilkårsvurderingDetaljer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
+    });
+
+    describe('Forsto eller burde forstått', () => {
+        describe('Forsto', () => {
+            const velgForsto = async (): Promise<void> => {
+                renderVilkårsDetaljer();
+                user.click(forstoEllerBurdeForståttRadio());
+                user.click(await forstoRadio());
+                expect(await begrunnelseForstoEllerBurdeForstått('forsto')).toBeInTheDocument();
+            };
+            særligeGrunnerSuite(velgForsto, false);
+        });
+
+        describe('Burde forstått', () => {
+            const velgBurdeForstått = async (): Promise<void> => {
+                renderVilkårsDetaljer();
+                user.click(forstoEllerBurdeForståttRadio());
+                user.click(await burdeForståttRadio());
+                expect(
+                    await begrunnelseForstoEllerBurdeForstått('burde forstått')
+                ).toBeInTheDocument();
+            };
+            særligeGrunnerSuite(velgBurdeForstått, false);
+        });
     });
 
     describe('God tro', () => {
@@ -289,6 +332,7 @@ describe('VilkårsvurderingDetaljer', () => {
             user.click(forårsaketAvMottakerRadio());
             user.click(await forsettRadio());
             expect(await begrunnelseForårsaketAvMottakeren('med forsett')).toBeInTheDocument();
+            expect(screen.queryByText('Reduksjon')).not.toBeInTheDocument();
             expect(screen.getByText('Renter')).toBeInTheDocument();
             expect(screen.getByText('10 %')).toBeInTheDocument();
             expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
@@ -304,7 +348,7 @@ describe('VilkårsvurderingDetaljer', () => {
                     await begrunnelseForårsaketAvMottakeren('grovt uaktsomt')
                 ).toBeInTheDocument();
             };
-            særligeGrunnerSuite(velgGrovtUaktsom);
+            særligeGrunnerSuite(velgGrovtUaktsom, true);
         });
 
         describe('Uaktsom', () => {
@@ -314,11 +358,14 @@ describe('VilkårsvurderingDetaljer', () => {
                 user.click(await uaktsomRadio());
                 expect(await begrunnelseForårsaketAvMottakeren('uaktsomt')).toBeInTheDocument();
             };
-            særligeGrunnerSuite(velgUaktsom);
+            særligeGrunnerSuite(velgUaktsom, false);
         });
     });
 
-    const særligeGrunnerSuite = (velgUaktsomhetsgrad: () => Promise<void>): void => {
+    const særligeGrunnerSuite = (
+        velgUaktsomhetsgrad: () => Promise<void>,
+        forventRenter: boolean
+    ): void => {
         test('Ja - særlige grunner skal redusere beløpet', async () => {
             await velgUaktsomhetsgrad();
 
@@ -326,12 +373,14 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await særligeGrunnerCheckboxGroup('for')).toBeInTheDocument();
             expect(await begrunnelseSærligeGrunner('for')).toBeInTheDocument();
 
-            const select = await redusertBeløpSelect();
-            expect(within(select).getByRole('option', { name: '30 %' })).toBeInTheDocument();
-            expect(within(select).getByRole('option', { name: '50 %' })).toBeInTheDocument();
-            expect(within(select).getByRole('option', { name: '70 %' })).toBeInTheDocument();
+            expect(await reduksjonsprosentField()).toBeInTheDocument();
+            expect(screen.getByText('Reduksjon')).toBeInTheDocument();
 
-            expect(screen.getByText('Renter')).toBeInTheDocument();
+            if (forventRenter) {
+                expect(screen.getByText('Renter')).toBeInTheDocument();
+            } else {
+                expect(screen.queryByText('Renter')).not.toBeInTheDocument();
+            }
             expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
@@ -342,7 +391,12 @@ describe('VilkårsvurderingDetaljer', () => {
             user.click(await særligeGrunnerNeiRadio());
             expect(await særligeGrunnerCheckboxGroup('mot')).toBeInTheDocument();
             expect(await begrunnelseSærligeGrunner('mot')).toBeInTheDocument();
-            expect(screen.queryByText('Renter')).not.toBeInTheDocument();
+            expect(screen.queryByText('Reduksjon')).not.toBeInTheDocument();
+            if (forventRenter) {
+                expect(screen.getByText('Renter')).toBeInTheDocument();
+            } else {
+                expect(screen.queryByText('Renter')).not.toBeInTheDocument();
+            }
             expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });

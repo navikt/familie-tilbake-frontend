@@ -126,6 +126,8 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         size="small"
                         style={{ width: '100px' }}
                         className="max-w-xl"
+                        type="number"
+                        min={1}
                     />
                     <SimulertBeløp beløp={0} />
                 </>

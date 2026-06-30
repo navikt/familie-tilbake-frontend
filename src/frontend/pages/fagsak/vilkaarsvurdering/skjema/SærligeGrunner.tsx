@@ -4,20 +4,24 @@ import {
     HStack,
     Radio,
     RadioGroup,
-    Select,
     Textarea,
     TextField,
 } from '@navikt/ds-react';
 import { type FC, useState } from 'react';
 
-import { SimulertBeløp } from '../SimulertBeløp';
+import { SimulertBeløp } from './SimulertBeløp';
 
 type SærligeGrunnerValg = 'ja' | 'nei';
 
-export const SærligeGrunner: FC = () => {
+type Props = {
+    renter?: boolean;
+};
+
+export const SærligeGrunner: FC<Props> = ({ renter = false }: Props) => {
     const [særligeGrunner, setSærligeGrunner] = useState<SærligeGrunnerValg>();
     const [særligeGrunnerFor, setSærligeGrunnerFor] = useState<string[]>([]);
     const [særligeGrunnerMot, setSærligeGrunnerMot] = useState<string[]>([]);
+    const [reduksjonsprosent, setReduksjonsprosent] = useState<number>(1);
     return (
         <>
             <RadioGroup
@@ -71,20 +75,24 @@ export const SærligeGrunner: FC = () => {
                         resize
                         maxLength={3000}
                     />
-                    <Select
-                        name="redusertBeløpProsent"
-                        label="Hvor mye skal beløpet reduseres?"
+                    <TextField
+                        label="Hvor mange prosent skal beløpet reduseres?"
                         size="small"
+                        className="max-w-xl"
+                        value={reduksjonsprosent}
                         style={{ width: '100px' }}
-                    >
-                        <option value="" disabled>
-                            Velg
-                        </option>
-                        <option value="30">30 %</option>
-                        <option value="50">50 %</option>
-                        <option value="70">70 %</option>
-                    </Select>
-                    <SimulertBeløp renter beløp={10000} />
+                        onChange={(e: React.ChangeEvent<HTMLInputElement, Element>): void =>
+                            setReduksjonsprosent(Number(e.target.value))
+                        }
+                        type="number"
+                        min={1}
+                        max={100}
+                    />
+                    <SimulertBeløp
+                        renter={renter}
+                        reduksjonsprosent={reduksjonsprosent}
+                        beløp={10000}
+                    />
                 </>
             )}
 
@@ -127,7 +135,7 @@ export const SærligeGrunner: FC = () => {
                         resize
                         maxLength={3000}
                     />
-                    <SimulertBeløp beløp={10000} />
+                    <SimulertBeløp renter={renter} beløp={10000} />
                 </>
             )}
         </>

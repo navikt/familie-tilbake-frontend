@@ -10,7 +10,7 @@ export const ForårsaketAvMottakerenFelter: FC = () => {
     return (
         <>
             <RadioGroup
-                legend="Vurder mottakers uaktsomhet i perioden"
+                legend="Vurder mottakerens uaktsomhet i perioden"
                 size="small"
                 className="max-w-xl"
                 value={uaktsomhet ?? ''}

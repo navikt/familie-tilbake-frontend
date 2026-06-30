@@ -15,7 +15,7 @@ export const GodTroFelter: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor du vurderer at mottaker har mottatt beløpet i aktsom god tro"
+                label="Begrunn hvorfor du vurderer at mottakeren har mottatt beløpet i aktsom god tro"
                 size="small"
                 className="max-w-xl"
                 minRows={3}

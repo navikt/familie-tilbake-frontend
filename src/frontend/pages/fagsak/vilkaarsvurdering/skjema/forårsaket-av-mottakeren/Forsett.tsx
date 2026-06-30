@@ -8,7 +8,7 @@ export const Forsett: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor du vurderer at mottaker har handlet med forsett"
+                label="Begrunn hvorfor du vurderer at mottakeren har handlet med forsett"
                 size="small"
                 className="max-w-xl"
                 minRows={3}
