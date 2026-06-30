@@ -11,7 +11,7 @@ import {
     SealXMarkIcon,
     XMarkIcon,
 } from '@navikt/aksel-icons';
-import { Heading, HStack, Tag } from '@navikt/ds-react';
+import { Heading, HStack, Tag, Tooltip } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
@@ -99,25 +99,33 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             }`}
                         >
                             <HStack gap="space-8">
-                                <Tag
-                                    variant="moderate"
-                                    icon={vurdering[periode.vurdering].icon}
-                                    size="small"
-                                    className="w-fit"
-                                    data-color={vurdering[periode.vurdering]['data-color']}
+                                <Tooltip
+                                    content={`Vurdering: ${vurdering[periode.vurdering].label}`}
                                 >
-                                    {vurdering[periode.vurdering].label}
-                                </Tag>
-                                {periode.resultat && (
                                     <Tag
                                         variant="moderate"
-                                        icon={resultat[periode.resultat].icon}
+                                        icon={vurdering[periode.vurdering].icon}
                                         size="small"
                                         className="w-fit"
-                                        data-color={resultat[periode.resultat]['data-color']}
+                                        data-color={vurdering[periode.vurdering]['data-color']}
                                     >
-                                        {resultat[periode.resultat].label}
+                                        {vurdering[periode.vurdering].label}
                                     </Tag>
+                                </Tooltip>
+                                {periode.resultat && (
+                                    <Tooltip
+                                        content={`Resultat: ${resultat[periode.resultat].label}`}
+                                    >
+                                        <Tag
+                                            variant="moderate"
+                                            icon={resultat[periode.resultat].icon}
+                                            size="small"
+                                            className="w-fit"
+                                            data-color={resultat[periode.resultat]['data-color']}
+                                        >
+                                            {resultat[periode.resultat].label}
+                                        </Tag>
+                                    </Tooltip>
                                 )}
                             </HStack>
                             <span className="font-ax-bold text-xl">
