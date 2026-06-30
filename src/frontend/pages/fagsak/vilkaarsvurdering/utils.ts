@@ -24,8 +24,8 @@ export const utledVurdering = (valg: VilkaarsvurderingValg): Vurderingsstatus =>
     }
 };
 
-export const erPeriodeVurdert = (periode: Vilkårsperiode): boolean =>
-    periode.vurdering !== 'IKKE_VURDERT';
+export const erPeriodeVurdert = (vurdering: Vilkårsperiode['vurdering']): boolean =>
+    vurdering !== 'IKKE_VURDERT';
 
 /**
  * Finner hvilken periode som skal være valgt som standard.
@@ -40,7 +40,7 @@ export const finnStandardValgtPeriode = (
     if (perioder.length === 0) {
         return undefined;
     }
-    const uvurderte = perioder.filter(periode => !erPeriodeVurdert(periode));
+    const uvurderte = perioder.filter(periode => !erPeriodeVurdert(periode.vurdering));
     if (uvurderte.length > 0) {
         return uvurderte[0];
     }

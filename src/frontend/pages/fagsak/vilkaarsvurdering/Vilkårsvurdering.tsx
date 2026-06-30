@@ -4,12 +4,15 @@ import type { Vilkårsperiode } from './typer';
 
 import { DocPencilIcon, SealCheckmarkIcon } from '@navikt/aksel-icons';
 import { Heading, HStack, InlineMessage, Tag, VStack } from '@navikt/ds-react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
-import { behandlingVilkaarsvurderingOptions } from '@/generated-new/@tanstack/react-query.gen';
+import {
+    behandlingVilkaarsvurderingOptions,
+    behandlingVilkaarsvurderingQueryKey,
+} from '@/generated-new/@tanstack/react-query.gen';
 import { useActionBar } from '@/hooks/useActionBar';
 import { formatterDatostring } from '@/utils/dateUtils';
 import { useStegNavigering } from '@/utils/sider';
@@ -34,6 +37,7 @@ export const Vilkårsvurdering: FC = () => {
     const { actionBarStegtekst } = useBehandlingState();
     const navigerTilForrige = useStegNavigering('FORELDELSE');
     const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
+    const queryClient = useQueryClient();
 
     const { data: vilkår } = useSuspenseQuery(
         behandlingVilkaarsvurderingOptions({ path: { behandlingId } })
@@ -44,6 +48,12 @@ export const Vilkårsvurdering: FC = () => {
     const [valgtPeriode, setValgtPeriode] = useState<Vilkårsperiode | undefined>(() =>
         finnStandardValgtPeriode(perioder)
     );
+
+    const invaliderVilkårsvurdering = (): void => {
+        queryClient.invalidateQueries({
+            queryKey: behandlingVilkaarsvurderingQueryKey({ path: { behandlingId } }),
+        });
+    };
 
     useActionBar({
         stegtekst: actionBarStegtekst('VILKÅRSVURDERING'),
@@ -82,7 +92,11 @@ export const Vilkårsvurdering: FC = () => {
                     valgtPeriode={valgtPeriode}
                     onSelectPeriode={setValgtPeriode}
                 />
-                <VilkårsvurderingDetaljer fom={valgtPeriode?.fom} tom={valgtPeriode?.tom} />
+                <VilkårsvurderingDetaljer
+                    valgtPeriode={valgtPeriode}
+                    vilkårsperioder={vilkår.vilkårsperioder}
+                    hentVilkårsvurdering={invaliderVilkårsvurdering}
+                />
             </div>
         </VStack>
     );

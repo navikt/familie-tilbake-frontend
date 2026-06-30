@@ -77,31 +77,32 @@ export const DelPeriode: FC<Props> = ({
         status: 'neutral',
     } satisfies Partial<TimelinePeriodProps>;
 
-    const tidslinjePerioder = valgtDato
-        ? ([
-              {
-                  id: '1',
-                  start: new Date(periode.fom),
-                  end: new Date(førsteSplittetPeriode.tom),
-                  ...fellesForPerioder,
-                  status: erVurdert ? ('success' as const) : fellesForPerioder.status,
-              },
-              {
-                  id: '2',
-                  start: valgtDato,
-                  end: new Date(andreSplittetPeriode.tom),
-                  ...fellesForPerioder,
-              },
-          ] satisfies TimelinePeriodProps[])
-        : ([
-              {
-                  id: '1',
-                  start: new Date(periode.fom),
-                  end: new Date(periode.tom),
-                  ...fellesForPerioder,
-                  status: erVurdert ? ('success' as const) : fellesForPerioder.status,
-              },
-          ] satisfies TimelinePeriodProps[]);
+    const tidslinjePerioder =
+        valgtDato && førsteSplittetPeriode && andreSplittetPeriode
+            ? ([
+                  {
+                      id: '1',
+                      start: new Date(periode.fom),
+                      end: new Date(førsteSplittetPeriode.tom),
+                      ...fellesForPerioder,
+                      status: erVurdert ? ('success' as const) : fellesForPerioder.status,
+                  },
+                  {
+                      id: '2',
+                      start: valgtDato,
+                      end: new Date(andreSplittetPeriode.tom),
+                      ...fellesForPerioder,
+                  },
+              ] satisfies TimelinePeriodProps[])
+            : ([
+                  {
+                      id: '1',
+                      start: new Date(periode.fom),
+                      end: new Date(periode.tom),
+                      ...fellesForPerioder,
+                      status: erVurdert ? ('success' as const) : fellesForPerioder.status,
+                  },
+              ] satisfies TimelinePeriodProps[]);
 
     const { datepickerProps, inputProps } = useDatepicker({
         fromDate: new Date(periode.fom),
@@ -166,7 +167,7 @@ export const DelPeriode: FC<Props> = ({
                 size="xsmall"
                 variant="tertiary"
             >
-                Del opp
+                Del opp perioden
             </Button>
 
             <Modal

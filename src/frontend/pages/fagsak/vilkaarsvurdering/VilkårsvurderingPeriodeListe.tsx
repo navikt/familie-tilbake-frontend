@@ -82,8 +82,8 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}
                 </Heading>
-                {perioder.filter(periode => erPeriodeVurdert(periode)).length} av {perioder.length}{' '}
-                vurdert
+                {perioder.filter(periode => erPeriodeVurdert(periode.vurdering)).length} av{' '}
+                {perioder.length} vurdert
             </HStack>
             <ul className="grid grid-cols-1 ax-sm:grid-cols-2 ax-md:grid-cols-1 gap-2">
                 {perioder.map(periode => (

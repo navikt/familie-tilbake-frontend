@@ -1,3 +1,5 @@
+import type { Vilkårsperiode } from './typer';
+
 import { render, screen, within } from '@testing-library/react';
 import { type UserEvent, userEvent } from '@testing-library/user-event';
 
@@ -7,8 +9,24 @@ type Beløpsbeskrivelse = 'hele beløpet' | 'deler av beløpet';
 type SærligeGrunnerRetning = 'for' | 'mot';
 type Uaktsomhetsgrad = 'med forsett' | 'grovt uaktsomt' | 'uaktsomt';
 
+const valgtPeriode: Vilkårsperiode = {
+    id: '1',
+    fom: '01.01.2023',
+    tom: '31.12.2023',
+    feilutbetalt: 10000,
+    vurdering: 'IKKE_VURDERT',
+    resultat: null,
+    rettsligGrunnlag: [],
+};
+
 const renderVilkårsDetaljer = (): void => {
-    render(<VilkårsvurderingDetaljer fom="01.01.2023" tom="31.12.2023" />);
+    render(
+        <VilkårsvurderingDetaljer
+            valgtPeriode={valgtPeriode}
+            vilkårsperioder={[]}
+            hentVilkårsvurdering={(): void => undefined}
+        />
+    );
 };
 
 const begrunnelseGodTro = async (): Promise<HTMLElement> =>

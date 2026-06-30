@@ -90,11 +90,13 @@ describe('Vilkårsvurdering - utils', () => {
 
     describe('erPeriodeVurdert', () => {
         test('burde være true for en vurdert periode', () => {
-            expect(erPeriodeVurdert(lagPeriode({ vurdering: 'GOD_TRO' }))).toBe(true);
+            expect(erPeriodeVurdert(lagPeriode({ vurdering: 'GOD_TRO' }).vurdering)).toBe(true);
         });
 
         test('burde være false for en uvurdert periode', () => {
-            expect(erPeriodeVurdert(lagPeriode({ vurdering: 'IKKE_VURDERT' }))).toBe(false);
+            expect(erPeriodeVurdert(lagPeriode({ vurdering: 'IKKE_VURDERT' }).vurdering)).toBe(
+                false
+            );
         });
     });
 

@@ -2,7 +2,7 @@ import type { Periode } from '@/generated';
 import type { PeriodeInfo } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
@@ -45,9 +45,9 @@ const renderDelPeriode = ({
     );
 };
 
-const delOppKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Del opp' });
+const delOppKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Del opp perioden' });
 const delOppPeriodenKnapp = (): HTMLElement =>
-    screen.getByRole('button', { name: 'Del opp perioden' });
+    within(screen.getByRole('dialog')).getByRole('button', { name: 'Del opp perioden' });
 const velgDatoTekst = 'Velg fra og med dato for periode 2';
 const velgDatoDatePicker = (): HTMLElement => screen.getByLabelText(velgDatoTekst);
 

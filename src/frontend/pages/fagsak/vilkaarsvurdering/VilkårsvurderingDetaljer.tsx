@@ -1,17 +1,28 @@
 import type { FC } from 'react';
+import type { Vilkaarsperiode } from '@/generated-new';
+import type { Vilkårsperiode } from './typer';
 
 import { Box, Heading, HStack } from '@navikt/ds-react';
 
+import { DelPeriode } from './del-periode/DelPeriode';
 import { VilkårsvurderingSkjema } from './skjema/VilkårsvurderingSkjema';
-
-// import { DelPeriode } from './del-periode/DelPeriode';
+import { erPeriodeVurdert } from './utils';
 
 type Props = {
-    fom: string | undefined;
-    tom: string | undefined;
+    valgtPeriode: Vilkårsperiode | undefined;
+    vilkårsperioder: Vilkaarsperiode[];
+    hentVilkårsvurdering: () => void;
 };
 
-export const VilkårsvurderingDetaljer: FC<Props> = ({ fom, tom }: Props) => {
+export const VilkårsvurderingDetaljer: FC<Props> = ({
+    valgtPeriode,
+    vilkårsperioder,
+    hentVilkårsvurdering,
+}: Props) => {
+    const valgtVilkårsperiode = vilkårsperioder.find(
+        ({ vilkårsvurdering }) => vilkårsvurdering.id === valgtPeriode?.id
+    );
+
     return (
         <section className="flex-2 min-h-0">
             <Box className="border border-ax-default rounded-xl border-ax-border-neutral-subtle h-full flex flex-col">
@@ -20,21 +31,21 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({ fom, tom }: Props) => {
                     className="border-b py-3 px-4 border-ax-border-neutral-subtle shrink-0"
                 >
                     <Heading size="small" level="2">
-                        {`Periode: ${fom}–${tom}`}
+                        {`Periode: ${valgtPeriode?.fom}–${valgtPeriode?.tom}`}
                     </Heading>
-                    {/* {fom && tom && (
-                        <DelPeriode
-                            periode={{
-                                fom,
-                                tom,
-                            }}
-                            vilkårsperioder={[]}
-                            erVurdert={false}
-                            hentVilkårsvurdering={function (): void {
-                                throw new Error('Function not implemented.');
-                            }}
-                        />
-                    )} */}
+                    {valgtPeriode &&
+                        valgtVilkårsperiode &&
+                        valgtVilkårsperiode.vilkårsvurdering.delbarePerioder.length > 1 && (
+                            <DelPeriode
+                                key={`${valgtVilkårsperiode.vilkårsvurdering.periode.fom}-${valgtVilkårsperiode.vilkårsvurdering.periode.tom}`}
+                                periode={valgtVilkårsperiode.vilkårsvurdering.periode}
+                                vilkårsperioder={
+                                    valgtVilkårsperiode.vilkårsvurdering.delbarePerioder
+                                }
+                                erVurdert={erPeriodeVurdert(valgtPeriode.vurdering)}
+                                hentVilkårsvurdering={hentVilkårsvurdering}
+                            />
+                        )}
                 </HStack>
 
                 <VilkårsvurderingSkjema />
