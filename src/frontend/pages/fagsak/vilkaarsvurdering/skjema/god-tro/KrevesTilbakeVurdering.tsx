@@ -1,6 +1,14 @@
 import type { FC } from 'react';
 
-import { Checkbox, CheckboxGroup, Radio, RadioGroup, Textarea, TextField } from '@navikt/ds-react';
+import {
+    Checkbox,
+    CheckboxGroup,
+    HStack,
+    Radio,
+    RadioGroup,
+    Textarea,
+    TextField,
+} from '@navikt/ds-react';
 import { useState } from 'react';
 
 import { SimulertBeløp } from '../SimulertBeløp';
@@ -28,8 +36,10 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                 value={krevesTilbake ?? ''}
                 onChange={(value: KrevesTilbake): void => setKrevesTilbake(value)}
             >
-                <Radio value="ja">Ja</Radio>
-                <Radio value="nei">Nei</Radio>
+                <HStack gap="space-16">
+                    <Radio value="ja">Ja</Radio>
+                    <Radio value="nei">Nei</Radio>
+                </HStack>
             </RadioGroup>
 
             {krevesTilbake === 'ja' && (

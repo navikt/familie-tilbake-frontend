@@ -1,6 +1,7 @@
 import {
     Checkbox,
     CheckboxGroup,
+    HStack,
     Radio,
     RadioGroup,
     Select,
@@ -26,8 +27,10 @@ export const SærligeGrunner: FC = () => {
                 value={særligeGrunner ?? ''}
                 onChange={(value: SærligeGrunnerValg): void => setSærligeGrunner(value)}
             >
-                <Radio value="ja">Ja</Radio>
-                <Radio value="nei">Nei</Radio>
+                <HStack gap="space-16">
+                    <Radio value="ja">Ja</Radio>
+                    <Radio value="nei">Nei</Radio>
+                </HStack>
             </RadioGroup>
 
             {særligeGrunner === 'ja' && (
