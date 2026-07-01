@@ -15,7 +15,7 @@ export const BurdeForstått: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SærligeGrunner />
+            <SærligeGrunner reduksjon />
         </>
     );
 };

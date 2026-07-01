@@ -15,7 +15,7 @@ export const VilkårsvurderingSkjema: FC = () => {
     return (
         <form className="py-3 px-4 overflow-y-auto gap-6 flex flex-col flex-1">
             <RadioGroup
-                legend="Hvilket vilkår etter folketrygdloven §22-15 gjelder for perioden?"
+                legend="Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?"
                 size="small"
                 className="max-w-xl"
                 value={valg ?? ''}
@@ -23,14 +23,14 @@ export const VilkårsvurderingSkjema: FC = () => {
             >
                 <Radio value="forsto_eller_burde_forstått">
                     Mottakeren <span className="font-bold">forsto eller burde forstått</span> at
-                    utbetalingen skyldtes en feil (Første avsnitt første setning)
+                    utbetalingen skyldtes en feil (første avsnitt første setning)
                 </Radio>
                 <Radio value="forårsaket_av_mottaker">
                     Mottakeren har forårsaket utbetalingen ved{' '}
                     <span className="font-bold">
                         å forsettlig eller uaktsomt gi feilaktige eller mangelfulle
                     </span>{' '}
-                    opplysninger (Første avsnitt andre setning)
+                    opplysninger (første avsnitt andre setning)
                 </Radio>
                 <Radio value="god_tro">
                     Mottakeren har mottatt beløpet i{' '}

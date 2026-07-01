@@ -25,7 +25,7 @@ export const Deler: FC = () => {
             />
             <KrevesTilbakeVurdering
                 navnPrefix="godTro.deler"
-                beløpsbeskrivelse="deler av beløpet"
+                beløpsbeskrivelse="hele beløpet som er i behold"
             />
         </>
     );

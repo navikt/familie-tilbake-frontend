@@ -5,7 +5,7 @@ import { type UserEvent, userEvent } from '@testing-library/user-event';
 
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
 
-type Beløpsbeskrivelse = 'hele beløpet' | 'deler av beløpet';
+type Beløpsbeskrivelse = 'hele beløpet' | 'hele beløpet som er i behold';
 type SærligeGrunnerRetning = 'for' | 'mot';
 type Uaktsomhetsgrad = 'med forsett' | 'grovt uaktsomt' | 'uaktsomt';
 
@@ -51,7 +51,7 @@ const begrunnelseIngenting = async (): Promise<HTMLElement> =>
 
 const vilkårRadioGroup = (): HTMLElement =>
     screen.getByRole('radiogroup', {
-        name: 'Hvilket vilkår etter folketrygdloven §22-15 gjelder for perioden?',
+        name: 'Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?',
     });
 const godTroRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
@@ -59,11 +59,11 @@ const godTroRadio = (): HTMLElement =>
     });
 const forårsaketAvMottakerRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
-        name: /Mottakeren har forårsaket utbetalingen ved å forsettlig eller uaktsomt gi feilaktige eller mangelfulle opplysninger \(Første avsnitt andre setning\)/i,
+        name: /Mottakeren har forårsaket utbetalingen ved å forsettlig eller uaktsomt gi feilaktige eller mangelfulle opplysninger \(første avsnitt andre setning\)/i,
     });
 const forstoEllerBurdeForståttRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
-        name: /Mottakeren forsto eller burde forstått at utbetalingen skyldtes en feil \(Første avsnitt første setning\)/i,
+        name: /Mottakeren forsto eller burde forstått at utbetalingen skyldtes en feil \(første avsnitt første setning\)/i,
     });
 
 const forståelseRadioGroup = async (): Promise<HTMLElement> =>
@@ -116,7 +116,7 @@ const begrunnelseSærligeGrunner = async (retning: SærligeGrunnerRetning): Prom
     });
 const reduksjonsprosentField = async (): Promise<HTMLElement> =>
     await screen.findByRole('spinbutton', {
-        name: 'Hvor mange prosent skal beløpet reduseres?',
+        name: 'Hvor mange prosent skal beløpet reduseres med?',
     });
 
 const beløpIBeholdRadioGroup = (): HTMLElement =>
@@ -140,7 +140,7 @@ const krevesTilbakeRadioGroup = async (
     beløpsbeskrivelse: Beløpsbeskrivelse
 ): Promise<HTMLElement> =>
     await screen.findByRole('radiogroup', {
-        name: `Skal ${beløpsbeskrivelse} som er i behold kreves tilbake?`,
+        name: `Skal ${beløpsbeskrivelse} kreves tilbake?`,
     });
 const krevesTilbakeJaRadio = async (beløpsbeskrivelse: Beløpsbeskrivelse): Promise<HTMLElement> =>
     within(await krevesTilbakeRadioGroup(beløpsbeskrivelse)).getByRole('radio', { name: 'Ja' });
@@ -156,7 +156,9 @@ const beløpIBehold = (): HTMLElement =>
         name: 'Hvor mange kroner er i behold?',
     });
 
-const begrunnelseIBehold = async (beløpsbeskrivelse: Beløpsbeskrivelse): Promise<HTMLElement> =>
+const begrunnelseIBehold = async (
+    beløpsbeskrivelse: 'hele beløpet' | 'deler av beløpet'
+): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
         name: `Begrunn hvorfor ${beløpsbeskrivelse} er i behold`,
     });
@@ -211,6 +213,14 @@ describe('VilkårsvurderingDetaljer', () => {
                 expect(await begrunnelseForstoEllerBurdeForstått('forsto')).toBeInTheDocument();
             };
             særligeGrunnerSuite(velgForsto, false);
+
+            test('Skal ha "Nei" som standardvalg for særlige grunner', async () => {
+                await velgForsto();
+
+                expect(await særligeGrunnerNeiRadio()).toBeChecked();
+                expect(await særligeGrunnerCheckboxGroup('mot')).toBeInTheDocument();
+                expect(await begrunnelseSærligeGrunner('mot')).toBeInTheDocument();
+            });
         });
 
         describe('Burde forstått', () => {
@@ -235,7 +245,7 @@ describe('VilkårsvurderingDetaljer', () => {
 
             user.click(ingentingIBeholdRadio());
             expect(await begrunnelseIngenting()).toBeInTheDocument();
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('0 kroner')).toBeInTheDocument();
         });
 
@@ -251,7 +261,7 @@ describe('VilkårsvurderingDetaljer', () => {
             user.click(await krevesTilbakeJaRadio('hele beløpet'));
             expect(await årsakKrevesTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
             expect(begrunnelseKreves('hele beløpet')).toBeInTheDocument();
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
@@ -268,7 +278,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
             expect(begrunnelseKrevesIkke('hele beløpet')).toBeInTheDocument();
             expect(beløpTilbakekreves()).toBeInTheDocument();
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('0 kroner')).toBeInTheDocument();
         });
 
@@ -282,10 +292,12 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseIBehold('deler av beløpet')).toBeInTheDocument();
             expect(beløpIBehold()).toBeInTheDocument();
 
-            user.click(await krevesTilbakeJaRadio('deler av beløpet'));
-            expect(await årsakKrevesTilbakeCheckboxGroup('deler av beløpet')).toBeInTheDocument();
-            expect(begrunnelseKreves('deler av beløpet')).toBeInTheDocument();
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            user.click(await krevesTilbakeJaRadio('hele beløpet som er i behold'));
+            expect(
+                await årsakKrevesTilbakeCheckboxGroup('hele beløpet som er i behold')
+            ).toBeInTheDocument();
+            expect(begrunnelseKreves('hele beløpet som er i behold')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
@@ -299,13 +311,13 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseIBehold('deler av beløpet')).toBeInTheDocument();
             expect(beløpIBehold()).toBeInTheDocument();
 
-            user.click(await krevesTilbakeNeiRadio('deler av beløpet'));
+            user.click(await krevesTilbakeNeiRadio('hele beløpet som er i behold'));
             expect(
-                await årsakKrevesIkkeTilbakeCheckboxGroup('deler av beløpet')
+                await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet som er i behold')
             ).toBeInTheDocument();
-            expect(begrunnelseKrevesIkke('deler av beløpet')).toBeInTheDocument();
+            expect(begrunnelseKrevesIkke('hele beløpet som er i behold')).toBeInTheDocument();
             expect(beløpTilbakekreves()).toBeInTheDocument();
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('0 kroner')).toBeInTheDocument();
         });
 
@@ -335,7 +347,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(screen.queryByText('Reduksjon')).not.toBeInTheDocument();
             expect(screen.getByText('Renter')).toBeInTheDocument();
             expect(screen.getByText('10 %')).toBeInTheDocument();
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
@@ -381,7 +393,7 @@ describe('VilkårsvurderingDetaljer', () => {
             } else {
                 expect(screen.queryByText('Renter')).not.toBeInTheDocument();
             }
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
@@ -397,7 +409,7 @@ describe('VilkårsvurderingDetaljer', () => {
             } else {
                 expect(screen.queryByText('Renter')).not.toBeInTheDocument();
             }
-            expect(screen.getByText('Beløp som skal tilbakekreves')).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 

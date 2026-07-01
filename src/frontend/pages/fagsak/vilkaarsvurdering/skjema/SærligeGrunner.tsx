@@ -7,7 +7,7 @@ import {
     Textarea,
     TextField,
 } from '@navikt/ds-react';
-import { type FC, useState } from 'react';
+import { type ChangeEvent, type FC, useState } from 'react';
 
 import { SimulertBeløp } from './SimulertBeløp';
 
@@ -15,13 +15,25 @@ type SærligeGrunnerValg = 'ja' | 'nei';
 
 type Props = {
     renter?: boolean;
+    reduksjon?: boolean;
+    standardValg?: SærligeGrunnerValg;
 };
 
-export const SærligeGrunner: FC<Props> = ({ renter = false }: Props) => {
-    const [særligeGrunner, setSærligeGrunner] = useState<SærligeGrunnerValg>();
+export const SærligeGrunner: FC<Props> = ({
+    renter = false,
+    reduksjon = false,
+    standardValg,
+}: Props) => {
+    const [særligeGrunner, setSærligeGrunner] = useState<SærligeGrunnerValg | undefined>(
+        standardValg
+    );
     const [særligeGrunnerFor, setSærligeGrunnerFor] = useState<string[]>([]);
     const [særligeGrunnerMot, setSærligeGrunnerMot] = useState<string[]>([]);
-    const [reduksjonsprosent, setReduksjonsprosent] = useState<number>(1);
+    const [reduksjonsprosent, setReduksjonsprosent] = useState<number | undefined>(undefined);
+
+    const reduksjonsprops = reduksjon
+        ? { reduksjon: true as const, reduksjonsprosent: reduksjonsprosent ?? 0 }
+        : { reduksjon: false as const };
     return (
         <>
             <RadioGroup
@@ -75,24 +87,21 @@ export const SærligeGrunner: FC<Props> = ({ renter = false }: Props) => {
                         resize
                         maxLength={3000}
                     />
+                    {/* TODO Valider senere at man ikke kan skrive utenfor 1–100 */}
                     <TextField
-                        label="Hvor mange prosent skal beløpet reduseres?"
+                        label="Hvor mange prosent skal beløpet reduseres med?"
                         size="small"
                         className="max-w-xl"
                         value={reduksjonsprosent}
                         style={{ width: '100px' }}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement, Element>): void =>
+                        onChange={(e: ChangeEvent<HTMLInputElement, Element>): void =>
                             setReduksjonsprosent(Number(e.target.value))
                         }
                         type="number"
                         min={1}
                         max={100}
                     />
-                    <SimulertBeløp
-                        renter={renter}
-                        reduksjonsprosent={reduksjonsprosent}
-                        beløp={10000}
-                    />
+                    <SimulertBeløp renter={renter} {...reduksjonsprops} beløp={10000} />
                 </>
             )}
 

@@ -15,7 +15,7 @@ export const GrovtUaktsom: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SærligeGrunner renter />
+            <SærligeGrunner renter reduksjon />
         </>
     );
 };

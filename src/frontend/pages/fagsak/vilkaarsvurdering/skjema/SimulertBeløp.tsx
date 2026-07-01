@@ -4,18 +4,32 @@ import { HStack, VStack } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
-type Props = {
-    renter?: boolean;
-    reduksjonsprosent?: number;
-    beløp: number;
+type MedReduksjon = {
+    reduksjon: true;
+    reduksjonsprosent: number;
 };
 
-export const SimulertBeløp: FC<Props> = ({ renter = false, reduksjonsprosent, beløp }: Props) => {
+type UtenReduksjon = {
+    reduksjon?: false;
+    reduksjonsprosent?: never;
+};
+
+type Props = {
+    renter?: boolean;
+    beløp: number;
+} & (MedReduksjon | UtenReduksjon);
+
+export const SimulertBeløp: FC<Props> = ({
+    renter = false,
+    reduksjonsprosent,
+    reduksjon,
+    beløp,
+}: Props) => {
     return (
-        <HStack className="border border-ax-border-info-subtle rounded-xl bg-ax-bg-info-soft p-4 font-semibold max-w-xl">
-            {(!!reduksjonsprosent || renter) && (
+        <HStack className="border border-ax-border-info-subtle rounded-xl bg-ax-bg-info-soft p-4 font-semibold">
+            {(reduksjon || renter) && (
                 <HStack gap="space-4" className="w-1/2 min-w-0 flex-nowrap">
-                    {!!reduksjonsprosent && (
+                    {reduksjon && (
                         <VStack gap="space-4" className="flex-1 min-w-0">
                             <span className="text-ax-text-neutral-subtle">Reduksjon</span>
                             <span className="text-xl">{reduksjonsprosent} %</span>
@@ -32,7 +46,7 @@ export const SimulertBeløp: FC<Props> = ({ renter = false, reduksjonsprosent, b
             )}
 
             <VStack gap="space-4" className="w-1/2">
-                <span className="text-ax-text-neutral-subtle">Beløp som skal tilbakekreves</span>
+                <span className="text-ax-text-neutral-subtle">Beløpet som skal kreves tilbake</span>
                 <span className="text-xl">{formatCurrencyNoKr(beløp)} kroner</span>
             </VStack>
         </HStack>

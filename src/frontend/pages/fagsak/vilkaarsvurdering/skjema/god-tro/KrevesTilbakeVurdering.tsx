@@ -18,7 +18,7 @@ type KrevesTilbake = 'ja' | 'nei';
 type Props = {
     /** Feltsti-prefiks for skjemafeltene, f.eks. "godTro.hele". Forbereder RHF-registrering. */
     navnPrefix: string;
-    beløpsbeskrivelse: 'hele beløpet' | 'deler av beløpet';
+    beløpsbeskrivelse: 'hele beløpet' | 'hele beløpet som er i behold';
 };
 
 export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) => {
@@ -29,7 +29,7 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
     return (
         <>
             <RadioGroup
-                legend={`Skal ${beløpsbeskrivelse} som er i behold kreves tilbake?`}
+                legend={`Skal ${beløpsbeskrivelse} kreves tilbake?`}
                 name={`${navnPrefix}.krevesTilbake`}
                 size="small"
                 className="max-w-xl"
@@ -94,12 +94,12 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         value={årsakerSkalIkkeKreves}
                         onChange={setÅrsakerSkalIkkeKreves}
                     >
-                        <Checkbox value="årsaken1">Hvor stort beløpet er</Checkbox>
+                        <Checkbox value="årsaken1">Størrelsen på beløpet</Checkbox>
                         <Checkbox value="årsaken2">
                             Hvor lenge siden feilutbetalingen skjedde
                         </Checkbox>
                         <Checkbox value="årsaken3">
-                            Om mottakeren har innrettet seg etter utbetalingen
+                            Om mottakeren har innrettet seg i tillit til utbetalingen
                         </Checkbox>
                         <Checkbox value="årsaken4">Annet</Checkbox>
                     </CheckboxGroup>

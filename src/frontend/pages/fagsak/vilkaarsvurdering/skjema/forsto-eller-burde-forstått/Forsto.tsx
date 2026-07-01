@@ -15,7 +15,7 @@ export const Forsto: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SærligeGrunner />
+            <SærligeGrunner reduksjon standardValg="nei" />
         </>
     );
 };
