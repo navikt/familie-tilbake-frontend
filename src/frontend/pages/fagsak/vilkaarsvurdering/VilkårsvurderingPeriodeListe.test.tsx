@@ -105,17 +105,17 @@ describe('VilkårsvurderingPeriodeListe', () => {
         expect(knapp).toHaveAccessibleName(/Resultat: Ingen tilbakekreving\./);
     });
 
-    test('burde kalle onSelectPeriode med periodens id ved klikk', async () => {
-        const onSelectPeriode = vi.fn();
+    test('burde kalle setValgtPeriodeId med periodens id ved klikk', async () => {
+        const setValgtPeriodeId = vi.fn();
         renderListe(
             [lagPeriode({ id: 'mars' }), lagPeriode({ id: 'april' })],
             undefined,
-            onSelectPeriode
+            setValgtPeriodeId
         );
 
         await userEvent.click(screen.getAllByRole('button')[1]);
 
-        expect(onSelectPeriode).toHaveBeenCalledExactlyOnceWith(lagPeriode({ id: 'april' }));
+        expect(setValgtPeriodeId).toHaveBeenCalledExactlyOnceWith('april');
     });
 
     test('burde vise rettslig grunnlag når det finnes', () => {

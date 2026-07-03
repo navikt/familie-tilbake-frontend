@@ -14,17 +14,11 @@ export type Sammenslåingsforslag = {
 const sorterPåFom = <T extends { periode: Periode }>(a: T, b: T): number =>
     a.periode.fom.localeCompare(b.periode.fom);
 
-const eldsteDelbarePeriode = (periode: SammenslåbarPeriode): PeriodeInfo => {
-    const sortert = [...periode.delbarePerioder].sort(sorterPåFom);
-    return sortert[0] ?? { periodeId: periode.periodeId, periode: periode.periode };
-};
+const eldsteDelbarePeriode = (periode: SammenslåbarPeriode): PeriodeInfo | undefined =>
+    [...periode.delbarePerioder].sort(sorterPåFom)[0];
 
-const nyesteDelbarePeriode = (periode: SammenslåbarPeriode): PeriodeInfo => {
-    const sortert = [...periode.delbarePerioder].sort(sorterPåFom);
-    return (
-        sortert[sortert.length - 1] ?? { periodeId: periode.periodeId, periode: periode.periode }
-    );
-};
+const nyesteDelbarePeriode = (periode: SammenslåbarPeriode): PeriodeInfo | undefined =>
+    [...periode.delbarePerioder].sort(sorterPåFom).at(-1);
 
 /**
  * Finner forslag for å slå sammen den gjeldende (nyeste av to naboer) perioden med den
@@ -36,7 +30,8 @@ const nyesteDelbarePeriode = (periode: SammenslåbarPeriode): PeriodeInfo => {
  * - `slåesSammenMedId`: den nyeste delbare perioden på den forrige (eldste) perioden
  *
  * @returns forslag med forrige periode og request-body, eller undefined hvis den gjeldende
- *          perioden er den eldste (og dermed ikke har en tidligere periode å slå sammen fra).
+ *          perioden er den eldste (og dermed ikke har en tidligere periode å slå sammen fra),
+ *          eller hvis en av periodene mangler delbare perioder å koble sammen.
  */
 export const finnSammenslåingsforslag = (
     vilkårsperioder: SammenslåbarPeriode[],
@@ -51,11 +46,16 @@ export const finnSammenslåingsforslag = (
     }
     const gjeldendePeriode = sortertePerioder[gjeldendeIndeks];
     const forrigePeriode = sortertePerioder[gjeldendeIndeks - 1];
+    const eldsteDelbareAvGjeldende = eldsteDelbarePeriode(gjeldendePeriode);
+    const nyesteDelbareAvForrige = nyesteDelbarePeriode(forrigePeriode);
+    if (!eldsteDelbareAvGjeldende || !nyesteDelbareAvForrige) {
+        return undefined;
+    }
     return {
         forrigePeriode,
         sammenslaaing: {
-            vilkårsvurderingId: eldsteDelbarePeriode(gjeldendePeriode).periodeId,
-            slåesSammenMedId: nyesteDelbarePeriode(forrigePeriode).periodeId,
+            vilkårsvurderingId: eldsteDelbareAvGjeldende.periodeId,
+            slåesSammenMedId: nyesteDelbareAvForrige.periodeId,
         },
     };
 };

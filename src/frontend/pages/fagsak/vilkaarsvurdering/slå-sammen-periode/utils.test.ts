@@ -51,28 +51,16 @@ describe('finnSammenslåingsforslag', () => {
         });
     });
 
-    test('Skal bruke periodens egen id når den ikke har flere delbare perioder', () => {
-        const enkelForrige: SammenslåbarPeriode = {
-            periodeId: 'X',
-            periode: { fom: '2024-01-01', tom: '2024-01-31' },
-            delbarePerioder: [
-                { periodeId: 'X', periode: { fom: '2024-01-01', tom: '2024-01-31' } },
-            ],
-        };
-        const enkelGjeldende: SammenslåbarPeriode = {
+    test('Skal returnere undefined når en av periodene mangler delbare perioder', () => {
+        const utenDelbare: SammenslåbarPeriode = {
             periodeId: 'Y',
             periode: { fom: '2024-02-01', tom: '2024-02-29' },
-            delbarePerioder: [
-                { periodeId: 'Y', periode: { fom: '2024-02-01', tom: '2024-02-29' } },
-            ],
+            delbarePerioder: [],
         };
 
-        const forslag = finnSammenslåingsforslag([enkelForrige, enkelGjeldende], 'Y');
+        const forslag = finnSammenslåingsforslag([periodeA, utenDelbare], 'Y');
 
-        expect(forslag?.sammenslaaing).toEqual({
-            vilkårsvurderingId: 'Y',
-            slåesSammenMedId: 'X',
-        });
+        expect(forslag).toBeUndefined();
     });
 
     test('Skal returnere undefined når perioden ikke finnes', () => {
