@@ -45,9 +45,14 @@ export const Vilkårsvurdering: FC = () => {
 
     const perioder = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
 
-    const [valgtPeriode, setValgtPeriode] = useState<Vilkårsperiode | undefined>(() =>
-        finnStandardValgtPeriode(perioder)
+    const [valgtPeriodeId, setValgtPeriodeId] = useState<Vilkårsperiode['id'] | undefined>(
+        () => finnStandardValgtPeriode(perioder)?.id
     );
+
+    const valgtPeriode = useMemo(() => {
+        const funnetPeriode = perioder.find(({ id }) => id === valgtPeriodeId);
+        return funnetPeriode ?? finnStandardValgtPeriode(perioder);
+    }, [perioder, valgtPeriodeId]);
 
     const invaliderVilkårsvurdering = (): void => {
         queryClient.invalidateQueries({
@@ -99,14 +104,16 @@ export const Vilkårsvurdering: FC = () => {
             <div className="flex flex-col ax-md:flex-row min-h-0 h-full">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
-                    valgtPeriode={valgtPeriode}
-                    onSelectPeriode={setValgtPeriode}
+                    valgtPeriodeId={valgtPeriodeId}
+                    setValgtPeriodeId={setValgtPeriodeId}
                 />
-                <VilkårsvurderingDetaljer
-                    valgtPeriode={valgtPeriode}
-                    vilkårsperioder={vilkår.vilkårsperioder}
-                    hentVilkårsvurdering={invaliderVilkårsvurdering}
-                />
+                {valgtPeriode && (
+                    <VilkårsvurderingDetaljer
+                        valgtPeriode={valgtPeriode}
+                        vilkårsperioder={vilkår.vilkårsperioder}
+                        hentVilkårsvurdering={invaliderVilkårsvurdering}
+                    />
+                )}
             </div>
         </VStack>
     );

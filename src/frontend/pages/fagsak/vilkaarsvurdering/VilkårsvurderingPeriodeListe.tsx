@@ -67,14 +67,14 @@ const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
 
 type Props = {
     perioder: Vilkårsperiode[];
-    valgtPeriode: Vilkårsperiode | undefined;
-    onSelectPeriode: (periode: Vilkårsperiode | undefined) => void;
+    valgtPeriodeId: Vilkårsperiode['id'] | undefined;
+    setValgtPeriodeId: (periodeId: Vilkårsperiode['id']) => void;
 };
 
 export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     perioder,
-    valgtPeriode,
-    onSelectPeriode,
+    valgtPeriodeId,
+    setValgtPeriodeId,
 }: Props) => {
     return (
         <section className="flex-1 min-h-0 scrollbar-stable flex flex-col gap-2 px-1">
@@ -82,18 +82,18 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}
                 </Heading>
-                {perioder.filter(periode => erPeriodeVurdert(periode.vurdering)).length} av{' '}
+                {perioder.filter(({ vurdering }) => erPeriodeVurdert(vurdering)).length} av{' '}
                 {perioder.length} vurdert
             </HStack>
             <ul className="grid grid-cols-1 ax-sm:grid-cols-2 ax-md:grid-cols-1 gap-2">
                 {perioder.map(periode => (
                     <li key={periode.id} className="flex min-h-11">
                         <button
-                            onClick={(): void => onSelectPeriode(periode)}
-                            aria-pressed={periode.id === valgtPeriode?.id}
-                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}.${periode.resultat ? ` Resultat: ${resultat[periode.resultat].label}.` : ''} Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriode?.id ? ' Valgt.' : ''}`}
+                            onClick={(): void => setValgtPeriodeId(periode.id)}
+                            aria-pressed={periode.id === valgtPeriodeId}
+                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}.${periode.resultat ? ` Resultat: ${resultat[periode.resultat].label}.` : ''} Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
-                                periode.id === valgtPeriode?.id
+                                periode.id === valgtPeriodeId
                                     ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
                                     : 'border border-ax-border-neutral-subtle hover:border-ax-border-neutral'
                             }`}

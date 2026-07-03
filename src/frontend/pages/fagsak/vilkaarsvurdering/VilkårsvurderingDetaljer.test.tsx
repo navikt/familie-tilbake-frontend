@@ -1,7 +1,11 @@
 import type { Vilkårsperiode } from './typer';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { type UserEvent, userEvent } from '@testing-library/user-event';
+
+import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
 
@@ -21,11 +25,15 @@ const valgtPeriode: Vilkårsperiode = {
 
 const renderVilkårsDetaljer = (): void => {
     render(
-        <VilkårsvurderingDetaljer
-            valgtPeriode={valgtPeriode}
-            vilkårsperioder={[]}
-            hentVilkårsvurdering={(): void => undefined}
-        />
+        <QueryClientProvider client={createTestQueryClient()}>
+            <TestBehandlingProvider>
+                <VilkårsvurderingDetaljer
+                    valgtPeriode={valgtPeriode}
+                    vilkårsperioder={[]}
+                    hentVilkårsvurdering={(): void => undefined}
+                />
+            </TestBehandlingProvider>
+        </QueryClientProvider>
     );
 };
 

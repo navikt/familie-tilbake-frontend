@@ -36,7 +36,7 @@ const renderDelPeriode = ({
             <TestBehandlingProvider>
                 <DelPeriode
                     periode={periodeProp}
-                    vilkårsperioder={vilkårsperioderProp}
+                    delbarePerioder={vilkårsperioderProp}
                     erVurdert={erVurdert}
                     hentVilkårsvurdering={(): void => undefined}
                 />

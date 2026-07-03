@@ -28,14 +28,14 @@ import { hentSplittedePerioder } from './utils';
 
 type Props = {
     periode: Periode;
-    vilkårsperioder: PeriodeInfo[];
+    delbarePerioder: PeriodeInfo[];
     erVurdert: boolean;
     hentVilkårsvurdering: () => void;
 };
 
 export const DelPeriode: FC<Props> = ({
     periode,
-    vilkårsperioder,
+    delbarePerioder,
     erVurdert,
     hentVilkårsvurdering,
 }: Props) => {
@@ -45,10 +45,10 @@ export const DelPeriode: FC<Props> = ({
 
     const perioderInnenforPeriode = useMemo(
         () =>
-            vilkårsperioder.filter(
+            delbarePerioder.filter(
                 ({ periode: { fom, tom } }) => fom >= periode.fom && tom <= periode.tom
             ),
-        [vilkårsperioder, periode]
+        [delbarePerioder, periode]
     );
     const valgbareSplittDatoer = perioderInnenforPeriode
         .slice(1)

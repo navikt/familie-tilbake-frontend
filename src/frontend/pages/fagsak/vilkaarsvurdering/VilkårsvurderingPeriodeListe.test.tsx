@@ -19,14 +19,14 @@ const lagPeriode = (overstyr: Partial<Vilkårsperiode> = {}): Vilkårsperiode =>
 
 const renderListe = (
     perioder: Vilkårsperiode[],
-    valgtPeriode: Vilkårsperiode | undefined = undefined,
-    onSelectPeriode: (periode: Vilkårsperiode | undefined) => void = vi.fn()
+    valgtPeriodeId: Vilkårsperiode['id'] | undefined = undefined,
+    setValgtPeriodeId: (periodeId: Vilkårsperiode['id'] | undefined) => void = vi.fn()
 ): void => {
     render(
         <VilkårsvurderingPeriodeListe
             perioder={perioder}
-            valgtPeriode={valgtPeriode}
-            onSelectPeriode={onSelectPeriode}
+            valgtPeriodeId={valgtPeriodeId}
+            setValgtPeriodeId={setValgtPeriodeId}
         />
     );
 };
@@ -89,7 +89,7 @@ describe('VilkårsvurderingPeriodeListe', () => {
     test('burde markere den valgte perioden med aria-pressed', () => {
         renderListe(
             [lagPeriode({ id: 'mars' }), lagPeriode({ id: 'april' })],
-            lagPeriode({ id: 'april' })
+            lagPeriode({ id: 'april' }).id
         );
 
         const valgtKnapp = screen.getByRole('button', { name: /Valgt\./ });

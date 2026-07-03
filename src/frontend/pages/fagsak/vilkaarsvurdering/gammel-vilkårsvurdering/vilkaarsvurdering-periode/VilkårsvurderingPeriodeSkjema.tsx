@@ -330,7 +330,7 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                         <DelPeriode
                             periode={periode.periode}
                             // Vil aldri være undefined siden kanSplitteINyModell vil returnere false hvis vilkårsvurderingsperioder er undefined
-                            vilkårsperioder={vilkårsvurderingsperioder ?? []}
+                            delbarePerioder={vilkårsvurderingsperioder ?? []}
                             erVurdert={
                                 !!periode.vilkårsvurderingsresultatInfo
                                     ?.vilkårsvurderingsresultat &&
