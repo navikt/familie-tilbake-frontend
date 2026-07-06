@@ -11,6 +11,7 @@ import {
     behandlingForhandsvarsel,
     behandlingHentDokument,
     behandlingHentDokumentInfo,
+    behandlingHentVarselbrevTekster,
     behandlingHentVedtaksbrev,
     behandlingHentVedtaksresultat,
     behandlingLagreBrukersuttalelse,
@@ -24,8 +25,9 @@ import {
     behandlingUtsettUttalelsesfrist,
     behandlingVilkaarsvurdering,
     behandlingVilkaarsvurderingsperioder,
+    brevLagSvgVarselbrev,
+    brevLagSvgVedtaksbrev,
     type Options,
-    vedtaksbrevLagSvgVedtaksbrev,
 } from '../sdk.gen';
 import type {
     BehandlingBehandlingsloggData,
@@ -45,6 +47,9 @@ import type {
     BehandlingHentDokumentInfoError,
     BehandlingHentDokumentInfoResponse,
     BehandlingHentDokumentResponse,
+    BehandlingHentVarselbrevTeksterData,
+    BehandlingHentVarselbrevTeksterError,
+    BehandlingHentVarselbrevTeksterResponse,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevError,
     BehandlingHentVedtaksbrevResponse,
@@ -79,8 +84,10 @@ import type {
     BehandlingVilkaarsvurderingsperioderData,
     BehandlingVilkaarsvurderingsperioderError,
     BehandlingVilkaarsvurderingsperioderResponse,
-    VedtaksbrevLagSvgVedtaksbrevData,
-    VedtaksbrevLagSvgVedtaksbrevResponse,
+    BrevLagSvgVarselbrevData,
+    BrevLagSvgVarselbrevResponse,
+    BrevLagSvgVedtaksbrevData,
+    BrevLagSvgVedtaksbrevResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -355,6 +362,31 @@ export const behandlingHentDokumentOptions = (options: Options<BehandlingHentDok
         queryKey: behandlingHentDokumentQueryKey(options),
     });
 
+export const behandlingHentVarselbrevTeksterQueryKey = (
+    options: Options<BehandlingHentVarselbrevTeksterData>
+) => createQueryKey('behandlingHentVarselbrevTekster', options);
+
+export const behandlingHentVarselbrevTeksterOptions = (
+    options: Options<BehandlingHentVarselbrevTeksterData>
+) =>
+    queryOptions<
+        BehandlingHentVarselbrevTeksterResponse,
+        AxiosError<BehandlingHentVarselbrevTeksterError>,
+        BehandlingHentVarselbrevTeksterResponse,
+        ReturnType<typeof behandlingHentVarselbrevTeksterQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentVarselbrevTekster({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentVarselbrevTeksterQueryKey(options),
+    });
+
 export const behandlingHentVedtaksbrevQueryKey = (
     options: Options<BehandlingHentVedtaksbrevData>
 ) => createQueryKey('behandlingHentVedtaksbrev', options);
@@ -574,20 +606,44 @@ export const behandlingHentDokumentInfoOptions = (
         queryKey: behandlingHentDokumentInfoQueryKey(options),
     });
 
-export const vedtaksbrevLagSvgVedtaksbrevMutation = (
-    options?: Partial<Options<VedtaksbrevLagSvgVedtaksbrevData>>
+export const brevLagSvgVarselbrevMutation = (
+    options?: Partial<Options<BrevLagSvgVarselbrevData>>
 ): UseMutationOptions<
-    VedtaksbrevLagSvgVedtaksbrevResponse,
+    BrevLagSvgVarselbrevResponse,
     AxiosError<DefaultError>,
-    Options<VedtaksbrevLagSvgVedtaksbrevData>
+    Options<BrevLagSvgVarselbrevData>
 > => {
     const mutationOptions: UseMutationOptions<
-        VedtaksbrevLagSvgVedtaksbrevResponse,
+        BrevLagSvgVarselbrevResponse,
         AxiosError<DefaultError>,
-        Options<VedtaksbrevLagSvgVedtaksbrevData>
+        Options<BrevLagSvgVarselbrevData>
     > = {
         mutationFn: async fnOptions => {
-            const { data } = await vedtaksbrevLagSvgVedtaksbrev({
+            const { data } = await brevLagSvgVarselbrev({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const brevLagSvgVedtaksbrevMutation = (
+    options?: Partial<Options<BrevLagSvgVedtaksbrevData>>
+): UseMutationOptions<
+    BrevLagSvgVedtaksbrevResponse,
+    AxiosError<DefaultError>,
+    Options<BrevLagSvgVedtaksbrevData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BrevLagSvgVedtaksbrevResponse,
+        AxiosError<DefaultError>,
+        Options<BrevLagSvgVedtaksbrevData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await brevLagSvgVedtaksbrev({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,

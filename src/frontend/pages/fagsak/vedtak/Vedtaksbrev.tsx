@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type {
+    BrevLagSvgVedtaksbrevData,
     Options,
     VedtaksbrevData,
     VedtaksbrevDataWritable,
-    VedtaksbrevLagSvgVedtaksbrevData,
 } from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
 
@@ -25,7 +25,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useBehandling } from '@/context/BehandlingContext';
 import {
     behandlingOppdaterVedtaksbrevMutation,
-    vedtaksbrevLagSvgVedtaksbrevMutation,
+    brevLagSvgVedtaksbrevMutation,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { fraIsoStringTilDatoOgKlokkeslett } from '@/utils/dato';
 
@@ -70,7 +70,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, setGjeldendeSide] = useState(1);
 
-    const { onMutate, ...originalMutation } = vedtaksbrevLagSvgVedtaksbrevMutation({
+    const { onMutate, ...originalMutation } = brevLagSvgVedtaksbrevMutation({
         baseURL: window.location.origin,
     });
 
@@ -87,7 +87,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
             setPdfSider(siderSomBase64);
         },
         onMutate: async (
-            variables: Options<VedtaksbrevLagSvgVedtaksbrevData>,
+            variables: Options<BrevLagSvgVedtaksbrevData>,
             context: MutationFunctionContext
         ) => {
             await queryClient.cancelQueries({ queryKey: ['lagPdf'] });

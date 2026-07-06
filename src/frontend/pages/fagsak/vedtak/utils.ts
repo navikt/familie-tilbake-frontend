@@ -18,10 +18,10 @@ export const vedtaksresultatFarger: Record<Vedtaksresultat, TagProps['data-color
 };
 
 export const elementArrayTilTekst = (
-    elementer: readonly { type: string; tekst?: string }[]
+    elementer: readonly { type?: string; tekst?: string }[]
 ): string =>
     elementer
-        .filter((e): e is RentekstElement => e.type === 'rentekst')
+        .filter((e): e is { tekst: string } => typeof e.tekst === 'string')
         .map(e => e.tekst)
         .join('\n\n');
 

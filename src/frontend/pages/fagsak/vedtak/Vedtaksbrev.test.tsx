@@ -70,7 +70,7 @@ describe('Vedtaksbrev', () => {
                                 begrunnelseType: 'SKAL_IKKE_UNNLATES_4_RETTSGEBYR',
                                 forklaring: '',
                                 meldingerTilSaksbehandler: [],
-                                underavsnitt: [{ type: 'rentekst', tekst: 'Andre textarea' }],
+                                underavsnitt: [{ tekst: 'Andre textarea' }],
                             },
                             {
                                 type: 'påkrevd_begrunnelse',
@@ -78,7 +78,7 @@ describe('Vedtaksbrev', () => {
                                 begrunnelseType: 'IKKE_REDUSERT_SÆRLIGE_GRUNNER',
                                 forklaring: tredjeAvsnittForklaring,
                                 meldingerTilSaksbehandler: [],
-                                underavsnitt: [{ type: 'rentekst', tekst: 'Tredje textarea' }],
+                                underavsnitt: [{ tekst: 'Tredje textarea' }],
                             },
                         ],
                     } satisfies Avsnitt,

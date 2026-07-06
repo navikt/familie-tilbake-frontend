@@ -21,6 +21,9 @@ import type {
     BehandlingHentDokumentInfoErrors,
     BehandlingHentDokumentInfoResponses,
     BehandlingHentDokumentResponses,
+    BehandlingHentVarselbrevTeksterData,
+    BehandlingHentVarselbrevTeksterErrors,
+    BehandlingHentVarselbrevTeksterResponses,
     BehandlingHentVedtaksbrevData,
     BehandlingHentVedtaksbrevErrors,
     BehandlingHentVedtaksbrevResponses,
@@ -60,8 +63,10 @@ import type {
     BehandlingVilkaarsvurderingsperioderData,
     BehandlingVilkaarsvurderingsperioderErrors,
     BehandlingVilkaarsvurderingsperioderResponses,
-    VedtaksbrevLagSvgVedtaksbrevData,
-    VedtaksbrevLagSvgVedtaksbrevResponses,
+    BrevLagSvgVarselbrevData,
+    BrevLagSvgVarselbrevResponses,
+    BrevLagSvgVedtaksbrevData,
+    BrevLagSvgVedtaksbrevResponses,
 } from './types.gen';
 
 export type Options<
@@ -237,6 +242,23 @@ export const behandlingHentDokument = <ThrowOnError extends boolean = false>(
         ...options,
     });
 
+export const behandlingHentVarselbrevTekster = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentVarselbrevTeksterData, ThrowOnError>
+): RequestResult<
+    BehandlingHentVarselbrevTeksterResponses,
+    BehandlingHentVarselbrevTeksterErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).get<
+        BehandlingHentVarselbrevTeksterResponses,
+        BehandlingHentVarselbrevTeksterErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/varselbrev/tekster',
+        ...options,
+    });
+
 export const behandlingHentVedtaksbrev = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingHentVedtaksbrevData, ThrowOnError>
 ): RequestResult<
@@ -322,7 +344,7 @@ export const behandlingLagreVilkaarsvurdering = <ThrowOnError extends boolean = 
         ThrowOnError
     >({
         responseType: 'json',
-        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering',
+        url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/periode/{periodeId}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
@@ -400,10 +422,23 @@ export const behandlingHentDokumentInfo = <ThrowOnError extends boolean = false>
         ...options,
     });
 
-export const vedtaksbrevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(
-    options: Options<VedtaksbrevLagSvgVedtaksbrevData, ThrowOnError>
-): RequestResult<VedtaksbrevLagSvgVedtaksbrevResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).post<VedtaksbrevLagSvgVedtaksbrevResponses, unknown, ThrowOnError>({
+export const brevLagSvgVarselbrev = <ThrowOnError extends boolean = false>(
+    options: Options<BrevLagSvgVarselbrevData, ThrowOnError>
+): RequestResult<BrevLagSvgVarselbrevResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<BrevLagSvgVarselbrevResponses, unknown, ThrowOnError>({
+        responseType: 'blob',
+        url: '/api/v1/brev/varselbrev/svg',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const brevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(
+    options: Options<BrevLagSvgVedtaksbrevData, ThrowOnError>
+): RequestResult<BrevLagSvgVedtaksbrevResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<BrevLagSvgVedtaksbrevResponses, unknown, ThrowOnError>({
         responseType: 'blob',
         url: '/api/v1/brev/vedtaksbrev/svg',
         ...options,
