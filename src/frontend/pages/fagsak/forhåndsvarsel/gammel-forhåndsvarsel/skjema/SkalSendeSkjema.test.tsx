@@ -132,6 +132,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato: string): FaktaOmFeilutbetaling =>
         perioder: [],
         vurdering: { årsak: null },
         ferdigvurdert: false,
+        usikker4xRettsgebyr: false,
     }) satisfies FaktaOmFeilutbetaling;
 
 const renderMedFaktaData = (vedtaksdato: string): void => {

@@ -58,6 +58,7 @@ const faktaOmFeilutbetaling = (
         },
     ],
     ferdigvurdert: false,
+    usikker4xRettsgebyr: false,
     vurdering: {
         årsak: null,
         oppdaget: undefined,

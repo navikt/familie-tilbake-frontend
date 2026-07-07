@@ -57,6 +57,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
     perioder: [],
     vurdering: { årsak: null },
     ferdigvurdert: false,
+    usikker4xRettsgebyr: false,
 });
 
 const renderForhåndsvarsel = (forhåndsvarselResponse: ForhaandsvarselResponse): void => {

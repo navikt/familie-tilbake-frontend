@@ -569,7 +569,8 @@ export const zFaktaOmFeilutbetaling = z.object({
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
     perioder: z.array(zFaktaPeriode),
     vurdering: zVurdering,
-    ferdigvurdert: z.boolean(),
+    ferdigvurdert: z.boolean().readonly(),
+    usikker4xRettsgebyr: z.boolean().readonly(),
 });
 
 export const z0Enum = z.enum([
@@ -599,6 +600,19 @@ export const zVilkaar = z.object({
     ferdigvurdert: z.boolean().readonly(),
     momenterSærligeGrunner: z.array(zMoment).readonly(),
     momenterReduksjonGodTro: z.array(zMoment).readonly(),
+    erUnder4xRettsgebyr: z.boolean().readonly(),
+});
+
+export const zFaktaOmFeilutbetalingWritable = z.object({
+    feilutbetaling: zFeilutbetaling,
+    tidligereVarsletBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
+    muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
+    perioder: z.array(zFaktaPeriode),
+    vurdering: zVurdering,
 });
 
 export const zMomentWritable = z.object({

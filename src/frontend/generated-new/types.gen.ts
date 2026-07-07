@@ -104,7 +104,8 @@ export type FaktaOmFeilutbetaling = {
     muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlag>;
     perioder: Array<FaktaPeriode>;
     vurdering: Vurdering;
-    ferdigvurdert: boolean;
+    readonly ferdigvurdert: boolean;
+    readonly usikker4xRettsgebyr: boolean;
 };
 
 export type FaktaPeriode = {
@@ -515,6 +516,7 @@ export type Vilkaar = {
     readonly ferdigvurdert: boolean;
     readonly momenterSærligeGrunner: Array<Moment>;
     readonly momenterReduksjonGodTro: Array<Moment>;
+    readonly erUnder4xRettsgebyr: boolean;
 };
 
 export type Vilkaarsperiode = {
@@ -599,6 +601,14 @@ export type DelerWritable = {
     beløp: number;
     begrunnelse: string;
     reduksjon: ReduksjonWritable;
+};
+
+export type FaktaOmFeilutbetalingWritable = {
+    feilutbetaling: Feilutbetaling;
+    tidligereVarsletBeløp: number | null;
+    muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlag>;
+    perioder: Array<FaktaPeriode>;
+    vurdering: Vurdering;
 };
 
 export type ForaarsaketAvMottakerWritable = {
