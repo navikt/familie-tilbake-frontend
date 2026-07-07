@@ -1,5 +1,6 @@
+import type { AxiosError } from 'axios';
 import type { Periode } from '@/generated';
-import type { PeriodeInfo, SplittPeriode } from '@/generated-new';
+import type { Error as KontraktError, PeriodeInfo, SplittPeriode } from '@/generated-new';
 
 import { CalendarFillIcon } from '@navikt/aksel-icons';
 import {
@@ -21,7 +22,6 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSplittPeriodeMutation } from '@/generated-new/@tanstack/react-query.gen';
 import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
-import { hentFeilmeldingFraError } from '@/typer/ressurs';
 import { formatterDatostring } from '@/utils';
 
 import { hentSplittedePerioder } from './utils';
@@ -117,11 +117,11 @@ export const DelPeriode: FC<Props> = ({
             });
             delPeriodeRef.current?.close();
         },
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet.
-        onError: error => {
+        onError: (error: AxiosError<KontraktError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke dele opp perioden',
-                message: hentFeilmeldingFraError(error),
+                title: error.response?.data.tittel ?? 'Kunne ikke dele opp perioden',
+                message:
+                    error.response?.data.melding ?? 'En feil har oppstått ved deling av perioden.',
                 status: 'error',
             });
         },
