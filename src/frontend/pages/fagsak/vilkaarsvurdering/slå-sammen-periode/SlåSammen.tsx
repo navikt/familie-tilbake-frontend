@@ -4,7 +4,7 @@ import type { SammenslåbarPeriode } from './utils';
 
 import { BodyShort, Box, Button, Modal } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { type FC, useMemo, useRef } from 'react';
+import { type FC, useRef } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSlaaSammenPerioderMutation } from '@/generated-new/@tanstack/react-query.gen';
@@ -16,13 +16,13 @@ import { formatterDatostring } from '@/utils';
 import { finnSammenslåingsforslag } from './utils';
 
 type Props = {
-    vilkårsvurderingId: string;
+    valgtPeriodeId: string;
     vilkårsperioder: SammenslåbarPeriode[];
     hentVilkårsvurdering: () => void;
 };
 
 export const SlåSammen: FC<Props> = ({
-    vilkårsvurderingId,
+    valgtPeriodeId,
     vilkårsperioder,
     hentVilkårsvurdering,
 }: Props) => {
@@ -30,10 +30,7 @@ export const SlåSammen: FC<Props> = ({
     const { behandlingId } = useBehandling();
     const visGlobalAlert = useVisGlobalAlert();
 
-    const forslag = useMemo(
-        () => finnSammenslåingsforslag(vilkårsperioder, vilkårsvurderingId),
-        [vilkårsperioder, vilkårsvurderingId]
-    );
+    const forslag = finnSammenslåingsforslag(vilkårsperioder, valgtPeriodeId);
 
     const lukkModal = (): void => slåSammenPeriodeRef.current?.close();
 

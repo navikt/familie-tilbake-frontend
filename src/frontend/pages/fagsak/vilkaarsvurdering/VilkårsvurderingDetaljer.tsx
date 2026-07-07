@@ -47,7 +47,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                                 />
                             )}
                         <SlåSammen
-                            vilkårsvurderingId={valgtPeriode.id}
+                            valgtPeriodeId={valgtPeriode.id}
                             vilkårsperioder={vilkårsperioder.map(({ vilkårsvurdering }) => ({
                                 periodeId: vilkårsvurdering.id,
                                 periode: vilkårsvurdering.periode,

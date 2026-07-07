@@ -46,7 +46,7 @@ export const Vilkårsvurdering: FC = () => {
     const perioder = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
 
     const [valgtPeriodeId, setValgtPeriodeId] = useState<Vilkårsperiode['id'] | undefined>(
-        () => finnStandardValgtPeriode(perioder)?.id
+        undefined
     );
 
     const valgtPeriode = useMemo(() => {
@@ -104,7 +104,7 @@ export const Vilkårsvurdering: FC = () => {
             <div className="flex flex-col ax-md:flex-row min-h-0 h-full">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
-                    valgtPeriodeId={valgtPeriodeId}
+                    valgtPeriodeId={valgtPeriode?.id}
                     setValgtPeriodeId={setValgtPeriodeId}
                 />
                 {valgtPeriode && (

@@ -2,7 +2,7 @@ import type { SammenslåbarPeriode } from './utils';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import { type UserEvent, userEvent } from '@testing-library/user-event';
 
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
@@ -40,7 +40,7 @@ const renderSlåSammen = ({
         <QueryClientProvider client={createTestQueryClient()}>
             <TestBehandlingProvider>
                 <SlåSammen
-                    vilkårsvurderingId={vilkårsvurderingIdProp}
+                    valgtPeriodeId={vilkårsvurderingIdProp}
                     vilkårsperioder={vilkårsperioderProp}
                     hentVilkårsvurdering={(): void => undefined}
                 />
@@ -54,16 +54,20 @@ const slåSammenKnapp = (): HTMLElement =>
     within(screen.getByRole('dialog')).getByRole('button', { name: 'Slå sammen' });
 
 describe('SlåSammen', () => {
+    let user: UserEvent;
+    beforeEach(() => {
+        user = userEvent.setup();
+    });
+
     test('Skal vise modal når knapp trykkes', async () => {
         renderSlåSammen();
 
-        åpneKnapp().click();
+        await user.click(åpneKnapp());
 
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
     });
 
     test('Skal vise forrige (eldre) periode som perioden slås sammen med i dialogen', async () => {
-        const user = userEvent.setup();
         renderSlåSammen({ vilkårsvurderingIdProp: '2' });
 
         await user.click(åpneKnapp());
@@ -74,7 +78,6 @@ describe('SlåSammen', () => {
     });
 
     test('Skal sammenslå med nærmeste periode uavhengig av rekkefølge i input', async () => {
-        const user = userEvent.setup();
         renderSlåSammen({
             vilkårsvurderingIdProp: '3',
             vilkårsperioderProp: [vilkårsperioder[2], vilkårsperioder[0], vilkårsperioder[1]],
@@ -94,7 +97,6 @@ describe('SlåSammen', () => {
     });
 
     test('Skal vise avbryt- og slå sammen-knapp i modal', async () => {
-        const user = userEvent.setup();
         renderSlåSammen();
 
         await user.click(åpneKnapp());
