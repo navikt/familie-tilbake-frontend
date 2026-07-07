@@ -15,7 +15,7 @@ import {
 } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
 import { format, isValid, parseISO } from 'date-fns';
-import { type FC, useMemo, useRef, useState } from 'react';
+import { type FC, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSplittPeriodeMutation } from '@/generated-new/@tanstack/react-query.gen';
@@ -43,31 +43,18 @@ export const DelPeriode: FC<Props> = ({
     const { behandlingId } = useBehandling();
     const visGlobalAlert = useVisGlobalAlert();
 
-    const perioderInnenforPeriode = useMemo(
-        () =>
-            delbarePerioder.filter(
-                ({ periode: { fom, tom } }) => fom >= periode.fom && tom <= periode.tom
-            ),
-        [delbarePerioder, periode]
-    );
-    const valgbareSplittDatoer = perioderInnenforPeriode
-        .slice(1)
-        .map(({ periode: { fom } }) => fom);
-    const standardSplittDato = perioderInnenforPeriode[1]?.periode.fom;
+    const valgbareSplittDatoer = delbarePerioder.slice(1).map(({ periode: { fom } }) => fom);
+
+    const standardSplittDato = delbarePerioder[1]?.periode.fom;
 
     const [valgtDato, setValgtDato] = useState<Date | undefined>(
         standardSplittDato ? parseISO(standardSplittDato) : undefined
     );
     const [feilmelding, setFeilmelding] = useState<string | undefined>(undefined);
 
-    const splittedePerioder = useMemo(
-        () =>
-            hentSplittedePerioder(
-                periode,
-                perioderInnenforPeriode.map(({ periode }) => periode),
-                valgtDato
-            ),
-        [periode, perioderInnenforPeriode, valgtDato]
+    const splittedePerioder = hentSplittedePerioder(
+        delbarePerioder.map(({ periode }) => periode),
+        valgtDato
     );
     const førsteSplittetPeriode = splittedePerioder[0];
     const andreSplittetPeriode = splittedePerioder[1];
@@ -145,7 +132,7 @@ export const DelPeriode: FC<Props> = ({
             setFeilmelding('Du må velge en dato');
             return;
         }
-        const valgtPeriodeId = perioderInnenforPeriode.find(
+        const valgtPeriodeId = delbarePerioder.find(
             ({ periode }) => periode.fom === format(valgtDato, 'yyyy-MM-dd')
         )?.periodeId;
         if (!valgtPeriodeId) {
@@ -167,12 +154,12 @@ export const DelPeriode: FC<Props> = ({
                 size="xsmall"
                 variant="tertiary"
             >
-                Del opp perioden
+                Del opp
             </Button>
 
             <Modal
                 ref={delPeriodeRef}
-                header={{ heading: 'Del opp perioden' }}
+                header={{ heading: 'Del opp' }}
                 className={MODAL_BREDDE}
                 closeOnBackdropClick
             >
@@ -230,7 +217,7 @@ export const DelPeriode: FC<Props> = ({
                         loading={splittPeriode.isPending}
                         disabled={splittPeriode.isPending}
                     >
-                        Del opp perioden
+                        Del opp
                     </Button>
                     <Button
                         variant="secondary"

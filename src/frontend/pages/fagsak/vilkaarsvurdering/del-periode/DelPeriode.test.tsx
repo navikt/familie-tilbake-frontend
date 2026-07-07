@@ -45,9 +45,9 @@ const renderDelPeriode = ({
     );
 };
 
-const delOppKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Del opp perioden' });
+const delOppKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Del opp' });
 const delOppPeriodenKnapp = (): HTMLElement =>
-    within(screen.getByRole('dialog')).getByRole('button', { name: 'Del opp perioden' });
+    within(screen.getByRole('dialog')).getByRole('button', { name: 'Del opp' });
 const velgDatoTekst = 'Velg fra og med dato for periode 2';
 const velgDatoDatePicker = (): HTMLElement => screen.getByLabelText(velgDatoTekst);
 
@@ -119,41 +119,6 @@ describe('DelPeriode', () => {
 
         expect(valgbareDager).toHaveLength(1);
         expect(valgbareDager[0]).toHaveTextContent('15');
-    });
-
-    test('Skal filtrere vilkårsperioder som ligger utenfor perioden', async () => {
-        const user = userEvent.setup();
-        const periode = {
-            fom: '2024-01-10',
-            tom: '2024-01-25',
-        };
-
-        const vilkårsperioderMedPerioderUtenfor = [
-            { periodeId: '1', periode: { fom: '2024-01-01', tom: '2024-01-09' } }, // Før perioden
-            { periodeId: '2', periode: { fom: '2024-01-10', tom: '2024-01-17' } }, // Innenfor
-            { periodeId: '3', periode: { fom: '2024-01-18', tom: '2024-01-25' } }, // Innenfor
-            { periodeId: '4', periode: { fom: '2024-01-26', tom: '2024-01-31' } }, // Etter perioden
-        ] satisfies PeriodeInfo[];
-
-        renderDelPeriode({
-            periodeProp: periode,
-            vilkårsperioderProp: vilkårsperioderMedPerioderUtenfor,
-        });
-
-        await user.click(delOppKnapp());
-
-        // Skal bare vise de to periodene innenfor
-        expect(screen.getByText('Periode 1')).toBeInTheDocument();
-        expect(screen.getByText('10.01.2024–17.01.2024')).toBeInTheDocument();
-        expect(screen.getByText('Periode 2')).toBeInTheDocument();
-        expect(screen.getByText('18.01.2024–25.01.2024')).toBeInTheDocument();
-
-        // Skal ikke inneholde periodene utenfor
-        expect(screen.queryByText('01.01.2024–09.01.2024')).not.toBeInTheDocument();
-        expect(screen.queryByText('26.01.2024–31.01.2024')).not.toBeInTheDocument();
-
-        // standardSplittDato skal være den andre filtrerte perioden
-        expect(velgDatoDatePicker()).toHaveValue('18.01.2024');
     });
 
     test('Skal vise "Vurdert" i popover for periode 1 når perioden er vurdert', async () => {
