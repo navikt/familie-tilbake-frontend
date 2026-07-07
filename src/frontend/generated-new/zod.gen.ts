@@ -78,6 +78,11 @@ export const zForstoEllerBurdeForstaatt = z.record(z.string(), z.unknown());
 
 export const zFritekst = z.string().min(3).max(3000);
 
+export const zHovedavsnittVarselbrev = z.object({
+    tittel: z.string().min(3).max(300),
+    innhold: z.array(z.string()),
+});
+
 export const zIkkeVurdert = z.record(z.string(), z.unknown());
 
 export const zIngenting = z.object({
@@ -154,11 +159,7 @@ export const zRentekstElement = z.object({
     tekst: z.string().min(3).max(3000),
 });
 
-export const zElement = z
-    .object({
-        type: z.literal('rentekst'),
-    })
-    .and(zRentekstElement);
+export const zElement = zRentekstElement;
 
 export const zPakrevdBegrunnelse = z.object({
     tittel: z.string(),
@@ -219,6 +220,11 @@ export const zGrovtUaktsomt = z.object({
 export const zSammenslaaing = z.object({
     vilkårsvurderingId: z.uuid(),
     slåesSammenMedId: z.uuid(),
+});
+
+export const zSection = z.object({
+    tittel: z.string(),
+    body: z.array(z.string()),
 });
 
 export const zSendForhaandsvarsel = z.object({
@@ -388,6 +394,20 @@ export const zUttalelsesfrist = z.object({
 export const zForhaandsvarselErSendt = z.object({
     forhåndsvarselInfo: zForhaandsvarselInfo,
     uttalelsesfrist: zUttalelsesfrist,
+});
+
+export const zVarselbrevData = z.object({
+    hovedavsnitt: zHovedavsnittVarselbrev,
+    underavsnitt: z.array(zUnderavsnittElement),
+    brevGjelder: zBrevmottaker,
+    signatur: zSignatur,
+    sendtDato: z.iso.date(),
+    saksnummer: z.string(),
+});
+
+export const zVarselbrevTekst = z.object({
+    overskrift: z.string(),
+    avsnitter: z.array(zSection),
 });
 
 export const zVarslingsunntak = z.enum([
@@ -875,6 +895,15 @@ export const zBehandlingHentDokumentPath = z.object({
  */
 export const zBehandlingHentDokumentResponse = z.string();
 
+export const zBehandlingHentVarselbrevTeksterPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentVarselbrevTeksterResponse = zVarselbrevTekst;
+
 export const zBehandlingHentVedtaksbrevPath = z.object({
     behandlingId: z.string(),
 });
@@ -913,16 +942,17 @@ export const zBehandlingVilkaarsvurderingPath = z.object({
  */
 export const zBehandlingVilkaarsvurderingResponse = zVilkaar;
 
-export const zBehandlingLagreVilkaarsvurderingBody = zVilkaarWritable;
+export const zBehandlingLagreVilkaarsvurderingBody = zVilkaarsvurderingWritable;
 
 export const zBehandlingLagreVilkaarsvurderingPath = z.object({
     behandlingId: z.uuid(),
+    periodeId: z.uuid(),
 });
 
 /**
  * The request has succeeded.
  */
-export const zBehandlingLagreVilkaarsvurderingResponse = zVilkaar;
+export const zBehandlingLagreVilkaarsvurderingResponse = zVilkaarsvurdering;
 
 export const zBehandlingVilkaarsvurderingsperioderPath = z.object({
     behandlingId: z.uuid(),
@@ -955,9 +985,16 @@ export const zBehandlingHentDokumentInfoPath = z.object({
  */
 export const zBehandlingHentDokumentInfoResponse = zDokumentInfo;
 
-export const zVedtaksbrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
+export const zBrevLagSvgVarselbrevBody = zVarselbrevData;
 
 /**
  * The request has succeeded.
  */
-export const zVedtaksbrevLagSvgVedtaksbrevResponse = z.string();
+export const zBrevLagSvgVarselbrevResponse = z.string();
+
+export const zBrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevLagSvgVedtaksbrevResponse = z.string();

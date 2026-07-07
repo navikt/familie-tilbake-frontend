@@ -29,6 +29,7 @@ import {
     forhåndsvarselUnntak,
     forhåndsvisBrev,
     henleggBehandling,
+    hentAlleKravgrunnlagUtenforScope,
     hentBehandling,
     hentBehandlingerForFagsystem,
     hentBeregningsresultat,
@@ -65,6 +66,7 @@ import {
     migrerAlleSaker,
     oppdaterBehandlendeEnhetPåBehandling,
     oppdaterFagsysteminfo,
+    oppdaterKravgrunnlagBeløp,
     oppdaterManuellBrevmottaker,
     opprettBehandling,
     opprettBehandlingManuellTask,
@@ -128,6 +130,8 @@ import type {
     ForhåndsvisBrevResponse,
     HenleggBehandlingData,
     HenleggBehandlingResponse,
+    HentAlleKravgrunnlagUtenforScopeData,
+    HentAlleKravgrunnlagUtenforScopeResponse,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponse,
@@ -197,6 +201,8 @@ import type {
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponse,
     OppdaterFagsysteminfoData,
+    OppdaterKravgrunnlagBeløpData,
+    OppdaterKravgrunnlagBeløpResponse,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponse,
     OpprettBehandlingData,
@@ -972,6 +978,33 @@ export const lagOppdaterOppgaveTaskForBehandlingMutation = (
 };
 
 /**
+ * Oppdaterer beløp for eksisterende fagsak med pågående behandling
+ */
+export const oppdaterKravgrunnlagBeløpMutation = (
+    options?: Partial<Options<OppdaterKravgrunnlagBeløpData>>
+): UseMutationOptions<
+    OppdaterKravgrunnlagBeløpResponse,
+    AxiosError<DefaultError>,
+    Options<OppdaterKravgrunnlagBeløpData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        OppdaterKravgrunnlagBeløpResponse,
+        AxiosError<DefaultError>,
+        Options<OppdaterKravgrunnlagBeløpData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await oppdaterKravgrunnlagBeløp({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
  * Oppretter FinnGammelBehandlingUtenOppgaveTask som logger ut gamle behandlinger uten åpen oppgave
  */
 export const finnGamleÅpneBehandlingerUtenOppgaveMutation = (
@@ -1718,6 +1751,34 @@ export const hentKravgrunnlagsinfoOptions = (options: Options<HentKravgrunnlagsi
             return data;
         },
         queryKey: hentKravgrunnlagsinfoQueryKey(options),
+    });
+
+export const hentAlleKravgrunnlagUtenforScopeQueryKey = (
+    options: Options<HentAlleKravgrunnlagUtenforScopeData>
+) => createQueryKey('hentAlleKravgrunnlagUtenforScope', options);
+
+/**
+ * Henter alle kravgrunnlag markert som utenfor scope for sak
+ */
+export const hentAlleKravgrunnlagUtenforScopeOptions = (
+    options: Options<HentAlleKravgrunnlagUtenforScopeData>
+) =>
+    queryOptions<
+        HentAlleKravgrunnlagUtenforScopeResponse,
+        AxiosError<DefaultError>,
+        HentAlleKravgrunnlagUtenforScopeResponse,
+        ReturnType<typeof hentAlleKravgrunnlagUtenforScopeQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await hentAlleKravgrunnlagUtenforScope({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: hentAlleKravgrunnlagUtenforScopeQueryKey(options),
     });
 
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey = (

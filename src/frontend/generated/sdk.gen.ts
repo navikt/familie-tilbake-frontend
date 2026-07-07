@@ -51,6 +51,8 @@ import type {
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
     HenleggBehandlingResponses,
+    HentAlleKravgrunnlagUtenforScopeData,
+    HentAlleKravgrunnlagUtenforScopeResponses,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponses,
@@ -123,6 +125,8 @@ import type {
     OppdaterBehandlendeEnhetPåBehandlingResponses,
     OppdaterFagsysteminfoData,
     OppdaterFagsysteminfoResponses,
+    OppdaterKravgrunnlagBeløpData,
+    OppdaterKravgrunnlagBeløpResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -560,6 +564,18 @@ export const lagOppdaterOppgaveTaskForBehandling = <ThrowOnError extends boolean
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+/**
+ * Oppdaterer beløp for eksisterende fagsak med pågående behandling
+ */
+export const oppdaterKravgrunnlagBeløp = <ThrowOnError extends boolean = false>(
+    options: Options<OppdaterKravgrunnlagBeløpData, ThrowOnError>
+): RequestResult<OppdaterKravgrunnlagBeløpResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<OppdaterKravgrunnlagBeløpResponses, unknown, ThrowOnError>({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}/oppdater-belop',
+        ...options,
     });
 
 /**
@@ -1024,6 +1040,22 @@ export const hentKravgrunnlagsinfo = <ThrowOnError extends boolean = false>(
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/ytelsestype/{ytelsestype}/fagsak/{eksternFagsakId}/ikke-arkivert-kravgrunnlag',
+        ...options,
+    });
+
+/**
+ * Henter alle kravgrunnlag markert som utenfor scope for sak
+ */
+export const hentAlleKravgrunnlagUtenforScope = <ThrowOnError extends boolean = false>(
+    options: Options<HentAlleKravgrunnlagUtenforScopeData, ThrowOnError>
+): RequestResult<HentAlleKravgrunnlagUtenforScopeResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).get<
+        HentAlleKravgrunnlagUtenforScopeResponses,
+        unknown,
+        ThrowOnError
+    >({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}',
         ...options,
     });
 

@@ -23,6 +23,22 @@ export const zOppdaterBehandlendeEnhetRequest = z.object({
     nyEnhet: z.string(),
 });
 
+export const zDatoperiode = z.object({
+    fom: z.iso.date(),
+    tom: z.iso.date(),
+    fomMåned: z.string(),
+    tomMåned: z.string(),
+});
+
+export const zForskjell = z.unknown();
+
+export const zJustertBeløp = zForskjell.and(
+    z.object({
+        periode: zDatoperiode,
+        differanse: z.number(),
+    })
+);
+
 export const zBeløpEntity = z.object({
     id: z.uuid(),
     kravgrunnlagPeriodeId: z.uuid(),
@@ -102,13 +118,6 @@ export const zVedtaksbrevEntity = z.object({
     journalpostId: z.string().nullish(),
     dokumentInfoId: z.string().nullish(),
     sendtTid: z.iso.date(),
-});
-
-export const zDatoperiode = z.object({
-    fom: z.iso.date(),
-    tom: z.iso.date(),
-    fomMåned: z.string(),
-    tomMåned: z.string(),
 });
 
 export const zPeriodeMedTekstDto = z.object({
@@ -228,6 +237,12 @@ export const zKravgrunnlagsinfo = z.object({
     mottattXmlId: z.uuid().nullish(),
     eksternId: z.string(),
     opprettetTid: z.iso.datetime(),
+});
+
+export const zEntity = z.object({
+    kravgrunnlag: z.string(),
+    kravgrunnlagId: z.string(),
+    fagsystemId: z.string(),
 });
 
 export const zInstitusjonDto = z.object({
@@ -2234,6 +2249,16 @@ export const zOppdaterFagsysteminfoPath = z.object({
 
 export const zLagOppdaterOppgaveTaskForBehandlingBody = z.array(z.uuid());
 
+export const zOppdaterKravgrunnlagBeløpPath = z.object({
+    fagsystem: zSchemaEnum2,
+    fagsystemId: z.string(),
+});
+
+/**
+ * OK
+ */
+export const zOppdaterKravgrunnlagBeløpResponse = z.array(z.array(zJustertBeløp));
+
 export const zFinnGamleÅpneBehandlingerUtenOppgavePath = z.object({
     fagsystem: zSchemaEnum2,
 });
@@ -2480,6 +2505,16 @@ export const zHentKravgrunnlagsinfoPath = z.object({
  * OK
  */
 export const zHentKravgrunnlagsinfoResponse = zRessursListKravgrunnlagsinfo;
+
+export const zHentAlleKravgrunnlagUtenforScopePath = z.object({
+    fagsystem: zSchemaEnum2,
+    fagsystemId: z.string(),
+});
+
+/**
+ * OK
+ */
+export const zHentAlleKravgrunnlagUtenforScopeResponse = z.array(zEntity);
 
 export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgavePath =
     z.object({

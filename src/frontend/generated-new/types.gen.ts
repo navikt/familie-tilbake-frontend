@@ -87,9 +87,7 @@ export type DokumentInfo = {
 
 export type DokumentType = 'VARSELBREV' | 'VEDTAKSBREV';
 
-export type Element = {
-    type: 'rentekst';
-} & RentekstElement;
+export type Element = RentekstElement;
 
 export type Error = {
     tittel: string;
@@ -202,6 +200,11 @@ export type Hovedavsnitt = {
 export type HovedavsnittUpdate = {
     tittel: string;
     underavsnitt: Array<RotElementUpdateItem>;
+};
+
+export type HovedavsnittVarselbrev = {
+    tittel: string;
+    innhold: Array<string>;
 };
 
 export type IkkeVurdert = {
@@ -364,6 +367,11 @@ export type Sammenslaaing = {
     slåesSammenMedId: string;
 };
 
+export type Section = {
+    tittel: string;
+    body: Array<string>;
+};
+
 export type SendForhaandsvarsel = {
     tekstFraSaksbehandler: string;
 };
@@ -451,6 +459,20 @@ export type Uttalelsesfrist = {
     nyFrist?: string;
     begrunnelse?: string;
     readonly opprinneligFrist: string;
+};
+
+export type VarselbrevData = {
+    hovedavsnitt: HovedavsnittVarselbrev;
+    underavsnitt: Array<UnderavsnittElement>;
+    brevGjelder: Brevmottaker;
+    signatur: Signatur;
+    sendtDato: string;
+    saksnummer: string;
+};
+
+export type VarselbrevTekst = {
+    overskrift: string;
+    avsnitter: Array<Section>;
 };
 
 export type Varslingsunntak =
@@ -1074,6 +1096,39 @@ export type BehandlingHentDokumentResponses = {
 export type BehandlingHentDokumentResponse =
     BehandlingHentDokumentResponses[keyof BehandlingHentDokumentResponses];
 
+export type BehandlingHentVarselbrevTeksterData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/varselbrev/tekster';
+};
+
+export type BehandlingHentVarselbrevTeksterErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentVarselbrevTeksterError =
+    BehandlingHentVarselbrevTeksterErrors[keyof BehandlingHentVarselbrevTeksterErrors];
+
+export type BehandlingHentVarselbrevTeksterResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: VarselbrevTekst;
+};
+
+export type BehandlingHentVarselbrevTeksterResponse =
+    BehandlingHentVarselbrevTeksterResponses[keyof BehandlingHentVarselbrevTeksterResponses];
+
 export type BehandlingHentVedtaksbrevData = {
     body?: never;
     path: {
@@ -1207,12 +1262,13 @@ export type BehandlingVilkaarsvurderingResponse =
     BehandlingVilkaarsvurderingResponses[keyof BehandlingVilkaarsvurderingResponses];
 
 export type BehandlingLagreVilkaarsvurderingData = {
-    body: VilkaarWritable;
+    body: VilkaarsvurderingWritable;
     path: {
         behandlingId: string;
+        periodeId: string;
     };
     query?: never;
-    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering';
+    url: '/api/v1/behandling/{behandlingId}/vilkårsvurdering/periode/{periodeId}';
 };
 
 export type BehandlingLagreVilkaarsvurderingErrors = {
@@ -1233,7 +1289,7 @@ export type BehandlingLagreVilkaarsvurderingResponses = {
     /**
      * The request has succeeded.
      */
-    200: Vilkaar;
+    200: Vilkaarsvurdering;
 };
 
 export type BehandlingLagreVilkaarsvurderingResponse =
@@ -1366,19 +1422,36 @@ export type BehandlingHentDokumentInfoResponses = {
 export type BehandlingHentDokumentInfoResponse =
     BehandlingHentDokumentInfoResponses[keyof BehandlingHentDokumentInfoResponses];
 
-export type VedtaksbrevLagSvgVedtaksbrevData = {
-    body: VedtaksbrevDataWritable;
+export type BrevLagSvgVarselbrevData = {
+    body: VarselbrevData;
     path?: never;
     query?: never;
-    url: '/api/v1/brev/vedtaksbrev/svg';
+    url: '/api/v1/brev/varselbrev/svg';
 };
 
-export type VedtaksbrevLagSvgVedtaksbrevResponses = {
+export type BrevLagSvgVarselbrevResponses = {
     /**
      * The request has succeeded.
      */
     200: Blob | File;
 };
 
-export type VedtaksbrevLagSvgVedtaksbrevResponse =
-    VedtaksbrevLagSvgVedtaksbrevResponses[keyof VedtaksbrevLagSvgVedtaksbrevResponses];
+export type BrevLagSvgVarselbrevResponse =
+    BrevLagSvgVarselbrevResponses[keyof BrevLagSvgVarselbrevResponses];
+
+export type BrevLagSvgVedtaksbrevData = {
+    body: VedtaksbrevDataWritable;
+    path?: never;
+    query?: never;
+    url: '/api/v1/brev/vedtaksbrev/svg';
+};
+
+export type BrevLagSvgVedtaksbrevResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Blob | File;
+};
+
+export type BrevLagSvgVedtaksbrevResponse =
+    BrevLagSvgVedtaksbrevResponses[keyof BrevLagSvgVedtaksbrevResponses];

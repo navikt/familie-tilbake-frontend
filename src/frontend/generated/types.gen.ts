@@ -51,6 +51,20 @@ export type OppdaterBehandlendeEnhetRequest = {
     nyEnhet: string;
 };
 
+export type Datoperiode = {
+    fom: string;
+    tom: string;
+    fomMåned: string;
+    tomMåned: string;
+};
+
+export type Forskjell = unknown;
+
+export type JustertBeløp = Forskjell & {
+    periode: Datoperiode;
+    differanse: number;
+};
+
 export type AktsomhetsvurderingEntity = {
     vurderingType: VurderingTypeEnum;
     mottakersForståelse?: MottakersForståelseEntity | null;
@@ -382,13 +396,6 @@ export type VurdertStegEntity = {
 
 export type YtelseEntity = {
     type: TypeEnum8;
-};
-
-export type Datoperiode = {
-    fom: string;
-    tom: string;
-    fomMåned: string;
-    tomMåned: string;
 };
 
 export type FritekstavsnittDto = {
@@ -741,6 +748,12 @@ export type RessursListKravgrunnlagsinfo = {
     melding: string;
     frontendFeilmelding?: string | null;
     stacktrace?: string | null;
+};
+
+export type Entity = {
+    kravgrunnlag: string;
+    kravgrunnlagId: string;
+    fagsystemId: string;
 };
 
 export type RessursMapStringBoolean = {
@@ -2389,6 +2402,26 @@ export type LagOppdaterOppgaveTaskForBehandlingResponses = {
     200: unknown;
 };
 
+export type OppdaterKravgrunnlagBeløpData = {
+    body?: never;
+    path: {
+        fagsystem: SchemaEnum2;
+        fagsystemId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}/oppdater-belop';
+};
+
+export type OppdaterKravgrunnlagBeløpResponses = {
+    /**
+     * OK
+     */
+    200: Array<Array<JustertBeløp>>;
+};
+
+export type OppdaterKravgrunnlagBeløpResponse =
+    OppdaterKravgrunnlagBeløpResponses[keyof OppdaterKravgrunnlagBeløpResponses];
+
 export type FinnGamleÅpneBehandlingerUtenOppgaveData = {
     body?: never;
     path: {
@@ -2898,6 +2931,26 @@ export type HentKravgrunnlagsinfoResponses = {
 
 export type HentKravgrunnlagsinfoResponse =
     HentKravgrunnlagsinfoResponses[keyof HentKravgrunnlagsinfoResponses];
+
+export type HentAlleKravgrunnlagUtenforScopeData = {
+    body?: never;
+    path: {
+        fagsystem: SchemaEnum2;
+        fagsystemId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}';
+};
+
+export type HentAlleKravgrunnlagUtenforScopeResponses = {
+    /**
+     * OK
+     */
+    200: Array<Entity>;
+};
+
+export type HentAlleKravgrunnlagUtenforScopeResponse =
+    HentAlleKravgrunnlagUtenforScopeResponses[keyof HentAlleKravgrunnlagUtenforScopeResponses];
 
 export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData = {
     body?: never;

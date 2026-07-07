@@ -59,7 +59,7 @@ const lagOpprinneligAvsnittMedBegrunnelse = (): Avsnitt => ({
             forklaring: 'Forklar dette',
             meldingerTilSaksbehandler: [],
             begrunnelseType: 'særlige_grunner',
-            underavsnitt: [{ type: 'rentekst', tekst: 'Opprinnelig begrunnelse' }],
+            underavsnitt: [{ tekst: 'Opprinnelig begrunnelse' }],
         },
     ],
 });
