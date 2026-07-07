@@ -149,6 +149,7 @@ export type {
     Error,
     Fakta,
     FaktaOmFeilutbetaling,
+    FaktaOmFeilutbetalingWritable,
     FaktaPeriode,
     Feilutbetaling,
     ForaarsaketAvMottaker,
