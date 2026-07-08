@@ -33,7 +33,6 @@ import { useVilkårsvurdering } from '@/pages/fagsak/vilkaarsvurdering/gammel-vi
 import { formatterDatostring, isEmpty } from '@/utils';
 
 import { DelPeriode } from '../../del-periode/DelPeriode';
-import { kanSplitte } from '../../del-periode/utils';
 import { PeriodeHandling } from '../typer/periodeHandling';
 import { AktsomhetsvurderingSkjema } from './aktsomhetsvurdering/AktsomhetsvurderingSkjema';
 import { GodTroSkjema } from './GodTroSkjema';
@@ -287,14 +286,14 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         !periode.foreldet &&
         differenceInMonths(parseISO(periode.periode.tom), parseISO(periode.periode.fom)) >= 1;
 
+    const delbarePerioder = vilkårsvurderingsperioder?.filter(
+        ({ periode: { fom, tom } }) => fom >= periode.periode.fom && tom <= periode.periode.tom
+    );
+
+    const finnesFlereDelbarePerioder = delbarePerioder && delbarePerioder.length > 1;
+
     const kanSplitteINyModell =
-        erNyModell &&
-        !erLesevisning &&
-        !periode.foreldet &&
-        kanSplitte(
-            periode.periode,
-            vilkårsvurderingsperioder?.map(({ periode }) => periode)
-        );
+        erNyModell && !erLesevisning && !periode.foreldet && finnesFlereDelbarePerioder;
 
     const erSistePeriode = periode.index === perioder[perioder.length - 1].index;
 
@@ -308,6 +307,11 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
         onNeste: () => handleNavigering(PeriodeHandling.GåTilNesteSteg),
         disableNeste: (!erAllePerioderBehandlet && !erSistePeriode) || periode.foreldet,
     });
+
+    const erPeriodenVurdert =
+        !!periode.vilkårsvurderingsresultatInfo?.vilkårsvurderingsresultat &&
+        periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat !==
+            Vilkårsresultat.Udefinert;
 
     if (sendInnSkjemaMutation.isPending) {
         return (
@@ -329,14 +333,8 @@ export const VilkårsvurderingPeriodeSkjema: FC<Props> = ({
                     {kanSplitteINyModell && (
                         <DelPeriode
                             periode={periode.periode}
-                            // Vil aldri være undefined siden kanSplitteINyModell vil returnere false hvis vilkårsvurderingsperioder er undefined
-                            delbarePerioder={vilkårsvurderingsperioder ?? []}
-                            erVurdert={
-                                !!periode.vilkårsvurderingsresultatInfo
-                                    ?.vilkårsvurderingsresultat &&
-                                periode.vilkårsvurderingsresultatInfo.vilkårsvurderingsresultat !==
-                                    Vilkårsresultat.Udefinert
-                            }
+                            delbarePerioder={delbarePerioder}
+                            erVurdert={erPeriodenVurdert}
                             hentVilkårsvurdering={hentVilkårsvurdering}
                         />
                     )}
