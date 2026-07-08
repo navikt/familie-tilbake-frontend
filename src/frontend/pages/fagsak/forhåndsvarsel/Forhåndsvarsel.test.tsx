@@ -71,6 +71,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
     vurdering: { årsak: null },
     ferdigvurdert: false,
     usikker4xRettsgebyr: false,
+    rettsgebyrÅrFraSaksbehandler: null,
 });
 
 const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselResponse => ({

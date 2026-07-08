@@ -2,9 +2,9 @@ import type { JSX } from 'react';
 import type { BehandlingOppdaterFaktaData, FaktaOmFeilutbetaling } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { expect } from 'vitest';
+import { expect, vi } from 'vitest';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
@@ -59,6 +59,7 @@ const faktaOmFeilutbetaling = (
     ],
     ferdigvurdert: false,
     usikker4xRettsgebyr: false,
+    rettsgebyrÅrFraSaksbehandler: null,
     vurdering: {
         årsak: null,
         oppdaget: undefined,
@@ -67,7 +68,8 @@ const faktaOmFeilutbetaling = (
 });
 
 const renderFakta = (
-    overrides?: Partial<FaktaOmFeilutbetaling>
+    overrides?: Partial<FaktaOmFeilutbetaling>,
+    stateOverrides?: { behandlingILesemodus?: boolean }
 ): Promise<BehandlingOppdaterFaktaData> => {
     const client = createTestQueryClient();
     const mutationBody = new Promise<BehandlingOppdaterFaktaData>(resolve => {
@@ -83,7 +85,10 @@ const renderFakta = (
 
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
+            <TestBehandlingProvider
+                behandling={lagBehandling({ behandlingId: 'unik' })}
+                stateOverrides={stateOverrides}
+            >
                 <QueryClientProvider client={client}>
                     <FaktaSkjema faktaOmFeilutbetaling={faktaOmFeilutbetaling(overrides)} />
                 </QueryClientProvider>
@@ -180,6 +185,7 @@ describe('Fakta om feilutbetaling', () => {
                             dato: '2020-04-20',
                         },
                     },
+                    rettsgebyrÅrFraSaksbehandler: null,
                 },
             });
         });
@@ -375,6 +381,149 @@ describe('Fakta om feilutbetaling', () => {
 
             expect(await datoSelector()).toHaveValue('01.01.2020');
             expect(await datoSelector()).not.toHaveAccessibleDescription();
+        });
+    });
+
+    describe('Siste utbetalingsår (usikker4xRettsgebyr)', () => {
+        const rettsgebyrÅr = (): HTMLElement =>
+            screen.getByRole('combobox', { name: /Hvilket år var siste utbetaling\?/ });
+
+        test('Vises ikke når usikker4xRettsgebyr er false', () => {
+            renderFakta({ usikker4xRettsgebyr: false });
+
+            expect(
+                screen.queryByRole('combobox', { name: 'Hvilket år var siste utbetaling?' })
+            ).not.toBeInTheDocument();
+        });
+
+        test('Vises når usikker4xRettsgebyr er true og forhåndsutfylles fra backend', () => {
+            renderFakta({
+                usikker4xRettsgebyr: true,
+                rettsgebyrÅrFraSaksbehandler: 2022,
+                perioder: [
+                    {
+                        id: 'unik',
+                        fom: '2020-04-20',
+                        tom: '2020-04-30',
+                        feilutbetaltBeløp: 6900,
+                        splittbarePerioder: [],
+                        rettsligGrunnlag: [{ bestemmelse: 'ANNET', grunnlag: 'ANNET_FRITEKST' }],
+                    },
+                ],
+            });
+
+            expect(rettsgebyrÅr()).toHaveValue('2022');
+        });
+
+        test('Året kan ikke være før første faktaperiode sin fom', () => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2023-06-15'));
+            renderFakta({
+                usikker4xRettsgebyr: true,
+                rettsgebyrÅrFraSaksbehandler: null,
+                perioder: [
+                    {
+                        id: 'unik',
+                        fom: '2021-04-20',
+                        tom: '2021-04-30',
+                        feilutbetaltBeløp: 6900,
+                        splittbarePerioder: [],
+                        rettsligGrunnlag: [{ bestemmelse: 'ANNET', grunnlag: 'ANNET_FRITEKST' }],
+                    },
+                ],
+            });
+
+            const valgbareÅr = within(rettsgebyrÅr())
+                .getAllByRole('option')
+                .map(option => option.textContent);
+
+            // Kun år fra og med første faktaperiode sin fom (2021) til inneværende år (2023)
+            expect(valgbareÅr).toEqual(['Velg år', '2023', '2022', '2021']);
+            expect(valgbareÅr).not.toContain('2020');
+
+            vi.useRealTimers();
+        });
+
+        test('Setter valgt år i submit-body', async () => {
+            const mutationBody = renderFakta({
+                usikker4xRettsgebyr: true,
+                rettsgebyrÅrFraSaksbehandler: null,
+                perioder: [
+                    {
+                        id: 'unik',
+                        fom: '2020-04-20',
+                        tom: '2020-04-30',
+                        feilutbetaltBeløp: 6900,
+                        splittbarePerioder: [],
+                        rettsligGrunnlag: [{ bestemmelse: 'ANNET', grunnlag: 'ANNET_FRITEKST' }],
+                    },
+                ],
+                vurdering: {
+                    årsak: 'årsak',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'hvordan',
+                    },
+                },
+            });
+
+            await user.selectOptions(rettsgebyrÅr(), '2021');
+            await user.click(nesteKnapp());
+
+            await expect(mutationBody).resolves.toMatchObject({
+                body: { rettsgebyrÅrFraSaksbehandler: 2021 },
+            });
+        });
+
+        test('Er readonly i lesemodus', () => {
+            renderFakta({ usikker4xRettsgebyr: true }, { behandlingILesemodus: true });
+
+            expect(rettsgebyrÅr().closest('.aksel-form-field')).toHaveClass(
+                'aksel-form-field--readonly'
+            );
+        });
+
+        test('Viser feilmelding ved submit uten valgt år', async () => {
+            renderFakta({
+                usikker4xRettsgebyr: true,
+                rettsgebyrÅrFraSaksbehandler: null,
+                vurdering: {
+                    årsak: 'årsak',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'beskrivelse',
+                    },
+                },
+            });
+
+            await user.click(nesteKnapp());
+
+            expect(rettsgebyrÅr()).toHaveAccessibleDescription(
+                /Du må velge år for siste utbetaling/
+            );
+        });
+
+        test('Sender null når usikker4xRettsgebyr er false selv om backend har en tallverdi', async () => {
+            const mutationBody = renderFakta({
+                usikker4xRettsgebyr: false,
+                rettsgebyrÅrFraSaksbehandler: 0,
+                vurdering: {
+                    årsak: 'årsak',
+                    oppdaget: {
+                        av: 'NAV',
+                        dato: '2020-04-20',
+                        beskrivelse: 'beskrivelse',
+                    },
+                },
+            });
+
+            await user.click(nesteKnapp());
+
+            await expect(mutationBody).resolves.toMatchObject({
+                body: { rettsgebyrÅrFraSaksbehandler: null },
+            });
         });
     });
 

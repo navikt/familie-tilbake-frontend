@@ -539,6 +539,11 @@ export const zVurdering = z.object({
 export const zOppdaterFaktaOmFeilutbetaling = z.object({
     perioder: z.array(zOppdaterFaktaPeriode).optional(),
     vurdering: zVurdering.optional(),
+    rettsgebyrÅrFraSaksbehandler: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
 });
 
 export const zResultatEnum = z.enum(['INNVILGET', 'OPPHØRT']);
@@ -569,6 +574,11 @@ export const zFaktaOmFeilutbetaling = z.object({
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
     perioder: z.array(zFaktaPeriode),
     vurdering: zVurdering,
+    rettsgebyrÅrFraSaksbehandler: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
     ferdigvurdert: z.boolean().readonly(),
     usikker4xRettsgebyr: z.boolean().readonly(),
 });
@@ -613,6 +623,11 @@ export const zFaktaOmFeilutbetalingWritable = z.object({
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
     perioder: z.array(zFaktaPeriode),
     vurdering: zVurdering,
+    rettsgebyrÅrFraSaksbehandler: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
 });
 
 export const zMomentWritable = z.object({

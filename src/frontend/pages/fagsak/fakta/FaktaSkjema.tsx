@@ -42,7 +42,7 @@ import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 import { dateTilIsoDatoString } from '@/utils/dato';
 import { useStegNavigering } from '@/utils/sider';
 
-import { oppdaterFaktaOmFeilutbetalingSchema } from './schema';
+import { lagOppdaterFaktaOmFeilutbetalingSchema } from './schema';
 
 type FaktaOmFeilUtbetalingForm = {
     vurdering: {
@@ -79,7 +79,9 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
     const navigerTilNeste = useStegNavigering('FORHÅNDSVARSEL');
 
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
-        resolver: zodResolver(oppdaterFaktaOmFeilutbetalingSchema),
+        resolver: zodResolver(
+            lagOppdaterFaktaOmFeilutbetalingSchema(faktaOmFeilutbetaling.usikker4xRettsgebyr)
+        ),
         defaultValues: {
             perioder: faktaOmFeilutbetaling.perioder.map(periode => ({
                 ...periode,
@@ -104,6 +106,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
                             : faktaOmFeilutbetaling.vurdering.oppdaget?.av,
                 },
             },
+            rettsgebyrÅrFraSaksbehandler: faktaOmFeilutbetaling.rettsgebyrÅrFraSaksbehandler,
         },
         reValidateMode: 'onChange',
         mode: 'onSubmit',
@@ -138,6 +141,19 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
             }
         },
     });
+
+    const førsteFaktaperiodeFom = faktaOmFeilutbetaling.perioder[0]?.fom;
+    const førsteFaktaperiodeÅr = førsteFaktaperiodeFom
+        ? parseISO(førsteFaktaperiodeFom).getFullYear()
+        : undefined;
+
+    const årsalternativer =
+        førsteFaktaperiodeÅr === undefined
+            ? []
+            : Array.from(
+                  { length: iDag.getFullYear() - førsteFaktaperiodeÅr + 1 },
+                  (_, i) => iDag.getFullYear() - i
+              );
     const oppdaterMutation = useMutation<
         BehandlingOppdaterFaktaResponse,
         AxiosError<BehandlingOppdaterFaktaError>,
@@ -173,8 +189,14 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = (
         data: OppdaterFaktaOmFeilutbetaling
     ): void => {
+        const body: OppdaterFaktaOmFeilutbetaling = {
+            ...data,
+            rettsgebyrÅrFraSaksbehandler: faktaOmFeilutbetaling.usikker4xRettsgebyr
+                ? data.rettsgebyrÅrFraSaksbehandler
+                : null,
+        };
         oppdaterMutation.mutate(
-            { body: data, path: { behandlingId } },
+            { body, path: { behandlingId } },
             {
                 onSuccess: async (data: FaktaOmFeilutbetaling) => {
                     nullstillIkkePersisterteKomponenter();
@@ -276,6 +298,29 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
                         maxLength={3000}
                         description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at brukeren har fått utbetalt for mye"
                     />
+                    {faktaOmFeilutbetaling.usikker4xRettsgebyr && (
+                        <Select
+                            label="Hvilket år var siste utbetaling?"
+                            description="For å kunne regne ut riktig rettsgebyr trenger vi denne informasjonen"
+                            size="small"
+                            readOnly={behandlingILesemodus}
+                            error={methods.formState.errors.rettsgebyrÅrFraSaksbehandler?.message}
+                            style={{ width: '137px' }}
+                            {...methods.register('rettsgebyrÅrFraSaksbehandler', {
+                                setValueAs: (value: string): number | null =>
+                                    value ? Number(value) : null,
+                            })}
+                        >
+                            <option value="" disabled>
+                                Velg år
+                            </option>
+                            {årsalternativer.map(år => (
+                                <option key={år} value={år}>
+                                    {år}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
                     <DatePicker {...datepickerProps} dropdownCaption>
                         <DatePicker.Input
                             size="small"

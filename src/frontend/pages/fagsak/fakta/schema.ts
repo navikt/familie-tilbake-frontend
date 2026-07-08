@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { zFritekst, zOppdaterFaktaOmFeilutbetaling, zVurdering } from '@/generated-new/zod.gen';
 
-export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
+const oppdaterFaktaOmFeilutbetalingSchema = z.object({
     ...zOppdaterFaktaOmFeilutbetaling.shape,
     vurdering: z.object({
         ...zVurdering.shape,
@@ -15,6 +15,17 @@ export const oppdaterFaktaOmFeilutbetalingSchema = z.object({
         }),
     }),
 });
+
+export const lagOppdaterFaktaOmFeilutbetalingSchema = (
+    usikker4xRettsgebyr: boolean
+): z.ZodType<OppdaterFaktaOmFeilutbetalingSchema, OppdaterFaktaOmFeilutbetalingSchema> =>
+    usikker4xRettsgebyr
+        ? oppdaterFaktaOmFeilutbetalingSchema.extend({
+              rettsgebyrÅrFraSaksbehandler: z.int({
+                  error: 'Du må velge år for siste utbetaling',
+              }),
+          })
+        : oppdaterFaktaOmFeilutbetalingSchema;
 
 export type OppdaterFaktaOmFeilutbetalingSchema = z.infer<
     typeof oppdaterFaktaOmFeilutbetalingSchema

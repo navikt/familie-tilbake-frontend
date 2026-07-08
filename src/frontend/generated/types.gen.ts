@@ -193,6 +193,7 @@ export type FaktastegEntity = {
     vurderingAvBrukersUttalelse?: string | null;
     oppdaget?: OppdagetEntity | null;
     trengerNyVurdering: boolean;
+    rettsgebyrÅrFraSaksbehandler?: number | null;
 };
 
 export type FatteVedtakStegEntity = {

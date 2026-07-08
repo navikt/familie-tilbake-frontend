@@ -104,6 +104,7 @@ export type FaktaOmFeilutbetaling = {
     muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlag>;
     perioder: Array<FaktaPeriode>;
     vurdering: Vurdering;
+    rettsgebyrÅrFraSaksbehandler: number | null;
     readonly ferdigvurdert: boolean;
     readonly usikker4xRettsgebyr: boolean;
 };
@@ -262,6 +263,7 @@ export type Oppdaget = {
 export type OppdaterFaktaOmFeilutbetaling = {
     perioder?: Array<OppdaterFaktaPeriode>;
     vurdering?: Vurdering;
+    rettsgebyrÅrFraSaksbehandler: number | null;
 };
 
 export type OppdaterFaktaPeriode = {
@@ -609,6 +611,7 @@ export type FaktaOmFeilutbetalingWritable = {
     muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlag>;
     perioder: Array<FaktaPeriode>;
     vurdering: Vurdering;
+    rettsgebyrÅrFraSaksbehandler: number | null;
 };
 
 export type ForaarsaketAvMottakerWritable = {
