@@ -10,7 +10,6 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSlaaSammenPerioderMutation } from '@/generated-new/@tanstack/react-query.gen';
 import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
-import { hentFeilmeldingFraError } from '@/typer/ressurs';
 import { formatterDatostring } from '@/utils';
 
 import { finnSammenslåingsforslag } from './utils';
@@ -47,7 +46,9 @@ export const SlåSammen: FC<Props> = ({
         onError: (error: AxiosError<KontraktError>) => {
             visGlobalAlert({
                 title: error.response?.data.tittel ?? 'Kunne ikke slå sammen periodene',
-                message: error.response?.data.melding ?? hentFeilmeldingFraError(error),
+                message:
+                    error.response?.data.melding ??
+                    'En feil har oppstått ved sammenslåing av periodene.',
                 status: 'error',
             });
         },
