@@ -1,5 +1,7 @@
+import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
+import type { BehandlingForeslaaVedtakError } from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
 
 import { Heading, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds-react';
@@ -58,10 +60,9 @@ export const Vedtak: FC = () => {
                 status: 'success',
             });
         },
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
+        onError: (error: AxiosError<BehandlingForeslaaVedtakError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke sende til godkjenning',
+                title: error.response?.data?.tittel ?? 'Kunne ikke sende til godkjenning',
                 message: error.response?.data?.melding,
                 status: 'error',
             });
