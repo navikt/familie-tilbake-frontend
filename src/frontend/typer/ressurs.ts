@@ -1,5 +1,3 @@
-import type { AxiosError } from 'axios';
-
 import { erServerFeil } from '@/utils/httpUtils';
 
 export enum RessursStatus {
@@ -86,12 +84,4 @@ export const byggFeiletRessurs = <T>(
         frontendFeilmelding,
         status: RessursStatus.Feilet,
     };
-};
-
-export const hentFeilmeldingFraError = (error: unknown, fallback = 'Ukjent feil'): string => {
-    const axiosError = error as AxiosError<ApiRessurs<unknown>>;
-    const data = axiosError.response?.data;
-    return (
-        data?.frontendFeilmelding ?? (data as { melding?: string } | undefined)?.melding ?? fallback
-    );
 };

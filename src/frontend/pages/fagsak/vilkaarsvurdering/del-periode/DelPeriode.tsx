@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 import type { Periode } from '@/generated';
-import type { Error as KontraktError, PeriodeInfo, SplittPeriode } from '@/generated-new';
+import type { BehandlingSplittPeriodeError, PeriodeInfo, SplittPeriode } from '@/generated-new';
 
 import { CalendarFillIcon } from '@navikt/aksel-icons';
 import {
@@ -117,11 +117,10 @@ export const DelPeriode: FC<Props> = ({
             });
             delPeriodeRef.current?.close();
         },
-        onError: (error: AxiosError<KontraktError>) => {
+        onError: (error: AxiosError<BehandlingSplittPeriodeError>) => {
             visGlobalAlert({
-                title: error.response?.data.tittel ?? 'Kunne ikke dele opp perioden',
-                message:
-                    error.response?.data.melding ?? 'En feil har oppstått ved deling av perioden.',
+                title: error.response?.data?.tittel ?? 'Kunne ikke dele opp perioden',
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },

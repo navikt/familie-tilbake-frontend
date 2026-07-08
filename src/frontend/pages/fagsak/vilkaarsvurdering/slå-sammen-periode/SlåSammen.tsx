@@ -1,5 +1,5 @@
 import type { AxiosError } from 'axios';
-import type { Error as KontraktError } from '@/generated-new';
+import type { BehandlingSlaaSammenPerioderError } from '@/generated-new';
 import type { SammenslåbarPeriode } from './utils';
 
 import { BodyShort, Box, Button, Modal } from '@navikt/ds-react';
@@ -43,12 +43,10 @@ export const SlåSammen: FC<Props> = ({
             });
             lukkModal();
         },
-        onError: (error: AxiosError<KontraktError>) => {
+        onError: (error: AxiosError<BehandlingSlaaSammenPerioderError>) => {
             visGlobalAlert({
                 title: error.response?.data.tittel ?? 'Kunne ikke slå sammen periodene',
-                message:
-                    error.response?.data.melding ??
-                    'En feil har oppstått ved sammenslåing av periodene.',
+                message: error.response?.data.melding,
                 status: 'error',
             });
         },

@@ -13,9 +13,12 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { forhåndsvisBrevMutation } from '@/generated/@tanstack/react-query.gen';
 import {
+    type BehandlingLagreBrukersuttalelseError,
+    type BehandlingLagreForhaandsvarselUnntakError,
     type BehandlingSendVarselbrevData,
     type BehandlingSendVarselbrevError,
     type BehandlingUtsettUttalelsesfristData,
+    type BehandlingUtsettUttalelsesfristError,
     type BehandlingUtsettUttalelsesfristResponse,
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
@@ -36,7 +39,6 @@ import {
 import { useActionBar } from '@/hooks/useActionBar';
 import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
-import { hentFeilmeldingFraError } from '@/typer/ressurs';
 import { formatterDatostring } from '@/utils';
 import { useStegNavigering } from '@/utils/sider';
 
@@ -72,11 +74,10 @@ export const Forhåndsvarsel: FC = () => {
                 status: 'success',
             });
         },
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
+        onError: (error: AxiosError<BehandlingLagreForhaandsvarselUnntakError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke sende forhåndsvarsel',
-                message: hentFeilmeldingFraError(error),
+                title: error.response?.data?.tittel ?? 'Kunne ikke sende forhåndsvarsel',
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },
@@ -172,11 +173,10 @@ export const ForhåndsvarselInnhold: FC = () => {
     const lagreUnntak = useMutation({
         ...behandlingLagreForhaandsvarselUnntakMutation(),
         onSuccess: etterVellykketLagring,
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
+        onError: (error: AxiosError<BehandlingLagreForhaandsvarselUnntakError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke lagre unntak',
-                message: hentFeilmeldingFraError(error),
+                title: error.response?.data?.tittel ?? 'Kunne ikke lagre unntak',
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },
@@ -202,11 +202,10 @@ export const ForhåndsvarselInnhold: FC = () => {
             });
         },
         onSuccess: etterVellykketLagring,
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
+        onError: (error: AxiosError<BehandlingLagreForhaandsvarselUnntakError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke lagre unntak',
-                message: hentFeilmeldingFraError(error),
+                title: error.response?.data?.tittel ?? 'Kunne ikke lagre unntak',
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },
@@ -215,11 +214,10 @@ export const ForhåndsvarselInnhold: FC = () => {
     const lagreBrukeruttalelse = useMutation({
         ...behandlingLagreBrukersuttalelseMutation(),
         onSuccess: etterVellykketLagring,
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
+        onError: (error: AxiosError<BehandlingLagreBrukersuttalelseError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke lagre brukeruttalelse',
-                message: hentFeilmeldingFraError(error),
+                title: error.response?.data?.tittel ?? 'Kunne ikke lagre brukeruttalelse',
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },
@@ -242,11 +240,10 @@ export const ForhåndsvarselInnhold: FC = () => {
                 status: 'success',
             });
         },
-        // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-        onError: error => {
+        onError: (error: AxiosError<BehandlingUtsettUttalelsesfristError>) => {
             visGlobalAlert({
-                title: 'Kunne ikke utsette fristen',
-                message: hentFeilmeldingFraError(error),
+                title: error.response?.data?.tittel ?? 'Kunne ikke utsette fristen',
+                message: error.response?.data?.melding,
                 status: 'error',
             });
         },
@@ -278,12 +275,11 @@ export const ForhåndsvarselInnhold: FC = () => {
                 onSuccess: () => {
                     bekreftelsesmodalRef.current?.close();
                 },
-                // biome-ignore lint/nursery/useExplicitType: Klarer ikke finne typen på error her, da den kommer fra useMutation og ikke er eksplisitt definert i api-kallet. Kan se nærmere på dette senere.
-                onError: error => {
+                onError: (error: AxiosError<BehandlingSendVarselbrevError>) => {
                     bekreftelsesmodalRef.current?.close();
                     visGlobalAlert({
-                        title: 'Kunne ikke sende forhåndsvarsel',
-                        message: hentFeilmeldingFraError(error),
+                        title: error.response?.data?.tittel ?? 'Kunne ikke sende forhåndsvarsel',
+                        message: error.response?.data?.melding,
                         status: 'error',
                     });
                 },
