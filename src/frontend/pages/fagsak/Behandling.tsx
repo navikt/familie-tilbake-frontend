@@ -306,7 +306,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
                             element={
-                                behandling.erNyModell && toggles[ToggleName.Vedtaksbrev] ? (
+                                behandling.erNyModell ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
                                         <Vedtak />
                                     </StegErrorBoundary>
