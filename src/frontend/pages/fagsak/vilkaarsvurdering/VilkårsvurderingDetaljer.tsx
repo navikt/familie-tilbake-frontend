@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Vilkaarsperiode } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
-import { Heading, HStack } from '@navikt/ds-react';
+import { Button, Heading, HStack } from '@navikt/ds-react';
 
 import { DelPeriode } from './del-periode/DelPeriode';
 import { VilkårsvurderingSkjema } from './skjema/VilkårsvurderingSkjema';
@@ -54,6 +54,9 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                         }))}
                         hentVilkårsvurdering={hentVilkårsvurdering}
                     />
+                    <Button size="xsmall" onClick={(): void => undefined}>
+                        Lagre
+                    </Button>
                 </HStack>
             </HStack>
 
