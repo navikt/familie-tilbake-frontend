@@ -601,7 +601,7 @@ export const zVilkaarsperiode = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
-        .readonly(),
+        .nullable(),
     vilkårsvurdering: zVilkaarsvurdering,
 });
 

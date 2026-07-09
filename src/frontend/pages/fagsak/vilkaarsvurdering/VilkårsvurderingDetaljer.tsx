@@ -34,7 +34,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                 <Heading size="small" level="2">
                     {`${valgtPeriode.fom}–${valgtPeriode.tom}`}
                 </Heading>
-                <HStack>
+                <HStack gap="space-4">
                     {valgtVilkårsperiode &&
                         valgtVilkårsperiode.vilkårsvurdering.delbarePerioder.length > 1 && (
                             <DelPeriode
@@ -61,8 +61,11 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                     </Button>
                 </HStack>
             </HStack>
-
-            <VilkårsvurderingSkjema erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
+            {/* TODO bytt ut propdrillingen av simulertBeløp og erUnder4xRettsgebyr etter react hook form sin useFormContext er på plass */}
+            <VilkårsvurderingSkjema
+                erUnder4xRettsgebyr={erUnder4xRettsgebyr}
+                simulertBeløp={valgtVilkårsperiode?.simulertBeløp ?? null}
+            />
         </section>
     );
 };

@@ -11,9 +11,13 @@ type VilkårValg = 'forsto_eller_burde_forstått' | 'forårsaket_av_mottaker' | 
 
 type Props = {
     erUnder4xRettsgebyr: boolean;
+    simulertBeløp: number | null;
 };
 
-export const VilkårsvurderingSkjema: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
+export const VilkårsvurderingSkjema: FC<Props> = ({
+    erUnder4xRettsgebyr,
+    simulertBeløp,
+}: Props) => {
     const [valg, setValg] = useState<VilkårValg>();
 
     return (
@@ -43,14 +47,20 @@ export const VilkårsvurderingSkjema: FC<Props> = ({ erUnder4xRettsgebyr }: Prop
             </RadioGroup>
 
             {valg === 'forsto_eller_burde_forstått' && (
-                <ForstoEllerBurdeForståttFelter erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
+                <ForstoEllerBurdeForståttFelter
+                    erUnder4xRettsgebyr={erUnder4xRettsgebyr}
+                    simulertBeløp={simulertBeløp}
+                />
             )}
 
             {valg === 'forårsaket_av_mottaker' && (
-                <ForårsaketAvMottakerenFelter erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
+                <ForårsaketAvMottakerenFelter
+                    erUnder4xRettsgebyr={erUnder4xRettsgebyr}
+                    simulertBeløp={simulertBeløp}
+                />
             )}
 
-            {valg === 'god_tro' && <GodTroFelter />}
+            {valg === 'god_tro' && <GodTroFelter simulertBeløp={simulertBeløp} />}
         </form>
     );
 };

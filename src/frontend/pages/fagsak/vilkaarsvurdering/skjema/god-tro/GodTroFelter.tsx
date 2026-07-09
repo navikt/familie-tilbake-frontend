@@ -9,7 +9,11 @@ import { Ingenting } from './Ingenting';
 
 type BeløpIBehold = 'ingenting' | 'hele' | 'deler';
 
-export const GodTroFelter: FC = () => {
+type Props = {
+    simulertBeløp: number | null;
+};
+
+export const GodTroFelter: FC<Props> = ({ simulertBeløp }: Props) => {
     const [beløpIBehold, setBeløpIBehold] = useState<BeløpIBehold>();
 
     return (
@@ -34,11 +38,11 @@ export const GodTroFelter: FC = () => {
                 <Radio value="deler">Deler av beløpet</Radio>
             </RadioGroup>
 
-            {beløpIBehold === 'ingenting' && <Ingenting />}
+            {beløpIBehold === 'ingenting' && <Ingenting simulertBeløp={simulertBeløp} />}
 
-            {beløpIBehold === 'hele' && <Hele />}
+            {beløpIBehold === 'hele' && <Hele simulertBeløp={simulertBeløp} />}
 
-            {beløpIBehold === 'deler' && <Deler />}
+            {beløpIBehold === 'deler' && <Deler simulertBeløp={simulertBeløp} />}
         </>
     );
 };

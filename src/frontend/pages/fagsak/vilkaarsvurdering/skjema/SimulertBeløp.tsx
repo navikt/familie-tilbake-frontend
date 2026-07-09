@@ -16,15 +16,19 @@ type UtenReduksjon = {
 
 type Props = {
     renter?: boolean;
-    beløp: number;
+    simulertBeløp: number | null;
 } & (MedReduksjon | UtenReduksjon);
 
 export const SimulertBeløp: FC<Props> = ({
     renter = false,
     reduksjonsprosent,
     reduksjon,
-    beløp,
+    simulertBeløp,
 }: Props) => {
+    if (simulertBeløp === null && !renter && !reduksjon) {
+        return null;
+    }
+
     return (
         <HStack className="border border-ax-border-info-subtle rounded-xl bg-ax-bg-info-soft p-4 font-semibold">
             {(reduksjon || renter) && (
@@ -45,10 +49,14 @@ export const SimulertBeløp: FC<Props> = ({
                 </HStack>
             )}
 
-            <VStack gap="space-4" className="w-1/2">
-                <span className="text-ax-text-info-subtle">Beløpet som skal kreves tilbake</span>
-                <span className="text-xl">{formatCurrencyNoKr(beløp)} kroner</span>
-            </VStack>
+            {simulertBeløp !== null && (
+                <VStack gap="space-4" className="w-1/2">
+                    <span className="text-ax-text-info-subtle">
+                        Beløpet som skal kreves tilbake
+                    </span>
+                    <span className="text-xl">{formatCurrencyNoKr(simulertBeløp)} kroner</span>
+                </VStack>
+            )}
         </HStack>
     );
 };

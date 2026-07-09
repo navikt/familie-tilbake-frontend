@@ -525,7 +525,7 @@ export type Vilkaarsperiode = {
     readonly feilutbetaltBeløp: number;
     readonly delresultat: _0Enum | null;
     readonly fakta: Fakta;
-    readonly simulertBeløp: number;
+    readonly simulertBeløp: number | null;
     vilkårsvurdering: Vilkaarsvurdering;
 };
 

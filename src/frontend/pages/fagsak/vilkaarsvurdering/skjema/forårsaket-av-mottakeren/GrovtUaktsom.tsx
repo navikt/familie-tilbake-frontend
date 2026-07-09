@@ -4,7 +4,11 @@ import { Textarea } from '@navikt/ds-react';
 
 import { SærligeGrunner } from '../SærligeGrunner';
 
-export const GrovtUaktsom: FC = () => {
+type Props = {
+    simulertBeløp: number | null;
+};
+
+export const GrovtUaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
     return (
         <>
             <Textarea
@@ -15,7 +19,7 @@ export const GrovtUaktsom: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SærligeGrunner renter reduksjon />
+            <SærligeGrunner renter reduksjon simulertBeløp={simulertBeløp} />
         </>
     );
 };

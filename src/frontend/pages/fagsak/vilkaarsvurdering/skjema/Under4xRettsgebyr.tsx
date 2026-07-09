@@ -8,12 +8,18 @@ import { SærligeGrunner } from './SærligeGrunner';
 type SærligeGrunnerValg = 'ja' | 'nei';
 
 type Props = {
+    simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
     standardValg?: SærligeGrunnerValg;
 };
 
-export const Under4xRettsgebyr: FC<Props> = ({ renter, reduksjon, standardValg }: Props) => {
+export const Under4xRettsgebyr: FC<Props> = ({
+    simulertBeløp,
+    renter,
+    reduksjon,
+    standardValg,
+}: Props) => {
     const [skalIkkeKrevesTilbake, setSkalIkkeKrevesTilbake] = useState<string>();
     return (
         <>
@@ -45,12 +51,17 @@ export const Under4xRettsgebyr: FC<Props> = ({ renter, reduksjon, standardValg }
                         resize
                         maxLength={3000}
                     />
-                    <SimulertBeløp beløp={1000} />
+                    <SimulertBeløp simulertBeløp={simulertBeløp} />
                 </>
             )}
 
             {skalIkkeKrevesTilbake === 'nei' && (
-                <SærligeGrunner reduksjon={reduksjon} standardValg={standardValg} renter={renter} />
+                <SærligeGrunner
+                    reduksjon={reduksjon}
+                    standardValg={standardValg}
+                    renter={renter}
+                    simulertBeløp={simulertBeløp}
+                />
             )}
         </>
     );

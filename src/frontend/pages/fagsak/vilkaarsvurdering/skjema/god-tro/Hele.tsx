@@ -4,7 +4,11 @@ import { Textarea } from '@navikt/ds-react';
 
 import { KrevesTilbakeVurdering } from './KrevesTilbakeVurdering';
 
-export const Hele: FC = () => {
+type Props = {
+    simulertBeløp: number | null;
+};
+
+export const Hele: FC<Props> = ({ simulertBeløp }: Props) => {
     return (
         <>
             <Textarea
@@ -16,7 +20,11 @@ export const Hele: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <KrevesTilbakeVurdering navnPrefix="godTro.hele" beløpsbeskrivelse="hele beløpet" />
+            <KrevesTilbakeVurdering
+                navnPrefix="godTro.hele"
+                beløpsbeskrivelse="hele beløpet"
+                simulertBeløp={simulertBeløp}
+            />
         </>
     );
 };

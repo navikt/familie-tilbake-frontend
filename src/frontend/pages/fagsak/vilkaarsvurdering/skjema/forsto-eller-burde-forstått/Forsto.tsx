@@ -7,9 +7,10 @@ import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
 type Props = {
     erUnder4xRettsgebyr: boolean;
+    simulertBeløp: number | null;
 };
 
-export const Forsto: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
+export const Forsto: FC<Props> = ({ erUnder4xRettsgebyr, simulertBeløp }: Props) => {
     return (
         <>
             <Textarea
@@ -21,9 +22,9 @@ export const Forsto: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
                 maxLength={3000}
             />
             {erUnder4xRettsgebyr ? (
-                <Under4xRettsgebyr reduksjon standardValg="nei" />
+                <Under4xRettsgebyr reduksjon standardValg="nei" simulertBeløp={simulertBeløp} />
             ) : (
-                <SærligeGrunner reduksjon standardValg="nei" />
+                <SærligeGrunner reduksjon standardValg="nei" simulertBeløp={simulertBeløp} />
             )}
         </>
     );

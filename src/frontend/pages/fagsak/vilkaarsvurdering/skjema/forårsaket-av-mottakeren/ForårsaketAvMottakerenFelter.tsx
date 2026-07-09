@@ -7,9 +7,13 @@ import { Uaktsom } from './Uaktsom';
 
 type Props = {
     erUnder4xRettsgebyr: boolean;
+    simulertBeløp: number | null;
 };
 
-export const ForårsaketAvMottakerenFelter: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
+export const ForårsaketAvMottakerenFelter: FC<Props> = ({
+    erUnder4xRettsgebyr,
+    simulertBeløp,
+}: Props) => {
     const [uaktsomhet, setUaktsomhet] = useState<string>();
     return (
         <>
@@ -25,11 +29,13 @@ export const ForårsaketAvMottakerenFelter: FC<Props> = ({ erUnder4xRettsgebyr }
                 <Radio value="forsett">Forsett</Radio>
             </RadioGroup>
 
-            {uaktsomhet === 'grovt-uaktsom' && <GrovtUaktsom />}
+            {uaktsomhet === 'grovt-uaktsom' && <GrovtUaktsom simulertBeløp={simulertBeløp} />}
 
-            {uaktsomhet === 'forsett' && <Forsett />}
+            {uaktsomhet === 'forsett' && <Forsett simulertBeløp={simulertBeløp} />}
 
-            {uaktsomhet === 'uaktsom' && <Uaktsom erUnder4xRettsgebyr={erUnder4xRettsgebyr} />}
+            {uaktsomhet === 'uaktsom' && (
+                <Uaktsom erUnder4xRettsgebyr={erUnder4xRettsgebyr} simulertBeløp={simulertBeløp} />
+            )}
         </>
     );
 };

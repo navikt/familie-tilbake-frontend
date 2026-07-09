@@ -14,12 +14,14 @@ import { SimulertBeløp } from './SimulertBeløp';
 type SærligeGrunnerValg = 'ja' | 'nei';
 
 type Props = {
+    simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
     standardValg?: SærligeGrunnerValg;
 };
 
 export const SærligeGrunner: FC<Props> = ({
+    simulertBeløp,
     renter = false,
     reduksjon = false,
     standardValg,
@@ -101,7 +103,11 @@ export const SærligeGrunner: FC<Props> = ({
                         min={1}
                         max={100}
                     />
-                    <SimulertBeløp renter={renter} {...reduksjonsprops} beløp={10000} />
+                    <SimulertBeløp
+                        simulertBeløp={simulertBeløp}
+                        renter={renter}
+                        {...reduksjonsprops}
+                    />
                 </>
             )}
 
@@ -144,7 +150,7 @@ export const SærligeGrunner: FC<Props> = ({
                         resize
                         maxLength={3000}
                     />
-                    <SimulertBeløp renter={renter} beløp={10000} />
+                    <SimulertBeløp renter={renter} simulertBeløp={simulertBeløp} />
                 </>
             )}
         </>

@@ -7,9 +7,10 @@ import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
 type Props = {
     erUnder4xRettsgebyr: boolean;
+    simulertBeløp: number | null;
 };
 
-export const BurdeForstått: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
+export const BurdeForstått: FC<Props> = ({ erUnder4xRettsgebyr, simulertBeløp }: Props) => {
     return (
         <>
             <Textarea
@@ -20,7 +21,11 @@ export const BurdeForstått: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
                 resize
                 maxLength={3000}
             />
-            {erUnder4xRettsgebyr ? <Under4xRettsgebyr reduksjon /> : <SærligeGrunner reduksjon />}
+            {erUnder4xRettsgebyr ? (
+                <Under4xRettsgebyr reduksjon simulertBeløp={simulertBeløp} />
+            ) : (
+                <SærligeGrunner reduksjon simulertBeløp={simulertBeløp} />
+            )}
         </>
     );
 };

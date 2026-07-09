@@ -4,7 +4,11 @@ import { Textarea } from '@navikt/ds-react';
 
 import { SimulertBeløp } from '../SimulertBeløp';
 
-export const Forsett: FC = () => {
+type Props = {
+    simulertBeløp: number | null;
+};
+
+export const Forsett: FC<Props> = ({ simulertBeløp }: Props) => {
     return (
         <>
             <Textarea
@@ -15,7 +19,7 @@ export const Forsett: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SimulertBeløp renter beløp={10000} />
+            <SimulertBeløp renter simulertBeløp={simulertBeløp} />
         </>
     );
 };

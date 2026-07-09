@@ -4,7 +4,11 @@ import { Textarea } from '@navikt/ds-react';
 
 import { SimulertBeløp } from '../SimulertBeløp';
 
-export const Ingenting: FC = () => {
+type Props = {
+    simulertBeløp: number | null;
+};
+
+export const Ingenting: FC<Props> = ({ simulertBeløp }: Props) => {
     return (
         <>
             <Textarea
@@ -15,7 +19,7 @@ export const Ingenting: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SimulertBeløp beløp={0} />
+            <SimulertBeløp simulertBeløp={simulertBeløp} />
         </>
     );
 };

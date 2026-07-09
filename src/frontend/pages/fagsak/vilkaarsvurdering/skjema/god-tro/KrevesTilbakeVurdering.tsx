@@ -18,10 +18,15 @@ type KrevesTilbake = 'ja' | 'nei';
 type Props = {
     /** Feltsti-prefiks for skjemafeltene, f.eks. "godTro.hele". Forbereder RHF-registrering. */
     navnPrefix: string;
+    simulertBeløp: number | null;
     beløpsbeskrivelse: 'hele beløpet' | 'hele beløpet som er i behold';
 };
 
-export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) => {
+export const KrevesTilbakeVurdering: FC<Props> = ({
+    navnPrefix,
+    simulertBeløp,
+    beløpsbeskrivelse,
+}: Props) => {
     const [krevesTilbake, setKrevesTilbake] = useState<KrevesTilbake>();
     const [årsakerSkalKreves, setÅrsakerSkalKreves] = useState<string[]>([]);
     const [årsakerSkalIkkeKreves, setÅrsakerSkalIkkeKreves] = useState<string[]>([]);
@@ -79,7 +84,7 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         resize
                         maxLength={3000}
                     />
-                    <SimulertBeløp beløp={10000} />
+                    <SimulertBeløp simulertBeløp={simulertBeløp} />
                 </>
             )}
 
@@ -129,7 +134,7 @@ export const KrevesTilbakeVurdering: FC<Props> = ({ navnPrefix, beløpsbeskrivel
                         type="number"
                         min={1}
                     />
-                    <SimulertBeløp beløp={0} />
+                    <SimulertBeløp simulertBeløp={simulertBeløp} />
                 </>
             )}
         </>
