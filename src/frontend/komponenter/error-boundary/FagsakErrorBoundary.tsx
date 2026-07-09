@@ -64,6 +64,9 @@ const FagsakError = ({ error }: { error: Error | null }): ReactNode => {
         <div className="min-h-screen bg-surface-subtle flex items-center justify-center p-8">
             <div className="max-w-2xl w-full">
                 <VStack gap="space-24">
+                    <Heading size="medium" visuallyHidden>
+                        {isFagsakError ? 'Kunne ikke laste fagsak' : 'Noe gikk galt'}
+                    </Heading>
                     <LocalAlert status="error">
                         <LocalAlert.Header>
                             <LocalAlert.Title>

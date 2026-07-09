@@ -2,7 +2,7 @@ import type { FC, ReactNode, RefObject } from 'react';
 import type { BehandlingsstegsinfoDto } from '@/generated';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { BodyShort, Button, Link, LocalAlert, VStack } from '@navikt/ds-react';
+import { Button, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
@@ -133,7 +133,7 @@ type HenlagtBehandlingProps = {
 const HenlagtBehandling: FC<HenlagtBehandlingProps> = ({ dialogRef }: HenlagtBehandlingProps) => (
     <BehandlingLayout dialogRef={dialogRef} skalHaActionBar={false}>
         <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
-            <BodyShort size="small">Behandlingen er henlagt</BodyShort>
+            <Heading size="small">Behandlingen er henlagt</Heading>
         </section>
     </BehandlingLayout>
 );
@@ -156,6 +156,9 @@ const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> 
     dialogRef,
 }: VenterPåKravgrunnlagBehandlingProps) => (
     <BehandlingLayout dialogRef={dialogRef} skalHaActionBar>
+        <Heading size="medium" visuallyHidden>
+            Behandlingen venter på kravgrunnlag
+        </Heading>
         <VenterPåKravgrunnlagActionBar />
     </BehandlingLayout>
 );

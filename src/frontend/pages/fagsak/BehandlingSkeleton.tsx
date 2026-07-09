@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { Button } from '@navikt/ds-react';
+import { Button, Heading } from '@navikt/ds-react';
 
 import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 import { SidebarSkeleton } from '@/komponenter/sidebar/SidebarSkeleton';
@@ -11,6 +11,9 @@ export const BehandlingSkeleton: FC = () => {
     return (
         <div className="grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 min-h-screen">
             <div className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-80px)]">
+                <Heading size="medium" visuallyHidden>
+                    Laster inn behandling
+                </Heading>
                 <div className="flex flex-row gap-2 ax-lg:block justify-between">
                     <StegflytSkeleton />
                     <Button
