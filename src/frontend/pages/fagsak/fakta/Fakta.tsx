@@ -29,93 +29,86 @@ export const Fakta: FC = () => {
         },
     });
     return (
-        <>
-            <VStack gap="space-24" aria-label="Fakta om feilutbetaling">
-                <Heading size="medium">Fakta om feilutbetalingen</Heading>
-                <section
-                    className={`flex md:flex-row flex-col ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-col-4' : 'flex-col-3'} w-full gap-6`}
-                    aria-label="Feilutbetaling og revurdering"
+        <VStack gap="space-24" aria-label="Fakta om feilutbetalingsinnhold">
+            <Heading size="medium">Fakta om feilutbetalingen</Heading>
+            <section
+                className={`flex md:flex-row flex-col ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-col-4' : 'flex-col-3'} w-full gap-6`}
+                aria-label="Feilutbetaling og revurdering"
+            >
+                <div
+                    className={`grid grid-cols-4 md:grid-cols-2 gap-4 ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-2' : 'flex-1'}`}
                 >
-                    <div
-                        className={`grid grid-cols-4 md:grid-cols-2 gap-4 ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-2' : 'flex-1'}`}
+                    <dl
+                        className={`flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'col-span-1' : 'col-span-2'}`}
                     >
-                        <div
-                            className={`flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'col-span-1' : 'col-span-2'}`}
-                        >
-                            <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
-                            <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">
-                                {formatCurrencyNoKr(faktaOmFeilutbetaling.feilutbetaling.beløp)}
+                        <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
+                        <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">
+                            {formatCurrencyNoKr(faktaOmFeilutbetaling.feilutbetaling.beløp)}
+                        </dd>
+                    </dl>
+                    {faktaOmFeilutbetaling.tidligereVarsletBeløp && (
+                        <dl className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                            <dt className="font-ax-bold text-ax-medium">Tidligere varslet beløp</dt>
+                            <dd className="font-ax-bold text-ax-heading-medium">
+                                {formatCurrencyNoKr(faktaOmFeilutbetaling.tidligereVarsletBeløp)}
+                            </dd>
+                        </dl>
+                    )}
+                    <dl className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
+                        <dt className="font-ax-bold text-ax-medium">Periode</dt>
+                        <dd className="font-ax-bold text-ax-heading-medium">
+                            {formatterDatostring(faktaOmFeilutbetaling.perioder[0].fom)}–
+                            {formatterDatostring(
+                                faktaOmFeilutbetaling.perioder[
+                                    faktaOmFeilutbetaling.perioder.length - 1
+                                ].tom
+                            )}
+                        </dd>
+                    </dl>
+                </div>
+                <VStack className="flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                    <Heading level="2" size="small">
+                        Revurdering
+                    </Heading>
+                    <dl className="grid grid-cols-2 gap-4">
+                        <div>
+                            <dt className="font-ax-bold text-ax-medium">Årsak til revurdering</dt>
+                            <dd>
+                                <Tag
+                                    data-color="neutral"
+                                    key={faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
+                                    variant="moderate"
+                                    size="small"
+                                    className="text-ax-medium"
+                                >
+                                    {faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
+                                </Tag>
                             </dd>
                         </div>
-                        {faktaOmFeilutbetaling.tidligereVarsletBeløp && (
-                            <div className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
-                                <dt className="font-ax-bold text-ax-medium">
-                                    Tidligere varslet beløp
-                                </dt>
-                                <dd className="font-ax-bold text-ax-heading-medium">
-                                    {formatCurrencyNoKr(
-                                        faktaOmFeilutbetaling.tidligereVarsletBeløp
-                                    )}
-                                </dd>
-                            </div>
-                        )}
-                        <div className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
-                            <dt className="font-ax-bold text-ax-medium">Periode</dt>
-                            <dd className="font-ax-bold text-ax-heading-medium">
-                                {formatterDatostring(faktaOmFeilutbetaling.perioder[0].fom)}–
+                        <div>
+                            <dt className="font-ax-bold text-ax-medium">
+                                Dato for revurderingsvedtak
+                            </dt>
+                            <dd className="text-ax-medium">
                                 {formatterDatostring(
-                                    faktaOmFeilutbetaling.perioder[
-                                        faktaOmFeilutbetaling.perioder.length - 1
-                                    ].tom
+                                    faktaOmFeilutbetaling.feilutbetaling.revurdering.vedtaksdato
                                 )}
                             </dd>
                         </div>
-                    </div>
-                    <VStack className="flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
-                        <Heading level="2" size="small">
-                            Revurdering
-                        </Heading>
-                        <dl className="grid grid-cols-2 gap-4">
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">
-                                    Årsak til revurdering
-                                </dt>
-                                <dd>
-                                    <Tag
-                                        data-color="neutral"
-                                        key={faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
-                                        variant="moderate"
-                                        size="small"
-                                        className="text-ax-medium"
-                                    >
-                                        {faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
-                                    </Tag>
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">
-                                    Dato for revurderingsvedtak
-                                </dt>
-                                <dd className="text-ax-medium">
-                                    {formatterDatostring(
-                                        faktaOmFeilutbetaling.feilutbetaling.revurdering.vedtaksdato
-                                    )}
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">Resultat</dt>
-                                <dd className="text-ax-medium">
-                                    {faktaOmFeilutbetaling.feilutbetaling.revurdering.resultat}
-                                </dd>
-                            </div>
-                        </dl>
-                    </VStack>
-                </section>
-                <FaktaSkjema
-                    key={String(faktaOmFeilutbetaling.ferdigvurdert)}
-                    faktaOmFeilutbetaling={faktaOmFeilutbetaling}
-                />
-            </VStack>
-        </>
+                        <div>
+                            <dt className="font-ax-bold text-ax-medium">Resultat</dt>
+                            <dd className="text-ax-medium">
+                                {faktaOmFeilutbetaling.feilutbetaling.revurdering.resultat}
+                            </dd>
+                        </div>
+                    </dl>
+                </VStack>
+            </section>
+
+            <FaktaSkjema
+                key={String(faktaOmFeilutbetaling.ferdigvurdert)}
+                faktaOmFeilutbetaling={faktaOmFeilutbetaling}
+            />
+        </VStack>
     );
 };

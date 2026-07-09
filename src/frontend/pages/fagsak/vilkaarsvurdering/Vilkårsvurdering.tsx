@@ -89,7 +89,7 @@ export const Vilkårsvurdering: FC = () => {
     );
 
     return (
-        <VStack gap="space-24" className="min-h-0 h-full">
+        <VStack gap="space-24" className="min-h-0 h-full" aria-label="Vilkårsvurderingsinnhold">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
                 <Heading size="medium">Vilkårsvurdering</Heading>
                 {statusTag}
