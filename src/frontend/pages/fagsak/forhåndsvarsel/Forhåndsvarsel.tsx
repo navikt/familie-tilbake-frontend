@@ -92,7 +92,7 @@ export const Forhåndsvarsel: FC = () => {
 
 export const ForhåndsvarselInnhold: FC = () => {
     const { behandlingId } = useBehandling();
-    const { actionBarStegtekst } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const navigerTilNeste = useStegNavigering('FORELDELSE');
     const navigerTilForrige = useStegNavigering('FAKTA');
     const queryClient = useQueryClient();
@@ -156,6 +156,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     } = methods;
 
     const etterVellykketLagring = async (): Promise<void> => {
+        nullstillIkkePersisterteKomponenter();
         await queryClient.invalidateQueries({
             queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
         });
@@ -329,10 +330,9 @@ export const ForhåndsvarselInnhold: FC = () => {
         ...fellesActionBarConfig,
         isLoading:
             sendVarselbrev.isPending || lagreUnntak.isPending || lagreUnntakMedUttalelse.isPending,
-        // TODO legg til "Lagre og gå videre" når setIkkePersistertKomponent er lagt til
-        ...(valg === 'send' && { nesteTekst: 'Send forhåndsvarselet' }),
+        nesteTekst: valg === 'send' ? 'Send forhåndsvarselet' : 'Lagre og gå videre',
         nesteAriaLabel:
-            valg === 'send' ? 'Send forhåndsvarselet' : 'Gå videre til foreldelsessteget',
+            valg === 'send' ? 'Send forhåndsvarselet' : 'Lagre og gå videre til foreldelsessteget',
     };
 
     const navigerTilNesteConfig = {
@@ -346,8 +346,8 @@ export const ForhåndsvarselInnhold: FC = () => {
         formId: BRUKERUTTALELSE_FORM_ID,
         ...fellesActionBarConfig,
         isLoading: lagreBrukeruttalelse.isPending,
-        // TODO legg til "Lagre og gå videre til foreldelsessteget" når setIkkePersistertKomponent er lagt til
-        nesteAriaLabel: 'Gå videre til foreldelsessteget',
+        nesteTekst: 'Lagre og gå videre',
+        nesteAriaLabel: 'Lagre og gå videre til foreldelsessteget',
     };
 
     const actionBarConfig = erRedigerbarForhåndsvarselFlyt

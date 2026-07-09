@@ -166,7 +166,7 @@ const skalSendesRadiogruppe = (): HTMLElement =>
     });
 
 const nesteKnapp = (): HTMLElement =>
-    screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
+    screen.getByRole('button', { name: 'Lagre og gå videre til foreldelsessteget' });
 
 const sendKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Send forhåndsvarselet' });
 
