@@ -9,7 +9,11 @@ import { GodTroFelter } from './god-tro/GodTroFelter';
 
 type VilkårValg = 'forsto_eller_burde_forstått' | 'forårsaket_av_mottaker' | 'god_tro';
 
-export const VilkårsvurderingSkjema: FC = () => {
+type Props = {
+    erUnder4xRettsgebyr: boolean;
+};
+
+export const VilkårsvurderingSkjema: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
     const [valg, setValg] = useState<VilkårValg>();
 
     return (
@@ -38,9 +42,13 @@ export const VilkårsvurderingSkjema: FC = () => {
                 </Radio>
             </RadioGroup>
 
-            {valg === 'forsto_eller_burde_forstått' && <ForstoEllerBurdeForståttFelter />}
+            {valg === 'forsto_eller_burde_forstått' && (
+                <ForstoEllerBurdeForståttFelter erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
+            )}
 
-            {valg === 'forårsaket_av_mottaker' && <ForårsaketAvMottakerenFelter />}
+            {valg === 'forårsaket_av_mottaker' && (
+                <ForårsaketAvMottakerenFelter erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
+            )}
 
             {valg === 'god_tro' && <GodTroFelter />}
         </form>

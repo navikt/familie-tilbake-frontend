@@ -31,14 +31,14 @@ export const SimulertBeløp: FC<Props> = ({
                 <HStack gap="space-4" className="w-1/2 min-w-0 flex-nowrap">
                     {reduksjon && (
                         <VStack gap="space-4" className="flex-1 min-w-0">
-                            <span className="text-ax-text-neutral-subtle">Reduksjon</span>
+                            <span className="text-ax-text-info-subtle">Reduksjon</span>
                             <span className="text-xl">{reduksjonsprosent} %</span>
                         </VStack>
                     )}
 
                     {renter && (
                         <VStack gap="space-4" className="flex-1 min-w-0">
-                            <span className="text-ax-text-neutral-subtle">Renter</span>
+                            <span className="text-ax-text-info-subtle">Renter</span>
                             <span className="text-xl">10 %</span>
                         </VStack>
                     )}
@@ -46,7 +46,7 @@ export const SimulertBeløp: FC<Props> = ({
             )}
 
             <VStack gap="space-4" className="w-1/2">
-                <span className="text-ax-text-neutral-subtle">Beløpet som skal kreves tilbake</span>
+                <span className="text-ax-text-info-subtle">Beløpet som skal kreves tilbake</span>
                 <span className="text-xl">{formatCurrencyNoKr(beløp)} kroner</span>
             </VStack>
         </HStack>

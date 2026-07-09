@@ -23,13 +23,14 @@ const valgtPeriode: Vilkårsperiode = {
     rettsligGrunnlag: [],
 };
 
-const renderVilkårsDetaljer = (): void => {
+const renderVilkårsDetaljer = (erUnder4xRettsgebyr = false): void => {
     render(
         <QueryClientProvider client={createTestQueryClient()}>
             <TestBehandlingProvider>
                 <VilkårsvurderingDetaljer
                     valgtPeriode={valgtPeriode}
                     vilkårsperioder={[]}
+                    erUnder4xRettsgebyr={erUnder4xRettsgebyr}
                     hentVilkårsvurdering={(): void => undefined}
                 />
             </TestBehandlingProvider>
@@ -127,6 +128,19 @@ const reduksjonsprosentField = async (): Promise<HTMLElement> =>
         name: 'Hvor mange prosent skal beløpet reduseres med?',
     });
 
+const under4xRadioGroup = async (): Promise<HTMLElement> =>
+    await screen.findByRole('radiogroup', {
+        name: 'Skal Nav la være å kreve beløpet tilbake? (Sjette avsnitt)',
+    });
+const under4xJaRadio = async (): Promise<HTMLElement> =>
+    within(await under4xRadioGroup()).getByRole('radio', { name: 'Ja' });
+const under4xNeiRadio = async (): Promise<HTMLElement> =>
+    within(await under4xRadioGroup()).getByRole('radio', { name: 'Nei' });
+const begrunnelseUnder4x = async (): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: 'Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake',
+    });
+
 const beløpIBeholdRadioGroup = (): HTMLElement =>
     screen.getByRole('radiogroup', {
         name: 'Hvor mye av det feilutbetalte beløpet er i behold?',
@@ -214,13 +228,29 @@ describe('VilkårsvurderingDetaljer', () => {
 
     describe('Forsto eller burde forstått', () => {
         describe('Forsto', () => {
-            const velgForsto = async (): Promise<void> => {
-                renderVilkårsDetaljer();
+            const velgForsto = async (erUnder4xRettsgebyr = false): Promise<void> => {
+                renderVilkårsDetaljer(erUnder4xRettsgebyr);
                 user.click(forstoEllerBurdeForståttRadio());
                 user.click(await forstoRadio());
                 expect(await begrunnelseForstoEllerBurdeForstått('forsto')).toBeInTheDocument();
             };
             særligeGrunnerSuite(velgForsto, false);
+
+            test('Under 4x rettsgebyr - Ja, Nav skal la være å kreve beløpet tilbake', async () => {
+                await velgForsto(true);
+
+                user.click(await under4xJaRadio());
+                expect(await begrunnelseUnder4x()).toBeInTheDocument();
+                expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
+                expect(screen.getByText('1 000 kroner')).toBeInTheDocument();
+            });
+
+            test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
+                await velgForsto(true);
+
+                user.click(await under4xNeiRadio());
+                expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
+            });
 
             test('Skal ha "Nei" som standardvalg for særlige grunner', async () => {
                 await velgForsto();
@@ -232,8 +262,8 @@ describe('VilkårsvurderingDetaljer', () => {
         });
 
         describe('Burde forstått', () => {
-            const velgBurdeForstått = async (): Promise<void> => {
-                renderVilkårsDetaljer();
+            const velgBurdeForstått = async (erUnder4xRettsgebyr = false): Promise<void> => {
+                renderVilkårsDetaljer(erUnder4xRettsgebyr);
                 user.click(forstoEllerBurdeForståttRadio());
                 user.click(await burdeForståttRadio());
                 expect(
@@ -241,6 +271,22 @@ describe('VilkårsvurderingDetaljer', () => {
                 ).toBeInTheDocument();
             };
             særligeGrunnerSuite(velgBurdeForstått, false);
+
+            test('Under 4x rettsgebyr - Ja, Nav skal la være å kreve beløpet tilbake', async () => {
+                await velgBurdeForstått(true);
+
+                user.click(await under4xJaRadio());
+                expect(await begrunnelseUnder4x()).toBeInTheDocument();
+                expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
+                expect(screen.getByText('1 000 kroner')).toBeInTheDocument();
+            });
+
+            test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
+                await velgBurdeForstått(true);
+
+                user.click(await under4xNeiRadio());
+                expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
+            });
         });
     });
 
@@ -372,13 +418,29 @@ describe('VilkårsvurderingDetaljer', () => {
         });
 
         describe('Uaktsom', () => {
-            const velgUaktsom = async (): Promise<void> => {
-                renderVilkårsDetaljer();
+            const velgUaktsom = async (erUnder4xRettsgebyr = false): Promise<void> => {
+                renderVilkårsDetaljer(erUnder4xRettsgebyr);
                 user.click(forårsaketAvMottakerRadio());
                 user.click(await uaktsomRadio());
                 expect(await begrunnelseForårsaketAvMottakeren('uaktsomt')).toBeInTheDocument();
             };
             særligeGrunnerSuite(velgUaktsom, false);
+
+            test('Under 4x rettsgebyr - Ja, Nav skal la være å kreve beløpet tilbake', async () => {
+                await velgUaktsom(true);
+
+                user.click(await under4xJaRadio());
+                expect(await begrunnelseUnder4x()).toBeInTheDocument();
+                expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
+                expect(screen.getByText('1 000 kroner')).toBeInTheDocument();
+            });
+
+            test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
+                await velgUaktsom(true);
+
+                user.click(await under4xNeiRadio());
+                expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
+            });
         });
     });
 

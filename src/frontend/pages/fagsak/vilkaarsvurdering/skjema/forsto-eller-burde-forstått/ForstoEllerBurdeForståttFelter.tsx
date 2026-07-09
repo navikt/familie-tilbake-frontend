@@ -4,7 +4,11 @@ import { type FC, useState } from 'react';
 import { BurdeForstått } from './BurdeForstått';
 import { Forsto } from './Forsto';
 
-export const ForstoEllerBurdeForståttFelter: FC = () => {
+type Props = {
+    erUnder4xRettsgebyr: boolean;
+};
+
+export const ForstoEllerBurdeForståttFelter: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
     const [forståelse, setForståelse] = useState<string>();
     return (
         <>
@@ -25,9 +29,11 @@ export const ForstoEllerBurdeForståttFelter: FC = () => {
                 </Radio>
             </RadioGroup>
 
-            {forståelse === 'forsto' && <Forsto />}
+            {forståelse === 'forsto' && <Forsto erUnder4xRettsgebyr={erUnder4xRettsgebyr} />}
 
-            {forståelse === 'burde-forstått' && <BurdeForstått />}
+            {forståelse === 'burde-forstått' && (
+                <BurdeForstått erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
+            )}
         </>
     );
 };

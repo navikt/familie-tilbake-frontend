@@ -3,8 +3,13 @@ import type { FC } from 'react';
 import { Textarea } from '@navikt/ds-react';
 
 import { SærligeGrunner } from '../SærligeGrunner';
+import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
-export const Forsto: FC = () => {
+type Props = {
+    erUnder4xRettsgebyr: boolean;
+};
+
+export const Forsto: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
     return (
         <>
             <Textarea
@@ -15,7 +20,11 @@ export const Forsto: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SærligeGrunner reduksjon standardValg="nei" />
+            {erUnder4xRettsgebyr ? (
+                <Under4xRettsgebyr reduksjon standardValg="nei" />
+            ) : (
+                <SærligeGrunner reduksjon standardValg="nei" />
+            )}
         </>
     );
 };

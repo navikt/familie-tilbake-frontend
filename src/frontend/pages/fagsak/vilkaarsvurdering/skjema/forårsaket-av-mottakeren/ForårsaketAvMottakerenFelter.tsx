@@ -5,7 +5,11 @@ import { Forsett } from './Forsett';
 import { GrovtUaktsom } from './GrovtUaktsom';
 import { Uaktsom } from './Uaktsom';
 
-export const ForårsaketAvMottakerenFelter: FC = () => {
+type Props = {
+    erUnder4xRettsgebyr: boolean;
+};
+
+export const ForårsaketAvMottakerenFelter: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
     const [uaktsomhet, setUaktsomhet] = useState<string>();
     return (
         <>
@@ -25,7 +29,7 @@ export const ForårsaketAvMottakerenFelter: FC = () => {
 
             {uaktsomhet === 'forsett' && <Forsett />}
 
-            {uaktsomhet === 'uaktsom' && <Uaktsom />}
+            {uaktsomhet === 'uaktsom' && <Uaktsom erUnder4xRettsgebyr={erUnder4xRettsgebyr} />}
         </>
     );
 };

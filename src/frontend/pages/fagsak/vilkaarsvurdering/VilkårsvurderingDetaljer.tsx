@@ -12,12 +12,14 @@ import { erPeriodeVurdert } from './utils';
 type Props = {
     valgtPeriode: Vilkårsperiode;
     vilkårsperioder: Vilkaarsperiode[];
+    erUnder4xRettsgebyr: boolean;
     hentVilkårsvurdering: () => void;
 };
 
 export const VilkårsvurderingDetaljer: FC<Props> = ({
     valgtPeriode,
     vilkårsperioder,
+    erUnder4xRettsgebyr,
     hentVilkårsvurdering,
 }: Props) => {
     const valgtVilkårsperiode = vilkårsperioder.find(
@@ -60,7 +62,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                 </HStack>
             </HStack>
 
-            <VilkårsvurderingSkjema />
+            <VilkårsvurderingSkjema erUnder4xRettsgebyr={erUnder4xRettsgebyr} />
         </section>
     );
 };

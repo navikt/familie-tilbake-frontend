@@ -3,8 +3,13 @@ import type { FC } from 'react';
 import { Textarea } from '@navikt/ds-react';
 
 import { SærligeGrunner } from '../SærligeGrunner';
+import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
-export const BurdeForstått: FC = () => {
+type Props = {
+    erUnder4xRettsgebyr: boolean;
+};
+
+export const BurdeForstått: FC<Props> = ({ erUnder4xRettsgebyr }: Props) => {
     return (
         <>
             <Textarea
@@ -15,7 +20,7 @@ export const BurdeForstått: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <SærligeGrunner reduksjon />
+            {erUnder4xRettsgebyr ? <Under4xRettsgebyr reduksjon /> : <SærligeGrunner reduksjon />}
         </>
     );
 };

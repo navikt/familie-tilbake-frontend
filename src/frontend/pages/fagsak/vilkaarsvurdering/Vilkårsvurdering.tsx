@@ -111,6 +111,8 @@ export const Vilkårsvurdering: FC = () => {
                     <VilkårsvurderingDetaljer
                         valgtPeriode={valgtPeriode}
                         vilkårsperioder={vilkår.vilkårsperioder}
+                        /* TODO erstatt propdrilling med useFormContext når det er på plass */
+                        erUnder4xRettsgebyr={vilkår.erUnder4xRettsgebyr}
                         hentVilkårsvurdering={invaliderVilkårsvurdering}
                     />
                 )}
