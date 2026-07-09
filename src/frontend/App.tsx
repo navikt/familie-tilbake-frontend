@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { Saksbehandler } from './typer/saksbehandler';
 
+import { Heading, Loader } from '@navikt/ds-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense, useEffect, useState } from 'react';
 import {
@@ -32,6 +33,15 @@ const FagsakContainer = lazyImportMedRetry(
     'FagsakContainer'
 );
 
+const SideLaster: FC = () => (
+    <div className="flex items-center justify-center h-screen">
+        <Heading size="medium" visuallyHidden>
+            Laster inn siden
+        </Heading>
+        <Loader size="2xlarge" title="Laster inn siden" variant="neutral" />
+    </div>
+);
+
 const AppLayout: FC = () => {
     const { autentisert } = useApp();
 
@@ -43,7 +53,9 @@ const AppLayout: FC = () => {
         <>
             <Toasts />
             <Header />
-            <Outlet />
+            <Suspense fallback={<SideLaster />}>
+                <Outlet />
+            </Suspense>
         </>
     );
 };
