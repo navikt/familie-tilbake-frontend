@@ -94,7 +94,7 @@ const uttalelseRadiogruppeVedUnntak = (): HTMLElement =>
     uttalelseRadiogruppe(/har brukeren uttalt seg\?/i);
 
 const nesteKnapp = (): HTMLElement =>
-    screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
+    screen.getByRole('button', { name: 'Lagre og gå videre til foreldelsessteget' });
 
 describe('Brukeruttalelse i forhåndsvarsel', () => {
     let user: UserEvent;
