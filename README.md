@@ -80,7 +80,7 @@ docker compose up
 pnpm start:dev
 ```
 
-Kompilerer backend (TypeScript → `node_dist/`) og starter Express-serveren på port `8000`. Wonderwall eksponerer applikasjonen på [http://localhost:4000](http://localhost:4000).
+Bundler backend (esbuild → `node_dist/server.js`) og starter Express-serveren på port `8000`. Wonderwall eksponerer applikasjonen på [http://localhost:4000](http://localhost:4000).
 
 ### 5. Start backend-API
 
@@ -104,7 +104,7 @@ TILBAKE_SCOPE=api://dev-gcp.tilbake.familie-tilbake/.default
 | `pnpm start:dev` | Kompiler backend og start utviklingsserver |
 | `pnpm build` | Sjekk (Biome) + produksjonsbygg (server + klient) |
 | `pnpm build:client` | Bygg frontend med Vite |
-| `pnpm build:server` | Kompiler backend med TypeScript |
+| `pnpm build:server` | Bundle backend til én fil med esbuild |
 | `pnpm test` | Kjør tester med Vitest |
 | `pnpm test:watch` | Kjør tester i watch-modus |
 | `pnpm check` | Kjør Biome read-only: linting + formatsjekk + import-sortering (skriver ingenting) |

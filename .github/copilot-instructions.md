@@ -42,7 +42,7 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 ### Backend (Node.js BFF - Backend for Frontend)
 - **Runtime**: Node.js 24 (Distroless container)
 - **Rammeverk**: Express
-- **Språk**: TypeScript (kompileres med ts-node)
+- **Språk**: TypeScript (bundles med esbuild)
 - **Sesjonshåndtering**: express-session med Redis (connect-redis)
 - **Proxy**: http-proxy-middleware (proxyer til backend API)
 - **Autentisering**: Texas (NAVs auth-klient)
@@ -234,12 +234,12 @@ Komponent re-renderer
 
 #### Development
 1. Start Docker (Redis): `docker-compose up`
-2. Build server: `tsc`
-3. Start dev-server: `NODE_ENV=development node node_dist/backend/server.js`
+2. Build server: `pnpm build:server` (esbuild)
+3. Start dev-server: `NODE_ENV=development node node_dist/server.js`
 4. Vite dev server proxyer til Express backend
 
 #### Production
-1. **Server build**: `tsc` → `node_dist/`
+1. **Server build**: `esbuild` → `node_dist/server.js` (én bundlet fil)
 2. **Client build**: `vite build` → `dist/`
 3. **Docker image**: Distroless Node.js 24 med begge builds
 4. **Sentry source maps**: Lastes opp under build via Vite plugin
