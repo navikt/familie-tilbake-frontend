@@ -101,7 +101,7 @@ TILBAKE_SCOPE=api://dev-gcp.tilbake.familie-tilbake/.default
 
 | Kommando | Beskrivelse |
 | --- | --- |
-| `pnpm start:dev` | Kompiler backend og start utviklingsserver |
+| `pnpm start:dev` | Bundle backend med esbuild og start utviklingsserver |
 | `pnpm build` | Sjekk (Biome) + produksjonsbygg (server + klient) |
 | `pnpm build:client` | Bygg frontend med Vite |
 | `pnpm build:server` | Bundle backend til én fil med esbuild |
