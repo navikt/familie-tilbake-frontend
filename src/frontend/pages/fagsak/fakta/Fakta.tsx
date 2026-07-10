@@ -29,7 +29,7 @@ export const Fakta: FC = () => {
         },
     });
     return (
-        <VStack gap="space-24" aria-label="Fakta om feilutbetalingsinnhold">
+        <VStack gap="space-24">
             <Heading size="medium">Fakta om feilutbetalingen</Heading>
             <section
                 className={`flex md:flex-row flex-col ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-col-4' : 'flex-col-3'} w-full gap-6`}
