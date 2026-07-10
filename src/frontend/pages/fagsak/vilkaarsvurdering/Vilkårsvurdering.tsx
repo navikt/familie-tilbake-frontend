@@ -96,7 +96,7 @@ export const Vilkårsvurdering: FC = () => {
                 <InlineMessage
                     size="small"
                     status="info"
-                    className="gap-1! basis-full ax-xl:basis-auto ax-xl:order-2"
+                    className="basis-full ax-xl:basis-auto ax-xl:order-2"
                 >
                     Intern vurdering (ikke synlig i vedtaksbrevet)
                 </InlineMessage>
