@@ -65,10 +65,7 @@ const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
     },
 };
 
-const periodeKortAriaLabel = (
-    periode: Vilkårsperiode,
-    valgtPeriodeId: Vilkårsperiode['id'] | undefined
-): string => {
+const periodeKortAriaLabel = (periode: Vilkårsperiode): string => {
     const vurderingLabel = vurdering[periode.vurdering].label;
     const resultatLabel = periode.resultat ? resultat[periode.resultat].label : undefined;
     const feilutbetaltLabel = formatCurrencyNoKr(periode.feilutbetalt);
@@ -79,7 +76,7 @@ const periodeKortAriaLabel = (
         resultatLabel ? ` Resultat: ${resultatLabel}.` : ''
     } Feilutbetalt: ${feilutbetaltLabel}.${
         rettsligGrunnlagLabel ? ` Rettslig grunnlag: ${rettsligGrunnlagLabel}.` : ''
-    }${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`;
+    }`;
 };
 
 type Props = {
@@ -113,7 +110,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                         <button
                             onClick={(): void => setValgtPeriodeId(periode.id)}
                             aria-pressed={periode.id === valgtPeriodeId}
-                            aria-label={periodeKortAriaLabel(periode, valgtPeriodeId)}
+                            aria-label={periodeKortAriaLabel(periode)}
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
                                 periode.id === valgtPeriodeId
                                     ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'

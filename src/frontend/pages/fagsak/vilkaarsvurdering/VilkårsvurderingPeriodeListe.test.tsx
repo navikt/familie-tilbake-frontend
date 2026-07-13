@@ -87,12 +87,10 @@ describe('VilkårsvurderingPeriodeListe', () => {
     });
 
     test('burde markere den valgte perioden med aria-pressed', () => {
-        renderListe(
-            [lagPeriode({ id: 'mars' }), lagPeriode({ id: 'april' })],
-            lagPeriode({ id: 'april' }).id
-        );
+        const valgtPeriode = lagPeriode({ id: 'april', fom: '01.04.2024' });
+        renderListe([lagPeriode({ id: 'mars' }), valgtPeriode], valgtPeriode.id);
 
-        const valgtKnapp = screen.getByRole('button', { name: /Valgt\./ });
+        const valgtKnapp = screen.getByRole('button', { name: /01.04./ });
         expect(valgtKnapp).toHaveAttribute('aria-pressed', 'true');
         expect(screen.getAllByRole('button', { pressed: false })).toHaveLength(1);
     });
