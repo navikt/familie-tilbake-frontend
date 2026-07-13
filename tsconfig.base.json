@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "sourceMap": true,
+    "target": "ES2025",
+    "module": "preserve",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "esModuleInterop": true,
     "skipLibCheck": true
   }
 }

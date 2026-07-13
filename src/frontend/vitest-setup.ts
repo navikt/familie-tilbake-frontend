@@ -4,7 +4,7 @@ import { Crypto } from '@peculiar/webcrypto';
 import { TextEncoder } from 'util';
 import { vi } from 'vitest';
 
-import { configureZod } from './frontend/utils/zodConfig';
+import { configureZod } from './utils/zodConfig';
 
 configureZod();
 

@@ -1,15 +1,8 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "node_dist",
-        "rootDir": "./src",
-        "module": "es2022",
-        "moduleResolution": "bundler",
-        "lib": ["ES2022"],
-        "declaration": true,
         "resolveJsonModule": true,
         "types": ["express-session"]
     },
-    "include": ["./src/backend"],
-    "exclude": ["./src/frontend"]
+    "include": ["./src/backend"]
 }
