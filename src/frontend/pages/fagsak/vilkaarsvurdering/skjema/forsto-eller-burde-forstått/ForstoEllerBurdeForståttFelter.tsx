@@ -5,14 +5,10 @@ import { BurdeForstått } from './BurdeForstått';
 import { Forsto } from './Forsto';
 
 type Props = {
-    erUnder4xRettsgebyr: boolean;
     simulertBeløp: number | null;
 };
 
-export const ForstoEllerBurdeForståttFelter: FC<Props> = ({
-    erUnder4xRettsgebyr,
-    simulertBeløp,
-}: Props) => {
+export const ForstoEllerBurdeForståttFelter: FC<Props> = ({ simulertBeløp }: Props) => {
     const [forståelse, setForståelse] = useState<string>();
     return (
         <>
@@ -33,16 +29,9 @@ export const ForstoEllerBurdeForståttFelter: FC<Props> = ({
                 </Radio>
             </RadioGroup>
 
-            {forståelse === 'forsto' && (
-                <Forsto erUnder4xRettsgebyr={erUnder4xRettsgebyr} simulertBeløp={simulertBeløp} />
-            )}
+            {forståelse === 'forsto' && <Forsto simulertBeløp={simulertBeløp} />}
 
-            {forståelse === 'burde-forstått' && (
-                <BurdeForstått
-                    erUnder4xRettsgebyr={erUnder4xRettsgebyr}
-                    simulertBeløp={simulertBeløp}
-                />
-            )}
+            {forståelse === 'burde-forstått' && <BurdeForstått simulertBeløp={simulertBeløp} />}
         </>
     );
 };

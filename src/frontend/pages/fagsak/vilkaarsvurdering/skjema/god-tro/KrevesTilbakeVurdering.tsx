@@ -11,6 +11,7 @@ import {
 } from '@navikt/ds-react';
 import { useState } from 'react';
 
+import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from '../SimulertBeløp';
 
 type KrevesTilbake = 'ja' | 'nei';
@@ -30,6 +31,7 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
     const [krevesTilbake, setKrevesTilbake] = useState<KrevesTilbake>();
     const [årsakerSkalKreves, setÅrsakerSkalKreves] = useState<string[]>([]);
     const [årsakerSkalIkkeKreves, setÅrsakerSkalIkkeKreves] = useState<string[]>([]);
+    const { momenterReduksjonGodTro } = useVilkårsvurderingLesedata();
 
     return (
         <>
@@ -58,16 +60,13 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
                         value={årsakerSkalKreves}
                         onChange={setÅrsakerSkalKreves}
                     >
-                        <Checkbox value="årsaken1">Størrelsen på beløpet</Checkbox>
-                        <Checkbox value="årsaken2">
-                            Hvor lenge siden feilutbetalingen skjedde
-                        </Checkbox>
-                        <Checkbox value="årsaken3">
-                            Om mottakeren har innrettet seg i tillit til utbetalingen
-                        </Checkbox>
-                        <Checkbox value="årsaken4">Annet</Checkbox>
+                        {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
+                            <Checkbox key={moment} value={moment}>
+                                {beskrivelse}
+                            </Checkbox>
+                        ))}
                     </CheckboxGroup>
-                    {årsakerSkalKreves.includes('årsaken4') && (
+                    {årsakerSkalKreves.includes('ANNET') && (
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             name={`${navnPrefix}.årsakerSkalKrevesAnnet`}
@@ -99,16 +98,13 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
                         value={årsakerSkalIkkeKreves}
                         onChange={setÅrsakerSkalIkkeKreves}
                     >
-                        <Checkbox value="årsaken1">Størrelsen på beløpet</Checkbox>
-                        <Checkbox value="årsaken2">
-                            Hvor lenge siden feilutbetalingen skjedde
-                        </Checkbox>
-                        <Checkbox value="årsaken3">
-                            Om mottakeren har innrettet seg i tillit til utbetalingen
-                        </Checkbox>
-                        <Checkbox value="årsaken4">Annet</Checkbox>
+                        {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
+                            <Checkbox key={moment} value={moment}>
+                                {beskrivelse}
+                            </Checkbox>
+                        ))}
                     </CheckboxGroup>
-                    {årsakerSkalIkkeKreves.includes('årsaken4') && (
+                    {årsakerSkalIkkeKreves.includes('ANNET') && (
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             name={`${navnPrefix}.årsakerSkalIkkeKrevesAnnet`}

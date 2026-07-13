@@ -19,6 +19,7 @@ import { useStegNavigering } from '@/utils/sider';
 
 import { finnStandardValgtPeriode, utledVurdering } from './utils';
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
+import { VilkårsvurderingLesedataProvider } from './VilkårsvurderingLesedataContext';
 import { VilkårsvurderingPeriodeListe } from './VilkårsvurderingPeriodeListe';
 
 const mapTilVilkårsperioder = (vilkår: Vilkaar): Vilkårsperiode[] =>
@@ -108,13 +109,17 @@ export const Vilkårsvurdering: FC = () => {
                     setValgtPeriodeId={setValgtPeriodeId}
                 />
                 {valgtPeriode && (
-                    <VilkårsvurderingDetaljer
-                        valgtPeriode={valgtPeriode}
-                        vilkårsperioder={vilkår.vilkårsperioder}
-                        /* TODO erstatt propdrilling med useFormContext når det er på plass */
+                    <VilkårsvurderingLesedataProvider
+                        momenterSærligeGrunner={vilkår.momenterSærligeGrunner}
+                        momenterReduksjonGodTro={vilkår.momenterReduksjonGodTro}
                         erUnder4xRettsgebyr={vilkår.erUnder4xRettsgebyr}
-                        hentVilkårsvurdering={invaliderVilkårsvurdering}
-                    />
+                    >
+                        <VilkårsvurderingDetaljer
+                            valgtPeriode={valgtPeriode}
+                            vilkårsperioder={vilkår.vilkårsperioder}
+                            hentVilkårsvurdering={invaliderVilkårsvurdering}
+                        />
+                    </VilkårsvurderingLesedataProvider>
                 )}
             </div>
         </VStack>

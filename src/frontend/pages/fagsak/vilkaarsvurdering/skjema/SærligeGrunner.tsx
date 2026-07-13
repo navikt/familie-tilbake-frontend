@@ -9,6 +9,7 @@ import {
 } from '@navikt/ds-react';
 import { type ChangeEvent, type FC, useState } from 'react';
 
+import { useVilkårsvurderingLesedata } from '../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from './SimulertBeløp';
 
 type SærligeGrunnerValg = 'ja' | 'nei';
@@ -32,6 +33,7 @@ export const SærligeGrunner: FC<Props> = ({
     const [særligeGrunnerFor, setSærligeGrunnerFor] = useState<string[]>([]);
     const [særligeGrunnerMot, setSærligeGrunnerMot] = useState<string[]>([]);
     const [reduksjonsprosent, setReduksjonsprosent] = useState<number | undefined>(undefined);
+    const { momenterSærligeGrunner } = useVilkårsvurderingLesedata();
 
     const reduksjonsprops = reduksjon
         ? { reduksjon: true as const, reduksjonsprosent: reduksjonsprosent ?? 0 }
@@ -60,21 +62,13 @@ export const SærligeGrunner: FC<Props> = ({
                         value={særligeGrunnerFor}
                         onChange={(value: string[]): void => setSærligeGrunnerFor(value)}
                     >
-                        <Checkbox value="særligGrunn1">
-                            Graden av uaktsomhet hos den som kravet retter seg mot
-                        </Checkbox>
-                        <Checkbox value="særligGrunn2">
-                            Størrelsen på det feilutbetalte beløpet
-                        </Checkbox>
-                        <Checkbox value="særligGrunn3">
-                            Hvor lang tid det har gått siden utbetalingen fant sted
-                        </Checkbox>
-                        <Checkbox value="særligGrunn4">
-                            Om feilen helt eller delvis kan tilskrives Nav
-                        </Checkbox>
-                        <Checkbox value="særligGrunn5">Annet</Checkbox>
+                        {momenterSærligeGrunner.map(({ moment, beskrivelse }) => (
+                            <Checkbox key={moment} value={moment}>
+                                {beskrivelse}
+                            </Checkbox>
+                        ))}
                     </CheckboxGroup>
-                    {særligeGrunnerFor.includes('særligGrunn5') && (
+                    {særligeGrunnerFor.includes('ANNET') && (
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
@@ -120,22 +114,14 @@ export const SærligeGrunner: FC<Props> = ({
                         value={særligeGrunnerMot}
                         onChange={(value: string[]): void => setSærligeGrunnerMot(value)}
                     >
-                        <Checkbox value="særligGrunn1">
-                            Graden av uaktsomhet hos den som kravet retter seg mot
-                        </Checkbox>
-                        <Checkbox value="særligGrunn2">
-                            Størrelsen på det feilutbetalte beløpet
-                        </Checkbox>
-                        <Checkbox value="særligGrunn3">
-                            Hvor lang tid det har gått siden utbetalingen fant sted
-                        </Checkbox>
-                        <Checkbox value="særligGrunn4">
-                            Om feilen helt eller delvis kan tilskrives Nav
-                        </Checkbox>
-                        <Checkbox value="særligGrunn5">Annet</Checkbox>
+                        {momenterSærligeGrunner.map(({ moment, beskrivelse }) => (
+                            <Checkbox key={moment} value={moment}>
+                                {beskrivelse}
+                            </Checkbox>
+                        ))}
                     </CheckboxGroup>
 
-                    {særligeGrunnerMot.includes('særligGrunn5') && (
+                    {særligeGrunnerMot.includes('ANNET') && (
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"

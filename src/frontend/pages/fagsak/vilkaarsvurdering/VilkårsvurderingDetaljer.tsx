@@ -12,14 +12,12 @@ import { erPeriodeVurdert } from './utils';
 type Props = {
     valgtPeriode: Vilkårsperiode;
     vilkårsperioder: Vilkaarsperiode[];
-    erUnder4xRettsgebyr: boolean;
     hentVilkårsvurdering: () => void;
 };
 
 export const VilkårsvurderingDetaljer: FC<Props> = ({
     valgtPeriode,
     vilkårsperioder,
-    erUnder4xRettsgebyr,
     hentVilkårsvurdering,
 }: Props) => {
     const valgtVilkårsperiode = vilkårsperioder.find(
@@ -61,11 +59,8 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                     </Button>
                 </HStack>
             </HStack>
-            {/* TODO bytt ut propdrillingen av simulertBeløp og erUnder4xRettsgebyr etter react hook form sin useFormContext er på plass */}
-            <VilkårsvurderingSkjema
-                erUnder4xRettsgebyr={erUnder4xRettsgebyr}
-                simulertBeløp={valgtVilkårsperiode?.simulertBeløp ?? null}
-            />
+            {/* TODO bytt ut propdrillingen av simulertBeløp etter react hook form sin useFormContext er på plass */}
+            <VilkårsvurderingSkjema simulertBeløp={valgtVilkårsperiode?.simulertBeløp ?? null} />
         </section>
     );
 };

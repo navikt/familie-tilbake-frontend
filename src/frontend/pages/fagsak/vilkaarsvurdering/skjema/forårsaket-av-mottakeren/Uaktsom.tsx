@@ -2,15 +2,16 @@ import type { FC } from 'react';
 
 import { Textarea } from '@navikt/ds-react';
 
+import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SærligeGrunner } from '../SærligeGrunner';
 import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
 type Props = {
-    erUnder4xRettsgebyr: boolean;
     simulertBeløp: number | null;
 };
 
-export const Uaktsom: FC<Props> = ({ erUnder4xRettsgebyr, simulertBeløp }: Props) => {
+export const Uaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
+    const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
     return (
         <>
             <Textarea

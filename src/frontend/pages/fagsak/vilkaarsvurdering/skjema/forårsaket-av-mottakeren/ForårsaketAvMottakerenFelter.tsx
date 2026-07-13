@@ -6,14 +6,10 @@ import { GrovtUaktsom } from './GrovtUaktsom';
 import { Uaktsom } from './Uaktsom';
 
 type Props = {
-    erUnder4xRettsgebyr: boolean;
     simulertBeløp: number | null;
 };
 
-export const ForårsaketAvMottakerenFelter: FC<Props> = ({
-    erUnder4xRettsgebyr,
-    simulertBeløp,
-}: Props) => {
+export const ForårsaketAvMottakerenFelter: FC<Props> = ({ simulertBeløp }: Props) => {
     const [uaktsomhet, setUaktsomhet] = useState<string>();
     return (
         <>
@@ -33,9 +29,7 @@ export const ForårsaketAvMottakerenFelter: FC<Props> = ({
 
             {uaktsomhet === 'forsett' && <Forsett simulertBeløp={simulertBeløp} />}
 
-            {uaktsomhet === 'uaktsom' && (
-                <Uaktsom erUnder4xRettsgebyr={erUnder4xRettsgebyr} simulertBeløp={simulertBeløp} />
-            )}
+            {uaktsomhet === 'uaktsom' && <Uaktsom simulertBeløp={simulertBeløp} />}
         </>
     );
 };

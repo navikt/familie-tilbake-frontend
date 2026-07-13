@@ -9,6 +9,7 @@ import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
+import { VilkårsvurderingLesedataProvider } from './VilkårsvurderingLesedataContext';
 
 type Beløpsbeskrivelse = 'hele beløpet' | 'hele beløpet som er i behold';
 type SærligeGrunnerRetning = 'for' | 'mot';
@@ -37,6 +38,20 @@ const lagVilkårsperiode = (simulertBeløp: number | null): Vilkaarsperiode => (
     },
 });
 
+const momenterSærligeGrunner = [
+    {
+        moment: 'GRAD_AV_UAKTSOMHET',
+        beskrivelse: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+    },
+    { moment: 'STØRRELSE_BELØP', beskrivelse: 'Størrelsen på det feilutbetalte beløpet' },
+    { moment: 'ANNET', beskrivelse: 'Annet' },
+];
+const momenterReduksjonGodTro = [
+    { moment: 'STØRRELSE_BELØP', beskrivelse: 'Størrelsen på beløpet' },
+    { moment: 'TID_SIDEN_UTBETALING', beskrivelse: 'Hvor lenge siden feilutbetalingen skjedde' },
+    { moment: 'ANNET', beskrivelse: 'Annet' },
+];
+
 const renderVilkårsDetaljer = (
     simulertBeløp: number | null = 10000,
     erUnder4xRettsgebyr = false
@@ -44,12 +59,17 @@ const renderVilkårsDetaljer = (
     render(
         <QueryClientProvider client={createTestQueryClient()}>
             <TestBehandlingProvider>
-                <VilkårsvurderingDetaljer
-                    valgtPeriode={valgtPeriode}
-                    vilkårsperioder={[lagVilkårsperiode(simulertBeløp)]}
+                <VilkårsvurderingLesedataProvider
+                    momenterSærligeGrunner={momenterSærligeGrunner}
+                    momenterReduksjonGodTro={momenterReduksjonGodTro}
                     erUnder4xRettsgebyr={erUnder4xRettsgebyr}
-                    hentVilkårsvurdering={(): void => undefined}
-                />
+                >
+                    <VilkårsvurderingDetaljer
+                        valgtPeriode={valgtPeriode}
+                        vilkårsperioder={[lagVilkårsperiode(simulertBeløp)]}
+                        hentVilkårsvurdering={(): void => undefined}
+                    />
+                </VilkårsvurderingLesedataProvider>
             </TestBehandlingProvider>
         </QueryClientProvider>
     );
