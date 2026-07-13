@@ -92,7 +92,8 @@ export const Forhåndsvarsel: FC = () => {
 
 export const ForhåndsvarselInnhold: FC = () => {
     const { behandlingId } = useBehandling();
-    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter } = useBehandlingState();
+    const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, harUlagredeData } =
+        useBehandlingState();
     const navigerTilNeste = useStegNavigering('FORELDELSE');
     const navigerTilForrige = useStegNavigering('FAKTA');
     const queryClient = useQueryClient();
@@ -350,11 +351,15 @@ export const ForhåndsvarselInnhold: FC = () => {
         nesteAriaLabel: 'Lagre og gå videre til foreldelsessteget',
     };
 
+    const sendtForhåndsvarselConfig = harUlagredeData
+        ? lagreBrukeruttalelseConfig
+        : navigerTilNesteConfig;
+
     const actionBarConfig = erRedigerbarForhåndsvarselFlyt
         ? skalSubmitteSkjema
             ? sendEllerLagreForhåndsvarselConfig
             : navigerTilNesteConfig
-        : lagreBrukeruttalelseConfig;
+        : sendtForhåndsvarselConfig;
 
     useActionBar(actionBarConfig);
 
