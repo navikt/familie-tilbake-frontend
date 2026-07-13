@@ -24,7 +24,10 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
         ({ vilkårsvurdering: { id } }) => id === valgtPeriode.id
     );
     return (
-        <section className="flex-2 min-h-0 border border-ax-default rounded-xl border-ax-border-neutral-subtle flex flex-col">
+        <section
+            className="flex-2 min-h-0 border border-ax-default rounded-xl border-ax-border-neutral-subtle flex flex-col"
+            aria-label={`Vilkårsvurdering for periode ${valgtPeriode.fom} til ${valgtPeriode.tom}`}
+        >
             <HStack
                 justify="space-between"
                 className="border-b py-3 px-4 border-ax-border-neutral-subtle shrink-0"

@@ -8,7 +8,10 @@ export const VilkårsvurderingSkeleton: FC = () => {
             <Heading size="medium">Vilkårsvurdering</Heading>
             <div className="grid grid-cols-1 ax-md:grid-cols-3 gap-4 ax-md:h-full min-h-0">
                 {/* Section 1: Perioder */}
-                <section className="col-span-1 ax-md:col-span-1 gap-2 flex flex-col overflow-y-auto min-h-0">
+                <section
+                    className="col-span-1 ax-md:col-span-1 gap-2 flex flex-col overflow-y-auto min-h-0"
+                    aria-label="Vilkårsvurderingsperioder skjelett"
+                >
                     <HStack justify="space-between" align="center">
                         <Heading size="small" level="2">
                             Periode
@@ -23,7 +26,10 @@ export const VilkårsvurderingSkeleton: FC = () => {
                 </section>
 
                 {/* Section 2: Detaljer */}
-                <section className="col-span-1 ax-md:col-span-2 h-full">
+                <section
+                    className="col-span-1 ax-md:col-span-2 h-full"
+                    aria-label="Vilkårsvurderingsdetaljer skjelett"
+                >
                     <Box className="border border-ax-default rounded-xl border-ax-border-neutral-subtle h-full flex flex-col">
                         <HStack
                             justify="space-between"

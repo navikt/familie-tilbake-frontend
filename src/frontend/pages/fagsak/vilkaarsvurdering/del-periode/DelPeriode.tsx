@@ -184,7 +184,10 @@ export const DelPeriode: FC<Props> = ({
                     </Timeline>
 
                     {førsteSplittetPeriode && andreSplittetPeriode && (
-                        <Box className="bg-ax-bg-info-moderate p-4 rounded-xl border border-ax-bg-info-strong">
+                        <Box
+                            aria-live="polite"
+                            className="bg-ax-bg-info-moderate p-4 rounded-xl border border-ax-bg-info-strong"
+                        >
                             <HStack gap="space-32">
                                 Periode 1
                                 <span className="font-semibold">

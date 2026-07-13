@@ -65,6 +65,23 @@ const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
     },
 };
 
+const periodeKortAriaLabel = (
+    periode: Vilkårsperiode,
+    valgtPeriodeId: Vilkårsperiode['id'] | undefined
+): string => {
+    const vurderingLabel = vurdering[periode.vurdering].label;
+    const resultatLabel = periode.resultat ? resultat[periode.resultat].label : undefined;
+    const feilutbetaltLabel = formatCurrencyNoKr(periode.feilutbetalt);
+    const rettsligGrunnlagLabel =
+        periode.rettsligGrunnlag.length > 0 ? periode.rettsligGrunnlag.join(', ') : undefined;
+
+    return `Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurderingLabel}.${
+        resultatLabel ? ` Resultat: ${resultatLabel}.` : ''
+    } Feilutbetalt: ${feilutbetaltLabel}.${
+        rettsligGrunnlagLabel ? ` Rettslig grunnlag: ${rettsligGrunnlagLabel}.` : ''
+    }${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`;
+};
+
 type Props = {
     perioder: Vilkårsperiode[];
     valgtPeriodeId: Vilkårsperiode['id'] | undefined;
@@ -77,13 +94,18 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     setValgtPeriodeId,
 }: Props) => {
     return (
-        <section className="flex-1 min-h-0 scrollbar-stable flex flex-col gap-2 px-1">
+        <section
+            className="flex-1 min-h-0 scrollbar-stable flex flex-col gap-2 px-1"
+            aria-label="Vilkårsvurderingsperioder"
+        >
             <HStack justify="space-between" align="center">
                 <Heading size="small" level="2">
                     {perioder.length > 1 ? 'Perioder' : 'Periode'}
                 </Heading>
-                {perioder.filter(({ vurdering }) => erPeriodeVurdert(vurdering)).length} av{' '}
-                {perioder.length} vurdert
+                <span aria-live="polite">
+                    {perioder.filter(({ vurdering }) => erPeriodeVurdert(vurdering)).length} av{' '}
+                    {perioder.length} vurdert
+                </span>
             </HStack>
             <ul className="grid grid-cols-1 ax-sm:grid-cols-2 ax-md:grid-cols-1 gap-2">
                 {perioder.map(periode => (
@@ -91,7 +113,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                         <button
                             onClick={(): void => setValgtPeriodeId(periode.id)}
                             aria-pressed={periode.id === valgtPeriodeId}
-                            aria-label={`Periode ${periode.fom} til ${periode.tom}. Vurdering: ${vurdering[periode.vurdering].label}.${periode.resultat ? ` Resultat: ${resultat[periode.resultat].label}.` : ''} Feilutbetalt: ${formatCurrencyNoKr(periode.feilutbetalt)}.${periode.id === valgtPeriodeId ? ' Valgt.' : ''}`}
+                            aria-label={periodeKortAriaLabel(periode, valgtPeriodeId)}
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
                                 periode.id === valgtPeriodeId
                                     ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
