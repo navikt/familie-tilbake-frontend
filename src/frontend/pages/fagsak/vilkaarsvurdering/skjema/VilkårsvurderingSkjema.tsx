@@ -17,7 +17,6 @@ export const VilkårsvurderingSkjema: FC<Props> = ({ simulertBeløp }: Props) =>
     const [valg, setValg] = useState<VilkårValg>();
 
     return (
-        // aria-live på det eksisterende form-elementet annonserer alle felt som vises betinget lenger ned i skjematreet (WCAG 4.1.3)
         <form className="py-3 px-4 overflow-y-auto gap-6 flex flex-col flex-1" aria-live="polite">
             <RadioGroup
                 legend="Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?"
