@@ -11,7 +11,10 @@ import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
-import { forhåndsvisBrevMutation } from '@/generated/@tanstack/react-query.gen';
+import {
+    forhåndsvisBrevMutation,
+    hentBehandlingQueryKey,
+} from '@/generated/@tanstack/react-query.gen';
 import {
     type BehandlingLagreBrukersuttalelseError,
     type BehandlingLagreForhaandsvarselUnntakError,
@@ -158,6 +161,9 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     const etterVellykketLagring = async (): Promise<void> => {
         nullstillIkkePersisterteKomponenter();
+        await queryClient.invalidateQueries({
+            queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+        });
         await queryClient.invalidateQueries({
             queryKey: behandlingForhandsvarselQueryKey({ path: { behandlingId } }),
         });
