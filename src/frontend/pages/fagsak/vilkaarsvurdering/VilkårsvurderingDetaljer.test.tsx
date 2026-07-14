@@ -1,4 +1,4 @@
-import type { Vilkaarsperiode } from '@/generated-new';
+import type { Moment, Vilkaarsperiode } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -38,7 +38,7 @@ const lagVilkårsperiode = (simulertBeløp: number | null): Vilkaarsperiode => (
     },
 });
 
-const momenterSærligeGrunner = [
+const momenterSærligeGrunner: Moment[] = [
     {
         moment: 'GRAD_AV_UAKTSOMHET',
         beskrivelse: 'Graden av uaktsomhet hos den som kravet retter seg mot',
@@ -46,7 +46,7 @@ const momenterSærligeGrunner = [
     { moment: 'STØRRELSE_BELØP', beskrivelse: 'Størrelsen på det feilutbetalte beløpet' },
     { moment: 'ANNET', beskrivelse: 'Annet' },
 ];
-const momenterReduksjonGodTro = [
+const momenterReduksjonGodTro: Moment[] = [
     { moment: 'STØRRELSE_BELØP', beskrivelse: 'Størrelsen på beløpet' },
     { moment: 'TID_SIDEN_UTBETALING', beskrivelse: 'Hvor lenge siden feilutbetalingen skjedde' },
     { moment: 'ANNET', beskrivelse: 'Annet' },
