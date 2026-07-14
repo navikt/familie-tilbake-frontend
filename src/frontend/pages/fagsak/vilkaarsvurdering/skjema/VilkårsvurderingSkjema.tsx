@@ -1,13 +1,15 @@
 import type { FC } from 'react';
 import type { Vilkaarsvurdering } from '@/generated-new';
-import type { VilkårsvurderingSkjemaFelter } from './skjemaTyper';
+import type { VilkårsvurderingSkjemaFelter } from './schema';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { ForstoEllerBurdeForståttFelter } from './forsto-eller-burde-forstått/ForstoEllerBurdeForståttFelter';
 import { ForårsaketAvMottakerenFelter } from './forårsaket-av-mottakeren/ForårsaketAvMottakerenFelter';
 import { GodTroFelter } from './god-tro/GodTroFelter';
+import { vilkårsvurderingSkjema } from './schema';
 import { utledDefaultValues } from './utledDefaultValues';
 
 type Props = {
@@ -17,6 +19,7 @@ type Props = {
 
 export const VilkårsvurderingSkjema: FC<Props> = ({ vilkårsvurdering, simulertBeløp }: Props) => {
     const methods = useForm<VilkårsvurderingSkjemaFelter>({
+        resolver: zodResolver(vilkårsvurderingSkjema),
         defaultValues: utledDefaultValues(vilkårsvurdering),
     });
 

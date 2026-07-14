@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { SærligeGrunnerNavnPrefix } from './skjemaTyper';
+import type { SærligeGrunnerNavnPrefix } from './schema';
 
 import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { HStack, InfoCard, Radio, RadioGroup, Textarea } from '@navikt/ds-react';

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
+import type { VilkårsvurderingSkjemaFelter } from '../schema';
 
 import { Textarea, TextField } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';

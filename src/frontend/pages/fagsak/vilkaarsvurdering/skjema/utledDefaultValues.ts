@@ -1,5 +1,5 @@
 import type { SaerligeGrunner, Vilkaarsvurdering } from '@/generated-new';
-import type { SærligeGrunnerFelter, VilkårsvurderingSkjemaFelter } from './skjemaTyper';
+import type { SærligeGrunnerFelter, VilkårsvurderingSkjemaFelter } from './schema';
 
 const tomSærligeGrunner = (
     erDetSærligeGrunner: SærligeGrunnerFelter['erDetSærligeGrunner'] = ''

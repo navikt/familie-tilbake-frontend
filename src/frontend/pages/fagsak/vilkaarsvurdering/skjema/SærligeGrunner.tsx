@@ -1,5 +1,5 @@
 import type { ChangeEvent, FC } from 'react';
-import type { SærligeGrunnerNavnPrefix, VilkårsvurderingSkjemaFelter } from './skjemaTyper';
+import type { SærligeGrunnerNavnPrefix, VilkårsvurderingSkjemaFelter } from './schema';
 
 import {
     Checkbox,

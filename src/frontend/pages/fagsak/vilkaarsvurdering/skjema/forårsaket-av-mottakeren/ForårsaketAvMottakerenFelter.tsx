@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
+import type { VilkårsvurderingSkjemaFelter } from '../schema';
 
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
