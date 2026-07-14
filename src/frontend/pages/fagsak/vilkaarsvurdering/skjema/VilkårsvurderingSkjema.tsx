@@ -17,7 +17,7 @@ export const VilkårsvurderingSkjema: FC<Props> = ({ simulertBeløp }: Props) =>
     const [valg, setValg] = useState<VilkårValg>();
 
     return (
-        <form className="py-3 px-4 overflow-y-auto gap-6 flex flex-col flex-1" aria-live="polite">
+        <form className="py-3 px-4 overflow-y-auto gap-6 flex flex-col flex-1">
             <RadioGroup
                 legend="Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?"
                 size="small"
