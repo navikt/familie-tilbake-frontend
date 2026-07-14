@@ -1,6 +1,8 @@
 import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
 
 import { Textarea, TextField } from '@navikt/ds-react';
+import { useFormContext } from 'react-hook-form';
 
 import { KrevesTilbakeVurdering } from './KrevesTilbakeVurdering';
 
@@ -9,11 +11,12 @@ type Props = {
 };
 
 export const Deler: FC<Props> = ({ simulertBeløp }: Props) => {
+    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor deler av beløpet er i behold"
-                name="godTro.deler.begrunnelseIBehold"
+                {...register('godTro.deler.begrunnelseIBehold')}
                 size="small"
                 className="max-w-xl"
                 minRows={3}
@@ -22,7 +25,9 @@ export const Deler: FC<Props> = ({ simulertBeløp }: Props) => {
             />
             <TextField
                 label="Hvor mange kroner er i behold?"
-                name="godTro.deler.beløpIBehold"
+                {...register('godTro.deler.beløpIBehold', {
+                    setValueAs: (value: string): number | null => (value ? Number(value) : null),
+                })}
                 size="small"
                 style={{ width: '100px' }}
                 className="max-w-xl"

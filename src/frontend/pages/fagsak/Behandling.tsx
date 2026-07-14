@@ -293,7 +293,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                         <Route
                             path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
                             element={
-                                behandling.erNyModell && toggles[ToggleName.Vilkårsvurdering] ? (
+                                behandling.erNyModell && !toggles[ToggleName.Vilkårsvurdering] ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.VILKÅRSVURDERING}>
                                         <Suspense fallback={<VilkårsvurderingSkeleton />}>
                                             <Vilkårsvurdering />

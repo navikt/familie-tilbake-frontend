@@ -1,4 +1,4 @@
-import type { Moment, Vilkaarsperiode } from '@/generated-new';
+import type { Moment, Vilkaarsperiode, Vilkaarsvurdering } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -43,13 +43,40 @@ const momenterSærligeGrunner: Moment[] = [
         moment: 'GRAD_AV_UAKTSOMHET',
         beskrivelse: 'Graden av uaktsomhet hos den som kravet retter seg mot',
     },
-    { moment: 'STØRRELSE_BELØP', beskrivelse: 'Størrelsen på det feilutbetalte beløpet' },
-    { moment: 'ANNET', beskrivelse: 'Annet' },
+    {
+        moment: 'HELT_ELLER_DELVIS_NAVS_FEIL',
+        beskrivelse: 'Om feilen helt eller delvis kan tilskrives Nav',
+    },
+    {
+        moment: 'STØRRELSE_BELØP',
+        beskrivelse: 'Størrelsen på feilutbetalt beløp',
+    },
+    {
+        moment: 'TID_FRA_UTBETALING',
+        beskrivelse: 'Hvor lang tid det har gått siden utbetalingen fant sted',
+    },
+    {
+        moment: 'ANNET',
+        beskrivelse: 'Annet',
+    },
 ];
 const momenterReduksjonGodTro: Moment[] = [
-    { moment: 'STØRRELSE_BELØP', beskrivelse: 'Størrelsen på beløpet' },
-    { moment: 'TID_SIDEN_UTBETALING', beskrivelse: 'Hvor lenge siden feilutbetalingen skjedde' },
-    { moment: 'ANNET', beskrivelse: 'Annet' },
+    {
+        moment: 'STØRRELSE_BELØP',
+        beskrivelse: 'Størrelsen på beløpet',
+    },
+    {
+        moment: 'TID_FRA_UTBETALING',
+        beskrivelse: 'Hvor lenge siden feilutbetalingen skjedde',
+    },
+    {
+        moment: 'MOTTAKER_TILLIT',
+        beskrivelse: 'Om mottakeren har innrettet seg i tillit til utbetalingen',
+    },
+    {
+        moment: 'ANNET',
+        beskrivelse: 'Annet',
+    },
 ];
 
 const renderVilkårsDetaljer = (
@@ -561,4 +588,74 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await beskrivAnnetFinnes()).toBeInTheDocument();
         });
     };
+
+    describe('Utledede defaultValues fra GET', () => {
+        const renderMedValg = (valg: Vilkaarsvurdering['valg']): void => {
+            const vilkårsperiode: Vilkaarsperiode = {
+                ...lagVilkårsperiode(10000),
+                vilkårsvurdering: {
+                    id: valgtPeriode.id,
+                    periode: { fom: '2023-01-01', tom: '2023-12-31' },
+                    delbarePerioder: [],
+                    valg,
+                },
+            };
+            render(
+                <QueryClientProvider client={createTestQueryClient()}>
+                    <TestBehandlingProvider>
+                        <VilkårsvurderingLesedataProvider
+                            momenterSærligeGrunner={momenterSærligeGrunner}
+                            momenterReduksjonGodTro={momenterReduksjonGodTro}
+                            erUnder4xRettsgebyr={false}
+                        >
+                            <VilkårsvurderingDetaljer
+                                valgtPeriode={valgtPeriode}
+                                vilkårsperioder={[vilkårsperiode]}
+                                hentVilkårsvurdering={(): void => undefined}
+                            />
+                        </VilkårsvurderingLesedataProvider>
+                    </TestBehandlingProvider>
+                </QueryClientProvider>
+            );
+        };
+
+        test('Særlige grunner mot fra GET huker av riktige checkbokser', async () => {
+            renderMedValg({
+                vurdering: 'forårsaket_av_mottaker',
+                aktsomhet: {
+                    aktsomhet: 'grovtUaktsomt',
+                    begrunnelse: 'grovt uaktsomt begrunnelse',
+                    erDetSærligeGrunner: {
+                        erDetSaerligeGrunner: 'nei',
+                        særligeGrunnerMot: [
+                            { moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' },
+                            { moment: 'TID_FRA_UTBETALING', beskrivelse: '' },
+                        ],
+                        begrunnelse: 'Særlige grunner-begrunnelse fra GET',
+                        annetBegrunnelse: null,
+                    },
+                },
+            });
+
+            const gruppe = await særligeGrunnerCheckboxGroup('mot');
+            expect(
+                within(gruppe).getByRole('checkbox', {
+                    name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                })
+            ).toBeChecked();
+            expect(
+                within(gruppe).getByRole('checkbox', {
+                    name: 'Hvor lang tid det har gått siden utbetalingen fant sted',
+                })
+            ).toBeChecked();
+            expect(
+                within(gruppe).getByRole('checkbox', {
+                    name: 'Om feilen helt eller delvis kan tilskrives Nav',
+                })
+            ).not.toBeChecked();
+            expect(await begrunnelseSærligeGrunner('mot')).toHaveValue(
+                'Særlige grunner-begrunnelse fra GET'
+            );
+        });
+    });
 });

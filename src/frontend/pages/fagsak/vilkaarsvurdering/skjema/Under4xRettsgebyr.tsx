@@ -1,24 +1,25 @@
+import type { FC } from 'react';
+import type { SærligeGrunnerNavnPrefix } from './skjemaTyper';
+
 import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { HStack, InfoCard, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import { SimulertBeløp } from './SimulertBeløp';
 import { SærligeGrunner } from './SærligeGrunner';
 
-type SærligeGrunnerValg = 'ja' | 'nei';
-
 type Props = {
+    navnPrefix: SærligeGrunnerNavnPrefix;
     simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
-    standardValg?: SærligeGrunnerValg;
 };
 
 export const Under4xRettsgebyr: FC<Props> = ({
+    navnPrefix,
     simulertBeløp,
     renter,
     reduksjon,
-    standardValg,
 }: Props) => {
     const [skalIkkeKrevesTilbake, setSkalIkkeKrevesTilbake] = useState<string>();
     return (
@@ -57,8 +58,8 @@ export const Under4xRettsgebyr: FC<Props> = ({
 
             {skalIkkeKrevesTilbake === 'nei' && (
                 <SærligeGrunner
+                    navnPrefix={navnPrefix}
                     reduksjon={reduksjon}
-                    standardValg={standardValg}
                     renter={renter}
                     simulertBeløp={simulertBeløp}
                 />

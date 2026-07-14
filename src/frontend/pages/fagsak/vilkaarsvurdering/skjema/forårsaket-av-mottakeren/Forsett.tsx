@@ -1,6 +1,8 @@
 import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
 
 import { Textarea } from '@navikt/ds-react';
+import { useFormContext } from 'react-hook-form';
 
 import { SimulertBeløp } from '../SimulertBeløp';
 
@@ -9,10 +11,12 @@ type Props = {
 };
 
 export const Forsett: FC<Props> = ({ simulertBeløp }: Props) => {
+    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor du vurderer at mottakeren har handlet med forsett"
+                {...register('forårsaketAvMottaker.forsettlig.begrunnelse')}
                 size="small"
                 className="max-w-xl"
                 minRows={3}

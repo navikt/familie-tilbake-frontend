@@ -13,10 +13,18 @@ const godTro: VilkaarsvurderingValg = {
 };
 const forstoEllerBurdeForstått: VilkaarsvurderingValg = {
     vurdering: 'forsto_eller_burde_forstått',
+    forståelse: {
+        forståelse: 'forsto',
+        begrunnelse: 'Mottaker forsto',
+        unnlatelse: {
+            unnlatelse: 'skalUnnlates',
+            begrunnelse: 'Tilbakekreving skal unnlates',
+        },
+    },
 };
+
 const uaktsomt: VilkaarsvurderingValg = {
     vurdering: 'forårsaket_av_mottaker',
-    begrunnelse: 'Feilutbetalingen er forårsaket av mottaker',
     aktsomhet: {
         aktsomhet: 'uaktsomt',
         begrunnelse: 'Mottaker handlet uaktsomt',
@@ -28,7 +36,6 @@ const uaktsomt: VilkaarsvurderingValg = {
 };
 const grovtUaktsomt: VilkaarsvurderingValg = {
     vurdering: 'forårsaket_av_mottaker',
-    begrunnelse: 'Feilutbetalingen er forårsaket av mottaker',
     aktsomhet: {
         aktsomhet: 'grovtUaktsomt',
         begrunnelse: 'Mottaker handlet grovt uaktsomt',
@@ -42,7 +49,6 @@ const grovtUaktsomt: VilkaarsvurderingValg = {
 };
 const forsettlig: VilkaarsvurderingValg = {
     vurdering: 'forårsaket_av_mottaker',
-    begrunnelse: 'Feilutbetalingen er forårsaket av mottaker',
     aktsomhet: {
         aktsomhet: 'forsettlig',
         begrunnelse: 'Mottaker handlet forsettlig',

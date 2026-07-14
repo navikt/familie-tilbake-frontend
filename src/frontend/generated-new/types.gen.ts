@@ -74,6 +74,11 @@ export type Brevmottaker = {
     personIdent: string;
 };
 
+export type BurdeForstaatt = {
+    begrunnelse: string;
+    unnlatelse: Unnlatelse;
+};
+
 export type Deler = {
     beløp: number;
     begrunnelse: string;
@@ -132,7 +137,6 @@ export type Feilutbetaling = {
 };
 
 export type ForaarsaketAvMottaker = {
-    begrunnelse: string;
     aktsomhet: Aktsomhet;
 };
 
@@ -171,8 +175,21 @@ export type Forsettlig = {
     begrunnelse: string;
 };
 
+export type Forstaaelse =
+    | ({
+          forståelse: 'forsto';
+      } & Forsto)
+    | ({
+          forståelse: 'burdeForstått';
+      } & BurdeForstaatt);
+
+export type Forsto = {
+    begrunnelse: string;
+    unnlatelse: Unnlatelse;
+};
+
 export type ForstoEllerBurdeForstaatt = {
-    [key: string]: unknown;
+    forståelse: Forstaaelse;
 };
 
 export type Fritekst = string;
@@ -207,6 +224,10 @@ export type HovedavsnittUpdate = {
 export type HovedavsnittVarselbrev = {
     tittel: string;
     innhold: Array<string>;
+};
+
+export type IkkeAktuelt = {
+    erDetSærligeGrunner: SaerligeGrunner;
 };
 
 export type IkkeVurdert = {
@@ -432,7 +453,10 @@ export type Unnlatelse =
       } & SkalUnnlates)
     | ({
           unnlatelse: 'skalIkkeUnnlates';
-      } & SkalIkkeUnnlates);
+      } & SkalIkkeUnnlates)
+    | ({
+          unnlatelse: 'ikkeAktuelt';
+      } & IkkeAktuelt);
 
 export type Unntak = {
     begrunnelseForUnntak: Varslingsunntak;
@@ -599,6 +623,11 @@ export type BelopIBeholdWritable =
           belopIBehold: 'deler';
       } & DelerWritable);
 
+export type BurdeForstaattWritable = {
+    begrunnelse: string;
+    unnlatelse: UnnlatelseWritable;
+};
+
 export type DelerWritable = {
     beløp: number;
     begrunnelse: string;
@@ -615,7 +644,6 @@ export type FaktaOmFeilutbetalingWritable = {
 };
 
 export type ForaarsaketAvMottakerWritable = {
-    begrunnelse: string;
     aktsomhet: AktsomhetWritable;
 };
 
@@ -640,6 +668,23 @@ export type ForhaandsvarselStegWritable =
           type: 'unntak';
       } & ForhaandsvarselUnntak);
 
+export type ForstaaelseWritable =
+    | ({
+          forståelse: 'forsto';
+      } & ForstoWritable)
+    | ({
+          forståelse: 'burdeForstått';
+      } & BurdeForstaattWritable);
+
+export type ForstoWritable = {
+    begrunnelse: string;
+    unnlatelse: UnnlatelseWritable;
+};
+
+export type ForstoEllerBurdeForstaattWritable = {
+    forståelse: ForstaaelseWritable;
+};
+
 export type GodTroWritable = {
     begrunnelse: string;
     beløpIBehold: BelopIBeholdWritable;
@@ -659,6 +704,10 @@ export type HovedavsnittWritable = {
     tittel: string;
     underavsnitt: Array<RotElementWritable>;
     hjemler: string;
+};
+
+export type IkkeAktueltWritable = {
+    erDetSærligeGrunner: SaerligeGrunnerWritable;
 };
 
 export type JaSaerligeGrunnerWritable = {
@@ -740,7 +789,10 @@ export type UnnlatelseWritable =
       } & SkalUnnlates)
     | ({
           unnlatelse: 'skalIkkeUnnlates';
-      } & SkalIkkeUnnlatesWritable);
+      } & SkalIkkeUnnlatesWritable)
+    | ({
+          unnlatelse: 'ikkeAktuelt';
+      } & IkkeAktueltWritable);
 
 export type UttalelsesfristWritable = {
     nyFrist?: string;
@@ -786,7 +838,7 @@ export type VilkaarsvurderingValgWritable =
       } & ForaarsaketAvMottakerWritable)
     | ({
           vurdering: 'forsto_eller_burde_forstått';
-      } & ForstoEllerBurdeForstaatt)
+      } & ForstoEllerBurdeForstaattWritable)
     | ({
           vurdering: 'ikke_vurdert';
       } & VilkaarsvurderingIkkeVurdert);

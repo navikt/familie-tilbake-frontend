@@ -1,3 +1,6 @@
+import type { ChangeEvent, FC } from 'react';
+import type { SærligeGrunnerNavnPrefix, VilkårsvurderingSkjemaFelter } from './skjemaTyper';
+
 import {
     Checkbox,
     CheckboxGroup,
@@ -7,49 +10,55 @@ import {
     Textarea,
     TextField,
 } from '@navikt/ds-react';
-import { type ChangeEvent, type FC, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { useVilkårsvurderingLesedata } from '../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from './SimulertBeløp';
 
-type SærligeGrunnerValg = 'ja' | 'nei';
-
 type Props = {
+    navnPrefix: SærligeGrunnerNavnPrefix;
     simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
-    standardValg?: SærligeGrunnerValg;
 };
 
 export const SærligeGrunner: FC<Props> = ({
+    navnPrefix,
     simulertBeløp,
     renter = false,
     reduksjon = false,
-    standardValg,
 }: Props) => {
-    const [særligeGrunner, setSærligeGrunner] = useState<SærligeGrunnerValg | undefined>(
-        standardValg
-    );
-    const [særligeGrunnerFor, setSærligeGrunnerFor] = useState<string[]>([]);
-    const [særligeGrunnerMot, setSærligeGrunnerMot] = useState<string[]>([]);
-    const [reduksjonsprosent, setReduksjonsprosent] = useState<number | undefined>(undefined);
+    const { register, watch, setValue } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterSærligeGrunner } = useVilkårsvurderingLesedata();
 
+    const særligeGrunner = watch(`${navnPrefix}.erDetSærligeGrunner`);
+    const særligeGrunnerFor = watch(`${navnPrefix}.særligeGrunnerFor`);
+    const særligeGrunnerMot = watch(`${navnPrefix}.særligeGrunnerMot`);
+    const prosentReduksjon = watch(`${navnPrefix}.prosentReduksjon`);
+
+    const { name: erDetSærligeGrunnerName, ...erDetSærligeGrunnerProps } = register(
+        `${navnPrefix}.erDetSærligeGrunner`
+    );
+
     const reduksjonsprops = reduksjon
-        ? { reduksjon: true as const, reduksjonsprosent: reduksjonsprosent ?? 0 }
+        ? { reduksjon: true as const, reduksjonsprosent: prosentReduksjon ?? 0 }
         : { reduksjon: false as const };
     return (
         <>
             <RadioGroup
+                name={erDetSærligeGrunnerName}
                 legend="Er det særlige grunner til å redusere beløpet?"
                 size="small"
                 className="max-w-xl"
-                value={særligeGrunner ?? ''}
-                onChange={(value: SærligeGrunnerValg): void => setSærligeGrunner(value)}
+                value={særligeGrunner}
             >
                 <HStack gap="space-16">
-                    <Radio value="ja">Ja</Radio>
-                    <Radio value="nei">Nei</Radio>
+                    <Radio value="ja" {...erDetSærligeGrunnerProps}>
+                        Ja
+                    </Radio>
+                    <Radio value="nei" {...erDetSærligeGrunnerProps}>
+                        Nei
+                    </Radio>
                 </HStack>
             </RadioGroup>
 
@@ -60,7 +69,11 @@ export const SærligeGrunner: FC<Props> = ({
                         size="small"
                         className="max-w-xl"
                         value={særligeGrunnerFor}
-                        onChange={(value: string[]): void => setSærligeGrunnerFor(value)}
+                        onChange={(value: string[]): void =>
+                            setValue(`${navnPrefix}.særligeGrunnerFor`, value, {
+                                shouldDirty: true,
+                            })
+                        }
                     >
                         {momenterSærligeGrunner.map(({ moment, beskrivelse }) => (
                             <Checkbox key={moment} value={moment}>
@@ -73,6 +86,7 @@ export const SærligeGrunner: FC<Props> = ({
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
                             className="max-w-xl"
+                            {...register(`${navnPrefix}.annetBegrunnelse`)}
                         />
                     )}
                     <Textarea
@@ -82,16 +96,21 @@ export const SærligeGrunner: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
+                        {...register(`${navnPrefix}.begrunnelse`)}
                     />
                     {/* TODO Valider senere at man ikke kan skrive utenfor 1–100 */}
                     <TextField
                         label="Hvor mange prosent skal beløpet reduseres med?"
                         size="small"
                         className="max-w-xl"
-                        value={reduksjonsprosent}
+                        value={prosentReduksjon ?? ''}
                         style={{ width: '100px' }}
                         onChange={(e: ChangeEvent<HTMLInputElement, Element>): void =>
-                            setReduksjonsprosent(Number(e.target.value))
+                            setValue(
+                                `${navnPrefix}.prosentReduksjon`,
+                                e.target.value === '' ? null : Number(e.target.value),
+                                { shouldDirty: true }
+                            )
                         }
                         type="number"
                         min={1}
@@ -112,7 +131,11 @@ export const SærligeGrunner: FC<Props> = ({
                         size="small"
                         className="max-w-xl"
                         value={særligeGrunnerMot}
-                        onChange={(value: string[]): void => setSærligeGrunnerMot(value)}
+                        onChange={(value: string[]): void =>
+                            setValue(`${navnPrefix}.særligeGrunnerMot`, value, {
+                                shouldDirty: true,
+                            })
+                        }
                     >
                         {momenterSærligeGrunner.map(({ moment, beskrivelse }) => (
                             <Checkbox key={moment} value={moment}>
@@ -126,6 +149,7 @@ export const SærligeGrunner: FC<Props> = ({
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
                             className="max-w-xl"
+                            {...register(`${navnPrefix}.annetBegrunnelse`)}
                         />
                     )}
                     <Textarea
@@ -135,6 +159,7 @@ export const SærligeGrunner: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
+                        {...register(`${navnPrefix}.begrunnelse`)}
                     />
                     <SimulertBeløp renter={renter} simulertBeløp={simulertBeløp} />
                 </>

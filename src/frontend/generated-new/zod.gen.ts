@@ -74,8 +74,6 @@ export const zForsettlig = z.object({
     begrunnelse: z.string(),
 });
 
-export const zForstoEllerBurdeForstaatt = z.record(z.string(), z.unknown());
-
 export const zFritekst = z.string().min(3).max(3000);
 
 export const zHovedavsnittVarselbrev = z.object({
@@ -217,6 +215,10 @@ export const zGrovtUaktsomt = z.object({
     erDetSærligeGrunner: zSaerligeGrunner,
 });
 
+export const zIkkeAktuelt = z.object({
+    erDetSærligeGrunner: zSaerligeGrunner,
+});
+
 export const zSammenslaaing = z.object({
     vilkårsvurderingId: z.uuid(),
     slåesSammenMedId: z.uuid(),
@@ -347,7 +349,27 @@ export const zHovedavsnittUpdate = z.object({
 export const zUnnlatelse = z.discriminatedUnion('unnlatelse', [
     zSkalUnnlates.extend({ unnlatelse: z.literal('skalUnnlates') }),
     zSkalIkkeUnnlates.extend({ unnlatelse: z.literal('skalIkkeUnnlates') }),
+    zIkkeAktuelt.extend({ unnlatelse: z.literal('ikkeAktuelt') }),
 ]);
+
+export const zBurdeForstaatt = z.object({
+    begrunnelse: z.string(),
+    unnlatelse: zUnnlatelse,
+});
+
+export const zForsto = z.object({
+    begrunnelse: z.string(),
+    unnlatelse: zUnnlatelse,
+});
+
+export const zForstaaelse = z.discriminatedUnion('forståelse', [
+    zForsto.extend({ forståelse: z.literal('forsto') }),
+    zBurdeForstaatt.extend({ forståelse: z.literal('burdeForstått') }),
+]);
+
+export const zForstoEllerBurdeForstaatt = z.object({
+    forståelse: zForstaaelse,
+});
 
 export const zUaktsomt = z.object({
     begrunnelse: z.string(),
@@ -361,7 +383,6 @@ export const zAktsomhet = z.discriminatedUnion('aktsomhet', [
 ]);
 
 export const zForaarsaketAvMottaker = z.object({
-    begrunnelse: z.string(),
     aktsomhet: zAktsomhet,
 });
 
@@ -684,6 +705,10 @@ export const zGrovtUaktsomtWritable = z.object({
     erDetSærligeGrunner: zSaerligeGrunnerWritable,
 });
 
+export const zIkkeAktueltWritable = z.object({
+    erDetSærligeGrunner: zSaerligeGrunnerWritable,
+});
+
 export const zSkalIkkeReduseresWritable = z.object({
     relevans: z.array(zMomentWritable),
     annetBegrunnelse: z.string().nullable(),
@@ -738,7 +763,27 @@ export const zGodTroWritable = z.object({
 export const zUnnlatelseWritable = z.discriminatedUnion('unnlatelse', [
     zSkalUnnlates.extend({ unnlatelse: z.literal('skalUnnlates') }),
     zSkalIkkeUnnlatesWritable.extend({ unnlatelse: z.literal('skalIkkeUnnlates') }),
+    zIkkeAktueltWritable.extend({ unnlatelse: z.literal('ikkeAktuelt') }),
 ]);
+
+export const zBurdeForstaattWritable = z.object({
+    begrunnelse: z.string(),
+    unnlatelse: zUnnlatelseWritable,
+});
+
+export const zForstoWritable = z.object({
+    begrunnelse: z.string(),
+    unnlatelse: zUnnlatelseWritable,
+});
+
+export const zForstaaelseWritable = z.discriminatedUnion('forståelse', [
+    zForstoWritable.extend({ forståelse: z.literal('forsto') }),
+    zBurdeForstaattWritable.extend({ forståelse: z.literal('burdeForstått') }),
+]);
+
+export const zForstoEllerBurdeForstaattWritable = z.object({
+    forståelse: zForstaaelseWritable,
+});
 
 export const zUaktsomtWritable = z.object({
     begrunnelse: z.string(),
@@ -752,7 +797,6 @@ export const zAktsomhetWritable = z.discriminatedUnion('aktsomhet', [
 ]);
 
 export const zForaarsaketAvMottakerWritable = z.object({
-    begrunnelse: z.string(),
     aktsomhet: zAktsomhetWritable,
 });
 
@@ -821,7 +865,7 @@ export const zVilkaarsvurderingValgWritable = z.union([
         .object({
             vurdering: z.literal('forsto_eller_burde_forstått'),
         })
-        .and(zForstoEllerBurdeForstaatt),
+        .and(zForstoEllerBurdeForstaattWritable),
     z
         .object({
             vurdering: z.literal('ikke_vurdert'),

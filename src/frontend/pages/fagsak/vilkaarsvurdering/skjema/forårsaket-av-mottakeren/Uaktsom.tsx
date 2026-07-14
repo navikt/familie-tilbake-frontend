@@ -1,6 +1,8 @@
 import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
 
 import { Textarea } from '@navikt/ds-react';
+import { useFormContext } from 'react-hook-form';
 
 import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SærligeGrunner } from '../SærligeGrunner';
@@ -12,10 +14,12 @@ type Props = {
 
 export const Uaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
     const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
+    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor du vurderer at mottakeren har handlet uaktsomt"
+                {...register('forårsaketAvMottaker.uaktsomt.begrunnelse')}
                 size="small"
                 className="max-w-xl"
                 minRows={3}
@@ -23,9 +27,17 @@ export const Uaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
                 maxLength={3000}
             />
             {erUnder4xRettsgebyr ? (
-                <Under4xRettsgebyr reduksjon simulertBeløp={simulertBeløp} />
+                <Under4xRettsgebyr
+                    navnPrefix="forårsaketAvMottaker.uaktsomt.særligeGrunner"
+                    reduksjon
+                    simulertBeløp={simulertBeløp}
+                />
             ) : (
-                <SærligeGrunner reduksjon simulertBeløp={simulertBeløp} />
+                <SærligeGrunner
+                    navnPrefix="forårsaketAvMottaker.uaktsomt.særligeGrunner"
+                    reduksjon
+                    simulertBeløp={simulertBeløp}
+                />
             )}
         </>
     );

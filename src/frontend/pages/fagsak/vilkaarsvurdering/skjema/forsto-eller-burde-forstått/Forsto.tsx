@@ -1,6 +1,8 @@
 import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
 
 import { Textarea } from '@navikt/ds-react';
+import { useFormContext } from 'react-hook-form';
 
 import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SærligeGrunner } from '../SærligeGrunner';
@@ -12,6 +14,7 @@ type Props = {
 
 export const Forsto: FC<Props> = ({ simulertBeløp }: Props) => {
     const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
+    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
@@ -21,11 +24,20 @@ export const Forsto: FC<Props> = ({ simulertBeløp }: Props) => {
                 minRows={3}
                 resize
                 maxLength={3000}
+                {...register('forstoEllerBurdeForstått.forsto.begrunnelse')}
             />
             {erUnder4xRettsgebyr ? (
-                <Under4xRettsgebyr reduksjon standardValg="nei" simulertBeløp={simulertBeløp} />
+                <Under4xRettsgebyr
+                    navnPrefix="forstoEllerBurdeForstått.forsto.særligeGrunner"
+                    reduksjon
+                    simulertBeløp={simulertBeløp}
+                />
             ) : (
-                <SærligeGrunner reduksjon standardValg="nei" simulertBeløp={simulertBeløp} />
+                <SærligeGrunner
+                    navnPrefix="forstoEllerBurdeForstått.forsto.særligeGrunner"
+                    reduksjon
+                    simulertBeløp={simulertBeløp}
+                />
             )}
         </>
     );

@@ -1,5 +1,8 @@
+import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from '../skjemaTyper';
+
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import { type FC, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Forsett } from './Forsett';
 import { GrovtUaktsom } from './GrovtUaktsom';
@@ -10,26 +13,37 @@ type Props = {
 };
 
 export const ForårsaketAvMottakerenFelter: FC<Props> = ({ simulertBeløp }: Props) => {
-    const [uaktsomhet, setUaktsomhet] = useState<string>();
+    const { control, register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const uaktsomhet = useWatch({
+        name: 'forårsaketAvMottaker.aktsomhet',
+        control: control,
+    });
+    const { name: aktsomhetName, ...aktsomhetProps } = register('forårsaketAvMottaker.aktsomhet');
     return (
         <>
             <RadioGroup
+                name={aktsomhetName}
                 legend="Vurder mottakerens uaktsomhet i perioden"
                 size="small"
                 className="max-w-xl"
-                value={uaktsomhet ?? ''}
-                onChange={(value: string): void => setUaktsomhet(value)}
+                value={uaktsomhet}
             >
-                <Radio value="uaktsom">Uaktsom</Radio>
-                <Radio value="grovt-uaktsom">Grovt uaktsom</Radio>
-                <Radio value="forsett">Forsett</Radio>
+                <Radio value="uaktsomt" {...aktsomhetProps}>
+                    Uaktsom
+                </Radio>
+                <Radio value="grovtUaktsomt" {...aktsomhetProps}>
+                    Grovt uaktsom
+                </Radio>
+                <Radio value="forsettlig" {...aktsomhetProps}>
+                    Forsett
+                </Radio>
             </RadioGroup>
 
-            {uaktsomhet === 'grovt-uaktsom' && <GrovtUaktsom simulertBeløp={simulertBeløp} />}
+            {uaktsomhet === 'grovtUaktsomt' && <GrovtUaktsom simulertBeløp={simulertBeløp} />}
 
-            {uaktsomhet === 'forsett' && <Forsett simulertBeløp={simulertBeløp} />}
+            {uaktsomhet === 'forsettlig' && <Forsett simulertBeløp={simulertBeløp} />}
 
-            {uaktsomhet === 'uaktsom' && <Uaktsom simulertBeløp={simulertBeløp} />}
+            {uaktsomhet === 'uaktsomt' && <Uaktsom simulertBeløp={simulertBeløp} />}
         </>
     );
 };

@@ -18,7 +18,7 @@
     "check": "biome check src",
     "check:fix": "biome check --write src",
     "prepare": "husky",
-    "generate-types": "openapi-ts"
+    "generate-types": "pnpm dlx --package typescript@6.0.3 --package @hey-api/openapi-ts@0.99.0 openapi-ts"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
