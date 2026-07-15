@@ -1,15 +1,15 @@
 import type { FC } from 'react';
-import type { SærligeGrunnerNavnPrefix } from './schema';
+import type { UnnlatelseNavnPrefix, VilkårsvurderingSkjemaFelter } from './schema';
 
 import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { HStack, InfoCard, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import { useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { SimulertBeløp } from './SimulertBeløp';
 import { SærligeGrunner } from './SærligeGrunner';
 
 type Props = {
-    navnPrefix: SærligeGrunnerNavnPrefix;
+    navnPrefix: UnnlatelseNavnPrefix;
     simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
@@ -21,7 +21,14 @@ export const Under4xRettsgebyr: FC<Props> = ({
     renter,
     reduksjon,
 }: Props) => {
-    const [skalIkkeKrevesTilbake, setSkalIkkeKrevesTilbake] = useState<string>();
+    const { register, control, setValue } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const unnlatelse = useWatch({ name: `${navnPrefix}.unnlatelse`, control });
+    const unnlatelseVerdi =
+        unnlatelse === 'skalUnnlates'
+            ? 'skalUnnlates'
+            : unnlatelse === 'skalIkkeUnnlates'
+              ? 'skalIkkeUnnlates'
+              : '';
     return (
         <>
             <InfoCard data-color="warning" className="max-w-xl" size="small">
@@ -33,16 +40,21 @@ export const Under4xRettsgebyr: FC<Props> = ({
                 legend="Skal Nav la være å kreve beløpet tilbake? (Sjette avsnitt)"
                 size="small"
                 className="max-w-xl"
-                value={skalIkkeKrevesTilbake ?? ''}
-                onChange={(value: string): void => setSkalIkkeKrevesTilbake(value)}
+                value={unnlatelseVerdi}
+                onChange={(value: string): void =>
+                    setValue(
+                        `${navnPrefix}.unnlatelse`,
+                        value === 'skalUnnlates' ? 'skalUnnlates' : 'skalIkkeUnnlates'
+                    )
+                }
             >
                 <HStack gap="space-16">
-                    <Radio value="ja">Ja</Radio>
-                    <Radio value="nei">Nei</Radio>
+                    <Radio value="skalUnnlates">Ja</Radio>
+                    <Radio value="skalIkkeUnnlates">Nei</Radio>
                 </HStack>
             </RadioGroup>
 
-            {skalIkkeKrevesTilbake === 'ja' && (
+            {unnlatelseVerdi === 'skalUnnlates' && (
                 <>
                     <Textarea
                         label="Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake"
@@ -51,18 +63,30 @@ export const Under4xRettsgebyr: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
+                        {...register(`${navnPrefix}.skalUnnlates.begrunnelse`)}
                     />
                     <SimulertBeløp simulertBeløp={simulertBeløp} />
                 </>
             )}
 
-            {skalIkkeKrevesTilbake === 'nei' && (
-                <SærligeGrunner
-                    navnPrefix={navnPrefix}
-                    reduksjon={reduksjon}
-                    renter={renter}
-                    simulertBeløp={simulertBeløp}
-                />
+            {unnlatelseVerdi === 'skalIkkeUnnlates' && (
+                <>
+                    <Textarea
+                        label="Begrunn hvorfor du vurderer at tilbakekrevingen ikke skal unnlates"
+                        size="small"
+                        className="max-w-xl"
+                        minRows={3}
+                        resize
+                        maxLength={3000}
+                        {...register(`${navnPrefix}.skalIkkeUnnlates.begrunnelse`)}
+                    />
+                    <SærligeGrunner
+                        navnPrefix={`${navnPrefix}.skalIkkeUnnlates.erDetSærligeGrunner`}
+                        reduksjon={reduksjon}
+                        renter={renter}
+                        simulertBeløp={simulertBeløp}
+                    />
+                </>
             )}
         </>
     );

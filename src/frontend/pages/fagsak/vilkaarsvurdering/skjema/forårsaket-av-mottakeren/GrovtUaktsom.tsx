@@ -24,7 +24,7 @@ export const GrovtUaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
                 maxLength={3000}
             />
             <SærligeGrunner
-                navnPrefix="forårsaketAvMottaker.grovtUaktsomt.særligeGrunner"
+                navnPrefix="forårsaketAvMottaker.grovtUaktsomt.erDetSærligeGrunner"
                 renter
                 reduksjon
                 simulertBeløp={simulertBeløp}

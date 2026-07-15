@@ -18,18 +18,39 @@ const prosentReduksjonSchema = zJaSaerligeGrunnerWritable.shape.prosentReduksjon
 
 const beløpIBeholdKronerSchema = zDelerWritable.shape.beløp.nullable();
 
-const særligeGrunnerSchema = z.object({
-    erDetSærligeGrunner: erDetSærligeGrunnerValgSchema,
+const jaSærligeGrunnerSchema = z.object({
     særligeGrunnerFor: z.array(z.string()),
+    prosentReduksjon: prosentReduksjonSchema,
+    begrunnelse: z.string(),
+    annetBegrunnelse: z.string(),
+});
+
+const neiSærligeGrunnerSchema = z.object({
     særligeGrunnerMot: z.array(z.string()),
     begrunnelse: z.string(),
     annetBegrunnelse: z.string(),
-    prosentReduksjon: prosentReduksjonSchema,
 });
 
-const medBegrunnelseOgSærligeGrunner = z.object({
-    begrunnelse: z.string(),
-    særligeGrunner: særligeGrunnerSchema,
+const særligeGrunnerSchema = z.object({
+    erDetSaerligeGrunner: erDetSærligeGrunnerValgSchema,
+    jaSærligeGrunner: jaSærligeGrunnerSchema,
+    neiSærligeGrunner: neiSærligeGrunnerSchema,
+});
+
+const unnlatelseValgSchema = z.enum(['skalUnnlates', 'skalIkkeUnnlates', 'ikkeAktuelt', '']);
+
+const unnlatelseSchema = z.object({
+    unnlatelse: unnlatelseValgSchema,
+    skalUnnlates: z.object({
+        begrunnelse: z.string(),
+    }),
+    skalIkkeUnnlates: z.object({
+        begrunnelse: z.string(),
+        erDetSærligeGrunner: særligeGrunnerSchema,
+    }),
+    ikkeAktuelt: z.object({
+        erDetSærligeGrunner: særligeGrunnerSchema,
+    }),
 });
 
 const reduksjonValgSchema = z.enum(['skalReduseres', 'skalIkkeReduseres', '']);
@@ -68,13 +89,25 @@ export const vilkårsvurderingSkjema = z.object({
     id: z.string(),
     valg: valgSchema,
     forstoEllerBurdeForstått: z.object({
-        forsto: medBegrunnelseOgSærligeGrunner,
-        burdeForstått: medBegrunnelseOgSærligeGrunner,
+        forsto: z.object({
+            begrunnelse: z.string(),
+            unnlatelse: unnlatelseSchema,
+        }),
+        burdeForstått: z.object({
+            begrunnelse: z.string(),
+            unnlatelse: unnlatelseSchema,
+        }),
     }),
     forårsaketAvMottaker: z.object({
         aktsomhet: aktsomhetValgSchema,
-        uaktsomt: medBegrunnelseOgSærligeGrunner,
-        grovtUaktsomt: medBegrunnelseOgSærligeGrunner,
+        uaktsomt: z.object({
+            begrunnelse: z.string(),
+            unnlatelse: unnlatelseSchema,
+        }),
+        grovtUaktsomt: z.object({
+            begrunnelse: z.string(),
+            erDetSærligeGrunner: særligeGrunnerSchema,
+        }),
         forsettlig: z.object({
             begrunnelse: z.string(),
         }),
@@ -103,17 +136,27 @@ export type BeløpIBeholdValg = z.infer<typeof beløpIBeholdValgSchema>;
 export type ReduksjonValg = z.infer<typeof reduksjonValgSchema>;
 export type ErDetSærligeGrunnerValg = z.infer<typeof erDetSærligeGrunnerValgSchema>;
 export type SærligeGrunnerFelter = z.infer<typeof særligeGrunnerSchema>;
+export type UnnlatelseFelter = z.infer<typeof unnlatelseSchema>;
 export type VilkårsvurderingSkjemaFelter = z.infer<typeof vilkårsvurderingSkjema>;
+
+/**
+ * Feltstier til `unnlatelse`-objektet i skjemaet. Brukes som `navnPrefix` slik at
+ * Under4xRettsgebyr-komponenten kan bygge stiene til grenene (`skalUnnlates`,
+ * `skalIkkeUnnlates`).
+ */
+export type UnnlatelseNavnPrefix =
+    | 'forstoEllerBurdeForstått.forsto.unnlatelse'
+    | 'forstoEllerBurdeForstått.burdeForstått.unnlatelse'
+    | 'forårsaketAvMottaker.uaktsomt.unnlatelse';
 
 /**
  * Feltstier hvor SærligeGrunner-komponenten registreres i skjemaet.
  * Brukes som `navnPrefix` slik at komponenten kan gjenbrukes på tvers av grenene.
  */
 export type SærligeGrunnerNavnPrefix =
-    | 'forstoEllerBurdeForstått.forsto.særligeGrunner'
-    | 'forstoEllerBurdeForstått.burdeForstått.særligeGrunner'
-    | 'forårsaketAvMottaker.uaktsomt.særligeGrunner'
-    | 'forårsaketAvMottaker.grovtUaktsomt.særligeGrunner';
+    | `${UnnlatelseNavnPrefix}.ikkeAktuelt.erDetSærligeGrunner`
+    | `${UnnlatelseNavnPrefix}.skalIkkeUnnlates.erDetSærligeGrunner`
+    | 'forårsaketAvMottaker.grovtUaktsomt.erDetSærligeGrunner';
 
 /**
  * Feltstier hvor Reduksjon-komponenten registreres i skjemaet.

@@ -10,7 +10,7 @@ import {
     Textarea,
     TextField,
 } from '@navikt/ds-react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useVilkårsvurderingLesedata } from '../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from './SimulertBeløp';
@@ -28,16 +28,27 @@ export const SærligeGrunner: FC<Props> = ({
     renter = false,
     reduksjon = false,
 }: Props) => {
-    const { register, watch, setValue } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const { register, setValue, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterSærligeGrunner } = useVilkårsvurderingLesedata();
-
-    const særligeGrunner = watch(`${navnPrefix}.erDetSærligeGrunner`);
-    const særligeGrunnerFor = watch(`${navnPrefix}.særligeGrunnerFor`);
-    const særligeGrunnerMot = watch(`${navnPrefix}.særligeGrunnerMot`);
-    const prosentReduksjon = watch(`${navnPrefix}.prosentReduksjon`);
+    const erDetSaerligeGrunner = useWatch({
+        name: `${navnPrefix}.erDetSaerligeGrunner`,
+        control,
+    });
+    const særligeGrunnerFor = useWatch({
+        name: `${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`,
+        control,
+    });
+    const særligeGrunnerMot = useWatch({
+        name: `${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`,
+        control,
+    });
+    const prosentReduksjon = useWatch({
+        name: `${navnPrefix}.jaSærligeGrunner.prosentReduksjon`,
+        control,
+    });
 
     const { name: erDetSærligeGrunnerName, ...erDetSærligeGrunnerProps } = register(
-        `${navnPrefix}.erDetSærligeGrunner`
+        `${navnPrefix}.erDetSaerligeGrunner`
     );
 
     const reduksjonsprops = reduksjon
@@ -50,7 +61,7 @@ export const SærligeGrunner: FC<Props> = ({
                 legend="Er det særlige grunner til å redusere beløpet?"
                 size="small"
                 className="max-w-xl"
-                value={særligeGrunner}
+                value={erDetSaerligeGrunner}
             >
                 <HStack gap="space-16">
                     <Radio value="ja" {...erDetSærligeGrunnerProps}>
@@ -62,7 +73,7 @@ export const SærligeGrunner: FC<Props> = ({
                 </HStack>
             </RadioGroup>
 
-            {særligeGrunner === 'ja' && (
+            {erDetSaerligeGrunner === 'ja' && (
                 <>
                     <CheckboxGroup
                         legend="Hvilke særlige grunner taler for å redusere beløpet?"
@@ -70,7 +81,7 @@ export const SærligeGrunner: FC<Props> = ({
                         className="max-w-xl"
                         value={særligeGrunnerFor}
                         onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.særligeGrunnerFor`, value, {
+                            setValue(`${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`, value, {
                                 shouldDirty: true,
                             })
                         }
@@ -86,7 +97,7 @@ export const SærligeGrunner: FC<Props> = ({
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
                             className="max-w-xl"
-                            {...register(`${navnPrefix}.annetBegrunnelse`)}
+                            {...register(`${navnPrefix}.jaSærligeGrunner.annetBegrunnelse`)}
                         />
                     )}
                     <Textarea
@@ -96,7 +107,7 @@ export const SærligeGrunner: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
-                        {...register(`${navnPrefix}.begrunnelse`)}
+                        {...register(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
                     />
                     {/* TODO Valider senere at man ikke kan skrive utenfor 1–100 */}
                     <TextField
@@ -107,7 +118,7 @@ export const SærligeGrunner: FC<Props> = ({
                         style={{ width: '100px' }}
                         onChange={(e: ChangeEvent<HTMLInputElement, Element>): void =>
                             setValue(
-                                `${navnPrefix}.prosentReduksjon`,
+                                `${navnPrefix}.jaSærligeGrunner.prosentReduksjon`,
                                 e.target.value === '' ? null : Number(e.target.value),
                                 { shouldDirty: true }
                             )
@@ -124,7 +135,7 @@ export const SærligeGrunner: FC<Props> = ({
                 </>
             )}
 
-            {særligeGrunner === 'nei' && (
+            {erDetSaerligeGrunner === 'nei' && (
                 <>
                     <CheckboxGroup
                         legend="Hvilke særlige grunner taler mot å redusere beløpet?"
@@ -132,7 +143,7 @@ export const SærligeGrunner: FC<Props> = ({
                         className="max-w-xl"
                         value={særligeGrunnerMot}
                         onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.særligeGrunnerMot`, value, {
+                            setValue(`${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`, value, {
                                 shouldDirty: true,
                             })
                         }
@@ -149,7 +160,7 @@ export const SærligeGrunner: FC<Props> = ({
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
                             className="max-w-xl"
-                            {...register(`${navnPrefix}.annetBegrunnelse`)}
+                            {...register(`${navnPrefix}.neiSærligeGrunner.annetBegrunnelse`)}
                         />
                     )}
                     <Textarea
@@ -159,7 +170,7 @@ export const SærligeGrunner: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
-                        {...register(`${navnPrefix}.begrunnelse`)}
+                        {...register(`${navnPrefix}.neiSærligeGrunner.begrunnelse`)}
                     />
                     <SimulertBeløp renter={renter} simulertBeløp={simulertBeløp} />
                 </>

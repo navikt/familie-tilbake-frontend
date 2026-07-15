@@ -28,13 +28,13 @@ export const Forsto: FC<Props> = ({ simulertBeløp }: Props) => {
             />
             {erUnder4xRettsgebyr ? (
                 <Under4xRettsgebyr
-                    navnPrefix="forstoEllerBurdeForstått.forsto.særligeGrunner"
+                    navnPrefix="forstoEllerBurdeForstått.forsto.unnlatelse"
                     reduksjon
                     simulertBeløp={simulertBeløp}
                 />
             ) : (
                 <SærligeGrunner
-                    navnPrefix="forstoEllerBurdeForstått.forsto.særligeGrunner"
+                    navnPrefix="forstoEllerBurdeForstått.forsto.unnlatelse.ikkeAktuelt.erDetSærligeGrunner"
                     reduksjon
                     simulertBeløp={simulertBeløp}
                 />

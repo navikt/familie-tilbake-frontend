@@ -28,13 +28,13 @@ export const Uaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
             />
             {erUnder4xRettsgebyr ? (
                 <Under4xRettsgebyr
-                    navnPrefix="forårsaketAvMottaker.uaktsomt.særligeGrunner"
+                    navnPrefix="forårsaketAvMottaker.uaktsomt.unnlatelse"
                     reduksjon
                     simulertBeløp={simulertBeløp}
                 />
             ) : (
                 <SærligeGrunner
-                    navnPrefix="forårsaketAvMottaker.uaktsomt.særligeGrunner"
+                    navnPrefix="forårsaketAvMottaker.uaktsomt.unnlatelse.ikkeAktuelt.erDetSærligeGrunner"
                     reduksjon
                     simulertBeløp={simulertBeløp}
                 />

@@ -1,4 +1,4 @@
-import type { Reduksjon, SaerligeGrunner, Vilkaarsvurdering } from '@/generated-new';
+import type { Reduksjon, SaerligeGrunner, Unnlatelse, Vilkaarsvurdering } from '@/generated-new';
 import type { SærligeGrunnerFelter, VilkårsvurderingSkjemaFelter } from './schema';
 
 type ReduksjonFelter = Pick<
@@ -42,35 +42,82 @@ const utledReduksjon = (reduksjon: Reduksjon): ReduksjonFelter => {
 };
 
 const tomSærligeGrunner = (
-    erDetSærligeGrunner: SærligeGrunnerFelter['erDetSærligeGrunner'] = ''
+    erDetSaerligeGrunner: SærligeGrunnerFelter['erDetSaerligeGrunner'] = ''
 ): SærligeGrunnerFelter => ({
-    erDetSærligeGrunner,
-    særligeGrunnerFor: [],
-    særligeGrunnerMot: [],
-    begrunnelse: '',
-    annetBegrunnelse: '',
-    prosentReduksjon: null,
+    erDetSaerligeGrunner,
+    jaSærligeGrunner: {
+        særligeGrunnerFor: [],
+        prosentReduksjon: null,
+        begrunnelse: '',
+        annetBegrunnelse: '',
+    },
+    neiSærligeGrunner: {
+        særligeGrunnerMot: [],
+        begrunnelse: '',
+        annetBegrunnelse: '',
+    },
 });
 
 const utledSærligeGrunner = (særligeGrunner: SaerligeGrunner): SærligeGrunnerFelter => {
+    const felter = tomSærligeGrunner(særligeGrunner.erDetSaerligeGrunner);
     if (særligeGrunner.erDetSaerligeGrunner === 'ja') {
-        return {
-            erDetSærligeGrunner: 'ja',
+        felter.jaSærligeGrunner = {
             særligeGrunnerFor: særligeGrunner.særligeGrunnerFor.map(({ moment }) => moment),
-            særligeGrunnerMot: [],
+            prosentReduksjon: særligeGrunner.prosentReduksjon,
             begrunnelse: særligeGrunner.begrunnelse,
             annetBegrunnelse: særligeGrunner.annetBegrunnelse ?? '',
-            prosentReduksjon: særligeGrunner.prosentReduksjon,
+        };
+    } else {
+        felter.neiSærligeGrunner = {
+            særligeGrunnerMot: særligeGrunner.særligeGrunnerMot.map(({ moment }) => moment),
+            begrunnelse: særligeGrunner.begrunnelse,
+            annetBegrunnelse: særligeGrunner.annetBegrunnelse ?? '',
         };
     }
-    return {
-        erDetSærligeGrunner: 'nei',
-        særligeGrunnerFor: [],
-        særligeGrunnerMot: særligeGrunner.særligeGrunnerMot.map(({ moment }) => moment),
-        begrunnelse: særligeGrunner.begrunnelse,
-        annetBegrunnelse: særligeGrunner.annetBegrunnelse ?? '',
-        prosentReduksjon: null,
-    };
+    return felter;
+};
+
+type UnnlatelseFelter =
+    VilkårsvurderingSkjemaFelter['forstoEllerBurdeForstått']['forsto']['unnlatelse'];
+
+const tomUnnlatelse = (
+    erDetSaerligeGrunner: SærligeGrunnerFelter['erDetSaerligeGrunner'] = ''
+): UnnlatelseFelter => ({
+    unnlatelse: '',
+    skalUnnlates: {
+        begrunnelse: '',
+    },
+    skalIkkeUnnlates: {
+        begrunnelse: '',
+        erDetSærligeGrunner: tomSærligeGrunner(erDetSaerligeGrunner),
+    },
+    ikkeAktuelt: {
+        erDetSærligeGrunner: tomSærligeGrunner(erDetSaerligeGrunner),
+    },
+});
+
+const utledUnnlatelse = (unnlatelse: Unnlatelse): UnnlatelseFelter => {
+    const felter = tomUnnlatelse();
+    felter.unnlatelse = unnlatelse.unnlatelse;
+    switch (unnlatelse.unnlatelse) {
+        case 'skalUnnlates':
+            felter.skalUnnlates = {
+                begrunnelse: unnlatelse.begrunnelse,
+            };
+            break;
+        case 'skalIkkeUnnlates':
+            felter.skalIkkeUnnlates = {
+                begrunnelse: unnlatelse.begrunnelse,
+                erDetSærligeGrunner: utledSærligeGrunner(unnlatelse.erDetSærligeGrunner),
+            };
+            break;
+        case 'ikkeAktuelt':
+            felter.ikkeAktuelt = {
+                erDetSærligeGrunner: utledSærligeGrunner(unnlatelse.erDetSærligeGrunner),
+            };
+            break;
+    }
+    return felter;
 };
 
 /**
@@ -90,22 +137,22 @@ export const utledDefaultValues = (
         forstoEllerBurdeForstått: {
             forsto: {
                 begrunnelse: '',
-                særligeGrunner: tomSærligeGrunner('nei'),
+                unnlatelse: tomUnnlatelse('nei'),
             },
             burdeForstått: {
                 begrunnelse: '',
-                særligeGrunner: tomSærligeGrunner(),
+                unnlatelse: tomUnnlatelse(),
             },
         },
         forårsaketAvMottaker: {
             aktsomhet: '',
             uaktsomt: {
                 begrunnelse: '',
-                særligeGrunner: tomSærligeGrunner(),
+                unnlatelse: tomUnnlatelse(),
             },
             grovtUaktsomt: {
                 begrunnelse: '',
-                særligeGrunner: tomSærligeGrunner(),
+                erDetSærligeGrunner: tomSærligeGrunner(),
             },
             forsettlig: {
                 begrunnelse: '',
@@ -133,18 +180,16 @@ export const utledDefaultValues = (
         defaultValues.forårsaketAvMottaker.aktsomhet = valg.aktsomhet.aktsomhet;
         switch (valg.aktsomhet.aktsomhet) {
             case 'uaktsomt':
-                defaultValues.forårsaketAvMottaker.uaktsomt.begrunnelse =
-                    valg.aktsomhet.begrunnelse;
-                if (valg.aktsomhet.unnlatelse.unnlatelse === 'skalIkkeUnnlates') {
-                    defaultValues.forårsaketAvMottaker.uaktsomt.særligeGrunner =
-                        utledSærligeGrunner(valg.aktsomhet.unnlatelse.erDetSærligeGrunner);
-                }
+                defaultValues.forårsaketAvMottaker.uaktsomt = {
+                    begrunnelse: valg.aktsomhet.begrunnelse,
+                    unnlatelse: utledUnnlatelse(valg.aktsomhet.unnlatelse),
+                };
                 break;
             case 'grovtUaktsomt':
-                defaultValues.forårsaketAvMottaker.grovtUaktsomt.begrunnelse =
-                    valg.aktsomhet.begrunnelse;
-                defaultValues.forårsaketAvMottaker.grovtUaktsomt.særligeGrunner =
-                    utledSærligeGrunner(valg.aktsomhet.erDetSærligeGrunner);
+                defaultValues.forårsaketAvMottaker.grovtUaktsomt = {
+                    begrunnelse: valg.aktsomhet.begrunnelse,
+                    erDetSærligeGrunner: utledSærligeGrunner(valg.aktsomhet.erDetSærligeGrunner),
+                };
                 break;
             case 'forsettlig':
                 defaultValues.forårsaketAvMottaker.forsettlig.begrunnelse =

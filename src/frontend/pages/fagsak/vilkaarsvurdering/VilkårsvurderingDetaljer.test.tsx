@@ -1,4 +1,10 @@
-import type { Moment, Reduksjon, Vilkaarsperiode, Vilkaarsvurdering } from '@/generated-new';
+import type {
+    Moment,
+    Reduksjon,
+    SaerligeGrunner,
+    Vilkaarsperiode,
+    Vilkaarsvurdering,
+} from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -200,9 +206,13 @@ const under4xJaRadio = async (): Promise<HTMLElement> =>
     within(await under4xRadioGroup()).getByRole('radio', { name: 'Ja' });
 const under4xNeiRadio = async (): Promise<HTMLElement> =>
     within(await under4xRadioGroup()).getByRole('radio', { name: 'Nei' });
-const begrunnelseUnder4x = async (): Promise<HTMLElement> =>
+const begrunnelseSkalUnnlates = async (): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
         name: 'Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake',
+    });
+const begrunnelseSkalIkkeUnnlates = async (): Promise<HTMLElement> =>
+    await screen.findByRole('textbox', {
+        name: 'Begrunn hvorfor du vurderer at tilbakekrevingen ikke skal unnlates',
     });
 
 const beløpIBeholdRadioGroup = (): HTMLElement =>
@@ -307,7 +317,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 await velgForsto(0, true);
 
                 user.click(await under4xJaRadio());
-                expect(await begrunnelseUnder4x()).toBeInTheDocument();
+                expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
                 expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
                 expect(screen.getByText('0 kroner')).toBeInTheDocument();
             });
@@ -346,15 +356,16 @@ describe('VilkårsvurderingDetaljer', () => {
                 await velgBurdeForstått(0, true);
 
                 user.click(await under4xJaRadio());
-                expect(await begrunnelseUnder4x()).toBeInTheDocument();
+                expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
                 expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
                 expect(screen.getByText('0 kroner')).toBeInTheDocument();
             });
 
-            test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
+            test('Under 4x rettsgebyr - Nei, viser begrunnelse og særlige grunner', async () => {
                 await velgBurdeForstått(10000, true);
 
                 user.click(await under4xNeiRadio());
+                expect(await begrunnelseSkalIkkeUnnlates()).toBeInTheDocument();
                 expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
             });
         });
@@ -513,15 +524,16 @@ describe('VilkårsvurderingDetaljer', () => {
                 await velgUaktsom(0, true);
 
                 user.click(await under4xJaRadio());
-                expect(await begrunnelseUnder4x()).toBeInTheDocument();
+                expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
                 expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
                 expect(screen.getByText('0 kroner')).toBeInTheDocument();
             });
 
-            test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
+            test('Under 4x rettsgebyr - Nei, viser begrunnelse og særlige grunner', async () => {
                 await velgUaktsom(10000, true);
 
                 user.click(await under4xNeiRadio());
+                expect(await begrunnelseSkalIkkeUnnlates()).toBeInTheDocument();
                 expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
             });
         });
@@ -589,8 +601,11 @@ describe('VilkårsvurderingDetaljer', () => {
         });
     };
 
-    describe('Utledede defaultValues fra GET', () => {
-        const renderMedValg = (valg: Vilkaarsvurdering['valg']): void => {
+    describe('Utledede defaultValues', () => {
+        const renderMedValg = (
+            valg: Vilkaarsvurdering['valg'],
+            erUnder4xRettsgebyr = false
+        ): void => {
             const vilkårsperiode: Vilkaarsperiode = {
                 ...lagVilkårsperiode(10000),
                 vilkårsvurdering: {
@@ -606,7 +621,7 @@ describe('VilkårsvurderingDetaljer', () => {
                         <VilkårsvurderingLesedataProvider
                             momenterSærligeGrunner={momenterSærligeGrunner}
                             momenterReduksjonGodTro={momenterReduksjonGodTro}
-                            erUnder4xRettsgebyr={false}
+                            erUnder4xRettsgebyr={erUnder4xRettsgebyr}
                         >
                             <VilkårsvurderingDetaljer
                                 valgtPeriode={valgtPeriode}
@@ -636,137 +651,304 @@ describe('VilkårsvurderingDetaljer', () => {
             begrunnelse: 'Begrunnelse for at beløpet ikke skal kreves tilbake',
         };
 
-        test('God tro - ingenting i behold fyller begrunnelsene fra GET', async () => {
-            renderMedValg({
-                vurdering: 'god_tro',
-                begrunnelse: 'Mottaker var i aktsom god tro',
-                beløpIBehold: {
-                    belopIBehold: 'ingenting',
-                    begrunnelse: 'Ingenting av beløpet er i behold',
-                },
+        describe('God tro', () => {
+            test('ingenting i behold fyller begrunnelsene', async () => {
+                renderMedValg({
+                    vurdering: 'god_tro',
+                    begrunnelse: 'Mottaker var i aktsom god tro',
+                    beløpIBehold: {
+                        belopIBehold: 'ingenting',
+                        begrunnelse: 'Ingenting av beløpet er i behold',
+                    },
+                });
+
+                expect(await begrunnelseGodTro()).toHaveValue('Mottaker var i aktsom god tro');
+                expect(ingentingIBeholdRadio()).toBeChecked();
+                expect(await begrunnelseIngenting()).toHaveValue(
+                    'Ingenting av beløpet er i behold'
+                );
             });
 
-            expect(await begrunnelseGodTro()).toHaveValue('Mottaker var i aktsom god tro');
-            expect(ingentingIBeholdRadio()).toBeChecked();
-            expect(await begrunnelseIngenting()).toHaveValue('Ingenting av beløpet er i behold');
+            test('hele i behold og kreves tilbake (skalIkkeReduseres) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'god_tro',
+                    begrunnelse: 'God tro-begrunnelse',
+                    beløpIBehold: {
+                        belopIBehold: 'hele',
+                        begrunnelse: 'Hele beløpet er i behold',
+                        reduksjon: skalKrevesTilbakeReduksjon,
+                    },
+                });
+
+                expect(await begrunnelseGodTro()).toHaveValue('God tro-begrunnelse');
+                expect(heleIBeholdRadio()).toBeChecked();
+                expect(await begrunnelseIBehold('hele beløpet')).toHaveValue(
+                    'Hele beløpet er i behold'
+                );
+                expect(await krevesTilbakeJaRadio('hele beløpet')).toBeChecked();
+
+                const gruppe = await årsakKrevesTilbakeCheckboxGroup('hele beløpet');
+                expect(
+                    within(gruppe).getByRole('checkbox', {
+                        name: 'Om mottakeren har innrettet seg i tillit til utbetalingen',
+                    })
+                ).toBeChecked();
+                expect(
+                    within(gruppe).getByRole('checkbox', { name: 'Størrelsen på beløpet' })
+                ).not.toBeChecked();
+                expect(begrunnelseKreves('hele beløpet')).toHaveValue(
+                    'Begrunnelse for at beløpet skal kreves tilbake'
+                );
+            });
+
+            test('hele i behold og skal reduseres (skalReduseres) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'god_tro',
+                    begrunnelse: 'God tro-begrunnelse',
+                    beløpIBehold: {
+                        belopIBehold: 'hele',
+                        begrunnelse: 'Hele beløpet er i behold',
+                        reduksjon: skalReduseresReduksjon,
+                    },
+                });
+
+                expect(heleIBeholdRadio()).toBeChecked();
+                expect(await krevesTilbakeNeiRadio('hele beløpet')).toBeChecked();
+
+                const gruppe = await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet');
+                expect(
+                    within(gruppe).getByRole('checkbox', { name: 'Størrelsen på beløpet' })
+                ).toBeChecked();
+                expect(within(gruppe).getByRole('checkbox', { name: 'Annet' })).toBeChecked();
+                expect(await beskrivAnnetFinnes()).toHaveValue('Annet-begrunnelse for reduksjon');
+                expect(begrunnelseKrevesIkke('hele beløpet')).toHaveValue(
+                    'Begrunnelse for at beløpet ikke skal kreves tilbake'
+                );
+                expect(beløpTilbakekreves()).toHaveValue(2500);
+            });
+
+            test('deler i behold og kreves tilbake (skalIkkeReduseres) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'god_tro',
+                    begrunnelse: 'God tro-begrunnelse',
+                    beløpIBehold: {
+                        belopIBehold: 'deler',
+                        beløp: 4000,
+                        begrunnelse: 'Deler av beløpet er i behold',
+                        reduksjon: skalKrevesTilbakeReduksjon,
+                    },
+                });
+
+                expect(delerIBeholdRadio()).toBeChecked();
+                expect(await begrunnelseIBehold('deler av beløpet')).toHaveValue(
+                    'Deler av beløpet er i behold'
+                );
+                expect(beløpIBehold()).toHaveValue('4000');
+                expect(await krevesTilbakeJaRadio('hele beløpet som er i behold')).toBeChecked();
+
+                const gruppe = await årsakKrevesTilbakeCheckboxGroup(
+                    'hele beløpet som er i behold'
+                );
+                expect(
+                    within(gruppe).getByRole('checkbox', {
+                        name: 'Om mottakeren har innrettet seg i tillit til utbetalingen',
+                    })
+                ).toBeChecked();
+                expect(begrunnelseKreves('hele beløpet som er i behold')).toHaveValue(
+                    'Begrunnelse for at beløpet skal kreves tilbake'
+                );
+            });
+
+            test('deler i behold og skal reduseres (skalReduseres) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'god_tro',
+                    begrunnelse: 'God tro-begrunnelse',
+                    beløpIBehold: {
+                        belopIBehold: 'deler',
+                        beløp: 4000,
+                        begrunnelse: 'Deler av beløpet er i behold',
+                        reduksjon: skalReduseresReduksjon,
+                    },
+                });
+
+                expect(delerIBeholdRadio()).toBeChecked();
+                expect(beløpIBehold()).toHaveValue('4000');
+                expect(await krevesTilbakeNeiRadio('hele beløpet som er i behold')).toBeChecked();
+
+                const gruppe = await årsakKrevesIkkeTilbakeCheckboxGroup(
+                    'hele beløpet som er i behold'
+                );
+                expect(
+                    within(gruppe).getByRole('checkbox', { name: 'Størrelsen på beløpet' })
+                ).toBeChecked();
+                expect(within(gruppe).getByRole('checkbox', { name: 'Annet' })).toBeChecked();
+                expect(await beskrivAnnetFinnes()).toHaveValue('Annet-begrunnelse for reduksjon');
+                expect(begrunnelseKrevesIkke('hele beløpet som er i behold')).toHaveValue(
+                    'Begrunnelse for at beløpet ikke skal kreves tilbake'
+                );
+                expect(beløpTilbakekreves()).toHaveValue(2500);
+            });
         });
 
-        test('God tro - hele i behold og kreves tilbake (skalIkkeReduseres) fyller skjemaet fra GET', async () => {
-            renderMedValg({
-                vurdering: 'god_tro',
-                begrunnelse: 'God tro-begrunnelse',
-                beløpIBehold: {
-                    belopIBehold: 'hele',
-                    begrunnelse: 'Hele beløpet er i behold',
-                    reduksjon: skalKrevesTilbakeReduksjon,
-                },
+        describe('Forårsaket av mottaker', () => {
+            const særligeGrunnerFor: SaerligeGrunner = {
+                erDetSaerligeGrunner: 'ja',
+                særligeGrunnerFor: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
+                prosentReduksjon: 40,
+                begrunnelse: 'Begrunnelse for særlige grunner',
+                annetBegrunnelse: null,
+            };
+            const særligeGrunnerMot: SaerligeGrunner = {
+                erDetSaerligeGrunner: 'nei',
+                særligeGrunnerMot: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
+                begrunnelse: 'Begrunnelse mot særlige grunner',
+                annetBegrunnelse: null,
+            };
+
+            test('forsettlig fyller begrunnelsen', async () => {
+                renderMedValg({
+                    vurdering: 'forårsaket_av_mottaker',
+                    aktsomhet: {
+                        aktsomhet: 'forsettlig',
+                        begrunnelse: 'Mottaker handlet med forsett',
+                    },
+                });
+
+                expect(await forsettRadio()).toBeChecked();
+                expect(await begrunnelseForårsaketAvMottakeren('med forsett')).toHaveValue(
+                    'Mottaker handlet med forsett'
+                );
             });
 
-            expect(await begrunnelseGodTro()).toHaveValue('God tro-begrunnelse');
-            expect(heleIBeholdRadio()).toBeChecked();
-            expect(await begrunnelseIBehold('hele beløpet')).toHaveValue(
-                'Hele beløpet er i behold'
-            );
-            expect(await krevesTilbakeJaRadio('hele beløpet')).toBeChecked();
+            test('grovt uaktsomt med særlige grunner for (ja) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'forårsaket_av_mottaker',
+                    aktsomhet: {
+                        aktsomhet: 'grovtUaktsomt',
+                        begrunnelse: 'Mottaker handlet grovt uaktsomt',
+                        erDetSærligeGrunner: særligeGrunnerFor,
+                    },
+                });
 
-            const gruppe = await årsakKrevesTilbakeCheckboxGroup('hele beløpet');
-            expect(
-                within(gruppe).getByRole('checkbox', {
-                    name: 'Om mottakeren har innrettet seg i tillit til utbetalingen',
-                })
-            ).toBeChecked();
-            expect(
-                within(gruppe).getByRole('checkbox', { name: 'Størrelsen på beløpet' })
-            ).not.toBeChecked();
-            expect(begrunnelseKreves('hele beløpet')).toHaveValue(
-                'Begrunnelse for at beløpet skal kreves tilbake'
-            );
-        });
-
-        test('God tro - hele i behold og skal reduseres (skalReduseres) fyller skjemaet fra GET', async () => {
-            renderMedValg({
-                vurdering: 'god_tro',
-                begrunnelse: 'God tro-begrunnelse',
-                beløpIBehold: {
-                    belopIBehold: 'hele',
-                    begrunnelse: 'Hele beløpet er i behold',
-                    reduksjon: skalReduseresReduksjon,
-                },
+                expect(await grovtUaktsomRadio()).toBeChecked();
+                expect(await begrunnelseForårsaketAvMottakeren('grovt uaktsomt')).toHaveValue(
+                    'Mottaker handlet grovt uaktsomt'
+                );
+                expect(await særligeGrunnerJaRadio()).toBeChecked();
+                expect(
+                    within(await særligeGrunnerCheckboxGroup('for')).getByRole('checkbox', {
+                        name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                    })
+                ).toBeChecked();
+                expect(await begrunnelseSærligeGrunner('for')).toHaveValue(
+                    'Begrunnelse for særlige grunner'
+                );
+                expect(await reduksjonsprosentField()).toHaveValue(40);
             });
 
-            expect(heleIBeholdRadio()).toBeChecked();
-            expect(await krevesTilbakeNeiRadio('hele beløpet')).toBeChecked();
+            test('grovt uaktsomt med særlige grunner mot (nei) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'forårsaket_av_mottaker',
+                    aktsomhet: {
+                        aktsomhet: 'grovtUaktsomt',
+                        begrunnelse: 'Mottaker handlet grovt uaktsomt',
+                        erDetSærligeGrunner: særligeGrunnerMot,
+                    },
+                });
 
-            const gruppe = await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet');
-            expect(
-                within(gruppe).getByRole('checkbox', { name: 'Størrelsen på beløpet' })
-            ).toBeChecked();
-            expect(within(gruppe).getByRole('checkbox', { name: 'Annet' })).toBeChecked();
-            expect(await beskrivAnnetFinnes()).toHaveValue('Annet-begrunnelse for reduksjon');
-            expect(begrunnelseKrevesIkke('hele beløpet')).toHaveValue(
-                'Begrunnelse for at beløpet ikke skal kreves tilbake'
-            );
-            expect(beløpTilbakekreves()).toHaveValue(2500);
-        });
-
-        test('God tro - deler i behold og kreves tilbake (skalIkkeReduseres) fyller skjemaet fra GET', async () => {
-            renderMedValg({
-                vurdering: 'god_tro',
-                begrunnelse: 'God tro-begrunnelse',
-                beløpIBehold: {
-                    belopIBehold: 'deler',
-                    beløp: 4000,
-                    begrunnelse: 'Deler av beløpet er i behold',
-                    reduksjon: skalKrevesTilbakeReduksjon,
-                },
+                expect(await grovtUaktsomRadio()).toBeChecked();
+                expect(await særligeGrunnerNeiRadio()).toBeChecked();
+                expect(
+                    within(await særligeGrunnerCheckboxGroup('mot')).getByRole('checkbox', {
+                        name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                    })
+                ).toBeChecked();
+                expect(await begrunnelseSærligeGrunner('mot')).toHaveValue(
+                    'Begrunnelse mot særlige grunner'
+                );
             });
 
-            expect(delerIBeholdRadio()).toBeChecked();
-            expect(await begrunnelseIBehold('deler av beløpet')).toHaveValue(
-                'Deler av beløpet er i behold'
-            );
-            expect(beløpIBehold()).toHaveValue('4000');
-            expect(await krevesTilbakeJaRadio('hele beløpet som er i behold')).toBeChecked();
+            test('uaktsomt med unnlatelse under 4x rettsgebyr (skalUnnlates) fyller skjemaet', async () => {
+                renderMedValg(
+                    {
+                        vurdering: 'forårsaket_av_mottaker',
+                        aktsomhet: {
+                            aktsomhet: 'uaktsomt',
+                            begrunnelse: 'Mottaker handlet uaktsomt',
+                            unnlatelse: {
+                                unnlatelse: 'skalUnnlates',
+                                begrunnelse: 'Nav skal la være å kreve beløpet tilbake',
+                            },
+                        },
+                    },
+                    true
+                );
 
-            const gruppe = await årsakKrevesTilbakeCheckboxGroup('hele beløpet som er i behold');
-            expect(
-                within(gruppe).getByRole('checkbox', {
-                    name: 'Om mottakeren har innrettet seg i tillit til utbetalingen',
-                })
-            ).toBeChecked();
-            expect(begrunnelseKreves('hele beløpet som er i behold')).toHaveValue(
-                'Begrunnelse for at beløpet skal kreves tilbake'
-            );
-        });
-
-        test('God tro - deler i behold og skal reduseres (skalReduseres) fyller skjemaet fra GET', async () => {
-            renderMedValg({
-                vurdering: 'god_tro',
-                begrunnelse: 'God tro-begrunnelse',
-                beløpIBehold: {
-                    belopIBehold: 'deler',
-                    beløp: 4000,
-                    begrunnelse: 'Deler av beløpet er i behold',
-                    reduksjon: skalReduseresReduksjon,
-                },
+                expect(await uaktsomRadio()).toBeChecked();
+                expect(await begrunnelseForårsaketAvMottakeren('uaktsomt')).toHaveValue(
+                    'Mottaker handlet uaktsomt'
+                );
+                expect(await under4xJaRadio()).toBeChecked();
+                expect(await begrunnelseSkalUnnlates()).toHaveValue(
+                    'Nav skal la være å kreve beløpet tilbake'
+                );
             });
 
-            expect(delerIBeholdRadio()).toBeChecked();
-            expect(beløpIBehold()).toHaveValue('4000');
-            expect(await krevesTilbakeNeiRadio('hele beløpet som er i behold')).toBeChecked();
+            test('uaktsomt med unnlatelse under 4x rettsgebyr (skalIkkeUnnlates) fyller skjemaet', async () => {
+                renderMedValg(
+                    {
+                        vurdering: 'forårsaket_av_mottaker',
+                        aktsomhet: {
+                            aktsomhet: 'uaktsomt',
+                            begrunnelse: 'Mottaker handlet uaktsomt',
+                            unnlatelse: {
+                                unnlatelse: 'skalIkkeUnnlates',
+                                begrunnelse: 'Nav skal ikke la være å kreve beløpet tilbake',
+                                erDetSærligeGrunner: særligeGrunnerMot,
+                            },
+                        },
+                    },
+                    true
+                );
 
-            const gruppe = await årsakKrevesIkkeTilbakeCheckboxGroup(
-                'hele beløpet som er i behold'
-            );
-            expect(
-                within(gruppe).getByRole('checkbox', { name: 'Størrelsen på beløpet' })
-            ).toBeChecked();
-            expect(within(gruppe).getByRole('checkbox', { name: 'Annet' })).toBeChecked();
-            expect(await beskrivAnnetFinnes()).toHaveValue('Annet-begrunnelse for reduksjon');
-            expect(begrunnelseKrevesIkke('hele beløpet som er i behold')).toHaveValue(
-                'Begrunnelse for at beløpet ikke skal kreves tilbake'
-            );
-            expect(beløpTilbakekreves()).toHaveValue(2500);
+                expect(await uaktsomRadio()).toBeChecked();
+                expect(await under4xNeiRadio()).toBeChecked();
+                expect(await særligeGrunnerNeiRadio()).toBeChecked();
+                expect(
+                    within(await særligeGrunnerCheckboxGroup('mot')).getByRole('checkbox', {
+                        name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                    })
+                ).toBeChecked();
+                expect(await begrunnelseSærligeGrunner('mot')).toHaveValue(
+                    'Begrunnelse mot særlige grunner'
+                );
+            });
+
+            test('uaktsomt med unnlatelse over 4x rettsgebyr (ikkeAktuelt) fyller skjemaet', async () => {
+                renderMedValg({
+                    vurdering: 'forårsaket_av_mottaker',
+                    aktsomhet: {
+                        aktsomhet: 'uaktsomt',
+                        begrunnelse: 'Mottaker handlet uaktsomt',
+                        unnlatelse: {
+                            unnlatelse: 'ikkeAktuelt',
+                            erDetSærligeGrunner: særligeGrunnerFor,
+                        },
+                    },
+                });
+
+                expect(await uaktsomRadio()).toBeChecked();
+                expect(await særligeGrunnerJaRadio()).toBeChecked();
+                expect(
+                    within(await særligeGrunnerCheckboxGroup('for')).getByRole('checkbox', {
+                        name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                    })
+                ).toBeChecked();
+                expect(await begrunnelseSærligeGrunner('for')).toHaveValue(
+                    'Begrunnelse for særlige grunner'
+                );
+                expect(await reduksjonsprosentField()).toHaveValue(40);
+            });
         });
     });
 });
