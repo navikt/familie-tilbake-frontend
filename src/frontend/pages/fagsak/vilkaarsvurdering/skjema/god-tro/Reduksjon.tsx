@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import type { ReduksjonNavnPrefix, VilkårsvurderingSkjemaFelter } from '../schema';
 
 import {
     Checkbox,
@@ -9,56 +10,68 @@ import {
     Textarea,
     TextField,
 } from '@navikt/ds-react';
-import { useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from '../SimulertBeløp';
 
-type KrevesTilbake = 'ja' | 'nei';
-
 type Props = {
-    /** Feltsti-prefiks for skjemafeltene, f.eks. "godTro.hele". Forbereder RHF-registrering. */
-    navnPrefix: string;
+    navnPrefix: ReduksjonNavnPrefix;
     simulertBeløp: number | null;
     beløpsbeskrivelse: 'hele beløpet' | 'hele beløpet som er i behold';
 };
 
-export const KrevesTilbakeVurdering: FC<Props> = ({
-    navnPrefix,
-    simulertBeløp,
-    beløpsbeskrivelse,
-}: Props) => {
-    const [krevesTilbake, setKrevesTilbake] = useState<KrevesTilbake>();
-    const [årsakerSkalKreves, setÅrsakerSkalKreves] = useState<string[]>([]);
-    const [årsakerSkalIkkeKreves, setÅrsakerSkalIkkeKreves] = useState<string[]>([]);
+export const Reduksjon: FC<Props> = ({ navnPrefix, simulertBeløp, beløpsbeskrivelse }: Props) => {
+    const { register, setValue, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterReduksjonGodTro } = useVilkårsvurderingLesedata();
+
+    const reduksjon = useWatch({
+        name: `${navnPrefix}.reduksjon`,
+        control,
+    });
+    const relevansSkalIkkeReduseres = useWatch({
+        name: `${navnPrefix}.skalIkkeReduseres.relevans`,
+        control,
+    });
+    const relevansSkalReduseres = useWatch({
+        name: `${navnPrefix}.skalReduseres.relevans`,
+        control,
+    });
+
+    const { name: reduksjonName, ...reduksjonProps } = register(`${navnPrefix}.reduksjon`);
 
     return (
         <>
             <RadioGroup
                 legend={`Skal ${beløpsbeskrivelse} kreves tilbake?`}
-                name={`${navnPrefix}.krevesTilbake`}
+                name={reduksjonName}
                 size="small"
                 className="max-w-xl"
-                value={krevesTilbake ?? ''}
-                onChange={(value: KrevesTilbake): void => setKrevesTilbake(value)}
+                value={reduksjon}
             >
                 <HStack gap="space-16">
-                    <Radio value="ja">Ja</Radio>
-                    <Radio value="nei">Nei</Radio>
+                    <Radio value="skalIkkeReduseres" {...reduksjonProps}>
+                        Ja
+                    </Radio>
+                    <Radio value="skalReduseres" {...reduksjonProps}>
+                        Nei
+                    </Radio>
                 </HStack>
             </RadioGroup>
 
-            {krevesTilbake === 'ja' && (
+            {reduksjon === 'skalIkkeReduseres' && (
                 <>
                     <CheckboxGroup
                         legend={`Hva er årsaken(e) til at ${beløpsbeskrivelse} skal kreves tilbake?`}
                         description="Kryss av for det som er avgjørende i vurderingen din"
-                        name={`${navnPrefix}.årsakerSkalKreves`}
                         size="small"
                         className="max-w-xl"
-                        value={årsakerSkalKreves}
-                        onChange={setÅrsakerSkalKreves}
+                        value={relevansSkalIkkeReduseres}
+                        onChange={(value: string[]): void =>
+                            setValue(`${navnPrefix}.skalIkkeReduseres.relevans`, value, {
+                                shouldDirty: true,
+                            })
+                        }
                     >
                         {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
                             <Checkbox key={moment} value={moment}>
@@ -66,17 +79,17 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
                             </Checkbox>
                         ))}
                     </CheckboxGroup>
-                    {årsakerSkalKreves.includes('ANNET') && (
+                    {relevansSkalIkkeReduseres.includes('ANNET') && (
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
-                            name={`${navnPrefix}.årsakerSkalKrevesAnnet`}
+                            {...register(`${navnPrefix}.skalIkkeReduseres.annetBegrunnelse`)}
                             size="small"
                             className="max-w-xl"
                         />
                     )}
                     <Textarea
                         label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} skal kreves tilbake`}
-                        name={`${navnPrefix}.begrunnelseSkalKreves`}
+                        {...register(`${navnPrefix}.skalIkkeReduseres.begrunnelse`)}
                         size="small"
                         className="max-w-xl"
                         minRows={3}
@@ -87,16 +100,19 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
                 </>
             )}
 
-            {krevesTilbake === 'nei' && (
+            {reduksjon === 'skalReduseres' && (
                 <>
                     <CheckboxGroup
                         legend={`Hva er årsaken(e) til at ${beløpsbeskrivelse} ikke skal kreves tilbake?`}
                         description="Kryss av for det som er avgjørende i vurderingen din"
-                        name={`${navnPrefix}.årsakerSkalIkkeKreves`}
                         size="small"
                         className="max-w-xl"
-                        value={årsakerSkalIkkeKreves}
-                        onChange={setÅrsakerSkalIkkeKreves}
+                        value={relevansSkalReduseres}
+                        onChange={(value: string[]): void =>
+                            setValue(`${navnPrefix}.skalReduseres.relevans`, value, {
+                                shouldDirty: true,
+                            })
+                        }
                     >
                         {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
                             <Checkbox key={moment} value={moment}>
@@ -104,17 +120,17 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
                             </Checkbox>
                         ))}
                     </CheckboxGroup>
-                    {årsakerSkalIkkeKreves.includes('ANNET') && (
+                    {relevansSkalReduseres.includes('ANNET') && (
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
-                            name={`${navnPrefix}.årsakerSkalIkkeKrevesAnnet`}
+                            {...register(`${navnPrefix}.skalReduseres.annetBegrunnelse`)}
                             size="small"
                             className="max-w-xl"
                         />
                     )}
                     <Textarea
                         label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} ikke skal kreves tilbake`}
-                        name={`${navnPrefix}.begrunnelseSkalIkkeKreves`}
+                        {...register(`${navnPrefix}.skalReduseres.begrunnelse`)}
                         size="small"
                         className="max-w-xl"
                         minRows={3}
@@ -123,7 +139,10 @@ export const KrevesTilbakeVurdering: FC<Props> = ({
                     />
                     <TextField
                         label="Hvor mange kroner skal kreves tilbake?"
-                        name={`${navnPrefix}.beløpSomKrevesTilbake`}
+                        {...register(`${navnPrefix}.skalReduseres.beløp`, {
+                            setValueAs: (value: string): number | null =>
+                                value ? Number(value) : null,
+                        })}
                         size="small"
                         style={{ width: '100px' }}
                         className="max-w-xl"

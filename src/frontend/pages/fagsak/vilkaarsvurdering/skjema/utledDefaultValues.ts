@@ -1,5 +1,45 @@
-import type { SaerligeGrunner, Vilkaarsvurdering } from '@/generated-new';
+import type { Reduksjon, SaerligeGrunner, Vilkaarsvurdering } from '@/generated-new';
 import type { SærligeGrunnerFelter, VilkårsvurderingSkjemaFelter } from './schema';
+
+type ReduksjonFelter = Pick<
+    VilkårsvurderingSkjemaFelter['godTro']['hele'],
+    'reduksjon' | 'skalReduseres' | 'skalIkkeReduseres'
+>;
+
+const tomReduksjon = (): ReduksjonFelter => ({
+    reduksjon: '',
+    skalReduseres: {
+        beløp: null,
+        relevans: [],
+        annetBegrunnelse: '',
+        begrunnelse: '',
+    },
+    skalIkkeReduseres: {
+        relevans: [],
+        annetBegrunnelse: '',
+        begrunnelse: '',
+    },
+});
+
+const utledReduksjon = (reduksjon: Reduksjon): ReduksjonFelter => {
+    const felter = tomReduksjon();
+    felter.reduksjon = reduksjon.reduksjon;
+    if (reduksjon.reduksjon === 'skalReduseres') {
+        felter.skalReduseres = {
+            beløp: reduksjon.beløp,
+            relevans: reduksjon.relevans.map(({ moment }) => moment),
+            annetBegrunnelse: reduksjon.annetBegrunnelse ?? '',
+            begrunnelse: reduksjon.begrunnelse,
+        };
+    } else {
+        felter.skalIkkeReduseres = {
+            relevans: reduksjon.relevans.map(({ moment }) => moment),
+            annetBegrunnelse: reduksjon.annetBegrunnelse ?? '',
+            begrunnelse: reduksjon.begrunnelse,
+        };
+    }
+    return felter;
+};
 
 const tomSærligeGrunner = (
     erDetSærligeGrunner: SærligeGrunnerFelter['erDetSærligeGrunner'] = ''
@@ -78,11 +118,13 @@ export const utledDefaultValues = (
                 begrunnelse: '',
             },
             hele: {
-                begrunnelseIBehold: '',
+                begrunnelse: '',
+                ...tomReduksjon(),
             },
             deler: {
-                beløpIBehold: null,
-                begrunnelseIBehold: '',
+                beløp: null,
+                begrunnelse: '',
+                ...tomReduksjon(),
             },
         },
     };
@@ -120,11 +162,19 @@ export const utledDefaultValues = (
                 defaultValues.godTro.ingenting.begrunnelse = beløpIBehold.begrunnelse;
                 break;
             case 'hele':
-                defaultValues.godTro.hele.begrunnelseIBehold = beløpIBehold.begrunnelse;
+                defaultValues.godTro.hele.begrunnelse = beløpIBehold.begrunnelse;
+                defaultValues.godTro.hele = {
+                    ...defaultValues.godTro.hele,
+                    ...utledReduksjon(beløpIBehold.reduksjon),
+                };
                 break;
             case 'deler':
-                defaultValues.godTro.deler.beløpIBehold = beløpIBehold.beløp;
-                defaultValues.godTro.deler.begrunnelseIBehold = beløpIBehold.begrunnelse;
+                defaultValues.godTro.deler.beløp = beløpIBehold.beløp;
+                defaultValues.godTro.deler.begrunnelse = beløpIBehold.begrunnelse;
+                defaultValues.godTro.deler = {
+                    ...defaultValues.godTro.deler,
+                    ...utledReduksjon(beløpIBehold.reduksjon),
+                };
                 break;
         }
     }

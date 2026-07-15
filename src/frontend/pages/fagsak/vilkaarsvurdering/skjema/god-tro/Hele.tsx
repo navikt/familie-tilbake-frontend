@@ -4,7 +4,7 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Textarea } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';
 
-import { KrevesTilbakeVurdering } from './KrevesTilbakeVurdering';
+import { Reduksjon } from './Reduksjon';
 
 type Props = {
     simulertBeløp: number | null;
@@ -16,14 +16,14 @@ export const Hele: FC<Props> = ({ simulertBeløp }: Props) => {
         <>
             <Textarea
                 label="Begrunn hvorfor hele beløpet er i behold"
-                {...register('godTro.hele.begrunnelseIBehold')}
+                {...register('godTro.hele.begrunnelse')}
                 size="small"
                 className="max-w-xl"
                 minRows={3}
                 resize
                 maxLength={3000}
             />
-            <KrevesTilbakeVurdering
+            <Reduksjon
                 navnPrefix="godTro.hele"
                 beløpsbeskrivelse="hele beløpet"
                 simulertBeløp={simulertBeløp}
