@@ -40,7 +40,7 @@
     "connect-redis": "9.0.0",
     "constate": "4.0.0",
     "cookie-parser": "1.4.7",
-    "countries-list": "3.4.0",
+    "countries-list": "3.4.1",
     "date-fns": "4.4.0",
     "deep-equal": "2.2.3",
     "dotenv": "17.4.2",
