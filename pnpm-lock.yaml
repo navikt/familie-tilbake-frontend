@@ -54,8 +54,8 @@ importers:
         specifier: 1.4.7
         version: 1.4.7
       countries-list:
-        specifier: 3.4.0
-        version: 3.4.0
+        specifier: 3.4.1
+        version: 3.4.1
       date-fns:
         specifier: 4.4.0
         version: 4.4.0
@@ -1610,8 +1610,8 @@ packages:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
-  countries-list@3.4.0:
-    resolution: {integrity: sha512-SonKkjlEGUNz/Ugj6akOMUl8/F6EBVbLq/nQbDKhZo60EFyNgsVIgDP521J9pGhywikV514Ct4BueIqiOnvBBA==}
+  countries-list@3.4.1:
+    resolution: {integrity: sha512-sKLGAZD5EAdzQwQ19vOp/9u33MTjmZ0CkdXPYtp/An6cyIlJ/E8TwGf2FcPe1AnzHO+h7nbTfoHyXIi58Hpa+Q==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -4282,7 +4282,7 @@ snapshots:
 
   cookie@0.7.2: {}
 
-  countries-list@3.4.0: {}
+  countries-list@3.4.1: {}
 
   cross-spawn@7.0.6:
     dependencies:
