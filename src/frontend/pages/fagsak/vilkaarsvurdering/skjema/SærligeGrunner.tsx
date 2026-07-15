@@ -17,14 +17,12 @@ import { SimulertBeløp } from './SimulertBeløp';
 
 type Props = {
     navnPrefix: SærligeGrunnerNavnPrefix;
-    simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
 };
 
 export const SærligeGrunner: FC<Props> = ({
     navnPrefix,
-    simulertBeløp,
     renter = false,
     reduksjon = false,
 }: Props) => {
@@ -127,11 +125,7 @@ export const SærligeGrunner: FC<Props> = ({
                         min={1}
                         max={100}
                     />
-                    <SimulertBeløp
-                        simulertBeløp={simulertBeløp}
-                        renter={renter}
-                        {...reduksjonsprops}
-                    />
+                    <SimulertBeløp renter={renter} {...reduksjonsprops} />
                 </>
             )}
 
@@ -172,7 +166,7 @@ export const SærligeGrunner: FC<Props> = ({
                         maxLength={3000}
                         {...register(`${navnPrefix}.neiSærligeGrunner.begrunnelse`)}
                     />
-                    <SimulertBeløp renter={renter} simulertBeløp={simulertBeløp} />
+                    <SimulertBeløp renter={renter} />
                 </>
             )}
         </>

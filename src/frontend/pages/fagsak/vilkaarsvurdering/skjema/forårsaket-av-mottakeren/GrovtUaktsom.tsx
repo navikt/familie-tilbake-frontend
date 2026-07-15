@@ -6,11 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { SærligeGrunner } from '../SærligeGrunner';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const GrovtUaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
+export const GrovtUaktsom: FC = () => {
     const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
@@ -27,7 +23,6 @@ export const GrovtUaktsom: FC<Props> = ({ simulertBeløp }: Props) => {
                 navnPrefix="forårsaketAvMottaker.grovtUaktsomt.erDetSærligeGrunner"
                 renter
                 reduksjon
-                simulertBeløp={simulertBeløp}
             />
         </>
     );

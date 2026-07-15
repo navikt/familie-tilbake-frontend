@@ -604,10 +604,11 @@ describe('VilkårsvurderingDetaljer', () => {
     describe('Utledede defaultValues', () => {
         const renderMedValg = (
             valg: Vilkaarsvurdering['valg'],
-            erUnder4xRettsgebyr = false
+            erUnder4xRettsgebyr = false,
+            simulertBeløp = 10000
         ): void => {
             const vilkårsperiode: Vilkaarsperiode = {
-                ...lagVilkårsperiode(10000),
+                ...lagVilkårsperiode(simulertBeløp),
                 vilkårsvurdering: {
                     id: valgtPeriode.id,
                     periode: { fom: '2023-01-01', tom: '2023-12-31' },
@@ -650,6 +651,25 @@ describe('VilkårsvurderingDetaljer', () => {
             annetBegrunnelse: 'Annet-begrunnelse for reduksjon',
             begrunnelse: 'Begrunnelse for at beløpet ikke skal kreves tilbake',
         };
+
+        test('utleder simulertBeløp fra perioden og viser det', async () => {
+            renderMedValg(
+                {
+                    vurdering: 'god_tro',
+                    begrunnelse: 'Mottaker var i aktsom god tro',
+                    beløpIBehold: {
+                        belopIBehold: 'ingenting',
+                        begrunnelse: 'Ingenting av beløpet er i behold',
+                    },
+                },
+                false,
+                7500
+            );
+
+            expect(await begrunnelseIngenting()).toBeInTheDocument();
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
+            expect(screen.getByText('7 500 kroner')).toBeInTheDocument();
+        });
 
         describe('God tro', () => {
             test('ingenting i behold fyller begrunnelsene', async () => {

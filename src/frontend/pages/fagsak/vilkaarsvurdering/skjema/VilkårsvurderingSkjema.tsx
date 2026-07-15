@@ -20,7 +20,7 @@ type Props = {
 export const VilkårsvurderingSkjema: FC<Props> = ({ vilkårsvurdering, simulertBeløp }: Props) => {
     const methods = useForm<VilkårsvurderingSkjemaFelter>({
         resolver: zodResolver(vilkårsvurderingSkjema),
-        defaultValues: utledDefaultValues(vilkårsvurdering),
+        defaultValues: utledDefaultValues(vilkårsvurdering, simulertBeløp),
     });
 
     const valg = useWatch({
@@ -56,15 +56,11 @@ export const VilkårsvurderingSkjema: FC<Props> = ({ vilkårsvurdering, simulert
                     </Radio>
                 </RadioGroup>
 
-                {valg === 'forsto_eller_burde_forstått' && (
-                    <ForstoEllerBurdeForståttFelter simulertBeløp={simulertBeløp} />
-                )}
+                {valg === 'forsto_eller_burde_forstått' && <ForstoEllerBurdeForståttFelter />}
 
-                {valg === 'forårsaket_av_mottaker' && (
-                    <ForårsaketAvMottakerenFelter simulertBeløp={simulertBeløp} />
-                )}
+                {valg === 'forårsaket_av_mottaker' && <ForårsaketAvMottakerenFelter />}
 
-                {valg === 'god_tro' && <GodTroFelter simulertBeløp={simulertBeløp} />}
+                {valg === 'god_tro' && <GodTroFelter />}
             </form>
         </FormProvider>
     );

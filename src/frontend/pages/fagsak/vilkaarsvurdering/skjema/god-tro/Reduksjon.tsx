@@ -17,11 +17,10 @@ import { SimulertBeløp } from '../SimulertBeløp';
 
 type Props = {
     navnPrefix: ReduksjonNavnPrefix;
-    simulertBeløp: number | null;
     beløpsbeskrivelse: 'hele beløpet' | 'hele beløpet som er i behold';
 };
 
-export const Reduksjon: FC<Props> = ({ navnPrefix, simulertBeløp, beløpsbeskrivelse }: Props) => {
+export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) => {
     const { register, setValue, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterReduksjonGodTro } = useVilkårsvurderingLesedata();
 
@@ -96,7 +95,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, simulertBeløp, beløpsbeskri
                         resize
                         maxLength={3000}
                     />
-                    <SimulertBeløp simulertBeløp={simulertBeløp} />
+                    <SimulertBeløp />
                 </>
             )}
 
@@ -149,7 +148,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, simulertBeløp, beløpsbeskri
                         type="number"
                         min={1}
                     />
-                    <SimulertBeløp simulertBeløp={simulertBeløp} />
+                    <SimulertBeløp />
                 </>
             )}
         </>

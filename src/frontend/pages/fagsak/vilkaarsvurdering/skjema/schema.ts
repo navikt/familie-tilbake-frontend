@@ -89,6 +89,7 @@ const reduksjonFelter: {
 
 export const vilkårsvurderingSkjema = z.object({
     id: z.string(),
+    simulertBeløp: z.number().nullable(),
     valg: valgSchema,
     forstoEllerBurdeForstått: z.object({
         forståelse: forståelseValgSchema,

@@ -6,11 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { Reduksjon } from './Reduksjon';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const Deler: FC<Props> = ({ simulertBeløp }: Props) => {
+export const Deler: FC = () => {
     const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
@@ -32,11 +28,7 @@ export const Deler: FC<Props> = ({ simulertBeløp }: Props) => {
                 style={{ width: '100px' }}
                 className="max-w-xl"
             />
-            <Reduksjon
-                navnPrefix="godTro.deler"
-                beløpsbeskrivelse="hele beløpet som er i behold"
-                simulertBeløp={simulertBeløp}
-            />
+            <Reduksjon navnPrefix="godTro.deler" beløpsbeskrivelse="hele beløpet som er i behold" />
         </>
     );
 };

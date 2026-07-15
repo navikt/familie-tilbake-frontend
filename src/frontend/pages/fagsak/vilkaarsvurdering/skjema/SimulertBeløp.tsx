@@ -1,6 +1,8 @@
 import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from './schema';
 
 import { HStack, VStack } from '@navikt/ds-react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
@@ -16,15 +18,16 @@ type UtenReduksjon = {
 
 type Props = {
     renter?: boolean;
-    simulertBeløp: number | null;
 } & (MedReduksjon | UtenReduksjon);
 
 export const SimulertBeløp: FC<Props> = ({
     renter = false,
     reduksjonsprosent,
     reduksjon,
-    simulertBeløp,
 }: Props) => {
+    const { control } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const simulertBeløp = useWatch({ name: 'simulertBeløp', control: control });
+
     if (simulertBeløp === null && !renter && !reduksjon) {
         return null;
     }

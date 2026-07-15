@@ -8,11 +8,7 @@ import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataCon
 import { SærligeGrunner } from '../SærligeGrunner';
 import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const BurdeForstått: FC<Props> = ({ simulertBeløp }: Props) => {
+export const BurdeForstått: FC = () => {
     const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
     const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
@@ -30,13 +26,11 @@ export const BurdeForstått: FC<Props> = ({ simulertBeløp }: Props) => {
                 <Under4xRettsgebyr
                     navnPrefix="forstoEllerBurdeForstått.burdeForstått.unnlatelse"
                     reduksjon
-                    simulertBeløp={simulertBeløp}
                 />
             ) : (
                 <SærligeGrunner
                     navnPrefix="forstoEllerBurdeForstått.burdeForstått.unnlatelse.ikkeAktuelt.erDetSærligeGrunner"
                     reduksjon
-                    simulertBeløp={simulertBeløp}
                 />
             )}
         </>

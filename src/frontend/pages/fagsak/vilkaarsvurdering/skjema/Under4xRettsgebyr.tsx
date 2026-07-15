@@ -10,17 +10,11 @@ import { SærligeGrunner } from './SærligeGrunner';
 
 type Props = {
     navnPrefix: UnnlatelseNavnPrefix;
-    simulertBeløp: number | null;
     renter?: boolean;
     reduksjon?: boolean;
 };
 
-export const Under4xRettsgebyr: FC<Props> = ({
-    navnPrefix,
-    simulertBeløp,
-    renter,
-    reduksjon,
-}: Props) => {
+export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: Props) => {
     const { register, control, setValue } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const unnlatelse = useWatch({ name: `${navnPrefix}.unnlatelse`, control });
     const unnlatelseVerdi =
@@ -65,7 +59,7 @@ export const Under4xRettsgebyr: FC<Props> = ({
                         maxLength={3000}
                         {...register(`${navnPrefix}.skalUnnlates.begrunnelse`)}
                     />
-                    <SimulertBeløp simulertBeløp={simulertBeløp} />
+                    <SimulertBeløp />
                 </>
             )}
 
@@ -84,7 +78,6 @@ export const Under4xRettsgebyr: FC<Props> = ({
                         navnPrefix={`${navnPrefix}.skalIkkeUnnlates.erDetSærligeGrunner`}
                         reduksjon={reduksjon}
                         renter={renter}
-                        simulertBeløp={simulertBeløp}
                     />
                 </>
             )}

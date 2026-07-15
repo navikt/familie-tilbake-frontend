@@ -62,7 +62,6 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                     </Button>
                 </HStack>
             </HStack>
-            {/* TODO bytt ut propdrillingen av simulertBeløp etter react hook form sin useFormContext er på plass */}
             {valgtVilkårsperiode && (
                 <VilkårsvurderingSkjema
                     key={valgtVilkårsperiode.vilkårsvurdering.id}

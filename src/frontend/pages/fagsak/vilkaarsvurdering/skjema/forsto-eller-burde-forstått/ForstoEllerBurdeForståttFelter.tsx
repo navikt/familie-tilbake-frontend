@@ -7,11 +7,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { BurdeForstått } from './BurdeForstått';
 import { Forsto } from './Forsto';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const ForstoEllerBurdeForståttFelter: FC<Props> = ({ simulertBeløp }: Props) => {
+export const ForstoEllerBurdeForståttFelter: FC = () => {
     const { control, register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const forståelse = useWatch({
         name: 'forstoEllerBurdeForstått.forståelse',
@@ -39,9 +35,9 @@ export const ForstoEllerBurdeForståttFelter: FC<Props> = ({ simulertBeløp }: P
                 </Radio>
             </RadioGroup>
 
-            {forståelse === 'forsto' && <Forsto simulertBeløp={simulertBeløp} />}
+            {forståelse === 'forsto' && <Forsto />}
 
-            {forståelse === 'burdeForstått' && <BurdeForstått simulertBeløp={simulertBeløp} />}
+            {forståelse === 'burdeForstått' && <BurdeForstått />}
         </>
     );
 };

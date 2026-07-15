@@ -127,12 +127,14 @@ const utledUnnlatelse = (unnlatelse: Unnlatelse): UnnlatelseFelter => {
  * inntil post og validering er på plass.
  */
 export const utledDefaultValues = (
-    vilkårsvurdering: Vilkaarsvurdering
+    vilkårsvurdering: Vilkaarsvurdering,
+    simulertBeløp: number | null
 ): VilkårsvurderingSkjemaFelter => {
     const { id, valg } = vilkårsvurdering;
 
     const defaultValues: VilkårsvurderingSkjemaFelter = {
         id,
+        simulertBeløp,
         valg: valg.vurdering === 'ikke_vurdert' ? '' : valg.vurdering,
         forstoEllerBurdeForstått: {
             forståelse: '',

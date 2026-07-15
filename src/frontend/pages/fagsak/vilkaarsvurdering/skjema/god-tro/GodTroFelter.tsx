@@ -8,11 +8,7 @@ import { Deler } from './Deler';
 import { Hele } from './Hele';
 import { Ingenting } from './Ingenting';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const GodTroFelter: FC<Props> = ({ simulertBeløp }: Props) => {
+export const GodTroFelter: FC = () => {
     const { register, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const beløpIBehold = useWatch({
         name: 'godTro.beløpIBehold',
@@ -49,11 +45,11 @@ export const GodTroFelter: FC<Props> = ({ simulertBeløp }: Props) => {
                 </Radio>
             </RadioGroup>
 
-            {beløpIBehold === 'ingenting' && <Ingenting simulertBeløp={simulertBeløp} />}
+            {beløpIBehold === 'ingenting' && <Ingenting />}
 
-            {beløpIBehold === 'hele' && <Hele simulertBeløp={simulertBeløp} />}
+            {beløpIBehold === 'hele' && <Hele />}
 
-            {beløpIBehold === 'deler' && <Deler simulertBeløp={simulertBeløp} />}
+            {beløpIBehold === 'deler' && <Deler />}
         </>
     );
 };

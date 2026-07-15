@@ -8,11 +8,7 @@ import { Forsett } from './Forsett';
 import { GrovtUaktsom } from './GrovtUaktsom';
 import { Uaktsom } from './Uaktsom';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const ForårsaketAvMottakerenFelter: FC<Props> = ({ simulertBeløp }: Props) => {
+export const ForårsaketAvMottakerenFelter: FC = () => {
     const { control, register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const uaktsomhet = useWatch({
         name: 'forårsaketAvMottaker.aktsomhet',
@@ -39,11 +35,11 @@ export const ForårsaketAvMottakerenFelter: FC<Props> = ({ simulertBeløp }: Pro
                 </Radio>
             </RadioGroup>
 
-            {uaktsomhet === 'grovtUaktsomt' && <GrovtUaktsom simulertBeløp={simulertBeløp} />}
+            {uaktsomhet === 'grovtUaktsomt' && <GrovtUaktsom />}
 
-            {uaktsomhet === 'forsettlig' && <Forsett simulertBeløp={simulertBeløp} />}
+            {uaktsomhet === 'forsettlig' && <Forsett />}
 
-            {uaktsomhet === 'uaktsomt' && <Uaktsom simulertBeløp={simulertBeløp} />}
+            {uaktsomhet === 'uaktsomt' && <Uaktsom />}
         </>
     );
 };

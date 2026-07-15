@@ -6,11 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { SimulertBeløp } from '../SimulertBeløp';
 
-type Props = {
-    simulertBeløp: number | null;
-};
-
-export const Forsett: FC<Props> = ({ simulertBeløp }: Props) => {
+export const Forsett: FC = () => {
     const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
@@ -23,7 +19,7 @@ export const Forsett: FC<Props> = ({ simulertBeløp }: Props) => {
                 resize
                 maxLength={3000}
             />
-            <SimulertBeløp renter simulertBeløp={simulertBeløp} />
+            <SimulertBeløp renter />
         </>
     );
 };
