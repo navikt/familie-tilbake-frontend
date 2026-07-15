@@ -1,5 +1,8 @@
+import type { FC } from 'react';
+import type { VilkårsvurderingSkjemaFelter } from '../schema';
+
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import { type FC, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { BurdeForstått } from './BurdeForstått';
 import { Forsto } from './Forsto';
@@ -9,21 +12,28 @@ type Props = {
 };
 
 export const ForstoEllerBurdeForståttFelter: FC<Props> = ({ simulertBeløp }: Props) => {
-    const [forståelse, setForståelse] = useState<string>();
+    const { control, register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const forståelse = useWatch({
+        name: 'forstoEllerBurdeForstått.forståelse',
+        control: control,
+    });
+    const { name: forståelseName, ...forståelseProps } = register(
+        'forstoEllerBurdeForstått.forståelse'
+    );
     return (
         <>
             <RadioGroup
+                name={forståelseName}
                 legend="Vurder mottakerens forståelse på utbetalingstidspunktet"
                 size="small"
                 className="max-w-xl"
-                value={forståelse ?? ''}
-                onChange={(value: string): void => setForståelse(value)}
+                value={forståelse}
             >
-                <Radio value="forsto">
+                <Radio value="forsto" {...forståelseProps}>
                     Mottakeren <span className="font-bold">forsto</span> at utbetalingen skyldtes en
                     feil
                 </Radio>
-                <Radio value="burde-forstått">
+                <Radio value="burdeForstått" {...forståelseProps}>
                     Mottakeren <span className="font-bold">burde forstått</span> at utbetalingen
                     skyldtes en feil
                 </Radio>
@@ -31,7 +41,7 @@ export const ForstoEllerBurdeForståttFelter: FC<Props> = ({ simulertBeløp }: P
 
             {forståelse === 'forsto' && <Forsto simulertBeløp={simulertBeløp} />}
 
-            {forståelse === 'burde-forstått' && <BurdeForstått simulertBeløp={simulertBeløp} />}
+            {forståelse === 'burdeForstått' && <BurdeForstått simulertBeløp={simulertBeløp} />}
         </>
     );
 };

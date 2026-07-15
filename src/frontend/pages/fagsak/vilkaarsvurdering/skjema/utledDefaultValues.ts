@@ -135,6 +135,7 @@ export const utledDefaultValues = (
         id,
         valg: valg.vurdering === 'ikke_vurdert' ? '' : valg.vurdering,
         forstoEllerBurdeForstått: {
+            forståelse: '',
             forsto: {
                 begrunnelse: '',
                 unnlatelse: tomUnnlatelse('nei'),
@@ -175,6 +176,25 @@ export const utledDefaultValues = (
             },
         },
     };
+
+    if (valg.vurdering === 'forsto_eller_burde_forstått') {
+        const forståelse = valg.forståelse;
+        defaultValues.forstoEllerBurdeForstått.forståelse = forståelse.forståelse;
+        switch (forståelse.forståelse) {
+            case 'forsto':
+                defaultValues.forstoEllerBurdeForstått.forsto = {
+                    begrunnelse: forståelse.begrunnelse,
+                    unnlatelse: utledUnnlatelse(forståelse.unnlatelse),
+                };
+                break;
+            case 'burdeForstått':
+                defaultValues.forstoEllerBurdeForstått.burdeForstått = {
+                    begrunnelse: forståelse.begrunnelse,
+                    unnlatelse: utledUnnlatelse(forståelse.unnlatelse),
+                };
+                break;
+        }
+    }
 
     if (valg.vurdering === 'forårsaket_av_mottaker') {
         defaultValues.forårsaketAvMottaker.aktsomhet = valg.aktsomhet.aktsomhet;

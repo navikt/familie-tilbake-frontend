@@ -950,5 +950,185 @@ describe('VilkårsvurderingDetaljer', () => {
                 expect(await reduksjonsprosentField()).toHaveValue(40);
             });
         });
+
+        describe('Forsto eller burde forstått', () => {
+            const særligeGrunnerFor: SaerligeGrunner = {
+                erDetSaerligeGrunner: 'ja',
+                særligeGrunnerFor: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
+                prosentReduksjon: 40,
+                begrunnelse: 'Begrunnelse for særlige grunner',
+                annetBegrunnelse: null,
+            };
+            const særligeGrunnerMot: SaerligeGrunner = {
+                erDetSaerligeGrunner: 'nei',
+                særligeGrunnerMot: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
+                begrunnelse: 'Begrunnelse mot særlige grunner',
+                annetBegrunnelse: null,
+            };
+
+            describe('Forsto', () => {
+                test('med unnlatelse over 4x rettsgebyr (ikkeAktuelt) fyller skjemaet', async () => {
+                    renderMedValg({
+                        vurdering: 'forsto_eller_burde_forstått',
+                        forståelse: {
+                            forståelse: 'forsto',
+                            begrunnelse: 'Mottaker forsto feilen',
+                            unnlatelse: {
+                                unnlatelse: 'ikkeAktuelt',
+                                erDetSærligeGrunner: særligeGrunnerFor,
+                            },
+                        },
+                    });
+
+                    expect(await forstoRadio()).toBeChecked();
+                    expect(await begrunnelseForstoEllerBurdeForstått('forsto')).toHaveValue(
+                        'Mottaker forsto feilen'
+                    );
+                    expect(await særligeGrunnerJaRadio()).toBeChecked();
+                    expect(
+                        within(await særligeGrunnerCheckboxGroup('for')).getByRole('checkbox', {
+                            name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                        })
+                    ).toBeChecked();
+                    expect(await begrunnelseSærligeGrunner('for')).toHaveValue(
+                        'Begrunnelse for særlige grunner'
+                    );
+                    expect(await reduksjonsprosentField()).toHaveValue(40);
+                });
+
+                test('med unnlatelse under 4x rettsgebyr (skalUnnlates) fyller skjemaet', async () => {
+                    renderMedValg(
+                        {
+                            vurdering: 'forsto_eller_burde_forstått',
+                            forståelse: {
+                                forståelse: 'forsto',
+                                begrunnelse: 'Mottaker forsto feilen',
+                                unnlatelse: {
+                                    unnlatelse: 'skalUnnlates',
+                                    begrunnelse: 'Nav skal la være å kreve beløpet tilbake',
+                                },
+                            },
+                        },
+                        true
+                    );
+
+                    expect(await forstoRadio()).toBeChecked();
+                    expect(await under4xJaRadio()).toBeChecked();
+                    expect(await begrunnelseSkalUnnlates()).toHaveValue(
+                        'Nav skal la være å kreve beløpet tilbake'
+                    );
+                });
+
+                test('med unnlatelse under 4x rettsgebyr (skalIkkeUnnlates) fyller skjemaet', async () => {
+                    renderMedValg(
+                        {
+                            vurdering: 'forsto_eller_burde_forstått',
+                            forståelse: {
+                                forståelse: 'forsto',
+                                begrunnelse: 'Mottaker forsto feilen',
+                                unnlatelse: {
+                                    unnlatelse: 'skalIkkeUnnlates',
+                                    begrunnelse: 'Nav skal ikke la være å kreve beløpet tilbake',
+                                    erDetSærligeGrunner: særligeGrunnerMot,
+                                },
+                            },
+                        },
+                        true
+                    );
+
+                    expect(await forstoRadio()).toBeChecked();
+                    expect(await under4xNeiRadio()).toBeChecked();
+                    expect(await begrunnelseSkalIkkeUnnlates()).toHaveValue(
+                        'Nav skal ikke la være å kreve beløpet tilbake'
+                    );
+                    expect(await særligeGrunnerNeiRadio()).toBeChecked();
+                    expect(await begrunnelseSærligeGrunner('mot')).toHaveValue(
+                        'Begrunnelse mot særlige grunner'
+                    );
+                });
+            });
+
+            describe('Burde forstått', () => {
+                test('med unnlatelse over 4x rettsgebyr (ikkeAktuelt) fyller skjemaet', async () => {
+                    renderMedValg({
+                        vurdering: 'forsto_eller_burde_forstått',
+                        forståelse: {
+                            forståelse: 'burdeForstått',
+                            begrunnelse: 'Mottaker burde forstått feilen',
+                            unnlatelse: {
+                                unnlatelse: 'ikkeAktuelt',
+                                erDetSærligeGrunner: særligeGrunnerFor,
+                            },
+                        },
+                    });
+
+                    expect(await burdeForståttRadio()).toBeChecked();
+                    expect(await begrunnelseForstoEllerBurdeForstått('burde forstått')).toHaveValue(
+                        'Mottaker burde forstått feilen'
+                    );
+                    expect(await særligeGrunnerJaRadio()).toBeChecked();
+                    expect(
+                        within(await særligeGrunnerCheckboxGroup('for')).getByRole('checkbox', {
+                            name: 'Graden av uaktsomhet hos den som kravet retter seg mot',
+                        })
+                    ).toBeChecked();
+                    expect(await begrunnelseSærligeGrunner('for')).toHaveValue(
+                        'Begrunnelse for særlige grunner'
+                    );
+                    expect(await reduksjonsprosentField()).toHaveValue(40);
+                });
+
+                test('med unnlatelse under 4x rettsgebyr (skalUnnlates) fyller skjemaet', async () => {
+                    renderMedValg(
+                        {
+                            vurdering: 'forsto_eller_burde_forstått',
+                            forståelse: {
+                                forståelse: 'burdeForstått',
+                                begrunnelse: 'Mottaker burde forstått feilen',
+                                unnlatelse: {
+                                    unnlatelse: 'skalUnnlates',
+                                    begrunnelse: 'Nav skal la være å kreve beløpet tilbake',
+                                },
+                            },
+                        },
+                        true
+                    );
+
+                    expect(await burdeForståttRadio()).toBeChecked();
+                    expect(await under4xJaRadio()).toBeChecked();
+                    expect(await begrunnelseSkalUnnlates()).toHaveValue(
+                        'Nav skal la være å kreve beløpet tilbake'
+                    );
+                });
+
+                test('med unnlatelse under 4x rettsgebyr (skalIkkeUnnlates) fyller skjemaet', async () => {
+                    renderMedValg(
+                        {
+                            vurdering: 'forsto_eller_burde_forstått',
+                            forståelse: {
+                                forståelse: 'burdeForstått',
+                                begrunnelse: 'Mottaker burde forstått feilen',
+                                unnlatelse: {
+                                    unnlatelse: 'skalIkkeUnnlates',
+                                    begrunnelse: 'Nav skal ikke la være å kreve beløpet tilbake',
+                                    erDetSærligeGrunner: særligeGrunnerMot,
+                                },
+                            },
+                        },
+                        true
+                    );
+
+                    expect(await burdeForståttRadio()).toBeChecked();
+                    expect(await under4xNeiRadio()).toBeChecked();
+                    expect(await begrunnelseSkalIkkeUnnlates()).toHaveValue(
+                        'Nav skal ikke la være å kreve beløpet tilbake'
+                    );
+                    expect(await særligeGrunnerNeiRadio()).toBeChecked();
+                    expect(await begrunnelseSærligeGrunner('mot')).toHaveValue(
+                        'Begrunnelse mot særlige grunner'
+                    );
+                });
+            });
+        });
     });
 });

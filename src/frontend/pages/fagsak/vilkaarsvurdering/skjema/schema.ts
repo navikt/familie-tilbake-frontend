@@ -8,6 +8,8 @@ import {
 
 const valgSchema = z.enum(['forsto_eller_burde_forstått', 'forårsaket_av_mottaker', 'god_tro', '']);
 
+const forståelseValgSchema = z.enum(['forsto', 'burdeForstått', '']);
+
 const aktsomhetValgSchema = z.enum(['uaktsomt', 'grovtUaktsomt', 'forsettlig', '']);
 
 const beløpIBeholdValgSchema = z.enum(['ingenting', 'hele', 'deler', '']);
@@ -89,6 +91,7 @@ export const vilkårsvurderingSkjema = z.object({
     id: z.string(),
     valg: valgSchema,
     forstoEllerBurdeForstått: z.object({
+        forståelse: forståelseValgSchema,
         forsto: z.object({
             begrunnelse: z.string(),
             unnlatelse: unnlatelseSchema,
@@ -131,6 +134,7 @@ export const vilkårsvurderingSkjema = z.object({
 });
 
 export type VilkårValg = z.infer<typeof valgSchema>;
+export type ForståelseValg = z.infer<typeof forståelseValgSchema>;
 export type AktsomhetValg = z.infer<typeof aktsomhetValgSchema>;
 export type BeløpIBeholdValg = z.infer<typeof beløpIBeholdValgSchema>;
 export type ReduksjonValg = z.infer<typeof reduksjonValgSchema>;
