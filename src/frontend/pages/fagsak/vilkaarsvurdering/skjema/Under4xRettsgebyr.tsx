@@ -15,7 +15,10 @@ type Props = {
 };
 
 export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: Props) => {
-    const { register, control, setValue } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const { register, control, setValue, getFieldState, formState } =
+        useFormContext<VilkårsvurderingSkjemaFelter>();
+    const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
+        getFieldState(navn, formState).error?.message;
     const unnlatelse = useWatch({ name: `${navnPrefix}.unnlatelse`, control });
     const unnlatelseVerdi =
         unnlatelse === 'skalUnnlates'
@@ -35,6 +38,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                 size="small"
                 className="max-w-xl"
                 value={unnlatelseVerdi}
+                error={feil(`${navnPrefix}.unnlatelse`)}
                 onChange={(value: string): void =>
                     setValue(
                         `${navnPrefix}.unnlatelse`,
@@ -58,6 +62,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                         resize
                         maxLength={3000}
                         {...register(`${navnPrefix}.skalUnnlates.begrunnelse`)}
+                        error={feil(`${navnPrefix}.skalUnnlates.begrunnelse`)}
                     />
                     <SimulertBeløp />
                 </>
@@ -73,6 +78,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                         resize
                         maxLength={3000}
                         {...register(`${navnPrefix}.skalIkkeUnnlates.begrunnelse`)}
+                        error={feil(`${navnPrefix}.skalIkkeUnnlates.begrunnelse`)}
                     />
                     <SærligeGrunner
                         navnPrefix={`${navnPrefix}.skalIkkeUnnlates.erDetSærligeGrunner`}

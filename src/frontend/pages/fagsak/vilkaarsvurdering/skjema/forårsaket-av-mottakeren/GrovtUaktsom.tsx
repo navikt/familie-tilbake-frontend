@@ -7,12 +7,16 @@ import { useFormContext } from 'react-hook-form';
 import { SærligeGrunner } from '../SærligeGrunner';
 
 export const GrovtUaktsom: FC = () => {
-    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor du vurderer at mottakeren har handlet grovt uaktsomt"
                 {...register('forårsaketAvMottaker.grovtUaktsomt.begrunnelse')}
+                error={errors.forårsaketAvMottaker?.grovtUaktsomt?.begrunnelse?.message}
                 size="small"
                 className="max-w-xl"
                 minRows={3}

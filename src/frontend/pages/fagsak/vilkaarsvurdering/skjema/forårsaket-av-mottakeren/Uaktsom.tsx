@@ -10,12 +10,16 @@ import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
 export const Uaktsom: FC = () => {
     const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
-    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor du vurderer at mottakeren har handlet uaktsomt"
                 {...register('forårsaketAvMottaker.uaktsomt.begrunnelse')}
+                error={errors.forårsaketAvMottaker?.uaktsomt?.begrunnelse?.message}
                 size="small"
                 className="max-w-xl"
                 minRows={3}

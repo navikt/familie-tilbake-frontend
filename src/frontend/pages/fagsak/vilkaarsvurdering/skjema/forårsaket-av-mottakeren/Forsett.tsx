@@ -7,12 +7,16 @@ import { useFormContext } from 'react-hook-form';
 import { SimulertBeløp } from '../SimulertBeløp';
 
 export const Forsett: FC = () => {
-    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor du vurderer at mottakeren har handlet med forsett"
                 {...register('forårsaketAvMottaker.forsettlig.begrunnelse')}
+                error={errors.forårsaketAvMottaker?.forsettlig?.begrunnelse?.message}
                 size="small"
                 className="max-w-xl"
                 minRows={3}

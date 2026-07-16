@@ -9,7 +9,11 @@ import { Hele } from './Hele';
 import { Ingenting } from './Ingenting';
 
 export const GodTroFelter: FC = () => {
-    const { register, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        control,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const beløpIBehold = useWatch({
         name: 'godTro.beløpIBehold',
         control: control,
@@ -21,6 +25,7 @@ export const GodTroFelter: FC = () => {
             <Textarea
                 label="Begrunn hvorfor du vurderer at mottakeren har mottatt beløpet i aktsom god tro"
                 {...register('godTro.begrunnelse')}
+                error={errors.godTro?.begrunnelse?.message}
                 size="small"
                 className="max-w-xl"
                 minRows={3}
@@ -33,6 +38,7 @@ export const GodTroFelter: FC = () => {
                 size="small"
                 className="max-w-xl"
                 value={beløpIBehold}
+                error={errors.godTro?.beløpIBehold?.message}
             >
                 <Radio value="ingenting" {...beløpIBeholdProps}>
                     Ingenting av beløpet

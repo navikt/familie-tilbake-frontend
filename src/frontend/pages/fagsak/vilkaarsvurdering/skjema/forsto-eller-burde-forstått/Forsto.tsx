@@ -10,7 +10,10 @@ import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
 export const Forsto: FC = () => {
     const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
-    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
@@ -21,6 +24,7 @@ export const Forsto: FC = () => {
                 resize
                 maxLength={3000}
                 {...register('forstoEllerBurdeForstått.forsto.begrunnelse')}
+                error={errors.forstoEllerBurdeForstått?.forsto?.begrunnelse?.message}
             />
             {erUnder4xRettsgebyr ? (
                 <Under4xRettsgebyr

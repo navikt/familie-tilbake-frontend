@@ -21,8 +21,12 @@ type Props = {
 };
 
 export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) => {
-    const { register, setValue, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const { register, setValue, control, getFieldState, formState } =
+        useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterReduksjonGodTro } = useVilkårsvurderingLesedata();
+
+    const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
+        getFieldState(navn, formState).error?.message;
 
     const reduksjon = useWatch({
         name: `${navnPrefix}.reduksjon`,
@@ -47,6 +51,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                 size="small"
                 className="max-w-xl"
                 value={reduksjon}
+                error={feil(`${navnPrefix}.reduksjon`)}
             >
                 <HStack gap="space-16">
                     <Radio value="skalIkkeReduseres" {...reduksjonProps}>
@@ -66,6 +71,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         size="small"
                         className="max-w-xl"
                         value={relevansSkalIkkeReduseres}
+                        error={feil(`${navnPrefix}.skalIkkeReduseres.relevans`)}
                         onChange={(value: string[]): void =>
                             setValue(`${navnPrefix}.skalIkkeReduseres.relevans`, value, {
                                 shouldDirty: true,
@@ -82,6 +88,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             {...register(`${navnPrefix}.skalIkkeReduseres.annetBegrunnelse`)}
+                            error={feil(`${navnPrefix}.skalIkkeReduseres.annetBegrunnelse`)}
                             size="small"
                             className="max-w-xl"
                         />
@@ -89,6 +96,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                     <Textarea
                         label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} skal kreves tilbake`}
                         {...register(`${navnPrefix}.skalIkkeReduseres.begrunnelse`)}
+                        error={feil(`${navnPrefix}.skalIkkeReduseres.begrunnelse`)}
                         size="small"
                         className="max-w-xl"
                         minRows={3}
@@ -107,6 +115,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         size="small"
                         className="max-w-xl"
                         value={relevansSkalReduseres}
+                        error={feil(`${navnPrefix}.skalReduseres.relevans`)}
                         onChange={(value: string[]): void =>
                             setValue(`${navnPrefix}.skalReduseres.relevans`, value, {
                                 shouldDirty: true,
@@ -123,6 +132,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         <TextField
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             {...register(`${navnPrefix}.skalReduseres.annetBegrunnelse`)}
+                            error={feil(`${navnPrefix}.skalReduseres.annetBegrunnelse`)}
                             size="small"
                             className="max-w-xl"
                         />
@@ -130,6 +140,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                     <Textarea
                         label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} ikke skal kreves tilbake`}
                         {...register(`${navnPrefix}.skalReduseres.begrunnelse`)}
+                        error={feil(`${navnPrefix}.skalReduseres.begrunnelse`)}
                         size="small"
                         className="max-w-xl"
                         minRows={3}
@@ -142,6 +153,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                             setValueAs: (value: string): number | null =>
                                 value ? Number(value) : null,
                         })}
+                        error={feil(`${navnPrefix}.skalReduseres.beløp`)}
                         size="small"
                         style={{ width: '100px' }}
                         className="max-w-xl"
