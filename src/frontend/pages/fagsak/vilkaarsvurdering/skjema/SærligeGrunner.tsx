@@ -26,8 +26,11 @@ export const SærligeGrunner: FC<Props> = ({
     renter = false,
     reduksjon = false,
 }: Props) => {
-    const { register, setValue, control } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const { register, setValue, control, getFieldState, formState } =
+        useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterSærligeGrunner } = useVilkårsvurderingLesedata();
+    const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
+        getFieldState(navn, formState).error?.message;
     const erDetSaerligeGrunner = useWatch({
         name: `${navnPrefix}.erDetSaerligeGrunner`,
         control,
@@ -60,6 +63,7 @@ export const SærligeGrunner: FC<Props> = ({
                 size="small"
                 className="max-w-xl"
                 value={erDetSaerligeGrunner}
+                error={feil(`${navnPrefix}.erDetSaerligeGrunner`)}
             >
                 <HStack gap="space-16">
                     <Radio value="ja" {...erDetSærligeGrunnerProps}>
@@ -78,6 +82,7 @@ export const SærligeGrunner: FC<Props> = ({
                         size="small"
                         className="max-w-xl"
                         value={særligeGrunnerFor}
+                        error={feil(`${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`)}
                         onChange={(value: string[]): void =>
                             setValue(`${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`, value, {
                                 shouldDirty: true,
@@ -96,6 +101,7 @@ export const SærligeGrunner: FC<Props> = ({
                             size="small"
                             className="max-w-xl"
                             {...register(`${navnPrefix}.jaSærligeGrunner.annetBegrunnelse`)}
+                            error={feil(`${navnPrefix}.jaSærligeGrunner.annetBegrunnelse`)}
                         />
                     )}
                     <Textarea
@@ -106,6 +112,7 @@ export const SærligeGrunner: FC<Props> = ({
                         resize
                         maxLength={3000}
                         {...register(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
+                        error={feil(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
                     />
                     {/* TODO Valider senere at man ikke kan skrive utenfor 1–100 */}
                     <TextField
@@ -113,6 +120,7 @@ export const SærligeGrunner: FC<Props> = ({
                         size="small"
                         className="max-w-xl"
                         value={prosentReduksjon ?? ''}
+                        error={feil(`${navnPrefix}.jaSærligeGrunner.prosentReduksjon`)}
                         style={{ width: '100px' }}
                         onChange={(e: ChangeEvent<HTMLInputElement, Element>): void =>
                             setValue(
@@ -136,6 +144,7 @@ export const SærligeGrunner: FC<Props> = ({
                         size="small"
                         className="max-w-xl"
                         value={særligeGrunnerMot}
+                        error={feil(`${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`)}
                         onChange={(value: string[]): void =>
                             setValue(`${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`, value, {
                                 shouldDirty: true,
@@ -155,6 +164,7 @@ export const SærligeGrunner: FC<Props> = ({
                             size="small"
                             className="max-w-xl"
                             {...register(`${navnPrefix}.neiSærligeGrunner.annetBegrunnelse`)}
+                            error={feil(`${navnPrefix}.neiSærligeGrunner.annetBegrunnelse`)}
                         />
                     )}
                     <Textarea
@@ -165,6 +175,7 @@ export const SærligeGrunner: FC<Props> = ({
                         resize
                         maxLength={3000}
                         {...register(`${navnPrefix}.neiSærligeGrunner.begrunnelse`)}
+                        error={feil(`${navnPrefix}.neiSærligeGrunner.begrunnelse`)}
                     />
                     <SimulertBeløp renter={renter} />
                 </>

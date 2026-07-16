@@ -7,12 +7,16 @@ import { useFormContext } from 'react-hook-form';
 import { SimulertBeløp } from '../SimulertBeløp';
 
 export const Ingenting: FC = () => {
-    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor ingenting av beløpet er i behold"
                 {...register('godTro.ingenting.begrunnelse')}
+                error={errors.godTro?.ingenting?.begrunnelse?.message}
                 size="small"
                 className="max-w-xl"
                 minRows={3}
