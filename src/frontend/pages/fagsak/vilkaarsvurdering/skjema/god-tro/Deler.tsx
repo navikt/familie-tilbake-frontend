@@ -7,12 +7,16 @@ import { useFormContext } from 'react-hook-form';
 import { Reduksjon } from './Reduksjon';
 
 export const Deler: FC = () => {
-    const { register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<VilkårsvurderingSkjemaFelter>();
     return (
         <>
             <Textarea
                 label="Begrunn hvorfor deler av beløpet er i behold"
                 {...register('godTro.deler.begrunnelse')}
+                error={errors.godTro?.deler?.begrunnelse?.message}
                 size="small"
                 className="max-w-xl"
                 minRows={3}
@@ -24,6 +28,7 @@ export const Deler: FC = () => {
                 {...register('godTro.deler.beløp', {
                     setValueAs: (value: string): number | null => (value ? Number(value) : null),
                 })}
+                error={errors.godTro?.deler?.beløp?.message}
                 size="small"
                 style={{ width: '100px' }}
                 className="max-w-xl"

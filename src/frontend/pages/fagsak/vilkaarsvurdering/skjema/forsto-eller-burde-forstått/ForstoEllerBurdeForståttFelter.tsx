@@ -8,7 +8,7 @@ import { BurdeForstått } from './BurdeForstått';
 import { Forsto } from './Forsto';
 
 export const ForstoEllerBurdeForståttFelter: FC = () => {
-    const { control, register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const { control, register, formState } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const forståelse = useWatch({
         name: 'forstoEllerBurdeForstått.forståelse',
         control: control,
@@ -24,6 +24,7 @@ export const ForstoEllerBurdeForståttFelter: FC = () => {
                 size="small"
                 className="max-w-xl"
                 value={forståelse}
+                error={formState.errors.forstoEllerBurdeForstått?.forståelse?.message}
             >
                 <Radio value="forsto" {...forståelseProps}>
                     Mottakeren <span className="font-bold">forsto</span> at utbetalingen skyldtes en

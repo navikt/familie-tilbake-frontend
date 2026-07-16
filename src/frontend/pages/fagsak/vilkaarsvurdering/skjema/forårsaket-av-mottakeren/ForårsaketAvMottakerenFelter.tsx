@@ -9,7 +9,7 @@ import { GrovtUaktsom } from './GrovtUaktsom';
 import { Uaktsom } from './Uaktsom';
 
 export const ForårsaketAvMottakerenFelter: FC = () => {
-    const { control, register } = useFormContext<VilkårsvurderingSkjemaFelter>();
+    const { control, register, formState } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const uaktsomhet = useWatch({
         name: 'forårsaketAvMottaker.aktsomhet',
         control: control,
@@ -23,6 +23,7 @@ export const ForårsaketAvMottakerenFelter: FC = () => {
                 size="small"
                 className="max-w-xl"
                 value={uaktsomhet}
+                error={formState.errors.forårsaketAvMottaker?.aktsomhet?.message}
             >
                 <Radio value="uaktsomt" {...aktsomhetProps}>
                     Uaktsom

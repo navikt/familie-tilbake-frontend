@@ -115,6 +115,7 @@ export const Vilkårsvurdering: FC = () => {
                         erUnder4xRettsgebyr={vilkår.erUnder4xRettsgebyr}
                     >
                         <VilkårsvurderingDetaljer
+                            key={valgtPeriode.id}
                             valgtPeriode={valgtPeriode}
                             vilkårsperioder={vilkår.vilkårsperioder}
                             hentVilkårsvurdering={invaliderVilkårsvurdering}

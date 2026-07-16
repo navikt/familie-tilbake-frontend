@@ -1151,4 +1151,31 @@ describe('VilkårsvurderingDetaljer', () => {
             });
         });
     });
+
+    describe('Lagre-knapp', () => {
+        const lagreKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Lagre' });
+
+        test('Er primær når skjemaet er tomt/ikke ferdig utfylt', () => {
+            renderVilkårsDetaljer();
+
+            expect(lagreKnapp()).toHaveAttribute('data-variant', 'primary');
+        });
+
+        test('Klikk på tomt skjema kjører validering og viser feil (ingen lagring)', async () => {
+            renderVilkårsDetaljer();
+
+            await user.click(lagreKnapp());
+
+            expect(await screen.findByText('Du må gjøre et valg')).toBeInTheDocument();
+        });
+
+        test('Er fortsatt primær når kun deler av aktiv gren er fylt ut', async () => {
+            renderVilkårsDetaljer();
+
+            user.click(godTroRadio());
+            await user.type(await begrunnelseGodTro(), 'En begrunnelse');
+
+            expect(lagreKnapp()).toHaveAttribute('data-variant', 'primary');
+        });
+    });
 });
