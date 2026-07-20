@@ -25,6 +25,7 @@ import {
     type BehandlingUtsettUttalelsesfristResponse,
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
+    type ForhaandsvarselSteg,
     type ForhaandsvarselUnntak,
     type UpdateUttalelsesfrist,
     type Uttalelse,
@@ -58,6 +59,24 @@ import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { ikkeVurdertSchema } from './schema';
 import { UtsettFristModal } from './UtsettFristModal';
 import { VisSendtVarselbrev } from './VisSendtVarselbrev';
+
+const utledForhåndsvarselDefaultValues = (
+    forhåndsvarselSteg: ForhaandsvarselSteg,
+    brukeruttalelse: Uttalelse | null
+): IkkeVurdertFormData | undefined => {
+    if (forhåndsvarselSteg.type !== 'unntak') {
+        return undefined;
+    }
+
+    return {
+        valg: 'unntak',
+        begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
+        beskrivelse: forhåndsvarselSteg.beskrivelse,
+        ...(forhåndsvarselSteg.begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG'
+            ? { brukeruttalelse: tilUttalelseSkjema(brukeruttalelse) }
+            : {}),
+    };
+};
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
@@ -144,15 +163,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     const methods = useForm<IkkeVurdertFormData>({
         resolver: zodResolver(ikkeVurdertSchema),
         shouldUnregister: true,
-        defaultValues:
-            forhåndsvarselSteg.type === 'unntak'
-                ? {
-                      valg: 'unntak',
-                      begrunnelseForUnntak: forhåndsvarselSteg.begrunnelseForUnntak,
-                      beskrivelse: forhåndsvarselSteg.beskrivelse,
-                      brukeruttalelse: tilUttalelseSkjema(brukeruttalelse),
-                  }
-                : undefined,
+        defaultValues: utledForhåndsvarselDefaultValues(forhåndsvarselSteg, brukeruttalelse),
     });
 
     const {
