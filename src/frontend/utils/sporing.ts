@@ -4,9 +4,9 @@
 // Applikasjonen er et internt saksbehandlerverktøy bak innlogging og krever
 // derfor ikke cookie-samtykke (jf. guiden om interne verktøy for Nav-ansatte).
 //
-// Base-scriptet (sporing.js) ruter automatisk til riktig event-proxy basert på
-// hostname (dev vs. prod), så vi trenger kun å oppgi riktig data-website-id per
-// miljø.
+// Base-scriptet finnes i to varianter: sporing-dev.js har dev-proxyen hardkodet,
+// mens sporing.js ruter til prod-proxyen. Vi velger variant og sporingskode ut
+// fra miljø, slik Innblikk oppgir dem på /sporingskoder.
 //
 // Vi bruker data-auto-track="false" og sporer kun eksplisitte hendelser via
 // sporHendelse (f.eks. menyvalg). Sidevisninger spores altså ikke.
@@ -15,11 +15,16 @@
 // payloaden fryses til den siden appen ble lastet på. Vi setter derfor url
 // eksplisitt ved hvert kall, slik at hendelsene knyttes til riktig side.
 
-// Unik sporingskode per miljø, hentet fra Innblikk (innblikk.ansatt.(dev.)nav.no/sporingskoder).
-enum SporingWebsiteId {
-    Dev = '226376e1-7fdd-47df-bb34-31d7ba1c5c9f',
-    // Prod = '<ikke registrert i Innblikk prod ennå>',
-}
+type Sporingsoppsett = {
+    websiteId: string;
+    skriptUrl: string;
+};
+
+// Sporingskode og skript hentet fra Innblikk (innblikk.ansatt.(dev.)nav.no/sporingskoder).
+const SPORING_DEV: Sporingsoppsett = {
+    websiteId: 'd955fe48-a9ac-4930-a6aa-a9dfb084ec2b',
+    skriptUrl: 'https://cdn.nav.no/team-researchops/sporing/sporing-dev.js',
+};
 
 // Minimal type for det vi faktisk bruker av sporingsskriptets API. Holdes lokal
 // (ikke global augmentering av Window) slik at resten av koden går via
@@ -49,22 +54,22 @@ export const settSporingsYtelsestype = (ytelsestype: string | undefined): void =
     gjeldendeYtelsestype = ytelsestype;
 };
 
-const hentWebsiteId = (): string | undefined => {
+const hentSporingsoppsett = (): Sporingsoppsett | undefined => {
     if (erDev()) {
-        return SporingWebsiteId.Dev;
+        return SPORING_DEV;
     }
 
-    // TODO: Registrer appen i Innblikk prod, legg til SporingWebsiteId.Prod og
-    // returner den her når hostname er intern.nav.no (prod).
+    // TODO: Registrer appen i Innblikk prod og legg til et SPORING_PROD-oppsett
+    // (sporing.js + prod-sporingskode) som returneres her for intern.nav.no.
     return undefined;
 };
 
 let trackerLoaded = false;
 
 export const loadTracker = (): void => {
-    const websiteId = hentWebsiteId();
+    const oppsett = hentSporingsoppsett();
 
-    if (!websiteId || trackerLoaded) {
+    if (!oppsett || trackerLoaded) {
         return;
     }
 
@@ -72,8 +77,8 @@ export const loadTracker = (): void => {
 
     const script = document.createElement('script');
     script.defer = true;
-    script.src = 'https://cdn.nav.no/team-researchops/sporing/sporing.js';
-    script.setAttribute('data-website-id', websiteId);
+    script.src = oppsett.skriptUrl;
+    script.setAttribute('data-website-id', oppsett.websiteId);
     script.setAttribute('data-auto-track', 'false');
     document.head.appendChild(script);
 };
