@@ -6,6 +6,7 @@ import { ActionMenu } from '@navikt/ds-react';
 import { useApp } from '@/context/AppContext';
 import { useBehandling } from '@/context/BehandlingContext';
 import { useFagsak } from '@/context/FagsakContext';
+import { sporHendelse } from '@/utils/sporing';
 
 export const HistoriskeVurderinger: FC = () => {
     const { eksternBrukId, ansvarligSaksbehandler } = useBehandling();
@@ -21,6 +22,9 @@ export const HistoriskeVurderinger: FC = () => {
                 as="a"
                 href={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/inaktiv`}
                 icon={<ClockDashedIcon aria-hidden />}
+                onSelect={(): void =>
+                    sporHendelse('behandlingsmeny', { valg: 'Se historiske vurderinger' })
+                }
             >
                 <span className="ml-1">Se historiske vurderinger</span>
             </ActionMenu.Item>

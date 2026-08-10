@@ -6,6 +6,7 @@ import { ActionMenu } from '@navikt/ds-react';
 import { useRef } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
+import { sporHendelse } from '@/utils/sporing';
 
 import { HenleggModal } from './henleggModal/HenleggModal';
 
@@ -25,7 +26,10 @@ export const Henlegg: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => dialogRef.current?.showModal()}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', { valg: 'Henlegg' });
+                    dialogRef.current?.showModal();
+                }}
                 icon={<CircleSlashIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >

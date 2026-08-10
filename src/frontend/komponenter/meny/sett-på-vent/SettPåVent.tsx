@@ -13,6 +13,7 @@ import { Datovelger } from '@/komponenter/datovelger/Datovelger';
 import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
 import { manuelleVenteÅrsaker, venteårsaker } from '@/typer/behandling';
 import { dagensDato } from '@/utils/dato';
+import { sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 
@@ -40,7 +41,10 @@ export const SettPåVent: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => dialogRef.current?.showModal()}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', { valg: 'Sett på vent' });
+                    dialogRef.current?.showModal();
+                }}
                 icon={<TimerPauseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >

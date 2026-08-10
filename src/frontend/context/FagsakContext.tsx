@@ -3,10 +3,11 @@ import type { FagsakDto, SchemaEnum2 as Fagsystem } from '@/generated';
 import type { Error as ModellError } from '@/generated-new';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createContext, use } from 'react';
+import { createContext, use, useEffect } from 'react';
 import { useParams } from 'react-router';
 
 import { hentFagsak } from '@/generated/sdk.gen';
+import { settSporingsYtelsestype } from '@/utils/sporing';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
 
@@ -72,6 +73,11 @@ export const FagsakProvider = ({ children }: Props): ReactElement => {
             return result.data.data;
         },
     });
+
+    useEffect(() => {
+        settSporingsYtelsestype(fagsak.ytelsestype);
+        return () => settSporingsYtelsestype(undefined);
+    }, [fagsak.ytelsestype]);
 
     return <FagsakContext value={fagsak}>{children}</FagsakContext>;
 };

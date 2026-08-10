@@ -7,6 +7,7 @@ import { useRef } from 'react';
 
 import { RessursStatus } from '@/typer/ressurs';
 import { hentFrontendFeilmelding } from '@/utils';
+import { sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 import { useEndreEnhet } from './EndreEnhetContext';
@@ -34,7 +35,10 @@ export const EndreEnhet: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => dialogRef.current?.showModal()}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', { valg: 'Endre enhet' });
+                    dialogRef.current?.showModal();
+                }}
                 className="text-xl cursor-pointer"
                 icon={<Buildings3Icon aria-hidden />}
             >

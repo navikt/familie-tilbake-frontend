@@ -12,6 +12,7 @@ import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { AlertType, ToastTyper } from '@/komponenter/toast/typer';
 import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 import { useStegNavigering } from '@/utils/sider';
+import { sporHendelse } from '@/utils/sporing';
 
 export const HentKorrigertKravgrunnlag: FC = () => {
     const { behandlingId } = useBehandling();
@@ -51,7 +52,10 @@ export const HentKorrigertKravgrunnlag: FC = () => {
 
     return (
         <ActionMenu.Item
-            onSelect={hentKorrigertKravgrunnlag}
+            onSelect={(): void => {
+                sporHendelse('behandlingsmeny', { valg: 'Hent korrigert kravgrunnlag' });
+                hentKorrigertKravgrunnlag();
+            }}
             className="text-xl cursor-pointer"
             icon={<HddUpIcon aria-hidden />}
         >

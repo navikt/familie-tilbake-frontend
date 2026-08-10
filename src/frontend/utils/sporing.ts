@@ -46,6 +46,14 @@ const hentWebsiteId = (): string | undefined => {
 
 let skriptLastet = false;
 
+// Ytelsestype (f.eks. BARNETRYGD) som festes på alle custom events. Settes fra
+// FagsakProvider når en fagsak er lastet, og nullstilles når man forlater den.
+let gjeldendeYtelsestype: string | undefined;
+
+export const settSporingsYtelsestype = (ytelsestype: string | undefined): void => {
+    gjeldendeYtelsestype = ytelsestype;
+};
+
 export const initSporing = (): void => {
     const websiteId = hentWebsiteId();
 
@@ -76,4 +84,20 @@ export const sporSidevisning = (forsøk = 0): void => {
     if (forsøk < MAKS_FORSØK) {
         window.setTimeout(() => sporSidevisning(forsøk + 1), 250);
     }
+};
+
+// Sporer en egendefinert hendelse (custom event) med valgfrie data-egenskaper.
+// Alle hendelser beriket automatisk med gjeldende ytelsestype (settes via
+// settSporingsYtelsestype fra FagsakProvider). Gjør ingenting dersom
+// sporingsskriptet ikke er lastet (f.eks. lokalt).
+export const sporHendelse = (navn: string, data?: Record<string, unknown>): void => {
+    const beriketData: Record<string, unknown> = {};
+
+    if (gjeldendeYtelsestype) {
+        beriketData.ytelsestype = gjeldendeYtelsestype;
+    }
+
+    Object.assign(beriketData, data);
+
+    window.sporing?.track(navn, Object.keys(beriketData).length > 0 ? beriketData : undefined);
 };

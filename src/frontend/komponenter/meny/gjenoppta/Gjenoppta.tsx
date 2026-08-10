@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { useBehandling } from '@/context/BehandlingContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
+import { sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 
@@ -27,7 +28,10 @@ export const Gjenoppta: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => dialogRef.current?.showModal()}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', { valg: 'Gjenoppta' });
+                    dialogRef.current?.showModal();
+                }}
                 className="text-xl cursor-pointer"
                 icon={<TimerStartIcon aria-hidden />}
             >

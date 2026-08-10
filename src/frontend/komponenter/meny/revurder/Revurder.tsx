@@ -7,6 +7,7 @@ import { useRef } from 'react';
 
 import { behandlingsårsaker } from '@/typer/behandling';
 import { hentFrontendFeilmelding } from '@/utils';
+import { sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 import { useRevurderSkjema } from './RevurderSkjemaContext';
@@ -19,7 +20,10 @@ export const Revurder: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => ref.current?.showModal()}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', { valg: 'Revurder' });
+                    ref.current?.showModal();
+                }}
                 className="text-xl cursor-pointer"
                 icon={<FileResetIcon aria-hidden />}
             >

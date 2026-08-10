@@ -4,6 +4,7 @@ import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
 
 import { FeilModal } from '@/komponenter/modal/feil/FeilModal';
+import { sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 import { useStartPåNytt } from './useStartPåNytt';
@@ -14,7 +15,10 @@ export const StartPåNytt: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={åpneDialog}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', { valg: 'Start på nytt' });
+                    åpneDialog();
+                }}
                 icon={<ArrowCirclepathReverseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >

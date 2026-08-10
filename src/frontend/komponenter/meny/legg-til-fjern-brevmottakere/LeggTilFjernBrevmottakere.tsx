@@ -13,6 +13,7 @@ import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { AlertType, ToastTyper } from '@/komponenter/toast/typer';
 import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 import { useStegNavigering } from '@/utils/sider';
+import { sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 
@@ -102,7 +103,14 @@ export const LeggTilFjernBrevmottakere: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={opprettEllerFjernSteg}
+                onSelect={(): void => {
+                    sporHendelse('behandlingsmeny', {
+                        valg: kanFjerneManuelleBrevmottakere
+                            ? 'Fjern brevmottaker(e)'
+                            : 'Legg til brevmottaker',
+                    });
+                    opprettEllerFjernSteg();
+                }}
                 className="text-xl cursor-pointer"
                 icon={<PersonPlusIcon aria-hidden />}
             >
