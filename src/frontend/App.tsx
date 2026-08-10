@@ -10,6 +10,7 @@ import {
     Outlet,
     Route,
     RouterProvider,
+    useLocation,
 } from 'react-router';
 
 import { hentInnloggetBruker } from './api/saksbehandler';
@@ -25,6 +26,7 @@ import { Toasts } from './komponenter/toast/Toasts';
 import { BehandlingSkeleton } from './pages/fagsak/BehandlingSkeleton';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
+import { sporSidevisning } from './utils/sporing';
 import { configureZod } from './utils/zodConfig';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
@@ -44,6 +46,12 @@ const SideLaster: FC = () => (
 
 const AppLayout: FC = () => {
     const { autentisert } = useApp();
+    const location = useLocation();
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: sporing skal kjøre på hvert route-bytte selv om verdiene ikke brukes i effekten direkte
+    useEffect(() => {
+        sporSidevisning();
+    }, [location.pathname, location.search]);
 
     if (!autentisert) {
         return <IkkeTilgang />;

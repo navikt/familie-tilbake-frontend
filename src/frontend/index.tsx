@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import './api/http/configureHeyApi';
 import { App } from './App';
 import { initGrafanaFaro } from './utils/grafanaFaro';
+import { initSporing } from './utils/sporing';
 
 import './index.css';
 
@@ -28,6 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 initGrafanaFaro();
+initSporing();
 
 const container = document.getElementById('app');
 
