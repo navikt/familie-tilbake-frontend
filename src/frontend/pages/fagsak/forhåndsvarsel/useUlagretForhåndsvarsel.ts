@@ -13,7 +13,7 @@ export const useUlagretForhåndsvarsel = (): void => {
 
     useEffect(() => {
         const unsubscribe = methods.subscribe({
-            formState: { isDirty: true },
+            formState: { dirtyFields: true },
             callback: (
                 data: Partial<FormState<FieldValues>> & {
                     values: FieldValues;
@@ -21,7 +21,7 @@ export const useUlagretForhåndsvarsel = (): void => {
                     type?: EventType;
                 }
             ): void => {
-                if (data.isDirty) {
+                if (Object.keys(data.dirtyFields ?? {}).length > 0) {
                     setIkkePersistertKomponent('forhåndsvarsel');
                 } else {
                     nullstillIkkePersisterteKomponenter();
