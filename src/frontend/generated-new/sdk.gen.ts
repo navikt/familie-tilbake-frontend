@@ -6,6 +6,9 @@ import type {
     BehandlingBehandlingsloggData,
     BehandlingBehandlingsloggErrors,
     BehandlingBehandlingsloggResponses,
+    BehandlingBenyttNyesteKravgrunnlagData,
+    BehandlingBenyttNyesteKravgrunnlagErrors,
+    BehandlingBenyttNyesteKravgrunnlagResponses,
     BehandlingFaktaData,
     BehandlingFaktaErrors,
     BehandlingFaktaResponses,
@@ -241,6 +244,19 @@ export const behandlingHentDokument = <ThrowOnError extends boolean = false>(
         url: '/api/v1/behandling/{behandlingId}/journalpost/{journalpostId}/dokument/{dokumentInfoId}',
         ...options,
     });
+
+export const behandlingBenyttNyesteKravgrunnlag = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingBenyttNyesteKravgrunnlagData, ThrowOnError>
+): RequestResult<
+    BehandlingBenyttNyesteKravgrunnlagResponses,
+    BehandlingBenyttNyesteKravgrunnlagErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).put<
+        BehandlingBenyttNyesteKravgrunnlagResponses,
+        BehandlingBenyttNyesteKravgrunnlagErrors,
+        ThrowOnError
+    >({ url: '/api/v1/behandling/{behandlingId}/kravgrunnlag/benytt-nyeste', ...options });
 
 export const behandlingHentVarselbrevTekster = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingHentVarselbrevTeksterData, ThrowOnError>

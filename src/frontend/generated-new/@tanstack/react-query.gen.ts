@@ -6,6 +6,7 @@ import type { AxiosError } from 'axios';
 import { client } from '../client.gen';
 import {
     behandlingBehandlingslogg,
+    behandlingBenyttNyesteKravgrunnlag,
     behandlingFakta,
     behandlingForeslaaVedtak,
     behandlingForhandsvarsel,
@@ -33,6 +34,8 @@ import type {
     BehandlingBehandlingsloggData,
     BehandlingBehandlingsloggError,
     BehandlingBehandlingsloggResponse,
+    BehandlingBenyttNyesteKravgrunnlagData,
+    BehandlingBenyttNyesteKravgrunnlagError,
     BehandlingFaktaData,
     BehandlingFaktaError,
     BehandlingFaktaResponse,
@@ -361,6 +364,30 @@ export const behandlingHentDokumentOptions = (options: Options<BehandlingHentDok
         },
         queryKey: behandlingHentDokumentQueryKey(options),
     });
+
+export const behandlingBenyttNyesteKravgrunnlagMutation = (
+    options?: Partial<Options<BehandlingBenyttNyesteKravgrunnlagData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingBenyttNyesteKravgrunnlagError>,
+    Options<BehandlingBenyttNyesteKravgrunnlagData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingBenyttNyesteKravgrunnlagError>,
+        Options<BehandlingBenyttNyesteKravgrunnlagData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingBenyttNyesteKravgrunnlag({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
 
 export const behandlingHentVarselbrevTeksterQueryKey = (
     options: Options<BehandlingHentVarselbrevTeksterData>
