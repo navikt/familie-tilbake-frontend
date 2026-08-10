@@ -18,6 +18,8 @@ import type {
     ByttEnhetData,
     ByttEnhetResponses,
     DumpFagsakData,
+    DumpFagsakFagsystemIdData,
+    DumpFagsakFagsystemIdResponses,
     DumpFagsakResponses,
     ErPerioderLikeData,
     ErPerioderLikeResponses,
@@ -51,8 +53,6 @@ import type {
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
     HenleggBehandlingResponses,
-    HentAlleKravgrunnlagUtenforScopeData,
-    HentAlleKravgrunnlagUtenforScopeResponses,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponses,
@@ -125,8 +125,6 @@ import type {
     OppdaterBehandlendeEnhetPåBehandlingResponses,
     OppdaterFagsysteminfoData,
     OppdaterFagsysteminfoResponses,
-    OppdaterKravgrunnlagBeløpData,
-    OppdaterKravgrunnlagBeløpResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -567,18 +565,6 @@ export const lagOppdaterOppgaveTaskForBehandling = <ThrowOnError extends boolean
     });
 
 /**
- * Oppdaterer beløp for eksisterende fagsak med pågående behandling
- */
-export const oppdaterKravgrunnlagBeløp = <ThrowOnError extends boolean = false>(
-    options: Options<OppdaterKravgrunnlagBeløpData, ThrowOnError>
-): RequestResult<OppdaterKravgrunnlagBeløpResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).post<OppdaterKravgrunnlagBeløpResponses, unknown, ThrowOnError>({
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}/oppdater-belop',
-        ...options,
-    });
-
-/**
  * Oppretter FinnGammelBehandlingUtenOppgaveTask som logger ut gamle behandlinger uten åpen oppgave
  */
 export const finnGamleÅpneBehandlingerUtenOppgave = <ThrowOnError extends boolean = false>(
@@ -634,6 +620,18 @@ export const ferdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgave = <
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+/**
+ * Henter hele JSON-objektet for en sak
+ */
+export const dumpFagsakFagsystemId = <ThrowOnError extends boolean = false>(
+    options: Options<DumpFagsakFagsystemIdData, ThrowOnError>
+): RequestResult<DumpFagsakFagsystemIdResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<DumpFagsakFagsystemIdResponses, unknown, ThrowOnError>({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/dump/{fagsystem}/{fagsystemId}',
+        ...options,
     });
 
 /**
@@ -1040,22 +1038,6 @@ export const hentKravgrunnlagsinfo = <ThrowOnError extends boolean = false>(
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/ytelsestype/{ytelsestype}/fagsak/{eksternFagsakId}/ikke-arkivert-kravgrunnlag',
-        ...options,
-    });
-
-/**
- * Henter alle kravgrunnlag markert som utenfor scope for sak
- */
-export const hentAlleKravgrunnlagUtenforScope = <ThrowOnError extends boolean = false>(
-    options: Options<HentAlleKravgrunnlagUtenforScopeData, ThrowOnError>
-): RequestResult<HentAlleKravgrunnlagUtenforScopeResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).get<
-        HentAlleKravgrunnlagUtenforScopeResponses,
-        unknown,
-        ThrowOnError
-    >({
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}',
         ...options,
     });
 

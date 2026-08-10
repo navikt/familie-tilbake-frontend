@@ -113,6 +113,22 @@ export const utledBehandlingSide = (steg: StegEnum): SynligSteg | undefined => {
     }
 };
 
+export const utledStandardSide = (
+    behandling: BehandlingDto,
+    aktivtSteg?: BehandlingsstegsinfoDto
+): SynligSteg | undefined => {
+    if (behandling.endretKravgrunnlag) {
+        return SYNLIGE_STEG.FAKTA;
+    }
+    if (aktivtSteg) {
+        return utledBehandlingSide(aktivtSteg.behandlingssteg);
+    }
+    if (behandling.status === 'AVSLUTTET') {
+        return SYNLIGE_STEG.FORESLÅ_VEDTAK;
+    }
+    return SYNLIGE_STEG.FAKTA;
+};
+
 const historiskeSider = [
     'inaktiv-vilkaarsvurdering',
     'inaktiv-fakta',

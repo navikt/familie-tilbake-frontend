@@ -23,22 +23,6 @@ export const zOppdaterBehandlendeEnhetRequest = z.object({
     nyEnhet: z.string(),
 });
 
-export const zDatoperiode = z.object({
-    fom: z.iso.date(),
-    tom: z.iso.date(),
-    fomMåned: z.string(),
-    tomMåned: z.string(),
-});
-
-export const zForskjell = z.unknown();
-
-export const zJustertBeløp = zForskjell.and(
-    z.object({
-        periode: zDatoperiode,
-        differanse: z.number(),
-    })
-);
-
 export const zBeløpEntity = z.object({
     id: z.uuid(),
     kravgrunnlagPeriodeId: z.uuid(),
@@ -58,13 +42,6 @@ export const zDatoperiodeEntity = z.object({
 export const zEnhetEntity = z.object({
     kode: z.string(),
     navn: z.string(),
-});
-
-export const zForeslåVedtakStegEntity = z.object({
-    id: z.uuid(),
-    behandlingRef: z.uuid(),
-    vurdert: z.boolean(),
-    trengerNyVurdering: z.boolean(),
 });
 
 export const zHistorikkReferanseEntityUuid = z.object({
@@ -118,6 +95,13 @@ export const zVedtaksbrevEntity = z.object({
     journalpostId: z.string().nullish(),
     dokumentInfoId: z.string().nullish(),
     sendtTid: z.iso.date(),
+});
+
+export const zDatoperiode = z.object({
+    fom: z.iso.date(),
+    tom: z.iso.date(),
+    fomMåned: z.string(),
+    tomMåned: z.string(),
 });
 
 export const zPeriodeMedTekstDto = z.object({
@@ -239,12 +223,6 @@ export const zKravgrunnlagsinfo = z.object({
     opprettetTid: z.iso.datetime(),
 });
 
-export const zEntity = z.object({
-    kravgrunnlag: z.string(),
-    kravgrunnlagId: z.string(),
-    fagsystemId: z.string(),
-});
-
 export const zInstitusjonDto = z.object({
     organisasjonsnummer: z.string(),
     navn: z.string(),
@@ -331,6 +309,19 @@ export const zBeregningsresultatsperiodeDto = z.object({
     renteprosent: z.number().nullish(),
     tilbakekrevingsbeløp: z.number().nullish(),
     tilbakekrevesBeløpEtterSkatt: z.number().nullish(),
+});
+
+export const zEndretKravgrunnlag = z.object({
+    gammeltBeløp: z
+        .int()
+        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    nyttBeløp: z
+        .int()
+        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    gammelPeriode: zDatoperiode,
+    nyPeriode: zDatoperiode,
 });
 
 export const zSchemaEnum = z.enum([
@@ -571,7 +562,12 @@ export const zVurderingTypeEnum = z.enum([
     'KOPIERT_VURDERING',
 ]);
 
-export const zKanUnnlatesEnum = z.enum(['UNNLATES', 'SKAL_IKKE_UNNLATES', 'OVER_4_RETTSGEBYR']);
+export const zKanUnnlatesEnum = z.enum([
+    'UNNLATES',
+    'SKAL_IKKE_UNNLATES',
+    'OVER_4_RETTSGEBYR',
+    'IKKE_VURDERT',
+]);
 
 export const zFeilaktigEllerMangelfullEnum = z.enum(['FEILAKTIG', 'MANGELFULL']);
 
@@ -623,6 +619,11 @@ export const zBrevEntity = z.object({
     brevtype: zBrevtypeEnum,
     varselbrevEntity: zVarselbrevEntity.nullish(),
     vedtaksbrevEntity: zVedtaksbrevEntity.nullish(),
+    opprettet: z.iso.datetime(),
+});
+
+export const zHistorikkEntityUuidBrevEntityBrev = z.object({
+    innslag: z.array(zBrevEntity),
 });
 
 export const zSpråkkodeEnum = z.enum(['NB', 'NN']);
@@ -649,19 +650,28 @@ export const zUttalelseVurderingEnum = z.enum([
     'NEI',
 ]);
 
+export const zBrukeruttalelseDto = z.object({
+    harBrukerUttaltSeg: zUttalelseVurderingEnum,
+    uttalelsesdetaljer: z.array(zUttalelsesdetaljer).nullish(),
+    kommentar: z.string().nullish(),
+});
+
+export const zTilbakeførtEnum = z.enum(['NyttKravgrunnlag', 'Underkjent']);
+
 export const zBrukeruttalelseEntity = z.object({
     id: z.uuid(),
     behandlingRef: z.uuid(),
     uttalelseVurdering: zUttalelseVurderingEnum,
     uttalelseInfoEntity: zUttalelseInfoEntity.nullish(),
     kommentar: z.string().nullish(),
-    trengerNyVurdering: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
-export const zBrukeruttalelseDto = z.object({
-    harBrukerUttaltSeg: zUttalelseVurderingEnum,
-    uttalelsesdetaljer: z.array(zUttalelsesdetaljer).nullish(),
-    kommentar: z.string().nullish(),
+export const zForeslåVedtakStegEntity = z.object({
+    id: z.uuid(),
+    behandlingRef: z.uuid(),
+    vurdert: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zTypeEnum4 = z.enum(['BEHANDLING', 'UKJENT']);
@@ -683,6 +693,11 @@ export const zEksternFagsakBehandlingEntity = z.object({
     vedtaksdato: z.iso.date().nullish(),
     utvidedePerioder: z.array(zUtvidetPeriodeEntity).nullish(),
     url: z.string().nullish(),
+    opprettet: z.iso.datetime(),
+});
+
+export const zHistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurdering = z.object({
+    innslag: z.array(zEksternFagsakBehandlingEntity),
 });
 
 export const zRettsligGrunnlagEnum = z.enum([
@@ -873,7 +888,7 @@ export const zForeldelsesstegEntity = z.object({
     id: z.uuid(),
     behandlingRef: z.uuid(),
     vurdertePerioder: z.array(zForeldelseperiodeEntity),
-    trengerNyVurdering: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zBegrunnelseForUnntakEnum = z.enum([
@@ -888,7 +903,7 @@ export const zForhåndsvarselUnntakEntity = z.object({
     behandlingRef: z.uuid(),
     begrunnelseForUnntak: zBegrunnelseForUnntakEnum,
     beskrivelse: z.string(),
-    trengerNyVurdering: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zForhåndsvarselEntity = z.object({
@@ -897,7 +912,7 @@ export const zForhåndsvarselEntity = z.object({
     uttalelsesfristEntity: zUttalelsesfristEntity.nullish(),
 });
 
-export const zBeholdTypeEnum = z.enum(['JA', 'NEI']);
+export const zBeholdTypeEnum = z.enum(['HELE_BELØPET', 'DELER_AV_BELØPET', 'JA', 'NEI']);
 
 export const zGodTroEntity = z.object({
     periodeRef: z.uuid(),
@@ -932,6 +947,11 @@ export const zKravgrunnlagHendelseEntity = z.object({
     kravgrunnlagId: z.string(),
     referanse: z.string(),
     perioder: z.array(zKravgrunnlagPeriodeEntity),
+    opprettet: z.iso.datetime(),
+});
+
+export const zHistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse = z.object({
+    innslag: z.array(zKravgrunnlagHendelseEntity),
 });
 
 export const zMottakersForståelseEnum = z.enum(['FORSTOD', 'BURDE_FORSTÅTT', 'MÅTTE_FORSTÅ']);
@@ -960,7 +980,7 @@ export const zFaktastegEntity = z.object({
     uttalelse: zUttalelseEnum,
     vurderingAvBrukersUttalelse: z.string().nullish(),
     oppdaget: zOppdagetEntity.nullish(),
-    trengerNyVurdering: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
     rettsgebyrÅrFraSaksbehandler: z
         .int()
         .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
@@ -981,9 +1001,9 @@ export const zSkalReduseresEntity = z.object({
 
 export const zTypeEnum7 = z.enum([
     'GRAD_AV_UAKTSOMHET',
-    'HELT_ELLER_DELVIS_NAVS_FEIL',
     'STØRRELSE_BELØP',
     'TID_FRA_UTBETALING',
+    'HELT_ELLER_DELVIS_NAVS_FEIL',
     'ANNET',
 ]);
 
@@ -1049,7 +1069,7 @@ export const zVilkårsvurderingstegEntity = z.object({
     id: z.uuid(),
     behandlingRef: z.uuid(),
     vurderinger: z.array(zVilkårsvurderingsperiodeEntity),
-    trengerNyVurdering: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zStegEnum = z.enum([
@@ -1125,6 +1145,7 @@ export const zBehandlingEntity = z.object({
     ansvarligSaksbehandler: zBehandlerEntity,
     eksternFagsakBehandlingRef: zHistorikkReferanseEntityUuid,
     kravgrunnlagRef: zHistorikkReferanseEntityUuid,
+    nyttKravgrunnlagRef: zHistorikkReferanseEntityUuid.nullish(),
     foreldelsestegEntity: zForeldelsesstegEntity,
     faktastegEntity: zFaktastegEntity,
     vilkårsvurderingstegEntity: zVilkårsvurderingstegEntity,
@@ -1132,6 +1153,10 @@ export const zBehandlingEntity = z.object({
     fatteVedtakStegEntity: zFatteVedtakStegEntity,
     forhåndsvarselEntity: zForhåndsvarselEntity,
     forrigeBehandlingsstatus: zForrigeBehandlingsstatusEnum,
+});
+
+export const zHistorikkEntityUuidBehandlingEntityBehandling = z.object({
+    innslag: z.array(zBehandlingEntity),
 });
 
 export const zTypeEnum8 = z.enum([
@@ -1153,16 +1178,17 @@ export const zEksternFagsakEntity = z.object({
     tilbakekrevingRef: z.string(),
     eksternId: z.string(),
     ytelseEntity: zYtelseEntity,
-    behandlinger: z.array(zEksternFagsakBehandlingEntity),
+    behandlinger: zHistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurdering,
 });
 
 export const zTilbakekrevingEntity = z.object({
     id: z.string(),
     nåværendeTilstand: zSchemaEnum,
     eksternFagsak: zEksternFagsakEntity,
-    behandlingHistorikkEntities: z.array(zBehandlingEntity),
-    kravgrunnlagHistorikkEntities: z.array(zKravgrunnlagHendelseEntity),
-    brevHistorikkEntities: z.array(zBrevEntity),
+    behandlingHistorikkEntities: zHistorikkEntityUuidBehandlingEntityBehandling,
+    kravgrunnlagHistorikkEntities:
+        zHistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse,
+    brevHistorikkEntities: zHistorikkEntityUuidBrevEntityBrev,
     opprettet: z.iso.datetime(),
     nestePåminnelse: z.iso.datetime().nullish(),
     opprettelsesvalg: zOpprettelsesvalgEnum,
@@ -2022,6 +2048,7 @@ export const zBehandlingDto = z.object({
     saksbehandlingstype: zSaksbehandlingstypeEnum,
     erNyModell: z.boolean(),
     innloggetRolle: zInnloggetRolleEnum,
+    endretKravgrunnlag: zEndretKravgrunnlag.nullish(),
 });
 
 export const zRessursBehandlingDto = z.object({
@@ -2254,16 +2281,6 @@ export const zOppdaterFagsysteminfoPath = z.object({
 
 export const zLagOppdaterOppgaveTaskForBehandlingBody = z.array(z.uuid());
 
-export const zOppdaterKravgrunnlagBeløpPath = z.object({
-    fagsystem: zSchemaEnum2,
-    fagsystemId: z.string(),
-});
-
-/**
- * OK
- */
-export const zOppdaterKravgrunnlagBeløpResponse = z.array(z.array(zJustertBeløp));
-
 export const zFinnGamleÅpneBehandlingerUtenOppgavePath = z.object({
     fagsystem: zSchemaEnum2,
 });
@@ -2274,6 +2291,16 @@ export const zFerdigstillOppgaverForBehandlingPath = z.object({
 });
 
 export const zFerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveBody = z.array(z.uuid());
+
+export const zDumpFagsakFagsystemIdPath = z.object({
+    fagsystem: zSchemaEnum2,
+    fagsystemId: z.string(),
+});
+
+/**
+ * OK
+ */
+export const zDumpFagsakFagsystemIdResponse = zTilbakekrevingEntity;
 
 export const zDumpFagsakPath = z.object({
     behandlingId: z.uuid(),
@@ -2510,16 +2537,6 @@ export const zHentKravgrunnlagsinfoPath = z.object({
  * OK
  */
 export const zHentKravgrunnlagsinfoResponse = zRessursListKravgrunnlagsinfo;
-
-export const zHentAlleKravgrunnlagUtenforScopePath = z.object({
-    fagsystem: zSchemaEnum2,
-    fagsystemId: z.string(),
-});
-
-/**
- * OK
- */
-export const zHentAlleKravgrunnlagUtenforScopeResponse = z.array(zEntity);
 
 export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgavePath =
     z.object({
