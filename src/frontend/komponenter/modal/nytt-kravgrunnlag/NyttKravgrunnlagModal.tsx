@@ -21,6 +21,7 @@ import {
     behandlingBenyttNyesteKravgrunnlagMutation,
     behandlingFaktaQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
+import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { formatCurrencyNoKr, formatterDatostring, hentPeriodelengde } from '@/utils';
 
 type Props = {
@@ -68,8 +69,8 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
             onClose={(): void => undefined}
             onBeforeClose={(): boolean => false}
             header={{ heading: 'Ny periode må vurderes', size: 'medium', closeButton: false }}
-            width="medium"
             portal
+            className={MODAL_BREDDE}
         >
             <Modal.Body>
                 <VStack gap="space-16">
