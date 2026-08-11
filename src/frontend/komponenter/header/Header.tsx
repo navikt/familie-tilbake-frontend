@@ -14,6 +14,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useFagsakStore } from '@/stores/fagsakStore';
 import { erHistoriskSide } from '@/utils/sider';
+import { sporHendelse } from '@/utils/sporing';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
 
@@ -115,6 +116,11 @@ export const Header: FC = () => {
                                     as="a"
                                     target="_blank"
                                     href={aInntektUrl}
+                                    onClick={(): void =>
+                                        sporHendelse('systemer-og-oppslagsverk', {
+                                            valg: 'A-inntekt',
+                                        })
+                                    }
                                 >
                                     {personligAInntektUrl
                                         ? 'A-inntekt personoversikt'
@@ -127,6 +133,11 @@ export const Header: FC = () => {
                                     as="a"
                                     target="_blank"
                                     href={gosysUrl}
+                                    onClick={(): void =>
+                                        sporHendelse('systemer-og-oppslagsverk', {
+                                            valg: 'Gosys',
+                                        })
+                                    }
                                 >
                                     {personIdent ? 'Gosys personoversikt' : 'Gosys'}
                                     <ExternalLinkIcon aria-hidden />
@@ -137,6 +148,11 @@ export const Header: FC = () => {
                                     as="a"
                                     target="_blank"
                                     href={modiaUrl}
+                                    onClick={(): void =>
+                                        sporHendelse('systemer-og-oppslagsverk', {
+                                            valg: 'Modia',
+                                        })
+                                    }
                                 >
                                     {personIdent ? 'Modia personoversikt' : 'Modia'}
                                     <ExternalLinkIcon aria-hidden />
@@ -147,6 +163,11 @@ export const Header: FC = () => {
                                     as="a"
                                     target="_blank"
                                     href={saksoversiktUrl}
+                                    onClick={(): void =>
+                                        sporHendelse('systemer-og-oppslagsverk', {
+                                            valg: 'Gå til saksoversikt',
+                                        })
+                                    }
                                 >
                                     Gå til saksoversikt
                                     <ExternalLinkIcon aria-hidden />
