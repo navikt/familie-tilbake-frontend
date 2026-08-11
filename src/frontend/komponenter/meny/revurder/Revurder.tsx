@@ -20,10 +20,7 @@ export const Revurder: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => {
-                    sporHendelse('behandlingsmeny', { valg: 'Revurder' });
-                    ref.current?.showModal();
-                }}
+                onSelect={(): void => ref.current?.showModal()}
                 className="text-xl cursor-pointer"
                 icon={<FileResetIcon aria-hidden />}
             >
@@ -61,7 +58,13 @@ export const Revurder: FC = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={sendInn}>
+                    <Button
+                        key="bekreft"
+                        onClick={(): void => {
+                            sporHendelse('behandlingsmeny', { valg: 'Revurder' });
+                            sendInn();
+                        }}
+                    >
                         Revurder
                     </Button>
                     <Button

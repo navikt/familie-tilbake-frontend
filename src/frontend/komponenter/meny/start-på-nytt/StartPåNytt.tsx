@@ -15,10 +15,7 @@ export const StartPåNytt: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => {
-                    sporHendelse('behandlingsmeny', { valg: 'Start på nytt' });
-                    åpneDialog();
-                }}
+                onSelect={(): void => åpneDialog()}
                 icon={<ArrowCirclepathReverseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
@@ -39,7 +36,13 @@ export const StartPåNytt: FC = () => {
                     </BodyLong>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={(): void => mutate()} loading={isPending}>
+                    <Button
+                        onClick={(): void => {
+                            sporHendelse('behandlingsmeny', { valg: 'Start på nytt' });
+                            mutate();
+                        }}
+                        loading={isPending}
+                    >
                         Start på nytt
                     </Button>
                     <Button variant="secondary" onClick={(): void => dialogRef.current?.close()}>

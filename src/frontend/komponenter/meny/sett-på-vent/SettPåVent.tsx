@@ -41,10 +41,7 @@ export const SettPåVent: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => {
-                    sporHendelse('behandlingsmeny', { valg: 'Sett på vent' });
-                    dialogRef.current?.showModal();
-                }}
+                onSelect={(): void => dialogRef.current?.showModal()}
                 icon={<TimerPauseIcon aria-hidden />}
                 className="text-xl cursor-pointer"
             >
@@ -87,7 +84,13 @@ export const SettPåVent: FC = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button key="bekreft" onClick={(): void => onBekreft(behandlingId)}>
+                    <Button
+                        key="bekreft"
+                        onClick={(): void => {
+                            sporHendelse('behandlingsmeny', { valg: 'Sett på vent' });
+                            onBekreft(behandlingId);
+                        }}
+                    >
                         Sett på vent
                     </Button>
                     <Button

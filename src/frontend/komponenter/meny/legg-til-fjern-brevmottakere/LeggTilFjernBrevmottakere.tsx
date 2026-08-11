@@ -30,7 +30,7 @@ export const LeggTilFjernBrevmottakere: FC = () => {
     const { setToast } = useApp();
 
     const kanFjerneManuelleBrevmottakere =
-        manuelleBrevmottakere.length ||
+        manuelleBrevmottakere.length > 0 ||
         behandlingsstegsinfo.some(
             steg =>
                 steg.behandlingssteg === 'BREVMOTTAKER' &&
@@ -96,6 +96,9 @@ export const LeggTilFjernBrevmottakere: FC = () => {
         if (kanFjerneManuelleBrevmottakere) {
             dialogRef.current?.showModal();
         } else {
+            sporHendelse('behandlingsmeny', {
+                valg: 'Legg til brevmottaker',
+            });
             opprettBrevmottakerSteg();
         }
     };
@@ -103,14 +106,7 @@ export const LeggTilFjernBrevmottakere: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => {
-                    sporHendelse('behandlingsmeny', {
-                        valg: kanFjerneManuelleBrevmottakere
-                            ? 'Fjern brevmottaker(e)'
-                            : 'Legg til brevmottaker',
-                    });
-                    opprettEllerFjernSteg();
-                }}
+                onSelect={(): void => opprettEllerFjernSteg()}
                 className="text-xl cursor-pointer"
                 icon={<PersonPlusIcon aria-hidden />}
             >
@@ -139,7 +135,12 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                         key="bekreft"
                         disabled={senderInn}
                         loading={senderInn}
-                        onClick={fjernBrevmottakerSteg}
+                        onClick={(): void => {
+                            sporHendelse('behandlingsmeny', {
+                                valg: 'Fjern brevmottaker(e)',
+                            });
+                            fjernBrevmottakerSteg();
+                        }}
                     >
                         Fjern
                     </Button>

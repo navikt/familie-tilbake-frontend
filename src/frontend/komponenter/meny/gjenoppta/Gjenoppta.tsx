@@ -28,10 +28,7 @@ export const Gjenoppta: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => {
-                    sporHendelse('behandlingsmeny', { valg: 'Gjenoppta' });
-                    dialogRef.current?.showModal();
-                }}
+                onSelect={(): void => dialogRef.current?.showModal()}
                 className="text-xl cursor-pointer"
                 icon={<TimerStartIcon aria-hidden />}
             >
@@ -53,7 +50,10 @@ export const Gjenoppta: FC = () => {
                 <Modal.Footer>
                     <Button
                         key="bekreft"
-                        onClick={(): void => onOkTaAvVent(behandling.behandlingId)}
+                        onClick={(): void => {
+                            sporHendelse('behandlingsmeny', { valg: 'Gjenoppta' });
+                            onOkTaAvVent(behandling.behandlingId);
+                        }}
                     >
                         Gjenoppta
                     </Button>

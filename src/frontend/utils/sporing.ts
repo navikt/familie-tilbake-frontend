@@ -1,26 +1,15 @@
-// Sporing (produktanalyse) via NAVs Umami/Innblikk-løsning fra ResearchOps.
-// Se https://reops-docs.ansatt.dev.nav.no/guider/kom-i-gang-med-sporing/
-//
-// Applikasjonen er et internt saksbehandlerverktøy bak innlogging og krever
-// derfor ikke cookie-samtykke (jf. guiden om interne verktøy for Nav-ansatte).
-//
-// Base-scriptet finnes i to varianter: sporing-dev.js har dev-proxyen hardkodet,
-// mens sporing.js ruter til prod-proxyen. Vi velger variant og sporingskode ut
-// fra miljø, slik Innblikk oppgir dem på /sporingskoder.
-//
-// Vi bruker data-auto-track="false" og sporer kun eksplisitte hendelser via
-// sporHendelse (f.eks. menyvalg). Sidevisninger spores altså ikke.
-//
-// Merk: når auto-sporing er av, kjører skriptet aldri init(), og URL-en i
-// payloaden fryses til den siden appen ble lastet på. Vi setter derfor url
-// eksplisitt ved hvert kall, slik at hendelsene knyttes til riktig side.
+/**
+ * Sporing (produktanalyse) via Umami/Innblikk-løsning fra ResearchOps.
+ * Se https://reops-docs.ansatt.dev.nav.no/guider/kom-i-gang-med-sporing/
+ */
+import type { SchemaEnum4 } from '@/generated/types.gen';
 
 type Sporingsoppsett = {
     websiteId: string;
     skriptUrl: string;
 };
 
-// Sporingskode og skript hentet fra Innblikk (innblikk.ansatt.(dev.)nav.no/sporingskoder).
+// Sporingskode og skript hentet fra Innblikk (innblikk.ansatt.dev.nav.no/sporingskoder)
 const SPORING_DEV: Sporingsoppsett = {
     websiteId: 'd955fe48-a9ac-4930-a6aa-a9dfb084ec2b',
     skriptUrl: 'https://cdn.nav.no/team-researchops/sporing/sporing-dev.js',
@@ -36,8 +25,6 @@ type SporingPayload = Record<string, unknown> & {
 };
 
 type SporingApi = {
-    // Funksjonsformen gir oss skriptets standardpayload, slik at vi kan
-    // overstyre felter (bl.a. url) før hendelsen sendes.
     track: (byggPayload: (standardPayload: SporingPayload) => SporingPayload) => void;
 };
 
@@ -46,11 +33,9 @@ const hentSporing = (): SporingApi | undefined =>
 
 const erDev = (): boolean => window.location.hostname.indexOf('dev.nav.no') > -1;
 
-// Ytelsestype (f.eks. BARNETRYGD) som festes på alle custom events. Settes fra
-// FagsakProvider når en fagsak er lastet, og nullstilles når man forlater den.
-let gjeldendeYtelsestype: string | undefined;
+let gjeldendeYtelsestype: SchemaEnum4 | undefined;
 
-export const settSporingsYtelsestype = (ytelsestype: string | undefined): void => {
+export const settSporingsYtelsestype = (ytelsestype: SchemaEnum4 | undefined): void => {
     gjeldendeYtelsestype = ytelsestype;
 };
 
@@ -83,10 +68,11 @@ export const loadTracker = (): void => {
     document.head.appendChild(script);
 };
 
-// Sporer en egendefinert hendelse (custom event) med valgfrie data-egenskaper.
-// Alle hendelser beriket automatisk med gjeldende ytelsestype (settes via
-// settSporingsYtelsestype fra FagsakProvider). Gjør ingenting dersom
-// sporingsskriptet ikke er lastet (f.eks. lokalt).
+/**
+ * Sporer en egendefinert hendelse (custom event) med valgfrie data-egenskaper.
+ * Alle hendelser beriket automatisk med gjeldende ytelsestype (settes via
+ * settSporingsYtelsestype fra FagsakProvider)
+ */
 export const sporHendelse = (navn: string, data?: Record<string, unknown>): void => {
     const beriketData: Record<string, unknown> = {};
 

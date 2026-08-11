@@ -35,10 +35,7 @@ export const EndreEnhet: FC = () => {
     return (
         <>
             <ActionMenu.Item
-                onSelect={(): void => {
-                    sporHendelse('behandlingsmeny', { valg: 'Endre enhet' });
-                    dialogRef.current?.showModal();
-                }}
+                onSelect={(): void => dialogRef.current?.showModal()}
                 className="text-xl cursor-pointer"
                 icon={<Buildings3Icon aria-hidden />}
             >
@@ -82,7 +79,10 @@ export const EndreEnhet: FC = () => {
                     <Button
                         disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                         key="bekreft"
-                        onClick={sendInn}
+                        onClick={(): void => {
+                            sporHendelse('behandlingsmeny', { valg: 'Endre enhet' });
+                            sendInn();
+                        }}
                     >
                         Endre
                     </Button>
