@@ -51,20 +51,6 @@ export type OppdaterBehandlendeEnhetRequest = {
     nyEnhet: string;
 };
 
-export type Datoperiode = {
-    fom: string;
-    tom: string;
-    fomMåned: string;
-    tomMåned: string;
-};
-
-export type Forskjell = unknown;
-
-export type JustertBeløp = Forskjell & {
-    periode: Datoperiode;
-    differanse: number;
-};
-
 export type AktsomhetsvurderingEntity = {
     vurderingType: VurderingTypeEnum;
     mottakersForståelse?: MottakersForståelseEntity | null;
@@ -98,6 +84,7 @@ export type BehandlingEntity = {
     ansvarligSaksbehandler: BehandlerEntity;
     eksternFagsakBehandlingRef: HistorikkReferanseEntityUuid;
     kravgrunnlagRef: HistorikkReferanseEntityUuid;
+    nyttKravgrunnlagRef?: HistorikkReferanseEntityUuid | null;
     foreldelsestegEntity: ForeldelsesstegEntity;
     faktastegEntity: FaktastegEntity;
     vilkårsvurderingstegEntity: VilkårsvurderingstegEntity;
@@ -124,6 +111,7 @@ export type BrevEntity = {
     brevtype: BrevtypeEnum;
     varselbrevEntity?: VarselbrevEntity | null;
     vedtaksbrevEntity?: VedtaksbrevEntity | null;
+    opprettet: string;
 };
 
 export type BrukerEntity = {
@@ -143,7 +131,7 @@ export type BrukeruttalelseEntity = {
     uttalelseVurdering: UttalelseVurderingEnum;
     uttalelseInfoEntity?: UttalelseInfoEntity | null;
     kommentar?: string | null;
-    trengerNyVurdering: boolean;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type DatoperiodeEntity = {
@@ -161,6 +149,7 @@ export type EksternFagsakBehandlingEntity = {
     vedtaksdato?: string | null;
     utvidedePerioder?: Array<UtvidetPeriodeEntity> | null;
     url?: string | null;
+    opprettet: string;
 };
 
 export type EksternFagsakEntity = {
@@ -168,7 +157,7 @@ export type EksternFagsakEntity = {
     tilbakekrevingRef: string;
     eksternId: string;
     ytelseEntity: YtelseEntity;
-    behandlinger: Array<EksternFagsakBehandlingEntity>;
+    behandlinger: HistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurdering;
 };
 
 export type EnhetEntity = {
@@ -192,7 +181,7 @@ export type FaktastegEntity = {
     uttalelse: UttalelseEnum;
     vurderingAvBrukersUttalelse?: string | null;
     oppdaget?: OppdagetEntity | null;
-    trengerNyVurdering: boolean;
+    tilbakeført?: TilbakeførtEnum;
     rettsgebyrÅrFraSaksbehandler?: number | null;
 };
 
@@ -214,7 +203,7 @@ export type ForeldelsesstegEntity = {
     id: string;
     behandlingRef: string;
     vurdertePerioder: Array<ForeldelseperiodeEntity>;
-    trengerNyVurdering: boolean;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type ForeldelsesvurderingEntity = {
@@ -228,7 +217,7 @@ export type ForeslåVedtakStegEntity = {
     id: string;
     behandlingRef: string;
     vurdert: boolean;
-    trengerNyVurdering: boolean;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type ForhåndsvarselEntity = {
@@ -242,7 +231,7 @@ export type ForhåndsvarselUnntakEntity = {
     behandlingRef: string;
     begrunnelseForUnntak: BegrunnelseForUnntakEnum;
     beskrivelse: string;
-    trengerNyVurdering: boolean;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type GodTroEntity = {
@@ -250,6 +239,22 @@ export type GodTroEntity = {
     begrunnelse: string;
     beholdType: BeholdTypeEnum;
     beløp?: number | null;
+};
+
+export type HistorikkEntityUuidBehandlingEntityBehandling = {
+    innslag: Array<BehandlingEntity>;
+};
+
+export type HistorikkEntityUuidBrevEntityBrev = {
+    innslag: Array<BrevEntity>;
+};
+
+export type HistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurdering = {
+    innslag: Array<EksternFagsakBehandlingEntity>;
+};
+
+export type HistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse = {
+    innslag: Array<KravgrunnlagHendelseEntity>;
 };
 
 export type HistorikkReferanseEntityUuid = {
@@ -270,6 +275,7 @@ export type KravgrunnlagHendelseEntity = {
     kravgrunnlagId: string;
     referanse: string;
     perioder: Array<KravgrunnlagPeriodeEntity>;
+    opprettet: string;
 };
 
 export type KravgrunnlagPeriodeEntity = {
@@ -315,9 +321,9 @@ export type TilbakekrevingEntity = {
     id: string;
     nåværendeTilstand: SchemaEnum;
     eksternFagsak: EksternFagsakEntity;
-    behandlingHistorikkEntities: Array<BehandlingEntity>;
-    kravgrunnlagHistorikkEntities: Array<KravgrunnlagHendelseEntity>;
-    brevHistorikkEntities: Array<BrevEntity>;
+    behandlingHistorikkEntities: HistorikkEntityUuidBehandlingEntityBehandling;
+    kravgrunnlagHistorikkEntities: HistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse;
+    brevHistorikkEntities: HistorikkEntityUuidBrevEntityBrev;
     opprettet: string;
     nestePåminnelse?: string | null;
     opprettelsesvalg: OpprettelsesvalgEnum;
@@ -377,7 +383,7 @@ export type VilkårsvurderingstegEntity = {
     id: string;
     behandlingRef: string;
     vurderinger: Array<VilkårsvurderingsperiodeEntity>;
-    trengerNyVurdering: boolean;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type VurdertAktsomhetEntity = {
@@ -397,6 +403,13 @@ export type VurdertStegEntity = {
 
 export type YtelseEntity = {
     type: TypeEnum8;
+};
+
+export type Datoperiode = {
+    fom: string;
+    tom: string;
+    fomMåned: string;
+    tomMåned: string;
 };
 
 export type FritekstavsnittDto = {
@@ -749,12 +762,6 @@ export type RessursListKravgrunnlagsinfo = {
     melding: string;
     frontendFeilmelding?: string | null;
     stacktrace?: string | null;
-};
-
-export type Entity = {
-    kravgrunnlag: string;
-    kravgrunnlagId: string;
-    fagsystemId: string;
 };
 
 export type RessursMapStringBoolean = {
@@ -1226,6 +1233,7 @@ export type BehandlingDto = {
     saksbehandlingstype: SaksbehandlingstypeEnum;
     erNyModell: boolean;
     innloggetRolle: InnloggetRolleEnum;
+    endretKravgrunnlag?: EndretKravgrunnlag | null;
 };
 
 export type BehandlingsstegsinfoDto = {
@@ -1233,6 +1241,13 @@ export type BehandlingsstegsinfoDto = {
     behandlingsstegstatus: BehandlingsstegstatusEnum;
     venteårsak?: VenteårsakEnum2;
     tidsfrist?: string | null;
+};
+
+export type EndretKravgrunnlag = {
+    gammeltBeløp: number;
+    nyttBeløp: number;
+    gammelPeriode: Datoperiode;
+    nyPeriode: Datoperiode;
 };
 
 export type RessursBehandlingDto = {
@@ -1326,7 +1341,11 @@ export type VurderingTypeEnum =
     | 'FORÅRSAKET_AV_BRUKER'
     | 'KOPIERT_VURDERING';
 
-export type KanUnnlatesEnum = 'UNNLATES' | 'SKAL_IKKE_UNNLATES' | 'OVER_4_RETTSGEBYR';
+export type KanUnnlatesEnum =
+    | 'UNNLATES'
+    | 'SKAL_IKKE_UNNLATES'
+    | 'OVER_4_RETTSGEBYR'
+    | 'IKKE_VURDERT';
 
 export type FeilaktigEllerMangelfullEnum = 'FEILAKTIG' | 'MANGELFULL';
 
@@ -1366,6 +1385,8 @@ export type UttalelseVurderingEnum =
     | 'UNNTAK_INGEN_UTTALELSE'
     | 'JA'
     | 'NEI';
+
+export type TilbakeførtEnum = 'NyttKravgrunnlag' | 'Underkjent';
 
 export type TypeEnum4 = 'BEHANDLING' | 'UKJENT';
 
@@ -1530,7 +1551,7 @@ export type BegrunnelseForUnntakEnum =
     | 'ÅPENBART_UNØDVENDIG'
     | 'ALLEREDE_UTTALET_SEG';
 
-export type BeholdTypeEnum = 'JA' | 'NEI';
+export type BeholdTypeEnum = 'HELE_BELØPET' | 'DELER_AV_BELØPET' | 'JA' | 'NEI';
 
 export type KravstatuskodeEnum =
     | 'ANNULERT'
@@ -1551,9 +1572,9 @@ export type TypeEnum6 = 'Ja' | 'Nei';
 
 export type TypeEnum7 =
     | 'GRAD_AV_UAKTSOMHET'
-    | 'HELT_ELLER_DELVIS_NAVS_FEIL'
     | 'STØRRELSE_BELØP'
     | 'TID_FRA_UTBETALING'
+    | 'HELT_ELLER_DELVIS_NAVS_FEIL'
     | 'ANNET';
 
 export type OpprettelsesvalgEnum = 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL';
@@ -2403,26 +2424,6 @@ export type LagOppdaterOppgaveTaskForBehandlingResponses = {
     200: unknown;
 };
 
-export type OppdaterKravgrunnlagBeløpData = {
-    body?: never;
-    path: {
-        fagsystem: SchemaEnum2;
-        fagsystemId: string;
-    };
-    query?: never;
-    url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}/oppdater-belop';
-};
-
-export type OppdaterKravgrunnlagBeløpResponses = {
-    /**
-     * OK
-     */
-    200: Array<Array<JustertBeløp>>;
-};
-
-export type OppdaterKravgrunnlagBeløpResponse =
-    OppdaterKravgrunnlagBeløpResponses[keyof OppdaterKravgrunnlagBeløpResponses];
-
 export type FinnGamleÅpneBehandlingerUtenOppgaveData = {
     body?: never;
     path: {
@@ -2469,6 +2470,26 @@ export type FerdigstillGodkjenneVedtakOppgaveOgOpprettBehandleSakOppgaveResponse
      */
     200: unknown;
 };
+
+export type DumpFagsakFagsystemIdData = {
+    body?: never;
+    path: {
+        fagsystem: SchemaEnum2;
+        fagsystemId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/dump/{fagsystem}/{fagsystemId}';
+};
+
+export type DumpFagsakFagsystemIdResponses = {
+    /**
+     * OK
+     */
+    200: TilbakekrevingEntity;
+};
+
+export type DumpFagsakFagsystemIdResponse =
+    DumpFagsakFagsystemIdResponses[keyof DumpFagsakFagsystemIdResponses];
 
 export type DumpFagsakData = {
     body?: never;
@@ -2932,26 +2953,6 @@ export type HentKravgrunnlagsinfoResponses = {
 
 export type HentKravgrunnlagsinfoResponse =
     HentKravgrunnlagsinfoResponses[keyof HentKravgrunnlagsinfoResponses];
-
-export type HentAlleKravgrunnlagUtenforScopeData = {
-    body?: never;
-    path: {
-        fagsystem: SchemaEnum2;
-        fagsystemId: string;
-    };
-    query?: never;
-    url: '/api/forvaltning/kravgrunnlag/{fagsystem}/{fagsystemId}';
-};
-
-export type HentAlleKravgrunnlagUtenforScopeResponses = {
-    /**
-     * OK
-     */
-    200: Array<Entity>;
-};
-
-export type HentAlleKravgrunnlagUtenforScopeResponse =
-    HentAlleKravgrunnlagUtenforScopeResponses[keyof HentAlleKravgrunnlagUtenforScopeResponses];
 
 export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData = {
     body?: never;

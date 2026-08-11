@@ -48,7 +48,7 @@ export default [
     },
     {
         ...defaultConfig,
-        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/2044df925bb94850f095058b6bf193c4cfeed5f8/tsp-output/schema/openapi.yaml',
+        input: 'https://raw.githubusercontent.com/navikt/tilbakekreving-kontrakter/482c04ad20262ad52d23306f7b3ed3b03b0f0c10/tsp-output/schema/openapi.yaml',
         output: {
             path: 'src/frontend/generated-new',
             postProcess: [

@@ -2,6 +2,7 @@
 
 export {
     behandlingBehandlingslogg,
+    behandlingBenyttNyesteKravgrunnlag,
     behandlingFakta,
     behandlingForeslaaVedtak,
     behandlingForhandsvarsel,
@@ -38,6 +39,10 @@ export type {
     BehandlingBehandlingsloggErrors,
     BehandlingBehandlingsloggResponse,
     BehandlingBehandlingsloggResponses,
+    BehandlingBenyttNyesteKravgrunnlagData,
+    BehandlingBenyttNyesteKravgrunnlagError,
+    BehandlingBenyttNyesteKravgrunnlagErrors,
+    BehandlingBenyttNyesteKravgrunnlagResponses,
     BehandlingFaktaData,
     BehandlingFaktaError,
     BehandlingFaktaErrors,

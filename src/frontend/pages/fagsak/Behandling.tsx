@@ -16,6 +16,7 @@ import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 import { StegErrorBoundary } from '@/komponenter/error-boundary/StegErrorBoundary';
 import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
+import { NyttKravgrunnlagModal } from '@/komponenter/modal/nytt-kravgrunnlag/NyttKravgrunnlagModal';
 import { PåVentModal } from '@/komponenter/modal/på-vent/PåVentModal';
 import { Stegflyt } from '@/komponenter/stegflyt/Stegflyt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
@@ -28,7 +29,7 @@ import {
     erHistoriskSide,
     erØnsketSideTilgjengelig,
     SYNLIGE_STEG,
-    utledBehandlingSide,
+    utledStandardSide,
 } from '@/utils/sider';
 
 import { Fakta } from './fakta/Fakta';
@@ -379,13 +380,9 @@ const Behandling: FC = () => {
     const erØnsketSideGyldig =
         !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
     if (!erØnsketSideGyldig) {
-        const aktivSide = aktivtSteg
-            ? utledBehandlingSide(aktivtSteg.behandlingssteg)
-            : behandling.status === 'AVSLUTTET'
-              ? SYNLIGE_STEG.FORESLÅ_VEDTAK
-              : SYNLIGE_STEG.FAKTA;
+        const standardSide = utledStandardSide(behandling, aktivtSteg);
 
-        return <Navigate to={`${behandlingUrl}/${aktivSide?.href ?? 'fakta'}`} replace />;
+        return <Navigate to={`${behandlingUrl}/${standardSide?.href ?? 'fakta'}`} replace />;
     }
 
     return <AktivBehandling dialogRef={dialogRef} />;
@@ -395,13 +392,23 @@ const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string =>
     `Behandlingen er satt på vent${ventegrunn.venteårsak ? `: ${venteårsaker[ventegrunn.venteårsak]}` : ''}.${ventegrunn.tidsfrist ? ` Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist)}` : ''}`;
 
 export const BehandlingContainer: FC = () => {
+    const behandling = useBehandling();
     const { ventegrunn, innholdsbredde } = useBehandlingState();
     const globalAlerts = useGlobalAlerts();
     const lukkGlobalAlert = useLukkGlobalAlert();
     const [visVenteModal, setVisVenteModal] = useState(false);
+    const [visNyttKravgrunnlagModal, setVisNyttKravgrunnlagModal] = useState(
+        !!behandling.endretKravgrunnlag
+    );
 
     return (
         <>
+            {behandling.endretKravgrunnlag && visNyttKravgrunnlagModal && (
+                <NyttKravgrunnlagModal
+                    endretKravgrunnlag={behandling.endretKravgrunnlag}
+                    onFullført={(): void => setVisNyttKravgrunnlagModal(false)}
+                />
+            )}
             {ventegrunn && (
                 <div className="px-4 py-2 bg-ax-neutral-100">
                     <LocalAlert status="announcement" size="small">

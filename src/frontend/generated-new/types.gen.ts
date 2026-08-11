@@ -1161,6 +1161,36 @@ export type BehandlingHentDokumentResponses = {
 export type BehandlingHentDokumentResponse =
     BehandlingHentDokumentResponses[keyof BehandlingHentDokumentResponses];
 
+export type BehandlingBenyttNyesteKravgrunnlagData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/kravgrunnlag/benytt-nyeste';
+};
+
+export type BehandlingBenyttNyesteKravgrunnlagErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingBenyttNyesteKravgrunnlagError =
+    BehandlingBenyttNyesteKravgrunnlagErrors[keyof BehandlingBenyttNyesteKravgrunnlagErrors];
+
+export type BehandlingBenyttNyesteKravgrunnlagResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
 export type BehandlingHentVarselbrevTeksterData = {
     body?: never;
     path: {

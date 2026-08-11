@@ -968,6 +968,10 @@ export const zBehandlingHentDokumentPath = z.object({
  */
 export const zBehandlingHentDokumentResponse = z.string();
 
+export const zBehandlingBenyttNyesteKravgrunnlagPath = z.object({
+    behandlingId: z.uuid(),
+});
+
 export const zBehandlingHentVarselbrevTeksterPath = z.object({
     behandlingId: z.uuid(),
 });
