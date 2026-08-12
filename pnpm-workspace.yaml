@@ -1,5 +1,6 @@
 overrides:
   protobufjs: ">=8.0.2"
+  js-yaml: "4.3.0"
 
 allowBuilds:
   '@sentry/cli': true
