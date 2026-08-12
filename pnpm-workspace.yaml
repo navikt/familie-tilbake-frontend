@@ -1,8 +1,12 @@
 overrides:
-  protobufjs: ">=8.0.2"
+  # Sikkerhetsfikser for transitive avhengigheter. Fjern oppføringen når direkte
+  # avhengighet selv krever en trygg versjon (sjekk med `pnpm why <pakke>`).
+  qs: "^6.15.2"
+  body-parser: "^2.3.0"
+  js-yaml: "^4.3.1"
+  brace-expansion: "^5.0.9"
 
 allowBuilds:
   '@sentry/cli': true
   esbuild: true
-  protobufjs: true
   unrs-resolver: true

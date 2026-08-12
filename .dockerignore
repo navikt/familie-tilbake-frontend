@@ -1,0 +1,5 @@
+*
+!node_dist
+!dist
+!node_modules
+!package.json

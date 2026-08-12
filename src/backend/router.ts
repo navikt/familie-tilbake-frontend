@@ -4,7 +4,6 @@ import type { TexasClient } from './backend/auth/texas';
 
 import fs from 'fs';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
 import { logRequest } from './backend/utils';
@@ -46,7 +45,9 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
 
     // APP
     if (!isProd) {
-        vite = await createViteServer({
+        // Vite er en devDependency og finnes ikke i produksjonsimaget, derfor lastes den dynamisk.
+        const { createServer } = await import('vite');
+        vite = await createServer({
             root: path.join(process.cwd(), 'src/frontend'),
             server: { middlewareMode: true },
             appType: 'custom',

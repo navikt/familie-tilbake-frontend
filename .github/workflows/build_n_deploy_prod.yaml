@@ -39,6 +39,9 @@ jobs:
           pnpm build
           pnpm test
 
+      - name: Remove devDependencies from node_modules before docker-build
+        run: pnpm prune --prod --ignore-scripts
+
       - name: Push docker image to GAR
         uses: nais/docker-build-push@v0
         id: docker-build-push
