@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Vilkaarsperiode } from '@/generated-new';
+import type { Periode, Vilkaarsperiode } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
 import { Button, Heading, HStack } from '@navikt/ds-react';
@@ -39,8 +39,13 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                     {valgtVilkårsperiode &&
                         valgtVilkårsperiode.vilkårsvurdering.delbarePerioder.length > 1 && (
                             <DelPeriode
-                                key={`${valgtVilkårsperiode.vilkårsvurdering.periode.fom}-${valgtVilkårsperiode.vilkårsvurdering.periode.tom}`}
-                                periode={valgtVilkårsperiode.vilkårsvurdering.periode}
+                                key={`${valgtVilkårsperiode.vilkårsvurdering.fom}-${valgtVilkårsperiode.vilkårsvurdering.tom}`}
+                                periode={
+                                    {
+                                        fom: valgtVilkårsperiode.vilkårsvurdering.fom,
+                                        tom: valgtVilkårsperiode.vilkårsvurdering.tom,
+                                    } satisfies Periode
+                                }
                                 delbarePerioder={
                                     valgtVilkårsperiode.vilkårsvurdering.delbarePerioder
                                 }
@@ -52,7 +57,10 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                         valgtPeriodeId={valgtPeriode.id}
                         vilkårsperioder={vilkårsperioder.map(({ vilkårsvurdering }) => ({
                             periodeId: vilkårsvurdering.id,
-                            periode: vilkårsvurdering.periode,
+                            periode: {
+                                fom: vilkårsvurdering.fom,
+                                tom: vilkårsvurdering.tom,
+                            } satisfies Periode,
                             delbarePerioder: vilkårsvurdering.delbarePerioder,
                         }))}
                         hentVilkårsvurdering={hentVilkårsvurdering}

@@ -38,7 +38,8 @@ const lagVilkårsperiode = (simulertBeløp: number | null): Vilkaarsperiode => (
     simulertBeløp,
     vilkårsvurdering: {
         id: valgtPeriode.id,
-        periode: { fom: '2023-01-01', tom: '2023-12-31' },
+        fom: '2023-01-01',
+        tom: '2023-12-31',
         delbarePerioder: [],
         valg: { vurdering: 'ikke_vurdert' },
     },
@@ -611,7 +612,8 @@ describe('VilkårsvurderingDetaljer', () => {
                 ...lagVilkårsperiode(simulertBeløp),
                 vilkårsvurdering: {
                     id: valgtPeriode.id,
-                    periode: { fom: '2023-01-01', tom: '2023-12-31' },
+                    fom: '2023-01-01',
+                    tom: '2023-12-31',
                     delbarePerioder: [],
                     valg,
                 },
