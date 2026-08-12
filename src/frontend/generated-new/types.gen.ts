@@ -15,6 +15,14 @@ export type Aktsomhet =
           aktsomhet: 'forsettlig';
       } & Forsettlig);
 
+export type ArsakTilTilbakeforing =
+    | 'ØktBeløp'
+    | 'LavereBeløp'
+    | 'NyPeriode'
+    | 'EndretPeriode'
+    | 'EndretPeriodeOgØktBeløp'
+    | 'EndretPeriodeOgLavereBeløp';
+
 export type Avsnitt = {
     tittel: string;
     readonly forklaring: string;
@@ -54,8 +62,8 @@ export type BeregningsresultatVurdering =
     | 'Forstod';
 
 export type Beregningsresultatsperiode = {
-    fom: string;
-    tom: string;
+    readonly fom: string;
+    readonly tom: string;
     feilutbetaltBeløp: number;
     vurdering: BeregningsresultatVurdering;
     andelAvBeløp: number | null;
@@ -116,13 +124,15 @@ export type FaktaOmFeilutbetaling = {
 
 export type FaktaPeriode = {
     id: string;
-    fom: string;
-    tom: string;
+    readonly fom: string;
+    readonly tom: string;
+    readonly tilbakeført?: ArsakTilTilbakeforing;
     feilutbetaltBeløp: number;
     splittbarePerioder: Array<{
         id: string;
-        fom: string;
-        tom: string;
+        readonly fom: string;
+        readonly tom: string;
+        readonly tilbakeført?: ArsakTilTilbakeforing;
         feilutbetaltBeløp: number;
         rettsligGrunnlag: Array<RettsligGrunnlag>;
     }>;
@@ -131,8 +141,8 @@ export type FaktaPeriode = {
 
 export type Feilutbetaling = {
     beløp: number;
-    fom: string;
-    tom: string;
+    readonly fom: string;
+    readonly tom: string;
     revurdering: Revurdering;
 };
 
@@ -324,8 +334,8 @@ export type PakrevdBegrunnelseUpdateItem = {
 };
 
 export type Periode = {
-    fom: string;
-    tom: string;
+    readonly fom: string;
+    readonly tom: string;
 };
 
 export type PeriodeInfo = {
@@ -555,7 +565,9 @@ export type Vilkaarsperiode = {
 
 export type Vilkaarsvurdering = {
     id: string;
-    readonly periode: Periode;
+    readonly fom: string;
+    readonly tom: string;
+    readonly tilbakeført?: ArsakTilTilbakeforing;
     readonly delbarePerioder: Array<PeriodeInfo>;
     valg: VilkaarsvurderingValg;
 };
@@ -623,6 +635,20 @@ export type BelopIBeholdWritable =
           belopIBehold: 'deler';
       } & DelerWritable);
 
+export type BeregningsresultatWritable = {
+    beregningsresultatsperioder: Array<BeregningsresultatsperiodeWritable>;
+    vedtaksresultat: Vedtaksresultat;
+};
+
+export type BeregningsresultatsperiodeWritable = {
+    feilutbetaltBeløp: number;
+    vurdering: BeregningsresultatVurdering;
+    andelAvBeløp: number | null;
+    renteprosent: number | null;
+    tilbakekrevingsbeløp: number;
+    tilbakekrevesBeløpEtterSkatt: number;
+};
+
 export type BurdeForstaattWritable = {
     begrunnelse: string;
     unnlatelse: UnnlatelseWritable;
@@ -635,12 +661,28 @@ export type DelerWritable = {
 };
 
 export type FaktaOmFeilutbetalingWritable = {
-    feilutbetaling: Feilutbetaling;
+    feilutbetaling: FeilutbetalingWritable;
     tidligereVarsletBeløp: number | null;
     muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlag>;
-    perioder: Array<FaktaPeriode>;
+    perioder: Array<FaktaPeriodeWritable>;
     vurdering: Vurdering;
     rettsgebyrÅrFraSaksbehandler: number | null;
+};
+
+export type FaktaPeriodeWritable = {
+    id: string;
+    feilutbetaltBeløp: number;
+    splittbarePerioder: Array<{
+        id: string;
+        feilutbetaltBeløp: number;
+        rettsligGrunnlag: Array<RettsligGrunnlag>;
+    }>;
+    rettsligGrunnlag: Array<RettsligGrunnlag>;
+};
+
+export type FeilutbetalingWritable = {
+    beløp: number;
+    revurdering: Revurdering;
 };
 
 export type ForaarsaketAvMottakerWritable = {
@@ -731,6 +773,10 @@ export type PakrevdBegrunnelseWritable = {
     tittel: string;
     begrunnelseType: string;
     underavsnitt: Array<Element>;
+};
+
+export type PeriodeInfoWritable = {
+    periodeId: string;
 };
 
 export type ReduksjonWritable =

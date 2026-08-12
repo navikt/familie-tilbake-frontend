@@ -25,8 +25,8 @@ import { VilkårsvurderingPeriodeListe } from './VilkårsvurderingPeriodeListe';
 const mapTilVilkårsperioder = (vilkår: Vilkaar): Vilkårsperiode[] =>
     vilkår.vilkårsperioder.map(periode => ({
         id: periode.vilkårsvurdering.id,
-        fom: formatterDatostring(periode.vilkårsvurdering.periode.fom),
-        tom: formatterDatostring(periode.vilkårsvurdering.periode.tom),
+        fom: formatterDatostring(periode.vilkårsvurdering.fom),
+        tom: formatterDatostring(periode.vilkårsvurdering.tom),
         feilutbetalt: periode.feilutbetaltBeløp,
         vurdering: utledVurdering(periode.vilkårsvurdering.valg),
         resultat: periode.delresultat,
