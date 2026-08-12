@@ -385,6 +385,11 @@ const Behandling: FC = () => {
     }
 
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+
+    if (behandling.endretKravgrunnlag && ønsketSide !== SYNLIGE_STEG.FAKTA.href) {
+        return <Navigate to={`${behandlingUrl}/${SYNLIGE_STEG.FAKTA.href}`} replace />;
+    }
+
     const erØnsketSideGyldig =
         !!ønsketSide && erØnsketSideTilgjengelig(ønsketSide, behandling.behandlingsstegsinfo);
     if (!erØnsketSideGyldig) {
