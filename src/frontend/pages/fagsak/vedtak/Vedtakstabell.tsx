@@ -4,6 +4,7 @@ import type { Beregningsresultat, BeregningsresultatVurdering } from '@/generate
 import { ExpansionCard, Table } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 const vurderingstekster: Record<BeregningsresultatVurdering | string, string> = {
     Forsett: 'Forsett',
@@ -38,6 +39,16 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
         <ExpansionCard
             size="small"
             defaultOpen
+            onToggle={(åpen: boolean): void =>
+                sporHendelse(
+                    åpen ? Hendelser.UTVIDBART_KORT_APNET : Hendelser.UTVIDBART_KORT_LUKKET,
+                    {
+                        tittel: 'Oppsummering av vedtaket',
+                        kontekst: Sporingskontekst.Vedtak,
+                        komponentId: 'vedtakstabell',
+                    }
+                )
+            }
             aria-label="Oppsummering av vedtaket"
             className="border-ax-border-neutral-subtle"
         >

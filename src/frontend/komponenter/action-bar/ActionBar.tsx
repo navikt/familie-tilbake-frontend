@@ -5,6 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 export const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',
@@ -44,7 +45,14 @@ export const ActionBar: FC<ActionBarConfig> = ({
                                 size="small"
                                 loading={isLoading}
                                 disabled={isLoading}
-                                onClick={onForrige}
+                                onClick={(): void => {
+                                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                                        tekst: forrigeTekst,
+                                        kontekst: Sporingskontekst.ActionBar,
+                                        seksjon: stegtekst,
+                                    });
+                                    onForrige();
+                                }}
                                 aria-label={forrigeAriaLabel}
                             >
                                 <span className="hidden ax-md:block">{forrigeTekst}</span>
@@ -65,6 +73,11 @@ export const ActionBar: FC<ActionBarConfig> = ({
                                 form={formId}
                                 loading={isLoading}
                                 onClick={(): void => {
+                                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                                        tekst: nesteTekst,
+                                        kontekst: Sporingskontekst.ActionBar,
+                                        seksjon: stegtekst,
+                                    });
                                     if (onNeste && type !== 'submit') onNeste();
                                 }}
                                 aria-label={nesteAriaLabel}

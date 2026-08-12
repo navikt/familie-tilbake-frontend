@@ -14,6 +14,7 @@ import { CopyButton, ExpansionCard, Tag } from '@navikt/ds-react';
 
 import { useFagsak } from '@/context/FagsakContext';
 import { formatterDatostring, hentAlder } from '@/utils';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { ICON_PROPS } from '../utils';
 
@@ -46,10 +47,20 @@ export const BrukerInformasjon: FC<Props> = ({ open, onToggle }: Props) => {
 
     const erKontrollert = open !== undefined;
 
+    const håndterToggle = (åpen: boolean): void => {
+        sporHendelse(åpen ? Hendelser.UTVIDBART_KORT_APNET : Hendelser.UTVIDBART_KORT_LUKKET, {
+            tittel: 'Informasjon om bruker',
+            kontekst: Sporingskontekst.Sidebar,
+            komponentId: 'brukerinformasjon',
+        });
+        onToggle?.(åpen);
+    };
+
     return (
         <ExpansionCard
             size="small"
-            {...(erKontrollert ? { open, onToggle } : { defaultOpen: true })}
+            {...(erKontrollert ? { open } : { defaultOpen: true })}
+            onToggle={håndterToggle}
             aria-label="Brukers informasjon"
             className="border-ax-border-neutral-subtle"
         >
@@ -92,6 +103,15 @@ export const BrukerInformasjon: FC<Props> = ({ open, onToggle }: Props) => {
                             copyText={bruker.personIdent}
                             className="p-0"
                             title="Kopier fødselsnummer"
+                            onClick={(): void =>
+                                sporHendelse(Hendelser.TEKST_KOPIERT, {
+                                    tekst: erDNummer(bruker.personIdent)
+                                        ? 'D-nummer'
+                                        : 'Fødselsnummer',
+                                    kontekst: Sporingskontekst.Sidebar,
+                                    komponentId: 'brukerinformasjon',
+                                })
+                            }
                         />
                     </dd>
 
@@ -130,6 +150,13 @@ export const BrukerInformasjon: FC<Props> = ({ open, onToggle }: Props) => {
                                     copyText={institusjon.organisasjonsnummer}
                                     className="p-0"
                                     title="Kopier organisasjonsnummer"
+                                    onClick={(): void =>
+                                        sporHendelse(Hendelser.TEKST_KOPIERT, {
+                                            tekst: 'Organisasjonsnummer',
+                                            kontekst: Sporingskontekst.Sidebar,
+                                            komponentId: 'brukerinformasjon',
+                                        })
+                                    }
                                 />
                             </dd>
                         </>

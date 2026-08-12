@@ -31,6 +31,7 @@ import {
     SYNLIGE_STEG,
     utledStandardSide,
 } from '@/utils/sider';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { Fakta } from './fakta/Fakta';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
@@ -242,7 +243,14 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             <SidebarRightIcon title="Åpne informasjonspanelet" fontSize="1.5rem" />
                         }
                         className="lg:hidden"
-                        onClick={(): void => dialogRef.current?.showModal()}
+                        onClick={(): void => {
+                            sporHendelse(Hendelser.MODAL_APNET, {
+                                tittel: 'Informasjon om tilbakekrevingen og bruker',
+                                kontekst: Sporingskontekst.Behandling,
+                                komponentId: 'åpne-informasjonspanel',
+                            });
+                            dialogRef.current?.showModal();
+                        }}
                     >
                         Åpne
                     </Button>

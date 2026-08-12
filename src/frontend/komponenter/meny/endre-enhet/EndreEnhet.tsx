@@ -7,7 +7,7 @@ import { useRef } from 'react';
 
 import { RessursStatus } from '@/typer/ressurs';
 import { hentFrontendFeilmelding } from '@/utils';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 import { useEndreEnhet } from './EndreEnhetContext';
@@ -80,7 +80,11 @@ export const EndreEnhet: FC = () => {
                         disabled={skjema.submitRessurs.status === RessursStatus.Henter}
                         key="bekreft"
                         onClick={(): void => {
-                            sporHendelse('behandlingsmeny', { valg: 'Endre enhet' });
+                            sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                                valgTekst: 'Endre enhet',
+                                komponentId: 'behandlingsmeny',
+                                kontekst: Sporingskontekst.Behandling,
+                            });
                             sendInn();
                         }}
                     >

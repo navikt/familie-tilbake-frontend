@@ -20,6 +20,7 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useFagsak } from '@/context/FagsakContext';
 import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@/typer/behandling';
 import { formatterDatostring } from '@/utils';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { ICON_PROPS } from '../utils';
 
@@ -34,10 +35,22 @@ export const Faktaboks: FC<Props> = ({ open, onToggle }: Props) => {
 
     const erKontrollert = open !== undefined;
 
+    // Fast tittel i sporingen (ikke den ytelsesspesifikke overskriften) slik at
+    // hendelsene kan aggregeres på tvers av ytelser. Ytelsen ligger i ytelsestype.
+    const håndterToggle = (åpen: boolean): void => {
+        sporHendelse(åpen ? Hendelser.UTVIDBART_KORT_APNET : Hendelser.UTVIDBART_KORT_LUKKET, {
+            tittel: 'Tilbakekrevingsinformasjon',
+            kontekst: Sporingskontekst.Sidebar,
+            komponentId: 'faktaboks',
+        });
+        onToggle?.(åpen);
+    };
+
     return (
         <ExpansionCard
             size="small"
-            {...(erKontrollert ? { open, onToggle } : { defaultOpen: true })}
+            {...(erKontrollert ? { open } : { defaultOpen: true })}
+            onToggle={håndterToggle}
             aria-label="Tilbakekrevingsinformasjon"
             className="border-ax-border-neutral-subtle"
         >

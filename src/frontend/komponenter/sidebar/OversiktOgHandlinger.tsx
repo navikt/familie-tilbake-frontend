@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { Menysider, OversiktOgHandlingerInnhold } from './OversiktOgHandlingerInnhold';
 
@@ -34,7 +35,14 @@ export const HistorikkOgDokumenter: FC = () => {
             <ToggleGroup
                 data-color="neutral"
                 value={aktivSide}
-                onChange={(value: string): void => setValgtSide(value as Menysider)}
+                onChange={(value: string): void => {
+                    sporHendelse(Hendelser.TOGGLEGROUP_VALGT, {
+                        valgtVerdi: value,
+                        kontekst: Sporingskontekst.Sidebar,
+                        komponentId: 'oversikt-og-handlinger',
+                    });
+                    setValgtSide(value as Menysider);
+                }}
                 size="small"
                 fill
                 className="sticky top-0"

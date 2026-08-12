@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 import { byggDataRessurs } from '@/typer/ressurs';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 type Props = {
     varselbrevUrl: string;
@@ -22,7 +23,14 @@ export const VisSendtVarselbrev: FC<Props> = ({ varselbrevUrl, laster = false }:
                 variant="tertiary"
                 icon={<EyeIcon aria-hidden />}
                 loading={laster}
-                onClick={(): void => setVisModal(true)}
+                onClick={(): void => {
+                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                        tekst: 'Vis brevet',
+                        kontekst: Sporingskontekst.Forhåndsvarsel,
+                        komponentId: 'vis-sendt-varselbrev',
+                    });
+                    setVisModal(true);
+                }}
             >
                 Vis brevet
             </Button>

@@ -14,7 +14,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useFagsakStore } from '@/stores/fagsakStore';
 import { erHistoriskSide } from '@/utils/sider';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
 
@@ -84,7 +84,17 @@ export const Header: FC = () => {
 
     return (
         <InternalHeader>
-            <InternalHeader.Title href="/" className="text-nowrap">
+            <InternalHeader.Title
+                href="/"
+                className="text-nowrap"
+                onClick={(): void =>
+                    sporHendelse(Hendelser.NAVIGERE, {
+                        lenketekst: 'Nav - Tilbakekreving',
+                        destinasjon: '/',
+                        kontekst: Sporingskontekst.Header,
+                    })
+                }
+            >
                 Nav - Tilbakekreving
             </InternalHeader.Title>
             <Høytidspynt />
@@ -117,8 +127,11 @@ export const Header: FC = () => {
                                     target="_blank"
                                     href={aInntektUrl}
                                     onClick={(): void =>
-                                        sporHendelse('systemer-og-oppslagsverk', {
-                                            valg: 'A-inntekt',
+                                        sporHendelse(Hendelser.NAVIGERE, {
+                                            lenketekst: 'A-inntekt',
+                                            destinasjon: aInntektUrl,
+                                            lenkegruppe: 'systemer-og-oppslagsverk',
+                                            kontekst: Sporingskontekst.Header,
                                         })
                                     }
                                 >
@@ -134,8 +147,11 @@ export const Header: FC = () => {
                                     target="_blank"
                                     href={gosysUrl}
                                     onClick={(): void =>
-                                        sporHendelse('systemer-og-oppslagsverk', {
-                                            valg: 'Gosys',
+                                        sporHendelse(Hendelser.NAVIGERE, {
+                                            lenketekst: 'Gosys',
+                                            destinasjon: gosysUrl,
+                                            lenkegruppe: 'systemer-og-oppslagsverk',
+                                            kontekst: Sporingskontekst.Header,
                                         })
                                     }
                                 >
@@ -149,8 +165,11 @@ export const Header: FC = () => {
                                     target="_blank"
                                     href={modiaUrl}
                                     onClick={(): void =>
-                                        sporHendelse('systemer-og-oppslagsverk', {
-                                            valg: 'Modia',
+                                        sporHendelse(Hendelser.NAVIGERE, {
+                                            lenketekst: 'Modia',
+                                            destinasjon: modiaUrl,
+                                            lenkegruppe: 'systemer-og-oppslagsverk',
+                                            kontekst: Sporingskontekst.Header,
                                         })
                                     }
                                 >
@@ -164,8 +183,11 @@ export const Header: FC = () => {
                                     target="_blank"
                                     href={saksoversiktUrl}
                                     onClick={(): void =>
-                                        sporHendelse('systemer-og-oppslagsverk', {
-                                            valg: 'Gå til saksoversikt',
+                                        sporHendelse(Hendelser.NAVIGERE, {
+                                            lenketekst: 'Gå til saksoversikt',
+                                            destinasjon: saksoversiktUrl,
+                                            lenkegruppe: 'systemer-og-oppslagsverk',
+                                            kontekst: Sporingskontekst.Header,
                                         })
                                     }
                                 >
@@ -194,7 +216,17 @@ export const Header: FC = () => {
                     </Dropdown.Menu.List>
                 </Dropdown.Menu>
             </Dropdown>
-            <InternalHeader.Button onClick={toggleTheme} aria-label="Bytt tema">
+            <InternalHeader.Button
+                onClick={(): void => {
+                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                        tekst: theme === 'light' ? 'Bytt til mørkt tema' : 'Bytt til lyst tema',
+                        kontekst: Sporingskontekst.Header,
+                        komponentId: 'bytt-tema',
+                    });
+                    toggleTheme();
+                }}
+                aria-label="Bytt tema"
+            >
                 {theme === 'light' ? (
                     <MoonIcon title="Bytt til mørkt tema" />
                 ) : (

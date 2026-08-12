@@ -4,7 +4,7 @@ import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
 
 import { FeilModal } from '@/komponenter/modal/feil/FeilModal';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 import { useStartPåNytt } from './useStartPåNytt';
@@ -38,7 +38,11 @@ export const StartPåNytt: FC = () => {
                 <Modal.Footer>
                     <Button
                         onClick={(): void => {
-                            sporHendelse('behandlingsmeny', { valg: 'Start på nytt' });
+                            sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                                valgTekst: 'Start på nytt',
+                                komponentId: 'behandlingsmeny',
+                                kontekst: Sporingskontekst.Behandling,
+                            });
                             mutate();
                         }}
                         loading={isPending}

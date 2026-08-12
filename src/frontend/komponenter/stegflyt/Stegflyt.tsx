@@ -9,6 +9,7 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { erStegUtført } from '@/context/BehandlingStateContext';
 import { useFagsak } from '@/context/FagsakContext';
 import { erSidenAktiv, SYNLIGE_STEG, visSide } from '@/utils/sider';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 interface StepperSteg extends SynligSteg {
     erUtført: boolean;
@@ -52,6 +53,20 @@ export const Stegflyt: FC = () => {
     const gåTilSteg = (stegNummer: number): void => {
         const nyttSteg = stegsinfo?.[stegNummer - 1];
         if (nyttSteg?.href && aktivStegnummer !== stegNummer) {
+            const forrigeSteg = stegsinfo?.[aktivStegnummer - 1];
+            const erFramover = stegNummer > aktivStegnummer;
+            const erNabosteg = Math.abs(stegNummer - aktivStegnummer) === 1;
+
+            sporHendelse(Hendelser.STEPPER_STEG_ENDRET, {
+                stegId: nyttSteg.steg,
+                stegIndeks: stegNummer - 1,
+                totaltAntallSteg: stegsinfo?.length ?? 0,
+                handling: erNabosteg ? (erFramover ? 'neste' : 'forrige') : 'hopp',
+                retning: erFramover ? 'fremover' : 'bakover',
+                forrigeStegFullfort: forrigeSteg?.erUtført,
+                kontekst: Sporingskontekst.Behandling,
+                komponentId: 'stegflyt',
+            });
             navigate(`${fagsakPath(nyttSteg.href)}`);
         }
     };

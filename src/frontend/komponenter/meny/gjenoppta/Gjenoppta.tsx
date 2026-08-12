@@ -8,7 +8,7 @@ import { useRef } from 'react';
 import { useBehandling } from '@/context/BehandlingContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 
@@ -51,7 +51,11 @@ export const Gjenoppta: FC = () => {
                     <Button
                         key="bekreft"
                         onClick={(): void => {
-                            sporHendelse('behandlingsmeny', { valg: 'Gjenoppta' });
+                            sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                                valgTekst: 'Gjenoppta',
+                                komponentId: 'behandlingsmeny',
+                                kontekst: Sporingskontekst.Behandling,
+                            });
                             onOkTaAvVent(behandling.behandlingId);
                         }}
                     >

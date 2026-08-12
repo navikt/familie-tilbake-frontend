@@ -13,7 +13,7 @@ import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { AlertType, ToastTyper } from '@/komponenter/toast/typer';
 import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 import { useStegNavigering } from '@/utils/sider';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 
@@ -96,8 +96,10 @@ export const LeggTilFjernBrevmottakere: FC = () => {
         if (kanFjerneManuelleBrevmottakere) {
             dialogRef.current?.showModal();
         } else {
-            sporHendelse('behandlingsmeny', {
-                valg: 'Legg til brevmottaker',
+            sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                valgTekst: 'Legg til brevmottaker',
+                komponentId: 'behandlingsmeny',
+                kontekst: Sporingskontekst.Behandling,
             });
             opprettBrevmottakerSteg();
         }
@@ -136,8 +138,10 @@ export const LeggTilFjernBrevmottakere: FC = () => {
                         disabled={senderInn}
                         loading={senderInn}
                         onClick={(): void => {
-                            sporHendelse('behandlingsmeny', {
-                                valg: 'Fjern brevmottaker(e)',
+                            sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                                valgTekst: 'Fjern brevmottaker(e)',
+                                komponentId: 'behandlingsmeny',
+                                kontekst: Sporingskontekst.Behandling,
                             });
                             fjernBrevmottakerSteg();
                         }}

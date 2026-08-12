@@ -19,6 +19,7 @@ import { useFormContext } from 'react-hook-form';
 import { useBehandling } from '@/context/BehandlingContext';
 import { PdfVisningModal } from '@/komponenter/pdf-visning-modal/PdfVisningModal';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 const lagForhåndsvisningBody = (behandlingId: string, fritekst: string): BestillBrevDto => ({
     behandlingId,
@@ -42,6 +43,11 @@ export const ForhåndsvisVarselbrev: FC = () => {
     });
 
     const forhåndsvis = (): void => {
+        sporHendelse(Hendelser.KNAPP_KLIKKET, {
+            tekst: 'Vis brevet',
+            kontekst: Sporingskontekst.Forhåndsvarsel,
+            komponentId: 'forhåndsvis-varselbrev',
+        });
         const fritekst = getValues('tekstFraSaksbehandler') ?? '';
         const queryKey = ['forhaandsvisBrev', behandlingId, 'VARSEL', fritekst];
         const cachedData = queryClient.getQueryData<RessursByte>(queryKey);

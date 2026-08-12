@@ -1,6 +1,10 @@
 /**
  * Sporing (produktanalyse) via Umami/Innblikk-løsning fra ResearchOps.
  * Se https://reops-docs.ansatt.dev.nav.no/guider/kom-i-gang-med-sporing/
+ *
+ * Hendelsesnavn og -egenskaper følger Navs taksonomi for produktanalyse,
+ * definert i https://github.com/navikt/analytics-types. Typene er speilet
+ * lokalt fordi @navikt/analytics-types ikke er publisert på offentlig npm.
  */
 import type { SchemaEnum4 } from '@/generated/types.gen';
 
@@ -51,6 +55,81 @@ const hentSporingsoppsett = (): Sporingsoppsett | undefined => {
 
 let trackerLoaded = false;
 
+/**
+ * Hendelsesnavn fra Navs taksonomi. Bruk alltid en av disse framfor
+ * egendefinerte navn, slik at data kan sammenliknes på tvers av Nav-løsninger.
+ */
+export const Hendelser = {
+    NAVIGERE: 'navigere',
+    KNAPP_KLIKKET: 'knapp klikket',
+    MODAL_APNET: 'modal åpnet',
+    ACTIONMENU_VALG_VALGT: 'actionmenu valg valgt',
+    TOGGLEGROUP_VALGT: 'togglegroup valgt',
+    STEPPER_STEG_ENDRET: 'stepper steg endret',
+    TEKST_KOPIERT: 'tekst kopiert',
+    UTVIDBART_KORT_APNET: 'utvidbart kort åpnet',
+    UTVIDBART_KORT_LUKKET: 'utvidbart kort lukket',
+} as const;
+
+type Basisegenskaper = {
+    kontekst?: string;
+    komponentId?: string;
+    seksjon?: string;
+    innholdstype?: string;
+    opprinnelse?: string;
+};
+
+type Hendelsesegenskaper = {
+    [Hendelser.NAVIGERE]: Basisegenskaper & {
+        lenketekst: string;
+        destinasjon: string;
+        lenkegruppe?: string;
+    };
+    [Hendelser.KNAPP_KLIKKET]: Basisegenskaper & {
+        tekst: string;
+    };
+    [Hendelser.MODAL_APNET]: Basisegenskaper & {
+        tittel?: string;
+    };
+    [Hendelser.ACTIONMENU_VALG_VALGT]: Basisegenskaper & {
+        valgTekst: string;
+        valgId?: string;
+        valgType?: 'item' | 'checkbox' | 'radio' | 'subtrigger';
+    };
+    [Hendelser.TOGGLEGROUP_VALGT]: Basisegenskaper & {
+        valgtVerdi: string;
+    };
+    [Hendelser.STEPPER_STEG_ENDRET]: Basisegenskaper & {
+        stegId?: string;
+        stegIndeks: number;
+        totaltAntallSteg: number;
+        handling?: 'neste' | 'forrige' | 'hopp';
+        retning?: 'fremover' | 'bakover';
+        forrigeStegFullfort?: boolean;
+    };
+    [Hendelser.TEKST_KOPIERT]: Basisegenskaper & {
+        /** Feltet som ble kopiert. Aldri selve verdien – den kan være personopplysning. */
+        tekst: string;
+    };
+    [Hendelser.UTVIDBART_KORT_APNET]: Basisegenskaper & {
+        tittel: string;
+    };
+    [Hendelser.UTVIDBART_KORT_LUKKET]: Basisegenskaper & {
+        tittel: string;
+    };
+};
+
+type Hendelsesnavn = keyof Hendelsesegenskaper;
+
+export const Sporingskontekst = {
+    Header: 'header',
+    Sidebar: 'sidebar',
+    Behandling: 'behandling',
+    ActionBar: 'actionbar',
+    Forhåndsvarsel: 'forhåndsvarsel',
+    Vedtak: 'vedtak',
+} as const;
+
 export const loadTracker = (): void => {
     const oppsett = hentSporingsoppsett();
 
@@ -69,18 +148,21 @@ export const loadTracker = (): void => {
 };
 
 /**
- * Sporer en egendefinert hendelse (custom event) med valgfrie data-egenskaper.
+ * Sporer en hendelse fra Navs taksonomi med tilhørende hendelsesdetaljer.
  * Alle hendelser beriket automatisk med gjeldende ytelsestype (settes via
  * settSporingsYtelsestype fra FagsakProvider)
  */
-export const sporHendelse = (navn: string, data?: Record<string, unknown>): void => {
+export const sporHendelse = <THendelse extends Hendelsesnavn>(
+    navn: THendelse,
+    egenskaper: Hendelsesegenskaper[THendelse]
+): void => {
     const beriketData: Record<string, unknown> = {};
 
     if (gjeldendeYtelsestype) {
         beriketData.ytelsestype = gjeldendeYtelsestype;
     }
 
-    Object.assign(beriketData, data);
+    Object.assign(beriketData, egenskaper);
 
     hentSporing()?.track(standardPayload => ({
         ...standardPayload,

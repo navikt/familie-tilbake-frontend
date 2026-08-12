@@ -9,7 +9,7 @@ import { LabelMedSpråk } from '@/komponenter/label-med-språk/LabelMedSpråk';
 import { ForhåndsvisHenleggelsesBrev } from '@/komponenter/meny/henlegg/forhåndsvisHenleggelsesbrev/ForhåndsvisHenleggelsesbrev';
 import { behandlingsresultater } from '@/typer/behandling';
 import { hentFrontendFeilmelding } from '@/utils';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../../utils';
 import { useHenleggSkjema } from './HenleggModalContext';
@@ -110,7 +110,11 @@ export const HenleggModal: FC<Props> = ({ dialogRef, årsaker }: Props) => {
                 <Button
                     key="bekreft"
                     onClick={(): void => {
-                        sporHendelse('behandlingsmeny', { valg: 'Henlegg' });
+                        sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                            valgTekst: 'Henlegg',
+                            komponentId: 'behandlingsmeny',
+                            kontekst: Sporingskontekst.Behandling,
+                        });
                         onBekreft();
                     }}
                 >

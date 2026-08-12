@@ -13,7 +13,7 @@ import { Datovelger } from '@/komponenter/datovelger/Datovelger';
 import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
 import { manuelleVenteÅrsaker, venteårsaker } from '@/typer/behandling';
 import { dagensDato } from '@/utils/dato';
-import { sporHendelse } from '@/utils/sporing';
+import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MODAL_BREDDE } from '../utils';
 
@@ -87,7 +87,11 @@ export const SettPåVent: FC = () => {
                     <Button
                         key="bekreft"
                         onClick={(): void => {
-                            sporHendelse('behandlingsmeny', { valg: 'Sett på vent' });
+                            sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {
+                                valgTekst: 'Sett på vent',
+                                komponentId: 'behandlingsmeny',
+                                kontekst: Sporingskontekst.Behandling,
+                            });
                             onBekreft(behandlingId);
                         }}
                     >
