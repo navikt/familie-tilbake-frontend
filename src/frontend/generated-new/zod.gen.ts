@@ -2,6 +2,15 @@
 
 import * as z from 'zod';
 
+export const zArsakTilTilbakeforing = z.enum([
+    'ØktBeløp',
+    'LavereBeløp',
+    'NyPeriode',
+    'EndretPeriode',
+    'EndretPeriodeOgØktBeløp',
+    'EndretPeriodeOgLavereBeløp',
+]);
+
 export const zBeregningsresultatVurdering = z.enum([
     'GodTro',
     'Forsett',
@@ -12,8 +21,8 @@ export const zBeregningsresultatVurdering = z.enum([
 ]);
 
 export const zBeregningsresultatsperiode = z.object({
-    fom: z.iso.date(),
-    tom: z.iso.date(),
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
     feilutbetaltBeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
@@ -144,8 +153,8 @@ export const zOppsummeringsdata = z.object({
 });
 
 export const zPeriode = z.object({
-    fom: z.iso.date(),
-    tom: z.iso.date(),
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
 });
 
 export const zPeriodeInfo = z.object({
@@ -178,18 +187,20 @@ export const zRettsligGrunnlag = z.object({
 });
 
 export const zFaktaPeriode = z.object({
-    id: z.string(),
-    fom: z.iso.date(),
-    tom: z.iso.date(),
+    id: z.uuid(),
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
+    tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
     feilutbetaltBeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     splittbarePerioder: z.array(
         z.object({
-            id: z.string(),
-            fom: z.iso.date(),
-            tom: z.iso.date(),
+            id: z.uuid(),
+            fom: z.iso.date().readonly(),
+            tom: z.iso.date().readonly(),
+            tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
             feilutbetaltBeløp: z
                 .int()
                 .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
@@ -520,7 +531,9 @@ export const zVilkaarsvurderingValg = z.union([
 
 export const zVilkaarsvurdering = z.object({
     id: z.uuid(),
-    periode: zPeriode.readonly(),
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
+    tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
     delbarePerioder: z.array(zPeriodeInfo).readonly(),
     valg: zVilkaarsvurderingValg,
 });
@@ -580,8 +593,8 @@ export const zFeilutbetaling = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    fom: z.iso.date(),
-    tom: z.iso.date(),
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
     revurdering: zRevurdering,
 });
 
@@ -634,15 +647,73 @@ export const zVilkaar = z.object({
     erUnder4xRettsgebyr: z.boolean().readonly(),
 });
 
+export const zBeregningsresultatsperiodeWritable = z.object({
+    feilutbetaltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    vurdering: zBeregningsresultatVurdering,
+    andelAvBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
+    renteprosent: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
+    tilbakekrevingsbeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    tilbakekrevesBeløpEtterSkatt: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+});
+
+export const zBeregningsresultatWritable = z.object({
+    beregningsresultatsperioder: z.array(zBeregningsresultatsperiodeWritable),
+    vedtaksresultat: zVedtaksresultat,
+});
+
+export const zFaktaPeriodeWritable = z.object({
+    id: z.uuid(),
+    feilutbetaltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    splittbarePerioder: z.array(
+        z.object({
+            id: z.uuid(),
+            feilutbetaltBeløp: z
+                .int()
+                .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+                .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+            rettsligGrunnlag: z.array(zRettsligGrunnlag),
+        })
+    ),
+    rettsligGrunnlag: z.array(zRettsligGrunnlag),
+});
+
+export const zFeilutbetalingWritable = z.object({
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    revurdering: zRevurdering,
+});
+
 export const zFaktaOmFeilutbetalingWritable = z.object({
-    feilutbetaling: zFeilutbetaling,
+    feilutbetaling: zFeilutbetalingWritable,
     tidligereVarsletBeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
         .nullable(),
     muligeRettsligGrunnlag: z.array(zMuligeRettsligGrunnlag),
-    perioder: z.array(zFaktaPeriode),
+    perioder: z.array(zFaktaPeriodeWritable),
     vurdering: zVurdering,
     rettsgebyrÅrFraSaksbehandler: z
         .int()
@@ -675,6 +746,10 @@ export const zPakrevdBegrunnelseWritable = z.object({
     tittel: z.string(),
     begrunnelseType: z.string(),
     underavsnitt: z.array(zElement),
+});
+
+export const zPeriodeInfoWritable = z.object({
+    periodeId: z.uuid(),
 });
 
 export const zRotElementWritable = z.discriminatedUnion('type', [
