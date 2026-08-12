@@ -39,17 +39,21 @@ export const Fakta: FC = () => {
                     className={`grid grid-cols-4 md:grid-cols-2 gap-4 ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-2' : 'flex-1'}`}
                 >
                     <dl
-                        className={`flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta-strong align-middle ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'col-span-1' : 'col-span-2'}`}
+                        className={`flex-1 p-4 bg-ax-bg-brand-magenta-soft border rounded-xl border-ax-border-brand-magenta align-middle ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'col-span-1' : 'col-span-2'}`}
                     >
-                        <dt className="font-ax-bold text-ax-medium">Feilutbetalt beløp</dt>
-                        <dd className="text-ax-text-brand-magenta font-ax-bold text-ax-heading-medium">
+                        <dt className="font-ax-bold text-ax-large text-ax-text-brand-magenta-subtle">
+                            Feilutbetalt beløp
+                        </dt>
+                        <dd className="font-ax-bold text-ax-xlarge text-ax-text-brand-magenta">
                             {formatCurrencyNoKr(faktaOmFeilutbetaling.feilutbetaling.beløp)}
                         </dd>
                     </dl>
                     {faktaOmFeilutbetaling.tidligereVarsletBeløp && (
                         <dl className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
-                            <dt className="font-ax-bold text-ax-medium">Tidligere varslet beløp</dt>
-                            <dd className="font-ax-bold text-ax-heading-medium">
+                            <dt className="font-ax-bold text-ax-large text-ax-text-neutral-subtle">
+                                Tidligere varslet beløp
+                            </dt>
+                            <dd className="font-ax-bold text-ax-xlarge">
                                 {formatCurrencyNoKr(faktaOmFeilutbetaling.tidligereVarsletBeløp)}
                             </dd>
                         </dl>
