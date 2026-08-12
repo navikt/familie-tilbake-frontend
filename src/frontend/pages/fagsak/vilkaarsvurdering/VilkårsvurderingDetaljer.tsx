@@ -1,7 +1,11 @@
 import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { BehandlingLagreVilkaarsvurderingError, Vilkaarsperiode } from '@/generated-new';
+import type {
+    BehandlingLagreVilkaarsvurderingError,
+    Periode,
+    Vilkaarsperiode,
+} from '@/generated-new';
 import type { VilkårsvurderingSkjemaFelter } from './skjema/schema';
 import type { Vilkårsperiode } from './typer';
 
@@ -99,8 +103,13 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
                 <HStack gap="space-4">
                     {valgtVilkårsperiode.vilkårsvurdering.delbarePerioder.length > 1 && (
                         <DelPeriode
-                            key={`${valgtVilkårsperiode.vilkårsvurdering.periode.fom}-${valgtVilkårsperiode.vilkårsvurdering.periode.tom}`}
-                            periode={valgtVilkårsperiode.vilkårsvurdering.periode}
+                            key={`${valgtVilkårsperiode.vilkårsvurdering.fom}-${valgtVilkårsperiode.vilkårsvurdering.tom}`}
+                            periode={
+                                {
+                                    fom: valgtVilkårsperiode.vilkårsvurdering.fom,
+                                    tom: valgtVilkårsperiode.vilkårsvurdering.tom,
+                                } satisfies Periode
+                            }
                             delbarePerioder={valgtVilkårsperiode.vilkårsvurdering.delbarePerioder}
                             erVurdert={erPeriodeVurdert(valgtPeriode.vurdering)}
                             hentVilkårsvurdering={hentVilkårsvurdering}
@@ -110,7 +119,10 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
                         valgtPeriodeId={valgtPeriode.id}
                         vilkårsperioder={vilkårsperioder.map(({ vilkårsvurdering }) => ({
                             periodeId: vilkårsvurdering.id,
-                            periode: vilkårsvurdering.periode,
+                            periode: {
+                                fom: vilkårsvurdering.fom,
+                                tom: vilkårsvurdering.tom,
+                            } satisfies Periode,
                             delbarePerioder: vilkårsvurdering.delbarePerioder,
                         }))}
                         hentVilkårsvurdering={hentVilkårsvurdering}
