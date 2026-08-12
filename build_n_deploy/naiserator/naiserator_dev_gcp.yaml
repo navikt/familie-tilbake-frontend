@@ -12,6 +12,9 @@ spec:
   replicas:
     min: 2
     max: 4
+    scalingStrategy:
+      cpu:
+        thresholdPercentage: 100
   port: 8000
   liveness:
     path: /isAlive
@@ -78,7 +81,7 @@ spec:
     - secret: tilbakekreving-frontend
   resources:
     limits:
-      memory: 192Mi
+      memory: 256Mi
     requests:
       memory: 160Mi
       cpu: 50m
