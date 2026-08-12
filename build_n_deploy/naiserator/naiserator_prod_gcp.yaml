@@ -11,7 +11,7 @@ spec:
   image: {{ image }}
   replicas:
     min: 2
-    max: 2
+    max: 4
   port: 8000
   liveness:
     path: /isAlive
@@ -75,10 +75,10 @@ spec:
     - secret: tilbakekreving-frontend
   resources:
     limits:
-      memory: 1024Mi
+      memory: 192Mi
     requests:
-      memory: 512Mi
-      cpu: 200m
+      memory: 160Mi
+      cpu: 50m
 
   valkey:
     - instance: sessions
