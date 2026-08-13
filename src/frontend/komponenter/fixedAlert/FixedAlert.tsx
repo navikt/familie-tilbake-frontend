@@ -18,7 +18,7 @@ const distanceToParent = 20;
 
 export const FixedAlert: FC<Props> = ({
     width,
-    venstrePosisjon,
+    venstrePosisjon = 0,
     children,
     title,
     status,
@@ -28,15 +28,14 @@ export const FixedAlert: FC<Props> = ({
 }: Props) => {
     const bottomPosition = baseBottom + stackIndex * (alertHeight + alertGap);
     const alertWidth = width && width > distanceToParent ? width - distanceToParent : undefined;
-    const venstreOffset =
-        venstrePosisjon !== undefined ? venstrePosisjon + distanceToParent / 2 : undefined;
+    const venstreOffset = venstrePosisjon + distanceToParent / 2;
 
     return (
         <LocalAlert
-            className="fixed left-6.5 z-50"
+            className="fixed z-50"
             style={{
                 width: alertWidth,
-                left: venstreOffset,
+                left: `${venstreOffset}px`,
                 bottom: `${bottomPosition}px`,
             }}
             status={status}
