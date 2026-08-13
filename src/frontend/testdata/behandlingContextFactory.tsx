@@ -25,7 +25,9 @@ export type BehandlingStateContextOverrides = {
     setIkkePersistertKomponent?: BehandlingStateContextType['setIkkePersistertKomponent'];
     nullstillIkkePersisterteKomponenter?: BehandlingStateContextType['nullstillIkkePersisterteKomponenter'];
     innholdsbredde?: BehandlingStateContextType['innholdsbredde'];
+    innholdVenstrePosisjon?: BehandlingStateContextType['innholdVenstrePosisjon'];
     setInnholdsbredde?: BehandlingStateContextType['setInnholdsbredde'];
+    setInnholdVenstrePosisjon?: BehandlingStateContextType['setInnholdVenstrePosisjon'];
 };
 
 const lagBehandlingStateContext = (
@@ -56,8 +58,11 @@ const lagBehandlingStateContext = (
             // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi i testdata
             ((): void => {}),
         innholdsbredde: overrides.innholdsbredde ?? 800,
+        innholdVenstrePosisjon: overrides.innholdVenstrePosisjon ?? 0,
         // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi i testdata
         setInnholdsbredde: overrides.setInnholdsbredde ?? ((): void => {}),
+        // biome-ignore lint/suspicious/noEmptyBlockStatements: noop standardverdi i testdata
+        setInnholdVenstrePosisjon: overrides.setInnholdVenstrePosisjon ?? ((): void => {}),
     };
 };
 

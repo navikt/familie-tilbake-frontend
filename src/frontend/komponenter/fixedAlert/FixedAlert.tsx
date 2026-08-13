@@ -5,6 +5,7 @@ import { LocalAlert } from '@navikt/ds-react';
 
 type Props = LocalAlertProps & {
     width?: number;
+    venstrePosisjon?: number;
     title: string;
     stackIndex?: number;
     onClose?: () => void;
@@ -17,6 +18,7 @@ const distanceToParent = 20;
 
 export const FixedAlert: FC<Props> = ({
     width,
+    venstrePosisjon,
     children,
     title,
     status,
@@ -26,12 +28,15 @@ export const FixedAlert: FC<Props> = ({
 }: Props) => {
     const bottomPosition = baseBottom + stackIndex * (alertHeight + alertGap);
     const alertWidth = width && width > distanceToParent ? width - distanceToParent : undefined;
+    const venstreOffset =
+        venstrePosisjon !== undefined ? venstrePosisjon + distanceToParent / 2 : undefined;
 
     return (
         <LocalAlert
             className="fixed left-6.5 z-50"
             style={{
                 width: alertWidth,
+                left: venstreOffset,
                 bottom: `${bottomPosition}px`,
             }}
             status={status}

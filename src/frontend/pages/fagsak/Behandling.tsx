@@ -212,7 +212,7 @@ type AktivBehandlingProps = {
 const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlingProps) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
-    const { ventegrunn, setInnholdsbredde } = useBehandlingState();
+    const { ventegrunn, setInnholdsbredde, setInnholdVenstrePosisjon } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
@@ -220,12 +220,13 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
             if (contentRef.current) {
                 const rect = contentRef.current.getBoundingClientRect();
                 setInnholdsbredde(rect.width);
+                setInnholdVenstrePosisjon(rect.left);
             }
         };
         oppdaterBredde();
         window.addEventListener('resize', oppdaterBredde);
         return (): void => window.removeEventListener('resize', oppdaterBredde);
-    }, [setInnholdsbredde]);
+    }, [setInnholdsbredde, setInnholdVenstrePosisjon]);
 
     return (
         <>
@@ -406,7 +407,7 @@ const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string =>
 
 export const BehandlingContainer: FC = () => {
     const behandling = useBehandling();
-    const { ventegrunn, innholdsbredde } = useBehandlingState();
+    const { ventegrunn, innholdsbredde, innholdVenstrePosisjon } = useBehandlingState();
     const globalAlerts = useGlobalAlerts();
     const lukkGlobalAlert = useLukkGlobalAlert();
     const [visVenteModal, setVisVenteModal] = useState(false);
@@ -422,24 +423,26 @@ export const BehandlingContainer: FC = () => {
                     onFullført={(): void => setVisNyttKravgrunnlagModal(false)}
                 />
             )}
-            {ventegrunn && (
-                <div className="px-4 py-2 bg-ax-neutral-100">
-                    <LocalAlert status="announcement" size="small">
-                        <LocalAlert.Header>
-                            <LocalAlert.Title>{venteBeskjed(ventegrunn)}</LocalAlert.Title>
-                        </LocalAlert.Header>
-                    </LocalAlert>
-                </div>
-            )}
             {ventegrunn && !visVenteModal && (
                 <PåVentModal ventegrunn={ventegrunn} onClose={(): void => setVisVenteModal(true)} />
             )}
-            {/* Trekker fra høyde fra header (48). Hvis det er
-            ventegrunn legges det til ytterligere 62 */}
-            <div
-                className={`grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 bg-ax-neutral-100 ${ventegrunn ? 'min-h-[calc(100vh-100px)]' : 'min-h-[calc(100vh-48px)]'}`}
-            >
-                <Behandling />
+            {/* Grå bakgrunn i full bredde, mens innholdet sentreres med maks bredde.
+            Trekker fra høyde fra header (48). Hvis det er ventegrunn legges det til ytterligere 62 */}
+            <div className="bg-ax-neutral-100 min-h-[calc(100vh-48px)]">
+                {ventegrunn && (
+                    <div className="mx-auto w-full max-w-[1600px] px-4 py-2">
+                        <LocalAlert status="announcement" size="small">
+                            <LocalAlert.Header>
+                                <LocalAlert.Title>{venteBeskjed(ventegrunn)}</LocalAlert.Title>
+                            </LocalAlert.Header>
+                        </LocalAlert>
+                    </div>
+                )}
+                <div
+                    className={`mx-auto w-full max-w-[1600px] grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 ${ventegrunn ? 'min-h-[calc(100vh-100px)]' : 'min-h-[calc(100vh-48px)]'}`}
+                >
+                    <Behandling />
+                </div>
             </div>
             {globalAlerts.map((alert, index) => (
                 <FixedAlert
@@ -448,6 +451,7 @@ export const BehandlingContainer: FC = () => {
                     status={alert.status}
                     title={alert.title}
                     width={innholdsbredde}
+                    venstrePosisjon={innholdVenstrePosisjon}
                     stackIndex={index}
                     onClose={(): void => lukkGlobalAlert(alert.id)}
                 >

@@ -24,6 +24,8 @@ export type BehandlingStateContextType = UseUlagretEndringerReturn & {
     harVærtPåFatteVedtakSteget: () => boolean;
     innholdsbredde: number;
     setInnholdsbredde: (bredde: number) => void;
+    innholdVenstrePosisjon: number;
+    setInnholdVenstrePosisjon: (venstreposisjon: number) => void;
 };
 
 export const BehandlingStateContext = createContext<BehandlingStateContextType | undefined>(
@@ -38,6 +40,7 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
     const behandling = useBehandling();
     const ulagretEndringer = useUlagretEndringer();
     const [innholdsbredde, setInnholdsbredde] = useState<number>(0);
+    const [innholdVenstrePosisjon, setInnholdVenstrePosisjon] = useState<number>(0);
 
     const behandlingILesemodus = useMemo((): boolean => {
         const fatteVedtakErKlarUtenNoenTilbakeførteSteg = behandling.behandlingsstegsinfo.some(
@@ -149,6 +152,8 @@ export const BehandlingStateProvider = ({ children }: Props): ReactElement => {
         harVærtPåFatteVedtakSteget,
         innholdsbredde,
         setInnholdsbredde,
+        innholdVenstrePosisjon,
+        setInnholdVenstrePosisjon,
         ...ulagretEndringer,
     };
 
