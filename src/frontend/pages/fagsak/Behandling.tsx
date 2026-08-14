@@ -93,8 +93,6 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
     'HistoriskeVurderingermeny'
 );
 
-const BEHANDLING_KONTEKST_PATH = '/behandling/:behandlingId';
-
 /**
  * Leaf-komponent som viser ActionBar fra storen.
  * Må være en separat komponent slik at store-subscriptions IKKE befinner seg
@@ -179,7 +177,7 @@ const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({
             </Suspense>
             <Routes>
                 <Route
-                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-fakta'}
+                    path="inaktiv-fakta"
                     element={
                         <HistoriskFaktaProvider>
                             <Suspense fallback="Historisk fakta laster...">
@@ -189,7 +187,7 @@ const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({
                     }
                 />
                 <Route
-                    path={BEHANDLING_KONTEKST_PATH + '/inaktiv-vilkaarsvurdering'}
+                    path="inaktiv-vilkaarsvurdering"
                     element={
                         <HistoriskVilkårsvurderingProvider>
                             <Suspense fallback="Historisk vilkårsvurdering laster...">
@@ -198,7 +196,7 @@ const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({
                         </HistoriskVilkårsvurderingProvider>
                     }
                 />
-                <Route path={BEHANDLING_KONTEKST_PATH + '/inaktiv'} element={<></>} />
+                <Route path="inaktiv" element={<></>} />
                 <Route path="*" element={<IkkeFunnet />} />
             </Routes>
         </VStack>
@@ -263,7 +261,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                 >
                     <Routes>
                         <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/fakta'}
+                            path="fakta"
                             element={
                                 behandling.erNyModell ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.FAKTA}>
@@ -279,7 +277,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             }
                         />
                         <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/forhaandsvarsel'}
+                            path="forhaandsvarsel"
                             element={
                                 <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
                                     <Suspense fallback={<ForhåndsvarselSkeleton />}>
@@ -293,7 +291,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             }
                         />
                         <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/foreldelse'}
+                            path="foreldelse"
                             element={
                                 <ForeldelseProvider>
                                     <ForeldelseContainer />
@@ -301,7 +299,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             }
                         />
                         <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/vilkaarsvurdering'}
+                            path="vilkaarsvurdering"
                             element={
                                 behandling.erNyModell && toggles[ToggleName.Vilkårsvurdering] ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.VILKÅRSVURDERING}>
@@ -317,7 +315,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             }
                         />
                         <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/vedtak'}
+                            path="vedtak"
                             element={
                                 behandling.erNyModell ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.FORESLÅ_VEDTAK}>
@@ -331,17 +329,14 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             }
                         />
                         <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/verge'}
+                            path="verge"
                             element={
                                 <VergeProvider>
                                     <VergeContainer />
                                 </VergeProvider>
                             }
                         />
-                        <Route
-                            path={BEHANDLING_KONTEKST_PATH + '/brevmottakere'}
-                            element={<BrevmottakerContainer />}
-                        />
+                        <Route path="brevmottakere" element={<BrevmottakerContainer />} />
                         <Route path="*" element={<IkkeFunnet />} />
                     </Routes>
                 </section>

@@ -1,42 +1,65 @@
 import type { FC } from 'react';
 
-import { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { Suspense, useEffect } from 'react';
+import { Outlet, useParams } from 'react-router';
 
 import { BehandlingProvider, finnBehandlingId } from '@/context/BehandlingContext';
 import { BehandlingStateProvider } from '@/context/BehandlingStateContext';
-import { useFagsak } from '@/context/FagsakContext';
+import { FagsakProvider, useFagsak } from '@/context/FagsakContext';
+import { FagsakErrorBoundary } from '@/komponenter/error-boundary/FagsakErrorBoundary';
 import { UlagretDataModal } from '@/komponenter/modal/UlagretDataModal';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useFagsakStore } from '@/stores/fagsakStore';
 
 import { BehandlingContainer } from './Behandling';
+import { BehandlingSkeleton } from './BehandlingSkeleton';
 
-export const FagsakContainer: FC = () => {
-    const location = useLocation();
-    const eksternBrukId = location.pathname.split('/')[6];
-
-    const { fagsystem, eksternFagsakId, bruker, behandlinger } = useFagsak();
-    const { setBehandlingId } = useBehandlingStore();
+const FagsakStoreSynk: FC = () => {
+    const { fagsystem, eksternFagsakId, bruker } = useFagsak();
     const { setEksternFagsakId, setFagsystem, setPersonIdent, resetFagsak } = useFagsakStore();
 
-    const behandlingId = eksternBrukId ? finnBehandlingId(behandlinger, eksternBrukId) : undefined;
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
-        if (eksternBrukId) {
-            setBehandlingId(eksternBrukId);
-        }
-
         setPersonIdent(bruker.personIdent);
         setEksternFagsakId(eksternFagsakId);
         setFagsystem(fagsystem);
 
-        return (): void => {
-            setBehandlingId(undefined);
-            resetFagsak();
-        };
-    }, [fagsystem, eksternFagsakId, bruker.personIdent, eksternBrukId]);
+        return (): void => resetFagsak();
+    }, [
+        fagsystem,
+        eksternFagsakId,
+        bruker.personIdent,
+        setEksternFagsakId,
+        setFagsystem,
+        setPersonIdent,
+        resetFagsak,
+    ]);
+
+    return null;
+};
+
+export const FagsakSide: FC = () => (
+    <Suspense fallback={<BehandlingSkeleton />}>
+        <FagsakErrorBoundary>
+            <FagsakProvider>
+                <FagsakStoreSynk />
+                <Outlet />
+            </FagsakProvider>
+        </FagsakErrorBoundary>
+    </Suspense>
+);
+
+export const BehandlingSide: FC = () => {
+    const { eksternBrukId } = useParams();
+    const { behandlinger } = useFagsak();
+    const setBehandlingId = useBehandlingStore(state => state.setBehandlingId);
+
+    const behandlingId = eksternBrukId ? finnBehandlingId(behandlinger, eksternBrukId) : undefined;
+
+    useEffect(() => {
+        setBehandlingId(eksternBrukId);
+
+        return (): void => setBehandlingId(undefined);
+    }, [eksternBrukId, setBehandlingId]);
 
     if (!behandlingId) {
         return null;

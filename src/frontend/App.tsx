@@ -4,34 +4,23 @@ import type { Saksbehandler } from './typer/saksbehandler';
 import { Heading, Loader } from '@navikt/ds-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense, useEffect, useState } from 'react';
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Outlet,
-    Route,
-    RouterProvider,
-} from 'react-router';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
 
 import { hentInnloggetBruker } from './api/saksbehandler';
 import { AppProvider, useApp } from './context/AppContext';
-import { FagsakProvider } from './context/FagsakContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { TogglesProvider } from './context/TogglesContext';
 import { ErrorBoundary } from './komponenter/error-boundary/ErrorBoundary';
-import { FagsakErrorBoundary } from './komponenter/error-boundary/FagsakErrorBoundary';
 import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting';
 import { Header } from './komponenter/header/Header';
 import { Toasts } from './komponenter/toast/Toasts';
-import { BehandlingSkeleton } from './pages/fagsak/BehandlingSkeleton';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
 import { configureZod } from './utils/zodConfig';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
-const FagsakContainer = lazyImportMedRetry(
-    () => import('./pages/fagsak/Fagsak'),
-    'FagsakContainer'
-);
+const FagsakSide = lazyImportMedRetry(() => import('./pages/fagsak/Fagsak'), 'FagsakSide');
+const BehandlingSide = lazyImportMedRetry(() => import('./pages/fagsak/Fagsak'), 'BehandlingSide');
 
 const SideLaster: FC = () => (
     <div className="flex items-center justify-center h-screen">
@@ -60,38 +49,36 @@ const AppLayout: FC = () => {
     );
 };
 
-const FagsakProvidersWrapper: FC = () => (
-    <Suspense fallback={<BehandlingSkeleton />}>
-        <FagsakErrorBoundary>
-            <FagsakProvider>
-                <Outlet />
-            </FagsakProvider>
-        </FagsakErrorBoundary>
-    </Suspense>
+const TogglesLayout: FC = () => (
+    <TogglesProvider>
+        <Outlet />
+    </TogglesProvider>
 );
 
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route element={<AppLayout />}>
-            <Route
-                element={
-                    <TogglesProvider>
-                        <Outlet />
-                    </TogglesProvider>
-                }
-            >
-                <Route path="/" element={<Landingsside />} />
-                <Route
-                    path="/fagsystem/:fagsystem/fagsak/:fagsakId/"
-                    element={<FagsakProvidersWrapper />}
-                >
-                    <Route path="*" element={<FagsakContainer />} />
-                </Route>
-                <Route path="*" element={<IkkeFunnet />} />
-            </Route>
-        </Route>
-    )
-);
+const router = createBrowserRouter([
+    {
+        element: <AppLayout />,
+        children: [
+            {
+                element: <TogglesLayout />,
+                children: [
+                    { path: '/', element: <Landingsside /> },
+                    {
+                        path: '/fagsystem/:fagsystem/fagsak/:fagsakId',
+                        element: <FagsakSide />,
+                        children: [
+                            {
+                                path: 'behandling/:eksternBrukId/*',
+                                element: <BehandlingSide />,
+                            },
+                        ],
+                    },
+                    { path: '*', element: <IkkeFunnet /> },
+                ],
+            },
+        ],
+    },
+]);
 
 export const App: FC = () => {
     const [autentisertSaksbehandler, setAutentisertSaksbehandler] = useState<
