@@ -55,6 +55,7 @@ export type AktsomhetsvurderingEntity = {
     vurderingType: VurderingTypeEnum;
     mottakersForståelse?: MottakersForståelseEntity | null;
     begrunnelse?: string | null;
+    begrunnelseForUnnlatelse?: string | null;
     beløpIBehold?: GodTroEntity | null;
     aktsomhet?: VurdertAktsomhetEntity | null;
     kanUnnlates?: KanUnnlatesEnum;
@@ -171,6 +172,7 @@ export type FaktaPeriodeEntity = {
     periode: DatoperiodeEntity;
     rettsligGrunnlag: RettsligGrunnlagEnum;
     rettsligGrunnlagUnderkategori: RettsligGrunnlagUnderkategoriEnum;
+    endringIKravgrunnlag?: ForskjellEntity | null;
 };
 
 export type FaktastegEntity = {
@@ -232,6 +234,14 @@ export type ForhåndsvarselUnntakEntity = {
     begrunnelseForUnntak: BegrunnelseForUnntakEnum;
     beskrivelse: string;
     tilbakeført?: TilbakeførtEnum;
+};
+
+export type ForskjellEntity = {
+    id: string;
+    faktavurderingPeriodeRef?: string | null;
+    vilkårsvurderingPeriodeRef?: string | null;
+    originalPeriode: DatoperiodeEntity;
+    endringIBeløp: number;
 };
 
 export type GodTroEntity = {
@@ -377,6 +387,7 @@ export type VilkårsvurderingsperiodeEntity = {
     periode: DatoperiodeEntity;
     begrunnelseForTilbakekreving?: string | null;
     vurdering: AktsomhetsvurderingEntity;
+    endretAvKravgrunnlag?: ForskjellEntity | null;
 };
 
 export type VilkårsvurderingstegEntity = {
@@ -1279,7 +1290,7 @@ export type SchemaEnum =
     | 'DISTRIUBER_VEDTAK'
     | 'AVSLUTTET';
 
-export type SchemaEnum2 = 'BA' | 'EF' | 'AAP' | 'KONT' | 'IT01' | 'TS' | 'TP';
+export type SchemaEnum2 = 'BA' | 'EF' | 'AAP' | 'KONT' | 'IT01' | 'TS' | 'TP' | 'DP';
 
 export type SchemaEnum3 =
     | 'BARNETRYGD'
@@ -1297,7 +1308,8 @@ export type SchemaEnum4 =
     | 'TILLEGGSSTØNAD'
     | 'INFOTRYGD'
     | 'ARBEIDSAVKLARINGSPENGER'
-    | 'TILTAKSPENGER';
+    | 'TILTAKSPENGER'
+    | 'DAGPENGER';
 
 export type StatusEnum = 'SUKSESS' | 'FEILET' | 'IKKE_HENTET' | 'IKKE_TILGANG' | 'FUNKSJONELL_FEIL';
 
@@ -1608,7 +1620,8 @@ export type TypeEnum8 =
     | 'OVERGANGSSTØNAD'
     | 'INFOTRYGD'
     | 'ARBEIDSAVKLARINGSPENGER'
-    | 'TILTAKSPENGER';
+    | 'TILTAKSPENGER'
+    | 'DAGPENGER';
 
 export type BegrunnelseForUnntakEnum2 =
     | 'IKKE_PRAKTISK_MULIG'

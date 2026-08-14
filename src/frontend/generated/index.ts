@@ -234,6 +234,7 @@ export type {
     ForhåndsvisningHenleggelsesbrevDto,
     ForhåndsvisVarselbrevRequest,
     ForrigeBehandlingsstatusEnum,
+    ForskjellEntity,
     FristUtsettelseDto,
     FritekstavsnittDto,
     FrontendBrukerDto,

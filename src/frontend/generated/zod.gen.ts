@@ -44,6 +44,14 @@ export const zEnhetEntity = z.object({
     navn: z.string(),
 });
 
+export const zForskjellEntity = z.object({
+    id: z.uuid(),
+    faktavurderingPeriodeRef: z.uuid().nullish(),
+    vilkårsvurderingPeriodeRef: z.uuid().nullish(),
+    originalPeriode: zDatoperiodeEntity,
+    endringIBeløp: z.number(),
+});
+
 export const zHistorikkReferanseEntityUuid = z.object({
     id: z.uuid(),
 });
@@ -338,7 +346,7 @@ export const zSchemaEnum = z.enum([
     'AVSLUTTET',
 ]);
 
-export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS', 'TP']);
+export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS', 'TP', 'DP']);
 
 export const zSchemaEnum3 = z.enum([
     'BARNETRYGD',
@@ -358,6 +366,7 @@ export const zSchemaEnum4 = z.enum([
     'INFOTRYGD',
     'ARBEIDSAVKLARINGSPENGER',
     'TILTAKSPENGER',
+    'DAGPENGER',
 ]);
 
 export const zOpprettManueltTilbakekrevingRequest = z.object({
@@ -852,6 +861,7 @@ export const zFaktaPeriodeEntity = z.object({
     periode: zDatoperiodeEntity,
     rettsligGrunnlag: zRettsligGrunnlagEnum,
     rettsligGrunnlagUnderkategori: zRettsligGrunnlagUnderkategoriEnum,
+    endringIKravgrunnlag: zForskjellEntity.nullish(),
 });
 
 export const zFaktaFeilutbetalingsperiodeDto = z.object({
@@ -1049,6 +1059,7 @@ export const zAktsomhetsvurderingEntity = z.object({
     vurderingType: zVurderingTypeEnum,
     mottakersForståelse: zMottakersForståelseEntity.nullish(),
     begrunnelse: z.string().nullish(),
+    begrunnelseForUnnlatelse: z.string().nullish(),
     beløpIBehold: zGodTroEntity.nullish(),
     aktsomhet: zVurdertAktsomhetEntity.nullish(),
     kanUnnlates: zKanUnnlatesEnum.optional(),
@@ -1063,6 +1074,7 @@ export const zVilkårsvurderingsperiodeEntity = z.object({
     periode: zDatoperiodeEntity,
     begrunnelseForTilbakekreving: z.string().nullish(),
     vurdering: zAktsomhetsvurderingEntity,
+    endretAvKravgrunnlag: zForskjellEntity.nullish(),
 });
 
 export const zVilkårsvurderingstegEntity = z.object({
@@ -1167,6 +1179,7 @@ export const zTypeEnum8 = z.enum([
     'INFOTRYGD',
     'ARBEIDSAVKLARINGSPENGER',
     'TILTAKSPENGER',
+    'DAGPENGER',
 ]);
 
 export const zYtelseEntity = z.object({
