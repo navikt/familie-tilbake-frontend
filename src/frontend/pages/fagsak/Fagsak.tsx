@@ -11,6 +11,7 @@ import { UlagretDataModal } from '@/komponenter/modal/UlagretDataModal';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useFagsakStore } from '@/stores/fagsakStore';
 
+import { IkkeFunnet } from '../feilsider/IkkeFunnet';
 import { BehandlingContainer } from './Behandling';
 import { BehandlingSkeleton } from './BehandlingSkeleton';
 
@@ -62,7 +63,7 @@ export const BehandlingSide: FC = () => {
     }, [eksternBrukId, setBehandlingId]);
 
     if (!behandlingId) {
-        return null;
+        return <IkkeFunnet />;
     }
 
     return (
