@@ -1,6 +1,26 @@
-import type { SchemaEnum4 } from '@/generated';
+import type { SchemaEnum2 as Fagsystem, SchemaEnum4 } from '@/generated';
+
+import { zSchemaEnum2 } from '@/generated/zod.gen';
 
 import { HendelseType } from './rettsligGrunnlag';
+
+// URL-er i omløp bruker KS for kontantstøtte, mens API-et forventer KONT
+const fagsystemAliaser: Record<string, Fagsystem> = {
+    KS: 'KONT',
+};
+
+export const tilFagsystem = (fagsystemParam: string | undefined): Fagsystem | undefined => {
+    if (!fagsystemParam) {
+        return undefined;
+    }
+
+    const fagsystem = Object.hasOwn(fagsystemAliaser, fagsystemParam)
+        ? fagsystemAliaser[fagsystemParam]
+        : fagsystemParam;
+    const resultat = zSchemaEnum2.safeParse(fagsystem);
+
+    return resultat.success ? resultat.data : undefined;
+};
 
 const hendelseTyperForYtelse: Record<string, HendelseType[]> = {
     BARNETRYGD: [

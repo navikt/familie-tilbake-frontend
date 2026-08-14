@@ -6,6 +6,7 @@ import { Outlet, useParams } from 'react-router';
 import { BehandlingProvider, finnBehandlingId } from '@/context/BehandlingContext';
 import { BehandlingStateProvider } from '@/context/BehandlingStateContext';
 import { FagsakProvider, useFagsak } from '@/context/FagsakContext';
+import { tilFagsystem } from '@/kodeverk';
 import { FagsakErrorBoundary } from '@/komponenter/error-boundary/FagsakErrorBoundary';
 import { UlagretDataModal } from '@/komponenter/modal/UlagretDataModal';
 import { useBehandlingStore } from '@/stores/behandlingStore';
@@ -38,16 +39,25 @@ const FagsakStoreSynk: FC = () => {
     return null;
 };
 
-export const FagsakSide: FC = () => (
-    <Suspense fallback={<BehandlingSkeleton />}>
-        <FagsakErrorBoundary>
-            <FagsakProvider>
-                <FagsakStoreSynk />
-                <Outlet />
-            </FagsakProvider>
-        </FagsakErrorBoundary>
-    </Suspense>
-);
+export const FagsakSide: FC = () => {
+    const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
+    const fagsystem = tilFagsystem(fagsystemParam);
+
+    if (!fagsystem || !eksternFagsakId) {
+        return <IkkeFunnet />;
+    }
+
+    return (
+        <Suspense fallback={<BehandlingSkeleton />}>
+            <FagsakErrorBoundary>
+                <FagsakProvider fagsystem={fagsystem} eksternFagsakId={eksternFagsakId}>
+                    <FagsakStoreSynk />
+                    <Outlet />
+                </FagsakProvider>
+            </FagsakErrorBoundary>
+        </Suspense>
+    );
+};
 
 export const BehandlingSide: FC = () => {
     const { eksternBrukId } = useParams();

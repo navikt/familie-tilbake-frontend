@@ -3,7 +3,8 @@ import type { ErrorInfo, ReactNode } from 'react';
 import { BodyLong, BodyShort, Button, Heading, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';
 
-import { FagsakIkkeStøttetError } from '@/context/FagsakContext';
+import { FagsakIkkeFunnetError, FagsakIkkeStøttetError } from '@/context/FagsakContext';
+import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 
 type Props = {
     children: ReactNode;
@@ -30,6 +31,10 @@ export class FagsakErrorBoundary extends Component<Props, State> {
 
     render(): ReactNode {
         if (this.state.hasError) {
+            if (this.state.error instanceof FagsakIkkeFunnetError) {
+                return <IkkeFunnet />;
+            }
+
             return this.state.error instanceof FagsakIkkeStøttetError ? (
                 <IkkeStøttetError error={this.state.error} />
             ) : (
