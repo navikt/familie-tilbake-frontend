@@ -43,7 +43,8 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     hentVilkårsvurdering,
 }: InnholdProps) => {
     const { behandlingId } = useBehandling();
-    const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
+    const { erUnder4xRettsgebyr, momenterSærligeGrunner, momenterReduksjonGodTro } =
+        useVilkårsvurderingLesedata();
     const visGlobalAlert = useVisGlobalAlert();
 
     const skjema = useMemo(
@@ -55,7 +56,8 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         resolver: zodResolver(skjema),
         defaultValues: utledDefaultValues(
             valgtVilkårsperiode.vilkårsvurdering,
-            valgtVilkårsperiode.simulertBeløp ?? null
+            valgtVilkårsperiode.simulertBeløp ?? null,
+            erPeriodeVurdert(valgtPeriode.vurdering)
         ),
     });
 
@@ -76,7 +78,12 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         lagreMutation.mutate(
             {
                 path: { behandlingId, periodeId: valgtPeriode.id },
-                body: utledWritable(data),
+                body: utledWritable(data, {
+                    fom: valgtVilkårsperiode.vilkårsvurdering.fom,
+                    tom: valgtVilkårsperiode.vilkårsvurdering.tom,
+                    delbarePerioder: valgtVilkårsperiode.vilkårsvurdering.delbarePerioder,
+                    momenter: [...momenterSærligeGrunner, ...momenterReduksjonGodTro],
+                }),
             },
             {
                 onSuccess: () => {

@@ -617,11 +617,9 @@ export const zFaktaOmFeilutbetaling = z.object({
     usikker4xRettsgebyr: z.boolean().readonly(),
 });
 
-export const z0Enum = z.enum([
-    'FULL_TILBAKEKREVING',
-    'INGEN_TILBAKEKREVING',
-    'DELVIS_TILBAKEKREVING',
-]);
+export const zDelresultatEnum = z
+    .enum(['FULL_TILBAKEKREVING', 'INGEN_TILBAKEKREVING', 'DELVIS_TILBAKEKREVING'])
+    .readonly();
 
 export const zVilkaarsperiode = z.object({
     feilutbetaltBeløp: z
@@ -629,13 +627,13 @@ export const zVilkaarsperiode = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
         .readonly(),
-    delresultat: z0Enum.nullable(),
+    delresultat: zDelresultatEnum,
     fakta: zFakta.readonly(),
     simulertBeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
-        .nullable(),
+        .readonly(),
     vilkårsvurdering: zVilkaarsvurdering,
 });
 

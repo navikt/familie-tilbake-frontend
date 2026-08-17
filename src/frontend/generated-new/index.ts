@@ -27,7 +27,6 @@ export {
     type Options,
 } from './sdk.gen';
 export type {
-    _0Enum,
     Aktsomhet,
     AktsomhetWritable,
     ArsakTilTilbakeforing,
@@ -153,6 +152,7 @@ export type {
     ClientOptions,
     Deler,
     DelerWritable,
+    DelresultatEnum,
     DokumentInfo,
     DokumentType,
     Element,

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { _0Enum as VedtaksresultatEnum } from '@/generated-new';
+import type { DelresultatEnum } from '@/generated-new';
 import type { PeriodeTag, Vilkårsperiode, Vurderingsstatus } from './typer';
 
 import {
@@ -17,7 +17,7 @@ import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
 import { erPeriodeVurdert } from './utils';
 
-const resultat: Record<VedtaksresultatEnum, PeriodeTag> = {
+const resultat: Record<DelresultatEnum, PeriodeTag> = {
     FULL_TILBAKEKREVING: {
         label: 'Full tilbakekreving',
         icon: <ArrowUndoIcon aria-hidden />,

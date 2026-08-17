@@ -557,9 +557,9 @@ export type Vilkaar = {
 
 export type Vilkaarsperiode = {
     readonly feilutbetaltBeløp: number;
-    readonly delresultat: _0Enum | null;
+    delresultat: DelresultatEnum;
     readonly fakta: Fakta;
-    readonly simulertBeløp: number | null;
+    readonly simulertBeløp: number;
     vilkårsvurdering: Vilkaarsvurdering;
 };
 
@@ -605,7 +605,10 @@ export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
 
-export type _0Enum = 'FULL_TILBAKEKREVING' | 'INGEN_TILBAKEKREVING' | 'DELVIS_TILBAKEKREVING';
+export type DelresultatEnum =
+    | 'FULL_TILBAKEKREVING'
+    | 'INGEN_TILBAKEKREVING'
+    | 'DELVIS_TILBAKEKREVING';
 
 export type AktsomhetWritable =
     | ({

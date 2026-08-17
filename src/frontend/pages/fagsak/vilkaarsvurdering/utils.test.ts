@@ -62,7 +62,7 @@ const lagPeriode = (overstyr: Partial<Vilkårsperiode> = {}): Vilkårsperiode =>
     tom: '31.01.2024',
     feilutbetalt: 1000,
     vurdering: 'IKKE_VURDERT',
-    resultat: null,
+    resultat: 'FULL_TILBAKEKREVING',
     rettsligGrunnlag: [],
     ...overstyr,
 });

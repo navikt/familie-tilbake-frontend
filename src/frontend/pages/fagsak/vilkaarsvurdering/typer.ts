@@ -1,6 +1,6 @@
 import type { TagProps } from '@navikt/ds-react';
 import type { ReactNode } from 'react';
-import type { _0Enum as VedtaksresultatEnum } from '@/generated-new';
+import type { DelresultatEnum } from '@/generated-new';
 
 export type Vurderingsstatus =
     | 'IKKE_VURDERT'
@@ -23,6 +23,6 @@ export type Vilkårsperiode = {
     tom: string;
     feilutbetalt: number;
     vurdering: Vurderingsstatus;
-    resultat: VedtaksresultatEnum | null;
+    resultat: DelresultatEnum;
     rettsligGrunnlag: string[];
 };

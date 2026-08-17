@@ -27,8 +27,9 @@ export const SimulertBeløp: FC<Props> = ({
 }: Props) => {
     const { control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const simulertBeløp = useWatch({ name: 'simulertBeløp', control: control });
+    const erVurdert = useWatch({ name: 'erVurdert', control: control });
 
-    if (simulertBeløp === null && !renter && !reduksjon) {
+    if (!erVurdert && !renter && !reduksjon) {
         return null;
     }
 
@@ -52,7 +53,7 @@ export const SimulertBeløp: FC<Props> = ({
                 </HStack>
             )}
 
-            {simulertBeløp !== null && (
+            {erVurdert && (
                 <VStack gap="space-4" className="w-1/2">
                     <span className="text-ax-text-info-subtle">
                         Beløpet som skal kreves tilbake

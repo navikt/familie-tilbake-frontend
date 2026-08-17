@@ -4,6 +4,7 @@ import type {
     SaerligeGrunner,
     Vilkaarsperiode,
     Vilkaarsvurdering,
+    VilkaarsvurderingValg,
 } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
@@ -21,27 +22,30 @@ type Beløpsbeskrivelse = 'hele beløpet' | 'hele beløpet som er i behold';
 type SærligeGrunnerRetning = 'for' | 'mot';
 type Uaktsomhetsgrad = 'med forsett' | 'grovt uaktsomt' | 'uaktsomt';
 
-const valgtPeriode: Vilkårsperiode = {
+const valgtPeriode = (vurdering: Vilkårsperiode['vurdering'] = 'FORSETT'): Vilkårsperiode => ({
     id: '1',
     fom: '01.01.2023',
     tom: '31.12.2023',
     feilutbetalt: 10000,
-    vurdering: 'IKKE_VURDERT',
-    resultat: null,
+    vurdering,
+    resultat: 'FULL_TILBAKEKREVING',
     rettsligGrunnlag: [],
-};
+});
 
-const lagVilkårsperiode = (simulertBeløp: number | null): Vilkaarsperiode => ({
+const lagVilkårsperiode = (
+    simulertBeløp: number,
+    valg: VilkaarsvurderingValg = { vurdering: 'ikke_vurdert' }
+): Vilkaarsperiode => ({
     feilutbetaltBeløp: 10000,
-    delresultat: null,
+    delresultat: 'FULL_TILBAKEKREVING',
     fakta: { rettsligGrunnlag: [] },
     simulertBeløp,
     vilkårsvurdering: {
-        id: valgtPeriode.id,
+        id: valgtPeriode().id,
         fom: '2023-01-01',
         tom: '2023-12-31',
         delbarePerioder: [],
-        valg: { vurdering: 'ikke_vurdert' },
+        valg,
     },
 });
 
@@ -87,8 +91,9 @@ const momenterReduksjonGodTro: Moment[] = [
 ];
 
 const renderVilkårsDetaljer = (
-    simulertBeløp: number | null = 10000,
-    erUnder4xRettsgebyr = false
+    simulertBeløp: number = 10000,
+    erUnder4xRettsgebyr = false,
+    vurdering: Vilkårsperiode['vurdering'] = 'FORSETT'
 ): void => {
     render(
         <QueryClientProvider client={createTestQueryClient()}>
@@ -99,7 +104,7 @@ const renderVilkårsDetaljer = (
                     erUnder4xRettsgebyr={erUnder4xRettsgebyr}
                 >
                     <VilkårsvurderingDetaljer
-                        valgtPeriode={valgtPeriode}
+                        valgtPeriode={valgtPeriode(vurdering)}
                         vilkårsperioder={[lagVilkårsperiode(simulertBeløp)]}
                         hentVilkårsvurdering={(): void => undefined}
                     />
@@ -304,7 +309,7 @@ describe('VilkårsvurderingDetaljer', () => {
     describe('Forsto eller burde forstått', () => {
         describe('Forsto', () => {
             const velgForsto = async (
-                simulertBeløp: number | null = 10000,
+                simulertBeløp: number = 10000,
                 erUnder4xRettsgebyr = false
             ): Promise<void> => {
                 renderVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr);
@@ -341,7 +346,7 @@ describe('VilkårsvurderingDetaljer', () => {
 
         describe('Burde forstått', () => {
             const velgBurdeForstått = async (
-                simulertBeløp: number | null = 10000,
+                simulertBeløp: number = 10000,
                 erUnder4xRettsgebyr = false
             ): Promise<void> => {
                 renderVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr);
@@ -487,8 +492,8 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
-        test('Forsett - simulertBeløp - null - skjuler beløpet', async () => {
-            renderVilkårsDetaljer(null);
+        test('Forsett - simulertBeløp - ikke vurdert - skjuler beløpet', async () => {
+            renderVilkårsDetaljer(10000, false, 'IKKE_VURDERT');
             user.click(forårsaketAvMottakerRadio());
             user.click(await forsettRadio());
             expect(await begrunnelseForårsaketAvMottakeren('med forsett')).toBeInTheDocument();
@@ -511,7 +516,7 @@ describe('VilkårsvurderingDetaljer', () => {
 
         describe('Uaktsom', () => {
             const velgUaktsom = async (
-                simulertBeløp: number | null = 10000,
+                simulertBeløp: number = 10000,
                 erUnder4xRettsgebyr = false
             ): Promise<void> => {
                 renderVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr);
@@ -611,7 +616,7 @@ describe('VilkårsvurderingDetaljer', () => {
             const vilkårsperiode: Vilkaarsperiode = {
                 ...lagVilkårsperiode(simulertBeløp),
                 vilkårsvurdering: {
-                    id: valgtPeriode.id,
+                    id: valgtPeriode().id,
                     fom: '2023-01-01',
                     tom: '2023-12-31',
                     delbarePerioder: [],
@@ -627,7 +632,7 @@ describe('VilkårsvurderingDetaljer', () => {
                             erUnder4xRettsgebyr={erUnder4xRettsgebyr}
                         >
                             <VilkårsvurderingDetaljer
-                                valgtPeriode={valgtPeriode}
+                                valgtPeriode={valgtPeriode()}
                                 vilkårsperioder={[vilkårsperiode]}
                                 hentVilkårsvurdering={(): void => undefined}
                             />

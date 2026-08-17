@@ -12,7 +12,7 @@ const lagPeriode = (overstyr: Partial<Vilkårsperiode> = {}): Vilkårsperiode =>
     tom: '31.01.2024',
     feilutbetalt: 1000,
     vurdering: 'IKKE_VURDERT',
-    resultat: null,
+    resultat: 'FULL_TILBAKEKREVING',
     rettsligGrunnlag: [],
     ...overstyr,
 });
@@ -73,23 +73,15 @@ describe('VilkårsvurderingPeriodeListe', () => {
     });
 
     test('burde vise resultatetiketten når perioden har et resultat', () => {
-        renderListe([lagPeriode({ vurdering: 'FORSETT', resultat: 'FULL_TILBAKEKREVING' })]);
+        renderListe([lagPeriode({ vurdering: 'FORSETT' })]);
 
         expect(screen.getByText('Full tilbakekreving')).toBeInTheDocument();
     });
 
     test('burde ikke vise resultatetiketten når perioden ikke er vurdert', () => {
-        renderListe([lagPeriode({ vurdering: 'IKKE_VURDERT', resultat: 'FULL_TILBAKEKREVING' })]);
+        renderListe([lagPeriode({ vurdering: 'IKKE_VURDERT' })]);
 
         expect(screen.queryByText('Full tilbakekreving')).not.toBeInTheDocument();
-    });
-
-    test('burde ikke vise resultatetikett når perioden mangler resultat', () => {
-        renderListe([lagPeriode({ resultat: null })]);
-
-        expect(screen.queryByText('Full tilbakekreving')).not.toBeInTheDocument();
-        expect(screen.queryByText('Delvis tilbakekreving')).not.toBeInTheDocument();
-        expect(screen.queryByText('Ingen tilbakekreving')).not.toBeInTheDocument();
     });
 
     test('burde markere den valgte perioden med aria-pressed', () => {

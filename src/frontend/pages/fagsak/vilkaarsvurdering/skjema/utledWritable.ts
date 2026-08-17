@@ -1,13 +1,14 @@
 import type {
-    AktsomhetWritable,
-    BelopIBeholdWritable,
-    ForstaaelseWritable,
-    MomentWritable,
-    ReduksjonWritable,
-    SaerligeGrunnerWritable,
-    UnnlatelseWritable,
-    VilkaarsvurderingValgWritable,
-    VilkaarsvurderingWritable,
+    Aktsomhet,
+    BelopIBehold,
+    Forstaaelse,
+    Moment,
+    PeriodeInfo,
+    Reduksjon,
+    SaerligeGrunner,
+    Unnlatelse,
+    Vilkaarsvurdering,
+    VilkaarsvurderingValg,
 } from '@/generated-new';
 import type {
     ReduksjonFelter,
@@ -16,11 +17,44 @@ import type {
     VilkårsvurderingSkjemaFelter,
 } from './schema';
 
-const tilMomenter = (verdier: string[]): MomentWritable[] => verdier.map(moment => ({ moment }));
+/**
+ * TODO: Må fikses i backend – dette er en midlertidig workaround.
+ *
+ * POST-endepunktet for vilkårsvurdering tar hele `Vilkaarsvurdering`-modellen som
+ * request body. Feltene under er markert `readOnly` i kontrakten – altså rene
+ * lesedata backend selv eier – men de er fortsatt `required` i schemaet backend
+ * deserialiserer mot. Utelater vi dem svarer backend 500.
+ *
+ * Den genererte `VilkaarsvurderingWritable` (kun `id` + `valg`) er derfor riktig
+ * slik den er nå; det er backend som må ta imot en egen skrivemodell (slik
+ * vedtaksbrev gjør med `...Update`/`...UpdateItem`). Feltene vi må sende likevel:
+ *
+ *   - `fom`, `tom` og `delbarePerioder` på rota
+ *   - `beskrivelse` på hvert `Moment` (særligeGrunnerFor/-Mot og relevans)
+ */
+type PåkrevdForBackend = {
+    fom: string;
+    tom: string;
+    delbarePerioder: readonly PeriodeInfo[];
+    momenter: readonly Moment[];
+};
+
+type MomentMapper = (verdier: string[]) => Moment[];
+
+const lagMomentMapper = (momenter: readonly Moment[]): MomentMapper => {
+    const beskrivelser = new Map(
+        momenter.map(({ moment, beskrivelse }) => [moment, beskrivelse] as const)
+    );
+    return (verdier: string[]): Moment[] =>
+        verdier.map(moment => ({ moment, beskrivelse: beskrivelser.get(moment) ?? '' }));
+};
 
 const tilAnnetBegrunnelse = (verdi: string): string | null => (verdi.trim() === '' ? null : verdi);
 
-const utledSærligeGrunnerWritable = (felter: SærligeGrunnerFelter): SaerligeGrunnerWritable => {
+const utledSærligeGrunner = (
+    felter: SærligeGrunnerFelter,
+    tilMomenter: MomentMapper
+): SaerligeGrunner => {
     if (felter.erDetSaerligeGrunner === 'ja') {
         return {
             erDetSaerligeGrunner: 'ja',
@@ -38,7 +72,7 @@ const utledSærligeGrunnerWritable = (felter: SærligeGrunnerFelter): SaerligeGr
     };
 };
 
-const utledReduksjonWritable = (felter: ReduksjonFelter): ReduksjonWritable => {
+const utledReduksjon = (felter: ReduksjonFelter, tilMomenter: MomentMapper): Reduksjon => {
     if (felter.reduksjon === 'skalReduseres') {
         return {
             reduksjon: 'skalReduseres',
@@ -56,7 +90,7 @@ const utledReduksjonWritable = (felter: ReduksjonFelter): ReduksjonWritable => {
     };
 };
 
-const utledUnnlatelseWritable = (felter: UnnlatelseFelter): UnnlatelseWritable => {
+const utledUnnlatelse = (felter: UnnlatelseFelter, tilMomenter: MomentMapper): Unnlatelse => {
     switch (felter.unnlatelse) {
         case 'skalUnnlates':
             return {
@@ -67,52 +101,60 @@ const utledUnnlatelseWritable = (felter: UnnlatelseFelter): UnnlatelseWritable =
             return {
                 unnlatelse: 'skalIkkeUnnlates',
                 begrunnelse: felter.skalIkkeUnnlates.begrunnelse,
-                erDetSærligeGrunner: utledSærligeGrunnerWritable(
-                    felter.skalIkkeUnnlates.erDetSærligeGrunner
+                erDetSærligeGrunner: utledSærligeGrunner(
+                    felter.skalIkkeUnnlates.erDetSærligeGrunner,
+                    tilMomenter
                 ),
             };
         default:
             return {
                 unnlatelse: 'ikkeAktuelt',
-                erDetSærligeGrunner: utledSærligeGrunnerWritable(
-                    felter.ikkeAktuelt.erDetSærligeGrunner
+                erDetSærligeGrunner: utledSærligeGrunner(
+                    felter.ikkeAktuelt.erDetSærligeGrunner,
+                    tilMomenter
                 ),
             };
     }
 };
 
-const utledValgWritable = (felter: VilkårsvurderingSkjemaFelter): VilkaarsvurderingValgWritable => {
+const utledValg = (
+    felter: VilkårsvurderingSkjemaFelter,
+    tilMomenter: MomentMapper
+): VilkaarsvurderingValg => {
     switch (felter.valg) {
         case 'forsto_eller_burde_forstått': {
             const { forstoEllerBurdeForstått } = felter;
-            const forståelse: ForstaaelseWritable =
+            const forståelse: Forstaaelse =
                 forstoEllerBurdeForstått.forståelse === 'forsto'
                     ? {
                           forståelse: 'forsto',
                           begrunnelse: forstoEllerBurdeForstått.forsto.begrunnelse,
-                          unnlatelse: utledUnnlatelseWritable(
-                              forstoEllerBurdeForstått.forsto.unnlatelse
+                          unnlatelse: utledUnnlatelse(
+                              forstoEllerBurdeForstått.forsto.unnlatelse,
+                              tilMomenter
                           ),
                       }
                     : {
                           forståelse: 'burdeForstått',
                           begrunnelse: forstoEllerBurdeForstått.burdeForstått.begrunnelse,
-                          unnlatelse: utledUnnlatelseWritable(
-                              forstoEllerBurdeForstått.burdeForstått.unnlatelse
+                          unnlatelse: utledUnnlatelse(
+                              forstoEllerBurdeForstått.burdeForstått.unnlatelse,
+                              tilMomenter
                           ),
                       };
             return { vurdering: 'forsto_eller_burde_forstått', forståelse };
         }
         case 'forårsaket_av_mottaker': {
             const { forårsaketAvMottaker } = felter;
-            let aktsomhet: AktsomhetWritable;
+            let aktsomhet: Aktsomhet;
             switch (forårsaketAvMottaker.aktsomhet) {
                 case 'uaktsomt':
                     aktsomhet = {
                         aktsomhet: 'uaktsomt',
                         begrunnelse: forårsaketAvMottaker.uaktsomt.begrunnelse,
-                        unnlatelse: utledUnnlatelseWritable(
-                            forårsaketAvMottaker.uaktsomt.unnlatelse
+                        unnlatelse: utledUnnlatelse(
+                            forårsaketAvMottaker.uaktsomt.unnlatelse,
+                            tilMomenter
                         ),
                     };
                     break;
@@ -120,8 +162,9 @@ const utledValgWritable = (felter: VilkårsvurderingSkjemaFelter): Vilkaarsvurde
                     aktsomhet = {
                         aktsomhet: 'grovtUaktsomt',
                         begrunnelse: forårsaketAvMottaker.grovtUaktsomt.begrunnelse,
-                        erDetSærligeGrunner: utledSærligeGrunnerWritable(
-                            forårsaketAvMottaker.grovtUaktsomt.erDetSærligeGrunner
+                        erDetSærligeGrunner: utledSærligeGrunner(
+                            forårsaketAvMottaker.grovtUaktsomt.erDetSærligeGrunner,
+                            tilMomenter
                         ),
                     };
                     break;
@@ -135,7 +178,7 @@ const utledValgWritable = (felter: VilkårsvurderingSkjemaFelter): Vilkaarsvurde
         }
         case 'god_tro': {
             const { godTro } = felter;
-            let beløpIBehold: BelopIBeholdWritable;
+            let beløpIBehold: BelopIBehold;
             switch (godTro.beløpIBehold) {
                 case 'ingenting':
                     beløpIBehold = {
@@ -147,7 +190,7 @@ const utledValgWritable = (felter: VilkårsvurderingSkjemaFelter): Vilkaarsvurde
                     beløpIBehold = {
                         belopIBehold: 'hele',
                         begrunnelse: godTro.hele.begrunnelse,
-                        reduksjon: utledReduksjonWritable(godTro.hele),
+                        reduksjon: utledReduksjon(godTro.hele, tilMomenter),
                     };
                     break;
                 default:
@@ -155,7 +198,7 @@ const utledValgWritable = (felter: VilkårsvurderingSkjemaFelter): Vilkaarsvurde
                         belopIBehold: 'deler',
                         beløp: godTro.deler.beløp ?? 0,
                         begrunnelse: godTro.deler.begrunnelse,
-                        reduksjon: utledReduksjonWritable(godTro.deler),
+                        reduksjon: utledReduksjon(godTro.deler, tilMomenter),
                     };
             }
             return { vurdering: 'god_tro', begrunnelse: godTro.begrunnelse, beløpIBehold };
@@ -166,10 +209,19 @@ const utledValgWritable = (felter: VilkårsvurderingSkjemaFelter): Vilkaarsvurde
 };
 
 /**
- * Bygger request-body (`VilkaarsvurderingWritable`) fra skjemafeltene. Kun den
- * aktive diskriminerte grenen tas med. Forutsetter at feltene er validert.
+ * Bygger request-body fra skjemafeltene. Kun den aktive diskriminerte grenen tas
+ * med. Forutsetter at feltene er validert.
+ *
+ * `påkrevdForBackend` er lesedata som egentlig ikke hører hjemme i en skrivemodell –
+ * se kommentaren på `PåkrevdForBackend`.
  */
-export const utledWritable = (felter: VilkårsvurderingSkjemaFelter): VilkaarsvurderingWritable => ({
+export const utledWritable = (
+    felter: VilkårsvurderingSkjemaFelter,
+    påkrevdForBackend: PåkrevdForBackend
+): Vilkaarsvurdering => ({
     id: felter.id,
-    valg: utledValgWritable(felter),
+    valg: utledValg(felter, lagMomentMapper(påkrevdForBackend.momenter)),
+    fom: påkrevdForBackend.fom,
+    tom: påkrevdForBackend.tom,
+    delbarePerioder: [...påkrevdForBackend.delbarePerioder],
 });
