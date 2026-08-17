@@ -78,6 +78,12 @@ describe('VilkårsvurderingPeriodeListe', () => {
         expect(screen.getByText('Full tilbakekreving')).toBeInTheDocument();
     });
 
+    test('burde ikke vise resultatetiketten når perioden ikke er vurdert', () => {
+        renderListe([lagPeriode({ vurdering: 'IKKE_VURDERT', resultat: 'FULL_TILBAKEKREVING' })]);
+
+        expect(screen.queryByText('Full tilbakekreving')).not.toBeInTheDocument();
+    });
+
     test('burde ikke vise resultatetikett når perioden mangler resultat', () => {
         renderListe([lagPeriode({ resultat: null })]);
 
