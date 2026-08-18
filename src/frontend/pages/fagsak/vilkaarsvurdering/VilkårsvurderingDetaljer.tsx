@@ -2,10 +2,13 @@ import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import type {
+    BehandlingLagreVilkaarsvurderingData,
     BehandlingLagreVilkaarsvurderingError,
+    BehandlingLagreVilkaarsvurderingResponse,
     Periode,
     Vilkaarsperiode,
 } from '@/generated-new';
+import type { Options } from '@/generated-new/client';
 import type { VilkårsvurderingSkjemaFelter } from './skjema/schema';
 import type { Vilkårsperiode } from './typer';
 
@@ -16,7 +19,6 @@ import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
-import { behandlingLagreVilkaarsvurderingMutation } from '@/generated-new/@tanstack/react-query.gen';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 
 import { DelPeriode } from './del-periode/DelPeriode';
@@ -35,6 +37,8 @@ type InnholdProps = {
     vilkårsperioder: Vilkaarsperiode[];
     hentVilkårsvurdering: () => void;
 };
+
+export const LAGRE_VILKÅRSVURDERING_MUTATION_KEY = ['lagreVilkårsvurdering'] as const;
 
 const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     valgtPeriode,
@@ -61,8 +65,12 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         ),
     });
 
-    const lagreMutation = useMutation({
-        ...behandlingLagreVilkaarsvurderingMutation(),
+    const lagreMutation = useMutation<
+        BehandlingLagreVilkaarsvurderingResponse,
+        AxiosError<BehandlingLagreVilkaarsvurderingError>,
+        Options<BehandlingLagreVilkaarsvurderingData>
+    >({
+        mutationKey: LAGRE_VILKÅRSVURDERING_MUTATION_KEY,
         onError: (error: AxiosError<BehandlingLagreVilkaarsvurderingError>) => {
             visGlobalAlert({
                 title: error.response?.data.tittel ?? 'Kunne ikke lagre vilkårsvurderingen',

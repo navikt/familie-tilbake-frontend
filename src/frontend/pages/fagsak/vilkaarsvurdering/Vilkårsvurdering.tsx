@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react';
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import {
+    behandlingLagreVilkaarsvurderingMutation,
     behandlingVilkaarsvurderingOptions,
     behandlingVilkaarsvurderingQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
@@ -19,7 +20,10 @@ import { formatterDatostring } from '@/utils/dateUtils';
 import { useStegNavigering } from '@/utils/sider';
 
 import { finnStandardValgtPeriode, utledVurdering } from './utils';
-import { VilkårsvurderingDetaljer } from './VilkårsvurderingDetaljer';
+import {
+    LAGRE_VILKÅRSVURDERING_MUTATION_KEY,
+    VilkårsvurderingDetaljer,
+} from './VilkårsvurderingDetaljer';
 import { VilkårsvurderingLesedataProvider } from './VilkårsvurderingLesedataContext';
 import { VilkårsvurderingPeriodeListe } from './VilkårsvurderingPeriodeListe';
 
@@ -56,6 +60,10 @@ export const Vilkårsvurdering: FC = () => {
         const funnetPeriode = perioder.find(({ id }) => id === valgtPeriodeId);
         return funnetPeriode ?? finnStandardValgtPeriode(perioder);
     }, [perioder, valgtPeriodeId]);
+
+    queryClient.setMutationDefaults(LAGRE_VILKÅRSVURDERING_MUTATION_KEY, {
+        ...behandlingLagreVilkaarsvurderingMutation(),
+    });
 
     const invaliderVilkårsvurdering = (): void => {
         queryClient.invalidateQueries({
