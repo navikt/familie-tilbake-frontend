@@ -31,6 +31,7 @@ export const SærligeGrunner: FC<Props> = ({
     const { momenterSærligeGrunner } = useVilkårsvurderingLesedata();
     const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
         getFieldState(navn, formState).error?.message;
+    const setValueOptions = { shouldDirty: true, shouldValidate: formState.isSubmitted };
     const erDetSaerligeGrunner = useWatch({
         name: `${navnPrefix}.erDetSaerligeGrunner`,
         control,
@@ -84,9 +85,11 @@ export const SærligeGrunner: FC<Props> = ({
                         value={særligeGrunnerFor}
                         error={feil(`${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`)}
                         onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`, value, {
-                                shouldDirty: true,
-                            })
+                            setValue(
+                                `${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`,
+                                value,
+                                setValueOptions
+                            )
                         }
                     >
                         {momenterSærligeGrunner.map(({ moment, beskrivelse }) => (
@@ -126,7 +129,7 @@ export const SærligeGrunner: FC<Props> = ({
                             setValue(
                                 `${navnPrefix}.jaSærligeGrunner.prosentReduksjon`,
                                 e.target.value === '' ? null : Number(e.target.value),
-                                { shouldDirty: true }
+                                setValueOptions
                             )
                         }
                         type="number"
@@ -146,9 +149,11 @@ export const SærligeGrunner: FC<Props> = ({
                         value={særligeGrunnerMot}
                         error={feil(`${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`)}
                         onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`, value, {
-                                shouldDirty: true,
-                            })
+                            setValue(
+                                `${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`,
+                                value,
+                                setValueOptions
+                            )
                         }
                     >
                         {momenterSærligeGrunner.map(({ moment, beskrivelse }) => (

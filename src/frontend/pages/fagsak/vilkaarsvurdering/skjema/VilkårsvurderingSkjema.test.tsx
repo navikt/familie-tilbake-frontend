@@ -507,6 +507,65 @@ describe('VilkårsvurderingSkjema', () => {
                 expect(screen.queryByText('Du må fylle inn en verdi')).not.toBeInTheDocument()
             );
         });
+
+        test('burde fjerne feilmeldingen når brukeren krysser av et moment', async () => {
+            renderSkjema();
+
+            await user.click(radio(VILKÅR_FORÅRSAKET_AV_MOTTAKER));
+            await user.click(radio('Grovt uaktsom'));
+            await user.click(radioIGruppe(SÆRLIGE_GRUNNER_LEGEND, 'Ja'));
+            await user.click(lagreKnapp());
+            expect(await screen.findByText('Du må velge minst ett alternativ')).toBeInTheDocument();
+
+            await user.click(avkryssningsboks(SÆRLIGE_GRUNNER_FOR_LEGEND, NAVS_FEIL.beskrivelse));
+
+            await waitFor(() =>
+                expect(
+                    screen.queryByText('Du må velge minst ett alternativ')
+                ).not.toBeInTheDocument()
+            );
+        });
+    });
+
+    describe('Fritekst for «Annet»', () => {
+        test('burde ikke sende friteksten når avkryssningen for «Annet» er fjernet igjen', async () => {
+            const sendtRequest = renderSkjema();
+
+            await user.click(radio(VILKÅR_FORÅRSAKET_AV_MOTTAKER));
+            await user.click(radio('Grovt uaktsom'));
+            await user.type(
+                tekstfelt('Begrunn hvorfor du vurderer at mottakeren har handlet grovt uaktsomt'),
+                'Mottakeren har utvist grov uaktsomhet'
+            );
+            await user.click(radioIGruppe(SÆRLIGE_GRUNNER_LEGEND, 'Nei'));
+            await user.click(avkryssningsboks(SÆRLIGE_GRUNNER_MOT_LEGEND, ANNET.beskrivelse));
+            await user.type(
+                tekstfelt(/Beskriv kort hva du legger i alternativet/),
+                'Denne teksten skal ikke lagres'
+            );
+            await user.click(avkryssningsboks(SÆRLIGE_GRUNNER_MOT_LEGEND, ANNET.beskrivelse));
+            await user.click(avkryssningsboks(SÆRLIGE_GRUNNER_MOT_LEGEND, NAVS_FEIL.beskrivelse));
+            await user.type(
+                tekstfelt(
+                    'Begrunn hvorfor du vurderer at det ikke er særlige grunner til å redusere beløpet'
+                ),
+                'Feilen kan ikke tilskrives Nav'
+            );
+            await user.click(lagreKnapp());
+
+            await expect(sendtRequest).resolves.toMatchObject({
+                body: {
+                    valg: {
+                        aktsomhet: {
+                            erDetSærligeGrunner: {
+                                særligeGrunnerMot: [NAVS_FEIL],
+                                annetBegrunnelse: null,
+                            },
+                        },
+                    },
+                },
+            });
+        });
     });
 
     describe('Bytte av gren midt i utfylling', () => {

@@ -27,6 +27,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
 
     const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
         getFieldState(navn, formState).error?.message;
+    const setValueOptions = { shouldDirty: true, shouldValidate: formState.isSubmitted };
 
     const reduksjon = useWatch({
         name: `${navnPrefix}.reduksjon`,
@@ -73,9 +74,11 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         value={relevansSkalIkkeReduseres}
                         error={feil(`${navnPrefix}.skalIkkeReduseres.relevans`)}
                         onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.skalIkkeReduseres.relevans`, value, {
-                                shouldDirty: true,
-                            })
+                            setValue(
+                                `${navnPrefix}.skalIkkeReduseres.relevans`,
+                                value,
+                                setValueOptions
+                            )
                         }
                     >
                         {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
@@ -117,9 +120,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         value={relevansSkalReduseres}
                         error={feil(`${navnPrefix}.skalReduseres.relevans`)}
                         onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.skalReduseres.relevans`, value, {
-                                shouldDirty: true,
-                            })
+                            setValue(`${navnPrefix}.skalReduseres.relevans`, value, setValueOptions)
                         }
                     >
                         {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (

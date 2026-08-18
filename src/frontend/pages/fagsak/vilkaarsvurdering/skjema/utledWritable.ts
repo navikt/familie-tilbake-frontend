@@ -40,7 +40,8 @@ const lagMomentMapper = (momenter: readonly Moment[]): MomentMapper => {
         verdier.map(moment => ({ moment, beskrivelse: beskrivelser.get(moment) ?? '' }));
 };
 
-const tilAnnetBegrunnelse = (verdi: string): string | null => (verdi.trim() === '' ? null : verdi);
+const tilAnnetBegrunnelse = (momenter: string[], verdi: string): string | null =>
+    momenter.includes('ANNET') && verdi.trim() !== '' ? verdi : null;
 
 const utledSærligeGrunner = (
     felter: SærligeGrunnerFelter,
@@ -52,14 +53,20 @@ const utledSærligeGrunner = (
             særligeGrunnerFor: tilMomenter(felter.jaSærligeGrunner.særligeGrunnerFor),
             prosentReduksjon: felter.jaSærligeGrunner.prosentReduksjon ?? 0,
             begrunnelse: felter.jaSærligeGrunner.begrunnelse,
-            annetBegrunnelse: tilAnnetBegrunnelse(felter.jaSærligeGrunner.annetBegrunnelse),
+            annetBegrunnelse: tilAnnetBegrunnelse(
+                felter.jaSærligeGrunner.særligeGrunnerFor,
+                felter.jaSærligeGrunner.annetBegrunnelse
+            ),
         };
     }
     return {
         erDetSaerligeGrunner: 'nei',
         særligeGrunnerMot: tilMomenter(felter.neiSærligeGrunner.særligeGrunnerMot),
         begrunnelse: felter.neiSærligeGrunner.begrunnelse,
-        annetBegrunnelse: tilAnnetBegrunnelse(felter.neiSærligeGrunner.annetBegrunnelse),
+        annetBegrunnelse: tilAnnetBegrunnelse(
+            felter.neiSærligeGrunner.særligeGrunnerMot,
+            felter.neiSærligeGrunner.annetBegrunnelse
+        ),
     };
 };
 
@@ -69,14 +76,20 @@ const utledReduksjon = (felter: ReduksjonFelter, tilMomenter: MomentMapper): Red
             reduksjon: 'skalReduseres',
             beløp: felter.skalReduseres.beløp ?? 0,
             relevans: tilMomenter(felter.skalReduseres.relevans),
-            annetBegrunnelse: tilAnnetBegrunnelse(felter.skalReduseres.annetBegrunnelse),
+            annetBegrunnelse: tilAnnetBegrunnelse(
+                felter.skalReduseres.relevans,
+                felter.skalReduseres.annetBegrunnelse
+            ),
             begrunnelse: felter.skalReduseres.begrunnelse,
         };
     }
     return {
         reduksjon: 'skalIkkeReduseres',
         relevans: tilMomenter(felter.skalIkkeReduseres.relevans),
-        annetBegrunnelse: tilAnnetBegrunnelse(felter.skalIkkeReduseres.annetBegrunnelse),
+        annetBegrunnelse: tilAnnetBegrunnelse(
+            felter.skalIkkeReduseres.relevans,
+            felter.skalIkkeReduseres.annetBegrunnelse
+        ),
         begrunnelse: felter.skalIkkeReduseres.begrunnelse,
     };
 };

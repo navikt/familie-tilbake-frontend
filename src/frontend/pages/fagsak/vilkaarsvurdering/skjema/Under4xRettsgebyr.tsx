@@ -19,6 +19,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
         useFormContext<VilkårsvurderingSkjemaFelter>();
     const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
         getFieldState(navn, formState).error?.message;
+    const setValueOptions = { shouldDirty: true, shouldValidate: formState.isSubmitted };
     const unnlatelse = useWatch({ name: `${navnPrefix}.unnlatelse`, control });
     const unnlatelseVerdi =
         unnlatelse === 'skalUnnlates'
@@ -42,7 +43,8 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                 onChange={(value: string): void =>
                     setValue(
                         `${navnPrefix}.unnlatelse`,
-                        value === 'skalUnnlates' ? 'skalUnnlates' : 'skalIkkeUnnlates'
+                        value === 'skalUnnlates' ? 'skalUnnlates' : 'skalIkkeUnnlates',
+                        setValueOptions
                     )
                 }
             >
