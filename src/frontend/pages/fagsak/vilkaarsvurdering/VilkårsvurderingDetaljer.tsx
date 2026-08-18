@@ -60,7 +60,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         resolver: zodResolver(skjema),
         defaultValues: utledDefaultValues(
             valgtVilkårsperiode.vilkårsvurdering,
-            valgtVilkårsperiode.simulertBeløp ?? null,
+            valgtVilkårsperiode.simulertBeløp,
             erPeriodeVurdert(valgtPeriode.vurdering)
         ),
     });

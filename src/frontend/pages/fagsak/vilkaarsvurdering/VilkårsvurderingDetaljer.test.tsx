@@ -254,7 +254,7 @@ const beløpTilbakekreves = (): HTMLElement =>
         name: 'Hvor mange kroner skal kreves tilbake?',
     });
 const beløpIBehold = (): HTMLElement =>
-    screen.getByRole('textbox', {
+    screen.getByRole('spinbutton', {
         name: 'Hvor mange kroner er i behold?',
     });
 
@@ -770,7 +770,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 expect(await begrunnelseIBehold('deler av beløpet')).toHaveValue(
                     'Deler av beløpet er i behold'
                 );
-                expect(beløpIBehold()).toHaveValue('4000');
+                expect(beløpIBehold()).toHaveValue(4000);
                 expect(await krevesTilbakeJaRadio('hele beløpet som er i behold')).toBeChecked();
 
                 const gruppe = await årsakKrevesTilbakeCheckboxGroup(
@@ -799,7 +799,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 });
 
                 expect(delerIBeholdRadio()).toBeChecked();
-                expect(beløpIBehold()).toHaveValue('4000');
+                expect(beløpIBehold()).toHaveValue(4000);
                 expect(await krevesTilbakeNeiRadio('hele beløpet som er i behold')).toBeChecked();
 
                 const gruppe = await årsakKrevesIkkeTilbakeCheckboxGroup(

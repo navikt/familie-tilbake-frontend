@@ -32,6 +32,8 @@ export const Deler: FC = () => {
                 size="small"
                 style={{ width: '100px' }}
                 className="max-w-xl"
+                type="number"
+                min={0}
             />
             <Reduksjon navnPrefix="godTro.deler" beløpsbeskrivelse="hele beløpet som er i behold" />
         </>
