@@ -168,22 +168,11 @@ export type ReduksjonFelter = Pick<
 
 type FeltSti = (string | number)[];
 
-/**
- * Native påkrevd-skjemaer. Feilmeldingene kommer fra det globale
- * `configureZod`-oppsettet (utils/zodConfig.ts): generiske tekst-/beløpsfelter
- * gir «Du må fylle inn en verdi», mens valg og avkrysning får en spesifikk
- * melding inline via `{ error }` – samme mønster som FaktaSkjema/VedtakSkjema.
- */
 const påkrevdTekst = z.string().trim().min(1);
 const påkrevdBeløp = z.number();
 const påkrevdValg = z.string().min(1, { error: 'Du må gjøre et valg' });
 const påkrevdMinstEtt = z.array(z.string()).min(1, { error: 'Du må velge minst ett alternativ' });
 
-/**
- * Validerer `verdi` mot et native skjema og videresender eventuelle issues til
- * superRefine-konteksten med riktig feltsti. Meldingen er allerede løst av
- * `configureZod`/inline `{ error }` under parsingen.
- */
 const valider = (
     ctx: z.core.$RefinementCtx,
     schema: z.ZodType,
@@ -400,11 +389,6 @@ const validerFelter = (
     }
 };
 
-/**
- * Bygger valideringsskjemaet for en vilkårsvurderingsperiode. Kun feltene i den
- * aktive diskriminerte grenen er påkrevd. `erUnder4xRettsgebyr` avgjør om
- * unnlatelses-grenen (sjette avsnitt) valideres i stedet for særlige grunner.
- */
 export const lagVilkårsvurderingSkjema = (
     erUnder4xRettsgebyr: boolean
 ): z.ZodType<VilkårsvurderingSkjemaFelter, VilkårsvurderingSkjemaFelter> =>
@@ -412,27 +396,14 @@ export const lagVilkårsvurderingSkjema = (
         validerFelter(felter, ctx, erUnder4xRettsgebyr)
     );
 
-/**
- * Feltstier til `unnlatelse`-objektet i skjemaet. Brukes som `navnPrefix` slik at
- * Under4xRettsgebyr-komponenten kan bygge stiene til grenene (`skalUnnlates`,
- * `skalIkkeUnnlates`).
- */
 export type UnnlatelseNavnPrefix =
     | 'forstoEllerBurdeForstått.forsto.unnlatelse'
     | 'forstoEllerBurdeForstått.burdeForstått.unnlatelse'
     | 'forårsaketAvMottaker.uaktsomt.unnlatelse';
 
-/**
- * Feltstier hvor SærligeGrunner-komponenten registreres i skjemaet.
- * Brukes som `navnPrefix` slik at komponenten kan gjenbrukes på tvers av grenene.
- */
 export type SærligeGrunnerNavnPrefix =
     | `${UnnlatelseNavnPrefix}.ikkeAktuelt.erDetSærligeGrunner`
     | `${UnnlatelseNavnPrefix}.skalIkkeUnnlates.erDetSærligeGrunner`
     | 'forårsaketAvMottaker.grovtUaktsomt.erDetSærligeGrunner';
 
-/**
- * Feltstier hvor Reduksjon-komponenten registreres i skjemaet.
- * Brukes som `navnPrefix` slik at komponenten kan gjenbrukes på tvers av grenene.
- */
 export type ReduksjonNavnPrefix = 'godTro.hele' | 'godTro.deler';

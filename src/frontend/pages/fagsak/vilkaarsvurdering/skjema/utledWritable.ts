@@ -18,19 +18,10 @@ import type {
 } from './schema';
 
 /**
- * TODO: Må fikses i backend – dette er en midlertidig workaround.
- *
  * POST-endepunktet for vilkårsvurdering tar hele `Vilkaarsvurdering`-modellen som
  * request body. Feltene under er markert `readOnly` i kontrakten – altså rene
  * lesedata backend selv eier – men de er fortsatt `required` i schemaet backend
- * deserialiserer mot. Utelater vi dem svarer backend 500.
- *
- * Den genererte `VilkaarsvurderingWritable` (kun `id` + `valg`) er derfor riktig
- * slik den er nå; det er backend som må ta imot en egen skrivemodell (slik
- * vedtaksbrev gjør med `...Update`/`...UpdateItem`). Feltene vi må sende likevel:
- *
- *   - `fom`, `tom` og `delbarePerioder` på rota
- *   - `beskrivelse` på hvert `Moment` (særligeGrunnerFor/-Mot og relevans)
+ * deserialiserer mot.
  */
 type PåkrevdForBackend = {
     fom: string;

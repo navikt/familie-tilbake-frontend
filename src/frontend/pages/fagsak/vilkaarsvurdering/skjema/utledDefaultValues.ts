@@ -120,13 +120,6 @@ const utledUnnlatelse = (unnlatelse: Unnlatelse): UnnlatelseFelter => {
     return felter;
 };
 
-/**
- * Utleder skjemaets defaultValues fra det man får i GET-endepunktet (typen Vilkaar).
- *
- * Kun feltene som finnes i backend-kontrakten fylles ut. Resten står tomme
- * inntil post og validering er på plass. `simulertBeløp` og `erVurdert` er rene
- * lesedata som legges i skjemaet slik at SimulertBeløp-komponenten når dem.
- */
 export const utledDefaultValues = (
     vilkårsvurdering: Vilkaarsvurdering,
     simulertBeløp: number,
