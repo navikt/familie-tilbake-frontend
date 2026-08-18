@@ -527,6 +527,63 @@ describe('VilkårsvurderingSkjema', () => {
         });
     });
 
+    describe('Prosentreduksjon', () => {
+        const fyllUtGrovtUaktsomMedSærligeGrunner = async (
+            user: UserEvent,
+            prosent: string
+        ): Promise<void> => {
+            await user.click(radio(VILKÅR_FORÅRSAKET_AV_MOTTAKER));
+            await user.click(radio('Grovt uaktsom'));
+            await user.type(
+                tekstfelt('Begrunn hvorfor du vurderer at mottakeren har handlet grovt uaktsomt'),
+                'Mottakeren har utvist grov uaktsomhet'
+            );
+            await user.click(radioIGruppe(SÆRLIGE_GRUNNER_LEGEND, 'Ja'));
+            await user.click(avkryssningsboks(SÆRLIGE_GRUNNER_FOR_LEGEND, NAVS_FEIL.beskrivelse));
+            await user.type(
+                tekstfelt(
+                    'Begrunn hvorfor du vurderer at det er særlige grunner til å redusere beløpet'
+                ),
+                'Det foreligger særlige grunner'
+            );
+            await user.type(tallfelt('Hvor mange prosent skal beløpet reduseres med?'), prosent);
+            await user.click(lagreKnapp());
+        };
+
+        test.each<[string, string]>([
+            ['over 100', '150'],
+            ['negativ', '-5'],
+            ['ikke et helt tall', '50.5'],
+        ])('burde blokkere innsending når prosenten er %s', async (_beskrivelse, prosent) => {
+            renderSkjema();
+
+            await fyllUtGrovtUaktsomMedSærligeGrunner(user, prosent);
+
+            await waitFor(() =>
+                expect(
+                    tallfelt('Hvor mange prosent skal beløpet reduseres med?')
+                ).toHaveAccessibleDescription('Du må fylle inn et helt tall mellom 0 og 100')
+            );
+        });
+
+        test.each<[string, number]>([
+            ['0', 0],
+            ['100', 100],
+        ])('burde godta grenseverdien %s prosent', async (prosent, forventet) => {
+            const sendtRequest = renderSkjema();
+
+            await fyllUtGrovtUaktsomMedSærligeGrunner(user, prosent);
+
+            await expect(sendtRequest).resolves.toMatchObject({
+                body: {
+                    valg: {
+                        aktsomhet: { erDetSærligeGrunner: { prosentReduksjon: forventet } },
+                    },
+                },
+            });
+        });
+    });
+
     describe('Fritekst for «Annet»', () => {
         test('burde ikke sende friteksten når avkryssningen for «Annet» er fjernet igjen', async () => {
             const sendtRequest = renderSkjema();

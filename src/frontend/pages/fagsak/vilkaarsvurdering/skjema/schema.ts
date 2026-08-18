@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-import {
-    zDelerWritable,
-    zJaSaerligeGrunnerWritable,
-    zSkalReduseresWritable,
-} from '@/generated-new/zod.gen';
+import { zDelerWritable, zSkalReduseresWritable } from '@/generated-new/zod.gen';
 
 /**
  * Base-skjemaet validerer kun *formen* på feltene. Verdier som mangler
@@ -29,9 +25,13 @@ const beløpIBeholdValgSchema = z.enum(['ingenting', 'hele', 'deler', '']).catch
 
 const erDetSærligeGrunnerValgSchema = z.enum(['ja', 'nei', '']).catch('');
 
-const prosentReduksjonSchema = zJaSaerligeGrunnerWritable.shape.prosentReduksjon
-    .nullable()
-    .catch(null);
+/**
+ * Kontrakten tillater 0–255 (uint8), men fagreglene tillater kun 0–100. Grensene
+ * ligger i `påkrevdProsent` og ikke her, slik at en verdi utenfor intervallet gir
+ * en presis feilmelding i stedet for å bli fanget av `.catch(null)` og rapportert
+ * som et manglende felt.
+ */
+const prosentReduksjonSchema = z.number().nullable().catch(null);
 
 const beløpIBeholdKronerSchema = zDelerWritable.shape.beløp.nullable().catch(null);
 
@@ -170,6 +170,11 @@ type FeltSti = (string | number)[];
 
 const påkrevdTekst = z.string().trim().min(1);
 const påkrevdBeløp = z.number();
+const prosentFeilmelding = 'Du må fylle inn et helt tall mellom 0 og 100';
+const påkrevdProsent = z
+    .int({ error: prosentFeilmelding })
+    .min(0, { error: prosentFeilmelding })
+    .max(100, { error: prosentFeilmelding });
 const påkrevdValg = z.string().min(1, { error: 'Du må gjøre et valg' });
 const påkrevdMinstEtt = z.array(z.string()).min(1, { error: 'Du må velge minst ett alternativ' });
 
@@ -196,6 +201,9 @@ const krevTekst = (ctx: z.core.$RefinementCtx, verdi: string, path: FeltSti): vo
 const krevBeløp = (ctx: z.core.$RefinementCtx, verdi: number | null, path: FeltSti): void =>
     valider(ctx, påkrevdBeløp, verdi, path);
 
+const krevProsent = (ctx: z.core.$RefinementCtx, verdi: number | null, path: FeltSti): void =>
+    valider(ctx, påkrevdProsent, verdi, path);
+
 const krevMinstEtt = (ctx: z.core.$RefinementCtx, verdier: string[], path: FeltSti): void =>
     valider(ctx, påkrevdMinstEtt, verdier, path);
 
@@ -214,7 +222,7 @@ const validerSærligeGrunner = (
         if (felter.jaSærligeGrunner.særligeGrunnerFor.includes('ANNET')) {
             krevTekst(ctx, felter.jaSærligeGrunner.annetBegrunnelse, [...path, 'annetBegrunnelse']);
         }
-        krevBeløp(ctx, felter.jaSærligeGrunner.prosentReduksjon, [...path, 'prosentReduksjon']);
+        krevProsent(ctx, felter.jaSærligeGrunner.prosentReduksjon, [...path, 'prosentReduksjon']);
         krevTekst(ctx, felter.jaSærligeGrunner.begrunnelse, [...path, 'begrunnelse']);
     } else if (felter.erDetSaerligeGrunner === 'nei') {
         const path = [...basePath, 'neiSærligeGrunner'];

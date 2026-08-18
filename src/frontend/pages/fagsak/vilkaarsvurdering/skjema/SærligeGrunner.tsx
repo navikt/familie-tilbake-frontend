@@ -117,7 +117,6 @@ export const SærligeGrunner: FC<Props> = ({
                         {...register(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
                         error={feil(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
                     />
-                    {/* TODO Valider senere at man ikke kan skrive utenfor 1–100 */}
                     <TextField
                         label="Hvor mange prosent skal beløpet reduseres med?"
                         size="small"
@@ -133,7 +132,7 @@ export const SærligeGrunner: FC<Props> = ({
                             )
                         }
                         type="number"
-                        min={1}
+                        min={0}
                         max={100}
                     />
                     <SimulertBeløp renter={renter} {...reduksjonsprops} />
