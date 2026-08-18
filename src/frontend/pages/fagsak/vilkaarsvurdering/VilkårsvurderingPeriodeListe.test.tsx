@@ -72,6 +72,13 @@ describe('VilkårsvurderingPeriodeListe', () => {
         expect(screen.getByText('God tro')).toBeInTheDocument();
     });
 
+    test('burde vise egen etikett for burde forstått', () => {
+        renderListe([lagPeriode({ vurdering: 'BURDE_FORSTÅTT' })]);
+
+        expect(screen.getByText('Burde forstått')).toBeInTheDocument();
+        expect(screen.queryByText('Forsto')).not.toBeInTheDocument();
+    });
+
     test('burde vise resultatetiketten når perioden har et resultat', () => {
         renderListe([lagPeriode({ vurdering: 'FORSETT' })]);
 

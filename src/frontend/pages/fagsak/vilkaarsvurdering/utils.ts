@@ -6,7 +6,14 @@ export const utledVurdering = (valg: VilkaarsvurderingValg): Vurderingsstatus =>
         case 'god_tro':
             return 'GOD_TRO';
         case 'forsto_eller_burde_forstått':
-            return 'FORSTO';
+            switch (valg.forståelse.forståelse) {
+                case 'forsto':
+                    return 'FORSTO';
+                case 'burdeForstått':
+                    return 'BURDE_FORSTÅTT';
+                default:
+                    return 'IKKE_VURDERT';
+            }
         case 'forårsaket_av_mottaker':
             switch (valg.aktsomhet.aktsomhet) {
                 case 'uaktsomt':

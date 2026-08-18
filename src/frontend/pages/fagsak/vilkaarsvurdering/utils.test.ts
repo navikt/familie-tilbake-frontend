@@ -11,11 +11,22 @@ const godTro: VilkaarsvurderingValg = {
         begrunnelse: 'Hele beløpet er forbrukt',
     },
 };
-const forstoEllerBurdeForstått: VilkaarsvurderingValg = {
+const forsto: VilkaarsvurderingValg = {
     vurdering: 'forsto_eller_burde_forstått',
     forståelse: {
         forståelse: 'forsto',
         begrunnelse: 'Mottaker forsto',
+        unnlatelse: {
+            unnlatelse: 'skalUnnlates',
+            begrunnelse: 'Tilbakekreving skal unnlates',
+        },
+    },
+};
+const burdeForstått: VilkaarsvurderingValg = {
+    vurdering: 'forsto_eller_burde_forstått',
+    forståelse: {
+        forståelse: 'burdeForstått',
+        begrunnelse: 'Mottaker burde forstått',
         unnlatelse: {
             unnlatelse: 'skalUnnlates',
             begrunnelse: 'Tilbakekreving skal unnlates',
@@ -73,8 +84,12 @@ describe('Vilkårsvurdering - utils', () => {
             expect(utledVurdering(godTro)).toBe('GOD_TRO');
         });
 
-        test('burde utlede FORSTO ved forsto_eller_burde_forstått', () => {
-            expect(utledVurdering(forstoEllerBurdeForstått)).toBe('FORSTO');
+        test('burde utlede FORSTO når mottaker forsto', () => {
+            expect(utledVurdering(forsto)).toBe('FORSTO');
+        });
+
+        test('burde utlede BURDE_FORSTÅTT når mottaker burde forstått', () => {
+            expect(utledVurdering(burdeForstått)).toBe('BURDE_FORSTÅTT');
         });
 
         test('burde utlede UAKTSOMT for forårsaket av mottaker med uaktsomhet', () => {
