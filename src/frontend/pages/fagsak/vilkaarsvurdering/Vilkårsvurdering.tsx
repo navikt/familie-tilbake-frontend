@@ -14,6 +14,7 @@ import {
     behandlingVilkaarsvurderingQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { useActionBar } from '@/hooks/useActionBar';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils/dateUtils';
 import { useStegNavigering } from '@/utils/sider';
 
@@ -39,6 +40,7 @@ export const Vilkårsvurdering: FC = () => {
     const navigerTilForrige = useStegNavigering('FORELDELSE');
     const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
     const queryClient = useQueryClient();
+    const visGlobalAlert = useVisGlobalAlert();
 
     const { data: vilkår } = useSuspenseQuery(
         behandlingVilkaarsvurderingOptions({ path: { behandlingId } })
@@ -61,12 +63,23 @@ export const Vilkårsvurdering: FC = () => {
         });
     };
 
+    const håndterNeste = (): void => {
+        if (!vilkår.ferdigvurdert) {
+            visGlobalAlert({
+                title: 'Du må vurdere og lagre alle periodene før du kan gå videre',
+                status: 'announcement',
+            });
+            return;
+        }
+        navigerTilNeste();
+    };
+
     useActionBar({
         stegtekst: actionBarStegtekst('VILKÅRSVURDERING'),
         forrigeAriaLabel: 'Gå tilbake til foreldelsessteget',
         onForrige: navigerTilForrige,
         nesteAriaLabel: 'Gå videre til vedtakssteget',
-        onNeste: navigerTilNeste,
+        onNeste: håndterNeste,
     });
 
     const statusTag = vilkår.ferdigvurdert ? (
