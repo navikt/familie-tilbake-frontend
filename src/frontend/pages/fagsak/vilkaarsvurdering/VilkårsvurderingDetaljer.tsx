@@ -96,7 +96,6 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
             {
                 onSuccess: () => {
                     methods.reset(data);
-                    hentVilkårsvurdering();
                 },
             }
         );

@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import {
     behandlingLagreVilkaarsvurderingMutation,
     behandlingVilkaarsvurderingOptions,
@@ -61,15 +62,21 @@ export const Vilkårsvurdering: FC = () => {
         return funnetPeriode ?? finnStandardValgtPeriode(perioder);
     }, [perioder, valgtPeriodeId]);
 
-    queryClient.setMutationDefaults(LAGRE_VILKÅRSVURDERING_MUTATION_KEY, {
-        ...behandlingLagreVilkaarsvurderingMutation(),
-    });
-
     const invaliderVilkårsvurdering = (): void => {
         queryClient.invalidateQueries({
             queryKey: behandlingVilkaarsvurderingQueryKey({ path: { behandlingId } }),
         });
     };
+
+    queryClient.setMutationDefaults(LAGRE_VILKÅRSVURDERING_MUTATION_KEY, {
+        ...behandlingLagreVilkaarsvurderingMutation(),
+        onSuccess: async (): Promise<void> => {
+            invaliderVilkårsvurdering();
+            await queryClient.invalidateQueries({
+                queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+            });
+        },
+    });
 
     const håndterNeste = (): void => {
         if (!vilkår.ferdigvurdert) {
