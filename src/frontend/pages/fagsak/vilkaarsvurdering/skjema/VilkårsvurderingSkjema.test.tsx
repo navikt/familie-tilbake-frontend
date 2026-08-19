@@ -5,6 +5,7 @@ import type {
     PeriodeInfo,
     Vilkaarsperiode,
     Vilkaarsvurdering,
+    VilkaarsvurderingValg,
 } from '@/generated-new';
 import type { Vilkårsperiode } from '../typer';
 
@@ -12,6 +13,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { useGlobalAlertStore } from '@/stores/globalAlertStore';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagBehandling } from '@/testdata/behandlingFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
@@ -56,40 +58,50 @@ const TID_SIDEN_UTBETALING: Moment = {
 const momenterSærligeGrunner: Moment[] = [GRAD_AV_UAKTSOMHET, NAVS_FEIL, ANNET];
 const momenterReduksjonGodTro: Moment[] = [STØRRELSE_PÅ_BELØPET, TID_SIDEN_UTBETALING, ANNET];
 
-const vilkårsvurdering: Vilkaarsvurdering = {
+const lagVilkårsvurdering = (valg: VilkaarsvurderingValg): Vilkaarsvurdering => ({
     id: PERIODE_ID,
     fom: FOM,
     tom: TOM,
     delbarePerioder,
-    valg: { vurdering: 'ikke_vurdert' },
-};
+    valg,
+});
 
-const lagValgtPeriode = (feilutbetaltBeløp: number): Vilkårsperiode => ({
+const lagValgtPeriode = (
+    feilutbetaltBeløp: number,
+    vurdering: Vilkårsperiode['vurdering']
+): Vilkårsperiode => ({
     id: PERIODE_ID,
     fom: '01.01.2024',
     tom: '31.01.2024',
     feilutbetalt: feilutbetaltBeløp,
-    vurdering: 'IKKE_VURDERT',
+    vurdering,
     resultat: 'FULL_TILBAKEKREVING',
     rettsligGrunnlag: [],
 });
 
-const lagVilkårsperiode = (feilutbetaltBeløp: number): Vilkaarsperiode => ({
+const lagVilkårsperiode = (
+    feilutbetaltBeløp: number,
+    valg: VilkaarsvurderingValg
+): Vilkaarsperiode => ({
     feilutbetaltBeløp,
     delresultat: 'FULL_TILBAKEKREVING',
     fakta: { rettsligGrunnlag: [] },
     simulertBeløp: feilutbetaltBeløp,
-    vilkårsvurdering,
+    vilkårsvurdering: lagVilkårsvurdering(valg),
 });
 
 type RenderProps = {
     erUnder4xRettsgebyr?: boolean;
     feilutbetaltBeløp?: number;
+    valg?: VilkaarsvurderingValg;
+    vurdering?: Vilkårsperiode['vurdering'];
 };
 
 const renderSkjema = ({
     erUnder4xRettsgebyr = false,
     feilutbetaltBeløp = 10000,
+    valg = { vurdering: 'ikke_vurdert' },
+    vurdering = 'IKKE_VURDERT',
 }: RenderProps = {}): Promise<BehandlingLagreVilkaarsvurderingData> => {
     const client = createTestQueryClient();
     const sendtRequest = new Promise<BehandlingLagreVilkaarsvurderingData>(resolve => {
@@ -110,8 +122,8 @@ const renderSkjema = ({
                     erUnder4xRettsgebyr={erUnder4xRettsgebyr}
                 >
                     <VilkårsvurderingDetaljer
-                        valgtPeriode={lagValgtPeriode(feilutbetaltBeløp)}
-                        vilkårsperioder={[lagVilkårsperiode(feilutbetaltBeløp)]}
+                        valgtPeriode={lagValgtPeriode(feilutbetaltBeløp, vurdering)}
+                        vilkårsperioder={[lagVilkårsperiode(feilutbetaltBeløp, valg)]}
                         hentVilkårsvurdering={(): void => undefined}
                     />
                 </VilkårsvurderingLesedataProvider>
@@ -151,6 +163,10 @@ describe('VilkårsvurderingSkjema', () => {
 
     beforeAll(() => {
         user = userEvent.setup({ delay: null });
+    });
+
+    beforeEach(() => {
+        useGlobalAlertStore.setState({ alerts: [] });
     });
 
     describe('Payload per gren', () => {
@@ -689,6 +705,65 @@ describe('VilkårsvurderingSkjema', () => {
                     'Du må fylle inn et helt beløp i kroner høyere enn 0'
                 )
             );
+        });
+    });
+
+    describe('Lagre-knappen', () => {
+        const forsettlig: VilkaarsvurderingValg = {
+            vurdering: 'forårsaket_av_mottaker',
+            aktsomhet: {
+                aktsomhet: 'forsettlig',
+                begrunnelse: 'Mottakeren visste at utbetalingen var feil',
+            },
+        };
+
+        test('burde varsle i stedet for å lagre når ingenting er endret', async () => {
+            const sendtRequest = renderSkjema({ valg: forsettlig, vurdering: 'FORSETT' });
+            let harSendtRequest = false;
+            sendtRequest.then(() => {
+                harSendtRequest = true;
+            });
+
+            await user.click(lagreKnapp());
+
+            await waitFor(() =>
+                expect(useGlobalAlertStore.getState().alerts).toMatchObject([
+                    { title: 'Ingen endringer å lagre', status: 'announcement' },
+                ])
+            );
+            expect(harSendtRequest).toBe(false);
+        });
+
+        test('burde lagre når skjemaet er endret etter at det ble lagret', async () => {
+            const sendtRequest = renderSkjema({ valg: forsettlig, vurdering: 'FORSETT' });
+
+            await user.type(
+                tekstfelt('Begrunn hvorfor du vurderer at mottakeren har handlet med forsett'),
+                ' og handlet likevel'
+            );
+            await user.click(lagreKnapp());
+
+            await expect(sendtRequest).resolves.toMatchObject({
+                body: {
+                    valg: {
+                        vurdering: 'forårsaket_av_mottaker',
+                        aktsomhet: {
+                            aktsomhet: 'forsettlig',
+                            begrunnelse:
+                                'Mottakeren visste at utbetalingen var feil og handlet likevel',
+                        },
+                    },
+                },
+            });
+        });
+
+        test('burde flytte fokus til det første feltet med feil ved mislykket innsending', async () => {
+            renderSkjema();
+
+            await user.click(radio(VILKÅR_FORÅRSAKET_AV_MOTTAKER));
+            await user.click(lagreKnapp());
+
+            await waitFor(() => expect(radio('Uaktsom')).toHaveFocus());
         });
     });
 

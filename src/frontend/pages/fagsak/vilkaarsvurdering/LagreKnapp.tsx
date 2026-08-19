@@ -5,6 +5,8 @@ import { Button } from '@navikt/ds-react';
 import { useMemo } from 'react';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
+
 type LagreKnappProps = {
     skjema: ReturnType<typeof lagVilkårsvurderingSkjema>;
     laster: boolean;
@@ -15,15 +17,28 @@ export const LagreKnapp: FC<LagreKnappProps> = ({ skjema, laster, lagre }: Lagre
     const { control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const { isDirty } = useFormState({ control });
     const verdier = useWatch({ control });
+    const visGlobalAlert = useVisGlobalAlert();
     const erSkjemaetKomplett = useMemo(() => skjema.safeParse(verdier).success, [skjema, verdier]);
-    const kanLagre = isDirty || !erSkjemaetKomplett;
+    const harUlagredeEndringer = isDirty || !erSkjemaetKomplett;
+
+    const håndterKlikk = (): void => {
+        if (harUlagredeEndringer) {
+            lagre();
+            return;
+        }
+        visGlobalAlert({
+            title: 'Ingen endringer å lagre',
+            status: 'announcement',
+        });
+    };
 
     return (
         <Button
+            type="button"
             size="xsmall"
-            variant={kanLagre ? 'primary' : 'tertiary'}
+            variant={harUlagredeEndringer ? 'primary' : 'tertiary'}
             loading={laster}
-            onClick={kanLagre ? lagre : undefined}
+            onClick={håndterKlikk}
         >
             Lagre
         </Button>
