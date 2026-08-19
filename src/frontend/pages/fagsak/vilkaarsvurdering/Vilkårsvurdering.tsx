@@ -74,8 +74,8 @@ export const Vilkårsvurdering: FC = () => {
     const håndterNeste = (): void => {
         if (!vilkår.ferdigvurdert) {
             visGlobalAlert({
-                title: 'Du må vurdere og lagre alle periodene før du kan gå videre',
-                status: 'announcement',
+                title: `Du må vurdere perioden${perioder.length > 1 ? 'e' : ''} og lagre før du kan gå videre`,
+                status: 'warning',
             });
             return;
         }

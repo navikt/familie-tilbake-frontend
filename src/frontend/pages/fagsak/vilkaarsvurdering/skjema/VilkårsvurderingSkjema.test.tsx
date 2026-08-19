@@ -64,30 +64,32 @@ const vilkårsvurdering: Vilkaarsvurdering = {
     valg: { vurdering: 'ikke_vurdert' },
 };
 
-const valgtPeriode: Vilkårsperiode = {
+const lagValgtPeriode = (feilutbetaltBeløp: number): Vilkårsperiode => ({
     id: PERIODE_ID,
     fom: '01.01.2024',
     tom: '31.01.2024',
-    feilutbetalt: 10000,
+    feilutbetalt: feilutbetaltBeløp,
     vurdering: 'IKKE_VURDERT',
     resultat: 'FULL_TILBAKEKREVING',
     rettsligGrunnlag: [],
-};
+});
 
-const vilkårsperiode: Vilkaarsperiode = {
-    feilutbetaltBeløp: 10000,
+const lagVilkårsperiode = (feilutbetaltBeløp: number): Vilkaarsperiode => ({
+    feilutbetaltBeløp,
     delresultat: 'FULL_TILBAKEKREVING',
     fakta: { rettsligGrunnlag: [] },
-    simulertBeløp: 10000,
+    simulertBeløp: feilutbetaltBeløp,
     vilkårsvurdering,
-};
+});
 
 type RenderProps = {
     erUnder4xRettsgebyr?: boolean;
+    feilutbetaltBeløp?: number;
 };
 
 const renderSkjema = ({
     erUnder4xRettsgebyr = false,
+    feilutbetaltBeløp = 10000,
 }: RenderProps = {}): Promise<BehandlingLagreVilkaarsvurderingData> => {
     const client = createTestQueryClient();
     const sendtRequest = new Promise<BehandlingLagreVilkaarsvurderingData>(resolve => {
@@ -108,8 +110,8 @@ const renderSkjema = ({
                     erUnder4xRettsgebyr={erUnder4xRettsgebyr}
                 >
                     <VilkårsvurderingDetaljer
-                        valgtPeriode={valgtPeriode}
-                        vilkårsperioder={[vilkårsperiode]}
+                        valgtPeriode={lagValgtPeriode(feilutbetaltBeløp)}
+                        vilkårsperioder={[lagVilkårsperiode(feilutbetaltBeløp)]}
                         hentVilkårsvurdering={(): void => undefined}
                     />
                 </VilkårsvurderingLesedataProvider>
@@ -581,6 +583,112 @@ describe('VilkårsvurderingSkjema', () => {
                     },
                 },
             });
+        });
+    });
+
+    describe('Beløpsgrenser', () => {
+        const REDUKSJON_LEGEND = 'Skal hele beløpet som er i behold kreves tilbake?';
+        const REDUKSJON_MOMENTER_LEGEND =
+            /^Hva er årsaken\(e\) til at hele beløpet som er i behold ikke skal kreves tilbake\?/;
+        const KREVES_TILBAKE_BEGRUNNELSE =
+            'Begrunn hvorfor du vurderer at hele beløpet som er i behold ikke skal kreves tilbake';
+
+        const fyllUtGodTroDeler = async (
+            user: UserEvent,
+            beløpIBehold: string,
+            krevesTilbake?: string
+        ): Promise<void> => {
+            await user.click(radio(VILKÅR_GOD_TRO));
+            await user.type(
+                tekstfelt(
+                    'Begrunn hvorfor du vurderer at mottakeren har mottatt beløpet i aktsom god tro'
+                ),
+                'Mottakeren var i aktsom god tro'
+            );
+            await user.click(radio('Deler av beløpet'));
+            await user.type(
+                tekstfelt('Begrunn hvorfor deler av beløpet er i behold'),
+                'Deler er brukt opp'
+            );
+            await user.type(tallfelt('Hvor mange kroner er i behold?'), beløpIBehold);
+            if (krevesTilbake === undefined) {
+                await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Ja'));
+                await user.click(
+                    avkryssningsboks(
+                        /^Hva er årsaken\(e\) til at hele beløpet som er i behold skal kreves tilbake\?/,
+                        TID_SIDEN_UTBETALING.beskrivelse
+                    )
+                );
+                await user.type(
+                    tekstfelt(
+                        'Begrunn hvorfor du vurderer at hele beløpet som er i behold skal kreves tilbake'
+                    ),
+                    'Det har gått lang tid'
+                );
+            } else {
+                await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Nei'));
+                await user.click(
+                    avkryssningsboks(REDUKSJON_MOMENTER_LEGEND, TID_SIDEN_UTBETALING.beskrivelse)
+                );
+                await user.type(tekstfelt(KREVES_TILBAKE_BEGRUNNELSE), 'Det har gått lang tid');
+                await user.type(tallfelt('Hvor mange kroner skal kreves tilbake?'), krevesTilbake);
+            }
+            await user.click(lagreKnapp());
+        };
+
+        test('burde blokkere innsending når beløpet i behold er høyere enn det feilutbetalte beløpet', async () => {
+            renderSkjema({ feilutbetaltBeløp: 5000 });
+
+            await fyllUtGodTroDeler(user, '5001');
+
+            await waitFor(() =>
+                expect(tallfelt('Hvor mange kroner er i behold?')).toHaveAccessibleDescription(
+                    /Beløpet kan ikke være høyere enn det feilutbetalte beløpet på 5\s000 kroner/
+                )
+            );
+        });
+
+        test('burde blokkere innsending når beløpet som kreves tilbake er høyere enn beløpet i behold', async () => {
+            renderSkjema({ feilutbetaltBeløp: 5000 });
+
+            await fyllUtGodTroDeler(user, '2000', '2001');
+
+            await waitFor(() =>
+                expect(
+                    tallfelt('Hvor mange kroner skal kreves tilbake?')
+                ).toHaveAccessibleDescription(
+                    /Beløpet kan ikke være høyere enn beløpet som er i behold på 2\s000 kroner/
+                )
+            );
+        });
+
+        test('burde knytte feilmeldingen til beløpsfeltet og ikke til beløpet i behold', async () => {
+            renderSkjema({ feilutbetaltBeløp: 5000 });
+
+            await fyllUtGodTroDeler(user, '2000', '2001');
+
+            await waitFor(() =>
+                expect(
+                    screen.getByText(/Beløpet kan ikke være høyere enn beløpet som er i behold/)
+                ).toBeInTheDocument()
+            );
+            expect(tallfelt('Hvor mange kroner er i behold?')).toHaveAccessibleDescription('');
+        });
+
+        test.each<[string, string]>([
+            ['er null', '0'],
+            ['er negativt', '-100'],
+            ['ikke er et helt kronebeløp', '1500.5'],
+        ])('burde blokkere innsending når beløpet i behold %s', async (_beskrivelse, beløp) => {
+            renderSkjema({ feilutbetaltBeløp: 5000 });
+
+            await fyllUtGodTroDeler(user, beløp);
+
+            await waitFor(() =>
+                expect(tallfelt('Hvor mange kroner er i behold?')).toHaveAccessibleDescription(
+                    'Du må fylle inn et helt beløp i kroner høyere enn 0'
+                )
+            );
         });
     });
 

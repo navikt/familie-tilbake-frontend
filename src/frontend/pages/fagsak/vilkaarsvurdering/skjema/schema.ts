@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { zDelerWritable, zSkalReduseresWritable } from '@/generated-new/zod.gen';
+import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
 /**
  * Base-skjemaet validerer kun *formen* på feltene. Verdier som mangler
@@ -33,7 +33,7 @@ const erDetSærligeGrunnerValgSchema = z.enum(['ja', 'nei', '']).catch('');
  */
 const prosentReduksjonSchema = z.number().nullable().catch(null);
 
-const beløpIBeholdKronerSchema = zDelerWritable.shape.beløp.nullable().catch(null);
+const beløpSchema = z.number().nullable().catch(null);
 
 const jaSærligeGrunnerSchema = z.object({
     særligeGrunnerFor: tekstliste,
@@ -74,12 +74,10 @@ const unnlatelseSchema = z.object({
 
 const reduksjonValgSchema = z.enum(['skalReduseres', 'skalIkkeReduseres', '']).catch('');
 
-const skalKrevesTilbakeBeløpSchema = zSkalReduseresWritable.shape.beløp.nullable().catch(null);
-
 const reduksjonFelter: {
     reduksjon: typeof reduksjonValgSchema;
     skalReduseres: z.ZodObject<{
-        beløp: typeof skalKrevesTilbakeBeløpSchema;
+        beløp: typeof beløpSchema;
         relevans: typeof tekstliste;
         annetBegrunnelse: typeof tekst;
         begrunnelse: typeof tekst;
@@ -92,7 +90,7 @@ const reduksjonFelter: {
 } = {
     reduksjon: reduksjonValgSchema,
     skalReduseres: z.object({
-        beløp: skalKrevesTilbakeBeløpSchema,
+        beløp: beløpSchema,
         relevans: tekstliste,
         annetBegrunnelse: tekst,
         begrunnelse: tekst,
@@ -145,7 +143,7 @@ export const vilkårsvurderingSkjema = z.object({
             ...reduksjonFelter,
         }),
         deler: z.object({
-            beløp: beløpIBeholdKronerSchema,
+            beløp: beløpSchema,
             begrunnelse: tekst,
             ...reduksjonFelter,
         }),
@@ -168,8 +166,24 @@ export type ReduksjonFelter = Pick<
 
 type FeltSti = (string | number)[];
 
+type Beløpstak = {
+    maks: number;
+    beskrivelse: 'det feilutbetalte beløpet' | 'beløpet som er i behold';
+};
+
+const takFeilmelding = ({ maks, beskrivelse }: Beløpstak): string =>
+    `Beløpet kan ikke være høyere enn ${beskrivelse} på ${formatCurrencyNoKr(maks)} kroner`;
+
 const påkrevdTekst = z.string().trim().min(1);
-const påkrevdBeløp = z.number();
+
+const påkrevdBeløp = (tak: Beløpstak): z.ZodType<number> => {
+    const heltBeløpFeilmelding = 'Du må fylle inn et helt beløp i kroner høyere enn 0';
+    return z
+        .number()
+        .int({ error: heltBeløpFeilmelding })
+        .min(1, { error: heltBeløpFeilmelding })
+        .max(tak.maks, { error: takFeilmelding(tak) });
+};
 const prosentFeilmelding = 'Du må fylle inn et helt tall mellom 0 og 100';
 const påkrevdProsent = z
     .int({ error: prosentFeilmelding })
@@ -198,8 +212,12 @@ const krevValg = (ctx: z.core.$RefinementCtx, verdi: string, path: FeltSti): voi
 const krevTekst = (ctx: z.core.$RefinementCtx, verdi: string, path: FeltSti): void =>
     valider(ctx, påkrevdTekst, verdi, path);
 
-const krevBeløp = (ctx: z.core.$RefinementCtx, verdi: number | null, path: FeltSti): void =>
-    valider(ctx, påkrevdBeløp, verdi, path);
+const krevBeløp = (
+    ctx: z.core.$RefinementCtx,
+    verdi: number | null,
+    path: FeltSti,
+    tak: Beløpstak
+): void => valider(ctx, påkrevdBeløp(tak), verdi, path);
 
 const krevProsent = (ctx: z.core.$RefinementCtx, verdi: number | null, path: FeltSti): void =>
     valider(ctx, påkrevdProsent, verdi, path);
@@ -243,12 +261,13 @@ const validerSærligeGrunner = (
 const validerReduksjon = (
     ctx: z.core.$RefinementCtx,
     felter: ReduksjonFelter,
-    basePath: FeltSti
+    basePath: FeltSti,
+    beløpIBehold: Beløpstak
 ): void => {
     krevValg(ctx, felter.reduksjon, [...basePath, 'reduksjon']);
     if (felter.reduksjon === 'skalReduseres') {
         const path = [...basePath, 'skalReduseres'];
-        krevBeløp(ctx, felter.skalReduseres.beløp, [...path, 'beløp']);
+        krevBeløp(ctx, felter.skalReduseres.beløp, [...path, 'beløp'], beløpIBehold);
         krevMinstEtt(ctx, felter.skalReduseres.relevans, [...path, 'relevans']);
         if (felter.skalReduseres.relevans.includes('ANNET')) {
             krevTekst(ctx, felter.skalReduseres.annetBegrunnelse, [...path, 'annetBegrunnelse']);
@@ -305,7 +324,8 @@ const validerUnnlatelse = (
 const validerFelter = (
     felter: VilkårsvurderingSkjemaFelter,
     ctx: z.core.$RefinementCtx,
-    erUnder4xRettsgebyr: boolean
+    erUnder4xRettsgebyr: boolean,
+    feilutbetaltBeløp: number
 ): void => {
     krevValg(ctx, felter.valg, ['valg']);
     switch (felter.valg) {
@@ -386,11 +406,26 @@ const validerFelter = (
                 ]);
             } else if (felter.godTro.beløpIBehold === 'hele') {
                 krevTekst(ctx, felter.godTro.hele.begrunnelse, [...base, 'hele', 'begrunnelse']);
-                validerReduksjon(ctx, felter.godTro.hele, [...base, 'hele']);
+                validerReduksjon(ctx, felter.godTro.hele, [...base, 'hele'], {
+                    maks: feilutbetaltBeløp,
+                    beskrivelse: 'beløpet som er i behold',
+                });
             } else if (felter.godTro.beløpIBehold === 'deler') {
-                krevBeløp(ctx, felter.godTro.deler.beløp, [...base, 'deler', 'beløp']);
+                const beløpIBehold = felter.godTro.deler.beløp;
+                krevBeløp(ctx, beløpIBehold, [...base, 'deler', 'beløp'], {
+                    maks: feilutbetaltBeløp,
+                    beskrivelse: 'det feilutbetalte beløpet',
+                });
                 krevTekst(ctx, felter.godTro.deler.begrunnelse, [...base, 'deler', 'begrunnelse']);
-                validerReduksjon(ctx, felter.godTro.deler, [...base, 'deler']);
+                validerReduksjon(ctx, felter.godTro.deler, [...base, 'deler'], {
+                    maks:
+                        beløpIBehold !== null &&
+                        beløpIBehold > 0 &&
+                        beløpIBehold <= feilutbetaltBeløp
+                            ? beløpIBehold
+                            : feilutbetaltBeløp,
+                    beskrivelse: 'beløpet som er i behold',
+                });
             }
             break;
         }
@@ -398,10 +433,11 @@ const validerFelter = (
 };
 
 export const lagVilkårsvurderingSkjema = (
-    erUnder4xRettsgebyr: boolean
+    erUnder4xRettsgebyr: boolean,
+    feilutbetaltBeløp: number
 ): z.ZodType<VilkårsvurderingSkjemaFelter, VilkårsvurderingSkjemaFelter> =>
     vilkårsvurderingSkjema.superRefine((felter, ctx) =>
-        validerFelter(felter, ctx, erUnder4xRettsgebyr)
+        validerFelter(felter, ctx, erUnder4xRettsgebyr, feilutbetaltBeløp)
     );
 
 export type UnnlatelseNavnPrefix =

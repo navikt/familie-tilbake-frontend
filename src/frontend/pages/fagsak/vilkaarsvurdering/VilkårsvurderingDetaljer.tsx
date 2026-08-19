@@ -52,8 +52,8 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     const visGlobalAlert = useVisGlobalAlert();
 
     const skjema = useMemo(
-        () => lagVilkårsvurderingSkjema(erUnder4xRettsgebyr),
-        [erUnder4xRettsgebyr]
+        () => lagVilkårsvurderingSkjema(erUnder4xRettsgebyr, valgtVilkårsperiode.feilutbetaltBeløp),
+        [erUnder4xRettsgebyr, valgtVilkårsperiode.feilutbetaltBeløp]
     );
 
     const methods = useForm<VilkårsvurderingSkjemaFelter>({
