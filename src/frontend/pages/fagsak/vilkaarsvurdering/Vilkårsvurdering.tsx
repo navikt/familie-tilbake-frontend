@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Vilkaar } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
-import { DocPencilIcon, SealCheckmarkIcon } from '@navikt/aksel-icons';
+import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
 import { Heading, InlineMessage, Tag, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
@@ -73,8 +73,8 @@ export const Vilkårsvurdering: FC = () => {
         <Tag
             variant="moderate"
             data-color="success"
-            icon={<SealCheckmarkIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3"
+            icon={<CheckmarkCircleIcon aria-hidden />}
+            className="w-fit ml-auto ax-xl:order-3 gap-2"
         >
             Vurdert
         </Tag>
@@ -83,7 +83,7 @@ export const Vilkårsvurdering: FC = () => {
             variant="moderate"
             data-color="info"
             icon={<DocPencilIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3"
+            className="w-fit ml-auto ax-xl:order-3 gap-2"
         >
             Under vurdering
         </Tag>
