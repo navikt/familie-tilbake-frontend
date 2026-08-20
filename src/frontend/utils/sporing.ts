@@ -143,7 +143,6 @@ export const loadTracker = (): void => {
     script.defer = true;
     script.src = oppsett.skriptUrl;
     script.setAttribute('data-website-id', oppsett.websiteId);
-    script.setAttribute('data-auto-track', 'false');
     document.head.appendChild(script);
 };
 
