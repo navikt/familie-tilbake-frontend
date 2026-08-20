@@ -1,4 +1,6 @@
+import type { AxiosError } from 'axios';
 import type { FC } from 'react';
+import type { BehandlingOppdaterFaktaError } from '@/generated-new';
 
 import { Heading, Tag, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
@@ -9,6 +11,7 @@ import {
     behandlingFaktaQueryKey,
     behandlingOppdaterFaktaMutation,
 } from '@/generated-new/@tanstack/react-query.gen';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 
 import { FaktaSkjema } from './FaktaSkjema';
@@ -16,6 +19,7 @@ import { FaktaSkjema } from './FaktaSkjema';
 export const Fakta: FC = () => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
+    const visGlobalAlert = useVisGlobalAlert();
     const { data: faktaOmFeilutbetaling } = useSuspenseQuery(
         behandlingFaktaOptions({ path: { behandlingId } })
     );
@@ -25,6 +29,13 @@ export const Fakta: FC = () => {
         onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }),
+            });
+        },
+        onError: (error: AxiosError<BehandlingOppdaterFaktaError>) => {
+            visGlobalAlert({
+                title: error.response?.data?.tittel ?? 'Kunne ikke lagre fakta om feilutbetalingen',
+                message: error.response?.data?.melding,
+                status: 'error',
             });
         },
     });
