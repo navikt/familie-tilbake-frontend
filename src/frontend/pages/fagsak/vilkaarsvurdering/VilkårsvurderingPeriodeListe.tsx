@@ -131,7 +131,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                                         {vurdering[periode.vurdering].label}
                                     </Tag>
                                 </Tooltip>
-                                {periode.resultat && periode.vurdering !== 'IKKE_VURDERT' && (
+                                {periode.vurdering !== 'IKKE_VURDERT' && (
                                     <Tooltip
                                         content={`Resultat: ${resultat[periode.resultat].label}`}
                                     >
