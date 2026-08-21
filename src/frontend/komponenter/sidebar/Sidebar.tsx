@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useLavViewportHøyde } from '@/hooks/useLavViewportHøyde';
+import { useSidebarErÅpen } from '@/stores/sidebarStore';
 
 import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
 import { Faktaboks } from './informasjonsbokser/Faktaboks';
 import { HistorikkOgDokumenter } from './OversiktOgHandlinger';
+import { SIDEBAR_PANEL_ID, SidebarVeksleknapp } from './SidebarVeksleknapp';
 
 type Props = {
     dialogRef: RefObject<HTMLDialogElement | null>;
@@ -17,6 +19,7 @@ type Props = {
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { ventegrunn } = useBehandlingState();
     const erLavHøyde = useLavViewportHøyde();
+    const erÅpen = useSidebarErÅpen();
 
     const [kortTilstand, setKortTilstand] = useState({
         faktaboksÅpen: !erLavHøyde,
@@ -56,22 +59,36 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
         <>
             {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
+                id={SIDEBAR_PANEL_ID}
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className={`flex-col gap-4 hidden ax-lg:flex ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'}`}
+                className={`flex-col gap-4 hidden ax-lg:flex ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'} ${
+                    erÅpen
+                        ? 'min-w-0'
+                        : 'w-12 shrink-0 items-center py-2 rounded-2xl border border-ax-border-neutral-subtle bg-ax-bg-default'
+                }`}
             >
-                <Faktaboks
-                    open={kortTilstand.faktaboksÅpen}
-                    onToggle={(åpen: boolean): void =>
-                        setKortTilstand(prev => ({ ...prev, faktaboksÅpen: åpen }))
-                    }
-                />
-                <BrukerInformasjon
-                    open={kortTilstand.brukerInfoÅpen}
-                    onToggle={(åpen: boolean): void =>
-                        setKortTilstand(prev => ({ ...prev, brukerInfoÅpen: åpen }))
-                    }
-                />
-                <HistorikkOgDokumenter />
+                {erÅpen ? (
+                    <>
+                        <div className="flex flex-row justify-end">
+                            <SidebarVeksleknapp />
+                        </div>
+                        <Faktaboks
+                            open={kortTilstand.faktaboksÅpen}
+                            onToggle={(åpen: boolean): void =>
+                                setKortTilstand(prev => ({ ...prev, faktaboksÅpen: åpen }))
+                            }
+                        />
+                        <BrukerInformasjon
+                            open={kortTilstand.brukerInfoÅpen}
+                            onToggle={(åpen: boolean): void =>
+                                setKortTilstand(prev => ({ ...prev, brukerInfoÅpen: åpen }))
+                            }
+                        />
+                        <HistorikkOgDokumenter />
+                    </>
+                ) : (
+                    <SidebarVeksleknapp />
+                )}
             </aside>
 
             <Modal

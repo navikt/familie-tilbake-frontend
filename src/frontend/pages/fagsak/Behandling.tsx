@@ -23,6 +23,7 @@ import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { useActionBarConfig } from '@/stores/actionBarStore';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useGlobalAlerts, useLukkGlobalAlert } from '@/stores/globalAlertStore';
+import { useSidebarErÅpen } from '@/stores/sidebarStore';
 import { venteårsaker } from '@/typer/behandling';
 import { formatterDatostring } from '@/utils';
 import {
@@ -118,7 +119,7 @@ const BehandlingLayout: FC<BehandlingLayoutProps> = ({
     skalHaActionBar,
 }: BehandlingLayoutProps) => (
     <>
-        <div className="flex-1 overflow-auto min-h-0 justify-between flex flex-col">
+        <div className="flex-1 overflow-auto min-h-0 min-w-0 justify-between flex flex-col">
             {children}
             {skalHaActionBar && <GlobalActionBar />}
         </div>
@@ -231,7 +232,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
             <section
                 /* Trekker fra høyde fra header (48) og padding oppe og nede (16+16).
                    Hvis det er ventegrunn legges det til ytterligere 62 */
-                className={`flex flex-col gap-4 flex-1 min-h-0 ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'}`}
+                className={`flex flex-col gap-4 flex-1 min-h-0 min-w-0 ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'}`}
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
                 <div className="flex flex-row gap-2 ax-lg:block justify-between">
@@ -400,6 +401,31 @@ const Behandling: FC = () => {
 const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string =>
     `Behandlingen er satt på vent${ventegrunn.venteårsak ? `: ${venteårsaker[ventegrunn.venteårsak]}` : ''}.${ventegrunn.tidsfrist ? ` Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist)}` : ''}`;
 
+type BehandlingGridProps = {
+    children: ReactNode;
+    harVentegrunn: boolean;
+};
+
+/**
+ * Rutenettet med hovedinnhold og informasjonspanel
+ */
+const BehandlingGrid: FC<BehandlingGridProps> = ({
+    children,
+    harVentegrunn,
+}: BehandlingGridProps) => {
+    const erÅpen = useSidebarErÅpen();
+
+    return (
+        <div
+            className={`mx-auto w-full max-w-[1600px] grid grid-cols-1 gap-4 p-4 ${
+                erÅpen ? 'ax-lg:grid-cols-[2fr_1fr]' : 'ax-lg:grid-cols-[1fr_auto]'
+            } ${harVentegrunn ? 'min-h-[calc(100vh-100px)]' : 'min-h-[calc(100vh-48px)]'}`}
+        >
+            {children}
+        </div>
+    );
+};
+
 export const BehandlingContainer: FC = () => {
     const behandling = useBehandling();
     const { ventegrunn, innholdsbredde, innholdVenstrePosisjon } = useBehandlingState();
@@ -433,11 +459,9 @@ export const BehandlingContainer: FC = () => {
                         </LocalAlert>
                     </div>
                 )}
-                <div
-                    className={`mx-auto w-full max-w-[1600px] grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 ${ventegrunn ? 'min-h-[calc(100vh-100px)]' : 'min-h-[calc(100vh-48px)]'}`}
-                >
+                <BehandlingGrid harVentegrunn={!!ventegrunn}>
                     <Behandling />
-                </div>
+                </BehandlingGrid>
             </div>
             {globalAlerts.map((alert, index) => (
                 <FixedAlert
