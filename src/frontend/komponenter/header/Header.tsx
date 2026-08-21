@@ -6,6 +6,7 @@ import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@n
 import { Dropdown, HStack, InternalHeader, Spacer, Tag } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { Link } from 'react-router';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '@/api/brukerlenker';
 import { useHttp } from '@/api/http/HttpProvider';
@@ -85,7 +86,8 @@ export const Header: FC = () => {
     return (
         <InternalHeader>
             <InternalHeader.Title
-                href="/"
+                as={Link}
+                to="/"
                 className="text-nowrap"
                 onClick={(): void =>
                     sporHendelse(Hendelser.NAVIGERE, {

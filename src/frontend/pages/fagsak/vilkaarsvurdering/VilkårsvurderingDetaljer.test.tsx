@@ -1186,3 +1186,68 @@ describe('VilkårsvurderingDetaljer', () => {
         });
     });
 });
+
+describe('Registrering av ulagrede endringer', () => {
+    const renderMedSpion = (
+        setIkkePersistertKomponent: (komponentId: string) => void,
+        nullstillIkkePersisterteKomponenter: () => void
+    ): ReturnType<typeof render> =>
+        render(
+            <QueryClientProvider client={createTestQueryClient()}>
+                <TestBehandlingProvider
+                    stateOverrides={{
+                        setIkkePersistertKomponent,
+                        nullstillIkkePersisterteKomponenter,
+                    }}
+                >
+                    <VilkårsvurderingLesedataProvider
+                        momenterSærligeGrunner={momenterSærligeGrunner}
+                        momenterReduksjonGodTro={momenterReduksjonGodTro}
+                        erUnder4xRettsgebyr={false}
+                    >
+                        <VilkårsvurderingDetaljer
+                            valgtPeriode={valgtPeriode()}
+                            vilkårsperioder={[lagVilkårsperiode(10000)]}
+                            hentVilkårsvurdering={(): void => undefined}
+                        />
+                    </VilkårsvurderingLesedataProvider>
+                </TestBehandlingProvider>
+            </QueryClientProvider>
+        );
+
+    test('Registrerer ingen ulagrede endringer for et urørt skjema', async () => {
+        const settSpion = vi.fn();
+        const nullstillSpion = vi.fn();
+
+        renderMedSpion(settSpion, nullstillSpion);
+        await screen.findByRole('radiogroup', {
+            name: 'Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?',
+        });
+
+        expect(settSpion).not.toHaveBeenCalled();
+    });
+
+    test('Registrerer ulagrede endringer når saksbehandleren gjør et valg', async () => {
+        const bruker = userEvent.setup();
+        const settSpion = vi.fn();
+        const nullstillSpion = vi.fn();
+        renderMedSpion(settSpion, nullstillSpion);
+
+        await bruker.click(godTroRadio());
+
+        expect(settSpion).toHaveBeenCalledWith('vilkårsvurdering');
+    });
+
+    test('Nullstiller registreringen når et skittent skjema forsvinner', async () => {
+        const bruker = userEvent.setup();
+        const settSpion = vi.fn();
+        const nullstillSpion = vi.fn();
+        const { unmount } = renderMedSpion(settSpion, nullstillSpion);
+        await bruker.click(godTroRadio());
+        nullstillSpion.mockClear();
+
+        unmount();
+
+        expect(nullstillSpion).toHaveBeenCalled();
+    });
+});

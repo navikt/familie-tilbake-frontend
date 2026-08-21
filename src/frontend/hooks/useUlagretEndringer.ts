@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export type UseUlagretEndringerReturn = {
     harUlagredeData: boolean;
@@ -11,21 +11,20 @@ export type UseUlagretEndringerReturn = {
  * Kan brukes globalt eller lokalt i komponenter.
  */
 export const useUlagretEndringer = (): UseUlagretEndringerReturn => {
-    const tomtSet = new Set<string>();
-    const [ikkePersisterteKomponenter, setIkkePersisterteKomponenter] =
-        useState<Set<string>>(tomtSet);
+    const [ikkePersisterteKomponenter, setIkkePersisterteKomponenter] = useState<Set<string>>(
+        () => new Set<string>()
+    );
     const harUlagredeData = ikkePersisterteKomponenter.size > 0;
 
-    const setIkkePersistertKomponent = (komponentId: string): void => {
-        if (ikkePersisterteKomponenter.has(komponentId)) return;
-        setIkkePersisterteKomponenter(new Set(ikkePersisterteKomponenter).add(komponentId));
-    };
+    const setIkkePersistertKomponent = useCallback((komponentId: string): void => {
+        setIkkePersisterteKomponenter(forrige =>
+            forrige.has(komponentId) ? forrige : new Set(forrige).add(komponentId)
+        );
+    }, []);
 
-    const nullstillIkkePersisterteKomponenter = (): void => {
-        if (ikkePersisterteKomponenter.size > 0) {
-            setIkkePersisterteKomponenter(tomtSet);
-        }
-    };
+    const nullstillIkkePersisterteKomponenter = useCallback((): void => {
+        setIkkePersisterteKomponenter(forrige => (forrige.size > 0 ? new Set<string>() : forrige));
+    }, []);
 
     return {
         harUlagredeData,

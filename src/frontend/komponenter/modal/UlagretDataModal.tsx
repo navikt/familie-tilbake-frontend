@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { BlockerFunction } from 'react-router';
 
 import { useCallback, useEffect } from 'react';
-import { useBeforeUnload, useBlocker } from 'react-router';
+import { useBeforeUnload, useBlocker, useLocation } from 'react-router';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 
@@ -10,9 +10,12 @@ import { ModalWrapper } from './ModalWrapper';
 
 export const UlagretDataModal: FC = () => {
     const { nullstillIkkePersisterteKomponenter, harUlagredeData } = useBehandlingState();
+    const location = useLocation();
     const skalBlokkere = useCallback<BlockerFunction>(
         ({ currentLocation, nextLocation }) =>
-            harUlagredeData && currentLocation.pathname !== nextLocation.pathname,
+            harUlagredeData &&
+            (currentLocation.pathname !== nextLocation.pathname ||
+                currentLocation.search !== nextLocation.search),
         [harUlagredeData]
     );
     const blocker = useBlocker(skalBlokkere);
@@ -45,6 +48,10 @@ export const UlagretDataModal: FC = () => {
         ),
         { capture: true }
     );
+
+    const erPeriodebytte =
+        blocker.state === 'blocked' && blocker.location.pathname === location.pathname;
+
     return (
         blocker.state === 'blocked' && (
             <ModalWrapper
@@ -65,8 +72,9 @@ export const UlagretDataModal: FC = () => {
                     },
                 }}
             >
-                Hvis du forlater siden nå, mister du endringene dine. Lukk dialogen og klikk på
-                «Neste» for å lagre endringene dine.
+                {erPeriodebytte
+                    ? 'Hvis du bytter periode nå, mister du endringene dine. Lukk dialogen og klikk på Lagre-knappen for å lagre endringene dine.'
+                    : 'Hvis du forlater siden nå, mister du endringene dine. Lukk dialogen og klikk på Lagre-knappen for å lagre endringene dine.'}
             </ModalWrapper>
         )
     );

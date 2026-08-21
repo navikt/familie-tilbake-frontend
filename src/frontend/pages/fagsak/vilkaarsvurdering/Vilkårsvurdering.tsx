@@ -5,7 +5,7 @@ import type { Vilkårsperiode } from './typer';
 import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
 import { Heading, InlineMessage, Tag, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -20,7 +20,8 @@ import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils/dateUtils';
 import { useStegNavigering } from '@/utils/sider';
 
-import { finnStandardValgtPeriode, utledVurdering } from './utils';
+import { usePeriodeIUrl } from './usePeriodeIUrl';
+import { utledVurdering } from './utils';
 import {
     LAGRE_VILKÅRSVURDERING_MUTATION_KEY,
     VilkårsvurderingDetaljer,
@@ -53,14 +54,7 @@ export const Vilkårsvurdering: FC = () => {
 
     const perioder = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
 
-    const [valgtPeriodeId, setValgtPeriodeId] = useState<Vilkårsperiode['id'] | undefined>(
-        undefined
-    );
-
-    const valgtPeriode = useMemo(() => {
-        const funnetPeriode = perioder.find(({ id }) => id === valgtPeriodeId);
-        return funnetPeriode ?? finnStandardValgtPeriode(perioder);
-    }, [perioder, valgtPeriodeId]);
+    const { valgtPeriode, setValgtPeriodeId } = usePeriodeIUrl(perioder);
 
     const invaliderVilkårsvurdering = (): void => {
         queryClient.invalidateQueries({

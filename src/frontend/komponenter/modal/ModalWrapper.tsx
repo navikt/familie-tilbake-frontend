@@ -32,6 +32,7 @@ export const ModalWrapper: FC<Props> = ({
                 aria-label={tittel}
                 header={{ heading: tittel, closeButton: !!onClose }}
                 className="w-150"
+                closeOnBackdropClick
             >
                 <Modal.Body>{children}</Modal.Body>
                 <Modal.Footer>
