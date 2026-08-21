@@ -324,8 +324,6 @@ describe('VilkårsvurderingDetaljer', () => {
 
                 user.click(await under4xJaRadio());
                 expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
-                expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-                expect(screen.getByText('0 kroner')).toBeInTheDocument();
             });
 
             test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
@@ -363,8 +361,6 @@ describe('VilkårsvurderingDetaljer', () => {
 
                 user.click(await under4xJaRadio());
                 expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
-                expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-                expect(screen.getByText('0 kroner')).toBeInTheDocument();
             });
 
             test('Under 4x rettsgebyr - Nei, viser begrunnelse og særlige grunner', async () => {
@@ -386,8 +382,6 @@ describe('VilkårsvurderingDetaljer', () => {
 
             user.click(ingentingIBeholdRadio());
             expect(await begrunnelseIngenting()).toBeInTheDocument();
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('0 kroner')).toBeInTheDocument();
         });
 
         test('Hele beløpet i behold - Kreves tilbake', async () => {
@@ -402,8 +396,6 @@ describe('VilkårsvurderingDetaljer', () => {
             user.click(await krevesTilbakeJaRadio('hele beløpet'));
             expect(await årsakKrevesTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
             expect(begrunnelseKreves('hele beløpet')).toBeInTheDocument();
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Hele beløpet i behold - Kreves ikke tilbake', async () => {
@@ -419,8 +411,6 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
             expect(begrunnelseKrevesIkke('hele beløpet')).toBeInTheDocument();
             expect(beløpTilbakekreves()).toBeInTheDocument();
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('0 kroner')).toBeInTheDocument();
         });
 
         test('Deler av beløpet i behold - Kreves tilbake', async () => {
@@ -438,8 +428,6 @@ describe('VilkårsvurderingDetaljer', () => {
                 await årsakKrevesTilbakeCheckboxGroup('hele beløpet som er i behold')
             ).toBeInTheDocument();
             expect(begrunnelseKreves('hele beløpet som er i behold')).toBeInTheDocument();
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Deler av beløpet i behold - Kreves ikke tilbake', async () => {
@@ -458,8 +446,6 @@ describe('VilkårsvurderingDetaljer', () => {
             ).toBeInTheDocument();
             expect(begrunnelseKrevesIkke('hele beløpet som er i behold')).toBeInTheDocument();
             expect(beløpTilbakekreves()).toBeInTheDocument();
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('0 kroner')).toBeInTheDocument();
         });
 
         test('Annet-alternativ viser fritekstfelt', async () => {
@@ -488,8 +474,6 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(screen.queryByText('Reduksjon')).not.toBeInTheDocument();
             expect(screen.getByText('Renter')).toBeInTheDocument();
             expect(screen.getByText('10 %')).toBeInTheDocument();
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Forsett - simulertBeløp - ikke vurdert - skjuler beløpet', async () => {
@@ -531,8 +515,6 @@ describe('VilkårsvurderingDetaljer', () => {
 
                 user.click(await under4xJaRadio());
                 expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
-                expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-                expect(screen.getByText('0 kroner')).toBeInTheDocument();
             });
 
             test('Under 4x rettsgebyr - Nei, viser begrunnelse og særlige grunner', async () => {
@@ -564,8 +546,6 @@ describe('VilkårsvurderingDetaljer', () => {
             } else {
                 expect(screen.queryByText('Renter')).not.toBeInTheDocument();
             }
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Nei - særlige grunner skal ikke redusere beløpet', async () => {
@@ -580,8 +560,6 @@ describe('VilkårsvurderingDetaljer', () => {
             } else {
                 expect(screen.queryByText('Renter')).not.toBeInTheDocument();
             }
-            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
-            expect(screen.getByText('10 000 kroner')).toBeInTheDocument();
         });
 
         test('Ja - Annet-alternativ viser fritekstfelt', async () => {
@@ -676,6 +654,28 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseIngenting()).toBeInTheDocument();
             expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('7 500 kroner')).toBeInTheDocument();
+        });
+
+        test('skjuler simulertBeløp så snart saksbehandleren endrer noe', async () => {
+            const bruker = userEvent.setup();
+            renderMedValg(
+                {
+                    vurdering: 'god_tro',
+                    begrunnelse: 'Mottaker var i aktsom god tro',
+                    beløpIBehold: {
+                        belopIBehold: 'ingenting',
+                        begrunnelse: 'Ingenting av beløpet er i behold',
+                    },
+                },
+                false,
+                7500
+            );
+            expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
+
+            await bruker.type(await begrunnelseIngenting(), ' med tillegg');
+
+            expect(screen.queryByText('Beløpet som skal kreves tilbake')).not.toBeInTheDocument();
+            expect(screen.queryByText('7 500 kroner')).not.toBeInTheDocument();
         });
 
         describe('God tro', () => {

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { VilkårsvurderingSkjemaFelter } from './schema';
 
 import { HStack, VStack } from '@navikt/ds-react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
@@ -28,8 +28,10 @@ export const SimulertBeløp: FC<Props> = ({
     const { control } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const simulertBeløp = useWatch({ name: 'simulertBeløp', control: control });
     const erVurdert = useWatch({ name: 'erVurdert', control: control });
+    const { isDirty } = useFormState({ control });
+    const visSimulertBeløp = erVurdert && !isDirty;
 
-    if (!erVurdert && !renter && !reduksjon) {
+    if (!visSimulertBeløp && !renter && !reduksjon) {
         return null;
     }
 
@@ -53,7 +55,7 @@ export const SimulertBeløp: FC<Props> = ({
                 </HStack>
             )}
 
-            {erVurdert && (
+            {visSimulertBeløp && (
                 <VStack gap="space-4" className="w-1/2">
                     <span className="text-ax-text-info-subtle">
                         Beløpet som skal kreves tilbake
