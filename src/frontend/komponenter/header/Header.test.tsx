@@ -1,6 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 vi.mock('@/api/brukerlenker');
 
@@ -16,9 +17,12 @@ const mockHentAInntektUrl = vi.mocked(hentAInntektUrl);
 
 const renderHeader = (): void => {
     const queryClient = createTestQueryClient();
+    const router = createMemoryRouter([{ path: '*', element: <Header /> }], {
+        initialEntries: ['/'],
+    });
     render(
         <QueryClientProvider client={queryClient}>
-            <Header />
+            <RouterProvider router={router} />
         </QueryClientProvider>
     );
 };

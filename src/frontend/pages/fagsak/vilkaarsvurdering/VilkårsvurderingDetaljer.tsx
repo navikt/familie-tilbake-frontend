@@ -28,6 +28,7 @@ import { utledDefaultValues } from './skjema/utledDefaultValues';
 import { utledWritable } from './skjema/utledWritable';
 import { VilkårsvurderingSkjema } from './skjema/VilkårsvurderingSkjema';
 import { SlåSammen } from './slå-sammen-periode/SlåSammen';
+import { UlagretEndringerVakt } from './UlagretEndringerVakt';
 import { erPeriodeVurdert } from './utils';
 import { useVilkårsvurderingLesedata } from './VilkårsvurderingLesedataContext';
 
@@ -103,6 +104,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
 
     return (
         <FormProvider {...methods}>
+            <UlagretEndringerVakt />
             <HStack
                 justify="space-between"
                 className="border-b py-3 px-4 border-ax-border-neutral-subtle shrink-0"
