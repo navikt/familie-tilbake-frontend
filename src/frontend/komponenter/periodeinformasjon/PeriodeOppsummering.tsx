@@ -25,14 +25,14 @@ export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype 
             </BodyShort>
             <BodyShort
                 size="small"
-                className="rounded-xl border border-ax-border-neutral-subtle py-2 px-4 w-fit"
+                className="rounded-xl border border-ax-border-brand-blue-subtle py-2 px-4 w-fit"
             >
                 {formatterDatostring(fom)}–{formatterDatostring(tom)}
             </BodyShort>
             {hentPeriodelengde(fom, tom) && (
                 <BodyShort
                     size="small"
-                    className="rounded-xl border border-ax-border-neutral-subtle py-2 px-4 w-fit"
+                    className="rounded-xl border border-ax-border-brand-blue-subtle py-2 px-4 w-fit"
                 >
                     {hentPeriodelengde(fom, tom)}
                 </BodyShort>
@@ -40,7 +40,7 @@ export const PeriodeOppsummering: FC<Props> = ({ fom, tom, beløp, hendelsetype 
             {hendelsetype && (
                 <BodyShort
                     size="small"
-                    className="rounded-xl border border-ax-border-neutral-subtle py-2 px-4 w-fit"
+                    className="rounded-xl border border-ax-border-brand-blue-subtle py-2 px-4 w-fit"
                 >
                     Rettslig grunnlag: {hendelsetyper[hendelsetype]}
                 </BodyShort>

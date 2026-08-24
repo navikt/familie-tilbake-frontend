@@ -9,7 +9,7 @@ import { StegflytSkeleton } from '@/komponenter/stegflyt/StegflytSkeleton';
 
 export const BehandlingSkeleton: FC = () => {
     return (
-        <div className="bg-ax-neutral-100 min-h-screen">
+        <div className="bg-ax-bg-brand-blue-soft min-h-screen">
             <div className="mx-auto w-full max-w-[1600px] grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 min-h-screen">
                 <div className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-80px)]">
                     <Heading size="medium" visuallyHidden>
@@ -25,7 +25,7 @@ export const BehandlingSkeleton: FC = () => {
                             Åpne
                         </Button>
                     </div>
-                    <div className="py-4 border-ax-border-neutral-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0" />
+                    <div className="py-4 border-ax-border-brand-blue-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0" />
                     <ActionBarSkeleton />
                 </div>
                 <SidebarSkeleton />

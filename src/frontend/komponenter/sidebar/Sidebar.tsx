@@ -64,7 +64,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 className={`flex-col gap-4 hidden ax-lg:flex ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'} ${
                     erÅpen
                         ? 'min-w-0'
-                        : 'w-12 shrink-0 items-center py-2 rounded-2xl border border-ax-border-neutral-subtle bg-ax-bg-default'
+                        : 'w-12 shrink-0 items-center py-2 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
                 }`}
             >
                 {erÅpen ? (

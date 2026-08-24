@@ -107,7 +107,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
             <UlagretEndringerVakt />
             <HStack
                 justify="space-between"
-                className="border-b py-3 px-4 border-ax-border-neutral-subtle shrink-0"
+                className="border-b py-3 px-4 border-ax-border-brand-blue-subtle shrink-0"
             >
                 <Heading size="small" level="2">
                     {`${valgtPeriode.fom}–${valgtPeriode.tom}`}
@@ -173,7 +173,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
 
     return (
         <section
-            className="flex-2 min-h-0 border border-ax-default rounded-xl border-ax-border-neutral-subtle flex flex-col"
+            className="flex-2 min-h-0 border border-ax-default rounded-xl border-ax-border-brand-blue-subtle flex flex-col"
             aria-label={`Vilkårsvurdering for periode ${valgtPeriode.fom} til ${valgtPeriode.tom}`}
         >
             {valgtVilkårsperiode && (

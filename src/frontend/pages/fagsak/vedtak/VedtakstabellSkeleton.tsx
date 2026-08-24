@@ -34,7 +34,7 @@ export const VedtakstabellSkeleton: FC = () => {
             size="small"
             defaultOpen
             aria-label="Laster oppsummering av vedtaket"
-            className="border-ax-border-neutral-subtle"
+            className="border-ax-border-brand-blue-subtle"
         >
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small">

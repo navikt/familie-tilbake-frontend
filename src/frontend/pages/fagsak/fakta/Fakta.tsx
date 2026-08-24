@@ -60,7 +60,7 @@ export const Fakta: FC = () => {
                         </dd>
                     </dl>
                     {faktaOmFeilutbetaling.tidligereVarsletBeløp && (
-                        <dl className="col-span-1 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                        <dl className="col-span-1 p-4 border rounded-xl border-ax-border-brand-blue-subtle">
                             <dt className="font-ax-bold text-ax-large text-ax-text-neutral-subtle">
                                 Tidligere varslet beløp
                             </dt>
@@ -69,7 +69,7 @@ export const Fakta: FC = () => {
                             </dd>
                         </dl>
                     )}
-                    <dl className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
+                    <dl className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-brand-blue-subtle">
                         <dt className="font-ax-bold text-ax-medium">Periode</dt>
                         <dd className="font-ax-bold text-ax-heading-medium">
                             {formatterDatostring(faktaOmFeilutbetaling.perioder[0].fom)}–
@@ -81,7 +81,7 @@ export const Fakta: FC = () => {
                         </dd>
                     </dl>
                 </div>
-                <VStack className="flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                <VStack className="flex-2 gap-4 p-4 border rounded-xl border-ax-border-brand-blue-subtle">
                     <Heading level="2" size="small">
                         Revurdering
                     </Heading>

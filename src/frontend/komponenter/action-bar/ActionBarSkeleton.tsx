@@ -5,7 +5,7 @@ import { Button, HStack, Skeleton } from '@navikt/ds-react';
 
 export const ActionBarSkeleton: FC = () => {
     return (
-        <div className="flex flex-row bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between flex-nowrap min-w-80">
+        <div className="flex flex-row bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border justify-between flex-nowrap min-w-80">
             <Button
                 variant="tertiary"
                 size="small"

@@ -50,7 +50,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                 )
             }
             aria-label="Oppsummering av vedtaket"
-            className="border-ax-border-neutral-subtle"
+            className="border-ax-border-brand-blue-subtle"
         >
             <ExpansionCard.Header>
                 <ExpansionCard.Title as="h2" size="small">
@@ -109,7 +109,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 </Table.DataCell>
                             </Table.Row>
                         ))}
-                        <Table.Row className="border-t-2 border-ax-border-neutral-subtle">
+                        <Table.Row className="border-t-2 border-ax-border-brand-blue-subtle">
                             <Table.DataCell className="border-b-0 font-bold">Sum</Table.DataCell>
                             <Table.DataCell
                                 align="right"

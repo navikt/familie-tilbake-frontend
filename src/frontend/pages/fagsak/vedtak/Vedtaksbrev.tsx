@@ -168,14 +168,14 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
                     <section
                         className={
                             /* Må trekke fra høyden på alt annet enn den hvite boksen for å gi den en korrekt høyde */
-                            `col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-neutral-subtle flex flex-col ${forhåndsvisningMutation.isError ? 'h-[calc(100vh-17.8rem)] overflow-hidden' : ''}`
+                            `col-span-1 sticky top-0 self-start border rounded-xl border-ax-border-brand-blue-subtle flex flex-col ${forhåndsvisningMutation.isError ? 'h-[calc(100vh-17.8rem)] overflow-hidden' : ''}`
                         }
                     >
                         {pdfSider.length > 0 && !forhåndsvisningMutation.isError && (
                             <HStack
                                 justify="center"
                                 align="center"
-                                className="p-2 border-t border-ax-border-neutral-subtle gap-4 rounded-xl"
+                                className="p-2 border-t border-ax-border-brand-blue-subtle gap-4 rounded-xl"
                             >
                                 <Pagination
                                     page={gjeldendeSide}
@@ -188,7 +188,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
                         <div
                             className={`flex-1 flex justify-center overflow-auto rounded-b-xl ${forhåndsvisningMutation.isError ? 'items-center' : 'items-start'} ${
                                 !forhåndsvisningMutation.isError
-                                    ? 'border-t border-ax-border-neutral-subtle'
+                                    ? 'border-t border-ax-border-brand-blue-subtle'
                                     : ''
                             }`}
                         >

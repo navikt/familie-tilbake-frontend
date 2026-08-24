@@ -21,14 +21,14 @@ export const FaktaSkeleton: FC = () => {
                                 <Skeleton variant="rounded" width="30%" />
                             </dd>
                         </div>
-                        <div className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-neutral-subtle">
+                        <div className="col-span-2 p-4 min-h-22 border rounded-xl border-ax-border-brand-blue-subtle">
                             <dt className="font-ax-bold text-ax-medium">Periode</dt>
                             <dd className="font-ax-bold text-ax-heading-medium">
                                 <Skeleton variant="rounded" width="100%" height={65} />
                             </dd>
                         </div>
                     </div>
-                    <div className="flex flex-col flex-2 gap-4 p-4 border rounded-xl border-ax-border-neutral-subtle">
+                    <div className="flex flex-col flex-2 gap-4 p-4 border rounded-xl border-ax-border-brand-blue-subtle">
                         <Heading level="2" size="small">
                             Revurdering
                         </Heading>
@@ -62,7 +62,7 @@ export const FaktaSkeleton: FC = () => {
                     <Heading level="2" size="small">
                         Rettslig grunnlag
                     </Heading>
-                    <div className="border rounded-xl border-ax-border-neutral-subtle">
+                    <div className="border rounded-xl border-ax-border-brand-blue-subtle">
                         <Table zebraStripes>
                             <Table.Header>
                                 <Table.Row>

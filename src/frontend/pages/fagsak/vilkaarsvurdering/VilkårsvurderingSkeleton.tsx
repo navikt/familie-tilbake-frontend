@@ -18,7 +18,7 @@ export const VilkårsvurderingSkeleton: FC = () => {
                         </Heading>
                         <Skeleton variant="text" width="120px" />
                     </HStack>
-                    <Box className="border border-ax-border-neutral-subtle rounded-xl p-4 gap-2 flex flex-col">
+                    <Box className="border border-ax-border-brand-blue-subtle rounded-xl p-4 gap-2 flex flex-col">
                         <Skeleton variant="text" width="100px" />
                         <Skeleton variant="text" width="160px" height="24px" />
                         <Skeleton variant="text" width="120px" />
@@ -27,10 +27,10 @@ export const VilkårsvurderingSkeleton: FC = () => {
 
                 {/* Section 2: Detaljer */}
                 <section className="col-span-1 ax-md:col-span-2 h-full" aria-busy>
-                    <Box className="border border-ax-default rounded-xl border-ax-border-neutral-subtle h-full flex flex-col">
+                    <Box className="border border-ax-default rounded-xl border-ax-border-brand-blue-subtle h-full flex flex-col">
                         <HStack
                             justify="space-between"
-                            className="border-b py-3 px-4 border-ax-border-neutral-subtle"
+                            className="border-b py-3 px-4 border-ax-border-brand-blue-subtle"
                         >
                             <Heading size="small" level="2">
                                 <Skeleton variant="text" width="200px" />

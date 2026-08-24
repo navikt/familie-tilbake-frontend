@@ -248,7 +248,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
                     <Heading level="2" size="small">
                         Rettslig grunnlag
                     </Heading>
-                    <div className="border rounded-xl border-ax-border-neutral-subtle">
+                    <div className="border rounded-xl border-ax-border-brand-blue-subtle">
                         <Table zebraStripes>
                             <Table.Header>
                                 <Table.Row>

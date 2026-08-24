@@ -9,13 +9,13 @@ export const SidebarSkeleton: FC = () => {
     return (
         <aside
             aria-label="Laster informasjon om tilbakekrevingen og bruker"
-            className="flex-col gap-4 bg-ax-neutral-100 hidden ax-lg:flex max-h-[calc(100vh-80px)]"
+            className="flex-col gap-4 bg-ax-bg-brand-blue-soft hidden ax-lg:flex max-h-[calc(100vh-80px)]"
         >
             <ExpansionCard
                 defaultOpen
                 size="small"
                 aria-label="Laster informasjon om tilbakekrevingen"
-                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
+                className="border rounded-xl border-ax-border-brand-blue-subtle flex flex-col bg-ax-bg-default"
             >
                 <ExpansionCard.Header>
                     <ExpansionCard.Title
@@ -86,7 +86,7 @@ export const SidebarSkeleton: FC = () => {
                 defaultOpen
                 size="small"
                 aria-label="Laster informasjon om bruker"
-                className="border rounded-xl border-ax-border-neutral-subtle flex flex-col bg-ax-bg-default"
+                className="border rounded-xl border-ax-border-brand-blue-subtle flex flex-col bg-ax-bg-default"
             >
                 <ExpansionCard.Header>
                     <ExpansionCard.Title as="h2" size="small" className="text-lg">
@@ -149,7 +149,7 @@ export const SidebarSkeleton: FC = () => {
                     </dl>
                 </ExpansionCard.Content>
             </ExpansionCard>
-            <div className="border border-ax-border-neutral-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"></div>
+            <div className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"></div>
         </aside>
     );
 };

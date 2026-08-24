@@ -257,7 +257,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                 </div>
                 <section
                     ref={contentRef}
-                    className="py-4 border-ax-border-neutral-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
+                    className="py-4 border-ax-border-brand-blue-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
                 >
                     <Routes>
@@ -449,7 +449,7 @@ export const BehandlingContainer: FC = () => {
             )}
             {/* Grå bakgrunn i full bredde, mens innholdet sentreres med maks bredde.
             Trekker fra høyde fra header (48). Hvis det er ventegrunn legges det til ytterligere 62 */}
-            <div className="bg-ax-neutral-100 min-h-[calc(100vh-48px)]">
+            <div className="bg-ax-bg-brand-blue-soft min-h-[calc(100vh-48px)]">
                 {ventegrunn && (
                     <div className="mx-auto w-full max-w-[1600px] px-4 py-2">
                         <LocalAlert status="announcement" size="small">

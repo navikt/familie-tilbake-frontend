@@ -114,7 +114,7 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             className={`w-full rounded-xl p-4 gap-2 flex flex-col text-left transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
                                 periode.id === valgtPeriodeId
                                     ? 'border border-ax-bg-accent-strong bg-ax-bg-info-soft'
-                                    : 'border border-ax-border-neutral-subtle hover:border-ax-border-neutral'
+                                    : 'border border-ax-border-brand-blue-subtle hover:border-ax-border-neutral'
                             }`}
                         >
                             <HStack gap="space-8">

@@ -25,7 +25,7 @@ export const ActionBar: FC<ActionBarConfig> = ({
     const { erNyModell } = useBehandling();
     return (
         <nav
-            className="flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between min-w-96"
+            className="flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border justify-between min-w-96"
             aria-label="Meny og behandlingens steg"
         >
             {!erNyModell && <Behandlingsmeny />}

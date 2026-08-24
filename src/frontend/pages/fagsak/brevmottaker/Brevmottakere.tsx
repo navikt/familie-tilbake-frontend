@@ -267,7 +267,7 @@ export const Brevmottakere: FC = () => {
                     <Box
                         borderWidth="1"
                         padding="space-16"
-                        className="border-ax-border-neutral-subtle rounded-xl"
+                        className="border-ax-border-brand-blue-subtle rounded-xl"
                         key={bruker.personIdent}
                     >
                         <Brevmottaker
@@ -289,7 +289,7 @@ export const Brevmottakere: FC = () => {
                             <Box
                                 borderWidth="1"
                                 padding="space-16"
-                                className="border-ax-border-neutral-subtle rounded-xl"
+                                className="border-ax-border-brand-blue-subtle rounded-xl"
                                 key={brevmottakerRespons.id}
                             >
                                 <Brevmottaker
