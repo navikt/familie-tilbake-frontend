@@ -4,6 +4,7 @@ import type { ActionBarConfig } from '@/stores/actionBarStore';
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
+import { useBehandling } from '@/context/BehandlingContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
@@ -21,12 +22,13 @@ export const ActionBar: FC<ActionBarConfig> = ({
     disableNeste = false,
     type = 'button',
 }: ActionBarConfig) => {
+    const { erNyModell } = useBehandling();
     return (
         <nav
             className="flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-neutral-subtle border justify-between min-w-96"
             aria-label="Meny og behandlingens steg"
         >
-            <Behandlingsmeny />
+            {!erNyModell && <Behandlingsmeny />}
 
             <HStack gap="space-32">
                 <BodyShort

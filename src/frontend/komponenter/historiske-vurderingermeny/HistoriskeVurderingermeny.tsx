@@ -9,7 +9,7 @@ import { useFagsak } from '@/context/FagsakContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 
 export const HistoriskeVurderingermeny: FC = () => {
-    const { eksternBrukId } = useBehandling();
+    const { eksternBrukId, erNyModell } = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`;
     const location = useLocation();
@@ -18,7 +18,7 @@ export const HistoriskeVurderingermeny: FC = () => {
     return (
         <VStack gap="space-8">
             <HStack gap="space-16">
-                <Behandlingsmeny />
+                {!erNyModell && <Behandlingsmeny />}
                 {behandlingsPath && (
                     <Link href={`${location.pathname.replace(behandlingsPath, '')}`}>
                         Gå til behandling

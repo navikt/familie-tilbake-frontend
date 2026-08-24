@@ -53,11 +53,11 @@ export const Behandlingsmeny: FC = () => {
 
             <ActionMenu.Content onClick={(): void => setHoldMenyenÅpen(true)}>
                 <ActionMenu.Group aria-label="Menyvalg">
-                    {behandling.kanRevurderingOpprettes && !behandling.erNyModell && <Revurder />}
+                    {behandling.kanRevurderingOpprettes && <Revurder />}
 
                     {(behandling.kanSetteTilbakeTilFakta || erForvalter) && <StartPåNytt />}
 
-                    {erBehandlingenAktiv && !behandling.erNyModell && (
+                    {erBehandlingenAktiv && (
                         <>
                             {behandling.kanHenleggeBehandling && <Henlegg />}
 
