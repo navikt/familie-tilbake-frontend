@@ -182,8 +182,8 @@ const utsettFristKnapp = (): HTMLElement => screen.getByRole('button', { name: '
 
 const forventFristerIFristboks = (opprinneligFrist: string, nyFrist?: string): void => {
     if (nyFrist) {
-        expect(screen.getByText('Opprinnelig frist')).toBeInTheDocument();
         expect(screen.getByText('Ny frist for uttalelse')).toBeInTheDocument();
+        expect(screen.getByText(/Opprinnelig frist:/)).toBeInTheDocument();
         expect(screen.getByText(formatterDatostring(opprinneligFrist))).toBeInTheDocument();
         expect(screen.getByText(formatterDatostring(nyFrist))).toBeInTheDocument();
         return;
@@ -207,6 +207,8 @@ const velgUnntak = async (user: UserEvent): Promise<void> => {
 };
 
 const visBrevKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Vis brevet' });
+
+const seBrevKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Se brevet' });
 
 const ventPåPdfModal = async (): Promise<HTMLElement> => screen.findByRole('dialog');
 
@@ -302,24 +304,24 @@ describe('Forhåndsvarsel', () => {
     });
 
     describe('Vis sendt varselbrev', () => {
-        test('burde vise "Vis brevet"-knapp når varsel er sendt', () => {
+        test('burde vise "Se brevet"-knapp når varsel er sendt', () => {
             renderSendtForhåndsvarsel();
 
-            expect(visBrevKnapp()).toBeInTheDocument();
+            expect(seBrevKnapp()).toBeInTheDocument();
         });
 
-        test('burde åpne PDF-modal ved klikk på "Vis brevet" når varsel er sendt', async () => {
+        test('burde åpne PDF-modal ved klikk på "Se brevet" når varsel er sendt', async () => {
             renderSendtForhåndsvarsel();
 
-            await user.click(visBrevKnapp());
+            await user.click(seBrevKnapp());
 
             expect(await ventPåPdfModal()).toBeInTheDocument();
         });
 
-        test('burde ikke vise "Vis brevet"-knapp når varsel ikke er sendt', () => {
+        test('burde ikke vise "Se brevet"-knapp når varsel ikke er sendt', () => {
             renderForhåndsvarsel();
 
-            expect(screen.queryByRole('button', { name: 'Vis brevet' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Se brevet' })).not.toBeInTheDocument();
         });
     });
 
@@ -342,14 +344,6 @@ describe('Forhåndsvarsel', () => {
             expect(
                 within(dialog).getByRole('textbox', { name: 'Begrunnelse for utsatt frist' })
             ).toBeInTheDocument();
-        });
-
-        test('Sendt varsel: ny frist vises under opprinnelig frist', () => {
-            const opprinneligFrist = '2025-01-22';
-            const nyFrist = '2025-01-29';
-            renderSendtForhåndsvarsel(nyFrist);
-
-            forventFristerIFristboks(opprinneligFrist, nyFrist);
         });
     });
 

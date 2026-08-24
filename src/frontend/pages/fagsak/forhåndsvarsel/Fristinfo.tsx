@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import type { Uttalelsesfrist } from '@/generated-new';
 
-import { ClockIcon } from '@navikt/aksel-icons';
-import { BodyShort, Box, Button, VStack } from '@navikt/ds-react';
+import { CalendarIcon } from '@navikt/aksel-icons';
+import { BodyShort, Box, Button, HStack, VStack } from '@navikt/ds-react';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { formatterDatostring } from '@/utils';
@@ -15,52 +15,55 @@ type Props = {
 export const Fristinfo: FC<Props> = ({ uttalelsesfrist, onUtsettFrist }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { opprinneligFrist, nyFrist } = uttalelsesfrist;
+    const gjeldendeFrist = nyFrist ?? opprinneligFrist;
 
     return (
         <Box
-            padding="space-16"
-            borderRadius="12"
-            borderWidth="1"
-            borderColor="info"
             background="info-soft"
-            className="w-72"
+            borderColor="info-subtle"
+            borderWidth="1"
+            borderRadius="12"
+            paddingInline="space-12"
+            paddingBlock="space-8"
         >
-            <VStack gap="space-16" align="start">
-                <div>
-                    <BodyShort size="small" weight="semibold">
-                        {nyFrist ? 'Opprinnelig frist' : 'Frist for uttalelse'}
-                    </BodyShort>
-                    <time
-                        dateTime={opprinneligFrist}
-                        className="font-ax-bold text-ax-heading-medium text-ax-text-info"
-                    >
-                        {formatterDatostring(opprinneligFrist)}
-                    </time>
-                </div>
-                {nyFrist && (
-                    <div>
-                        <BodyShort size="small" weight="semibold">
-                            Ny frist for uttalelse
-                        </BodyShort>
-                        <time
-                            dateTime={nyFrist}
-                            className="font-ax-bold text-ax-heading-medium text-ax-text-info"
+            <HStack align="center" gap="space-8" wrap={false}>
+                <HStack align="center" gap="space-16" wrap={false} className="min-w-0 grow">
+                    <CalendarIcon
+                        fontSize="2.25rem"
+                        aria-hidden
+                        className="shrink-0 text-ax-text-info-subtle"
+                    />
+                    <VStack className="min-w-0">
+                        <BodyShort
+                            size="small"
+                            weight="semibold"
+                            className="text-ax-text-info-subtle"
                         >
-                            {formatterDatostring(nyFrist)}
-                        </time>
-                    </div>
-                )}
+                            Frist for uttalelse
+                        </BodyShort>
+                        <BodyShort
+                            as="div"
+                            size="medium"
+                            weight="semibold"
+                            className="text-ax-text-info"
+                        >
+                            <time dateTime={gjeldendeFrist}>
+                                {formatterDatostring(gjeldendeFrist)}
+                            </time>
+                        </BodyShort>
+                    </VStack>
+                </HStack>
                 {!behandlingILesemodus && (
                     <Button
+                        data-color="neutral"
                         variant="secondary"
                         size="small"
-                        icon={<ClockIcon aria-hidden />}
                         onClick={onUtsettFrist}
                     >
                         Utsett frist
                     </Button>
                 )}
-            </VStack>
+            </HStack>
         </Box>
     );
 };

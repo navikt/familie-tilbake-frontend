@@ -58,7 +58,7 @@ import { BRUKERUTTALELSE_FORM_ID, SendtVarsel } from './SendtVarsel';
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { ikkeVurdertSchema } from './schema';
 import { UtsettFristModal } from './UtsettFristModal';
-import { VisSendtVarselbrev } from './VisSendtVarselbrev';
+import { Varselbrevinfo } from './Varselbrevinfo';
 
 const utledForhåndsvarselDefaultValues = (
     forhåndsvarselSteg: ForhaandsvarselSteg,
@@ -380,9 +380,6 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     useActionBar(actionBarConfig);
 
-    const skalViseFristinfo =
-        forhåndsvarselSteg.type === 'sendt' || forhåndsvarselSteg.type === 'unntak';
-
     return (
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
@@ -394,23 +391,26 @@ export const ForhåndsvarselInnhold: FC = () => {
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
                 </FormProvider>
             ) : (
-                <div
-                    className={`grid grid-cols-1 gap-6 items-start ${skalViseFristinfo ? ' lg:grid-cols-[1fr_18rem]' : ''}`}
-                >
+                <div className="grid grid-cols-1 gap-6 items-start lg:grid-cols-[1fr_21rem]">
                     <HStack align="center" gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
-                        {forhåndsvarselSteg.type === 'sendt' && varselbrevUrl && (
-                            <VisSendtVarselbrev
-                                varselbrevUrl={varselbrevUrl}
-                                laster={dokumentInfoLaster || sendtDokumentLaster}
-                            />
-                        )}
                     </HStack>
                     <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
-                        <Fristinfo
-                            uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
-                            onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
-                        />
+                        <VStack gap="space-8">
+                            {forhåndsvarselSteg.type === 'sendt' && (
+                                <Varselbrevinfo
+                                    varselbrevUrl={varselbrevUrl}
+                                    sendtTid={
+                                        forhåndsvarselSteg.forhåndsvarselInfo.varselbrevSendtTid
+                                    }
+                                    laster={dokumentInfoLaster || sendtDokumentLaster}
+                                />
+                            )}
+                            <Fristinfo
+                                uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
+                                onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
+                            />
+                        </VStack>
                     </div>
 
                     <VStack gap="space-24">
