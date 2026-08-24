@@ -31,7 +31,7 @@ export const SendMelding: FC = () => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+        <div className="flex flex-col">
             <Heading size="xsmall" level="3">
                 {manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
             </Heading>

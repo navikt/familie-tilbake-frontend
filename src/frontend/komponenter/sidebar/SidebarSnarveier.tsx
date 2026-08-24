@@ -6,7 +6,6 @@ import { useSidebarStore } from '@/stores/sidebarStore';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MENYSIDE_META } from './menysider';
-import { SidebarVeksleknapp } from './SidebarVeksleknapp';
 import { useMenysider } from './useMenysider';
 
 export const SidebarSnarveier: FC = () => {
@@ -15,7 +14,6 @@ export const SidebarSnarveier: FC = () => {
 
     return (
         <nav aria-label="Snarveier i informasjonspanelet" className="flex flex-col gap-4">
-            <SidebarVeksleknapp />
             {tilgjengeligeSider.map(side => {
                 const { tittel, ikon: Ikon } = MENYSIDE_META[side];
                 return (

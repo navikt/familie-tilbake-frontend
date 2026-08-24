@@ -5,49 +5,38 @@ import { useEffect, useState } from 'react';
 
 import { useHttp } from '@/api/http/HttpProvider';
 import { useBehandling } from '@/context/BehandlingContext';
-import { Menysider } from '@/komponenter/sidebar/menysider';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@/typer/ressurs';
 
-type Props = {
-    valgtMenyside: Menysider | null;
-};
+const [DokumentlistingProvider, useDokumentlisting] = createUseContext(() => {
+    const { behandlingId } = useBehandling();
+    const [journalposter, setJournalposter] = useState<Ressurs<Journalpost[]>>();
+    const { request } = useHttp();
 
-const [DokumentlistingProvider, useDokumentlisting] = createUseContext(
-    ({ valgtMenyside }: Props) => {
-        const { behandlingId } = useBehandling();
-        const [journalposter, setJournalposter] = useState<Ressurs<Journalpost[]>>();
-        const { request } = useHttp();
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
+    useEffect(() => {
+        hentDokumentlisting();
+    }, [behandlingId]);
 
-        // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
-        useEffect(() => {
-            if (valgtMenyside === Menysider.Dokumenter) {
-                hentDokumentlisting();
-            }
-        }, [behandlingId, valgtMenyside]);
-
-        const hentDokumentlisting = (): void => {
-            // setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
-            setJournalposter(byggHenterRessurs());
-            request<void, Journalpost[]>({
-                method: 'GET',
-                url: `/familie-tilbake/api/behandling/${behandlingId}/journalposter`,
+    const hentDokumentlisting = (): void => {
+        // setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
+        setJournalposter(byggHenterRessurs());
+        request<void, Journalpost[]>({
+            method: 'GET',
+            url: `/familie-tilbake/api/behandling/${behandlingId}/journalposter`,
+        })
+            .then((hentetDokumenter: Ressurs<Journalpost[]>) => {
+                setJournalposter(hentetDokumenter);
             })
-                .then((hentetDokumenter: Ressurs<Journalpost[]>) => {
-                    setJournalposter(hentetDokumenter);
-                })
-                .catch(() => {
-                    setJournalposter(
-                        byggFeiletRessurs(
-                            'Ukjent feil ved henting av dokumentlisting for behandling'
-                        )
-                    );
-                });
-        };
+            .catch(() => {
+                setJournalposter(
+                    byggFeiletRessurs('Ukjent feil ved henting av dokumentlisting for behandling')
+                );
+            });
+    };
 
-        return {
-            journalposter,
-        };
-    }
-);
+    return {
+        journalposter,
+    };
+});
 
 export { DokumentlistingProvider, useDokumentlisting };

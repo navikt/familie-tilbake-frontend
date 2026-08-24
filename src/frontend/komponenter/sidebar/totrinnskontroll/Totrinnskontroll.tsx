@@ -55,7 +55,7 @@ export const Totrinnskontroll: FC = () => {
 
     return (
         <>
-            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
                 {skalViseFeilmelding && (
                     <LocalAlert status="error">
                         <LocalAlert.Header>

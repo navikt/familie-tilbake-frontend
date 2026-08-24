@@ -25,7 +25,7 @@ export const SidebarInnhold: FC<Props> = ({ valgtMenyside }: Props) => {
             );
         case Menysider.Dokumenter:
             return (
-                <DokumentlistingProvider valgtMenyside={valgtMenyside}>
+                <DokumentlistingProvider>
                     <Dokumentlisting />
                 </DokumentlistingProvider>
             );
@@ -37,7 +37,7 @@ export const SidebarInnhold: FC<Props> = ({ valgtMenyside }: Props) => {
             );
         case Menysider.Historikk:
             return (
-                <HistorikkProvider valgtMenyside={valgtMenyside}>
+                <HistorikkProvider>
                     <Historikk />
                 </HistorikkProvider>
             );

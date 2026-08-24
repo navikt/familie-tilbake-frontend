@@ -23,7 +23,7 @@ export const Historikk: FC = () => {
     const innslag = historikkInnslag.data;
     innslag.sort((a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime());
     return (
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+        <div className="flex flex-col">
             {innslag.map(hi => (
                 <HistorikkInnslag key={`${hi.opprettetTid}_${hi.tittel}`} innslag={hi} />
             ))}

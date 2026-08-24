@@ -28,7 +28,7 @@ export const Dokumentlisting: FC = () => {
     });
 
     return (
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+        <div className="flex flex-col">
             {poster.map(post => (
                 <JournalpostVisning key={`jpId_${post.journalpostId}`} journalpost={post} />
             ))}

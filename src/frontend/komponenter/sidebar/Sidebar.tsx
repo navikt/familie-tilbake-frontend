@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useSidebarErÅpen } from '@/stores/sidebarStore';
 
-import { SidebarLayout } from './SidebarLayout';
+import { SidebarPanel } from './SidebarPanel';
 import { SidebarSnarveier } from './SidebarSnarveier';
 import { SIDEBAR_PANEL_ID, SidebarVeksleknapp } from './SidebarVeksleknapp';
 
@@ -51,9 +51,12 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 }`}
             >
                 {erÅpen ? (
-                    <SidebarLayout veksleknapp={<SidebarVeksleknapp />} />
+                    <SidebarPanel veksleknapp={<SidebarVeksleknapp />} />
                 ) : (
-                    <SidebarSnarveier />
+                    <>
+                        <SidebarVeksleknapp />
+                        <SidebarSnarveier />
+                    </>
                 )}
             </aside>
 
@@ -65,7 +68,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
             >
                 <Modal.Header />
                 <Modal.Body className="flex flex-col gap-4 pt-1">
-                    <SidebarLayout />
+                    <SidebarPanel />
                 </Modal.Body>
             </Modal>
         </>

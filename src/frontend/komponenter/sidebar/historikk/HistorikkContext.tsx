@@ -8,14 +8,9 @@ import { useNavigate } from 'react-router';
 import { useHttp } from '@/api/http/HttpProvider';
 import { useBehandling } from '@/context/BehandlingContext';
 import { useFagsak } from '@/context/FagsakContext';
-import { Menysider } from '@/komponenter/sidebar/menysider';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@/typer/ressurs';
 
-type Props = {
-    valgtMenyside: Menysider;
-};
-
-const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: Props) => {
+const [HistorikkProvider, useHistorikk] = createUseContext(() => {
     const behandling = useBehandling();
     const { fagsystem, eksternFagsakId } = useFagsak();
     const [historikkInnslag, setHistorikkInnslag] = useState<Ressurs<HistorikkInnslag[]>>();
@@ -24,10 +19,8 @@ const [HistorikkProvider, useHistorikk] = createUseContext(({ valgtMenyside }: P
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
-        if (valgtMenyside === Menysider.Historikk) {
-            hentHistorikkinnslag();
-        }
-    }, [behandling, valgtMenyside]);
+        hentHistorikkinnslag();
+    }, [behandling]);
 
     const hentHistorikkinnslag = (): void => {
         // setState-kall for lastetilstand i en fetch-funksjon som kalles fra useEffect. Bør migreres til TanStack Query (useQuery) slik at server state håndteres uten useEffect.
