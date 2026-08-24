@@ -1,10 +1,11 @@
 import type { FC, MouseEventHandler, RefObject } from 'react';
 
 import { Modal } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
+import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
-import { useSidebarErÅpen } from '@/stores/sidebarStore';
+import { useSidebarErÅpen, useSidebarStore } from '@/stores/sidebarStore';
 
 import { SidebarPanel } from './SidebarPanel';
 import { SidebarSnarveier } from './SidebarSnarveier';
@@ -16,7 +17,18 @@ type Props = {
 
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { ventegrunn } = useBehandlingState();
+    const { behandlingId } = useBehandling();
     const erÅpen = useSidebarErÅpen();
+    const nullstillValgtSide = useSidebarStore(state => state.nullstillValgtSide);
+
+    // Valgt fane hører til behandlingen som vises, og skal ikke følge med til neste behandling.
+    const forrigeBehandlingId = useRef(behandlingId);
+    useEffect(() => {
+        if (forrigeBehandlingId.current !== behandlingId) {
+            forrigeBehandlingId.current = behandlingId;
+            nullstillValgtSide();
+        }
+    }, [behandlingId, nullstillValgtSide]);
 
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 1024px)');

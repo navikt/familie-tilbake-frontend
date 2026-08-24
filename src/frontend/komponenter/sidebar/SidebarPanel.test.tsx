@@ -69,6 +69,24 @@ describe('SidebarPanel', () => {
         expect(screen.getByRole('heading', { level: 2, name: 'Fatte vedtak' })).toBeInTheDocument();
     });
 
+    test('Beholder skjemasiden montert etter fanebytte så utfylt tekst ikke går tapt', async () => {
+        renderSidebarPanel();
+
+        await userEvent.click(screen.getByRole('tab', { name: 'Send brev' }));
+        await userEvent.click(screen.getByRole('tab', { name: 'Detaljer' }));
+
+        expect(screen.getByText(`Innhold for ${Menysider.SendBrev}`)).toBeInTheDocument();
+    });
+
+    test('Avmonterer lesesider etter fanebytte slik at de hentes på nytt', async () => {
+        renderSidebarPanel();
+
+        await userEvent.click(screen.getByRole('tab', { name: 'Historikk' }));
+        await userEvent.click(screen.getByRole('tab', { name: 'Detaljer' }));
+
+        expect(screen.queryByText(`Innhold for ${Menysider.Historikk}`)).not.toBeInTheDocument();
+    });
+
     test('Skjuler send brev-fanen for ny modell', () => {
         renderSidebarPanel(lagBehandling({ erNyModell: true }));
 

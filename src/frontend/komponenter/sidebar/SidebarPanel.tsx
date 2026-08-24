@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react';
 
 import { Heading, Tabs } from '@navikt/ds-react';
+import { useState } from 'react';
 
 import { useSidebarStore } from '@/stores/sidebarStore';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
@@ -16,6 +17,11 @@ type Props = {
 export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
     const { tilgjengeligeSider, aktivSide } = useMenysider();
     const settValgtSide = useSidebarStore(state => state.settValgtSide);
+    const [besøkteSider, setBesøkteSider] = useState<Menysider[]>([aktivSide]);
+
+    if (!besøkteSider.includes(aktivSide)) {
+        setBesøkteSider([...besøkteSider, aktivSide]);
+    }
 
     return (
         <Tabs
@@ -52,6 +58,7 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
                 <Tabs.Panel
                     key={side}
                     value={side}
+                    lazy={!(MENYSIDE_META[side].bevarerTilstand && besøkteSider.includes(side))}
                     className="flex-1 min-h-0 flex-col gap-4 data-[state=active]:flex"
                 >
                     <Heading level="2" size="small">
