@@ -23,7 +23,6 @@ import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { useActionBarConfig } from '@/stores/actionBarStore';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useGlobalAlerts, useLukkGlobalAlert } from '@/stores/globalAlertStore';
-import { useSidebarErÅpen } from '@/stores/sidebarStore';
 import { venteårsaker } from '@/typer/behandling';
 import { formatterDatostring } from '@/utils';
 import {
@@ -34,6 +33,7 @@ import {
 } from '@/utils/sider';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
+import { BEHANDLING_HØYDE, BehandlingGrid } from './BehandlingGrid';
 import { Fakta } from './fakta/Fakta';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { FaktaProvider } from './fakta/gammel-fakta/FaktaContext';
@@ -211,7 +211,7 @@ type AktivBehandlingProps = {
 const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlingProps) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
-    const { ventegrunn, setInnholdsbredde, setInnholdVenstrePosisjon } = useBehandlingState();
+    const { setInnholdsbredde, setInnholdVenstrePosisjon } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
@@ -230,9 +230,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
     return (
         <>
             <section
-                /* Trekker fra høyde fra header (48) og padding oppe og nede (16+16).
-                   Hvis det er ventegrunn legges det til ytterligere 62 */
-                className={`flex flex-col gap-4 flex-1 min-h-0 min-w-0 ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'}`}
+                className="flex flex-col gap-4 min-h-0 min-w-0"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
                 <div className="flex flex-row gap-2 ax-lg:block justify-between">
@@ -401,31 +399,6 @@ const Behandling: FC = () => {
 const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string =>
     `Behandlingen er satt på vent${ventegrunn.venteårsak ? `: ${venteårsaker[ventegrunn.venteårsak]}` : ''}.${ventegrunn.tidsfrist ? ` Tidsfrist: ${formatterDatostring(ventegrunn.tidsfrist)}` : ''}`;
 
-type BehandlingGridProps = {
-    children: ReactNode;
-    harVentegrunn: boolean;
-};
-
-/**
- * Rutenettet med hovedinnhold og informasjonspanel
- */
-const BehandlingGrid: FC<BehandlingGridProps> = ({
-    children,
-    harVentegrunn,
-}: BehandlingGridProps) => {
-    const erÅpen = useSidebarErÅpen();
-
-    return (
-        <div
-            className={`mx-auto w-full max-w-[1600px] grid grid-cols-1 gap-4 p-4 ${
-                erÅpen ? 'ax-lg:grid-cols-[2fr_1fr]' : 'ax-lg:grid-cols-[1fr_auto]'
-            } ${harVentegrunn ? 'min-h-[calc(100vh-100px)]' : 'min-h-[calc(100vh-48px)]'}`}
-        >
-            {children}
-        </div>
-    );
-};
-
 export const BehandlingContainer: FC = () => {
     const behandling = useBehandling();
     const { ventegrunn, innholdsbredde, innholdVenstrePosisjon } = useBehandlingState();
@@ -447,9 +420,8 @@ export const BehandlingContainer: FC = () => {
             {ventegrunn && !visVenteModal && (
                 <PåVentModal ventegrunn={ventegrunn} onClose={(): void => setVisVenteModal(true)} />
             )}
-            {/* Grå bakgrunn i full bredde, mens innholdet sentreres med maks bredde.
-            Trekker fra høyde fra header (48). Hvis det er ventegrunn legges det til ytterligere 62 */}
-            <div className="bg-ax-bg-brand-blue-soft min-h-[calc(100vh-48px)]">
+            {/* Grå bakgrunn i full bredde, mens innholdet sentreres med maks bredde. */}
+            <div className={`bg-ax-bg-brand-blue-soft flex flex-col ${BEHANDLING_HØYDE}`}>
                 {ventegrunn && (
                     <div className="mx-auto w-full max-w-[1600px] px-4 py-2">
                         <LocalAlert status="announcement" size="small">
@@ -459,7 +431,7 @@ export const BehandlingContainer: FC = () => {
                         </LocalAlert>
                     </div>
                 )}
-                <BehandlingGrid harVentegrunn={!!ventegrunn}>
+                <BehandlingGrid>
                     <Behandling />
                 </BehandlingGrid>
             </div>

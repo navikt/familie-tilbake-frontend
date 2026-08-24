@@ -7,11 +7,13 @@ import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 import { SidebarSkeleton } from '@/komponenter/sidebar/SidebarSkeleton';
 import { StegflytSkeleton } from '@/komponenter/stegflyt/StegflytSkeleton';
 
+import { BEHANDLING_HØYDE, BehandlingGrid } from './BehandlingGrid';
+
 export const BehandlingSkeleton: FC = () => {
     return (
-        <div className="bg-ax-bg-brand-blue-soft min-h-screen">
-            <div className="mx-auto w-full max-w-[1600px] grid grid-cols-1 ax-lg:grid-cols-[2fr_1fr] gap-4 p-4 min-h-screen">
-                <div className="flex flex-col gap-4 flex-1 min-h-0 max-h-[calc(100vh-80px)]">
+        <div className={`bg-ax-bg-brand-blue-soft flex flex-col ${BEHANDLING_HØYDE}`}>
+            <BehandlingGrid>
+                <div className="flex flex-col gap-4 min-h-0 min-w-0">
                     <Heading size="medium" visuallyHidden>
                         Laster inn behandling
                     </Heading>
@@ -29,7 +31,7 @@ export const BehandlingSkeleton: FC = () => {
                     <ActionBarSkeleton />
                 </div>
                 <SidebarSkeleton />
-            </div>
+            </BehandlingGrid>
         </div>
     );
 };

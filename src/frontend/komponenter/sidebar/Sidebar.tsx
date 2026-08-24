@@ -4,7 +4,6 @@ import { Modal } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
-import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useSidebarErÅpen, useSidebarStore } from '@/stores/sidebarStore';
 
 import { SidebarPanel } from './SidebarPanel';
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
-    const { ventegrunn } = useBehandlingState();
     const { behandlingId } = useBehandling();
     const erÅpen = useSidebarErÅpen();
     const nullstillValgtSide = useSidebarStore(state => state.nullstillValgtSide);
@@ -52,11 +50,10 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
 
     return (
         <>
-            {/* Reduserer høyden med header(48)-høyde og padding(16+16)-høyde til fagsakcontainer */}
             <aside
                 id={SIDEBAR_PANEL_ID}
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className={`flex-col hidden ax-lg:flex ${ventegrunn ? 'h-[calc(100vh-142px)]' : 'h-[calc(100vh-80px)]'} ${
+                className={`flex-col hidden ax-lg:flex min-h-0 ${
                     erÅpen
                         ? 'min-w-0 gap-2'
                         : 'w-16 shrink-0 items-center p-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'

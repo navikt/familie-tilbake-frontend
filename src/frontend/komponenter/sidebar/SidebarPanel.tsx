@@ -36,7 +36,7 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
             }}
             size="small"
             fill
-            className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default h-full flex flex-col min-h-0 p-4 gap-4"
+            className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default flex-1 flex flex-col min-h-0 p-4 gap-4"
         >
             <div className="flex flex-row items-start gap-2">
                 <Tabs.List className="grow min-w-0">
