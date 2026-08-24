@@ -1,26 +1,21 @@
 import type { FC } from 'react';
 
+import { Detaljer } from './detaljer/Detaljer';
 import { Dokumentlisting } from './dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './dokumentlisting/DokumentlistingContext';
 import { Historikk } from './historikk/Historikk';
 import { HistorikkProvider } from './historikk/HistorikkContext';
+import { Menysider } from './menysider';
 import { SendMelding } from './sendMelding/SendMelding';
 import { SendMeldingProvider } from './sendMelding/SendMeldingContext';
 import { Totrinnskontroll } from './totrinnskontroll/Totrinnskontroll';
 import { TotrinnskontrollProvider } from './totrinnskontroll/TotrinnskontrollContext';
 
-export enum Menysider {
-    Totrinn = `TOTRINN`,
-    Historikk = 'HISTORIKK',
-    SendBrev = 'SEND_BREV',
-    Dokumenter = 'DOKUMENTER',
-}
-
 type Props = {
     valgtMenyside: Menysider;
 };
 
-export const OversiktOgHandlingerInnhold: FC<Props> = ({ valgtMenyside }: Props) => {
+export const SidebarInnhold: FC<Props> = ({ valgtMenyside }: Props) => {
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (
@@ -41,11 +36,13 @@ export const OversiktOgHandlingerInnhold: FC<Props> = ({ valgtMenyside }: Props)
                 </SendMeldingProvider>
             );
         case Menysider.Historikk:
-        default:
             return (
                 <HistorikkProvider valgtMenyside={valgtMenyside}>
                     <Historikk />
                 </HistorikkProvider>
             );
+        case Menysider.Detaljer:
+        default:
+            return <Detaljer />;
     }
 };

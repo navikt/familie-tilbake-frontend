@@ -1,15 +1,13 @@
 import type { FC, MouseEventHandler, RefObject } from 'react';
 
 import { Modal } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
-import { useLavViewportHøyde } from '@/hooks/useLavViewportHøyde';
 import { useSidebarErÅpen } from '@/stores/sidebarStore';
 
-import { BrukerInformasjon } from './informasjonsbokser/BrukerInformasjon';
-import { Faktaboks } from './informasjonsbokser/Faktaboks';
-import { HistorikkOgDokumenter } from './OversiktOgHandlinger';
+import { SidebarLayout } from './SidebarLayout';
+import { SidebarSnarveier } from './SidebarSnarveier';
 import { SIDEBAR_PANEL_ID, SidebarVeksleknapp } from './SidebarVeksleknapp';
 
 type Props = {
@@ -18,22 +16,7 @@ type Props = {
 
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { ventegrunn } = useBehandlingState();
-    const erLavHøyde = useLavViewportHøyde();
     const erÅpen = useSidebarErÅpen();
-
-    const [kortTilstand, setKortTilstand] = useState({
-        faktaboksÅpen: !erLavHøyde,
-        brukerInfoÅpen: !erLavHøyde,
-        forrigeErLavHøyde: erLavHøyde,
-    });
-
-    if (erLavHøyde !== kortTilstand.forrigeErLavHøyde) {
-        setKortTilstand({
-            faktaboksÅpen: !erLavHøyde,
-            brukerInfoÅpen: !erLavHøyde,
-            forrigeErLavHøyde: erLavHøyde,
-        });
-    }
 
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 1024px)');
@@ -61,33 +44,16 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
             <aside
                 id={SIDEBAR_PANEL_ID}
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className={`flex-col gap-4 hidden ax-lg:flex ${ventegrunn ? 'max-h-[calc(100vh-142px)]' : 'max-h-[calc(100vh-80px)]'} ${
+                className={`flex-col hidden ax-lg:flex ${ventegrunn ? 'h-[calc(100vh-142px)]' : 'h-[calc(100vh-80px)]'} ${
                     erÅpen
-                        ? 'min-w-0'
-                        : 'w-12 shrink-0 items-center py-2 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
+                        ? 'min-w-0 gap-2'
+                        : 'w-16 shrink-0 items-center p-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
                 }`}
             >
                 {erÅpen ? (
-                    <>
-                        <div className="flex flex-row justify-end">
-                            <SidebarVeksleknapp />
-                        </div>
-                        <Faktaboks
-                            open={kortTilstand.faktaboksÅpen}
-                            onToggle={(åpen: boolean): void =>
-                                setKortTilstand(prev => ({ ...prev, faktaboksÅpen: åpen }))
-                            }
-                        />
-                        <BrukerInformasjon
-                            open={kortTilstand.brukerInfoÅpen}
-                            onToggle={(åpen: boolean): void =>
-                                setKortTilstand(prev => ({ ...prev, brukerInfoÅpen: åpen }))
-                            }
-                        />
-                        <HistorikkOgDokumenter />
-                    </>
+                    <SidebarLayout veksleknapp={<SidebarVeksleknapp />} />
                 ) : (
-                    <SidebarVeksleknapp />
+                    <SidebarSnarveier />
                 )}
             </aside>
 
@@ -99,9 +65,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
             >
                 <Modal.Header />
                 <Modal.Body className="flex flex-col gap-4 pt-1">
-                    <Faktaboks />
-                    <BrukerInformasjon />
-                    <HistorikkOgDokumenter />
+                    <SidebarLayout />
                 </Modal.Body>
             </Modal>
         </>

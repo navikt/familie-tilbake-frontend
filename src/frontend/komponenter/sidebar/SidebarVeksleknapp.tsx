@@ -25,7 +25,7 @@ export const SidebarVeksleknapp: FC = () => {
 
     return (
         <Button
-            type="button"
+            data-color="neutral"
             size="small"
             variant="tertiary"
             aria-expanded={erÅpen}
