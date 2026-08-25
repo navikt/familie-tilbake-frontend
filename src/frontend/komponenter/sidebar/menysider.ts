@@ -19,7 +19,6 @@ export enum Menysider {
 type MenysideMeta = {
     tittel: string;
     ikon: ComponentType<SVGProps<SVGSVGElement> & { title?: string }>;
-    /** Sider med skjema holdes montert etter første besøk så utfylt tekst ikke går tapt ved fanebytte. */
     bevarerTilstand?: boolean;
 };
 

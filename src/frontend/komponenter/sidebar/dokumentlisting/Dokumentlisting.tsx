@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 
+import { VStack } from '@navikt/ds-react';
+
 import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
 import { HenterData } from '@/komponenter/datalast/HenterData';
 import { RessursStatus } from '@/typer/ressurs';
@@ -28,11 +30,11 @@ export const Dokumentlisting: FC = () => {
     });
 
     return (
-        <div className="flex flex-col">
+        <VStack>
             {poster.map(post => (
                 <JournalpostVisning key={`jpId_${post.journalpostId}`} journalpost={post} />
             ))}
             {poster.length === 0 && <div>Ingen dokumenter på saken.</div>}
-        </div>
+        </VStack>
     );
 };

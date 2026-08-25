@@ -1,13 +1,15 @@
 import type { FC } from 'react';
 
-import { BrukerBoks } from './BrukerBoks';
+import { VStack } from '@navikt/ds-react';
+
 import { Faktaboks } from './Faktaboks';
+import { MottakerBoks } from './MottakerBoks';
 
 export const Detaljer: FC = () => {
     return (
-        <div className="flex flex-col gap-4">
+        <VStack gap="space-16">
             <Faktaboks />
-            <BrukerBoks />
-        </div>
+            <MottakerBoks />
+        </VStack>
     );
 };

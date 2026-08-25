@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { FagsakContext } from '@/context/FagsakContext';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 
-import { BrukerBoks } from './BrukerBoks';
+import { MottakerBoks } from './MottakerBoks';
 
 vi.mock(import('@/utils'), async importOriginal => {
     const actual = await importOriginal();
@@ -41,19 +41,19 @@ const renderBrukerInformasjon = (
                 institusjon: institusjon ? baseInstitusjon(institusjon) : undefined,
             })}
         >
-            <BrukerBoks />
+            <MottakerBoks />
         </FagsakContext>
     );
 };
 
-describe('Brukerboks', () => {
+describe('MottakerBoks', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     test('Viser heading', () => {
         renderBrukerInformasjon();
-        expect(screen.getByRole('heading', { name: 'Bruker' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Mottaker' })).toBeInTheDocument();
     });
 
     test('Viser navn', () => {

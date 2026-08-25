@@ -19,7 +19,6 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const erÅpen = useSidebarErÅpen();
     const nullstillValgtSide = useSidebarStore(state => state.nullstillValgtSide);
 
-    // Valgt fane hører til behandlingen som vises, og skal ikke følge med til neste behandling.
     const forrigeBehandlingId = useRef(behandlingId);
     useEffect(() => {
         if (forrigeBehandlingId.current !== behandlingId) {
@@ -56,7 +55,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 className={`flex-col hidden ax-lg:flex min-h-0 ${
                     erÅpen
                         ? 'min-w-0 gap-2'
-                        : 'w-16 shrink-0 items-center p-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
+                        : 'w-16 shrink-0 items-center p-4 pt-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
                 }`}
             >
                 {erÅpen ? (
@@ -76,7 +75,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 onClick={handleKlikkUtenforModal}
             >
                 <Modal.Header />
-                <Modal.Body className="flex flex-col gap-4 pt-1">
+                <Modal.Body className="flex flex-col gap-4">
                     <SidebarPanel />
                 </Modal.Body>
             </Modal>

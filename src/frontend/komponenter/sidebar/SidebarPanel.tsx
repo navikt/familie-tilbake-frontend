@@ -18,7 +18,6 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
     const { tilgjengeligeSider, aktivSide } = useMenysider();
     const settValgtSide = useSidebarStore(state => state.settValgtSide);
     const [besøkteSider, setBesøkteSider] = useState<Menysider[]>([aktivSide]);
-
     if (!besøkteSider.includes(aktivSide)) {
         setBesøkteSider([...besøkteSider, aktivSide]);
     }
@@ -27,18 +26,17 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
         <Tabs
             value={aktivSide}
             onChange={(value: string): void => {
-                sporHendelse(Hendelser.TOGGLEGROUP_VALGT, {
+                sporHendelse(Hendelser.TABLIST_VALGT, {
                     valgtVerdi: value,
                     kontekst: Sporingskontekst.Sidebar,
                     komponentId: 'sidebar-panel',
                 });
                 settValgtSide(value as Menysider);
             }}
-            size="small"
             fill
-            className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default flex-1 flex flex-col min-h-0 p-4 gap-4"
+            className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default flex-1 flex flex-col min-h-0 p-4 pt-2 gap-4"
         >
-            <div className="flex flex-row items-start gap-2">
+            <div className="flex flex-row gap-2 items-center">
                 <Tabs.List className="grow min-w-0">
                     {tilgjengeligeSider.map(side => {
                         const { tittel, ikon: Ikon } = MENYSIDE_META[side];

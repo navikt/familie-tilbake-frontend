@@ -1,7 +1,7 @@
 import type { ChangeEvent, FC } from 'react';
 import type { FeltState } from '@/hooks/skjema';
 
-import { Button, ErrorMessage, Heading, Select, Textarea } from '@navikt/ds-react';
+import { Button, ErrorMessage, Heading, Select, Textarea, VStack } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -31,7 +31,7 @@ export const SendMelding: FC = () => {
     const kanSende = skjema.felter.maltype.verdi !== '' && skjema.felter.fritekst.verdi !== '';
 
     return (
-        <div className="flex flex-col">
+        <VStack>
             <Heading size="xsmall" level="3">
                 {manuelleBrevmottakere.length > 0 ? 'Brevmottakere' : 'Brevmottaker'}
             </Heading>
@@ -83,6 +83,6 @@ export const SendMelding: FC = () => {
                 </div>
                 {feilmelding && <ErrorMessage size="small">{feilmelding}</ErrorMessage>}
             </div>
-        </div>
+        </VStack>
     );
 };

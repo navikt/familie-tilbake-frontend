@@ -74,11 +74,11 @@ export const Faktaboks: FC = () => {
                     </>
                 )}
 
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-start">
                     <Buildings3Icon {...ICON_PROPS} />
                     Enhet
                 </dt>
-                <dd className="text-ax-medium items-center flex">
+                <dd className="text-ax-medium items-start flex">
                     {behandling.enhetskode} {behandling.enhetsnavn}
                 </dd>
             </dl>

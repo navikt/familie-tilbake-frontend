@@ -37,16 +37,16 @@ const kjønnIkon = (kjønn: KjønnEnum): ReactNode => {
     }
 };
 
-export const BrukerBoks: FC = () => {
+export const MottakerBoks: FC = () => {
     const { bruker, institusjon } = useFagsak();
 
     return (
         <section
-            aria-label="Brukers informasjon"
+            aria-label="Mottaker-informasjon"
             className="flex flex-col gap-2 rounded-xl border border-ax-border-brand-blue-subtle p-4"
         >
             <Heading level="3" size="xsmall" className="text-ax-text-neutral-subtle">
-                Bruker
+                Mottaker
             </Heading>
             <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
                 <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">

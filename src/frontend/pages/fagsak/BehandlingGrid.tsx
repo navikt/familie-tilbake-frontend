@@ -9,10 +9,6 @@ type Props = {
     children: ReactNode;
 };
 
-/**
- * Rutenettet med hovedinnhold og informasjonspanel. Rutenettet får høyden sin fra
- * forelderen, slik at barna kan scrolle internt uten egne høydeberegninger.
- */
 export const BehandlingGrid: FC<Props> = ({ children }: Props) => {
     const erÅpen = useSidebarErÅpen();
 

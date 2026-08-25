@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { VStack } from '@navikt/ds-react';
 import { parseISO } from 'date-fns';
 
 import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
@@ -23,10 +24,10 @@ export const Historikk: FC = () => {
     const innslag = historikkInnslag.data;
     innslag.sort((a, b) => parseISO(b.opprettetTid).getTime() - parseISO(a.opprettetTid).getTime());
     return (
-        <div className="flex flex-col">
+        <VStack>
             {innslag.map(hi => (
                 <HistorikkInnslag key={`${hi.opprettetTid}_${hi.tittel}`} innslag={hi} />
             ))}
-        </div>
+        </VStack>
     );
 };
