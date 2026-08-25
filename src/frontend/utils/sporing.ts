@@ -64,7 +64,7 @@ export const Hendelser = {
     KNAPP_KLIKKET: 'knapp klikket',
     MODAL_APNET: 'modal åpnet',
     ACTIONMENU_VALG_VALGT: 'actionmenu valg valgt',
-    TABLIST_VALGT: 'togglegroup valgt',
+    TABLIST_VALGT: 'tablist valgt',
     STEPPER_STEG_ENDRET: 'stepper steg endret',
     TEKST_KOPIERT: 'tekst kopiert',
     UTVIDBART_KORT_APNET: 'utvidbart kort åpnet',

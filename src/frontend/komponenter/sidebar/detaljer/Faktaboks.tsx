@@ -165,7 +165,7 @@ const ResultatTag: FC<ResultatProps> = ({ resultat }: ResultatProps) => {
     const dataColor = RESULTAT_META[resultat];
     return (
         <>
-            <dt className="shrink-0text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
+            <dt className="shrink-0 text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
                 <ClipboardIcon {...ICON_PROPS} />
                 Resultat
             </dt>
