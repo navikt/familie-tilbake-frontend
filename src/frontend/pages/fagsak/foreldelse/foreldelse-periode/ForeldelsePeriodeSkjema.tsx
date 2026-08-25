@@ -16,6 +16,7 @@ import {
 import { differenceInMonths, parseISO } from 'date-fns';
 import { type FC, type ReactNode, useEffect } from 'react';
 
+import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { Valideringsstatus } from '@/hooks/skjema/typer';
 import { Datovelger } from '@/komponenter/datovelger/Datovelger';
@@ -31,6 +32,7 @@ type Props = {
 };
 
 export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
+    const { erNyModell } = useBehandling();
     const { erAutoutført, oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
         (oppdatertPeriode: ForeldelsePeriodeSkjemeData) => oppdaterPeriode(oppdatertPeriode)
@@ -73,30 +75,12 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
     const lagForeldelsesfristHjelpetekst = (): ReactNode => {
         if (skjema.felter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST') {
             return (
-                <>
-                    <BodyLong size="small">
-                        Skatteetaten trenger tid for fristavbrytende tiltak. Husk å legge til nok
-                        tid ved fastsettelse av frist. Se rutine for&nbsp;
-                        <Link
-                            href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
-                            target="_blank"
-                        >
-                            foreldelse av tilbakebetalingskrav
-                            <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
-                        </Link>
-                    </BodyLong>
-                </>
-            );
-        } else if (skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET') {
-            return (
-                <>
-                    <BodyLong size="small" className="flex flex-col gap-2">
-                        <span>
-                            Skatteetaten trenger tid for fristavbrytende tiltak. Husk å legge til
-                            nok tid ved fastsettelse av frist.
-                        </span>
-                        <span>
-                            Sett foreldelsesfristen minimum 6 uker frem i tid. Se rutine for&nbsp;
+                <BodyLong size="small">
+                    Skatteetaten trenger tid for fristavbrytende tiltak. Husk å legge til nok tid
+                    ved fastsettelse av frist.{' '}
+                    {!erNyModell && (
+                        <>
+                            Se rutine for&nbsp;
                             <Link
                                 href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
                                 target="_blank"
@@ -104,9 +88,31 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                                 foreldelse av tilbakebetalingskrav
                                 <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
                             </Link>
-                        </span>
-                    </BodyLong>
-                </>
+                        </>
+                    )}
+                </BodyLong>
+            );
+        } else if (skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET') {
+            return (
+                <BodyLong size="small" className="flex flex-col gap-2">
+                    <span>
+                        Skatteetaten trenger tid for fristavbrytende tiltak. Husk å legge til nok
+                        tid ved fastsettelse av frist.
+                    </span>
+                    Sett foreldelsesfristen minimum 6 uker frem i tid.{' '}
+                    {!erNyModell && (
+                        <>
+                            Se rutine for&nbsp;
+                            <Link
+                                href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
+                                target="_blank"
+                            >
+                                foreldelse av tilbakebetalingskrav
+                                <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
+                            </Link>
+                        </>
+                    )}
+                </BodyLong>
             );
         } else {
             return null;
