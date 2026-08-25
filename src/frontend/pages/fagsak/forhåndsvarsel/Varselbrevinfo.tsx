@@ -44,12 +44,13 @@ export const Varselbrevinfo: FC<Props> = ({ varselbrevUrl, sendtTid, laster = fa
                                 Brevet ble sendt
                             </BodyShort>
                             <BodyShort
-                                as="div"
+                                as="time"
+                                dateTime={sendtTid}
                                 size="medium"
                                 weight="semibold"
                                 className="text-ax-text-neutral"
                             >
-                                <time dateTime={sendtTid}>{formatterDatostring(sendtTid)}</time>
+                                {formatterDatostring(sendtTid)}
                             </BodyShort>
                         </VStack>
                     </HStack>

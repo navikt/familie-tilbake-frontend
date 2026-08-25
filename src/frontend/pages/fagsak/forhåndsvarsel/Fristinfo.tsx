@@ -42,14 +42,13 @@ export const Fristinfo: FC<Props> = ({ uttalelsesfrist, onUtsettFrist }: Props) 
                             Frist for uttalelse
                         </BodyShort>
                         <BodyShort
-                            as="div"
+                            as="time"
+                            dateTime={gjeldendeFrist}
                             size="medium"
                             weight="semibold"
                             className="text-ax-text-info"
                         >
-                            <time dateTime={gjeldendeFrist}>
-                                {formatterDatostring(gjeldendeFrist)}
-                            </time>
+                            {formatterDatostring(gjeldendeFrist)}
                         </BodyShort>
                     </VStack>
                 </HStack>
