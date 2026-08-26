@@ -7,6 +7,7 @@ export type SidebarState = {
     erÅpen: boolean;
     valgtSide: Menysider | null;
     veksleÅpen: () => void;
+    lukk: () => void;
     settValgtSide: (side: Menysider) => void;
     åpneMedSide: (side: Menysider) => void;
     nullstillValgtSide: () => void;
@@ -19,6 +20,9 @@ export const useSidebarStore = create<SidebarState>()(
             valgtSide: null,
             veksleÅpen: (): void => {
                 set(state => ({ erÅpen: !state.erÅpen }));
+            },
+            lukk: (): void => {
+                set({ erÅpen: false });
             },
             settValgtSide: (side: Menysider): void => {
                 set({ valgtSide: side });
