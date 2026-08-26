@@ -15,7 +15,7 @@ import { useStegflyt } from '@/komponenter/stegflyt/useStegflyt';
 const SKJUL_NAVN = 'sr-only';
 
 const SIRKEL_BASE =
-    'flex size-[25px] shrink-0 items-center justify-center rounded-ax-full border-2 text-[16px] font-ax-bold leading-[20px]';
+    'flex size-[25px] shrink-0 items-center justify-center rounded-full border-2 text-[16px] font-ax-bold leading-[20px]';
 
 const NAVN_BASE = 'whitespace-nowrap text-[16px] font-ax-bold leading-[20px]';
 
@@ -81,11 +81,11 @@ export const KompaktStegflyt: FC = () => {
     if (!harGjeldendeSteg) return null;
 
     return (
-        <div ref={beholderRef} className="min-w-0 flex-1 overflow-x-auto">
+        <div ref={beholderRef} className="flex min-w-0 flex-1 items-center overflow-x-auto">
             <ol
                 ref={innholdRef}
                 aria-label="Behandlingssteg"
-                className="flex w-max flex-nowrap items-center gap-2"
+                className="flex w-max shrink-0 flex-nowrap items-center gap-2"
             >
                 {steg.map(stegdata => (
                     <li key={stegdata.steg} className="flex flex-nowrap items-center gap-2">
@@ -100,7 +100,7 @@ export const KompaktStegflyt: FC = () => {
                                 to={stegdata.url}
                                 aria-current={stegdata.erGjeldende ? 'step' : undefined}
                                 aria-label={tilgjengeligNavn(stegdata)}
-                                className="group flex flex-nowrap items-center gap-2 rounded-ax-8 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
+                                className="group flex flex-nowrap items-center gap-2 rounded-lg no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
                                 onClick={(): void => sporStegbytte(stegdata.nummer)}
                             >
                                 <StegInnhold steg={stegdata} harPlassTilAlleNavn={harPlass} />
