@@ -52,7 +52,7 @@ export const ActionBar: FC<ActionBarConfig> = ({
                     </BodyShort>
                 )}
                 <HStack gap="space-16" wrap={false}>
-                    {forrigeAriaLabel && onForrige && (
+                    {forrigeAriaLabel && onForrige ? (
                         <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button
                                 variant="secondary"
@@ -74,6 +74,25 @@ export const ActionBar: FC<ActionBarConfig> = ({
                                 <span className="hidden ax-md:block">{forrigeTekst}</span>
                             </Button>
                         </Tooltip>
+                    ) : (
+                        visStegflyt && (
+                            /*
+                             * Første steg har ingen forrige-knapp, og uten en plassholder ville
+                             * stegflyten fått rundt 110 px mer plass akkurat der. Da rekker
+                             * stegnavnene å vises, for så å forsvinne så snart knappen dukker opp
+                             * på neste steg. Vi holder derfor bredden lik gjennom hele flyten.
+                             */
+                            <Button
+                                aria-hidden
+                                tabIndex={-1}
+                                variant="secondary"
+                                icon={<ChevronLeftIcon aria-hidden />}
+                                className="flex gap-0 ax-lg:gap-2 py-2 invisible"
+                                size="small"
+                            >
+                                <span className="hidden ax-md:block">{forrigeTekst}</span>
+                            </Button>
+                        )
                     )}
                     {!skjulNeste && (
                         <Tooltip

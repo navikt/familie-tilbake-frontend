@@ -13,6 +13,7 @@ import { useHarPlassTilStegnavn } from '@/komponenter/stegflyt/useHarPlassTilSte
 let tilgjengeligBredde = 0;
 let nødvendigBredde = 0;
 let utløsResize: (() => void) | undefined;
+let observerteElementer: Element[] = [];
 
 const opprinneligResizeObserver: typeof global.ResizeObserver = global.ResizeObserver;
 
@@ -25,12 +26,13 @@ beforeEach(() => {
         configurable: true,
         get: (): number => nødvendigBredde,
     });
+    observerteElementer = [];
     global.ResizeObserver = class {
         constructor(callback: () => void) {
             utløsResize = callback;
         }
-        observe(): void {
-            // Testen utløser callbacken manuelt.
+        observe(element: Element): void {
+            observerteElementer.push(element);
         }
         unobserve(): void {
             // Testen utløser callbacken manuelt.
@@ -47,6 +49,7 @@ afterEach(() => {
     Reflect.deleteProperty(HTMLOListElement.prototype, 'scrollWidth');
     global.ResizeObserver = opprinneligResizeObserver;
     utløsResize = undefined;
+    observerteElementer = [];
 });
 
 type TestkomponentProps = {
@@ -109,6 +112,30 @@ describe('useHarPlassTilStegnavn', () => {
         endreBredde(500);
 
         expect(screen.getByTestId('status')).toHaveTextContent('skjuler navn');
+    });
+
+    test('skjuler navnene når de vokser etter at webfonten er lastet', () => {
+        // Med fallback-fonten er navnene smalere enn de blir til slutt, så den
+        // første målingen konkluderer feilaktig med at det er plass.
+        tilgjengeligBredde = 910;
+        nødvendigBredde = 800;
+        render(<Testkomponent stegsignatur="a|b" />);
+        expect(screen.getByTestId('status')).toHaveTextContent('viser navn');
+
+        // Webfonten gjør navnene bredere uten at beholderen endrer størrelse.
+        nødvendigBredde = 1000;
+        act(() => utløsResize?.());
+
+        expect(screen.getByTestId('status')).toHaveTextContent('skjuler navn');
+    });
+
+    test('observerer innholdet, slik at endringer i tekstbredden fanges opp', () => {
+        tilgjengeligBredde = 1000;
+        nødvendigBredde = 664;
+        render(<Testkomponent stegsignatur="a|b" />);
+
+        expect(observerteElementer.some(element => element instanceof HTMLOListElement)).toBe(true);
+        expect(observerteElementer.some(element => element instanceof HTMLDivElement)).toBe(true);
     });
 
     test('måler behovet på nytt når stegene endrer seg', () => {
