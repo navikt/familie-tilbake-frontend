@@ -18,7 +18,7 @@ import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting'
 import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
 import { NyttKravgrunnlagModal } from '@/komponenter/modal/nytt-kravgrunnlag/NyttKravgrunnlagModal';
 import { PåVentModal } from '@/komponenter/modal/på-vent/PåVentModal';
-import { Stegflyt } from '@/komponenter/stegflyt/Stegflyt';
+import { Stegflyt } from '@/komponenter/stegflyt/gammel-stegflyt/Stegflyt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { useActionBarConfig } from '@/stores/actionBarStore';
 import { useBehandlingStore } from '@/stores/behandlingStore';
@@ -98,7 +98,8 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
  */
 const GlobalActionBar: FC = () => {
     const config = useActionBarConfig();
-    return config ? <ActionBar {...config} /> : <ActionBarSkeleton />;
+    const { erNyModell } = useBehandling();
+    return config ? <ActionBar {...config} /> : <ActionBarSkeleton medStegflyt={erNyModell} />;
 };
 
 type BehandlingLayoutProps = {
@@ -229,8 +230,10 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                 className="flex flex-col gap-4 min-h-0 min-w-0"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
-                <div className="flex flex-row gap-2 ax-lg:block justify-between">
-                    <Stegflyt />
+                <div
+                    className={`flex flex-row gap-2 ax-lg:block ${behandling.erNyModell ? 'justify-end' : 'justify-between'}`}
+                >
+                    {!behandling.erNyModell && <Stegflyt />}
                     <Button
                         variant="tertiary"
                         icon={

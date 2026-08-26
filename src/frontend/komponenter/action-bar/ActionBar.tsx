@@ -5,7 +5,9 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
+import { KompaktStegflyt } from '@/komponenter/stegflyt/KompaktStegflyt';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 export const ActionBar: FC<ActionBarConfig> = ({
@@ -23,21 +25,33 @@ export const ActionBar: FC<ActionBarConfig> = ({
     type = 'button',
 }: ActionBarConfig) => {
     const { erNyModell } = useBehandling();
+    const { harKravgrunnlag } = useBehandlingState();
+
+    // Ny modell viser stegflyten inne i action-baren i stedet for meny og stegtekst.
+    // Uten kravgrunnlag er behandlingen ikke i gang i noe steg (den venter), og da
+    // beholder vi stegteksten som forteller hvilken tilstand behandlingen er i.
+    const visStegflyt = erNyModell && harKravgrunnlag;
+
     return (
         <nav
-            className={`flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 ${erNyModell ? 'justify-end' : 'justify-between'}`}
-            aria-label="Meny og behandlingens steg"
+            className={`flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${erNyModell && !visStegflyt ? 'justify-end' : 'justify-between'}`}
+            aria-label={
+                visStegflyt ? 'Behandlingens steg og handlinger' : 'Meny og behandlingens steg'
+            }
         >
             {!erNyModell && <Behandlingsmeny />}
+            {visStegflyt && <KompaktStegflyt />}
 
-            <HStack gap="space-32">
-                <BodyShort
-                    size="small"
-                    className="text-ax-text-neutral-subtle font-ax-bold flex items-center"
-                >
-                    {stegtekst}
-                </BodyShort>
-                <HStack gap="space-16">
+            <HStack gap="space-32" wrap={false} className="shrink-0">
+                {!visStegflyt && (
+                    <BodyShort
+                        size="small"
+                        className="text-ax-text-neutral-subtle font-ax-bold flex items-center"
+                    >
+                        {stegtekst}
+                    </BodyShort>
+                )}
+                <HStack gap="space-16" wrap={false}>
                     {forrigeAriaLabel && onForrige && (
                         <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
                             <Button
