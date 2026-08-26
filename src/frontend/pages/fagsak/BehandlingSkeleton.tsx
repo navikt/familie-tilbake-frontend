@@ -5,7 +5,7 @@ import { Button, Heading } from '@navikt/ds-react';
 
 import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 import { SidebarSkeleton } from '@/komponenter/sidebar/SidebarSkeleton';
-import { StegflytSkeleton } from '@/komponenter/stegflyt/StegflytSkeleton';
+import { StegflytSkeleton } from '@/komponenter/stegflyt/gammel-stegflyt/StegflytSkeleton';
 
 import { BEHANDLING_HØYDE, BEHANDLING_MINSTEBREDDE, BehandlingGrid } from './BehandlingGrid';
 

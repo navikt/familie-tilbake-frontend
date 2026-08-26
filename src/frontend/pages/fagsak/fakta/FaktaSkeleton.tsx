@@ -149,7 +149,7 @@ export const FaktaSkeleton: FC = () => {
                     </div>
                 </section>
             </div>
-            <ActionBarSkeleton />
+            <ActionBarSkeleton medStegflyt />
         </>
     );
 };
