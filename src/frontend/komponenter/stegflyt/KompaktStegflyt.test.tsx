@@ -144,8 +144,8 @@ describe('KompaktStegflyt', () => {
         test('beholder stegnavnet som tilgjengelig navn selv når det skjules visuelt', () => {
             renderKompaktStegflyt();
 
-            // Navnet ligger alltid i DOM-en og skjules kun visuelt med sr-only i smale
-            // containere, slik at lenken aldri får kun stegnummeret som navn.
+            // Navnet ligger alltid i DOM-en og skjules kun visuelt med sr-only når det ikke er
+            // plass, slik at lenken aldri får kun stegnummeret som navn.
             expect(
                 screen.getByRole('link', { name: 'Forhåndsvarsel, fullført' })
             ).toBeInTheDocument();

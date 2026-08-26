@@ -20,6 +20,24 @@ global.console = {
 
 Object.assign(global, { TextEncoder });
 
+// jsdom implementerer ikke ResizeObserver. Komponenter som måler tilgjengelig
+// plass trenger den for å kunne rendres i test.
+if (!('ResizeObserver' in global)) {
+    Object.assign(global, {
+        ResizeObserver: class {
+            observe(): void {
+                // Tester som trenger målinger stubber dette selv.
+            }
+            unobserve(): void {
+                // Tester som trenger målinger stubber dette selv.
+            }
+            disconnect(): void {
+                // Tester som trenger målinger stubber dette selv.
+            }
+        },
+    });
+}
+
 const crypto = new Crypto();
 Object.defineProperty(global, 'crypto', {
     get(): Crypto {
