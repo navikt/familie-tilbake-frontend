@@ -38,6 +38,27 @@ const renderActionBar = (
     );
 };
 
+const renderUtenForrige = (behandling: BehandlingDto): void => {
+    render(
+        <MemoryRouter initialEntries={['/fagsystem/BA/fagsak/1/behandling/2/fakta']}>
+            <FagsakContext value={lagFagsak()}>
+                <TestBehandlingProvider
+                    behandling={behandling}
+                    stateOverrides={{ harKravgrunnlag: true }}
+                >
+                    <ActionBar
+                        stegtekst="Steg 1 av 5"
+                        forrigeAriaLabel={undefined}
+                        onForrige={undefined}
+                        nesteAriaLabel="gå videre til foreldelsessteget"
+                        onNeste={vi.fn()}
+                    />
+                </TestBehandlingProvider>
+            </FagsakContext>
+        </MemoryRouter>
+    );
+};
+
 describe('ActionBar', () => {
     test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = vi.fn();
@@ -110,6 +131,24 @@ describe('ActionBar', () => {
             expect(
                 screen.getByRole('button', { name: /gå tilbake til faktasteget/i })
             ).toBeInTheDocument();
+        });
+
+        test('Reserverer plassen etter forrige-knappen på første steg', () => {
+            renderUtenForrige(lagNyModellBehandling());
+
+            // Plassholderen skal holde bredden lik gjennom hele flyten, men den må
+            // verken være synlig for skjermlesere eller nåbar med tastatur.
+            const plassholder = screen.getByText('Forrige').closest('button');
+            expect(plassholder).toHaveClass('invisible');
+            expect(plassholder).toHaveAttribute('aria-hidden', 'true');
+            expect(plassholder).toHaveAttribute('tabindex', '-1');
+            expect(screen.queryByRole('button', { name: /forrige/i })).not.toBeInTheDocument();
+        });
+
+        test('Reserverer ikke plass i gammel modell, som ikke viser stegflyten', () => {
+            renderUtenForrige(lagBehandling({ erNyModell: false }));
+
+            expect(screen.queryByText('Forrige')).not.toBeInTheDocument();
         });
     });
 });

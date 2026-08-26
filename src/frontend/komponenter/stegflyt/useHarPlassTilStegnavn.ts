@@ -59,8 +59,13 @@ export const useHarPlassTilStegnavn = (stegsignatur: string): Plassmåling => {
 
         vurderPlass();
 
+        // Vi observerer også innholdet, ikke bare beholderen. Stegnavnene er som
+        // regel smalere enn de skal være ved første måling, fordi webfonten ikke er
+        // lastet ennå. Beholderen endrer ikke bredde når fonten kommer, så uten
+        // dette ville den for lave målingen blitt stående til stegene endrer seg.
         const observatør = new ResizeObserver(vurderPlass);
         observatør.observe(beholder);
+        observatør.observe(innhold);
         return (): void => observatør.disconnect();
     }, [stegsignatur, harPlass]);
 
