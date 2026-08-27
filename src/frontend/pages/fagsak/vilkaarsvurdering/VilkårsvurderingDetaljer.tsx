@@ -83,23 +83,17 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
 
     const onSubmit: SubmitHandler<VilkårsvurderingSkjemaFelter> = (
         data: VilkårsvurderingSkjemaFelter
-    ): void => {
-        lagreMutation.mutate(
-            {
-                path: { behandlingId, periodeId: valgtPeriode.id },
-                body: utledWritable(data, {
-                    fom: valgtVilkårsperiode.vilkårsvurdering.fom,
-                    tom: valgtVilkårsperiode.vilkårsvurdering.tom,
-                    delbarePerioder: valgtVilkårsperiode.vilkårsvurdering.delbarePerioder,
-                    momenter: [...momenterSærligeGrunner, ...momenterReduksjonGodTro],
-                }),
-            },
-            {
-                onSuccess: () => {
-                    methods.reset(data);
-                },
-            }
-        );
+    ) => {
+        lagreMutation.mutate({
+            path: { behandlingId, periodeId: valgtPeriode.id },
+            body: utledWritable(data, {
+                fom: valgtVilkårsperiode.vilkårsvurdering.fom,
+                tom: valgtVilkårsperiode.vilkårsvurdering.tom,
+                delbarePerioder: valgtVilkårsperiode.vilkårsvurdering.delbarePerioder,
+                momenter: [...momenterSærligeGrunner, ...momenterReduksjonGodTro],
+            }),
+        });
+        methods.reset({ ...data, erVurdert: true });
     };
 
     return (

@@ -765,6 +765,37 @@ describe('VilkårsvurderingSkjema', () => {
 
             await waitFor(() => expect(radio('Uaktsom')).toHaveFocus());
         });
+
+        test('burde regne perioden som lagret og vurdert etter en vellykket lagring', async () => {
+            const sendtRequest = renderSkjema();
+
+            await user.click(radio(VILKÅR_FORÅRSAKET_AV_MOTTAKER));
+            await user.click(radio('Grovt uaktsom'));
+            await user.type(
+                tekstfelt('Begrunn hvorfor du vurderer at mottakeren har handlet grovt uaktsomt'),
+                'Mottakeren har handlet grovt uaktsomt'
+            );
+            await user.click(radioIGruppe(SÆRLIGE_GRUNNER_LEGEND, 'Nei'));
+            await user.click(avkryssningsboks(SÆRLIGE_GRUNNER_MOT_LEGEND, NAVS_FEIL.beskrivelse));
+            await user.type(
+                tekstfelt(
+                    'Begrunn hvorfor du vurderer at det ikke er særlige grunner til å redusere beløpet'
+                ),
+                'Feilen kan ikke tilskrives Nav'
+            );
+            await user.click(lagreKnapp());
+            await sendtRequest;
+
+            expect(await screen.findByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
+
+            await user.click(lagreKnapp());
+
+            await waitFor(() =>
+                expect(useGlobalAlertStore.getState().alerts).toMatchObject([
+                    { title: 'Ingen endringer å lagre', status: 'announcement' },
+                ])
+            );
+        });
     });
 
     describe('Fritekst for «Annet»', () => {
