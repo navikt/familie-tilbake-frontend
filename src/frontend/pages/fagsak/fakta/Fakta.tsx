@@ -2,6 +2,7 @@ import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { BehandlingOppdaterFaktaError } from '@/generated-new';
 
+import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
 import { Heading, Tag, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
@@ -39,9 +40,33 @@ export const Fakta: FC = () => {
             });
         },
     });
+
+    const statusTag = faktaOmFeilutbetaling.ferdigvurdert ? (
+        <Tag
+            variant="moderate"
+            data-color="success"
+            icon={<CheckmarkCircleIcon aria-hidden />}
+            className="w-fit ml-auto ax-xl:order-3 gap-2"
+        >
+            Vurdert
+        </Tag>
+    ) : (
+        <Tag
+            variant="moderate"
+            data-color="info"
+            icon={<DocPencilIcon aria-hidden />}
+            className="w-fit ml-auto ax-xl:order-3 gap-2"
+        >
+            Under vurdering
+        </Tag>
+    );
+
     return (
         <VStack gap="space-24">
-            <Heading size="medium">Fakta om feilutbetalingen</Heading>
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+                <Heading size="medium">Fakta om feilutbetalingen</Heading>
+                {statusTag}
+            </div>
             <section
                 className={`flex md:flex-row flex-col ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-col-4' : 'flex-col-3'} w-full gap-6`}
                 aria-label="Feilutbetaling og revurdering"
