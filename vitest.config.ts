@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
-const frontendPath = resolve(__dirname, 'src/frontend');
+const frontendPath = resolve(import.meta.dirname, 'src/frontend');
 
 export default defineConfig({
     plugins: [react()],
