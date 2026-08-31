@@ -399,13 +399,13 @@ export const ForhåndsvarselInnhold: FC = () => {
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
                 </FormProvider>
             ) : (
-                <div className="grid grid-cols-1 gap-6 items-start lg:grid-cols-[1fr_21rem]">
-                    <HStack align="center" gap="space-16" className="lg:col-span-2">
+                <div className="grid grid-cols-1 gap-6 items-start">
+                    <HStack className="md:col-span-2">
                         <Heading size="medium">Forhåndsvarsel</Heading>
                         {StatusTag(forhåndsvarselSteg.ferdigvurdert)}
                     </HStack>
 
-                    <VStack gap="space-8" className="lg:col-start-2 lg:row-start-2">
+                    <VStack gap="space-8" className="md:col-start-2 md:row-start-2">
                         {forhåndsvarselSteg.type === 'sendt' && (
                             <Varselbrevinfo
                                 varselbrevUrl={varselbrevUrl}
@@ -419,7 +419,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                         />
                     </VStack>
 
-                    <VStack gap="space-24" className="lg:col-start-1 lg:row-start-2">
+                    <VStack gap="space-24" className="md:col-start-1 md:row-start-2">
                         <SkalSendeForhåndsvarsel
                             name="valg"
                             value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
