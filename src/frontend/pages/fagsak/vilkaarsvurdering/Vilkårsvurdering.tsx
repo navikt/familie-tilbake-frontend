@@ -95,7 +95,7 @@ export const Vilkårsvurdering: FC = () => {
         <VStack gap="space-24" className="min-h-0 h-full">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
                 <Heading size="medium">Vilkårsvurdering</Heading>
-                {StatusTag(vilkår.ferdigvurdert)}
+                <StatusTag tilbakeført={vilkår.tilbakeført} ferdigvurdert={vilkår.ferdigvurdert} />
                 <InlineMessage
                     size="small"
                     status="info"

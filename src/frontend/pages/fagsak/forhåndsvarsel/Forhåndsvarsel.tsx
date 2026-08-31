@@ -389,11 +389,18 @@ export const ForhåndsvarselInnhold: FC = () => {
                 <FormProvider {...methods}>
                     <HStack align="center" gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
-                        {StatusTag(
-                            forhåndsvarselSteg.type !== 'ikke_vurdert'
-                                ? forhåndsvarselSteg.ferdigvurdert
-                                : false
-                        )}
+                        <StatusTag
+                            tilbakeført={
+                                forhåndsvarselSteg.type !== 'ikke_vurdert'
+                                    ? forhåndsvarselSteg.tilbakeført
+                                    : undefined
+                            }
+                            ferdigvurdert={
+                                forhåndsvarselSteg.type !== 'ikke_vurdert'
+                                    ? forhåndsvarselSteg.ferdigvurdert
+                                    : false
+                            }
+                        />
                         {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                     </HStack>
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
@@ -402,7 +409,10 @@ export const ForhåndsvarselInnhold: FC = () => {
                 <div className="grid grid-cols-1 gap-6 items-start">
                     <HStack className="md:col-span-2">
                         <Heading size="medium">Forhåndsvarsel</Heading>
-                        {StatusTag(forhåndsvarselSteg.ferdigvurdert)}
+                        <StatusTag
+                            tilbakeført={forhåndsvarselSteg.tilbakeført}
+                            ferdigvurdert={forhåndsvarselSteg.ferdigvurdert}
+                        />
                     </HStack>
 
                     <VStack gap="space-8" className="md:col-start-2 md:row-start-2">

@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { BehandlingOppdaterFaktaError } from '@/generated-new';
 
-import { Heading, Tag, VStack } from '@navikt/ds-react';
+import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -43,10 +43,13 @@ export const Fakta: FC = () => {
 
     return (
         <VStack gap="space-24">
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+            <HStack align="center" className="gap-x-8 gap-y-2">
                 <Heading size="medium">Fakta om feilutbetalingen</Heading>
-                {StatusTag(faktaOmFeilutbetaling.ferdigvurdert)}
-            </div>
+                <StatusTag
+                    tilbakeført={faktaOmFeilutbetaling.tilbakeført}
+                    ferdigvurdert={faktaOmFeilutbetaling.ferdigvurdert}
+                />
+            </HStack>
             <section
                 className={`flex md:flex-row flex-col ${faktaOmFeilutbetaling.tidligereVarsletBeløp ? 'flex-col-4' : 'flex-col-3'} w-full gap-6`}
                 aria-label="Feilutbetaling og revurdering"

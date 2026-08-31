@@ -1,10 +1,33 @@
 import type { JSX } from 'react';
+import type { ArsakTilTilbakeforing } from '@/generated-new';
 
-import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
+import {
+    ArrowCirclepathReverseIcon,
+    CheckmarkCircleIcon,
+    DocPencilIcon,
+} from '@navikt/aksel-icons';
 import { Tag } from '@navikt/ds-react';
 
-export const StatusTag = (ferdigvurdert: boolean): JSX.Element =>
-    ferdigvurdert ? (
+type Props = {
+    tilbakeført?: ArsakTilTilbakeforing | undefined;
+    ferdigvurdert: boolean;
+};
+
+export const StatusTag = ({ tilbakeført, ferdigvurdert }: Props): JSX.Element => {
+    if (tilbakeført) {
+        return (
+            <Tag
+                variant="moderate"
+                data-color="warning"
+                icon={<ArrowCirclepathReverseIcon aria-hidden />}
+                className="w-fit ml-auto ax-xl:order-3 gap-2"
+            >
+                Vurder på nytt
+            </Tag>
+        );
+    }
+
+    return ferdigvurdert ? (
         <Tag
             variant="moderate"
             data-color="success"
@@ -23,3 +46,4 @@ export const StatusTag = (ferdigvurdert: boolean): JSX.Element =>
             Under vurdering
         </Tag>
     );
+};
