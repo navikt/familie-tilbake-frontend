@@ -51,7 +51,7 @@ const hentBrukerdata = async (
     req: Request
 ): Promise<AxiosResponse<Userinfo>> => {
     try {
-        return retry(req, 'hente brukerdata', () => fetchUserinfo(accessToken));
+        return await retry(req, 'hente brukerdata', () => fetchUserinfo(accessToken));
     } catch (e: unknown) {
         logRequest(
             req,
