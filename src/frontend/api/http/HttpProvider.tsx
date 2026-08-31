@@ -26,11 +26,11 @@ export type Http = {
 type Props = {
     fjernRessursSomLasterTimeout?: number;
     innloggetSaksbehandler?: Saksbehandler;
-    settAutentisert?: (autentisert: boolean) => void;
+    setUautorisert?: (httpStatus: number) => void;
 };
 
 export const [HttpProvider, useHttp] = constate(
-    ({ innloggetSaksbehandler, settAutentisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
+    ({ innloggetSaksbehandler, setUautorisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
         const [ressurserSomLaster, setRessurserSomLaster] = useState<string[]>([]);
 
         const fjernRessursSomLaster = (ressursId: string): void => {
@@ -67,8 +67,8 @@ export const [HttpProvider, useHttp] = constate(
                     });
                 })
                 .catch((error: AxiosError<ApiRessurs<SkjemaRespons>>) => {
-                    if (error.message.includes('401') && settAutentisert) {
-                        settAutentisert(false);
+                    if (error.response?.status === 401 && setUautorisert) {
+                        setUautorisert(401);
                     }
 
                     config.påvirkerSystemLaster && fjernRessursSomLaster(ressursId);

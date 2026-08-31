@@ -1,12 +1,10 @@
-import type { FC } from 'react';
-import type { Saksbehandler } from './typer/saksbehandler';
+import type { FC, ReactNode } from 'react';
 
 import { Heading, Loader } from '@navikt/ds-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
 
-import { hentInnloggetBruker } from './api/saksbehandler';
 import { AppProvider, useApp } from './context/AppContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { TogglesProvider } from './context/TogglesContext';
@@ -15,7 +13,8 @@ import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting'
 import { Header } from './komponenter/header/Header';
 import { Toasts } from './komponenter/toast/Toasts';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
-import { IkkeTilgang } from './pages/feilsider/ikke-tilgang';
+import { Serverfeil } from './pages/feilsider/serverfeil';
+import { Uautorisert } from './pages/feilsider/Uautorisert';
 import { configureZod } from './utils/zodConfig';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
@@ -32,21 +31,28 @@ const SideLaster: FC = () => (
 );
 
 const AppLayout: FC = () => {
-    const { autentisert } = useApp();
+    const { innloggingsstatus } = useApp();
 
-    if (!autentisert) {
-        return <IkkeTilgang />;
+    switch (innloggingsstatus.status) {
+        case 'laster':
+            return <SideLaster />;
+        case 'feilet':
+            return innloggingsstatus.httpStatus === 401 ? (
+                <Uautorisert />
+            ) : (
+                <Serverfeil httpStatus={innloggingsstatus.httpStatus} />
+            );
+        case 'innlogget':
+            return (
+                <>
+                    <Toasts />
+                    <Header />
+                    <Suspense fallback={<SideLaster />}>
+                        <Outlet />
+                    </Suspense>
+                </>
+            );
     }
-
-    return (
-        <>
-            <Toasts />
-            <Header />
-            <Suspense fallback={<SideLaster />}>
-                <Outlet />
-            </Suspense>
-        </>
-    );
 };
 
 const TogglesLayout: FC = () => (
@@ -80,10 +86,23 @@ const router = createBrowserRouter([
     },
 ]);
 
+/*
+ * Ligger inne i AppProvider for å kunne lese innlogget saksbehandler fra context.
+ * Uten den havner alle Sentry-feil på "Ukjent bruker".
+ */
+const ErrorBoundaryMedBruker: FC<{ children: ReactNode }> = ({
+    children,
+}: {
+    children: ReactNode;
+}) => {
+    const { innloggetSaksbehandler } = useApp();
+
+    return (
+        <ErrorBoundary autentisertSaksbehandler={innloggetSaksbehandler}>{children}</ErrorBoundary>
+    );
+};
+
 export const App: FC = () => {
-    const [autentisertSaksbehandler, setAutentisertSaksbehandler] = useState<
-        Saksbehandler | undefined
-    >(undefined);
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
@@ -94,23 +113,17 @@ export const App: FC = () => {
 
     configureZod();
 
-    useEffect(() => {
-        hentInnloggetBruker().then((innhentetInnloggetSaksbehandler: Saksbehandler) => {
-            setAutentisertSaksbehandler(innhentetInnloggetSaksbehandler);
-        });
-    }, []);
-
     return (
         <QueryClientProvider client={queryClient}>
-            <ErrorBoundary autentisertSaksbehandler={autentisertSaksbehandler}>
-                <AppProvider autentisertSaksbehandler={autentisertSaksbehandler}>
+            <AppProvider>
+                <ErrorBoundaryMedBruker>
                     <ThemeProvider>
                         <main aria-label="Hovedinnhold">
                             <RouterProvider router={router} />
                         </main>
                     </ThemeProvider>
-                </AppProvider>
-            </ErrorBoundary>
+                </ErrorBoundaryMedBruker>
+            </AppProvider>
         </QueryClientProvider>
     );
 };

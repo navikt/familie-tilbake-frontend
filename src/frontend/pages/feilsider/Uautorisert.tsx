@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { BodyShort, Box, Button, Heading, Page, VStack } from '@navikt/ds-react';
 
-export const IkkeTilgang: FC = () => {
+export const Uautorisert: FC = () => {
     return (
         <Page.Block width="xl" gutters>
             <Box paddingBlock="space-80 space-64" data-aksel-template="403-v2">

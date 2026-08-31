@@ -3,10 +3,12 @@ import type { Toast, ToastTyper } from '@/komponenter/toast/typer';
 import type { Ressurs } from '@/typer/ressurs';
 import type { Saksbehandler } from '@/typer/saksbehandler';
 
+import axios from 'axios';
 import createUseContext from 'constate';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { HttpProvider, useHttp } from '@/api/http/HttpProvider';
+import { hentInnloggetBruker } from '@/api/saksbehandler';
 
 type Info = {
     appImage: string;
@@ -18,30 +20,49 @@ type Props = {
     children: ReactNode;
 };
 
-type AppProps = {
-    autentisertSaksbehandler: Saksbehandler | undefined;
-};
+export type Innloggingsstatus =
+    | { status: 'laster' }
+    | { status: 'innlogget' }
+    | { status: 'feilet'; httpStatus?: number };
 
 type AuthProviderExports = {
-    autentisert: boolean;
-    settAutentisert: (autentisert: boolean) => void;
+    innloggingsstatus: Innloggingsstatus;
+    setUautorisert: (httpStatus: number) => void;
     innloggetSaksbehandler: Saksbehandler | undefined;
 };
 
-const [AuthProvider, useAuth] = createUseContext(
-    ({ autentisertSaksbehandler }: AppProps): AuthProviderExports => {
-        const [autentisert, setAutentisert] = useState(true);
+const [AuthProvider, useAuth] = createUseContext((): AuthProviderExports => {
+    const [innloggetSaksbehandler, setInnloggetSaksbehandler] = useState<Saksbehandler | undefined>(
+        undefined
+    );
+    const [innloggingsstatus, setInnloggingsstatus] = useState<Innloggingsstatus>({
+        status: 'laster',
+    });
 
-        return {
-            autentisert,
-            innloggetSaksbehandler: autentisertSaksbehandler,
-            settAutentisert: setAutentisert,
-        };
-    }
-);
+    useEffect(() => {
+        hentInnloggetBruker()
+            .then((saksbehandler: Saksbehandler) => {
+                setInnloggetSaksbehandler(saksbehandler);
+                setInnloggingsstatus({ status: 'innlogget' });
+            })
+            .catch((feil: unknown) => {
+                setInnloggingsstatus({
+                    status: 'feilet',
+                    httpStatus: axios.isAxiosError(feil) ? feil.response?.status : undefined,
+                });
+            });
+    }, []);
+
+    return {
+        innloggingsstatus,
+        innloggetSaksbehandler,
+        setUautorisert: (httpStatus: number): void =>
+            setInnloggingsstatus({ status: 'feilet', httpStatus }),
+    };
+});
 
 const [AppContentProvider, useApp] = createUseContext(() => {
-    const { autentisert, innloggetSaksbehandler } = useAuth();
+    const { innloggingsstatus, innloggetSaksbehandler } = useAuth();
     const { request } = useHttp();
     const [toasts, setToasts] = useState<{ [toastId: string]: Toast }>({});
 
@@ -59,7 +80,7 @@ const [AppContentProvider, useApp] = createUseContext(() => {
     };
 
     return {
-        autentisert,
+        innloggingsstatus,
         innloggetSaksbehandler,
         hentTilbakeInfo,
         setToast: (toastId: ToastTyper, toast: Toast): void =>
@@ -73,24 +94,21 @@ const [AppContentProvider, useApp] = createUseContext(() => {
 });
 
 const AuthOgHttpProvider: FC<Props> = ({ children }: Props) => {
-    const { innloggetSaksbehandler, settAutentisert } = useAuth();
+    const { innloggetSaksbehandler, setUautorisert } = useAuth();
 
     return (
         <HttpProvider
             innloggetSaksbehandler={innloggetSaksbehandler}
-            settAutentisert={settAutentisert}
+            setUautorisert={setUautorisert}
         >
             <AppContentProvider>{children}</AppContentProvider>
         </HttpProvider>
     );
 };
 
-const AppProvider: FC<AppProps & Props> = ({
-    autentisertSaksbehandler,
-    children,
-}: AppProps & Props) => {
+const AppProvider: FC<Props> = ({ children }: Props) => {
     return (
-        <AuthProvider autentisertSaksbehandler={autentisertSaksbehandler}>
+        <AuthProvider>
             <AuthOgHttpProvider>{children}</AuthOgHttpProvider>
         </AuthProvider>
     );
