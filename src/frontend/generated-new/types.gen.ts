@@ -15,13 +15,7 @@ export type Aktsomhet =
           aktsomhet: 'forsettlig';
       } & Forsettlig);
 
-export type ArsakTilTilbakeforing =
-    | 'ØktBeløp'
-    | 'LavereBeløp'
-    | 'NyPeriode'
-    | 'EndretPeriode'
-    | 'EndretPeriodeOgØktBeløp'
-    | 'EndretPeriodeOgLavereBeløp';
+export type ArsakTilTilbakeforing = 'NyttKravgrunnlag' | 'TilbakemeldingFraSaksbehandler';
 
 export type Avsnitt = {
     tittel: string;
@@ -35,6 +29,10 @@ export type AvsnittUpdateItem = {
     tittel: string;
     id: string;
     underavsnitt: Array<RotElementUpdateItem>;
+};
+
+export type Behandling = {
+    kravgrunnlagEndret?: Array<KravgrunnlagForskjell>;
 };
 
 export type BelopIBehold =
@@ -102,6 +100,12 @@ export type DokumentType = 'VARSELBREV' | 'VEDTAKSBREV';
 
 export type Element = RentekstElement;
 
+export type EndretPeriode = {
+    readonly fom: string;
+    readonly tom: string;
+    endringIBeløp: number;
+};
+
 export type Error = {
     tittel: string;
     melding: string;
@@ -112,13 +116,14 @@ export type Fakta = {
 };
 
 export type FaktaOmFeilutbetaling = {
+    readonly tilbakeført?: ArsakTilTilbakeforing;
+    readonly ferdigvurdert: boolean;
     feilutbetaling: Feilutbetaling;
     tidligereVarsletBeløp: number | null;
     muligeRettsligGrunnlag: Array<MuligeRettsligGrunnlag>;
     perioder: Array<FaktaPeriode>;
     vurdering: Vurdering;
     rettsgebyrÅrFraSaksbehandler: number | null;
-    readonly ferdigvurdert: boolean;
     readonly usikker4xRettsgebyr: boolean;
 };
 
@@ -126,13 +131,13 @@ export type FaktaPeriode = {
     id: string;
     readonly fom: string;
     readonly tom: string;
-    readonly tilbakeført?: ArsakTilTilbakeforing;
+    readonly endringIKravgrunnlag?: KravgrunnlagForskjell;
     feilutbetaltBeløp: number;
     splittbarePerioder: Array<{
         id: string;
         readonly fom: string;
         readonly tom: string;
-        readonly tilbakeført?: ArsakTilTilbakeforing;
+        readonly endringIKravgrunnlag?: KravgrunnlagForskjell;
         feilutbetaltBeløp: number;
         rettsligGrunnlag: Array<RettsligGrunnlag>;
     }>;
@@ -151,6 +156,8 @@ export type ForaarsaketAvMottaker = {
 };
 
 export type ForhaandsvarselErSendt = {
+    readonly tilbakeført?: ArsakTilTilbakeforing;
+    readonly ferdigvurdert: boolean;
     forhåndsvarselInfo: ForhaandsvarselInfo;
     uttalelsesfrist: Uttalelsesfrist;
 };
@@ -177,6 +184,8 @@ export type ForhaandsvarselSteg =
       } & ForhaandsvarselUnntak);
 
 export type ForhaandsvarselUnntak = {
+    readonly tilbakeført?: ArsakTilTilbakeforing;
+    readonly ferdigvurdert: boolean;
     begrunnelseForUnntak: Varslingsunntak;
     beskrivelse: string;
 };
@@ -255,6 +264,14 @@ export type JaSaerligeGrunner = {
     annetBegrunnelse: string | null;
 };
 
+export type KravgrunnlagForskjell =
+    | ({
+          type: 'ny_periode';
+      } & NyPeriode)
+    | ({
+          type: 'endret_periode';
+      } & EndretPeriode);
+
 export type Logginnslag = {
     behandlingId: string;
     opprettetTid: string;
@@ -283,6 +300,12 @@ export type NeiSaerligeGrunner = {
     særligeGrunnerMot: Array<Moment>;
     begrunnelse: string;
     annetBegrunnelse: string | null;
+};
+
+export type NyPeriode = {
+    readonly fom: string;
+    readonly tom: string;
+    beløp: number;
 };
 
 export type Oppdaget = {
@@ -548,8 +571,9 @@ export type Vedtaksresultat =
     | 'FullTilbakebetaling';
 
 export type Vilkaar = {
-    vilkårsperioder: Array<Vilkaarsperiode>;
+    readonly tilbakeført?: ArsakTilTilbakeforing;
     readonly ferdigvurdert: boolean;
+    vilkårsperioder: Array<Vilkaarsperiode>;
     readonly momenterSærligeGrunner: Array<Moment>;
     readonly momenterReduksjonGodTro: Array<Moment>;
     readonly erUnder4xRettsgebyr: boolean;
@@ -567,7 +591,7 @@ export type Vilkaarsvurdering = {
     id: string;
     readonly fom: string;
     readonly tom: string;
-    readonly tilbakeført?: ArsakTilTilbakeforing;
+    readonly endringIKravgrunnlag?: KravgrunnlagForskjell;
     readonly delbarePerioder: Array<PeriodeInfo>;
     valg: VilkaarsvurderingValg;
 };
@@ -627,6 +651,10 @@ export type AvsnittWritable = {
     underavsnitt: Array<RotElementWritable>;
 };
 
+export type BehandlingWritable = {
+    kravgrunnlagEndret?: Array<KravgrunnlagForskjellWritable>;
+};
+
 export type BelopIBeholdWritable =
     | ({
           belopIBehold: 'ingenting';
@@ -661,6 +689,10 @@ export type DelerWritable = {
     beløp: number;
     begrunnelse: string;
     reduksjon: ReduksjonWritable;
+};
+
+export type EndretPeriodeWritable = {
+    endringIBeløp: number;
 };
 
 export type FaktaOmFeilutbetalingWritable = {
@@ -711,7 +743,12 @@ export type ForhaandsvarselStegWritable =
       } & ForhaandsvarselErSendtWritable)
     | ({
           type: 'unntak';
-      } & ForhaandsvarselUnntak);
+      } & ForhaandsvarselUnntakWritable);
+
+export type ForhaandsvarselUnntakWritable = {
+    begrunnelseForUnntak: Varslingsunntak;
+    beskrivelse: string;
+};
 
 export type ForstaaelseWritable =
     | ({
@@ -762,6 +799,14 @@ export type JaSaerligeGrunnerWritable = {
     annetBegrunnelse: string | null;
 };
 
+export type KravgrunnlagForskjellWritable =
+    | ({
+          type: 'ny_periode';
+      } & NyPeriodeWritable)
+    | ({
+          type: 'endret_periode';
+      } & EndretPeriodeWritable);
+
 export type MomentWritable = {
     moment: string;
 };
@@ -770,6 +815,10 @@ export type NeiSaerligeGrunnerWritable = {
     særligeGrunnerMot: Array<MomentWritable>;
     begrunnelse: string;
     annetBegrunnelse: string | null;
+};
+
+export type NyPeriodeWritable = {
+    beløp: number;
 };
 
 export type PakrevdBegrunnelseWritable = {
@@ -891,6 +940,39 @@ export type VilkaarsvurderingValgWritable =
     | ({
           vurdering: 'ikke_vurdert';
       } & VilkaarsvurderingIkkeVurdert);
+
+export type BehandlingHentBehandlingData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/';
+};
+
+export type BehandlingHentBehandlingErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentBehandlingError =
+    BehandlingHentBehandlingErrors[keyof BehandlingHentBehandlingErrors];
+
+export type BehandlingHentBehandlingResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Behandling;
+};
+
+export type BehandlingHentBehandlingResponse =
+    BehandlingHentBehandlingResponses[keyof BehandlingHentBehandlingResponses];
 
 export type BehandlingBehandlingsloggData = {
     body?: never;

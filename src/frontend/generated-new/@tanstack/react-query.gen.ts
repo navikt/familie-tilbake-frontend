@@ -10,6 +10,7 @@ import {
     behandlingFakta,
     behandlingForeslaaVedtak,
     behandlingForhandsvarsel,
+    behandlingHentBehandling,
     behandlingHentDokument,
     behandlingHentDokumentInfo,
     behandlingHentVarselbrevTekster,
@@ -44,6 +45,9 @@ import type {
     BehandlingForhandsvarselData,
     BehandlingForhandsvarselError,
     BehandlingForhandsvarselResponse,
+    BehandlingHentBehandlingData,
+    BehandlingHentBehandlingError,
+    BehandlingHentBehandlingResponse,
     BehandlingHentDokumentData,
     BehandlingHentDokumentError,
     BehandlingHentDokumentInfoData,
@@ -131,6 +135,28 @@ const createQueryKey = <TOptions extends Options>(
     }
     return [params];
 };
+
+export const behandlingHentBehandlingQueryKey = (options: Options<BehandlingHentBehandlingData>) =>
+    createQueryKey('behandlingHentBehandling', options);
+
+export const behandlingHentBehandlingOptions = (options: Options<BehandlingHentBehandlingData>) =>
+    queryOptions<
+        BehandlingHentBehandlingResponse,
+        AxiosError<BehandlingHentBehandlingError>,
+        BehandlingHentBehandlingResponse,
+        ReturnType<typeof behandlingHentBehandlingQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentBehandling({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentBehandlingQueryKey(options),
+    });
 
 export const behandlingBehandlingsloggQueryKey = (
     options: Options<BehandlingBehandlingsloggData>

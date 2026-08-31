@@ -25,6 +25,7 @@ const lagEndretKravgrunnlag = (
         tomMåned: '2024-01',
     },
     nyPeriode: { fom: '2024-01-01', tom: '2024-01-31', fomMåned: '2024-01', tomMåned: '2024-01' },
+    endringer: [],
     ...overrides,
 });
 

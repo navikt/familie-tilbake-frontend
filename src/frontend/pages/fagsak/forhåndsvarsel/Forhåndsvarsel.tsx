@@ -4,7 +4,8 @@ import type { Options } from '@/generated-new/sdk.gen';
 import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Heading, HStack, VStack } from '@navikt/ds-react';
+import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
+import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -314,6 +315,8 @@ export const ForhåndsvarselInnhold: FC = () => {
                 unntak: {
                     begrunnelseForUnntak: data.begrunnelseForUnntak,
                     beskrivelse: data.beskrivelse,
+                    // backenden trenger denne men er bare readonly
+                    ferdigvurdert: false,
                 },
                 uttalelse: tilUttalelsePayload(data.brukeruttalelse, 'unntak'),
             });
@@ -380,40 +383,59 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     useActionBar(actionBarConfig);
 
+    const statusTag = forhåndsvarselSteg.ferdigvurdert ? (
+        <Tag
+            variant="moderate"
+            data-color="success"
+            icon={<CheckmarkCircleIcon aria-hidden />}
+            className="w-fit ml-auto ax-xl:order-3 gap-2"
+        >
+            Vurdert
+        </Tag>
+    ) : (
+        <Tag
+            variant="moderate"
+            data-color="info"
+            icon={<DocPencilIcon aria-hidden />}
+            className="w-fit ml-auto ax-xl:order-3 gap-2"
+        >
+            Under vurdering
+        </Tag>
+    );
+
     return (
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
                 <FormProvider {...methods}>
                     <HStack align="center" gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
+                        {statusTag}
                         {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                     </HStack>
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
                 </FormProvider>
             ) : (
                 <div className="grid grid-cols-1 gap-6 items-start lg:grid-cols-[1fr_21rem]">
-                    <HStack align="center" gap="space-16">
+                    <HStack align="center" gap="space-16" className="lg:col-span-2">
                         <Heading size="medium">Forhåndsvarsel</Heading>
+                        {statusTag}
                     </HStack>
-                    <div className="lg:col-start-2 lg:row-start-1 lg:row-end-3">
-                        <VStack gap="space-8">
-                            {forhåndsvarselSteg.type === 'sendt' && (
-                                <Varselbrevinfo
-                                    varselbrevUrl={varselbrevUrl}
-                                    sendtTid={
-                                        forhåndsvarselSteg.forhåndsvarselInfo.varselbrevSendtTid
-                                    }
-                                    laster={dokumentInfoLaster || sendtDokumentLaster}
-                                />
-                            )}
-                            <Fristinfo
-                                uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
-                                onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
-                            />
-                        </VStack>
-                    </div>
 
-                    <VStack gap="space-24">
+                    <VStack gap="space-8" className="lg:col-start-2 lg:row-start-2">
+                        {forhåndsvarselSteg.type === 'sendt' && (
+                            <Varselbrevinfo
+                                varselbrevUrl={varselbrevUrl}
+                                sendtTid={forhåndsvarselSteg.forhåndsvarselInfo.varselbrevSendtTid}
+                                laster={dokumentInfoLaster || sendtDokumentLaster}
+                            />
+                        )}
+                        <Fristinfo
+                            uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
+                            onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
+                        />
+                    </VStack>
+
+                    <VStack gap="space-24" className="lg:col-start-1 lg:row-start-2">
                         <SkalSendeForhåndsvarsel
                             name="valg"
                             value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}

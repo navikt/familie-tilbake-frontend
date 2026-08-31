@@ -199,6 +199,7 @@ export type ForeldelseperiodeEntity = {
     foreldelsesvurderingRef: string;
     periode: DatoperiodeEntity;
     foreldelsesvurdering: ForeldelsesvurderingEntity;
+    endringIKravgrunnlag?: ForskjellEntity | null;
 };
 
 export type ForeldelsesstegEntity = {
@@ -240,8 +241,11 @@ export type ForskjellEntity = {
     id: string;
     faktavurderingPeriodeRef?: string | null;
     vilkårsvurderingPeriodeRef?: string | null;
-    originalPeriode: DatoperiodeEntity;
-    endringIBeløp: number;
+    foreldelsesvurderingPeriodeRef?: string | null;
+    type: TypeEnum6;
+    originalPeriode?: DatoperiodeEntity | null;
+    endringIBeløp?: number | null;
+    nyPeriode?: DatoperiodeEntity | null;
 };
 
 export type GodTroEntity = {
@@ -311,12 +315,12 @@ export type OppdagetEntity = {
 };
 
 export type SkalReduseresEntity = {
-    type: TypeEnum6;
+    type: TypeEnum7;
     prosentdel?: number | null;
 };
 
 export type SærligGrunnEntity = {
-    type: TypeEnum7;
+    type: TypeEnum8;
     annetBegrunnelse?: string | null;
 };
 
@@ -387,7 +391,7 @@ export type VilkårsvurderingsperiodeEntity = {
     periode: DatoperiodeEntity;
     begrunnelseForTilbakekreving?: string | null;
     vurdering: AktsomhetsvurderingEntity;
-    endretAvKravgrunnlag?: ForskjellEntity | null;
+    endringIKravgrunnlag?: ForskjellEntity | null;
 };
 
 export type VilkårsvurderingstegEntity = {
@@ -413,7 +417,7 @@ export type VurdertStegEntity = {
 };
 
 export type YtelseEntity = {
-    type: TypeEnum8;
+    type: TypeEnum9;
 };
 
 export type Datoperiode = {
@@ -609,7 +613,7 @@ export type GodTroDto = {
 };
 
 export type SærligGrunnDto = {
-    særligGrunn: TypeEnum7;
+    særligGrunn: TypeEnum8;
     begrunnelse?: string | null;
 };
 
@@ -967,7 +971,7 @@ export type RessursListManuellBrevmottakerResponsDto = {
 
 export type HistorikkinnslagDto = {
     behandlingId: string;
-    type: TypeEnum9;
+    type: TypeEnum10;
     aktør: AktørEnum;
     aktørIdent: string;
     tittel: string;
@@ -1026,7 +1030,7 @@ export type VurdertGodTroDto = {
 };
 
 export type VurdertSærligGrunnDto = {
-    særligGrunn: TypeEnum7;
+    særligGrunn: TypeEnum8;
     begrunnelse?: string | null;
 };
 
@@ -1259,6 +1263,25 @@ export type EndretKravgrunnlag = {
     nyttBeløp: number;
     gammelPeriode: Datoperiode;
     nyPeriode: Datoperiode;
+    endringer: Array<EndretPeriodeDto | NyPeriodeDto>;
+};
+
+export type EndretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    readonly fom: string;
+    readonly tom: string;
+    endringIBeløp: number;
+    type: 'EndretPeriodeDto';
+};
+
+export type KravgrunnlagForskjellDto = {
+    type: string;
+};
+
+export type NyPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    readonly fom: string;
+    readonly tom: string;
+    beløp: number;
+    type: 'NyPeriodeDto';
 };
 
 export type RessursBehandlingDto = {
@@ -1359,7 +1382,7 @@ export type KanUnnlatesEnum =
     | 'OVER_4_RETTSGEBYR'
     | 'IKKE_VURDERT';
 
-export type FeilaktigEllerMangelfullEnum = 'FEILAKTIG' | 'MANGELFULL';
+export type FeilaktigEllerMangelfullEnum = 'FEILAKTIG' | 'MANGELFULL' | 'IKKE_VURDERT';
 
 export type AktørTypeEnum = 'Person' | 'Organisasjon' | 'Samhandler' | 'Applikasjonsbruker';
 
@@ -1563,6 +1586,8 @@ export type BegrunnelseForUnntakEnum =
     | 'ÅPENBART_UNØDVENDIG'
     | 'ALLEREDE_UTTALET_SEG';
 
+export type TypeEnum6 = 'JustertBeløp' | 'NyPeriode';
+
 export type BeholdTypeEnum = 'HELE_BELØPET' | 'DELER_AV_BELØPET' | 'JA' | 'NEI';
 
 export type KravstatuskodeEnum =
@@ -1580,9 +1605,9 @@ export type MottakersForståelseEnum = 'FORSTOD' | 'BURDE_FORSTÅTT' | 'MÅTTE_F
 
 export type AvEnum = 'Nav' | 'Bruker';
 
-export type TypeEnum6 = 'Ja' | 'Nei';
+export type TypeEnum7 = 'Ja' | 'Nei';
 
-export type TypeEnum7 =
+export type TypeEnum8 =
     | 'GRAD_AV_UAKTSOMHET'
     | 'STØRRELSE_BELØP'
     | 'TID_FRA_UTBETALING'
@@ -1613,7 +1638,7 @@ export type StegEnum =
 
 export type VurderingEnum = 'IKKE_VURDERT' | 'GODKJENT' | 'UNDERKJENT';
 
-export type TypeEnum8 =
+export type TypeEnum9 =
     | 'BARNETRYGD'
     | 'TILLEGGSSTØNAD'
     | 'KONTANTSTØTTE'
@@ -1729,7 +1754,7 @@ export type UnderavsnittstypeEnum =
     | 'SÆRLIGEGRUNNER'
     | 'SÆRLIGEGRUNNER_ANNET';
 
-export type TypeEnum9 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
+export type TypeEnum10 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
 
 export type AktørEnum = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
 
@@ -1950,6 +1975,68 @@ export type VenteårsakEnum2 =
     | 'ENDRE_TILKJENT_YTELSE'
     | 'VENT_PÅ_MULIG_MOTREGNING'
     | 'MANGLER_STØTTE';
+
+export type BehandlingDtoWritable = {
+    eksternBrukId: string;
+    behandlingId: string;
+    erBehandlingHenlagt: boolean;
+    type: TypeEnum3;
+    status: StatusEnum2;
+    opprettetDato: string;
+    avsluttetDato?: string | null;
+    endretTidspunkt: string;
+    vedtaksdato?: string | null;
+    enhetskode: string;
+    enhetsnavn: string;
+    resultatstype?: ResultatstypeEnum;
+    ansvarligSaksbehandler: string;
+    ansvarligBeslutter?: string | null;
+    erBehandlingPåVent: boolean;
+    kanHenleggeBehandling: boolean;
+    kanRevurderingOpprettes: boolean;
+    harVerge: boolean;
+    kanEndres: boolean;
+    kanSetteTilbakeTilFakta: boolean;
+    varselSendt: boolean;
+    behandlingsstegsinfo: Array<BehandlingsstegsinfoDto>;
+    fagsystemsbehandlingId: string;
+    eksternFagsakId: string;
+    behandlingsårsakstype?: RevurderingsårsakEnum;
+    støtterManuelleBrevmottakere: boolean;
+    harManuelleBrevmottakere: boolean;
+    manuelleBrevmottakere: Array<ManuellBrevmottakerResponsDto>;
+    begrunnelseForTilbakekreving?: string | null;
+    saksbehandlingstype: SaksbehandlingstypeEnum;
+    erNyModell: boolean;
+    innloggetRolle: InnloggetRolleEnum;
+    endretKravgrunnlag?: EndretKravgrunnlagWritable | null;
+};
+
+export type EndretKravgrunnlagWritable = {
+    gammeltBeløp: number;
+    nyttBeløp: number;
+    gammelPeriode: Datoperiode;
+    nyPeriode: Datoperiode;
+    endringer: Array<EndretPeriodeDtoWritable | NyPeriodeDtoWritable>;
+};
+
+export type EndretPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    endringIBeløp: number;
+    type: 'EndretPeriodeDtoWritable';
+};
+
+export type NyPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    beløp: number;
+    type: 'NyPeriodeDtoWritable';
+};
+
+export type RessursBehandlingDtoWritable = {
+    data?: BehandlingDtoWritable | null;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
+};
 
 export type TvingHenleggBehandlingData = {
     body?: never;

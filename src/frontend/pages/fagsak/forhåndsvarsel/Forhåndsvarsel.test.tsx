@@ -77,6 +77,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
 const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselResponse => ({
     forhaandsvarselSteg: {
         type: 'sendt',
+        ferdigvurdert: true,
         forhåndsvarselInfo: {
             tekstFraSaksbehandler: 'Varselbrev er sendt',
             varselbrevSendtTid: '2025-01-10T10:00:00Z',

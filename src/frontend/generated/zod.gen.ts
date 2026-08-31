@@ -44,14 +44,6 @@ export const zEnhetEntity = z.object({
     navn: z.string(),
 });
 
-export const zForskjellEntity = z.object({
-    id: z.uuid(),
-    faktavurderingPeriodeRef: z.uuid().nullish(),
-    vilkårsvurderingPeriodeRef: z.uuid().nullish(),
-    originalPeriode: zDatoperiodeEntity,
-    endringIBeløp: z.number(),
-});
-
 export const zHistorikkReferanseEntityUuid = z.object({
     id: z.uuid(),
 });
@@ -319,6 +311,34 @@ export const zBeregningsresultatsperiodeDto = z.object({
     tilbakekrevesBeløpEtterSkatt: z.number().nullish(),
 });
 
+export const zKravgrunnlagForskjellDto = z.object({
+    type: z.string(),
+});
+
+export const zEndretPeriodeDto = zKravgrunnlagForskjellDto.and(
+    z.object({
+        fom: z.iso.date().readonly(),
+        tom: z.iso.date().readonly(),
+        endringIBeløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('EndretPeriodeDto'),
+    })
+);
+
+export const zNyPeriodeDto = zKravgrunnlagForskjellDto.and(
+    z.object({
+        fom: z.iso.date().readonly(),
+        tom: z.iso.date().readonly(),
+        beløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('NyPeriodeDto'),
+    })
+);
+
 export const zEndretKravgrunnlag = z.object({
     gammeltBeløp: z
         .int()
@@ -330,6 +350,7 @@ export const zEndretKravgrunnlag = z.object({
         .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     gammelPeriode: zDatoperiode,
     nyPeriode: zDatoperiode,
+    endringer: z.array(z.union([zEndretPeriodeDto, zNyPeriodeDto])),
 });
 
 export const zSchemaEnum = z.enum([
@@ -578,7 +599,7 @@ export const zKanUnnlatesEnum = z.enum([
     'IKKE_VURDERT',
 ]);
 
-export const zFeilaktigEllerMangelfullEnum = z.enum(['FEILAKTIG', 'MANGELFULL']);
+export const zFeilaktigEllerMangelfullEnum = z.enum(['FEILAKTIG', 'MANGELFULL', 'IKKE_VURDERT']);
 
 export const zAktørTypeEnum = z.enum([
     'Person',
@@ -855,15 +876,6 @@ export const zRettsligGrunnlagUnderkategoriEnum = z.enum([
     'BARN_STARTET_PÅ_SKOLEN',
 ]);
 
-export const zFaktaPeriodeEntity = z.object({
-    id: z.uuid(),
-    faktavurderingRef: z.uuid(),
-    periode: zDatoperiodeEntity,
-    rettsligGrunnlag: zRettsligGrunnlagEnum,
-    rettsligGrunnlagUnderkategori: zRettsligGrunnlagUnderkategoriEnum,
-    endringIKravgrunnlag: zForskjellEntity.nullish(),
-});
-
 export const zFaktaFeilutbetalingsperiodeDto = z.object({
     periode: zDatoperiode,
     hendelsestype: zRettsligGrunnlagEnum,
@@ -887,20 +899,6 @@ export const zForeldelsesvurderingEntity = z.object({
     oppdaget: z.iso.date().nullish(),
 });
 
-export const zForeldelseperiodeEntity = z.object({
-    id: z.uuid(),
-    foreldelsesvurderingRef: z.uuid(),
-    periode: zDatoperiodeEntity,
-    foreldelsesvurdering: zForeldelsesvurderingEntity,
-});
-
-export const zForeldelsesstegEntity = z.object({
-    id: z.uuid(),
-    behandlingRef: z.uuid(),
-    vurdertePerioder: z.array(zForeldelseperiodeEntity),
-    tilbakeført: zTilbakeførtEnum.optional(),
-});
-
 export const zBegrunnelseForUnntakEnum = z.enum([
     'IKKE_PRAKTISK_MULIG',
     'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
@@ -920,6 +918,43 @@ export const zForhåndsvarselEntity = z.object({
     brukeruttalelseEntity: zBrukeruttalelseEntity.nullish(),
     forhåndsvarselUnntakEntity: zForhåndsvarselUnntakEntity.nullish(),
     uttalelsesfristEntity: zUttalelsesfristEntity.nullish(),
+});
+
+export const zTypeEnum6 = z.enum(['JustertBeløp', 'NyPeriode']);
+
+export const zForskjellEntity = z.object({
+    id: z.uuid(),
+    faktavurderingPeriodeRef: z.uuid().nullish(),
+    vilkårsvurderingPeriodeRef: z.uuid().nullish(),
+    foreldelsesvurderingPeriodeRef: z.uuid().nullish(),
+    type: zTypeEnum6,
+    originalPeriode: zDatoperiodeEntity.nullish(),
+    endringIBeløp: z.number().nullish(),
+    nyPeriode: zDatoperiodeEntity.nullish(),
+});
+
+export const zFaktaPeriodeEntity = z.object({
+    id: z.uuid(),
+    faktavurderingRef: z.uuid(),
+    periode: zDatoperiodeEntity,
+    rettsligGrunnlag: zRettsligGrunnlagEnum,
+    rettsligGrunnlagUnderkategori: zRettsligGrunnlagUnderkategoriEnum,
+    endringIKravgrunnlag: zForskjellEntity.nullish(),
+});
+
+export const zForeldelseperiodeEntity = z.object({
+    id: z.uuid(),
+    foreldelsesvurderingRef: z.uuid(),
+    periode: zDatoperiodeEntity,
+    foreldelsesvurdering: zForeldelsesvurderingEntity,
+    endringIKravgrunnlag: zForskjellEntity.nullish(),
+});
+
+export const zForeldelsesstegEntity = z.object({
+    id: z.uuid(),
+    behandlingRef: z.uuid(),
+    vurdertePerioder: z.array(zForeldelseperiodeEntity),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zBeholdTypeEnum = z.enum(['HELE_BELØPET', 'DELER_AV_BELØPET', 'JA', 'NEI']);
@@ -998,10 +1033,10 @@ export const zFaktastegEntity = z.object({
         .nullish(),
 });
 
-export const zTypeEnum6 = z.enum(['Ja', 'Nei']);
+export const zTypeEnum7 = z.enum(['Ja', 'Nei']);
 
 export const zSkalReduseresEntity = z.object({
-    type: zTypeEnum6,
+    type: zTypeEnum7,
     prosentdel: z
         .int()
         .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
@@ -1009,7 +1044,7 @@ export const zSkalReduseresEntity = z.object({
         .nullish(),
 });
 
-export const zTypeEnum7 = z.enum([
+export const zTypeEnum8 = z.enum([
     'GRAD_AV_UAKTSOMHET',
     'STØRRELSE_BELØP',
     'TID_FRA_UTBETALING',
@@ -1018,7 +1053,7 @@ export const zTypeEnum7 = z.enum([
 ]);
 
 export const zSærligGrunnEntity = z.object({
-    type: zTypeEnum7,
+    type: zTypeEnum8,
     annetBegrunnelse: z.string().nullish(),
 });
 
@@ -1030,12 +1065,12 @@ export const zSærligeGrunnerEntity = z.object({
 });
 
 export const zSærligGrunnDto = z.object({
-    særligGrunn: zTypeEnum7,
+    særligGrunn: zTypeEnum8,
     begrunnelse: z.string().min(0).max(1500).nullish(),
 });
 
 export const zVurdertSærligGrunnDto = z.object({
-    særligGrunn: zTypeEnum7,
+    særligGrunn: zTypeEnum8,
     begrunnelse: z.string().nullish(),
 });
 
@@ -1074,7 +1109,7 @@ export const zVilkårsvurderingsperiodeEntity = z.object({
     periode: zDatoperiodeEntity,
     begrunnelseForTilbakekreving: z.string().nullish(),
     vurdering: zAktsomhetsvurderingEntity,
-    endretAvKravgrunnlag: zForskjellEntity.nullish(),
+    endringIKravgrunnlag: zForskjellEntity.nullish(),
 });
 
 export const zVilkårsvurderingstegEntity = z.object({
@@ -1171,7 +1206,7 @@ export const zHistorikkEntityUuidBehandlingEntityBehandling = z.object({
     innslag: z.array(zBehandlingEntity),
 });
 
-export const zTypeEnum8 = z.enum([
+export const zTypeEnum9 = z.enum([
     'BARNETRYGD',
     'TILLEGGSSTØNAD',
     'KONTANTSTØTTE',
@@ -1183,7 +1218,7 @@ export const zTypeEnum8 = z.enum([
 ]);
 
 export const zYtelseEntity = z.object({
-    type: zTypeEnum8,
+    type: zTypeEnum9,
 });
 
 export const zEksternFagsakEntity = z.object({
@@ -1606,13 +1641,13 @@ export const zRessursListAvsnitt = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zTypeEnum9 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV', 'AUTOMATISK_VURDERING']);
+export const zTypeEnum10 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV', 'AUTOMATISK_VURDERING']);
 
 export const zAktørEnum = z.enum(['SAKSBEHANDLER', 'BESLUTTER', 'VEDTAKSLØSNING']);
 
 export const zHistorikkinnslagDto = z.object({
     behandlingId: z.string(),
-    type: zTypeEnum9,
+    type: zTypeEnum10,
     aktør: zAktørEnum,
     aktørIdent: z.string(),
     tittel: z.string(),
@@ -2066,6 +2101,84 @@ export const zBehandlingDto = z.object({
 
 export const zRessursBehandlingDto = z.object({
     data: zBehandlingDto.nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zEndretPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
+    z.object({
+        endringIBeløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('EndretPeriodeDtoWritable'),
+    })
+);
+
+export const zNyPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
+    z.object({
+        beløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('NyPeriodeDtoWritable'),
+    })
+);
+
+export const zEndretKravgrunnlagWritable = z.object({
+    gammeltBeløp: z
+        .int()
+        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    nyttBeløp: z
+        .int()
+        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    gammelPeriode: zDatoperiode,
+    nyPeriode: zDatoperiode,
+    endringer: z.array(z.union([zEndretPeriodeDtoWritable, zNyPeriodeDtoWritable])),
+});
+
+export const zBehandlingDtoWritable = z.object({
+    eksternBrukId: z.uuid(),
+    behandlingId: z.uuid(),
+    erBehandlingHenlagt: z.boolean(),
+    type: zTypeEnum3,
+    status: zStatusEnum2,
+    opprettetDato: z.iso.date(),
+    avsluttetDato: z.iso.date().nullish(),
+    endretTidspunkt: z.iso.datetime(),
+    vedtaksdato: z.iso.date().nullish(),
+    enhetskode: z.string(),
+    enhetsnavn: z.string(),
+    resultatstype: zResultatstypeEnum.optional(),
+    ansvarligSaksbehandler: z.string(),
+    ansvarligBeslutter: z.string().nullish(),
+    erBehandlingPåVent: z.boolean(),
+    kanHenleggeBehandling: z.boolean(),
+    kanRevurderingOpprettes: z.boolean(),
+    harVerge: z.boolean(),
+    kanEndres: z.boolean(),
+    kanSetteTilbakeTilFakta: z.boolean(),
+    varselSendt: z.boolean(),
+    behandlingsstegsinfo: z.array(zBehandlingsstegsinfoDto),
+    fagsystemsbehandlingId: z.string(),
+    eksternFagsakId: z.string(),
+    behandlingsårsakstype: zRevurderingsårsakEnum.optional(),
+    støtterManuelleBrevmottakere: z.boolean(),
+    harManuelleBrevmottakere: z.boolean(),
+    manuelleBrevmottakere: z.array(zManuellBrevmottakerResponsDto),
+    begrunnelseForTilbakekreving: z.string().nullish(),
+    saksbehandlingstype: zSaksbehandlingstypeEnum,
+    erNyModell: z.boolean(),
+    innloggetRolle: zInnloggetRolleEnum,
+    endretKravgrunnlag: zEndretKravgrunnlagWritable.nullish(),
+});
+
+export const zRessursBehandlingDtoWritable = z.object({
+    data: zBehandlingDtoWritable.nullish(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),

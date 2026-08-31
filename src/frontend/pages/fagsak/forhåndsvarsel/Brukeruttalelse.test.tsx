@@ -107,6 +107,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -127,6 +128,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -146,6 +148,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -166,6 +169,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -197,6 +201,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -222,6 +227,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'unntak',
                     begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
                     beskrivelse: 'Kort begrunnelse',
@@ -242,6 +248,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'unntak',
                     begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
                     beskrivelse: 'Kort begrunnelse',
@@ -266,6 +273,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: {
+                    ferdigvurdert: true,
                     type: 'unntak',
                     begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
                     beskrivelse: 'Kort begrunnelse',

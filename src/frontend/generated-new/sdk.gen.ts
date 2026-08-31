@@ -18,6 +18,9 @@ import type {
     BehandlingForhandsvarselData,
     BehandlingForhandsvarselErrors,
     BehandlingForhandsvarselResponses,
+    BehandlingHentBehandlingData,
+    BehandlingHentBehandlingErrors,
+    BehandlingHentBehandlingResponses,
     BehandlingHentDokumentData,
     BehandlingHentDokumentErrors,
     BehandlingHentDokumentInfoData,
@@ -89,6 +92,19 @@ export type Options<
      */
     meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
+
+export const behandlingHentBehandling = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentBehandlingData, ThrowOnError>
+): RequestResult<BehandlingHentBehandlingResponses, BehandlingHentBehandlingErrors, ThrowOnError> =>
+    (options.client ?? client).get<
+        BehandlingHentBehandlingResponses,
+        BehandlingHentBehandlingErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/',
+        ...options,
+    });
 
 export const behandlingBehandlingslogg = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingBehandlingsloggData, ThrowOnError>
