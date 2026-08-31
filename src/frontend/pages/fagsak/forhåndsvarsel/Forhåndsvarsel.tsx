@@ -387,8 +387,9 @@ export const ForhåndsvarselInnhold: FC = () => {
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
                 <FormProvider {...methods}>
-                    <HStack align="center" gap="space-16">
+                    <HStack gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
+                        {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                         <StatusTag
                             tilbakeført={
                                 forhåndsvarselSteg.type !== 'ikke_vurdert'
@@ -401,7 +402,6 @@ export const ForhåndsvarselInnhold: FC = () => {
                                     : false
                             }
                         />
-                        {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                     </HStack>
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
                 </FormProvider>

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Vilkaar } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
-import { Heading, InlineMessage, VStack } from '@navikt/ds-react';
+import { Heading, HStack, InlineMessage, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -93,17 +93,19 @@ export const Vilkårsvurdering: FC = () => {
 
     return (
         <VStack gap="space-24" className="min-h-0 h-full">
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
-                <Heading size="medium">Vilkårsvurdering</Heading>
+            <HStack>
+                <HStack className="gap-x-4">
+                    <Heading size="medium">Vilkårsvurdering</Heading>
+                    <InlineMessage
+                        size="small"
+                        status="info"
+                        className="items-center ax-xl:order-2"
+                    >
+                        Intern vurdering (ikke synlig i vedtaksbrevet)
+                    </InlineMessage>
+                </HStack>
                 <StatusTag tilbakeført={vilkår.tilbakeført} ferdigvurdert={vilkår.ferdigvurdert} />
-                <InlineMessage
-                    size="small"
-                    status="info"
-                    className="basis-full ax-xl:basis-auto ax-xl:order-2"
-                >
-                    Intern vurdering (ikke synlig i vedtaksbrevet)
-                </InlineMessage>
-            </div>
+            </HStack>
             <div className="flex flex-col ax-md:flex-row min-h-0 h-full">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
