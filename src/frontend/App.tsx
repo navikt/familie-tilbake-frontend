@@ -15,7 +15,6 @@ import { Toasts } from './komponenter/toast/Toasts';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { Serverfeil } from './pages/feilsider/serverfeil';
 import { Uautorisert } from './pages/feilsider/Uautorisert';
-import { configureZod } from './utils/zodConfig';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
 const FagsakSide = lazyImportMedRetry(() => import('./pages/fagsak/Fagsak'), 'FagsakSide');
@@ -110,8 +109,6 @@ export const App: FC = () => {
             },
         },
     });
-
-    configureZod();
 
     return (
         <QueryClientProvider client={queryClient}>
