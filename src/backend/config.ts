@@ -83,7 +83,7 @@ export const texasConfig: TexasConfig = {
 };
 
 export const sessionConfig: SessionKonfigurasjon = {
-    cookieSecret: [`${process.env.COOKIE_KEY1}`, `${process.env.COOKIE_KEY2}`],
+    cookieSecret: [envVar('COOKIE_KEY1'), envVar('COOKIE_KEY2')],
     navn: 'tilbakekreving-backend-v1',
     valkeyFullUrl: process.env.VALKEY_HOST_SESSIONS
         ? `rediss://${process.env.VALKEY_HOST_SESSIONS}:${process.env.VALKEY_PORT_SESSIONS}`
