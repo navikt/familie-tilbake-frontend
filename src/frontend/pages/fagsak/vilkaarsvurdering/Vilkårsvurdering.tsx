@@ -2,8 +2,7 @@ import type { FC } from 'react';
 import type { Vilkaar } from '@/generated-new';
 import type { Vilkårsperiode } from './typer';
 
-import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
-import { Heading, InlineMessage, Tag, VStack } from '@navikt/ds-react';
+import { Heading, InlineMessage, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -20,6 +19,7 @@ import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils/dateUtils';
 import { useStegNavigering } from '@/utils/sider';
 
+import { StatusTag } from '../StegStatus';
 import { usePeriodeIUrl } from './usePeriodeIUrl';
 import { utledVurdering } from './utils';
 import {
@@ -91,31 +91,11 @@ export const Vilkårsvurdering: FC = () => {
         onNeste: håndterNeste,
     });
 
-    const statusTag = vilkår.ferdigvurdert ? (
-        <Tag
-            variant="moderate"
-            data-color="success"
-            icon={<CheckmarkCircleIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3 gap-2"
-        >
-            Vurdert
-        </Tag>
-    ) : (
-        <Tag
-            variant="moderate"
-            data-color="info"
-            icon={<DocPencilIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3 gap-2"
-        >
-            Under vurdering
-        </Tag>
-    );
-
     return (
         <VStack gap="space-24" className="min-h-0 h-full">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
                 <Heading size="medium">Vilkårsvurdering</Heading>
-                {statusTag}
+                {StatusTag(vilkår.ferdigvurdert)}
                 <InlineMessage
                     size="small"
                     status="info"

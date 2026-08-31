@@ -4,8 +4,7 @@ import type { Options } from '@/generated-new/sdk.gen';
 import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckmarkCircleIcon, DocPencilIcon } from '@navikt/aksel-icons';
-import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
+import { Heading, HStack, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -47,6 +46,7 @@ import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils';
 import { useStegNavigering } from '@/utils/sider';
 
+import { StatusTag } from '../StegStatus';
 import {
     type BrukeruttalelseFormData,
     tilUttalelsePayload,
@@ -383,33 +383,17 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     useActionBar(actionBarConfig);
 
-    const statusTag = forhåndsvarselSteg.ferdigvurdert ? (
-        <Tag
-            variant="moderate"
-            data-color="success"
-            icon={<CheckmarkCircleIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3 gap-2"
-        >
-            Vurdert
-        </Tag>
-    ) : (
-        <Tag
-            variant="moderate"
-            data-color="info"
-            icon={<DocPencilIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3 gap-2"
-        >
-            Under vurdering
-        </Tag>
-    );
-
     return (
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
                 <FormProvider {...methods}>
                     <HStack align="center" gap="space-16">
                         <Heading size="medium">Forhåndsvarsel</Heading>
-                        {statusTag}
+                        {StatusTag(
+                            forhåndsvarselSteg.type !== 'ikke_vurdert'
+                                ? forhåndsvarselSteg.ferdigvurdert
+                                : false
+                        )}
                         {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                     </HStack>
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
@@ -418,7 +402,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                 <div className="grid grid-cols-1 gap-6 items-start lg:grid-cols-[1fr_21rem]">
                     <HStack align="center" gap="space-16" className="lg:col-span-2">
                         <Heading size="medium">Forhåndsvarsel</Heading>
-                        {statusTag}
+                        {StatusTag(forhåndsvarselSteg.ferdigvurdert)}
                     </HStack>
 
                     <VStack gap="space-8" className="lg:col-start-2 lg:row-start-2">
