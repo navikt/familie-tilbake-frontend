@@ -200,6 +200,8 @@ export type {
     FjernBrevmottakerStegData,
     FjernBrevmottakerStegResponse,
     FjernBrevmottakerStegResponses,
+    FjernetPeriodeDto,
+    FjernetPeriodeDtoWritable,
     FjernManuellBrevmottakerData,
     FjernManuellBrevmottakerResponse,
     FjernManuellBrevmottakerResponses,

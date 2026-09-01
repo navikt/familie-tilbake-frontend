@@ -1,5 +1,10 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { EndretKravgrunnlag, EndretPeriodeDto, NyPeriodeDto } from '@/generated';
+import type {
+    EndretKravgrunnlag,
+    EndretPeriodeDto,
+    FjernetPeriodeDto,
+    NyPeriodeDto,
+} from '@/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
@@ -16,8 +21,8 @@ import { NyttKravgrunnlagModal } from './NyttKravgrunnlagModal';
 const lagNyPeriode = (overrides: Partial<NyPeriodeDto> = {}): NyPeriodeDto =>
     ({
         type: 'NyPeriodeDto',
-        fom: '2026-08-17',
-        tom: '2026-08-24',
+        fom: '2026-09-21',
+        tom: '2026-09-27',
         beløp: 10000,
         ...overrides,
     }) satisfies NyPeriodeDto;
@@ -32,6 +37,15 @@ const lagEndretPeriode = (overrides: Partial<EndretPeriodeDto> = {}): EndretPeri
         nyttBeløp: 20000,
         ...overrides,
     }) satisfies EndretPeriodeDto;
+
+const lagFjernetPeriode = (overrides: Partial<FjernetPeriodeDto> = {}): FjernetPeriodeDto =>
+    ({
+        type: 'FjernetPeriodeDto',
+        fom: '2024-01-01',
+        tom: '2024-12-31',
+        beløp: 55000,
+        ...overrides,
+    }) satisfies FjernetPeriodeDto;
 
 const lagEndretKravgrunnlag = (overrides: Partial<EndretKravgrunnlag> = {}): EndretKravgrunnlag =>
     ({
@@ -80,7 +94,7 @@ describe('NyttKravgrunnlagModal', () => {
 
         expect(
             await screen.findByRole('heading', {
-                name: 'Endringer i eksisterende periode',
+                name: 'Endringer i perioden',
                 level: 1,
             })
         ).toBeInTheDocument();
@@ -160,7 +174,7 @@ describe('NyttKravgrunnlagModal', () => {
         expect(
             screen.getByRole('heading', { name: 'Detaljer om den nye perioden', level: 2 })
         ).toBeInTheDocument();
-        expect(screen.getByText('17.08.2026–24.08.2026')).toBeInTheDocument();
+        expect(screen.getByText('21.09.2026–27.09.2026')).toBeInTheDocument();
         expect(screen.getByText('10 000')).toBeInTheDocument();
         expect(
             screen.queryByRole('heading', {
@@ -169,11 +183,68 @@ describe('NyttKravgrunnlagModal', () => {
         ).not.toBeInTheDocument();
     });
 
+    test('Viser kun kort for fjernet periode når det bare er en fjernet periode', async () => {
+        renderModal(lagEndretKravgrunnlag({ endringer: [lagFjernetPeriode()] }));
+
+        expect(
+            await screen.findByRole('heading', { name: 'Endringer i perioden', level: 1 })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', {
+                name: 'Detaljer om perioden som er fjernet',
+                level: 2,
+            })
+        ).toBeInTheDocument();
+        expect(screen.getByText('01.01.2024–31.12.2024')).toBeInTheDocument();
+        expect(screen.getByText('1 år')).toBeInTheDocument();
+        expect(screen.getByText('55 000')).toBeInTheDocument();
+        expect(
+            screen.queryByRole('heading', { name: 'Detaljer om den nye perioden' })
+        ).not.toBeInTheDocument();
+    });
+
     test('Viser begge kortene når det er både ny periode og endring i eksisterende', async () => {
         renderModal(lagEndretKravgrunnlag({ endringer: [lagNyPeriode(), lagEndretPeriode()] }));
 
         expect(
             await screen.findByRole('heading', { name: 'Endringer i periodene', level: 1 })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'Det er registrert 1 periode og endringer i 1 periode som må vurderes på nytt.'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: 'Detaljer om den nye perioden', level: 2 })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', {
+                name: 'Detaljer om endringer i den eksisterende perioden',
+                level: 2,
+            })
+        ).toBeInTheDocument();
+    });
+
+    test('Viser fjernet, ny og endret periode', async () => {
+        renderModal(
+            lagEndretKravgrunnlag({
+                endringer: [lagFjernetPeriode(), lagNyPeriode(), lagEndretPeriode()],
+            })
+        );
+
+        expect(
+            await screen.findByRole('heading', { name: 'Endringer i periodene', level: 1 })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'Det er registrert at 1 periode er fjernet, 1 periode er lagt til og endringer i 1 periode som må vurderes på nytt.'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', {
+                name: 'Detaljer om perioden som er fjernet',
+                level: 2,
+            })
         ).toBeInTheDocument();
         expect(
             screen.getByRole('heading', { name: 'Detaljer om den nye perioden', level: 2 })
@@ -195,7 +266,7 @@ describe('NyttKravgrunnlagModal', () => {
         expect(modal).toBeInTheDocument();
         expect(
             screen.getByRole('heading', {
-                name: 'Endringer i eksisterende periode',
+                name: 'Endringer i perioden',
                 level: 1,
             })
         ).toBeInTheDocument();

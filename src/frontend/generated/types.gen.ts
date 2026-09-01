@@ -1217,7 +1217,7 @@ export type EndretKravgrunnlag = {
     nyttBeløp: number;
     gammelPeriode: Datoperiode;
     nyPeriode: Datoperiode;
-    endringer: Array<EndretPeriodeDto | NyPeriodeDto>;
+    endringer: Array<EndretPeriodeDto | FjernetPeriodeDto | NyPeriodeDto>;
 };
 
 export type EndretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
@@ -1227,6 +1227,13 @@ export type EndretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
     nyttBeløp: number;
     gammeltBeløp: number;
     type: 'EndretPeriodeDto';
+};
+
+export type FjernetPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    readonly fom: string;
+    readonly tom: string;
+    beløp: number;
+    type: 'FjernetPeriodeDto';
 };
 
 export type KravgrunnlagForskjellDto = {
@@ -1547,7 +1554,7 @@ export type BegrunnelseForUnntakEnum =
     | 'ÅPENBART_UNØDVENDIG'
     | 'ALLEREDE_UTTALET_SEG';
 
-export type TypeEnum6 = 'JustertBeløp' | 'NyPeriode';
+export type TypeEnum6 = 'JustertBeløp' | 'NyPeriode' | 'FjernetPeriode';
 
 export type BeholdTypeEnum = 'HELE_BELØPET' | 'DELER_AV_BELØPET' | 'JA' | 'NEI';
 
@@ -1973,13 +1980,18 @@ export type EndretKravgrunnlagWritable = {
     nyttBeløp: number;
     gammelPeriode: Datoperiode;
     nyPeriode: Datoperiode;
-    endringer: Array<EndretPeriodeDtoWritable | NyPeriodeDtoWritable>;
+    endringer: Array<EndretPeriodeDtoWritable | FjernetPeriodeDtoWritable | NyPeriodeDtoWritable>;
 };
 
 export type EndretPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
     nyttBeløp: number;
     gammeltBeløp: number;
     type: 'EndretPeriodeDtoWritable';
+};
+
+export type FjernetPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    beløp: number;
+    type: 'FjernetPeriodeDtoWritable';
 };
 
 export type NyPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {

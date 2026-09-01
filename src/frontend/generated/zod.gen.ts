@@ -298,6 +298,18 @@ export const zKravgrunnlagForskjellDto = z.object({
     type: z.string(),
 });
 
+export const zFjernetPeriodeDto = zKravgrunnlagForskjellDto.and(
+    z.object({
+        fom: z.iso.date().readonly(),
+        tom: z.iso.date().readonly(),
+        beløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('FjernetPeriodeDto'),
+    })
+);
+
 export const zNyPeriodeDto = zKravgrunnlagForskjellDto.and(
     z.object({
         fom: z.iso.date().readonly(),
@@ -343,7 +355,7 @@ export const zEndretKravgrunnlag = z.object({
         .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     gammelPeriode: zDatoperiode,
     nyPeriode: zDatoperiode,
-    endringer: z.array(z.union([zEndretPeriodeDto, zNyPeriodeDto])),
+    endringer: z.array(z.union([zEndretPeriodeDto, zFjernetPeriodeDto, zNyPeriodeDto])),
 });
 
 export const zSchemaEnum = z.enum([
@@ -907,7 +919,7 @@ export const zForhåndsvarselEntity = z.object({
     uttalelsesfristEntity: zUttalelsesfristEntity.nullish(),
 });
 
-export const zTypeEnum6 = z.enum(['JustertBeløp', 'NyPeriode']);
+export const zTypeEnum6 = z.enum(['JustertBeløp', 'NyPeriode', 'FjernetPeriode']);
 
 export const zForskjellEntity = z.object({
     id: z.uuid(),
@@ -2079,6 +2091,16 @@ export const zEndretPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
     })
 );
 
+export const zFjernetPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
+    z.object({
+        beløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('FjernetPeriodeDtoWritable'),
+    })
+);
+
 export const zNyPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
     z.object({
         beløp: z
@@ -2100,7 +2122,9 @@ export const zEndretKravgrunnlagWritable = z.object({
         .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     gammelPeriode: zDatoperiode,
     nyPeriode: zDatoperiode,
-    endringer: z.array(z.union([zEndretPeriodeDtoWritable, zNyPeriodeDtoWritable])),
+    endringer: z.array(
+        z.union([zEndretPeriodeDtoWritable, zFjernetPeriodeDtoWritable, zNyPeriodeDtoWritable])
+    ),
 });
 
 export const zBehandlingDtoWritable = z.object({

@@ -1,5 +1,10 @@
 import type { FC } from 'react';
-import type { EndretKravgrunnlag, EndretPeriodeDto, NyPeriodeDto } from '@/generated';
+import type {
+    EndretKravgrunnlag,
+    EndretPeriodeDto,
+    FjernetPeriodeDto,
+    NyPeriodeDto,
+} from '@/generated';
 
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from '@navikt/aksel-icons';
 import {
@@ -28,6 +33,51 @@ import { formatCurrencyNoKr, formatterDatostring, hentPeriodelengde } from '@/ut
 
 const periodensVarighet = (fom: string, tom: string): number => Date.parse(tom) - Date.parse(fom);
 
+type FjernetPeriodeKortProps = {
+    periode: FjernetPeriodeDto;
+};
+
+const FjernetPeriodeKort: FC<FjernetPeriodeKortProps> = ({ periode }: FjernetPeriodeKortProps) => {
+    const periodelengde = hentPeriodelengde(periode.fom, periode.tom);
+    return (
+        <Box borderColor="warning" borderWidth="1" borderRadius="12" overflow="hidden">
+            <Box
+                background="warning-moderate"
+                borderColor="warning"
+                borderWidth="0 0 1 0"
+                paddingInline="space-16"
+                paddingBlock="space-6"
+            >
+                <Heading level="2" size="xsmall" className="text-ax-text-warning">
+                    Detaljer om perioden som er fjernet
+                </Heading>
+            </Box>
+            <HStack
+                gap="space-32"
+                paddingInline="space-16"
+                paddingBlock="space-8 space-12"
+                className="bg-ax-bg-default"
+            >
+                <VStack gap="space-8">
+                    <BodyShort weight="semibold">Periode</BodyShort>
+                    <VStack>
+                        <BodyShort>
+                            {formatterDatostring(periode.fom)}–{formatterDatostring(periode.tom)}
+                        </BodyShort>
+                        {periodelengde && <BodyShort size="small">{periodelengde}</BodyShort>}
+                    </VStack>
+                </VStack>
+                <VStack gap="space-8">
+                    <BodyShort weight="semibold">Feilutbetalt</BodyShort>
+                    <BodyShort className="text-ax-text-brand-magenta">
+                        {formatCurrencyNoKr(periode.beløp)}
+                    </BodyShort>
+                </VStack>
+            </HStack>
+        </Box>
+    );
+};
+
 type NyPeriodeKortProps = {
     periode: NyPeriodeDto;
 };
@@ -55,7 +105,7 @@ const NyPeriodeKort: FC<NyPeriodeKortProps> = ({ periode }: NyPeriodeKortProps) 
             >
                 <VStack gap="space-8">
                     <BodyShort weight="semibold">Periode</BodyShort>
-                    <VStack gap="space-0">
+                    <VStack>
                         <BodyShort>
                             {formatterDatostring(periode.fom)}–{formatterDatostring(periode.tom)}
                         </BodyShort>
@@ -114,7 +164,7 @@ const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriod
                     <BodyShort weight="semibold">Periode</BodyShort>
                     {periodeErEndret ? (
                         <HStack gap="space-16" align="center" wrap={false}>
-                            <VStack gap="space-0" align="start">
+                            <VStack align="start">
                                 <BodyShort>
                                     {formatterDatostring(periode.gammelPeriode.fom)}–
                                     {formatterDatostring(periode.gammelPeriode.tom)}
@@ -130,7 +180,7 @@ const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriod
                                 fontSize="1.5rem"
                                 className="shrink-0"
                             />
-                            <VStack gap="space-0" align="start">
+                            <VStack align="start">
                                 <BodyShort>
                                     {formatterDatostring(periode.fom)}–
                                     {formatterDatostring(periode.tom)}
@@ -154,7 +204,7 @@ const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriod
                             </VStack>
                         </HStack>
                     ) : (
-                        <VStack gap="space-0" align="start">
+                        <VStack align="start">
                             <BodyShort>
                                 {formatterDatostring(periode.fom)}–
                                 {formatterDatostring(periode.tom)}
@@ -213,25 +263,61 @@ type ModalTekst = {
     beskrivelse: string;
 };
 
-const hentModalTekst = (antallNyePerioder: number, harEndretPerioder: boolean): ModalTekst => {
+const periodeOrd = (antall: number): string => (antall === 1 ? 'periode' : 'perioder');
+
+const periodeFrase = (antall: number): string => `${antall} ${periodeOrd(antall)}`;
+
+const hentModalTekst = (
+    antallNyePerioder: number,
+    antallEndredePerioder: number,
+    antallFjernedePerioder: number
+): ModalTekst => {
     const harNyePerioder = antallNyePerioder > 0;
+    const harEndretPerioder = antallEndredePerioder > 0;
+    const harFjernedePerioder = antallFjernedePerioder > 0;
+    const antallBerørtePerioder =
+        antallNyePerioder + antallEndredePerioder + antallFjernedePerioder;
+    const tittelPerioder = antallBerørtePerioder === 1 ? 'perioden' : 'periodene';
+
+    if (harFjernedePerioder && harNyePerioder && harEndretPerioder) {
+        return {
+            tittel: `Endringer i ${tittelPerioder}`,
+            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet, ${periodeFrase(antallNyePerioder)} er lagt til og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
+        };
+    }
+    if (harFjernedePerioder && harNyePerioder) {
+        return {
+            tittel: `Endringer i ${tittelPerioder}`,
+            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet og ${periodeFrase(antallNyePerioder)} er lagt til som må vurderes på nytt.`,
+        };
+    }
+    if (harFjernedePerioder && harEndretPerioder) {
+        return {
+            tittel: `Endringer i ${tittelPerioder}`,
+            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
+        };
+    }
+    if (harFjernedePerioder) {
+        return {
+            tittel: `Endringer i ${tittelPerioder}`,
+            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet, og du må vurdere saken på nytt.`,
+        };
+    }
     if (harNyePerioder && harEndretPerioder) {
         return {
-            tittel: 'Endringer i periodene',
-            beskrivelse:
-                'Det er både registrert en ny periode og endringer i eksisterende periode som må vurderes på nytt.',
+            tittel: `Endringer i ${tittelPerioder}`,
+            beskrivelse: `Det er registrert ${periodeFrase(antallNyePerioder)} og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
         };
     }
     if (harEndretPerioder) {
         return {
-            tittel: 'Endringer i eksisterende periode',
-            beskrivelse:
-                'Det er registrert endringer i eksisterende periode som må vurderes på nytt.',
+            tittel: `Endringer i ${tittelPerioder}`,
+            beskrivelse: `Det er registrert endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
         };
     }
     return {
         tittel: antallNyePerioder > 1 ? 'Nye perioder må vurderes' : 'Ny periode må vurderes',
-        beskrivelse: 'Det er registrert en ny periode i kravgrunnlaget som må vurderes.',
+        beskrivelse: `Det er registrert ${periodeFrase(antallNyePerioder)} i kravgrunnlaget som må vurderes.`,
     };
 };
 
@@ -240,12 +326,21 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
     const queryClient = useQueryClient();
 
     const { endringer } = endretKravgrunnlag;
-    const nyePerioder = endringer.filter((endring): endring is NyPeriodeDto => 'beløp' in endring);
+    const fjernedePerioder = endringer.filter(
+        (endring): endring is FjernetPeriodeDto => endring.type === 'FjernetPeriodeDto'
+    );
+    const nyePerioder = endringer.filter(
+        (endring): endring is NyPeriodeDto => endring.type === 'NyPeriodeDto'
+    );
     const endretPerioder = endringer.filter(
         (endring): endring is EndretPeriodeDto => 'gammelPeriode' in endring
     );
 
-    const { tittel, beskrivelse } = hentModalTekst(nyePerioder.length, endretPerioder.length > 0);
+    const { tittel, beskrivelse } = hentModalTekst(
+        nyePerioder.length,
+        endretPerioder.length,
+        fjernedePerioder.length
+    );
 
     // Chrome fyrer ikke alltid dialogens cancel-event, så vi blokkerer selve Escape-lukkingen
     useEffect(() => {
@@ -291,6 +386,12 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
             <Modal.Body>
                 <VStack gap="space-16">
                     <BodyLong>{beskrivelse}</BodyLong>
+                    {fjernedePerioder.map(periode => (
+                        <FjernetPeriodeKort
+                            key={`${periode.fom}-${periode.tom}`}
+                            periode={periode}
+                        />
+                    ))}
                     {nyePerioder.map(periode => (
                         <NyPeriodeKort key={`${periode.fom}-${periode.tom}`} periode={periode} />
                     ))}
