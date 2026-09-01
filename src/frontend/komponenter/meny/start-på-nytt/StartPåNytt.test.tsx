@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
@@ -45,7 +45,7 @@ describe('StartPåNytt', () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <FagsakContext value={lagFagsak()}>
-                    <TestBehandlingProvider behandling={lagBehandlingDto()}>
+                    <TestBehandlingProvider behandling={lagBehandling()}>
                         <ActionMenu open>
                             <ActionMenu.Trigger>
                                 <Button>Test kun for å rendre</Button>

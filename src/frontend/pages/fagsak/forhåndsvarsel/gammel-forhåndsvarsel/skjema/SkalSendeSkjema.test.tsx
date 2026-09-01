@@ -9,7 +9,7 @@ import { Forhåndsvarsel } from '@/pages/fagsak/forhåndsvarsel/gammel-forhånds
 import { useForhåndsvarselMutations } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import {
     lagForhåndsvarselMutations,
@@ -28,10 +28,9 @@ vi.mock('../useForhåndsvarselMutations', () => ({
 }));
 
 const renderForhåndsvarselSkjema = (): void => {
-    const behandling = lagBehandlingDto();
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider behandling={behandling}>
+            <TestBehandlingProvider behandling={lagBehandling()}>
                 <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
@@ -51,10 +50,9 @@ const renderForhåndsvarselSkjema = (): void => {
 const renderForhåndsvarselSkjemaSendt = (): void => {
     vi.mocked(useForhåndsvarselQueries).mockReturnValue(lagForhåndsvarselQueriesSendt());
 
-    const behandling = lagBehandlingDto();
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider behandling={behandling}>
+            <TestBehandlingProvider behandling={lagBehandling()}>
                 <QueryClientProvider client={createTestQueryClient()}>
                     <Forhåndsvarsel />
                 </QueryClientProvider>
@@ -137,7 +135,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato: string): FaktaOmFeilutbetaling =>
     }) satisfies FaktaOmFeilutbetaling;
 
 const renderMedFaktaData = (vedtaksdato: string): void => {
-    const behandling = lagBehandlingDto();
+    const behandling = lagBehandling();
     const queryClient = createTestQueryClient();
 
     const queryKey = behandlingFaktaQueryKey({

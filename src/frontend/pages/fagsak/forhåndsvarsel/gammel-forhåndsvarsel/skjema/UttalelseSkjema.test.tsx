@@ -7,7 +7,7 @@ import { Forhåndsvarsel } from '@/pages/fagsak/forhåndsvarsel/gammel-forhånds
 import { useForhåndsvarselMutations } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
 import { useForhåndsvarselQueries } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import {
     lagForhåndsvarselMutations,
@@ -25,7 +25,7 @@ vi.mock('../useForhåndsvarselMutations', () => ({
 }));
 
 const renderBrukeruttalelse = (): void => {
-    const behandling = lagBehandlingDto({
+    const behandling = lagBehandling({
         varselSendt: true,
     });
 

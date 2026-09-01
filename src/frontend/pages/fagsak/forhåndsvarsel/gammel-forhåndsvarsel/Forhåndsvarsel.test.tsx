@@ -6,7 +6,7 @@ import { type UserEvent, userEvent } from '@testing-library/user-event';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import {
     lagForhåndsvarselMutations,
@@ -34,7 +34,7 @@ const lagForhåndsvarselInfo = (overrides?: Partial<ForhåndsvarselDto>): Forhå
     ...overrides,
 });
 
-const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandlingDto()): void => {
+const renderForhåndsvarsel = (behandling: BehandlingDto = lagBehandling()): void => {
     render(
         <FagsakContext value={lagFagsak()}>
             <TestBehandlingProvider
@@ -181,7 +181,7 @@ describe('Forhåndsvarsel', () => {
 
     describe('Validering', () => {
         test('Skal vise feilmelding dersom ingen Skalsendeforhåndsvarsel-alternativ er valgt', async () => {
-            renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+            renderForhåndsvarsel(lagBehandling({ varselSendt: false }));
 
             fireEvent.click(screen.getByRole('button', { name: 'Neste' }));
 
@@ -192,7 +192,7 @@ describe('Forhåndsvarsel', () => {
 
         describe("Når 'Ja' er valgt", () => {
             test('Vises feilmelding dersom fritekstfelt er tomt', async () => {
-                renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+                renderForhåndsvarsel(lagBehandling({ varselSendt: false }));
 
                 fireEvent.click(screen.getByText('Ja'));
                 fireEvent.click(screen.getByRole('button', { name: 'Send forhåndsvarselet' }));
@@ -204,7 +204,7 @@ describe('Forhåndsvarsel', () => {
 
     describe('Knappetekst i ActionBar', () => {
         test('Viser "Send forhåndsvarselet" når Ja er valgt og varsel ikke er sendt', () => {
-            renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+            renderForhåndsvarsel(lagBehandling({ varselSendt: false }));
 
             fireEvent.click(screen.getByLabelText('Ja'));
 
@@ -214,7 +214,7 @@ describe('Forhåndsvarsel', () => {
         });
 
         test('Viser "Lagre og gå til neste" når Nei er valgt (for å sende unntak)', () => {
-            renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+            renderForhåndsvarsel(lagBehandling({ varselSendt: false }));
 
             fireEvent.click(screen.getByLabelText('Nei'));
 
@@ -290,7 +290,7 @@ describe('Forhåndsvarsel', () => {
 
     describe('formId - riktig skjema sendes inn', () => {
         test('Bruker opprettForm når varsel ikke er sendt og unntak ikke finnes', () => {
-            renderForhåndsvarsel(lagBehandlingDto({ varselSendt: false }));
+            renderForhåndsvarsel(lagBehandling({ varselSendt: false }));
 
             const nesteKnapp = screen.getByRole('button', { name: 'Neste' });
             expect(nesteKnapp).toHaveAttribute('form', 'opprettForm');

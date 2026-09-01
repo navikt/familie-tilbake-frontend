@@ -9,7 +9,7 @@ import { vi } from 'vitest';
 import { Feil } from '@/api/feil';
 import { FagsakContext } from '@/context/FagsakContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
-import { lagBehandlingDto } from '@/testdata/behandlingFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 import { RessursStatus } from '@/typer/ressurs';
@@ -34,7 +34,7 @@ const wrapper: FC<WrapperProps> = ({ children }: WrapperProps) => (
     <QueryClientProvider client={createTestQueryClient()}>
         <MemoryRouter>
             <FagsakContext value={lagFagsak()}>
-                <TestBehandlingProvider behandling={lagBehandlingDto({ behandlingId })}>
+                <TestBehandlingProvider behandling={lagBehandling({ behandlingId })}>
                     {children}
                 </TestBehandlingProvider>
             </FagsakContext>

@@ -77,9 +77,3 @@ export const lagBrevmottakerSteg = (valg: StegValg = {}): BehandlingsstegsinfoDt
 /** Klar default steg */
 export const lagForeslåVedtakSteg = (valg: StegValg = {}): BehandlingsstegsinfoDto =>
     lagSteg('FORESLÅ_VEDTAK', 'KLAR', valg);
-
-//TODO: Skal fjernes når vi tar i bruk BehandlingDto over
-export const lagBehandlingDto = (overrides: Partial<BehandlingDto> = {}): BehandlingDto => ({
-    ...lagBehandling(),
-    ...overrides,
-});
