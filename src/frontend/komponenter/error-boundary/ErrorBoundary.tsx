@@ -43,8 +43,8 @@ export class ErrorBoundary extends Component<Props, State> {
             withScope(scope => {
                 Object.keys(info).forEach(key => {
                     scope.setExtra(key, info[key]);
-                    captureException(error);
                 });
+                captureException(error);
             });
 
             apiLoggFeil(`En feil har oppstått i vedtaksløsningen: \n*Error*: ${error}`);
