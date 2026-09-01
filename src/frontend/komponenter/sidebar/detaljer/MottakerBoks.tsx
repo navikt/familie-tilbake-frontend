@@ -71,12 +71,9 @@ export const MottakerBoks: FC = () => {
                     <BagdeIcon {...ICON_PROPS} />
                     {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
                 </dt>
-                {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO a11y – aria-label på element uten rolle, ikke flagget av tidligere ESLint-oppsett */}
-                <dd
-                    className="text-ax-medium flex flex-row gap-2 items-center"
-                    aria-label={formatterPersonIdent(bruker.personIdent).split('').join(' ')}
-                >
-                    {formatterPersonIdent(bruker.personIdent)}
+                <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                    <span aria-hidden>{formatterPersonIdent(bruker.personIdent)}</span>
+                    <span className="sr-only">{bruker.personIdent.split('').join(' ')}</span>
                     <CopyButton
                         copyText={bruker.personIdent}
                         className="p-0"
@@ -116,12 +113,13 @@ export const MottakerBoks: FC = () => {
                             <Buildings2Icon {...ICON_PROPS} />
                             Org.nummer
                         </dt>
-                        {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO a11y – aria-label på element uten rolle, ikke flagget av tidligere ESLint-oppsett */}
-                        <dd
-                            className="text-ax-medium flex flex-row gap-2 items-center"
-                            aria-label={institusjon.organisasjonsnummer.split('').join(' ')}
-                        >
-                            {formatterOrgNummer(institusjon.organisasjonsnummer)}
+                        <dd className="text-ax-medium flex flex-row gap-2 items-center">
+                            <span aria-hidden>
+                                {formatterOrgNummer(institusjon.organisasjonsnummer)}
+                            </span>
+                            <span className="sr-only">
+                                {institusjon.organisasjonsnummer.split('').join(' ')}
+                            </span>
                             <CopyButton
                                 copyText={institusjon.organisasjonsnummer}
                                 className="p-0"

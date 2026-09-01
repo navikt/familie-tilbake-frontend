@@ -287,8 +287,6 @@ describe('BrevmottakerFormModal', () => {
                     screen.getByText('Fødselsnummer må være 11 sammenhengende siffer')
                 ).toBeInTheDocument();
             });
-
-            test.todo('Oppslag personregister skal trimme mellomrom fra organisasjonsnummer');
         });
 
         describe('Verge', () => {

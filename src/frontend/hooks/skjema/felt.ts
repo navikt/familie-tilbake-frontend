@@ -6,7 +6,7 @@
  * er valgt retning i prosjektet. Inntil videre må hooken beholdes som den er for å unngå
  * å bryte alle skjemaer som bruker den.
  *
- * TODO: Exhaustive-deps-reglene er også skrudd av her fordi useCallback/useMemo-kallene
+ * Exhaustive-deps-reglene er også skrudd av her fordi useCallback/useMemo-kallene
  * bevisst bruker et subsett av avhengighetene for å unngå at memoiseringen blir meningsløs
  * (flere indre funksjoner er ikke selv memoisert). Dette løses ved migrering til
  * react-hook-form. Se også på om useEffect-bruken her er en bug eller tiltenkt funksjonalitet.
