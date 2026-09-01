@@ -412,6 +412,7 @@ export type {
     OpprettVergeStegResponse,
     OpprettVergeStegResponses,
     Periode,
+    PeriodeDto,
     PeriodeMedTekstDto,
     PersonIdent,
     ReduksjonMomenterEntity,

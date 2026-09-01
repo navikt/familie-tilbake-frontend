@@ -244,7 +244,8 @@ export type ForskjellEntity = {
     foreldelsesvurderingPeriodeRef?: string | null;
     type: TypeEnum6;
     originalPeriode?: DatoperiodeEntity | null;
-    endringIBeløp?: number | null;
+    gammeltBeløp?: number | null;
+    nyttBeløp?: number | null;
     nyPeriode?: DatoperiodeEntity | null;
 };
 
@@ -1265,7 +1266,9 @@ export type EndretKravgrunnlag = {
 export type EndretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
     readonly fom: string;
     readonly tom: string;
-    endringIBeløp: number;
+    gammelPeriode: PeriodeDto;
+    nyttBeløp: number;
+    gammeltBeløp: number;
     type: 'EndretPeriodeDto';
 };
 
@@ -1278,6 +1281,11 @@ export type NyPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
     readonly tom: string;
     beløp: number;
     type: 'NyPeriodeDto';
+};
+
+export type PeriodeDto = {
+    readonly fom: string;
+    readonly tom: string;
 };
 
 export type RessursBehandlingDto = {
@@ -2017,7 +2025,8 @@ export type EndretKravgrunnlagWritable = {
 };
 
 export type EndretPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
-    endringIBeløp: number;
+    nyttBeløp: number;
+    gammeltBeløp: number;
     type: 'EndretPeriodeDtoWritable';
 };
 
