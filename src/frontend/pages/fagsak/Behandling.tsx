@@ -33,7 +33,7 @@ import {
 } from '@/utils/sider';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
-import { BEHANDLING_HØYDE, BehandlingGrid } from './BehandlingGrid';
+import { BEHANDLING_HØYDE, BEHANDLING_MINSTEBREDDE, BehandlingGrid } from './BehandlingGrid';
 import { Fakta } from './fakta/Fakta';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { FaktaProvider } from './fakta/gammel-fakta/FaktaContext';
@@ -421,7 +421,9 @@ export const BehandlingContainer: FC = () => {
                 <PåVentModal ventegrunn={ventegrunn} onClose={(): void => setVisVenteModal(true)} />
             )}
             {/* Grå bakgrunn i full bredde, mens innholdet sentreres med maks bredde. */}
-            <div className={`bg-ax-bg-brand-blue-soft flex flex-col ${BEHANDLING_HØYDE}`}>
+            <div
+                className={`bg-ax-bg-brand-blue-soft flex flex-col ${BEHANDLING_HØYDE} ${BEHANDLING_MINSTEBREDDE}`}
+            >
                 {ventegrunn && (
                     <div className="mx-auto w-full max-w-[1600px] px-4 py-2">
                         <LocalAlert status="announcement" size="small">

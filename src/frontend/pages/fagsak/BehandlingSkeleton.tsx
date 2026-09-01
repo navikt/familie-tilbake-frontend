@@ -7,11 +7,13 @@ import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 import { SidebarSkeleton } from '@/komponenter/sidebar/SidebarSkeleton';
 import { StegflytSkeleton } from '@/komponenter/stegflyt/StegflytSkeleton';
 
-import { BEHANDLING_HØYDE, BehandlingGrid } from './BehandlingGrid';
+import { BEHANDLING_HØYDE, BEHANDLING_MINSTEBREDDE, BehandlingGrid } from './BehandlingGrid';
 
 export const BehandlingSkeleton: FC = () => {
     return (
-        <div className={`bg-ax-bg-brand-blue-soft flex flex-col ${BEHANDLING_HØYDE}`}>
+        <div
+            className={`bg-ax-bg-brand-blue-soft flex flex-col ${BEHANDLING_HØYDE} ${BEHANDLING_MINSTEBREDDE}`}
+        >
             <BehandlingGrid>
                 <div className="flex flex-col gap-4 min-h-0 min-w-0">
                     <Heading size="medium" visuallyHidden>

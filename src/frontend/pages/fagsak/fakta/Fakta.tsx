@@ -43,7 +43,7 @@ export const Fakta: FC = () => {
 
     return (
         <VStack gap="space-24">
-            <HStack>
+            <HStack className="justify-between">
                 <Heading size="medium">Fakta om feilutbetalingen</Heading>
                 <StatusTag
                     tilbakeført={faktaOmFeilutbetaling.tilbakeført}

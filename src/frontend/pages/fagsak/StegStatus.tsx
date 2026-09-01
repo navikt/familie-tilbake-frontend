@@ -20,7 +20,7 @@ export const StatusTag = ({ tilbakeført, ferdigvurdert }: Props): JSX.Element =
                 variant="moderate"
                 data-color="warning"
                 icon={<ArrowCirclepathReverseIcon aria-hidden />}
-                className="w-fit ml-auto ax-xl:order-3 gap-2"
+                className="w-fit gap-2"
             >
                 Vurder på nytt
             </Tag>
@@ -32,7 +32,7 @@ export const StatusTag = ({ tilbakeført, ferdigvurdert }: Props): JSX.Element =
             variant="moderate"
             data-color="success"
             icon={<CheckmarkCircleIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3 gap-2"
+            className="w-fit gap-2"
         >
             Vurdert
         </Tag>
@@ -41,7 +41,7 @@ export const StatusTag = ({ tilbakeført, ferdigvurdert }: Props): JSX.Element =
             variant="moderate"
             data-color="info"
             icon={<DocPencilIcon aria-hidden />}
-            className="w-fit ml-auto ax-xl:order-3 gap-2"
+            className="w-fit gap-2"
         >
             Under vurdering
         </Tag>

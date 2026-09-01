@@ -387,9 +387,11 @@ export const ForhåndsvarselInnhold: FC = () => {
         <VStack gap="space-24">
             {erRedigerbarForhåndsvarselFlyt ? (
                 <FormProvider {...methods}>
-                    <HStack gap="space-16">
-                        <Heading size="medium">Forhåndsvarsel</Heading>
-                        {visForhåndsvisning && <ForhåndsvisVarselbrev />}
+                    <HStack gap="space-16" className="justify-between">
+                        <HStack className="gap-x-4">
+                            <Heading size="medium">Forhåndsvarsel</Heading>
+                            {visForhåndsvisning && <ForhåndsvisVarselbrev />}
+                        </HStack>
                         <StatusTag
                             tilbakeført={
                                 forhåndsvarselSteg.type !== 'ikke_vurdert'
@@ -407,7 +409,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                 </FormProvider>
             ) : (
                 <div className="grid grid-cols-1 gap-6 items-start">
-                    <HStack className="md:col-span-2">
+                    <HStack className="md:col-span-2 justify-between">
                         <Heading size="medium">Forhåndsvarsel</Heading>
                         <StatusTag
                             tilbakeført={forhåndsvarselSteg.tilbakeført}
