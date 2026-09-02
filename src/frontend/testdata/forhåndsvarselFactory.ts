@@ -1,73 +1,57 @@
-import type { UseQueryResult } from '@tanstack/react-query';
-import type { Varselbrevtekst } from '@/generated';
-import type { UseForhåndsvarselMutationsReturn } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselMutations';
-import type { UseForhåndsvarselQueriesReturn } from '@/pages/fagsak/forhåndsvarsel/gammel-forhåndsvarsel/useForhåndsvarselQueries';
+import type {
+    ForhaandsvarselErSendt,
+    ForhaandsvarselResponse,
+    ForhaandsvarselUnntak,
+    Uttalelse,
+} from '@/generated-new';
 
-import { vi } from 'vitest';
-
-const lagMockQuery = <T>(data?: T): UseQueryResult<T | undefined> =>
-    ({
-        data,
-        isLoading: false,
-        error: null,
-        isError: false,
-        isSuccess: true,
-        isPending: false,
-        refetch: vi.fn(),
-    }) as unknown as UseQueryResult<T | undefined>;
-
-export const lagForhåndsvarselQueries = (
-    overrides: Partial<UseForhåndsvarselQueriesReturn> = {}
-): UseForhåndsvarselQueriesReturn => ({
-    forhåndsvarselInfo: {
-        varselbrevDto: { varselbrevSendtTid: undefined },
-        utsettUttalelseFrist: undefined,
-        brukeruttalelse: undefined,
-        forhåndsvarselUnntak: undefined,
-    },
-    varselbrevtekster: {
-        overskrift: 'Nav vurderer om du må betale tilbake overgangsstønad',
-        avsnitter: [
-            {
-                title: 'Dette har skjedd',
-                body: 'Test innhold',
-            },
-        ],
-    },
-    forhåndsvarselInfoLoading: false,
-    varselbrevteksterLoading: false,
-    forhåndsvarselInfoError: false,
-    varselbrevteksterError: false,
-    varselbrevteksterQuery: lagMockQuery<Varselbrevtekst>(),
-    sendtDokument: undefined,
-    sendtDokumentLoading: false,
-    sendtDokumentError: false,
+export const lagForhåndsvarselResponse = (
+    overrides: Partial<ForhaandsvarselResponse> = {}
+): ForhaandsvarselResponse => ({
+    forhaandsvarselSteg: { type: 'ikke_vurdert' },
+    brukeruttalelse: null,
     ...overrides,
 });
 
-export const lagForhåndsvarselQueriesSendt = (
-    overrides: Partial<UseForhåndsvarselQueriesReturn> = {}
-): UseForhåndsvarselQueriesReturn =>
-    lagForhåndsvarselQueries({
-        forhåndsvarselInfo: {
-            varselbrevDto: { varselbrevSendtTid: '2023-01-01T10:00:00Z' },
-            utsettUttalelseFrist: undefined,
-            brukeruttalelse: undefined,
+export const lagForhåndsvarselResponseSendt = (
+    steg: Partial<ForhaandsvarselErSendt> = {},
+    overrides: Partial<ForhaandsvarselResponse> = {}
+): ForhaandsvarselResponse =>
+    lagForhåndsvarselResponse({
+        forhaandsvarselSteg: {
+            type: 'sendt',
+            ferdigvurdert: true,
+            forhåndsvarselInfo: {
+                tekstFraSaksbehandler: 'Varselbrev er sendt',
+                varselbrevSendtTid: '2025-01-10T10:00:00Z',
+            },
+            uttalelsesfrist: {
+                opprinneligFrist: '2025-01-22',
+            },
+            ...steg,
         },
         ...overrides,
     });
 
-export const lagForhåndsvarselMutations = (): UseForhåndsvarselMutationsReturn =>
-    ({
-        sendForhåndsvarsel: vi.fn(),
-        sendBrukeruttalelse: vi.fn(),
-        sendUtsettFrist: vi.fn(),
-        sendUnntak: vi.fn(),
-        seForhåndsvisning: vi.fn(),
-        navigerTilNeste: vi.fn(),
-        sendForhåndsvarselMutation: lagMockQuery(),
-        sendBrukeruttalelseMutation: lagMockQuery(),
-        sendUtsettFristMutation: lagMockQuery(),
-        sendUnntakMutation: lagMockQuery(),
-        forhåndsvisning: lagMockQuery(),
-    }) as unknown as UseForhåndsvarselMutationsReturn;
+export const lagForhåndsvarselResponseUnntak = (
+    steg: Partial<ForhaandsvarselUnntak> = {},
+    overrides: Partial<ForhaandsvarselResponse> = {}
+): ForhaandsvarselResponse =>
+    lagForhåndsvarselResponse({
+        forhaandsvarselSteg: {
+            type: 'unntak',
+            ferdigvurdert: false,
+            begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+            beskrivelse: 'Det er åpenbart unødvendig å varsle bruker.',
+            ...steg,
+        },
+        ...overrides,
+    });
+
+export const lagUttalelse = (overrides: Partial<Uttalelse> = {}): Uttalelse => ({
+    harBrukerUttaltSeg: 'JA_ETTER_FORHÅNDSVARSEL',
+    uttalelsesdato: '2025-01-20',
+    hvorBrukerenUttalteSeg: 'Telefon',
+    beskrivelse: 'Bruker er uenig i vedtaket.',
+    ...overrides,
+});

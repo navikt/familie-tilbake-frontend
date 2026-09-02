@@ -39,7 +39,7 @@ import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { FaktaProvider } from './fakta/gammel-fakta/FaktaContext';
 import { HistoriskFaktaProvider } from './fakta/gammel-fakta/fakta-periode/historikk/HistoriskFaktaContext';
 import { ForeldelseProvider } from './foreldelse/ForeldelseContext';
-import { ForhåndsvarselSkeleton } from './forhåndsvarsel/gammel-forhåndsvarsel/ForhåndsvarselSkeleton';
+import { ForhåndsvarselSkeleton } from './forhåndsvarsel/ForhåndsvarselSkeleton';
 import { VedtakProvider } from './vedtak/gammel-vedtak/VedtakContext';
 import { VergeProvider } from './verge/VergeContext';
 import { HistoriskVilkårsvurderingProvider } from './vilkaarsvurdering/gammel-vilkårsvurdering/historikk/HistoriskVilkårsvurderingContext';
@@ -58,10 +58,6 @@ const FaktaContainer = lazyImportMedRetry(
 const HistoriskFaktaContainer = lazyImportMedRetry(
     () => import('./fakta/gammel-fakta/fakta-periode/historikk/HistoriskFaktaContainer'),
     'HistoriskFaktaContainer'
-);
-const GammelForhåndsvarsel = lazyImportMedRetry(
-    () => import('./forhåndsvarsel/gammel-forhåndsvarsel/Forhåndsvarsel'),
-    'Forhåndsvarsel'
 );
 const Forhåndsvarsel = lazyImportMedRetry(
     () => import('./forhåndsvarsel/Forhåndsvarsel'),
@@ -280,11 +276,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                             element={
                                 <StegErrorBoundary steg={SYNLIGE_STEG.FORHÅNDSVARSEL}>
                                     <Suspense fallback={<ForhåndsvarselSkeleton />}>
-                                        {toggles[ToggleName.Forhaandsvarsel] ? (
-                                            <Forhåndsvarsel />
-                                        ) : (
-                                            <GammelForhåndsvarsel />
-                                        )}
+                                        <Forhåndsvarsel />
                                     </Suspense>
                                 </StegErrorBoundary>
                             }
