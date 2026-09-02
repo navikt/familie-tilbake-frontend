@@ -963,7 +963,7 @@ export const zGodTroEntity = z.object({
     periodeRef: z.uuid(),
     begrunnelse: z.string(),
     beholdType: zBeholdTypeEnum,
-    beløp: z.number().nullish(),
+    beløpIBehold: z.number().nullish(),
 });
 
 export const zKravstatuskodeEnum = z.enum([
@@ -1044,34 +1044,12 @@ export const zSkalReduseresEntity = z.object({
         .nullish(),
 });
 
-export const zTypeEnum8 = z.enum([
-    'GRAD_AV_UAKTSOMHET',
-    'STØRRELSE_BELØP',
-    'TID_FRA_UTBETALING',
-    'HELT_ELLER_DELVIS_NAVS_FEIL',
-    'ANNET',
-]);
-
-export const zSærligGrunnEntity = z.object({
-    type: zTypeEnum8,
-    annetBegrunnelse: z.string().nullish(),
-});
-
-export const zSærligeGrunnerEntity = z.object({
+export const zReduksjonMomenterEntity = z.object({
     periodeRef: z.uuid(),
     begrunnelse: z.string(),
-    grunner: z.array(zSærligGrunnEntity),
+    grunner: z.array(z.string()),
     skalReduseres: zSkalReduseresEntity,
-});
-
-export const zSærligGrunnDto = z.object({
-    særligGrunn: zTypeEnum8,
-    begrunnelse: z.string().min(0).max(1500).nullish(),
-});
-
-export const zVurdertSærligGrunnDto = z.object({
-    særligGrunn: zTypeEnum8,
-    begrunnelse: z.string().nullish(),
+    annetBegrunnelse: z.string().nullish(),
 });
 
 export const zOpprettelsesvalgEnum = z.enum(['OPPRETT_TILBAKEKREVING_UTEN_VARSEL']);
@@ -1098,7 +1076,7 @@ export const zAktsomhetsvurderingEntity = z.object({
     beløpIBehold: zGodTroEntity.nullish(),
     aktsomhet: zVurdertAktsomhetEntity.nullish(),
     kanUnnlates: zKanUnnlatesEnum.optional(),
-    særligGrunner: zSærligeGrunnerEntity.nullish(),
+    reduksjonMomenterEntity: zReduksjonMomenterEntity.nullish(),
     feilaktigEllerMangelfull: zFeilaktigEllerMangelfullEnum.optional(),
     forrigePeriodeId: z.uuid().nullish(),
 });
@@ -1206,7 +1184,7 @@ export const zHistorikkEntityUuidBehandlingEntityBehandling = z.object({
     innslag: z.array(zBehandlingEntity),
 });
 
-export const zTypeEnum9 = z.enum([
+export const zTypeEnum8 = z.enum([
     'BARNETRYGD',
     'TILLEGGSSTØNAD',
     'KONTANTSTØTTE',
@@ -1218,7 +1196,7 @@ export const zTypeEnum9 = z.enum([
 ]);
 
 export const zYtelseEntity = z.object({
-    type: zTypeEnum9,
+    type: zTypeEnum8,
 });
 
 export const zEksternFagsakEntity = z.object({
@@ -1349,18 +1327,6 @@ export const zAktsomhetEnum = z.enum(['FORSETT', 'GROV_UAKTSOMHET', 'SIMPEL_UAKT
 
 export const zUnnlates4RettsgebyrEnum = z.enum(['UNNLATES', 'TILBAKEKREVES', 'OVER_4_RETTSGEBYR']);
 
-export const zAktsomhetDto = z.object({
-    aktsomhet: zAktsomhetEnum,
-    ileggRenter: z.boolean().nullish(),
-    andelTilbakekreves: z.number().nullish(),
-    beløpTilbakekreves: z.number().nullish(),
-    begrunnelse: z.string().min(0).max(1500),
-    særligeGrunner: z.array(zSærligGrunnDto).nullish(),
-    særligeGrunnerTilReduksjon: z.boolean(),
-    unnlates4Rettsgebyr: zUnnlates4RettsgebyrEnum.optional(),
-    særligeGrunnerBegrunnelse: z.string().nullish(),
-});
-
 export const zForeldelsesvurderingstypeEnum = z.enum([
     'IKKE_VURDERT',
     'AUTOMATISK_VURDERT_IKKE_FORELDET',
@@ -1382,6 +1348,36 @@ export const zBehandlingsstegForeldelseDto = zBehandlingsstegDto.and(
         foreldetPerioder: z.array(zForeldelsesperiodeDto),
     })
 );
+
+export const zSærligGrunnEnum = z.enum([
+    'GRAD_AV_UAKTSOMHET',
+    'STØRRELSE_BELØP',
+    'TID_FRA_UTBETALING',
+    'HELT_ELLER_DELVIS_NAVS_FEIL',
+    'ANNET',
+]);
+
+export const zSærligGrunnDto = z.object({
+    særligGrunn: zSærligGrunnEnum,
+    begrunnelse: z.string().min(0).max(1500).nullish(),
+});
+
+export const zAktsomhetDto = z.object({
+    aktsomhet: zAktsomhetEnum,
+    ileggRenter: z.boolean().nullish(),
+    andelTilbakekreves: z.number().nullish(),
+    beløpTilbakekreves: z.number().nullish(),
+    begrunnelse: z.string().min(0).max(1500),
+    særligeGrunner: z.array(zSærligGrunnDto).nullish(),
+    særligeGrunnerTilReduksjon: z.boolean(),
+    unnlates4Rettsgebyr: zUnnlates4RettsgebyrEnum.optional(),
+    særligeGrunnerBegrunnelse: z.string().nullish(),
+});
+
+export const zVurdertSærligGrunnDto = z.object({
+    særligGrunn: zSærligGrunnEnum,
+    begrunnelse: z.string().nullish(),
+});
 
 export const zVilkårsvurderingsresultatEnum = z.enum([
     'FORSTO_BURDE_FORSTÅTT',
@@ -1641,13 +1637,13 @@ export const zRessursListAvsnitt = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zTypeEnum10 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV', 'AUTOMATISK_VURDERING']);
+export const zTypeEnum9 = z.enum(['HENDELSE', 'SKJERMLENKE', 'BREV', 'AUTOMATISK_VURDERING']);
 
 export const zAktørEnum = z.enum(['SAKSBEHANDLER', 'BESLUTTER', 'VEDTAKSLØSNING']);
 
 export const zHistorikkinnslagDto = z.object({
     behandlingId: z.string(),
-    type: zTypeEnum10,
+    type: zTypeEnum9,
     aktør: zAktørEnum,
     aktørIdent: z.string(),
     tittel: z.string(),

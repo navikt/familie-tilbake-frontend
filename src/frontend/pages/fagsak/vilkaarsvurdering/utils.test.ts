@@ -51,7 +51,7 @@ const grovtUaktsomt: VilkaarsvurderingValg = {
         aktsomhet: 'grovtUaktsomt',
         begrunnelse: 'Mottaker handlet grovt uaktsomt',
         erDetSærligeGrunner: {
-            erDetSaerligeGrunner: 'nei',
+            erDetReduksjonÅrsaker: 'nei',
             særligeGrunnerMot: [],
             begrunnelse: 'Ingen særlige grunner',
             annetBegrunnelse: null,

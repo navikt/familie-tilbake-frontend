@@ -32,8 +32,8 @@ export const SærligeGrunner: FC<Props> = ({
     const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
         getFieldState(navn, formState).error?.message;
     const setValueOptions = { shouldDirty: true, shouldValidate: formState.isSubmitted };
-    const erDetSaerligeGrunner = useWatch({
-        name: `${navnPrefix}.erDetSaerligeGrunner`,
+    const erDetReduksjonÅrsaker = useWatch({
+        name: `${navnPrefix}.erDetReduksjonÅrsaker`,
         control,
     });
     const særligeGrunnerFor = useWatch({
@@ -50,7 +50,7 @@ export const SærligeGrunner: FC<Props> = ({
     });
 
     const { name: erDetSærligeGrunnerName, ...erDetSærligeGrunnerProps } = register(
-        `${navnPrefix}.erDetSaerligeGrunner`
+        `${navnPrefix}.erDetReduksjonÅrsaker`
     );
 
     const reduksjonsprops = reduksjon
@@ -63,8 +63,8 @@ export const SærligeGrunner: FC<Props> = ({
                 legend="Er det særlige grunner til å redusere beløpet?"
                 size="small"
                 className="max-w-xl"
-                value={erDetSaerligeGrunner}
-                error={feil(`${navnPrefix}.erDetSaerligeGrunner`)}
+                value={erDetReduksjonÅrsaker}
+                error={feil(`${navnPrefix}.erDetReduksjonÅrsaker`)}
             >
                 <HStack gap="space-16">
                     <Radio value="ja" {...erDetSærligeGrunnerProps}>
@@ -76,7 +76,7 @@ export const SærligeGrunner: FC<Props> = ({
                 </HStack>
             </RadioGroup>
 
-            {erDetSaerligeGrunner === 'ja' && (
+            {erDetReduksjonÅrsaker === 'ja' && (
                 <>
                     <CheckboxGroup
                         legend="Hvilke særlige grunner taler for å redusere beløpet?"
@@ -139,7 +139,7 @@ export const SærligeGrunner: FC<Props> = ({
                 </>
             )}
 
-            {erDetSaerligeGrunner === 'nei' && (
+            {erDetReduksjonÅrsaker === 'nei' && (
                 <>
                     <CheckboxGroup
                         legend="Hvilke særlige grunner taler mot å redusere beløpet?"

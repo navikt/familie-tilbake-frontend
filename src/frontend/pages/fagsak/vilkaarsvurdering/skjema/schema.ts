@@ -25,6 +25,8 @@ const beløpIBeholdValgSchema = z.enum(['ingenting', 'hele', 'deler', '']).catch
 
 const erDetSærligeGrunnerValgSchema = z.enum(['ja', 'nei', '']).catch('');
 
+const erDetReduksjonÅrsakerGodTroValgSchema = z.enum(['jaGodTro', 'neiGodTro', '']).catch('');
+
 /**
  * Kontrakten tillater 0–255 (uint8), men fagreglene tillater kun 0–100. Grensene
  * ligger i `påkrevdProsent` og ikke her, slik at en verdi utenfor intervallet gir
@@ -49,7 +51,7 @@ const neiSærligeGrunnerSchema = z.object({
 });
 
 const særligeGrunnerSchema = z.object({
-    erDetSaerligeGrunner: erDetSærligeGrunnerValgSchema,
+    erDetReduksjonÅrsaker: erDetSærligeGrunnerValgSchema,
     jaSærligeGrunner: jaSærligeGrunnerSchema,
     neiSærligeGrunner: neiSærligeGrunnerSchema,
 });
@@ -72,30 +74,28 @@ const unnlatelseSchema = z.object({
     }),
 });
 
-const reduksjonValgSchema = z.enum(['skalReduseres', 'skalIkkeReduseres', '']).catch('');
-
 const reduksjonFelter: {
-    reduksjon: typeof reduksjonValgSchema;
-    skalReduseres: z.ZodObject<{
-        beløp: typeof beløpSchema;
+    erDetReduksjonÅrsaker: typeof erDetReduksjonÅrsakerGodTroValgSchema;
+    jaGodTro: z.ZodObject<{
+        prosentReduksjon: typeof prosentReduksjonSchema;
         relevans: typeof tekstliste;
         annetBegrunnelse: typeof tekst;
         begrunnelse: typeof tekst;
     }>;
-    skalIkkeReduseres: z.ZodObject<{
+    neiGodTro: z.ZodObject<{
         relevans: typeof tekstliste;
         annetBegrunnelse: typeof tekst;
         begrunnelse: typeof tekst;
     }>;
 } = {
-    reduksjon: reduksjonValgSchema,
-    skalReduseres: z.object({
-        beløp: beløpSchema,
+    erDetReduksjonÅrsaker: erDetReduksjonÅrsakerGodTroValgSchema,
+    jaGodTro: z.object({
+        prosentReduksjon: prosentReduksjonSchema,
         relevans: tekstliste,
         annetBegrunnelse: tekst,
         begrunnelse: tekst,
     }),
-    skalIkkeReduseres: z.object({
+    neiGodTro: z.object({
         relevans: tekstliste,
         annetBegrunnelse: tekst,
         begrunnelse: tekst,
@@ -154,21 +154,21 @@ export type VilkårValg = z.infer<typeof valgSchema>;
 export type ForståelseValg = z.infer<typeof forståelseValgSchema>;
 export type AktsomhetValg = z.infer<typeof aktsomhetValgSchema>;
 export type BeløpIBeholdValg = z.infer<typeof beløpIBeholdValgSchema>;
-export type ReduksjonValg = z.infer<typeof reduksjonValgSchema>;
+export type ReduksjonValg = z.infer<typeof erDetReduksjonÅrsakerGodTroValgSchema>;
 export type ErDetSærligeGrunnerValg = z.infer<typeof erDetSærligeGrunnerValgSchema>;
 export type SærligeGrunnerFelter = z.infer<typeof særligeGrunnerSchema>;
 export type UnnlatelseFelter = z.infer<typeof unnlatelseSchema>;
 export type VilkårsvurderingSkjemaFelter = z.infer<typeof vilkårsvurderingSkjema>;
 export type ReduksjonFelter = Pick<
     VilkårsvurderingSkjemaFelter['godTro']['hele'],
-    'reduksjon' | 'skalReduseres' | 'skalIkkeReduseres'
+    'erDetReduksjonÅrsaker' | 'jaGodTro' | 'neiGodTro'
 >;
 
 type FeltSti = (string | number)[];
 
 type Beløpstak = {
     maks: number;
-    beskrivelse: 'det feilutbetalte beløpet' | 'beløpet som er i behold';
+    beskrivelse: 'det feilutbetalte beløpet';
 };
 
 const takFeilmelding = ({ maks, beskrivelse }: Beløpstak): string =>
@@ -230,8 +230,8 @@ const validerSærligeGrunner = (
     felter: SærligeGrunnerFelter,
     basePath: FeltSti
 ): void => {
-    krevValg(ctx, felter.erDetSaerligeGrunner, [...basePath, 'erDetSaerligeGrunner']);
-    if (felter.erDetSaerligeGrunner === 'ja') {
+    krevValg(ctx, felter.erDetReduksjonÅrsaker, [...basePath, 'erDetReduksjonÅrsaker']);
+    if (felter.erDetReduksjonÅrsaker === 'ja') {
         const path = [...basePath, 'jaSærligeGrunner'];
         krevMinstEtt(ctx, felter.jaSærligeGrunner.særligeGrunnerFor, [
             ...path,
@@ -242,7 +242,7 @@ const validerSærligeGrunner = (
         }
         krevProsent(ctx, felter.jaSærligeGrunner.prosentReduksjon, [...path, 'prosentReduksjon']);
         krevTekst(ctx, felter.jaSærligeGrunner.begrunnelse, [...path, 'begrunnelse']);
-    } else if (felter.erDetSaerligeGrunner === 'nei') {
+    } else if (felter.erDetReduksjonÅrsaker === 'nei') {
         const path = [...basePath, 'neiSærligeGrunner'];
         krevMinstEtt(ctx, felter.neiSærligeGrunner.særligeGrunnerMot, [
             ...path,
@@ -261,28 +261,24 @@ const validerSærligeGrunner = (
 const validerReduksjon = (
     ctx: z.core.$RefinementCtx,
     felter: ReduksjonFelter,
-    basePath: FeltSti,
-    beløpIBehold: Beløpstak
+    basePath: FeltSti
 ): void => {
-    krevValg(ctx, felter.reduksjon, [...basePath, 'reduksjon']);
-    if (felter.reduksjon === 'skalReduseres') {
-        const path = [...basePath, 'skalReduseres'];
-        krevBeløp(ctx, felter.skalReduseres.beløp, [...path, 'beløp'], beløpIBehold);
-        krevMinstEtt(ctx, felter.skalReduseres.relevans, [...path, 'relevans']);
-        if (felter.skalReduseres.relevans.includes('ANNET')) {
-            krevTekst(ctx, felter.skalReduseres.annetBegrunnelse, [...path, 'annetBegrunnelse']);
+    krevValg(ctx, felter.erDetReduksjonÅrsaker, [...basePath, 'erDetReduksjonÅrsaker']);
+    if (felter.erDetReduksjonÅrsaker === 'jaGodTro') {
+        const path = [...basePath, 'jaGodTro'];
+        krevMinstEtt(ctx, felter.jaGodTro.relevans, [...path, 'relevans']);
+        if (felter.jaGodTro.relevans.includes('ANNET')) {
+            krevTekst(ctx, felter.jaGodTro.annetBegrunnelse, [...path, 'annetBegrunnelse']);
         }
-        krevTekst(ctx, felter.skalReduseres.begrunnelse, [...path, 'begrunnelse']);
-    } else if (felter.reduksjon === 'skalIkkeReduseres') {
-        const path = [...basePath, 'skalIkkeReduseres'];
-        krevMinstEtt(ctx, felter.skalIkkeReduseres.relevans, [...path, 'relevans']);
-        if (felter.skalIkkeReduseres.relevans.includes('ANNET')) {
-            krevTekst(ctx, felter.skalIkkeReduseres.annetBegrunnelse, [
-                ...path,
-                'annetBegrunnelse',
-            ]);
+        krevTekst(ctx, felter.jaGodTro.begrunnelse, [...path, 'begrunnelse']);
+        krevProsent(ctx, felter.jaGodTro.prosentReduksjon, [...path, 'prosentReduksjon']);
+    } else if (felter.erDetReduksjonÅrsaker === 'neiGodTro') {
+        const path = [...basePath, 'neiGodTro'];
+        krevMinstEtt(ctx, felter.neiGodTro.relevans, [...path, 'relevans']);
+        if (felter.neiGodTro.relevans.includes('ANNET')) {
+            krevTekst(ctx, felter.neiGodTro.annetBegrunnelse, [...path, 'annetBegrunnelse']);
         }
-        krevTekst(ctx, felter.skalIkkeReduseres.begrunnelse, [...path, 'begrunnelse']);
+        krevTekst(ctx, felter.neiGodTro.begrunnelse, [...path, 'begrunnelse']);
     }
 };
 
@@ -406,26 +402,14 @@ const validerFelter = (
                 ]);
             } else if (felter.godTro.beløpIBehold === 'hele') {
                 krevTekst(ctx, felter.godTro.hele.begrunnelse, [...base, 'hele', 'begrunnelse']);
-                validerReduksjon(ctx, felter.godTro.hele, [...base, 'hele'], {
-                    maks: feilutbetaltBeløp,
-                    beskrivelse: 'beløpet som er i behold',
-                });
+                validerReduksjon(ctx, felter.godTro.hele, [...base, 'hele']);
             } else if (felter.godTro.beløpIBehold === 'deler') {
-                const beløpIBehold = felter.godTro.deler.beløp;
-                krevBeløp(ctx, beløpIBehold, [...base, 'deler', 'beløp'], {
+                krevBeløp(ctx, felter.godTro.deler.beløp, [...base, 'deler', 'beløp'], {
                     maks: feilutbetaltBeløp,
                     beskrivelse: 'det feilutbetalte beløpet',
                 });
                 krevTekst(ctx, felter.godTro.deler.begrunnelse, [...base, 'deler', 'begrunnelse']);
-                validerReduksjon(ctx, felter.godTro.deler, [...base, 'deler'], {
-                    maks:
-                        beløpIBehold !== null &&
-                        beløpIBehold > 0 &&
-                        beløpIBehold <= feilutbetaltBeløp
-                            ? beløpIBehold
-                            : feilutbetaltBeløp,
-                    beskrivelse: 'beløpet som er i behold',
-                });
+                validerReduksjon(ctx, felter.godTro.deler, [...base, 'deler']);
             }
             break;
         }

@@ -1,38 +1,34 @@
-import type { Reduksjon, SaerligeGrunner, Unnlatelse, Vilkaarsvurdering } from '@/generated-new';
-import type { SærligeGrunnerFelter, VilkårsvurderingSkjemaFelter } from './schema';
-
-type ReduksjonFelter = Pick<
-    VilkårsvurderingSkjemaFelter['godTro']['hele'],
-    'reduksjon' | 'skalReduseres' | 'skalIkkeReduseres'
->;
+import type { ReduksjonArsaker, Unnlatelse, Vilkaarsvurdering } from '@/generated-new';
+import type { ReduksjonFelter, SærligeGrunnerFelter, VilkårsvurderingSkjemaFelter } from './schema';
 
 const tomReduksjon = (): ReduksjonFelter => ({
-    reduksjon: '',
-    skalReduseres: {
-        beløp: null,
+    erDetReduksjonÅrsaker: '',
+    jaGodTro: {
+        prosentReduksjon: null,
         relevans: [],
         annetBegrunnelse: '',
         begrunnelse: '',
     },
-    skalIkkeReduseres: {
+    neiGodTro: {
         relevans: [],
         annetBegrunnelse: '',
         begrunnelse: '',
     },
 });
 
-const utledReduksjon = (reduksjon: Reduksjon): ReduksjonFelter => {
+const utledReduksjon = (reduksjon: ReduksjonArsaker): ReduksjonFelter => {
     const felter = tomReduksjon();
-    felter.reduksjon = reduksjon.reduksjon;
-    if (reduksjon.reduksjon === 'skalReduseres') {
-        felter.skalReduseres = {
-            beløp: reduksjon.beløp,
+    if (reduksjon.erDetReduksjonÅrsaker === 'jaGodTro') {
+        felter.erDetReduksjonÅrsaker = 'jaGodTro';
+        felter.jaGodTro = {
+            prosentReduksjon: reduksjon.prosentReduksjon,
             relevans: reduksjon.relevans.map(({ moment }) => moment),
             annetBegrunnelse: reduksjon.annetBegrunnelse ?? '',
             begrunnelse: reduksjon.begrunnelse,
         };
-    } else {
-        felter.skalIkkeReduseres = {
+    } else if (reduksjon.erDetReduksjonÅrsaker === 'neiGodTro') {
+        felter.erDetReduksjonÅrsaker = 'neiGodTro';
+        felter.neiGodTro = {
             relevans: reduksjon.relevans.map(({ moment }) => moment),
             annetBegrunnelse: reduksjon.annetBegrunnelse ?? '',
             begrunnelse: reduksjon.begrunnelse,
@@ -42,9 +38,9 @@ const utledReduksjon = (reduksjon: Reduksjon): ReduksjonFelter => {
 };
 
 const tomSærligeGrunner = (
-    erDetSaerligeGrunner: SærligeGrunnerFelter['erDetSaerligeGrunner'] = ''
+    erDetReduksjonÅrsaker: SærligeGrunnerFelter['erDetReduksjonÅrsaker'] = ''
 ): SærligeGrunnerFelter => ({
-    erDetSaerligeGrunner,
+    erDetReduksjonÅrsaker,
     jaSærligeGrunner: {
         særligeGrunnerFor: [],
         prosentReduksjon: null,
@@ -58,16 +54,18 @@ const tomSærligeGrunner = (
     },
 });
 
-const utledSærligeGrunner = (særligeGrunner: SaerligeGrunner): SærligeGrunnerFelter => {
-    const felter = tomSærligeGrunner(særligeGrunner.erDetSaerligeGrunner);
-    if (særligeGrunner.erDetSaerligeGrunner === 'ja') {
+const utledSærligeGrunner = (særligeGrunner: ReduksjonArsaker): SærligeGrunnerFelter => {
+    const felter = tomSærligeGrunner();
+    if (særligeGrunner.erDetReduksjonÅrsaker === 'ja') {
+        felter.erDetReduksjonÅrsaker = 'ja';
         felter.jaSærligeGrunner = {
             særligeGrunnerFor: særligeGrunner.særligeGrunnerFor.map(({ moment }) => moment),
             prosentReduksjon: særligeGrunner.prosentReduksjon,
             begrunnelse: særligeGrunner.begrunnelse,
             annetBegrunnelse: særligeGrunner.annetBegrunnelse ?? '',
         };
-    } else {
+    } else if (særligeGrunner.erDetReduksjonÅrsaker === 'nei') {
+        felter.erDetReduksjonÅrsaker = 'nei';
         felter.neiSærligeGrunner = {
             særligeGrunnerMot: særligeGrunner.særligeGrunnerMot.map(({ moment }) => moment),
             begrunnelse: særligeGrunner.begrunnelse,
@@ -81,7 +79,7 @@ type UnnlatelseFelter =
     VilkårsvurderingSkjemaFelter['forstoEllerBurdeForstått']['forsto']['unnlatelse'];
 
 const tomUnnlatelse = (
-    erDetSaerligeGrunner: SærligeGrunnerFelter['erDetSaerligeGrunner'] = ''
+    erDetReduksjonÅrsaker: SærligeGrunnerFelter['erDetReduksjonÅrsaker'] = ''
 ): UnnlatelseFelter => ({
     unnlatelse: '',
     skalUnnlates: {
@@ -89,10 +87,10 @@ const tomUnnlatelse = (
     },
     skalIkkeUnnlates: {
         begrunnelse: '',
-        erDetSærligeGrunner: tomSærligeGrunner(erDetSaerligeGrunner),
+        erDetSærligeGrunner: tomSærligeGrunner(erDetReduksjonÅrsaker),
     },
     ikkeAktuelt: {
-        erDetSærligeGrunner: tomSærligeGrunner(erDetSaerligeGrunner),
+        erDetSærligeGrunner: tomSærligeGrunner(erDetReduksjonÅrsaker),
     },
 });
 

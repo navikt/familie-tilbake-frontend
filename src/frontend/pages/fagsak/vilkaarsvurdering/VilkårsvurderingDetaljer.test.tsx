@@ -1,7 +1,6 @@
 import type {
     Moment,
-    Reduksjon,
-    SaerligeGrunner,
+    ReduksjonArsaker,
     Vilkaarsperiode,
     Vilkaarsvurdering,
     VilkaarsvurderingValg,
@@ -249,9 +248,9 @@ const krevesTilbakeJaRadio = async (beløpsbeskrivelse: Beløpsbeskrivelse): Pro
 const krevesTilbakeNeiRadio = async (beløpsbeskrivelse: Beløpsbeskrivelse): Promise<HTMLElement> =>
     within(await krevesTilbakeRadioGroup(beløpsbeskrivelse)).getByRole('radio', { name: 'Nei' });
 
-const beløpTilbakekreves = (): HTMLElement =>
+const prosentReduksjonGodTro = (): HTMLElement =>
     screen.getByRole('spinbutton', {
-        name: 'Hvor mange kroner skal kreves tilbake?',
+        name: 'Hvor mange prosent skal beløpet reduseres med?',
     });
 const beløpIBehold = (): HTMLElement =>
     screen.getByRole('spinbutton', {
@@ -410,7 +409,7 @@ describe('VilkårsvurderingDetaljer', () => {
             user.click(await krevesTilbakeNeiRadio('hele beløpet'));
             expect(await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
             expect(begrunnelseKrevesIkke('hele beløpet')).toBeInTheDocument();
-            expect(beløpTilbakekreves()).toBeInTheDocument();
+            expect(prosentReduksjonGodTro()).toBeInTheDocument();
         });
 
         test('Deler av beløpet i behold - Kreves tilbake', async () => {
@@ -445,7 +444,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet som er i behold')
             ).toBeInTheDocument();
             expect(begrunnelseKrevesIkke('hele beløpet som er i behold')).toBeInTheDocument();
-            expect(beløpTilbakekreves()).toBeInTheDocument();
+            expect(prosentReduksjonGodTro()).toBeInTheDocument();
         });
 
         test('Annet-alternativ viser fritekstfelt', async () => {
@@ -620,15 +619,15 @@ describe('VilkårsvurderingDetaljer', () => {
             );
         };
 
-        const skalKrevesTilbakeReduksjon: Reduksjon = {
-            reduksjon: 'skalIkkeReduseres',
+        const skalKrevesTilbakeReduksjon: ReduksjonArsaker = {
+            erDetReduksjonÅrsaker: 'neiGodTro',
             relevans: [{ moment: 'MOTTAKER_TILLIT', beskrivelse: '' }],
             annetBegrunnelse: null,
             begrunnelse: 'Begrunnelse for at beløpet skal kreves tilbake',
         };
-        const skalReduseresReduksjon: Reduksjon = {
-            reduksjon: 'skalReduseres',
-            beløp: 2500,
+        const skalReduseresReduksjon: ReduksjonArsaker = {
+            erDetReduksjonÅrsaker: 'jaGodTro',
+            prosentReduksjon: 25,
             relevans: [
                 { moment: 'STØRRELSE_BELØP', beskrivelse: '' },
                 { moment: 'ANNET', beskrivelse: '' },
@@ -696,7 +695,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 );
             });
 
-            test('hele i behold og kreves tilbake (skalIkkeReduseres) fyller skjemaet', async () => {
+            test('hele i behold og kreves tilbake (neiGodTro) fyller skjemaet', async () => {
                 renderMedValg({
                     vurdering: 'god_tro',
                     begrunnelse: 'God tro-begrunnelse',
@@ -728,7 +727,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 );
             });
 
-            test('hele i behold og skal reduseres (skalReduseres) fyller skjemaet', async () => {
+            test('hele i behold og skal reduseres (jaGodTro) fyller skjemaet', async () => {
                 renderMedValg({
                     vurdering: 'god_tro',
                     begrunnelse: 'God tro-begrunnelse',
@@ -751,10 +750,10 @@ describe('VilkårsvurderingDetaljer', () => {
                 expect(begrunnelseKrevesIkke('hele beløpet')).toHaveValue(
                     'Begrunnelse for at beløpet ikke skal kreves tilbake'
                 );
-                expect(beløpTilbakekreves()).toHaveValue(2500);
+                expect(prosentReduksjonGodTro()).toHaveValue(25);
             });
 
-            test('deler i behold og kreves tilbake (skalIkkeReduseres) fyller skjemaet', async () => {
+            test('deler i behold og kreves tilbake (neiGodTro) fyller skjemaet', async () => {
                 renderMedValg({
                     vurdering: 'god_tro',
                     begrunnelse: 'God tro-begrunnelse',
@@ -786,7 +785,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 );
             });
 
-            test('deler i behold og skal reduseres (skalReduseres) fyller skjemaet', async () => {
+            test('deler i behold og skal reduseres (jaGodTro) fyller skjemaet', async () => {
                 renderMedValg({
                     vurdering: 'god_tro',
                     begrunnelse: 'God tro-begrunnelse',
@@ -813,20 +812,20 @@ describe('VilkårsvurderingDetaljer', () => {
                 expect(begrunnelseKrevesIkke('hele beløpet som er i behold')).toHaveValue(
                     'Begrunnelse for at beløpet ikke skal kreves tilbake'
                 );
-                expect(beløpTilbakekreves()).toHaveValue(2500);
+                expect(prosentReduksjonGodTro()).toHaveValue(25);
             });
         });
 
         describe('Forårsaket av mottaker', () => {
-            const særligeGrunnerFor: SaerligeGrunner = {
-                erDetSaerligeGrunner: 'ja',
+            const særligeGrunnerFor: ReduksjonArsaker = {
+                erDetReduksjonÅrsaker: 'ja',
                 særligeGrunnerFor: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
                 prosentReduksjon: 40,
                 begrunnelse: 'Begrunnelse for særlige grunner',
                 annetBegrunnelse: null,
             };
-            const særligeGrunnerMot: SaerligeGrunner = {
-                erDetSaerligeGrunner: 'nei',
+            const særligeGrunnerMot: ReduksjonArsaker = {
+                erDetReduksjonÅrsaker: 'nei',
                 særligeGrunnerMot: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
                 begrunnelse: 'Begrunnelse mot særlige grunner',
                 annetBegrunnelse: null,
@@ -979,15 +978,15 @@ describe('VilkårsvurderingDetaljer', () => {
         });
 
         describe('Forsto eller burde forstått', () => {
-            const særligeGrunnerFor: SaerligeGrunner = {
-                erDetSaerligeGrunner: 'ja',
+            const særligeGrunnerFor: ReduksjonArsaker = {
+                erDetReduksjonÅrsaker: 'ja',
                 særligeGrunnerFor: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
                 prosentReduksjon: 40,
                 begrunnelse: 'Begrunnelse for særlige grunner',
                 annetBegrunnelse: null,
             };
-            const særligeGrunnerMot: SaerligeGrunner = {
-                erDetSaerligeGrunner: 'nei',
+            const særligeGrunnerMot: ReduksjonArsaker = {
+                erDetReduksjonÅrsaker: 'nei',
                 særligeGrunnerMot: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
                 begrunnelse: 'Begrunnelse mot særlige grunner',
                 annetBegrunnelse: null,

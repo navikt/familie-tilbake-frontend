@@ -88,7 +88,7 @@ export type BurdeForstaatt = {
 export type Deler = {
     beløp: number;
     begrunnelse: string;
-    reduksjon: Reduksjon;
+    reduksjon: ReduksjonArsaker;
 };
 
 export type DokumentInfo = {
@@ -220,12 +220,12 @@ export type GodTro = {
 
 export type GrovtUaktsomt = {
     begrunnelse: string;
-    erDetSærligeGrunner: SaerligeGrunner;
+    erDetSærligeGrunner: ReduksjonArsaker;
 };
 
 export type Hele = {
     begrunnelse: string;
-    reduksjon: Reduksjon;
+    reduksjon: ReduksjonArsaker;
 };
 
 export type Hovedavsnitt = {
@@ -246,7 +246,7 @@ export type HovedavsnittVarselbrev = {
 };
 
 export type IkkeAktuelt = {
-    erDetSærligeGrunner: SaerligeGrunner;
+    erDetSærligeGrunner: ReduksjonArsaker;
 };
 
 export type IkkeVurdert = {
@@ -366,13 +366,19 @@ export type PeriodeInfo = {
     periode: Periode;
 };
 
-export type Reduksjon =
+export type ReduksjonArsaker =
     | ({
-          reduksjon: 'skalReduseres';
-      } & SkalReduseres)
+          erDetReduksjonÅrsaker: 'nei';
+      } & NeiSaerligeGrunner)
     | ({
-          reduksjon: 'skalIkkeReduseres';
-      } & SkalIkkeReduseres);
+          erDetReduksjonÅrsaker: 'ja';
+      } & JaSaerligeGrunner)
+    | ({
+          erDetReduksjonÅrsaker: 'neiGodTro';
+      } & SkalIkkeReduseres)
+    | ({
+          erDetReduksjonÅrsaker: 'jaGodTro';
+      } & SkalReduseres);
 
 export type RentekstElement = {
     tekst: string;
@@ -411,14 +417,6 @@ export type RotElementUpdateItem =
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseUpdateItem);
 
-export type SaerligeGrunner =
-    | ({
-          erDetSaerligeGrunner: 'nei';
-      } & NeiSaerligeGrunner)
-    | ({
-          erDetSaerligeGrunner: 'ja';
-      } & JaSaerligeGrunner);
-
 export type Sammenslaaing = {
     vilkårsvurderingId: string;
     slåesSammenMedId: string;
@@ -447,11 +445,11 @@ export type SkalIkkeReduseres = {
 
 export type SkalIkkeUnnlates = {
     begrunnelse: string;
-    erDetSærligeGrunner: SaerligeGrunner;
+    erDetSærligeGrunner: ReduksjonArsaker;
 };
 
 export type SkalReduseres = {
-    beløp: number;
+    prosentReduksjon: number;
     relevans: Array<Moment>;
     annetBegrunnelse: string | null;
     begrunnelse: string;
@@ -688,7 +686,7 @@ export type BurdeForstaattWritable = {
 export type DelerWritable = {
     beløp: number;
     begrunnelse: string;
-    reduksjon: ReduksjonWritable;
+    reduksjon: ReduksjonArsakerWritable;
 };
 
 export type EndretPeriodeWritable = {
@@ -774,12 +772,12 @@ export type GodTroWritable = {
 
 export type GrovtUaktsomtWritable = {
     begrunnelse: string;
-    erDetSærligeGrunner: SaerligeGrunnerWritable;
+    erDetSærligeGrunner: ReduksjonArsakerWritable;
 };
 
 export type HeleWritable = {
     begrunnelse: string;
-    reduksjon: ReduksjonWritable;
+    reduksjon: ReduksjonArsakerWritable;
 };
 
 export type HovedavsnittWritable = {
@@ -789,7 +787,7 @@ export type HovedavsnittWritable = {
 };
 
 export type IkkeAktueltWritable = {
-    erDetSærligeGrunner: SaerligeGrunnerWritable;
+    erDetSærligeGrunner: ReduksjonArsakerWritable;
 };
 
 export type JaSaerligeGrunnerWritable = {
@@ -831,13 +829,19 @@ export type PeriodeInfoWritable = {
     periodeId: string;
 };
 
-export type ReduksjonWritable =
+export type ReduksjonArsakerWritable =
     | ({
-          reduksjon: 'skalReduseres';
-      } & SkalReduseresWritable)
+          erDetReduksjonÅrsaker: 'nei';
+      } & NeiSaerligeGrunnerWritable)
     | ({
-          reduksjon: 'skalIkkeReduseres';
-      } & SkalIkkeReduseresWritable);
+          erDetReduksjonÅrsaker: 'ja';
+      } & JaSaerligeGrunnerWritable)
+    | ({
+          erDetReduksjonÅrsaker: 'neiGodTro';
+      } & SkalIkkeReduseresWritable)
+    | ({
+          erDetReduksjonÅrsaker: 'jaGodTro';
+      } & SkalReduseresWritable);
 
 export type RotElementWritable =
     | ({
@@ -850,14 +854,6 @@ export type RotElementWritable =
           type: 'påkrevd_begrunnelse';
       } & PakrevdBegrunnelseWritable);
 
-export type SaerligeGrunnerWritable =
-    | ({
-          erDetSaerligeGrunner: 'nei';
-      } & NeiSaerligeGrunnerWritable)
-    | ({
-          erDetSaerligeGrunner: 'ja';
-      } & JaSaerligeGrunnerWritable);
-
 export type SkalIkkeReduseresWritable = {
     relevans: Array<MomentWritable>;
     annetBegrunnelse: string | null;
@@ -866,11 +862,11 @@ export type SkalIkkeReduseresWritable = {
 
 export type SkalIkkeUnnlatesWritable = {
     begrunnelse: string;
-    erDetSærligeGrunner: SaerligeGrunnerWritable;
+    erDetSærligeGrunner: ReduksjonArsakerWritable;
 };
 
 export type SkalReduseresWritable = {
-    beløp: number;
+    prosentReduksjon: number;
     relevans: Array<MomentWritable>;
     annetBegrunnelse: string | null;
     begrunnelse: string;

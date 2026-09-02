@@ -4,8 +4,7 @@ import type {
     Forstaaelse,
     Moment,
     PeriodeInfo,
-    Reduksjon,
-    SaerligeGrunner,
+    ReduksjonArsaker,
     Unnlatelse,
     Vilkaarsvurdering,
     VilkaarsvurderingValg,
@@ -46,10 +45,10 @@ const tilAnnetBegrunnelse = (momenter: string[], verdi: string): string | null =
 const utledSærligeGrunner = (
     felter: SærligeGrunnerFelter,
     tilMomenter: MomentMapper
-): SaerligeGrunner => {
-    if (felter.erDetSaerligeGrunner === 'ja') {
+): ReduksjonArsaker => {
+    if (felter.erDetReduksjonÅrsaker === 'ja') {
         return {
-            erDetSaerligeGrunner: 'ja',
+            erDetReduksjonÅrsaker: 'ja',
             særligeGrunnerFor: tilMomenter(felter.jaSærligeGrunner.særligeGrunnerFor),
             prosentReduksjon: felter.jaSærligeGrunner.prosentReduksjon ?? 0,
             begrunnelse: felter.jaSærligeGrunner.begrunnelse,
@@ -60,7 +59,7 @@ const utledSærligeGrunner = (
         };
     }
     return {
-        erDetSaerligeGrunner: 'nei',
+        erDetReduksjonÅrsaker: 'nei',
         særligeGrunnerMot: tilMomenter(felter.neiSærligeGrunner.særligeGrunnerMot),
         begrunnelse: felter.neiSærligeGrunner.begrunnelse,
         annetBegrunnelse: tilAnnetBegrunnelse(
@@ -70,27 +69,27 @@ const utledSærligeGrunner = (
     };
 };
 
-const utledReduksjon = (felter: ReduksjonFelter, tilMomenter: MomentMapper): Reduksjon => {
-    if (felter.reduksjon === 'skalReduseres') {
+const utledReduksjon = (felter: ReduksjonFelter, tilMomenter: MomentMapper): ReduksjonArsaker => {
+    if (felter.erDetReduksjonÅrsaker === 'jaGodTro') {
         return {
-            reduksjon: 'skalReduseres',
-            beløp: felter.skalReduseres.beløp ?? 0,
-            relevans: tilMomenter(felter.skalReduseres.relevans),
+            erDetReduksjonÅrsaker: 'jaGodTro',
+            prosentReduksjon: felter.jaGodTro.prosentReduksjon ?? 0,
+            relevans: tilMomenter(felter.jaGodTro.relevans),
             annetBegrunnelse: tilAnnetBegrunnelse(
-                felter.skalReduseres.relevans,
-                felter.skalReduseres.annetBegrunnelse
+                felter.jaGodTro.relevans,
+                felter.jaGodTro.annetBegrunnelse
             ),
-            begrunnelse: felter.skalReduseres.begrunnelse,
+            begrunnelse: felter.jaGodTro.begrunnelse,
         };
     }
     return {
-        reduksjon: 'skalIkkeReduseres',
-        relevans: tilMomenter(felter.skalIkkeReduseres.relevans),
+        erDetReduksjonÅrsaker: 'neiGodTro',
+        relevans: tilMomenter(felter.neiGodTro.relevans),
         annetBegrunnelse: tilAnnetBegrunnelse(
-            felter.skalIkkeReduseres.relevans,
-            felter.skalIkkeReduseres.annetBegrunnelse
+            felter.neiGodTro.relevans,
+            felter.neiGodTro.annetBegrunnelse
         ),
-        begrunnelse: felter.skalIkkeReduseres.begrunnelse,
+        begrunnelse: felter.neiGodTro.begrunnelse,
     };
 };
 

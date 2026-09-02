@@ -59,7 +59,7 @@ export type AktsomhetsvurderingEntity = {
     beløpIBehold?: GodTroEntity | null;
     aktsomhet?: VurdertAktsomhetEntity | null;
     kanUnnlates?: KanUnnlatesEnum;
-    særligGrunner?: SærligeGrunnerEntity | null;
+    reduksjonMomenterEntity?: ReduksjonMomenterEntity | null;
     feilaktigEllerMangelfull?: FeilaktigEllerMangelfullEnum;
     forrigePeriodeId?: string | null;
 };
@@ -252,7 +252,7 @@ export type GodTroEntity = {
     periodeRef: string;
     begrunnelse: string;
     beholdType: BeholdTypeEnum;
-    beløp?: number | null;
+    beløpIBehold?: number | null;
 };
 
 export type HistorikkEntityUuidBehandlingEntityBehandling = {
@@ -314,21 +314,17 @@ export type OppdagetEntity = {
     beskrivelse: string;
 };
 
-export type SkalReduseresEntity = {
-    type: TypeEnum7;
-    prosentdel?: number | null;
-};
-
-export type SærligGrunnEntity = {
-    type: TypeEnum8;
+export type ReduksjonMomenterEntity = {
+    periodeRef: string;
+    begrunnelse: string;
+    grunner: Array<string>;
+    skalReduseres: SkalReduseresEntity;
     annetBegrunnelse?: string | null;
 };
 
-export type SærligeGrunnerEntity = {
-    periodeRef: string;
-    begrunnelse: string;
-    grunner: Array<SærligGrunnEntity>;
-    skalReduseres: SkalReduseresEntity;
+export type SkalReduseresEntity = {
+    type: TypeEnum7;
+    prosentdel?: number | null;
 };
 
 export type TilbakekrevingEntity = {
@@ -417,7 +413,7 @@ export type VurdertStegEntity = {
 };
 
 export type YtelseEntity = {
-    type: TypeEnum9;
+    type: TypeEnum8;
 };
 
 export type Datoperiode = {
@@ -613,7 +609,7 @@ export type GodTroDto = {
 };
 
 export type SærligGrunnDto = {
-    særligGrunn: TypeEnum8;
+    særligGrunn: SærligGrunnEnum;
     begrunnelse?: string | null;
 };
 
@@ -971,7 +967,7 @@ export type RessursListManuellBrevmottakerResponsDto = {
 
 export type HistorikkinnslagDto = {
     behandlingId: string;
-    type: TypeEnum10;
+    type: TypeEnum9;
     aktør: AktørEnum;
     aktørIdent: string;
     tittel: string;
@@ -1030,7 +1026,7 @@ export type VurdertGodTroDto = {
 };
 
 export type VurdertSærligGrunnDto = {
-    særligGrunn: TypeEnum8;
+    særligGrunn: SærligGrunnEnum;
     begrunnelse?: string | null;
 };
 
@@ -1607,13 +1603,6 @@ export type AvEnum = 'Nav' | 'Bruker';
 
 export type TypeEnum7 = 'Ja' | 'Nei';
 
-export type TypeEnum8 =
-    | 'GRAD_AV_UAKTSOMHET'
-    | 'STØRRELSE_BELØP'
-    | 'TID_FRA_UTBETALING'
-    | 'HELT_ELLER_DELVIS_NAVS_FEIL'
-    | 'ANNET';
-
 export type OpprettelsesvalgEnum = 'OPPRETT_TILBAKEKREVING_UTEN_VARSEL';
 
 export type AktsomhetTypeEnum =
@@ -1638,7 +1627,7 @@ export type StegEnum =
 
 export type VurderingEnum = 'IKKE_VURDERT' | 'GODKJENT' | 'UNDERKJENT';
 
-export type TypeEnum9 =
+export type TypeEnum8 =
     | 'BARNETRYGD'
     | 'TILLEGGSSTØNAD'
     | 'KONTANTSTØTTE'
@@ -1679,6 +1668,13 @@ export type ForeldelsesvurderingstypeEnum =
     | 'FORELDET'
     | 'IKKE_FORELDET'
     | 'TILLEGGSFRIST';
+
+export type SærligGrunnEnum =
+    | 'GRAD_AV_UAKTSOMHET'
+    | 'STØRRELSE_BELØP'
+    | 'TID_FRA_UTBETALING'
+    | 'HELT_ELLER_DELVIS_NAVS_FEIL'
+    | 'ANNET';
 
 export type VilkårsvurderingsresultatEnum =
     | 'FORSTO_BURDE_FORSTÅTT'
@@ -1754,7 +1750,7 @@ export type UnderavsnittstypeEnum =
     | 'SÆRLIGEGRUNNER'
     | 'SÆRLIGEGRUNNER_ANNET';
 
-export type TypeEnum10 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
+export type TypeEnum9 = 'HENDELSE' | 'SKJERMLENKE' | 'BREV' | 'AUTOMATISK_VURDERING';
 
 export type AktørEnum = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
 

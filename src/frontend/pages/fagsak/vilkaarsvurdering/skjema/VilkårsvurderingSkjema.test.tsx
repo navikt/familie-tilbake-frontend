@@ -206,7 +206,7 @@ describe('VilkårsvurderingSkjema', () => {
                             unnlatelse: {
                                 unnlatelse: 'ikkeAktuelt',
                                 erDetSærligeGrunner: {
-                                    erDetSaerligeGrunner: 'nei',
+                                    erDetReduksjonÅrsaker: 'nei',
                                     særligeGrunnerMot: [NAVS_FEIL],
                                     begrunnelse: 'Feilen kan ikke tilskrives Nav',
                                     annetBegrunnelse: null,
@@ -331,7 +331,7 @@ describe('VilkårsvurderingSkjema', () => {
                             aktsomhet: 'grovtUaktsomt',
                             begrunnelse: 'Mottakeren har utvist grov uaktsomhet',
                             erDetSærligeGrunner: {
-                                erDetSaerligeGrunner: 'ja',
+                                erDetReduksjonÅrsaker: 'ja',
                                 særligeGrunnerFor: [ANNET, GRAD_AV_UAKTSOMHET],
                                 prosentReduksjon: 30,
                                 begrunnelse: 'Det foreligger særlige grunner',
@@ -374,7 +374,7 @@ describe('VilkårsvurderingSkjema', () => {
                 ),
                 'Det har gått lang tid'
             );
-            await user.type(tallfelt('Hvor mange kroner skal kreves tilbake?'), '1000');
+            await user.type(tallfelt('Hvor mange prosent skal beløpet reduseres med?'), '40');
             await user.click(lagreKnapp());
 
             await expect(sendtRequest).resolves.toEqual({
@@ -392,8 +392,8 @@ describe('VilkårsvurderingSkjema', () => {
                             beløp: 2500,
                             begrunnelse: 'Deler er brukt opp',
                             reduksjon: {
-                                reduksjon: 'skalReduseres',
-                                beløp: 1000,
+                                erDetReduksjonÅrsaker: 'jaGodTro',
+                                prosentReduksjon: 40,
                                 relevans: [TID_SIDEN_UTBETALING],
                                 annetBegrunnelse: null,
                                 begrunnelse: 'Det har gått lang tid',
@@ -612,7 +612,7 @@ describe('VilkårsvurderingSkjema', () => {
         const fyllUtGodTroDeler = async (
             user: UserEvent,
             beløpIBehold: string,
-            krevesTilbake?: string
+            prosentReduksjon?: string
         ): Promise<void> => {
             await user.click(radio(VILKÅR_GOD_TRO));
             await user.type(
@@ -627,7 +627,7 @@ describe('VilkårsvurderingSkjema', () => {
                 'Deler er brukt opp'
             );
             await user.type(tallfelt('Hvor mange kroner er i behold?'), beløpIBehold);
-            if (krevesTilbake === undefined) {
+            if (prosentReduksjon === undefined) {
                 await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Ja'));
                 await user.click(
                     avkryssningsboks(
@@ -647,7 +647,10 @@ describe('VilkårsvurderingSkjema', () => {
                     avkryssningsboks(REDUKSJON_MOMENTER_LEGEND, TID_SIDEN_UTBETALING.beskrivelse)
                 );
                 await user.type(tekstfelt(KREVES_TILBAKE_BEGRUNNELSE), 'Det har gått lang tid');
-                await user.type(tallfelt('Hvor mange kroner skal kreves tilbake?'), krevesTilbake);
+                await user.type(
+                    tallfelt('Hvor mange prosent skal beløpet reduseres med?'),
+                    prosentReduksjon
+                );
             }
             await user.click(lagreKnapp());
         };
@@ -664,28 +667,33 @@ describe('VilkårsvurderingSkjema', () => {
             );
         });
 
-        test('burde blokkere innsending når beløpet som kreves tilbake er høyere enn beløpet i behold', async () => {
+        test.each<[string, string]>([
+            ['er høyere enn 100', '101'],
+            ['er negativ', '-1'],
+            ['ikke er et helt tall', '12.5'],
+        ])(
+            'burde blokkere innsending når reduksjonsprosenten %s',
+            async (_beskrivelse, prosent) => {
+                renderSkjema({ feilutbetaltBeløp: 5000 });
+
+                await fyllUtGodTroDeler(user, '2000', prosent);
+
+                await waitFor(() =>
+                    expect(
+                        tallfelt('Hvor mange prosent skal beløpet reduseres med?')
+                    ).toHaveAccessibleDescription('Du må fylle inn et helt tall mellom 0 og 100')
+                );
+            }
+        );
+
+        test('burde knytte feilmeldingen til prosentfeltet og ikke til beløpet i behold', async () => {
             renderSkjema({ feilutbetaltBeløp: 5000 });
 
-            await fyllUtGodTroDeler(user, '2000', '2001');
+            await fyllUtGodTroDeler(user, '2000', '101');
 
             await waitFor(() =>
                 expect(
-                    tallfelt('Hvor mange kroner skal kreves tilbake?')
-                ).toHaveAccessibleDescription(
-                    /Beløpet kan ikke være høyere enn beløpet som er i behold på 2\s000 kroner/
-                )
-            );
-        });
-
-        test('burde knytte feilmeldingen til beløpsfeltet og ikke til beløpet i behold', async () => {
-            renderSkjema({ feilutbetaltBeløp: 5000 });
-
-            await fyllUtGodTroDeler(user, '2000', '2001');
-
-            await waitFor(() =>
-                expect(
-                    screen.getByText(/Beløpet kan ikke være høyere enn beløpet som er i behold/)
+                    screen.getByText('Du må fylle inn et helt tall mellom 0 og 100')
                 ).toBeInTheDocument()
             );
             expect(tallfelt('Hvor mange kroner er i behold?')).toHaveAccessibleDescription('');
