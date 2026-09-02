@@ -7,7 +7,6 @@ import { hentFrontendFeilmelding } from '@/utils';
 
 export enum ToggleName {
     Vilkårsvurdering = 'tilbakekreving-frontend.nytt-vilkaarsvurderingssteg',
-    Forhaandsvarsel = 'familie-tilbake-frontend.forhaandsvarselsteg',
 }
 
 type Toggles = {
