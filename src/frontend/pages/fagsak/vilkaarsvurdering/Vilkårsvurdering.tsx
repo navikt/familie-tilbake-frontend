@@ -93,10 +93,10 @@ export const Vilkårsvurdering: FC = () => {
 
     return (
         <VStack gap="space-24" className="min-h-0 h-full">
-            <HStack className="gap-y-2 justify-between">
-                <HStack className="gap-x-4">
+            <HStack className="justify-between" gap="space-8 space-0" align="center">
+                <HStack gap="space-0 space-32" align="center">
                     <Heading size="medium">Vilkårsvurdering</Heading>
-                    <InlineMessage size="small" status="info" className="items-center">
+                    <InlineMessage size="small" status="info">
                         Intern vurdering (ikke synlig i vedtaksbrevet)
                     </InlineMessage>
                 </HStack>

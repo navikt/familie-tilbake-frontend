@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { BehandlingOppdaterFaktaError } from '@/generated-new';
 
-import { Heading, HStack, Tag, VStack } from '@navikt/ds-react';
+import { Heading, HStack, InlineMessage, Tag, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -43,8 +43,13 @@ export const Fakta: FC = () => {
 
     return (
         <VStack gap="space-24">
-            <HStack className="justify-between">
-                <Heading size="medium">Fakta om feilutbetalingen</Heading>
+            <HStack justify="space-between" gap="space-8" align="center">
+                <HStack gap="space-0 space-32" align="center">
+                    <Heading size="medium">Fakta om feilutbetalingen</Heading>
+                    <InlineMessage size="small" status="info">
+                        Intern vurdering (ikke synlig i vedtaksbrev)
+                    </InlineMessage>
+                </HStack>
                 <StatusTag
                     tilbakeført={faktaOmFeilutbetaling.tilbakeført}
                     ferdigvurdert={faktaOmFeilutbetaling.ferdigvurdert}

@@ -4,7 +4,7 @@ import type { Options } from '@/generated-new/sdk.gen';
 import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Heading, HStack, VStack } from '@navikt/ds-react';
+import { Heading, HStack, InlineMessage, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -389,7 +389,16 @@ export const ForhåndsvarselInnhold: FC = () => {
                 <FormProvider {...methods}>
                     <HStack gap="space-16" className="justify-between">
                         <HStack className="gap-x-4">
-                            <Heading size="medium">Forhåndsvarsel</Heading>
+                            <HStack gap="space-0 space-32" align="center">
+                                <Heading size="medium">Forhåndsvarsel</Heading>
+                                {(valg === 'unntak' ||
+                                    (forhåndsvarselSteg.type === 'unntak' && valg !== 'send')) && (
+                                    <InlineMessage size="small" status="info">
+                                        Intern vurdering (ikke synlig i vedtaksbrev)
+                                    </InlineMessage>
+                                )}
+                            </HStack>
+
                             {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                         </HStack>
                         <StatusTag
@@ -410,7 +419,14 @@ export const ForhåndsvarselInnhold: FC = () => {
             ) : (
                 <div className="grid grid-cols-1 gap-6 items-start">
                     <HStack className="md:col-span-2 justify-between">
-                        <Heading size="medium">Forhåndsvarsel</Heading>
+                        <HStack gap="space-0 space-32" align="center">
+                            <Heading size="medium">Forhåndsvarsel</Heading>
+                            {forhåndsvarselSteg.type === 'sendt' && (
+                                <InlineMessage size="small" status="info">
+                                    Intern vurdering (ikke synlig i vedtaksbrev)
+                                </InlineMessage>
+                            )}
+                        </HStack>
                         <StatusTag
                             tilbakeført={forhåndsvarselSteg.tilbakeført}
                             ferdigvurdert={forhåndsvarselSteg.ferdigvurdert}
