@@ -166,23 +166,18 @@ export type ReduksjonFelter = Pick<
 
 type FeltSti = (string | number)[];
 
-type Beløpstak = {
-    maks: number;
-    beskrivelse: 'det feilutbetalte beløpet';
-};
-
-const takFeilmelding = ({ maks, beskrivelse }: Beløpstak): string =>
-    `Beløpet kan ikke være høyere enn ${beskrivelse} på ${formatCurrencyNoKr(maks)} kroner`;
+const takFeilmelding = (maksbeløp: number): string =>
+    `Beløpet kan ikke være høyere enn det feilutbetalte beløpet på ${formatCurrencyNoKr(maksbeløp)} kroner`;
 
 const påkrevdTekst = z.string().trim().min(1);
 
-const påkrevdBeløp = (tak: Beløpstak): z.ZodType<number> => {
+const påkrevdBeløp = (maksbeløp: number): z.ZodType<number> => {
     const heltBeløpFeilmelding = 'Du må fylle inn et helt beløp i kroner høyere enn 0';
     return z
         .number()
         .int({ error: heltBeløpFeilmelding })
         .min(1, { error: heltBeløpFeilmelding })
-        .max(tak.maks, { error: takFeilmelding(tak) });
+        .max(maksbeløp, { error: takFeilmelding(maksbeløp) });
 };
 const prosentFeilmelding = 'Du må fylle inn et helt tall mellom 0 og 100';
 const påkrevdProsent = z
@@ -216,8 +211,8 @@ const krevBeløp = (
     ctx: z.core.$RefinementCtx,
     verdi: number | null,
     path: FeltSti,
-    tak: Beløpstak
-): void => valider(ctx, påkrevdBeløp(tak), verdi, path);
+    maksbeløp: number
+): void => valider(ctx, påkrevdBeløp(maksbeløp), verdi, path);
 
 const krevProsent = (ctx: z.core.$RefinementCtx, verdi: number | null, path: FeltSti): void =>
     valider(ctx, påkrevdProsent, verdi, path);
@@ -404,10 +399,12 @@ const validerFelter = (
                 krevTekst(ctx, felter.godTro.hele.begrunnelse, [...base, 'hele', 'begrunnelse']);
                 validerReduksjon(ctx, felter.godTro.hele, [...base, 'hele']);
             } else if (felter.godTro.beløpIBehold === 'deler') {
-                krevBeløp(ctx, felter.godTro.deler.beløp, [...base, 'deler', 'beløp'], {
-                    maks: feilutbetaltBeløp,
-                    beskrivelse: 'det feilutbetalte beløpet',
-                });
+                krevBeløp(
+                    ctx,
+                    felter.godTro.deler.beløp,
+                    [...base, 'deler', 'beløp'],
+                    feilutbetaltBeløp
+                );
                 krevTekst(ctx, felter.godTro.deler.begrunnelse, [...base, 'deler', 'begrunnelse']);
                 validerReduksjon(ctx, felter.godTro.deler, [...base, 'deler']);
             }
