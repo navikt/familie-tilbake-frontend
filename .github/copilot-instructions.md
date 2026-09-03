@@ -24,7 +24,7 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 - **Rammeverk**: React 19
 - **Språk**: TypeScript (strict mode)
 - **Build Tool**: Vite
-- **Routing**: React Router 7
+- **Routing**: React Router 8
 - **State Management**: 
   - Zustand (globale stores) - *migrerer bort fra Constate*
   - React Context (useContext) for komponent-scopet state
@@ -46,7 +46,6 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 - **Sesjonshåndtering**: express-session med Redis (connect-redis)
 - **Proxy**: http-proxy-middleware (proxyer til backend API)
 - **Autentisering**: Texas (NAVs auth-klient)
-- **Sikkerhet**: CSRF-beskyttelse middleware
 
 ### DevOps & Infrastruktur
 - **Container**: Distroless Node.js 24 (Debian 12)
