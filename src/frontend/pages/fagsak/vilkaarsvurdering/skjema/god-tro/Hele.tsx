@@ -23,7 +23,7 @@ export const Hele: FC = () => {
                 resize
                 maxLength={3000}
             />
-            <Reduksjon navnPrefix="godTro.hele" beløpsbeskrivelse="hele beløpet" />
+            <Reduksjon navnPrefix="godTro.hele" />
         </>
     );
 };

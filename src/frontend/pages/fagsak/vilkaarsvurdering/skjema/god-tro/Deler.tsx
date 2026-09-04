@@ -35,7 +35,7 @@ export const Deler: FC = () => {
                 type="number"
                 min={1}
             />
-            <Reduksjon navnPrefix="godTro.deler" beløpsbeskrivelse="hele beløpet som er i behold" />
+            <Reduksjon navnPrefix="godTro.deler" />
         </>
     );
 };
