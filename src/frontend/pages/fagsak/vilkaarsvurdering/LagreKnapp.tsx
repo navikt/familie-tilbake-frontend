@@ -36,7 +36,7 @@ export const LagreKnapp: FC<LagreKnappProps> = ({ skjema, laster, lagre }: Lagre
         <Button
             type="button"
             size="xsmall"
-            variant={harUlagredeEndringer ? 'primary' : 'tertiary'}
+            variant={isDirty ? 'primary' : 'tertiary'}
             loading={laster}
             onClick={håndterKlikk}
         >
