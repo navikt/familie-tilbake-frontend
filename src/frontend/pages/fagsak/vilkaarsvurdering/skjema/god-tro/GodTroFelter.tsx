@@ -43,19 +43,19 @@ export const GodTroFelter: FC = () => {
                 <Radio value="ingenting" {...beløpIBeholdProps}>
                     Ingenting av beløpet
                 </Radio>
-                <Radio value="hele" {...beløpIBeholdProps}>
-                    Hele beløpet
-                </Radio>
                 <Radio value="deler" {...beløpIBeholdProps}>
                     Deler av beløpet
+                </Radio>
+                <Radio value="hele" {...beløpIBeholdProps}>
+                    Hele beløpet
                 </Radio>
             </RadioGroup>
 
             {beløpIBehold === 'ingenting' && <Ingenting />}
 
-            {beløpIBehold === 'hele' && <Hele />}
-
             {beløpIBehold === 'deler' && <Deler />}
+
+            {beløpIBehold === 'hele' && <Hele />}
         </>
     );
 };

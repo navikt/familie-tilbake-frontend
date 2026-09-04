@@ -14,7 +14,7 @@ export const Hele: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor hele beløpet er i behold"
+                label="Begrunn hvorfor hele det feilutbetalte beløpet er i behold"
                 {...register('godTro.hele.begrunnelse')}
                 error={errors.godTro?.hele?.begrunnelse?.message}
                 size="small"

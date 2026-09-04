@@ -355,7 +355,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Deler av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor deler av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor deler av det feilutbetalte beløpet er i behold'),
                 'Deler er brukt opp'
             );
             await user.type(tallfelt('Hvor mange kroner er i behold?'), '2500');
@@ -623,7 +623,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Deler av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor deler av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor deler av det feilutbetalte beløpet er i behold'),
                 'Deler er brukt opp'
             );
             await user.type(tallfelt('Hvor mange kroner er i behold?'), beløpIBehold);
