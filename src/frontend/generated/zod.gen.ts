@@ -315,18 +315,6 @@ export const zKravgrunnlagForskjellDto = z.object({
     type: z.string(),
 });
 
-export const zEndretPeriodeDto = zKravgrunnlagForskjellDto.and(
-    z.object({
-        fom: z.iso.date().readonly(),
-        tom: z.iso.date().readonly(),
-        endringIBeløp: z
-            .int()
-            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
-            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
-        type: z.literal('EndretPeriodeDto'),
-    })
-);
-
 export const zNyPeriodeDto = zKravgrunnlagForskjellDto.and(
     z.object({
         fom: z.iso.date().readonly(),
@@ -336,6 +324,28 @@ export const zNyPeriodeDto = zKravgrunnlagForskjellDto.and(
             .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
             .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
         type: z.literal('NyPeriodeDto'),
+    })
+);
+
+export const zPeriodeDto = z.object({
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
+});
+
+export const zEndretPeriodeDto = zKravgrunnlagForskjellDto.and(
+    z.object({
+        fom: z.iso.date().readonly(),
+        tom: z.iso.date().readonly(),
+        gammelPeriode: zPeriodeDto,
+        nyttBeløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        gammeltBeløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('EndretPeriodeDto'),
     })
 );
 
@@ -929,7 +939,8 @@ export const zForskjellEntity = z.object({
     foreldelsesvurderingPeriodeRef: z.uuid().nullish(),
     type: zTypeEnum6,
     originalPeriode: zDatoperiodeEntity.nullish(),
-    endringIBeløp: z.number().nullish(),
+    gammeltBeløp: z.number().nullish(),
+    nyttBeløp: z.number().nullish(),
     nyPeriode: zDatoperiodeEntity.nullish(),
 });
 
@@ -2105,7 +2116,11 @@ export const zRessursBehandlingDto = z.object({
 
 export const zEndretPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
     z.object({
-        endringIBeløp: z
+        nyttBeløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        gammeltBeløp: z
             .int()
             .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
             .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
