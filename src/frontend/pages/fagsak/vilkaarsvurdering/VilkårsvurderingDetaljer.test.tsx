@@ -1161,10 +1161,10 @@ describe('VilkårsvurderingDetaljer', () => {
     describe('Lagre-knapp', () => {
         const lagreKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Lagre' });
 
-        test('Er primær når skjemaet er tomt/ikke ferdig utfylt', () => {
+        test('Er tertiær når skjemaet er tomt/ikke ferdig utfylt', () => {
             renderVilkårsDetaljer();
 
-            expect(lagreKnapp()).toHaveAttribute('data-variant', 'primary');
+            expect(lagreKnapp()).toHaveAttribute('data-variant', 'tertiary');
         });
 
         test('Klikk på tomt skjema kjører validering og viser feil (ingen lagring)', async () => {
@@ -1175,7 +1175,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await screen.findByText('Du må gjøre et valg')).toBeInTheDocument();
         });
 
-        test('Er fortsatt primær når kun deler av aktiv gren er fylt ut', async () => {
+        test('Er primær ved isDirty', async () => {
             renderVilkårsDetaljer();
 
             user.click(godTroRadio());
