@@ -257,11 +257,9 @@ const beløpIBehold = (): HTMLElement =>
         name: 'Hvor mange kroner er i behold?',
     });
 
-const begrunnelseIBehold = async (
-    beløpsbeskrivelse: 'hele beløpet' | 'deler av beløpet'
-): Promise<HTMLElement> =>
+const begrunnelseIBehold = async (beløpsbeskrivelse: 'hele' | 'deler av'): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
-        name: `Begrunn hvorfor ${beløpsbeskrivelse} er i behold`,
+        name: `Begrunn hvorfor ${beløpsbeskrivelse} det feilutbetalte beløpet er i behold`,
     });
 const årsakKrevesTilbakeCheckboxGroup = async (
     beløpsbeskrivelse: Beløpsbeskrivelse
@@ -390,7 +388,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseGodTro()).toBeInTheDocument();
 
             user.click(heleIBeholdRadio());
-            expect(await begrunnelseIBehold('hele beløpet')).toBeInTheDocument();
+            expect(await begrunnelseIBehold('hele')).toBeInTheDocument();
 
             user.click(await krevesTilbakeJaRadio('hele beløpet'));
             expect(await årsakKrevesTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
@@ -404,7 +402,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseGodTro()).toBeInTheDocument();
 
             user.click(heleIBeholdRadio());
-            expect(await begrunnelseIBehold('hele beløpet')).toBeInTheDocument();
+            expect(await begrunnelseIBehold('hele')).toBeInTheDocument();
 
             user.click(await krevesTilbakeNeiRadio('hele beløpet'));
             expect(await årsakKrevesIkkeTilbakeCheckboxGroup('hele beløpet')).toBeInTheDocument();
@@ -419,7 +417,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseGodTro()).toBeInTheDocument();
 
             user.click(delerIBeholdRadio());
-            expect(await begrunnelseIBehold('deler av beløpet')).toBeInTheDocument();
+            expect(await begrunnelseIBehold('deler av')).toBeInTheDocument();
             expect(beløpIBehold()).toBeInTheDocument();
 
             user.click(await krevesTilbakeJaRadio('hele beløpet som er i behold'));
@@ -436,7 +434,7 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseGodTro()).toBeInTheDocument();
 
             user.click(delerIBeholdRadio());
-            expect(await begrunnelseIBehold('deler av beløpet')).toBeInTheDocument();
+            expect(await begrunnelseIBehold('deler av')).toBeInTheDocument();
             expect(beløpIBehold()).toBeInTheDocument();
 
             user.click(await krevesTilbakeNeiRadio('hele beløpet som er i behold'));
@@ -708,9 +706,7 @@ describe('VilkårsvurderingDetaljer', () => {
 
                 expect(await begrunnelseGodTro()).toHaveValue('God tro-begrunnelse');
                 expect(heleIBeholdRadio()).toBeChecked();
-                expect(await begrunnelseIBehold('hele beløpet')).toHaveValue(
-                    'Hele beløpet er i behold'
-                );
+                expect(await begrunnelseIBehold('hele')).toHaveValue('Hele beløpet er i behold');
                 expect(await krevesTilbakeJaRadio('hele beløpet')).toBeChecked();
 
                 const gruppe = await årsakKrevesTilbakeCheckboxGroup('hele beløpet');
@@ -766,7 +762,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 });
 
                 expect(delerIBeholdRadio()).toBeChecked();
-                expect(await begrunnelseIBehold('deler av beløpet')).toHaveValue(
+                expect(await begrunnelseIBehold('deler av')).toHaveValue(
                     'Deler av beløpet er i behold'
                 );
                 expect(beløpIBehold()).toHaveValue(4000);
