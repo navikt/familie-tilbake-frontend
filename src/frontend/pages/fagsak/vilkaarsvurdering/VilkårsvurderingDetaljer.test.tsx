@@ -130,7 +130,7 @@ const begrunnelseForstoEllerBurdeForstått = async (
 
 const begrunnelseIngenting = async (): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
-        name: 'Begrunn hvorfor ingenting av beløpet er i behold',
+        name: 'Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold',
     });
 
 const vilkårRadioGroup = (): HTMLElement =>

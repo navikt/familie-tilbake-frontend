@@ -416,7 +416,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Ingenting av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor ingenting av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold'),
                 'Beløpet er brukt opp'
             );
             await user.click(lagreKnapp());
@@ -867,7 +867,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Ingenting av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor ingenting av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold'),
                 'Beløpet er brukt opp'
             );
             await user.click(lagreKnapp());
@@ -907,7 +907,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Ingenting av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor ingenting av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold'),
                 'Beløpet er brukt opp'
             );
 

@@ -14,7 +14,7 @@ export const Ingenting: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor ingenting av beløpet er i behold"
+                label="Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold"
                 {...register('godTro.ingenting.begrunnelse')}
                 error={errors.godTro?.ingenting?.begrunnelse?.message}
                 size="small"
