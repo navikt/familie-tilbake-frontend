@@ -17,10 +17,9 @@ import { SimulertBeløp } from '../SimulertBeløp';
 
 type Props = {
     navnPrefix: ReduksjonNavnPrefix;
-    beløpsbeskrivelse: 'hele beløpet' | 'hele beløpet som er i behold';
 };
 
-export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) => {
+export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
     const { register, setValue, control, getFieldState, formState } =
         useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterReduksjonGodTro } = useVilkårsvurderingLesedata();
@@ -53,7 +52,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
     return (
         <>
             <RadioGroup
-                legend={`Skal ${beløpsbeskrivelse} kreves tilbake?`}
+                legend="Skal beløpet reduseres?"
                 name={reduksjonName}
                 size="small"
                 className="max-w-xl"
@@ -61,61 +60,19 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                 error={feil(`${navnPrefix}.erDetReduksjonÅrsaker`)}
             >
                 <HStack gap="space-16">
-                    <Radio value="neiGodTro" {...reduksjonProps}>
+                    <Radio value="jaGodTro" {...reduksjonProps}>
                         Ja
                     </Radio>
-                    <Radio value="jaGodTro" {...reduksjonProps}>
+                    <Radio value="neiGodTro" {...reduksjonProps}>
                         Nei
                     </Radio>
                 </HStack>
             </RadioGroup>
 
-            {erDetReduksjonÅrsaker === 'neiGodTro' && (
-                <>
-                    <CheckboxGroup
-                        legend={`Hva er årsaken(e) til at ${beløpsbeskrivelse} skal kreves tilbake?`}
-                        description="Kryss av for det som er avgjørende i vurderingen din"
-                        size="small"
-                        className="max-w-xl"
-                        value={relevansNeiGodTro}
-                        error={feil(`${navnPrefix}.neiGodTro.relevans`)}
-                        onChange={(value: string[]): void =>
-                            setValue(`${navnPrefix}.neiGodTro.relevans`, value, setValueOptions)
-                        }
-                    >
-                        {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
-                            <Checkbox key={moment} value={moment}>
-                                {beskrivelse}
-                            </Checkbox>
-                        ))}
-                    </CheckboxGroup>
-                    {relevansNeiGodTro.includes('ANNET') && (
-                        <TextField
-                            label="Beskriv kort hva du legger i alternativet “Annet”"
-                            {...register(`${navnPrefix}.neiGodTro.annetBegrunnelse`)}
-                            error={feil(`${navnPrefix}.neiGodTro.annetBegrunnelse`)}
-                            size="small"
-                            className="max-w-xl"
-                        />
-                    )}
-                    <Textarea
-                        label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} skal kreves tilbake`}
-                        {...register(`${navnPrefix}.neiGodTro.begrunnelse`)}
-                        error={feil(`${navnPrefix}.neiGodTro.begrunnelse`)}
-                        size="small"
-                        className="max-w-xl"
-                        minRows={3}
-                        resize
-                        maxLength={3000}
-                    />
-                    <SimulertBeløp />
-                </>
-            )}
-
             {erDetReduksjonÅrsaker === 'jaGodTro' && (
                 <>
                     <CheckboxGroup
-                        legend={`Hva er årsaken(e) til at ${beløpsbeskrivelse} ikke skal kreves tilbake?`}
+                        legend="Hva er årsaken(e) til at beløpet skal reduseres?"
                         description="Kryss av for det som er avgjørende i vurderingen din"
                         size="small"
                         className="max-w-xl"
@@ -141,7 +98,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         />
                     )}
                     <Textarea
-                        label={`Begrunn hvorfor du vurderer at ${beløpsbeskrivelse} ikke skal kreves tilbake`}
+                        label="Begrunn hvorfor du vurderer at beløpet skal reduseres"
                         {...register(`${navnPrefix}.jaGodTro.begrunnelse`)}
                         error={feil(`${navnPrefix}.jaGodTro.begrunnelse`)}
                         size="small"
@@ -169,6 +126,48 @@ export const Reduksjon: FC<Props> = ({ navnPrefix, beløpsbeskrivelse }: Props) 
                         max={100}
                     />
                     <SimulertBeløp reduksjon reduksjonsprosent={prosentReduksjon ?? 0} />
+                </>
+            )}
+
+            {erDetReduksjonÅrsaker === 'neiGodTro' && (
+                <>
+                    <CheckboxGroup
+                        legend="Hva er årsaken(e) til at beløpet ikke skal reduseres?"
+                        description="Kryss av for det som er avgjørende i vurderingen din"
+                        size="small"
+                        className="max-w-xl"
+                        value={relevansNeiGodTro}
+                        error={feil(`${navnPrefix}.neiGodTro.relevans`)}
+                        onChange={(value: string[]): void =>
+                            setValue(`${navnPrefix}.neiGodTro.relevans`, value, setValueOptions)
+                        }
+                    >
+                        {momenterReduksjonGodTro.map(({ moment, beskrivelse }) => (
+                            <Checkbox key={moment} value={moment}>
+                                {beskrivelse}
+                            </Checkbox>
+                        ))}
+                    </CheckboxGroup>
+                    {relevansNeiGodTro.includes('ANNET') && (
+                        <TextField
+                            label="Beskriv kort hva du legger i alternativet “Annet”"
+                            {...register(`${navnPrefix}.neiGodTro.annetBegrunnelse`)}
+                            error={feil(`${navnPrefix}.neiGodTro.annetBegrunnelse`)}
+                            size="small"
+                            className="max-w-xl"
+                        />
+                    )}
+                    <Textarea
+                        label="Begrunn hvorfor du vurderer at beløpet ikke skal reduseres"
+                        {...register(`${navnPrefix}.neiGodTro.begrunnelse`)}
+                        error={feil(`${navnPrefix}.neiGodTro.begrunnelse`)}
+                        size="small"
+                        className="max-w-xl"
+                        minRows={3}
+                        resize
+                        maxLength={3000}
+                    />
+                    <SimulertBeløp />
                 </>
             )}
         </>

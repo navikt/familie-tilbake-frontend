@@ -35,7 +35,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                 </InfoCard.Header>
             </InfoCard>
             <RadioGroup
-                legend="Skal Nav la være å kreve beløpet tilbake? (Sjette avsnitt)"
+                legend="Skal Nav la være å kreve beløpet tilbake? (sjette avsnitt)"
                 size="small"
                 className="max-w-xl"
                 value={unnlatelseVerdi}

@@ -230,7 +230,7 @@ describe('VilkårsvurderingSkjema', () => {
                 'Mottakeren burde undersøkt'
             );
             await user.click(
-                radioIGruppe('Skal Nav la være å kreve beløpet tilbake? (Sjette avsnitt)', 'Ja')
+                radioIGruppe('Skal Nav la være å kreve beløpet tilbake? (sjette avsnitt)', 'Ja')
             );
             await user.type(
                 tekstfelt(
@@ -355,23 +355,19 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Deler av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor deler av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor deler av det feilutbetalte beløpet er i behold'),
                 'Deler er brukt opp'
             );
             await user.type(tallfelt('Hvor mange kroner er i behold?'), '2500');
-            await user.click(
-                radioIGruppe('Skal hele beløpet som er i behold kreves tilbake?', 'Nei')
-            );
+            await user.click(radioIGruppe('Skal beløpet reduseres?', 'Ja'));
             await user.click(
                 avkryssningsboks(
-                    /^Hva er årsaken\(e\) til at hele beløpet som er i behold ikke skal kreves tilbake\?/,
+                    /^Hva er årsaken\(e\) til at beløpet skal reduseres\?/,
                     TID_SIDEN_UTBETALING.beskrivelse
                 )
             );
             await user.type(
-                tekstfelt(
-                    'Begrunn hvorfor du vurderer at hele beløpet som er i behold ikke skal kreves tilbake'
-                ),
+                tekstfelt('Begrunn hvorfor du vurderer at beløpet skal reduseres'),
                 'Det har gått lang tid'
             );
             await user.type(tallfelt('Hvor mange prosent skal beløpet reduseres med?'), '40');
@@ -416,7 +412,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Ingenting av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor ingenting av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold'),
                 'Beløpet er brukt opp'
             );
             await user.click(lagreKnapp());
@@ -603,11 +599,9 @@ describe('VilkårsvurderingSkjema', () => {
     });
 
     describe('Beløpsgrenser', () => {
-        const REDUKSJON_LEGEND = 'Skal hele beløpet som er i behold kreves tilbake?';
-        const REDUKSJON_MOMENTER_LEGEND =
-            /^Hva er årsaken\(e\) til at hele beløpet som er i behold ikke skal kreves tilbake\?/;
-        const KREVES_TILBAKE_BEGRUNNELSE =
-            'Begrunn hvorfor du vurderer at hele beløpet som er i behold ikke skal kreves tilbake';
+        const REDUKSJON_LEGEND = 'Skal beløpet reduseres?';
+        const REDUKSJON_MOMENTER_LEGEND = /^Hva er årsaken\(e\) til at beløpet skal reduseres\?/;
+        const REDUKSJON_BEGRUNNELSE = 'Begrunn hvorfor du vurderer at beløpet skal reduseres';
 
         const fyllUtGodTroDeler = async (
             user: UserEvent,
@@ -623,30 +617,28 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Deler av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor deler av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor deler av det feilutbetalte beløpet er i behold'),
                 'Deler er brukt opp'
             );
             await user.type(tallfelt('Hvor mange kroner er i behold?'), beløpIBehold);
             if (prosentReduksjon === undefined) {
-                await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Ja'));
+                await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Nei'));
                 await user.click(
                     avkryssningsboks(
-                        /^Hva er årsaken\(e\) til at hele beløpet som er i behold skal kreves tilbake\?/,
+                        /^Hva er årsaken\(e\) til at beløpet ikke skal reduseres\?/,
                         TID_SIDEN_UTBETALING.beskrivelse
                     )
                 );
                 await user.type(
-                    tekstfelt(
-                        'Begrunn hvorfor du vurderer at hele beløpet som er i behold skal kreves tilbake'
-                    ),
+                    tekstfelt('Begrunn hvorfor du vurderer at beløpet ikke skal reduseres'),
                     'Det har gått lang tid'
                 );
             } else {
-                await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Nei'));
+                await user.click(radioIGruppe(REDUKSJON_LEGEND, 'Ja'));
                 await user.click(
                     avkryssningsboks(REDUKSJON_MOMENTER_LEGEND, TID_SIDEN_UTBETALING.beskrivelse)
                 );
-                await user.type(tekstfelt(KREVES_TILBAKE_BEGRUNNELSE), 'Det har gått lang tid');
+                await user.type(tekstfelt(REDUKSJON_BEGRUNNELSE), 'Det har gått lang tid');
                 await user.type(
                     tallfelt('Hvor mange prosent skal beløpet reduseres med?'),
                     prosentReduksjon
@@ -867,7 +859,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Ingenting av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor ingenting av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold'),
                 'Beløpet er brukt opp'
             );
             await user.click(lagreKnapp());
@@ -907,7 +899,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radio('Ingenting av beløpet'));
             await user.type(
-                tekstfelt('Begrunn hvorfor ingenting av beløpet er i behold'),
+                tekstfelt('Begrunn hvorfor ingenting av det feilutbetalte beløpet er i behold'),
                 'Beløpet er brukt opp'
             );
 

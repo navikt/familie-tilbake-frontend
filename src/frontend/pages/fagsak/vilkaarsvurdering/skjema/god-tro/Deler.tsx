@@ -14,7 +14,7 @@ export const Deler: FC = () => {
     return (
         <>
             <Textarea
-                label="Begrunn hvorfor deler av beløpet er i behold"
+                label="Begrunn hvorfor deler av det feilutbetalte beløpet er i behold"
                 {...register('godTro.deler.begrunnelse')}
                 error={errors.godTro?.deler?.begrunnelse?.message}
                 size="small"
@@ -35,7 +35,7 @@ export const Deler: FC = () => {
                 type="number"
                 min={1}
             />
-            <Reduksjon navnPrefix="godTro.deler" beløpsbeskrivelse="hele beløpet som er i behold" />
+            <Reduksjon navnPrefix="godTro.deler" />
         </>
     );
 };

@@ -44,7 +44,7 @@ export const VilkårsvurderingSkjema: FC = () => {
                 </Radio>
                 <Radio value="god_tro" {...valgProps}>
                     Mottakeren har mottatt beløpet i{' '}
-                    <span className="font-bold">aktsom god tro</span>
+                    <span className="font-bold">aktsom god tro</span> (femte avsnitt)
                 </Radio>
             </RadioGroup>
 
