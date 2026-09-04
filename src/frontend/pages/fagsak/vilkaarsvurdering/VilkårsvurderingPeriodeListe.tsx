@@ -4,6 +4,7 @@ import type { PeriodeTag, Vilkårsperiode, Vurderingsstatus } from './typer';
 
 import {
     ArrowUndoIcon,
+    ExclamationmarkTriangleIcon,
     HeadCloudIcon,
     PercentIcon,
     QuestionmarkCircleIcon,
@@ -81,12 +82,14 @@ const periodeKortAriaLabel = (periode: Vilkårsperiode): string => {
 
 type Props = {
     perioder: Vilkårsperiode[];
+    erUnder4xRettsgebyr: boolean;
     valgtPeriodeId: Vilkårsperiode['id'] | undefined;
     setValgtPeriodeId: (periodeId: Vilkårsperiode['id']) => void;
 };
 
 export const VilkårsvurderingPeriodeListe: FC<Props> = ({
     perioder,
+    erUnder4xRettsgebyr,
     valgtPeriodeId,
     setValgtPeriodeId,
 }: Props) => {
@@ -150,8 +153,16 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             <span className="font-ax-bold text-xl">
                                 {periode.fom}–{periode.tom}
                             </span>
-                            <span className="text-ax-text-brand-magenta">
+                            <span className="text-ax-text-brand-magenta flex flex-row gap-2">
                                 Feilutbetalt: {formatCurrencyNoKr(periode.feilutbetalt)}
+                                {erUnder4xRettsgebyr && (
+                                    <Tooltip content="Totalbeløpet er under fire ganger rettsgebyret">
+                                        <ExclamationmarkTriangleIcon
+                                            aria-label="Advarsel: Totalbeløpet er under fire ganger rettsgebyret"
+                                            className="text-ax-text-neutral-subtle"
+                                        />
+                                    </Tooltip>
+                                )}
                             </span>
                             {periode.rettsligGrunnlag.length > 0 && (
                                 <span>{periode.rettsligGrunnlag.join(', ')}</span>

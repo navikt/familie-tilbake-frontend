@@ -25,6 +25,7 @@ const renderListe = (
     render(
         <VilkårsvurderingPeriodeListe
             perioder={perioder}
+            erUnder4xRettsgebyr={false}
             valgtPeriodeId={valgtPeriodeId}
             setValgtPeriodeId={setValgtPeriodeId}
         />
