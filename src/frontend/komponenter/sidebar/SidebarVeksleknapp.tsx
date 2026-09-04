@@ -3,16 +3,16 @@ import type { FC } from 'react';
 import { SidebarLeftIcon, SidebarRightIcon } from '@navikt/aksel-icons';
 import { Button } from '@navikt/ds-react';
 
-import { useSidebarStore } from '@/stores/sidebarStore';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
+
+import { useSidebarVisning } from './useSidebarVisning';
 
 export const SIDEBAR_PANEL_ID = 'informasjonspanel';
 
 export const SidebarVeksleknapp: FC = () => {
-    const erÅpen = useSidebarStore(state => state.erÅpen);
-    const veksleÅpen = useSidebarStore(state => state.veksleÅpen);
+    const { innholdErSynlig, veksle } = useSidebarVisning();
 
-    const tekst = erÅpen ? 'Lukk informasjonspanelet' : 'Åpne informasjonspanelet';
+    const tekst = innholdErSynlig ? 'Lukk informasjonspanelet' : 'Åpne informasjonspanelet';
 
     const håndterKlikk = (): void => {
         sporHendelse(Hendelser.KNAPP_KLIKKET, {
@@ -20,7 +20,7 @@ export const SidebarVeksleknapp: FC = () => {
             kontekst: Sporingskontekst.Sidebar,
             komponentId: 'veksle-informasjonspanel',
         });
-        veksleÅpen();
+        veksle();
     };
 
     return (
@@ -28,9 +28,15 @@ export const SidebarVeksleknapp: FC = () => {
             data-color="neutral"
             size="small"
             variant="tertiary"
-            aria-expanded={erÅpen}
+            aria-expanded={innholdErSynlig}
             aria-controls={SIDEBAR_PANEL_ID}
-            icon={erÅpen ? <SidebarRightIcon title={tekst} /> : <SidebarLeftIcon title={tekst} />}
+            icon={
+                innholdErSynlig ? (
+                    <SidebarRightIcon title={tekst} />
+                ) : (
+                    <SidebarLeftIcon title={tekst} />
+                )
+            }
             onClick={håndterKlikk}
         />
     );

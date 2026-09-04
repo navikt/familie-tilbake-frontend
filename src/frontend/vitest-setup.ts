@@ -38,6 +38,37 @@ if (!('ResizeObserver' in global)) {
     });
 }
 
+// jsdom implementerer ikke matchMedia. Uten den kan ikke komponenter som tilpasser
+// seg skjermbredden rendres. Vi svarer på `min-width`-spørringer ut fra
+// window.innerWidth, slik at tester kan styre bredden ved å sette den.
+if (!window.matchMedia) {
+    const treffer = (query: string): boolean => {
+        const minstebredde = /\(min-width:\s*(\d+)px\)/.exec(query);
+        return minstebredde ? window.innerWidth >= Number(minstebredde[1]) : false;
+    };
+
+    const ingenLyttere = (): void => {
+        // Stubben varsler ikke om endringer; tester rerendrer selv.
+    };
+
+    Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: (query: string): MediaQueryList =>
+            ({
+                get matches(): boolean {
+                    return treffer(query);
+                },
+                media: query,
+                onchange: null,
+                addEventListener: ingenLyttere,
+                removeEventListener: ingenLyttere,
+                addListener: ingenLyttere,
+                removeListener: ingenLyttere,
+                dispatchEvent: (): boolean => false,
+            }) as unknown as MediaQueryList,
+    });
+}
+
 const crypto = new Crypto();
 Object.defineProperty(global, 'crypto', {
     get(): Crypto {

@@ -4,12 +4,12 @@ import { Modal } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
-import { useErStorSkjerm } from '@/hooks/useErStorSkjerm';
-import { useSidebarErÅpen, useSidebarStore } from '@/stores/sidebarStore';
+import { useSidebarStore } from '@/stores/sidebarStore';
 
 import { SidebarPanel } from './SidebarPanel';
 import { SidebarSnarveier } from './SidebarSnarveier';
 import { SIDEBAR_PANEL_ID, SidebarVeksleknapp } from './SidebarVeksleknapp';
+import { useSidebarVisning } from './useSidebarVisning';
 
 type Props = {
     dialogRef: RefObject<HTMLDialogElement | null>;
@@ -17,14 +17,8 @@ type Props = {
 
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { behandlingId } = useBehandling();
-    const erÅpen = useSidebarErÅpen();
-    const erStorSkjerm = useErStorSkjerm();
+    const { visPanel, visModal, lukkModal } = useSidebarVisning();
     const nullstillValgtSide = useSidebarStore(state => state.nullstillValgtSide);
-    const lukk = useSidebarStore(state => state.lukk);
-
-    // Sidebaren har bare plass som panel på store skjermer. På smale skjermer vises
-    // den som en smal ikonkolonne, og selve innholdet åpnes i en modal.
-    const visPanel = erÅpen && erStorSkjerm;
 
     const forrigeBehandlingId = useRef(behandlingId);
     useEffect(() => {
@@ -34,24 +28,15 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
         }
     }, [behandlingId, nullstillValgtSide]);
 
-    const skalViseModal = erÅpen && !erStorSkjerm;
     useEffect(() => {
         const dialog = dialogRef.current;
         if (!dialog) return;
-        if (skalViseModal && !dialog.open) {
+        if (visModal && !dialog.open) {
             dialog.showModal();
-        } else if (!skalViseModal && dialog.open) {
+        } else if (!visModal && dialog.open) {
             dialog.close();
         }
-    }, [skalViseModal, dialogRef]);
-
-    // Åpen-tilstanden er persistert og hører til panelvisningen. Uten dette ville en
-    // åpen sidebar fra en bredere skjerm slått opp en modal med én gang siden lastes.
-    useEffect(() => {
-        if (!erStorSkjerm) {
-            lukk();
-        }
-    }, [erStorSkjerm, lukk]);
+    }, [visModal, dialogRef]);
 
     const handleKlikkUtenforModal: MouseEventHandler<HTMLDialogElement> = (
         e: React.MouseEvent<HTMLDialogElement, MouseEvent>
@@ -87,7 +72,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 aria-label="Informasjon om tilbakekrevingen og bruker"
                 className="h-full mr-2 my-2"
                 onClick={handleKlikkUtenforModal}
-                onClose={lukk}
+                onClose={lukkModal}
             >
                 <Modal.Header />
                 <Modal.Body className="flex flex-col gap-4">
