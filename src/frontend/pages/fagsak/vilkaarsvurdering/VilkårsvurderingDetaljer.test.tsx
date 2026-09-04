@@ -139,7 +139,7 @@ const vilkårRadioGroup = (): HTMLElement =>
     });
 const godTroRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
-        name: 'Mottakeren har mottatt beløpet i aktsom god tro',
+        name: 'Mottakeren har mottatt beløpet i aktsom god tro (femte avsnitt)',
     });
 const forårsaketAvMottakerRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
@@ -205,7 +205,7 @@ const reduksjonsprosentField = async (): Promise<HTMLElement> =>
 
 const under4xRadioGroup = async (): Promise<HTMLElement> =>
     await screen.findByRole('radiogroup', {
-        name: 'Skal Nav la være å kreve beløpet tilbake? (Sjette avsnitt)',
+        name: 'Skal Nav la være å kreve beløpet tilbake? (sjette avsnitt)',
     });
 const under4xJaRadio = async (): Promise<HTMLElement> =>
     within(await under4xRadioGroup()).getByRole('radio', { name: 'Ja' });
