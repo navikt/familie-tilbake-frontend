@@ -2,15 +2,13 @@ import type { FC } from 'react';
 
 import { Skeleton } from '@navikt/ds-react';
 
-import { useErStorSkjerm } from '@/hooks/useErStorSkjerm';
-import { useSidebarErÅpen } from '@/stores/sidebarStore';
+import { useSidebarVisning } from './useSidebarVisning';
 
 /** Speiler oppsettet i Sidebar, slik at kolonnen ikke endrer bredde når innholdet er lastet. */
 export const SidebarSkeleton: FC = () => {
-    const erÅpen = useSidebarErÅpen();
-    const erStorSkjerm = useErStorSkjerm();
+    const { visPanel } = useSidebarVisning();
 
-    if (!(erÅpen && erStorSkjerm)) {
+    if (!visPanel) {
         return (
             <aside
                 aria-label="Laster informasjonspanelet"

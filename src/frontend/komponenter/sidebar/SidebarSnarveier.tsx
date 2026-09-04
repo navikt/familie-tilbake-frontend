@@ -2,15 +2,15 @@ import type { FC } from 'react';
 
 import { Button } from '@navikt/ds-react';
 
-import { useSidebarStore } from '@/stores/sidebarStore';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { MENYSIDE_META } from './menysider';
 import { useMenysider } from './useMenysider';
+import { useSidebarVisning } from './useSidebarVisning';
 
 export const SidebarSnarveier: FC = () => {
     const { tilgjengeligeSider, aktivSide } = useMenysider();
-    const åpneMedSide = useSidebarStore(state => state.åpneMedSide);
+    const { åpneSide } = useSidebarVisning();
 
     return (
         <nav aria-label="Snarveier i informasjonspanelet" className="flex flex-col gap-4">
@@ -31,7 +31,7 @@ export const SidebarSnarveier: FC = () => {
                                 kontekst: Sporingskontekst.Sidebar,
                                 komponentId: 'sidebar-snarvei',
                             });
-                            åpneMedSide(side);
+                            åpneSide(side);
                         }}
                     />
                 );
