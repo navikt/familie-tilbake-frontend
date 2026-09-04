@@ -105,6 +105,7 @@ export const Vilkårsvurdering: FC = () => {
             <div className="flex flex-col ax-md:flex-row min-h-0 h-full">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
+                    erUnder4xRettsgebyr={vilkår.erUnder4xRettsgebyr}
                     valgtPeriodeId={valgtPeriode?.id}
                     setValgtPeriodeId={setValgtPeriodeId}
                 />
