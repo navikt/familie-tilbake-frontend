@@ -28,7 +28,7 @@ export const VedtakSkeleton: FC = () => {
                     <Skeleton variant="rounded" width="100%" height={990} />
                 </VStack>
             </div>
-            <ActionBarSkeleton />
+            <ActionBarSkeleton medStegflyt />
         </VStack>
     );
 };

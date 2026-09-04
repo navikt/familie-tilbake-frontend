@@ -1,11 +1,10 @@
 import type { FC } from 'react';
 
-import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { Button, Heading } from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 
 import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
 import { SidebarSkeleton } from '@/komponenter/sidebar/SidebarSkeleton';
-import { StegflytSkeleton } from '@/komponenter/stegflyt/StegflytSkeleton';
+import { StegflytSkeleton } from '@/komponenter/stegflyt/gammel-stegflyt/StegflytSkeleton';
 
 import { BEHANDLING_HØYDE, BEHANDLING_MINSTEBREDDE, BehandlingGrid } from './BehandlingGrid';
 
@@ -19,16 +18,7 @@ export const BehandlingSkeleton: FC = () => {
                     <Heading size="medium" visuallyHidden>
                         Laster inn behandling
                     </Heading>
-                    <div className="flex flex-row gap-2 ax-lg:block justify-between">
-                        <StegflytSkeleton />
-                        <Button
-                            variant="tertiary"
-                            icon={<SidebarRightIcon aria-hidden fontSize="1.5rem" />}
-                            className="lg:hidden"
-                        >
-                            Åpne
-                        </Button>
-                    </div>
+                    <StegflytSkeleton />
                     <div className="py-4 border-ax-border-brand-blue-subtle border rounded-2xl px-6 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0" />
                     <ActionBarSkeleton />
                 </div>

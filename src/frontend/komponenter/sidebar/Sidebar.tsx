@@ -4,11 +4,12 @@ import { Modal } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
-import { useSidebarErÅpen, useSidebarStore } from '@/stores/sidebarStore';
+import { useSidebarStore } from '@/stores/sidebarStore';
 
 import { SidebarPanel } from './SidebarPanel';
 import { SidebarSnarveier } from './SidebarSnarveier';
 import { SIDEBAR_PANEL_ID, SidebarVeksleknapp } from './SidebarVeksleknapp';
+import { useSidebarVisning } from './useSidebarVisning';
 
 type Props = {
     dialogRef: RefObject<HTMLDialogElement | null>;
@@ -16,7 +17,7 @@ type Props = {
 
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { behandlingId } = useBehandling();
-    const erÅpen = useSidebarErÅpen();
+    const { visPanel, visModal, lukkModal } = useSidebarVisning();
     const nullstillValgtSide = useSidebarStore(state => state.nullstillValgtSide);
 
     const forrigeBehandlingId = useRef(behandlingId);
@@ -28,16 +29,14 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     }, [behandlingId, nullstillValgtSide]);
 
     useEffect(() => {
-        const mq = window.matchMedia('(min-width: 1024px)');
-        const lukkModalenHvisStørreEnnLg = (): void => {
-            if (mq.matches && dialogRef.current?.open) {
-                dialogRef.current.close();
-            }
-        };
-        lukkModalenHvisStørreEnnLg();
-        mq.addEventListener('change', lukkModalenHvisStørreEnnLg);
-        return (): void => mq.removeEventListener('change', lukkModalenHvisStørreEnnLg);
-    }, [dialogRef]);
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+        if (visModal && !dialog.open) {
+            dialog.showModal();
+        } else if (!visModal && dialog.open) {
+            dialog.close();
+        }
+    }, [visModal, dialogRef]);
 
     const handleKlikkUtenforModal: MouseEventHandler<HTMLDialogElement> = (
         e: React.MouseEvent<HTMLDialogElement, MouseEvent>
@@ -52,13 +51,13 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
             <aside
                 id={SIDEBAR_PANEL_ID}
                 aria-label="Informasjon om tilbakekrevingen og bruker"
-                className={`flex-col hidden ax-lg:flex min-h-0 ${
-                    erÅpen
+                className={`flex flex-col min-h-0 ${
+                    visPanel
                         ? 'min-w-0 gap-2'
                         : 'w-16 shrink-0 items-center p-4 pt-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
                 }`}
             >
-                {erÅpen ? (
+                {visPanel ? (
                     <SidebarPanel veksleknapp={<SidebarVeksleknapp />} />
                 ) : (
                     <>
@@ -73,6 +72,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 aria-label="Informasjon om tilbakekrevingen og bruker"
                 className="h-full mr-2 my-2"
                 onClick={handleKlikkUtenforModal}
+                onClose={lukkModal}
             >
                 <Modal.Header />
                 <Modal.Body className="flex flex-col gap-4">

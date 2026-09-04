@@ -1,8 +1,7 @@
 import type { FC, ReactNode, RefObject } from 'react';
 import type { BehandlingsstegsinfoDto } from '@/generated';
 
-import { SidebarRightIcon } from '@navikt/aksel-icons';
-import { Button, Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
+import { Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
@@ -18,7 +17,7 @@ import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting'
 import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
 import { NyttKravgrunnlagModal } from '@/komponenter/modal/nytt-kravgrunnlag/NyttKravgrunnlagModal';
 import { PåVentModal } from '@/komponenter/modal/på-vent/PåVentModal';
-import { Stegflyt } from '@/komponenter/stegflyt/Stegflyt';
+import { Stegflyt } from '@/komponenter/stegflyt/gammel-stegflyt/Stegflyt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { useActionBarConfig } from '@/stores/actionBarStore';
 import { useBehandlingStore } from '@/stores/behandlingStore';
@@ -31,7 +30,6 @@ import {
     SYNLIGE_STEG,
     utledStandardSide,
 } from '@/utils/sider';
-import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { BEHANDLING_HØYDE, BEHANDLING_MINSTEBREDDE, BehandlingGrid } from './BehandlingGrid';
 import { Fakta } from './fakta/Fakta';
@@ -98,7 +96,8 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
  */
 const GlobalActionBar: FC = () => {
     const config = useActionBarConfig();
-    return config ? <ActionBar {...config} /> : <ActionBarSkeleton />;
+    const { erNyModell } = useBehandling();
+    return config ? <ActionBar {...config} /> : <ActionBarSkeleton medStegflyt={erNyModell} />;
 };
 
 type BehandlingLayoutProps = {
@@ -229,26 +228,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                 className="flex flex-col gap-4 min-h-0 min-w-0"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
-                <div className="flex flex-row gap-2 ax-lg:block justify-between">
-                    <Stegflyt />
-                    <Button
-                        variant="tertiary"
-                        icon={
-                            <SidebarRightIcon title="Åpne informasjonspanelet" fontSize="1.5rem" />
-                        }
-                        className="lg:hidden"
-                        onClick={(): void => {
-                            sporHendelse(Hendelser.MODAL_APNET, {
-                                tittel: 'Informasjon om tilbakekrevingen og bruker',
-                                kontekst: Sporingskontekst.Behandling,
-                                komponentId: 'åpne-informasjonspanel',
-                            });
-                            dialogRef.current?.showModal();
-                        }}
-                    >
-                        Åpne
-                    </Button>
-                </div>
+                {!behandling.erNyModell && <Stegflyt />}
                 <section
                     ref={contentRef}
                     className="py-4 border-ax-border-brand-blue-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
