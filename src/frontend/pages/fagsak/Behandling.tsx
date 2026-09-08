@@ -12,12 +12,14 @@ import { ToggleName, useToggles } from '@/context/TogglesContext';
 import { useActionBar } from '@/hooks/useActionBar';
 import { ActionBar } from '@/komponenter/action-bar/ActionBar';
 import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
+import { useActionBarVariant } from '@/komponenter/action-bar/useActionBarVariant';
 import { StegErrorBoundary } from '@/komponenter/error-boundary/StegErrorBoundary';
 import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
 import { NyttKravgrunnlagModal } from '@/komponenter/modal/nytt-kravgrunnlag/NyttKravgrunnlagModal';
 import { PåVentModal } from '@/komponenter/modal/på-vent/PåVentModal';
 import { Stegflyt } from '@/komponenter/stegflyt/gammel-stegflyt/Stegflyt';
+import { useNyStegflyt } from '@/komponenter/stegflyt/useNyStegflyt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { useActionBarConfig } from '@/stores/actionBarStore';
 import { useBehandlingStore } from '@/stores/behandlingStore';
@@ -96,8 +98,8 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
  */
 const GlobalActionBar: FC = () => {
     const config = useActionBarConfig();
-    const { erNyModell } = useBehandling();
-    return config ? <ActionBar {...config} /> : <ActionBarSkeleton medStegflyt={erNyModell} />;
+    const variant = useActionBarVariant();
+    return config ? <ActionBar {...config} /> : <ActionBarSkeleton variant={variant} />;
 };
 
 type BehandlingLayoutProps = {
@@ -206,6 +208,7 @@ type AktivBehandlingProps = {
 const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlingProps) => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
+    const nyStegflyt = useNyStegflyt();
     const { setInnholdsbredde, setInnholdVenstrePosisjon } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
 
@@ -228,7 +231,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                 className="flex flex-col gap-4 min-h-0 min-w-0"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
-                {!behandling.erNyModell && <Stegflyt />}
+                {!nyStegflyt && <Stegflyt />}
                 <section
                     ref={contentRef}
                     className="py-4 border-ax-border-brand-blue-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"

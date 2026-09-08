@@ -4,11 +4,11 @@ import type { ActionBarConfig } from '@/stores/actionBarStore';
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
-import { useBehandling } from '@/context/BehandlingContext';
-import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 import { KompaktStegflyt } from '@/komponenter/stegflyt/KompaktStegflyt';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
+
+import { useActionBarVariant } from './useActionBarVariant';
 
 export const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',
@@ -24,22 +24,17 @@ export const ActionBar: FC<ActionBarConfig> = ({
     disableNeste = false,
     type = 'button',
 }: ActionBarConfig) => {
-    const { erNyModell } = useBehandling();
-    const { harKravgrunnlag } = useBehandlingState();
-
+    const variant = useActionBarVariant();
+    const visMeny = variant === 'meny';
     // Ny modell viser stegflyten inne i action-baren i stedet for meny og stegtekst.
-    // Uten kravgrunnlag er behandlingen ikke i gang i noe steg (den venter), og da
-    // beholder vi stegteksten som forteller hvilken tilstand behandlingen er i.
-    const visStegflyt = erNyModell && harKravgrunnlag;
+    const visStegflyt = variant === 'stegflyt';
 
     return (
         <nav
-            className={`flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${erNyModell && !visStegflyt ? 'justify-end' : 'justify-between'}`}
-            aria-label={
-                visStegflyt ? 'Behandlingens steg og handlinger' : 'Meny og behandlingens steg'
-            }
+            className={`flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
+            aria-label={visMeny ? 'Meny og behandlingens steg' : 'Behandlingens steg og handlinger'}
         >
-            {!erNyModell && <Behandlingsmeny />}
+            {visMeny && <Behandlingsmeny />}
             {visStegflyt && <KompaktStegflyt />}
 
             <HStack gap="space-32" wrap={false} className="shrink-0">

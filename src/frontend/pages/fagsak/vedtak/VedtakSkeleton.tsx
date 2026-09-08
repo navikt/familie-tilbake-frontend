@@ -2,8 +2,6 @@ import type { FC } from 'react';
 
 import { Heading, HStack, Skeleton, VStack } from '@navikt/ds-react';
 
-import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
-
 export const VedtakSkeleton: FC = () => {
     return (
         <VStack gap="space-24">
@@ -28,7 +26,6 @@ export const VedtakSkeleton: FC = () => {
                     <Skeleton variant="rounded" width="100%" height={990} />
                 </VStack>
             </div>
-            <ActionBarSkeleton medStegflyt />
         </VStack>
     );
 };

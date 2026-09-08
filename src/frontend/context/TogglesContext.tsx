@@ -1,5 +1,6 @@
-import createUseContext from 'constate';
-import { useCallback, useEffect, useState } from 'react';
+import type { FC, ReactNode } from 'react';
+
+import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useHttp } from '@/api/http/HttpProvider';
 import { type Ressurs, RessursStatus } from '@/typer/ressurs';
@@ -7,17 +8,35 @@ import { hentFrontendFeilmelding } from '@/utils';
 
 export enum ToggleName {
     Vilkårsvurdering = 'tilbakekreving-frontend.nytt-vilkaarsvurderingssteg',
+    NyStegflyt = 'tilbakekreving-frontend.ny-stegflyt',
 }
 
 type Toggles = {
     [key: string]: boolean;
 };
 
-const [TogglesProvider, useToggles] = createUseContext(() => {
+type TogglesContextType = {
+    toggles: Toggles;
+    feilmelding: string;
+};
+
+/**
+ * Standardverdien lar komponenter lese toggles uten en provider, for eksempel i tester.
+ * Da er alle toggles avskrudd, slik at vi faller tilbake til eksisterende funksjonalitet.
+ */
+export const TogglesContext = createContext<TogglesContextType>({
+    toggles: {},
+    feilmelding: '',
+});
+
+type Props = {
+    children: ReactNode;
+};
+
+export const TogglesProvider: FC<Props> = ({ children }: Props) => {
     const [toggles, setToggles] = useState<Toggles>({});
     const [feilmelding, setFeilmelding] = useState<string>('');
     const { request } = useHttp();
-    TogglesProvider.displayName = 'TOGGLES_PROVIDER';
 
     const fetchToggles = useCallback(() => {
         const hentToggles = (): Promise<Ressurs<Toggles>> => {
@@ -46,7 +65,17 @@ const [TogglesProvider, useToggles] = createUseContext(() => {
         fetchToggles();
     }, [fetchToggles]);
 
-    return { toggles, feilmelding };
-});
+    const verdi = useMemo(
+        (): TogglesContextType => ({ toggles, feilmelding }),
+        [toggles, feilmelding]
+    );
 
-export { TogglesProvider, useToggles };
+    return <TogglesContext value={verdi}>{children}</TogglesContext>;
+};
+
+export const useToggles = (): TogglesContextType => use(TogglesContext);
+
+export const useToggle = (navn: ToggleName): boolean => {
+    const { toggles } = useToggles();
+    return toggles[navn] === true;
+};

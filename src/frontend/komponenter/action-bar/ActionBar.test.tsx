@@ -4,9 +4,11 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { FagsakContext } from '@/context/FagsakContext';
+import { ToggleName } from '@/context/TogglesContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagBehandling, lagFaktaSteg, lagForeldelseSteg } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
+import { TestTogglesProvider } from '@/testdata/togglesContextFactory';
 
 import { ActionBar } from './ActionBar';
 
@@ -15,25 +17,28 @@ const renderActionBar = (
     onNeste: () => void,
     isLoading: boolean = false,
     behandling?: BehandlingDto,
-    harKravgrunnlag: boolean = true
+    harKravgrunnlag: boolean = true,
+    nyStegflytPåskrudd: boolean = true
 ): void => {
     render(
         <MemoryRouter initialEntries={['/fagsystem/BA/fagsak/1/behandling/2/fakta']}>
-            <FagsakContext value={lagFagsak()}>
-                <TestBehandlingProvider
-                    behandling={behandling}
-                    stateOverrides={{ harKravgrunnlag }}
-                >
-                    <ActionBar
-                        stegtekst="Steg 2 av 5"
-                        forrigeAriaLabel="gå tilbake til faktasteget"
-                        nesteAriaLabel="gå videre til vilkårsvurderingssteget"
-                        onNeste={onNeste}
-                        isLoading={isLoading}
-                        onForrige={onForrige}
-                    />
-                </TestBehandlingProvider>
-            </FagsakContext>
+            <TestTogglesProvider påskrudde={nyStegflytPåskrudd ? [ToggleName.NyStegflyt] : []}>
+                <FagsakContext value={lagFagsak()}>
+                    <TestBehandlingProvider
+                        behandling={behandling}
+                        stateOverrides={{ harKravgrunnlag }}
+                    >
+                        <ActionBar
+                            stegtekst="Steg 2 av 5"
+                            forrigeAriaLabel="gå tilbake til faktasteget"
+                            nesteAriaLabel="gå videre til vilkårsvurderingssteget"
+                            onNeste={onNeste}
+                            isLoading={isLoading}
+                            onForrige={onForrige}
+                        />
+                    </TestBehandlingProvider>
+                </FagsakContext>
+            </TestTogglesProvider>
         </MemoryRouter>
     );
 };
@@ -41,20 +46,22 @@ const renderActionBar = (
 const renderUtenForrige = (behandling: BehandlingDto): void => {
     render(
         <MemoryRouter initialEntries={['/fagsystem/BA/fagsak/1/behandling/2/fakta']}>
-            <FagsakContext value={lagFagsak()}>
-                <TestBehandlingProvider
-                    behandling={behandling}
-                    stateOverrides={{ harKravgrunnlag: true }}
-                >
-                    <ActionBar
-                        stegtekst="Steg 1 av 5"
-                        forrigeAriaLabel={undefined}
-                        onForrige={undefined}
-                        nesteAriaLabel="gå videre til foreldelsessteget"
-                        onNeste={vi.fn()}
-                    />
-                </TestBehandlingProvider>
-            </FagsakContext>
+            <TestTogglesProvider påskrudde={[ToggleName.NyStegflyt]}>
+                <FagsakContext value={lagFagsak()}>
+                    <TestBehandlingProvider
+                        behandling={behandling}
+                        stateOverrides={{ harKravgrunnlag: true }}
+                    >
+                        <ActionBar
+                            stegtekst="Steg 1 av 5"
+                            forrigeAriaLabel={undefined}
+                            onForrige={undefined}
+                            nesteAriaLabel="gå videre til foreldelsessteget"
+                            onNeste={vi.fn()}
+                        />
+                    </TestBehandlingProvider>
+                </FagsakContext>
+            </TestTogglesProvider>
         </MemoryRouter>
     );
 };
@@ -149,6 +156,13 @@ describe('ActionBar', () => {
             renderUtenForrige(lagBehandling({ erNyModell: false }));
 
             expect(screen.queryByText('Forrige')).not.toBeInTheDocument();
+        });
+
+        test('Viser stegteksten i stedet for stegflyten når toggelen er avskrudd', () => {
+            renderActionBar(vi.fn(), vi.fn(), false, lagNyModellBehandling(), true, false);
+
+            expect(screen.queryByRole('list', { name: 'Behandlingssteg' })).not.toBeInTheDocument();
+            expect(screen.getByText('Steg 2 av 5')).toBeInTheDocument();
         });
     });
 });

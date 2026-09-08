@@ -1,12 +1,14 @@
 import type { FC } from 'react';
+import type { ActionBarVariant } from './useActionBarVariant';
 
 import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
 import { Button, HStack, Skeleton } from '@navikt/ds-react';
 import { Fragment } from 'react';
 
+export type ActionBarSkeletonVariant = ActionBarVariant | 'ukjent';
+
 type Props = {
-    /** Ny modell viser stegflyten inne i action-baren i stedet for behandlingsmenyen. */
-    medStegflyt?: boolean;
+    variant?: ActionBarSkeletonVariant;
 };
 
 const ANTALL_STEG = 5;
@@ -25,12 +27,18 @@ const StegflytSkeleton: FC = () => (
     </HStack>
 );
 
-export const ActionBarSkeleton: FC<Props> = ({ medStegflyt = false }: Props) => {
+export const ActionBarSkeleton: FC<Props> = ({ variant = 'ukjent' }: Props) => {
+    const visMeny = variant === 'meny';
+    const visStegflyt = variant === 'stegflyt';
+    const visStegtekst = visMeny || variant === 'stegtekst';
+
     return (
-        <div className="flex flex-row bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border justify-between flex-nowrap min-w-80 gap-4">
-            {medStegflyt ? (
-                <StegflytSkeleton />
-            ) : (
+        <div
+            className={`flex flex-row bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border flex-nowrap min-w-80 gap-4 ${
+                visMeny || visStegflyt ? 'justify-between' : 'justify-end'
+            }`}
+        >
+            {visMeny && (
                 <Button
                     variant="tertiary"
                     size="small"
@@ -39,9 +47,10 @@ export const ActionBarSkeleton: FC<Props> = ({ medStegflyt = false }: Props) => 
                     Meny
                 </Button>
             )}
+            {visStegflyt && <StegflytSkeleton />}
 
             <HStack gap="space-32" align="center" wrap={false}>
-                {!medStegflyt && <Skeleton width={80} variant="rounded" />}
+                {visStegtekst && <Skeleton width={80} variant="rounded" />}
                 <HStack gap="space-16" className="flex-nowrap">
                     <Skeleton width={100} height={40} variant="rounded" />
                     <Skeleton width={100} height={40} variant="rounded" />

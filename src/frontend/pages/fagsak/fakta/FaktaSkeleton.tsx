@@ -2,8 +2,6 @@ import type { FC } from 'react';
 
 import { BodyShort, Heading, Skeleton, Table } from '@navikt/ds-react';
 
-import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
-
 export const FaktaSkeleton: FC = () => {
     return (
         <>
@@ -149,7 +147,6 @@ export const FaktaSkeleton: FC = () => {
                     </div>
                 </section>
             </div>
-            <ActionBarSkeleton medStegflyt />
         </>
     );
 };
