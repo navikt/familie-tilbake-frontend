@@ -4,11 +4,12 @@ import type { ActionBarConfig } from '@/stores/actionBarStore';
 import { ChevronLeftIcon, ChevronRightIcon } from '@navikt/aksel-icons';
 import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
+import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 import { KompaktStegflyt } from '@/komponenter/stegflyt/KompaktStegflyt';
+import { useNyStegflyt } from '@/komponenter/stegflyt/useNyStegflyt';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-import { useActionBarVariant } from './useActionBarVariant';
 
 export const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',
@@ -24,10 +25,12 @@ export const ActionBar: FC<ActionBarConfig> = ({
     disableNeste = false,
     type = 'button',
 }: ActionBarConfig) => {
-    const variant = useActionBarVariant();
-    const visMeny = variant === 'meny';
-    // Ny modell viser stegflyten inne i action-baren i stedet for meny og stegtekst.
-    const visStegflyt = variant === 'stegflyt';
+    const { erNyModell } = useBehandling();
+    const { harKravgrunnlag } = useBehandlingState();
+    const nyStegflyt = useNyStegflyt();
+
+    const visMeny = !erNyModell;
+    const visStegflyt = nyStegflyt && harKravgrunnlag;
 
     return (
         <nav
@@ -71,12 +74,6 @@ export const ActionBar: FC<ActionBarConfig> = ({
                         </Tooltip>
                     ) : (
                         visStegflyt && (
-                            /*
-                             * Første steg har ingen forrige-knapp, og uten en plassholder ville
-                             * stegflyten fått rundt 110 px mer plass akkurat der. Da rekker
-                             * stegnavnene å vises, for så å forsvinne så snart knappen dukker opp
-                             * på neste steg. Vi holder derfor bredden lik gjennom hele flyten.
-                             */
                             <Button
                                 aria-hidden
                                 tabIndex={-1}

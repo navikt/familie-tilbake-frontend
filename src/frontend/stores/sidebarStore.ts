@@ -4,9 +4,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type SidebarState = {
-    /** Brukerens ønske om at panelet skal være åpent. Gjelder skjermer med plass til panel. */
     erÅpen: boolean;
-    /** Innholdet vist i modal, som er visningsformen på smale skjermer. */
     modalErÅpen: boolean;
     valgtSide: Menysider | null;
     veksleÅpen: () => void;

@@ -7,11 +7,6 @@ import { Link as ReactRouterLink } from 'react-router';
 import { useHarPlassTilStegnavn } from '@/komponenter/stegflyt/useHarPlassTilStegnavn';
 import { useStegflyt } from '@/komponenter/stegflyt/useStegflyt';
 
-/**
- * Når det ikke er plass til alle stegnavnene, vises kun navnet på steget
- * saksbehandler står på. Navnene skjules visuelt med `sr-only` og ikke med
- * `hidden`, slik at de fortsatt formidles til hjelpemidler.
- */
 const SKJUL_NAVN = 'sr-only';
 
 const SIRKEL_BASE =
@@ -48,11 +43,6 @@ type StegInnholdProps = {
     harPlassTilAlleNavn: boolean;
 };
 
-/**
- * Stegnavnet skjules kun visuelt i smale containere, men statusen må uansett formidles
- * eksplisitt. Vi setter derfor hele det tilgjengelige navnet selv, i stedet for å stole
- * på at hjelpemidler skiller tekstnodene med mellomrom.
- */
 const tilgjengeligNavn = ({ navn, erUtført, erTilgjengelig }: StegflytSteg): string => {
     if (erUtført) return `${navn}, fullført`;
     if (!erTilgjengelig) return `${navn}, ikke tilgjengelig`;
@@ -68,10 +58,6 @@ const StegInnhold: FC<StegInnholdProps> = ({ steg, harPlassTilAlleNavn }: StegIn
     </>
 );
 
-/**
- * Kompakt horisontal stegflyt som vises inne i action-baren for ny modell, og som
- * erstatter den frittstående stepperen over behandlingscontaineren.
- */
 export const KompaktStegflyt: FC = () => {
     const { steg, harGjeldendeSteg, sporStegbytte } = useStegflyt('kompakt-stegflyt');
     const { beholderRef, innholdRef, harPlass } = useHarPlassTilStegnavn(

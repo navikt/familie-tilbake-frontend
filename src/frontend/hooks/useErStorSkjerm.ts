@@ -1,6 +1,5 @@
 import { useSyncExternalStore } from 'react';
 
-/** Samme grense som Tailwind-varianten `ax-lg`, der sidebaren får plass som panel. */
 const STOR_SKJERM = '(min-width: 1024px)';
 
 const abonner = (varsle: () => void): (() => void) => {

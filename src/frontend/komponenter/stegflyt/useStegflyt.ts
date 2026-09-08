@@ -10,25 +10,18 @@ import { erSidenAktiv, SYNLIGE_STEG, visSide } from '@/utils/sider';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 export interface StegflytSteg extends SynligSteg {
-    /** Fortløpende nummer, 1-indeksert. */
     nummer: number;
-    /** Steget er ferdig behandlet. */
     erUtført: boolean;
-    /** Steget er en del av behandlingen og kan navigeres til. */
     erTilgjengelig: boolean;
-    /** Steget er det brukeren står på nå. */
     erGjeldende: boolean;
     url: string;
 }
 
 export type Stegflytdata = {
     steg: StegflytSteg[];
-    /** 1-indeksert nummer for gjeldende steg, eller 0 om ingen av stegene matcher URL-en. */
     gjeldendeStegnummer: number;
     harGjeldendeSteg: boolean;
-    /** Sporer stegbyttet og navigerer. Brukes når komponenten ikke er en lenke. */
     gåTilSteg: (stegnummer: number) => void;
-    /** Sporer stegbyttet uten å navigere. Brukes når navigeringen skjer via en lenke. */
     sporStegbytte: (stegnummer: number) => void;
 };
 

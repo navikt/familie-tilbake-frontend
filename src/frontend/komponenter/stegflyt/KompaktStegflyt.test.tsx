@@ -16,10 +16,6 @@ import { KompaktStegflyt } from './KompaktStegflyt';
 
 const BEHANDLING_URL = '/fagsystem/BA/fagsak/123/behandling/456';
 
-/**
- * Fakta og Forhåndsvarsel er utført, Foreldelse og Vilkårsvurdering er tilgjengelige,
- * og Vedtak mangler i stegsinfoen og er derfor ikke tilgjengelig.
- */
 const STEGSINFO: BehandlingsstegsinfoDto[] = [
     { behandlingssteg: 'FAKTA', behandlingsstegstatus: 'UTFØRT' },
     { behandlingssteg: 'FORHÅNDSVARSEL', behandlingsstegstatus: 'UTFØRT' },
@@ -32,7 +28,6 @@ const lagTestbehandling = (overrides: Partial<BehandlingDto> = {}): BehandlingDt
         eksternBrukId: '456',
         behandlingId: '123',
         erNyModell: true,
-        // Skjuler Verge-steget, slik at stegflyten matcher designet.
         støtterManuelleBrevmottakere: true,
         behandlingsstegsinfo: STEGSINFO,
         ...overrides,
@@ -144,8 +139,6 @@ describe('KompaktStegflyt', () => {
         test('beholder stegnavnet som tilgjengelig navn selv når det skjules visuelt', () => {
             renderKompaktStegflyt();
 
-            // Navnet ligger alltid i DOM-en og skjules kun visuelt med sr-only når det ikke er
-            // plass, slik at lenken aldri får kun stegnummeret som navn.
             expect(
                 screen.getByRole('link', { name: 'Forhåndsvarsel, fullført' })
             ).toBeInTheDocument();

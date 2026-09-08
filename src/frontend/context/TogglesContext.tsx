@@ -20,10 +20,6 @@ type TogglesContextType = {
     feilmelding: string;
 };
 
-/**
- * Standardverdien lar komponenter lese toggles uten en provider, for eksempel i tester.
- * Da er alle toggles avskrudd, slik at vi faller tilbake til eksisterende funksjonalitet.
- */
 export const TogglesContext = createContext<TogglesContextType>({
     toggles: {},
     feilmelding: '',

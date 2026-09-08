@@ -4,7 +4,6 @@ import { Skeleton } from '@navikt/ds-react';
 
 import { useSidebarVisning } from './useSidebarVisning';
 
-/** Speiler oppsettet i Sidebar, slik at kolonnen ikke endrer bredde når innholdet er lastet. */
 export const SidebarSkeleton: FC = () => {
     const { visPanel } = useSidebarVisning();
 

@@ -12,7 +12,6 @@ import { ToggleName, useToggles } from '@/context/TogglesContext';
 import { useActionBar } from '@/hooks/useActionBar';
 import { ActionBar } from '@/komponenter/action-bar/ActionBar';
 import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
-import { useActionBarVariant } from '@/komponenter/action-bar/useActionBarVariant';
 import { StegErrorBoundary } from '@/komponenter/error-boundary/StegErrorBoundary';
 import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting';
 import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
@@ -98,8 +97,7 @@ const HistoriskeVurderingermeny = lazyImportMedRetry(
  */
 const GlobalActionBar: FC = () => {
     const config = useActionBarConfig();
-    const variant = useActionBarVariant();
-    return config ? <ActionBar {...config} /> : <ActionBarSkeleton variant={variant} />;
+    return config ? <ActionBar {...config} /> : <ActionBarSkeleton />;
 };
 
 type BehandlingLayoutProps = {

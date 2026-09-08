@@ -4,22 +4,14 @@ import { useErStorSkjerm } from '@/hooks/useErStorSkjerm';
 import { useSidebarStore } from '@/stores/sidebarStore';
 
 type SidebarVisning = {
-    /** Panelet vises ved siden av innholdet. */
     visPanel: boolean;
-    /** Innholdet vises i modal fordi skjermen er for smal til et panel. */
     visModal: boolean;
-    /** Om innholdet er synlig i en av de to visningsformene. */
     innholdErSynlig: boolean;
     veksle: () => void;
     åpneSide: (side: Menysider) => void;
     lukkModal: () => void;
 };
 
-/**
- * Samler avgjørelsen om hvordan sidebaren vises. Panelet og modalen har hver sin
- * tilstand, slik at et smalt vindu ikke overskriver ønsket om et åpent panel: gjør
- * du vinduet bredt igjen, kommer panelet tilbake slik det var.
- */
 export const useSidebarVisning = (): SidebarVisning => {
     const erStorSkjerm = useErStorSkjerm();
     const erÅpen = useSidebarStore(state => state.erÅpen);

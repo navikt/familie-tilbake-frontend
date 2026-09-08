@@ -6,10 +6,6 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import { useHarPlassTilStegnavn } from '@/komponenter/stegflyt/useHarPlassTilStegnavn';
 
-/**
- * jsdom regner ikke ut layout, så både `clientWidth` og `scrollWidth` er alltid 0.
- * Vi styrer derfor geometrien eksplisitt for å kunne teste beslutningslogikken.
- */
 let tilgjengeligBredde = 0;
 let nødvendigBredde = 0;
 let utløsResize: (() => void) | undefined;

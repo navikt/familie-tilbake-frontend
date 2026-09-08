@@ -5,8 +5,6 @@ import { Heading, HStack, Skeleton, VStack } from '@navikt/ds-react';
 export const VedtakSkeleton: FC = () => {
     return (
         <VStack gap="space-24">
-            <Heading size="medium">Vedtak</Heading>
-
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
                 <VStack className="col-span-1 overflow-auto flex-1 min-h-0 gap-6">
                     <HStack justify="space-between" align="center">
