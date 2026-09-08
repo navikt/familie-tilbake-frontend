@@ -76,7 +76,7 @@ export const Header: FC = () => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (fagsakBehandlingUrl == null) {
+        if (!fagsakBehandlingUrl) {
             return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;
         }
         return fagsakBehandlingUrl;
