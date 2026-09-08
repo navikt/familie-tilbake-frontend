@@ -6,7 +6,7 @@ type FagsakStore = {
     eksternFagsakId: string | undefined;
     fagsystem: SchemaEnum2 | undefined;
     personIdent: string | undefined;
-    fagsakBehandlingUrl: string | undefined;
+    fagsakBehandlingUrl: string | null | undefined;
     setEksternFagsakId: (eksternFagsakId: string | undefined) => void;
     setFagsystem: (fagsystem: SchemaEnum2 | undefined) => void;
     setPersonIdent: (personIdent: string | undefined) => void;
@@ -22,7 +22,7 @@ export const useFagsakStore = create<FagsakStore>(set => ({
     setEksternFagsakId: (eksternFagsakId: string | undefined): void => set({ eksternFagsakId }),
     setFagsystem: (fagsystem: SchemaEnum2 | undefined): void => set({ fagsystem }),
     setPersonIdent: (personIdent: string | undefined): void => set({ personIdent }),
-    setFagsakBehandlingUrl: (fagsakBehandlingUrl: string | undefined): void =>
+    setFagsakBehandlingUrl: (fagsakBehandlingUrl: string | null | undefined): void =>
         set({ fagsakBehandlingUrl }),
     resetFagsak: (): void =>
         set({
