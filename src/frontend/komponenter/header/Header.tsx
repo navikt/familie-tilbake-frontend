@@ -37,7 +37,7 @@ export const Header: FC = () => {
     });
     const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};
     const { behandlingId, rolle, erNyModell } = useBehandlingStore();
-    const { fagsystem, eksternFagsakId, personIdent } = useFagsakStore();
+    const { fagsystem, eksternFagsakId, personIdent, fagsakBehandlingUrl } = useFagsakStore();
 
     const { request } = useHttp();
     const { data: personligAInntektUrl } = useQuery({
@@ -76,11 +76,11 @@ export const Header: FC = () => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (fagsystem === 'TS') {
-            return `/redirect/fagsystem/${fagsystem}/ekstern/person/${eksternFagsakId}`;
+        if (!fagsakBehandlingUrl) {
+            return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;
         }
-        return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;
-    }, [erHistoriskVisning, fagsystem, eksternFagsakId, behandlingsPath]);
+        return fagsakBehandlingUrl;
+    }, [erHistoriskVisning, fagsystem, eksternFagsakId, behandlingsPath, fagsakBehandlingUrl]);
     const { theme, toggleTheme } = useTheme();
 
     return (

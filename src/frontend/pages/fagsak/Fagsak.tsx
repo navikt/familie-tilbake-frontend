@@ -17,22 +17,31 @@ import { BehandlingContainer } from './Behandling';
 import { BehandlingSkeleton } from './BehandlingSkeleton';
 
 const FagsakStoreSynk: FC = () => {
-    const { fagsystem, eksternFagsakId, bruker } = useFagsak();
-    const { setEksternFagsakId, setFagsystem, setPersonIdent, resetFagsak } = useFagsakStore();
+    const { fagsystem, eksternFagsakId, bruker, fagsakBehandlingUrl } = useFagsak();
+    const {
+        setEksternFagsakId,
+        setFagsystem,
+        setPersonIdent,
+        setFagsakBehandlingUrl,
+        resetFagsak,
+    } = useFagsakStore();
 
     useEffect(() => {
         setPersonIdent(bruker.personIdent);
         setEksternFagsakId(eksternFagsakId);
         setFagsystem(fagsystem);
+        setFagsakBehandlingUrl(fagsakBehandlingUrl);
 
         return (): void => resetFagsak();
     }, [
         fagsystem,
         eksternFagsakId,
         bruker.personIdent,
+        fagsakBehandlingUrl,
         setEksternFagsakId,
         setFagsystem,
         setPersonIdent,
+        setFagsakBehandlingUrl,
         resetFagsak,
     ]);
 
