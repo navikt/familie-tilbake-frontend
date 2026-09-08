@@ -65,7 +65,7 @@ if (!window.matchMedia) {
                 addListener: ingenLyttere,
                 removeListener: ingenLyttere,
                 dispatchEvent: (): boolean => false,
-            }) as unknown as MediaQueryList,
+            }) satisfies MediaQueryList,
     });
 }
 
