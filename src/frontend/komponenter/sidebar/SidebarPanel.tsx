@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC, ReactNode, Ref } from 'react';
 
 import { Heading, Tabs } from '@navikt/ds-react';
 import { useState } from 'react';
@@ -12,9 +12,10 @@ import { useMenysider } from './useMenysider';
 
 type Props = {
     veksleknapp?: ReactNode;
+    aktivTabRef?: Ref<HTMLButtonElement>;
 };
 
-export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
+export const SidebarPanel: FC<Props> = ({ veksleknapp, aktivTabRef }: Props) => {
     const { tilgjengeligeSider, aktivSide } = useMenysider();
     const settValgtSide = useSidebarStore(state => state.settValgtSide);
     const [besøkteSider, setBesøkteSider] = useState<Menysider[]>([aktivSide]);
@@ -43,6 +44,7 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp }: Props) => {
                         return (
                             <Tabs.Tab
                                 key={side}
+                                ref={side === aktivSide ? aktivTabRef : undefined}
                                 value={side}
                                 aria-label={tittel}
                                 icon={<Ikon fontSize="1.25rem" title={tittel} />}

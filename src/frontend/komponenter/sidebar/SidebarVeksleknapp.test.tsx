@@ -5,9 +5,14 @@ import { useSidebarStore } from '@/stores/sidebarStore';
 
 import { SidebarVeksleknapp } from './SidebarVeksleknapp';
 
+const settSkjermbredde = (bredde: number): void => {
+    window.innerWidth = bredde;
+};
+
 describe('SidebarVeksleknapp', () => {
     beforeEach(() => {
         useSidebarStore.setState({ erÅpen: true });
+        settSkjermbredde(1280);
     });
 
     test('Viser lukkeknapp når panelet er åpent', () => {
@@ -28,6 +33,16 @@ describe('SidebarVeksleknapp', () => {
             'aria-expanded',
             'false'
         );
+    });
+
+    test('Forteller at knappen åpner en dialog på små skjermer', () => {
+        settSkjermbredde(800);
+        render(<SidebarVeksleknapp />);
+
+        const knapp = screen.getByRole('button', { name: 'Åpne informasjonspanelet' });
+        expect(knapp).toHaveAttribute('aria-haspopup', 'dialog');
+        expect(knapp).not.toHaveAttribute('aria-controls');
+        expect(knapp).not.toHaveAttribute('aria-expanded');
     });
 
     test('Åpner panelet igjen ved nytt klikk', async () => {

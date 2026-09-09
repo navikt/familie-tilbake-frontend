@@ -126,21 +126,25 @@ describe('KompaktStegflyt', () => {
 
             expect(screen.queryByRole('link', { name: /^Vedtak/ })).not.toBeInTheDocument();
             expect(screen.getByText('Vedtak')).toBeInTheDocument();
-            expect(screen.getByText('Vedtak, ikke tilgjengelig')).toBeInTheDocument();
+            expect(screen.getByText('Vedtak, steg 5 av 5, ikke tilgjengelig')).toBeInTheDocument();
         });
 
-        test('formidler fullført status i tilgjengelig navn, ikke bare visuelt', () => {
+        test('formidler fullført status og posisjon i tilgjengelig navn, ikke bare visuelt', () => {
             renderKompaktStegflyt();
 
-            expect(screen.getByRole('link', { name: 'Fakta, fullført' })).toBeInTheDocument();
-            expect(screen.getByRole('link', { name: 'Vilkårsvurdering' })).toBeInTheDocument();
+            expect(
+                screen.getByRole('link', { name: 'Fakta, steg 1 av 5, fullført' })
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole('link', { name: 'Vilkårsvurdering, steg 4 av 5' })
+            ).toBeInTheDocument();
         });
 
         test('beholder stegnavnet som tilgjengelig navn selv når det skjules visuelt', () => {
             renderKompaktStegflyt();
 
             expect(
-                screen.getByRole('link', { name: 'Forhåndsvarsel, fullført' })
+                screen.getByRole('link', { name: 'Forhåndsvarsel, steg 2 av 5, fullført' })
             ).toBeInTheDocument();
         });
     });
@@ -162,13 +166,12 @@ describe('KompaktStegflyt', () => {
             const bruker = userEvent.setup();
             renderKompaktStegflyt();
 
-            screen.getByRole('link', { name: 'Fakta, fullført' }).focus();
+            screen.getByRole('link', { name: 'Fakta, steg 1 av 5, fullført' }).focus();
             await bruker.keyboard('{Enter}');
 
-            expect(screen.getByRole('link', { name: 'Fakta, fullført' })).toHaveAttribute(
-                'aria-current',
-                'step'
-            );
+            expect(
+                screen.getByRole('link', { name: 'Fakta, steg 1 av 5, fullført' })
+            ).toHaveAttribute('aria-current', 'step');
         });
     });
 });

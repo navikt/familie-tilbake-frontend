@@ -6,6 +6,7 @@ type Plassmåling = {
     beholderRef: RefObject<HTMLDivElement | null>;
     innholdRef: RefObject<HTMLOListElement | null>;
     harPlass: boolean;
+    kanSideScrolle: boolean;
 };
 
 export const useHarPlassTilStegnavn = (stegsignatur: string): Plassmåling => {
@@ -14,6 +15,7 @@ export const useHarPlassTilStegnavn = (stegsignatur: string): Plassmåling => {
     const nødvendigBredde = useRef(0);
     const måltSignatur = useRef<string | null>(null);
     const [harPlass, setHarPlass] = useState(true);
+    const [kanSideScrolle, setKanSideScrolle] = useState(false);
 
     useLayoutEffect(() => {
         const beholder = beholderRef.current;
@@ -37,6 +39,8 @@ export const useHarPlassTilStegnavn = (stegsignatur: string): Plassmåling => {
             if (nyVerdi !== harPlass) {
                 setHarPlass(nyVerdi);
             }
+            const måSideScrolles = innhold.scrollWidth > beholder.clientWidth;
+            setKanSideScrolle(forrige => (forrige === måSideScrolles ? forrige : måSideScrolles));
         };
 
         vurderPlass();
@@ -47,5 +51,5 @@ export const useHarPlassTilStegnavn = (stegsignatur: string): Plassmåling => {
         return (): void => observatør.disconnect();
     }, [stegsignatur, harPlass]);
 
-    return { beholderRef, innholdRef, harPlass };
+    return { beholderRef, innholdRef, harPlass, kanSideScrolle };
 };

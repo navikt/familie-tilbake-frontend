@@ -209,6 +209,14 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
     const nyStegflyt = useNyStegflyt();
     const { setInnholdsbredde, setInnholdVenstrePosisjon } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
+    const { pathname } = useLocation();
+    const forrigeSti = useRef(pathname);
+
+    useEffect(() => {
+        if (forrigeSti.current === pathname) return;
+        forrigeSti.current = pathname;
+        contentRef.current?.focus();
+    }, [pathname]);
 
     useLayoutEffect(() => {
         const oppdaterBredde = (): void => {
@@ -234,6 +242,7 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                     ref={contentRef}
                     className="py-4 border-ax-border-brand-blue-subtle border rounded-2xl pl-6 pr-3 bg-ax-bg-default scrollbar-stable overflow-x-hidden overflow-y-auto flex-1 min-h-0"
                     aria-label="Behandlingsinnhold"
+                    tabIndex={-1}
                 >
                     <Routes>
                         <Route

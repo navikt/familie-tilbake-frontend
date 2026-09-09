@@ -4,7 +4,7 @@ import { useSidebarErÅpen } from '@/stores/sidebarStore';
 
 /** Headeren er 48px høy, og resten av viewporten disponeres av behandlingsvisningen. */
 export const BEHANDLING_HØYDE = 'h-[calc(100vh-48px)]';
-export const BEHANDLING_MINSTEBREDDE = 'min-w-[26rem]';
+export const BEHANDLING_MINSTEBREDDE = 'min-w-[20rem]';
 
 type Props = {
     children: ReactNode;

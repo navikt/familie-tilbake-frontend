@@ -18,6 +18,9 @@ type Props = {
 export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
     const { behandlingId } = useBehandling();
     const { visPanel, visModal, lukkModal } = useSidebarVisning();
+    const veksleknappRef = useRef<HTMLButtonElement>(null);
+    const aktivTabRef = useRef<HTMLButtonElement>(null);
+    const fokusmål = useRef<'veksleknapp' | 'panel' | null>(null);
     const nullstillValgtSide = useSidebarStore(state => state.nullstillValgtSide);
 
     const forrigeBehandlingId = useRef(behandlingId);
@@ -34,9 +37,24 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
         if (visModal && !dialog.open) {
             dialog.showModal();
         } else if (!visModal && dialog.open) {
+            const fokusVarIModalen = dialog.contains(document.activeElement);
             dialog.close();
+            if (fokusVarIModalen) {
+                veksleknappRef.current?.focus();
+            }
         }
     }, [visModal, dialogRef]);
+
+    useEffect(() => {
+        const mål = fokusmål.current;
+        fokusmål.current = null;
+        if (!mål || visModal) return;
+        if (mål === 'panel' && visPanel) {
+            aktivTabRef.current?.focus();
+        } else {
+            veksleknappRef.current?.focus();
+        }
+    }, [visPanel, visModal]);
 
     const handleKlikkUtenforModal: MouseEventHandler<HTMLDialogElement> = (
         e: React.MouseEvent<HTMLDialogElement, MouseEvent>
@@ -50,7 +68,7 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
         <>
             <aside
                 id={SIDEBAR_PANEL_ID}
-                aria-label="Informasjon om tilbakekrevingen og bruker"
+                aria-label="Informasjonspanel"
                 className={`flex flex-col min-h-0 ${
                     visPanel
                         ? 'min-w-0 gap-2'
@@ -58,11 +76,30 @@ export const Sidebar: FC<Props> = ({ dialogRef }: Props) => {
                 }`}
             >
                 {visPanel ? (
-                    <SidebarPanel veksleknapp={<SidebarVeksleknapp />} />
+                    <SidebarPanel
+                        aktivTabRef={aktivTabRef}
+                        veksleknapp={
+                            <SidebarVeksleknapp
+                                ref={veksleknappRef}
+                                onVeksle={(): void => {
+                                    fokusmål.current = 'veksleknapp';
+                                }}
+                            />
+                        }
+                    />
                 ) : (
                     <>
-                        <SidebarVeksleknapp />
-                        <SidebarSnarveier />
+                        <SidebarVeksleknapp
+                            ref={veksleknappRef}
+                            onVeksle={(): void => {
+                                fokusmål.current = 'veksleknapp';
+                            }}
+                        />
+                        <SidebarSnarveier
+                            onÅpnetSide={(): void => {
+                                fokusmål.current = 'panel';
+                            }}
+                        />
                     </>
                 )}
             </aside>

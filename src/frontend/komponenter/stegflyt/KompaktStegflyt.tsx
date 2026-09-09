@@ -10,9 +10,9 @@ import { useStegflyt } from '@/komponenter/stegflyt/useStegflyt';
 const SKJUL_NAVN = 'sr-only';
 
 const SIRKEL_BASE =
-    'flex size-[25px] shrink-0 items-center justify-center rounded-full border-2 text-[16px] font-ax-bold leading-[20px]';
+    'flex size-[1.5625rem] shrink-0 items-center justify-center rounded-full border-2 text-[1rem] font-ax-bold leading-[1.25rem]';
 
-const NAVN_BASE = 'whitespace-nowrap text-[16px] font-ax-bold leading-[20px]';
+const NAVN_BASE = 'whitespace-nowrap text-[1rem] font-ax-bold leading-[1.25rem]';
 
 const sirkelKlasser = ({ erGjeldende, erTilgjengelig }: StegflytSteg): string => {
     if (erGjeldende) {
@@ -21,7 +21,7 @@ const sirkelKlasser = ({ erGjeldende, erTilgjengelig }: StegflytSteg): string =>
     if (erTilgjengelig) {
         return `${SIRKEL_BASE} border-ax-border-accent-strong text-ax-text-accent-subtle group-hover:bg-ax-bg-accent-moderate-hoverA`;
     }
-    return `${SIRKEL_BASE} border-ax-border-neutral-strong text-ax-text-neutral-subtle`;
+    return `${SIRKEL_BASE} border-dashed border-ax-border-neutral-strong text-ax-text-neutral-subtle`;
 };
 
 const navnKlasser = (
@@ -43,10 +43,14 @@ type StegInnholdProps = {
     harPlassTilAlleNavn: boolean;
 };
 
-const tilgjengeligNavn = ({ navn, erUtført, erTilgjengelig }: StegflytSteg): string => {
-    if (erUtført) return `${navn}, fullført`;
-    if (!erTilgjengelig) return `${navn}, ikke tilgjengelig`;
-    return navn;
+const tilgjengeligNavn = (
+    { navn, nummer, erUtført, erTilgjengelig }: StegflytSteg,
+    antallSteg: number
+): string => {
+    const posisjon = `steg ${nummer} av ${antallSteg}`;
+    if (erUtført) return `${navn}, ${posisjon}, fullført`;
+    if (!erTilgjengelig) return `${navn}, ${posisjon}, ikke tilgjengelig`;
+    return `${navn}, ${posisjon}`;
 };
 
 const StegInnhold: FC<StegInnholdProps> = ({ steg, harPlassTilAlleNavn }: StegInnholdProps) => (
@@ -60,14 +64,25 @@ const StegInnhold: FC<StegInnholdProps> = ({ steg, harPlassTilAlleNavn }: StegIn
 
 export const KompaktStegflyt: FC = () => {
     const { steg, harGjeldendeSteg, sporStegbytte } = useStegflyt('kompakt-stegflyt');
-    const { beholderRef, innholdRef, harPlass } = useHarPlassTilStegnavn(
-        steg.map(({ navn }) => navn).join('|')
-    );
+    const {
+        beholderRef,
+        innholdRef,
+        harPlass,
+        kanSideScrolle: kanRulle,
+    } = useHarPlassTilStegnavn(steg.map(({ navn }) => navn).join('|'));
 
     if (!harGjeldendeSteg) return null;
 
+    const rulleegenskaper = kanRulle
+        ? { tabIndex: 0, role: 'group', 'aria-label': 'Behandlingssteg, kan rulles vannrett' }
+        : {};
+
     return (
-        <div ref={beholderRef} className="flex min-w-0 flex-1 items-center overflow-x-auto">
+        <div
+            ref={beholderRef}
+            {...rulleegenskaper}
+            className="-m-1 flex min-w-0 flex-1 items-center overflow-x-auto p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
+        >
             <ol
                 ref={innholdRef}
                 aria-label="Behandlingssteg"
@@ -85,15 +100,17 @@ export const KompaktStegflyt: FC = () => {
                             <ReactRouterLink
                                 to={stegdata.url}
                                 aria-current={stegdata.erGjeldende ? 'step' : undefined}
-                                aria-label={tilgjengeligNavn(stegdata)}
-                                className="group flex flex-nowrap items-center gap-2 rounded-lg no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
+                                aria-label={tilgjengeligNavn(stegdata, steg.length)}
+                                className="group -m-1 flex flex-nowrap items-center gap-2 rounded-lg p-1 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
                                 onClick={(): void => sporStegbytte(stegdata.nummer)}
                             >
                                 <StegInnhold steg={stegdata} harPlassTilAlleNavn={harPlass} />
                             </ReactRouterLink>
                         ) : (
                             <span className="flex flex-nowrap items-center gap-2">
-                                <span className="sr-only">{tilgjengeligNavn(stegdata)}</span>
+                                <span className="sr-only">
+                                    {tilgjengeligNavn(stegdata, steg.length)}
+                                </span>
                                 <span aria-hidden className="flex flex-nowrap items-center gap-2">
                                     <StegInnhold steg={stegdata} harPlassTilAlleNavn={harPlass} />
                                 </span>

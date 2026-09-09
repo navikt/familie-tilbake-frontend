@@ -8,7 +8,11 @@ import { MENYSIDE_META } from './menysider';
 import { useMenysider } from './useMenysider';
 import { useSidebarVisning } from './useSidebarVisning';
 
-export const SidebarSnarveier: FC = () => {
+type Props = {
+    onÅpnetSide?: () => void;
+};
+
+export const SidebarSnarveier: FC<Props> = ({ onÅpnetSide }: Props) => {
     const { tilgjengeligeSider, aktivSide } = useMenysider();
     const { åpneSide } = useSidebarVisning();
 
@@ -32,6 +36,7 @@ export const SidebarSnarveier: FC = () => {
                                 komponentId: 'sidebar-snarvei',
                             });
                             åpneSide(side);
+                            onÅpnetSide?.();
                         }}
                     />
                 );

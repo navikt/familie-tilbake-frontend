@@ -4,6 +4,7 @@ import { useErStorSkjerm } from '@/hooks/useErStorSkjerm';
 import { useSidebarStore } from '@/stores/sidebarStore';
 
 type SidebarVisning = {
+    erStorSkjerm: boolean;
     visPanel: boolean;
     visModal: boolean;
     innholdErSynlig: boolean;
@@ -45,6 +46,7 @@ export const useSidebarVisning = (): SidebarVisning => {
     };
 
     return {
+        erStorSkjerm,
         visPanel,
         visModal,
         innholdErSynlig: visPanel || visModal,
