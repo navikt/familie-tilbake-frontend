@@ -176,6 +176,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
         >
             {valgtVilkårsperiode && (
                 <VilkårsvurderingDetaljerInnhold
+                    key={valgtVilkårsperiode.simulertBeløp}
                     valgtPeriode={valgtPeriode}
                     valgtVilkårsperiode={valgtVilkårsperiode}
                     vilkårsperioder={vilkårsperioder}

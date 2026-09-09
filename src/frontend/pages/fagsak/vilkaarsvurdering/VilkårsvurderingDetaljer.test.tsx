@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import type {
     Moment,
     ReduksjonArsaker,
@@ -88,28 +89,35 @@ const momenterReduksjonGodTro: Moment[] = [
     },
 ];
 
+const lagVilkårsDetaljer = (
+    simulertBeløp: number = 10000,
+    erUnder4xRettsgebyr = false,
+    vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
+    valg?: VilkaarsvurderingValg
+): ReactElement => (
+    <QueryClientProvider client={createTestQueryClient()}>
+        <TestBehandlingProvider>
+            <VilkårsvurderingLesedataProvider
+                momenterSærligeGrunner={momenterSærligeGrunner}
+                momenterReduksjonGodTro={momenterReduksjonGodTro}
+                erUnder4xRettsgebyr={erUnder4xRettsgebyr}
+            >
+                <VilkårsvurderingDetaljer
+                    valgtPeriode={valgtPeriode(vurdering)}
+                    vilkårsperioder={[lagVilkårsperiode(simulertBeløp, valg)]}
+                    hentVilkårsvurdering={(): void => undefined}
+                />
+            </VilkårsvurderingLesedataProvider>
+        </TestBehandlingProvider>
+    </QueryClientProvider>
+);
+
 const renderVilkårsDetaljer = (
     simulertBeløp: number = 10000,
     erUnder4xRettsgebyr = false,
     vurdering: Vilkårsperiode['vurdering'] = 'FORSETT'
 ): void => {
-    render(
-        <QueryClientProvider client={createTestQueryClient()}>
-            <TestBehandlingProvider>
-                <VilkårsvurderingLesedataProvider
-                    momenterSærligeGrunner={momenterSærligeGrunner}
-                    momenterReduksjonGodTro={momenterReduksjonGodTro}
-                    erUnder4xRettsgebyr={erUnder4xRettsgebyr}
-                >
-                    <VilkårsvurderingDetaljer
-                        valgtPeriode={valgtPeriode(vurdering)}
-                        vilkårsperioder={[lagVilkårsperiode(simulertBeløp)]}
-                        hentVilkårsvurdering={(): void => undefined}
-                    />
-                </VilkårsvurderingLesedataProvider>
-            </TestBehandlingProvider>
-        </QueryClientProvider>
-    );
+    render(lagVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr, vurdering));
 };
 
 const begrunnelseGodTro = async (): Promise<HTMLElement> =>
@@ -636,6 +644,25 @@ describe('VilkårsvurderingDetaljer', () => {
             expect(await begrunnelseIngenting()).toBeInTheDocument();
             expect(screen.getByText('Beløpet som skal kreves tilbake')).toBeInTheDocument();
             expect(screen.getByText('7 500 kroner')).toBeInTheDocument();
+        });
+
+        test('oppdaterer simulertBeløp når perioden blir refetchet etter lagring', () => {
+            const valg: VilkaarsvurderingValg = {
+                vurdering: 'god_tro',
+                begrunnelse: 'Mottaker var i aktsom god tro',
+                beløpIBehold: {
+                    belopIBehold: 'ingenting',
+                    begrunnelse: 'Ingenting av beløpet er i behold',
+                },
+            };
+            const { rerender } = render(lagVilkårsDetaljer(7500, false, 'GOD_TRO', valg));
+
+            expect(screen.getByText('7 500 kroner')).toBeInTheDocument();
+
+            rerender(lagVilkårsDetaljer(5000, false, 'GOD_TRO', valg));
+
+            expect(screen.queryByText('7 500 kroner')).not.toBeInTheDocument();
+            expect(screen.getByText('5 000 kroner')).toBeInTheDocument();
         });
 
         test('skjuler simulertBeløp så snart saksbehandleren endrer noe', async () => {
