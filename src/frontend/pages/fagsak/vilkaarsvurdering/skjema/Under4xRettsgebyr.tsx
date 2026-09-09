@@ -35,7 +35,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                 </InfoCard.Header>
             </InfoCard>
             <RadioGroup
-                legend="Skal Nav la være å kreve beløpet tilbake? (sjette avsnitt)"
+                legend="Skal beløpet kreves tilbake? (sjette avsnitt)"
                 size="small"
                 className="max-w-xl"
                 value={unnlatelseVerdi}
@@ -49,26 +49,10 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                 }
             >
                 <HStack gap="space-16">
-                    <Radio value="skalUnnlates">Ja</Radio>
-                    <Radio value="skalIkkeUnnlates">Nei</Radio>
+                    <Radio value="skalIkkeUnnlates">Ja</Radio>
+                    <Radio value="skalUnnlates">Nei</Radio>
                 </HStack>
             </RadioGroup>
-
-            {unnlatelseVerdi === 'skalUnnlates' && (
-                <>
-                    <Textarea
-                        label="Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake"
-                        size="small"
-                        className="max-w-xl"
-                        minRows={3}
-                        resize
-                        maxLength={3000}
-                        {...register(`${navnPrefix}.skalUnnlates.begrunnelse`)}
-                        error={feil(`${navnPrefix}.skalUnnlates.begrunnelse`)}
-                    />
-                    <SimulertBeløp />
-                </>
-            )}
 
             {unnlatelseVerdi === 'skalIkkeUnnlates' && (
                 <>
@@ -87,6 +71,22 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                         reduksjon={reduksjon}
                         renter={renter}
                     />
+                </>
+            )}
+
+            {unnlatelseVerdi === 'skalUnnlates' && (
+                <>
+                    <Textarea
+                        label="Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake"
+                        size="small"
+                        className="max-w-xl"
+                        minRows={3}
+                        resize
+                        maxLength={3000}
+                        {...register(`${navnPrefix}.skalUnnlates.begrunnelse`)}
+                        error={feil(`${navnPrefix}.skalUnnlates.begrunnelse`)}
+                    />
+                    <SimulertBeløp />
                 </>
             )}
         </>

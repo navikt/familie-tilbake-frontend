@@ -229,9 +229,7 @@ describe('VilkårsvurderingSkjema', () => {
                 ),
                 'Mottakeren burde undersøkt'
             );
-            await user.click(
-                radioIGruppe('Skal Nav la være å kreve beløpet tilbake? (sjette avsnitt)', 'Ja')
-            );
+            await user.click(radioIGruppe('Skal beløpet kreves tilbake? (sjette avsnitt)', 'Nei'));
             await user.type(
                 tekstfelt(
                     'Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake'

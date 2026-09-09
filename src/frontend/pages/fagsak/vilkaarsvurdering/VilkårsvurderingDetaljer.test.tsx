@@ -212,7 +212,7 @@ const reduksjonsprosentField = async (): Promise<HTMLElement> =>
 
 const under4xRadioGroup = async (): Promise<HTMLElement> =>
     await screen.findByRole('radiogroup', {
-        name: 'Skal Nav la være å kreve beløpet tilbake? (sjette avsnitt)',
+        name: 'Skal beløpet kreves tilbake? (sjette avsnitt)',
     });
 const under4xJaRadio = async (): Promise<HTMLElement> =>
     within(await under4xRadioGroup()).getByRole('radio', { name: 'Ja' });
@@ -313,17 +313,17 @@ describe('VilkårsvurderingDetaljer', () => {
             };
             særligeGrunnerSuite(velgForsto, false);
 
-            test('Under 4x rettsgebyr - Ja, Nav skal la være å kreve beløpet tilbake', async () => {
+            test('Under 4x rettsgebyr - Nei, Nav skal la være å kreve beløpet tilbake', async () => {
                 await velgForsto(0, true);
 
-                user.click(await under4xJaRadio());
+                user.click(await under4xNeiRadio());
                 expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
             });
 
-            test('Under 4x rettsgebyr - Nei, viser særlige grunner', async () => {
+            test('Under 4x rettsgebyr - Ja, viser særlige grunner', async () => {
                 await velgForsto(10000, true);
 
-                user.click(await under4xNeiRadio());
+                user.click(await under4xJaRadio());
                 expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
             });
 
@@ -350,17 +350,17 @@ describe('VilkårsvurderingDetaljer', () => {
             };
             særligeGrunnerSuite(velgBurdeForstått, false);
 
-            test('Under 4x rettsgebyr - Ja, Nav skal la være å kreve beløpet tilbake', async () => {
+            test('Under 4x rettsgebyr - Nei, Nav skal la være å kreve beløpet tilbake', async () => {
                 await velgBurdeForstått(0, true);
 
-                user.click(await under4xJaRadio());
+                user.click(await under4xNeiRadio());
                 expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
             });
 
-            test('Under 4x rettsgebyr - Nei, viser begrunnelse og særlige grunner', async () => {
+            test('Under 4x rettsgebyr - Ja, viser begrunnelse og særlige grunner', async () => {
                 await velgBurdeForstått(10000, true);
 
-                user.click(await under4xNeiRadio());
+                user.click(await under4xJaRadio());
                 expect(await begrunnelseSkalIkkeUnnlates()).toBeInTheDocument();
                 expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
             });
@@ -500,17 +500,17 @@ describe('VilkårsvurderingDetaljer', () => {
             };
             særligeGrunnerSuite(velgUaktsom, false);
 
-            test('Under 4x rettsgebyr - Ja, Nav skal la være å kreve beløpet tilbake', async () => {
+            test('Under 4x rettsgebyr - Nei, Nav skal la være å kreve beløpet tilbake', async () => {
                 await velgUaktsom(0, true);
 
-                user.click(await under4xJaRadio());
+                user.click(await under4xNeiRadio());
                 expect(await begrunnelseSkalUnnlates()).toBeInTheDocument();
             });
 
-            test('Under 4x rettsgebyr - Nei, viser begrunnelse og særlige grunner', async () => {
+            test('Under 4x rettsgebyr - Ja, viser begrunnelse og særlige grunner', async () => {
                 await velgUaktsom(10000, true);
 
-                user.click(await under4xNeiRadio());
+                user.click(await under4xJaRadio());
                 expect(await begrunnelseSkalIkkeUnnlates()).toBeInTheDocument();
                 expect(await særligeGrunnerRadioGroup()).toBeInTheDocument();
             });
@@ -918,7 +918,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 expect(await begrunnelseForårsaketAvMottakeren('uaktsomt')).toHaveValue(
                     'Mottaker handlet uaktsomt'
                 );
-                expect(await under4xJaRadio()).toBeChecked();
+                expect(await under4xNeiRadio()).toBeChecked();
                 expect(await begrunnelseSkalUnnlates()).toHaveValue(
                     'Nav skal la være å kreve beløpet tilbake'
                 );
@@ -942,7 +942,7 @@ describe('VilkårsvurderingDetaljer', () => {
                 );
 
                 expect(await uaktsomRadio()).toBeChecked();
-                expect(await under4xNeiRadio()).toBeChecked();
+                expect(await under4xJaRadio()).toBeChecked();
                 expect(await særligeGrunnerNeiRadio()).toBeChecked();
                 expect(
                     within(await særligeGrunnerCheckboxGroup('mot')).getByRole('checkbox', {
@@ -1043,7 +1043,7 @@ describe('VilkårsvurderingDetaljer', () => {
                     );
 
                     expect(await forstoRadio()).toBeChecked();
-                    expect(await under4xJaRadio()).toBeChecked();
+                    expect(await under4xNeiRadio()).toBeChecked();
                     expect(await begrunnelseSkalUnnlates()).toHaveValue(
                         'Nav skal la være å kreve beløpet tilbake'
                     );
@@ -1067,7 +1067,7 @@ describe('VilkårsvurderingDetaljer', () => {
                     );
 
                     expect(await forstoRadio()).toBeChecked();
-                    expect(await under4xNeiRadio()).toBeChecked();
+                    expect(await under4xJaRadio()).toBeChecked();
                     expect(await begrunnelseSkalIkkeUnnlates()).toHaveValue(
                         'Nav skal ikke la være å kreve beløpet tilbake'
                     );
@@ -1125,7 +1125,7 @@ describe('VilkårsvurderingDetaljer', () => {
                     );
 
                     expect(await burdeForståttRadio()).toBeChecked();
-                    expect(await under4xJaRadio()).toBeChecked();
+                    expect(await under4xNeiRadio()).toBeChecked();
                     expect(await begrunnelseSkalUnnlates()).toHaveValue(
                         'Nav skal la være å kreve beløpet tilbake'
                     );
@@ -1149,7 +1149,7 @@ describe('VilkårsvurderingDetaljer', () => {
                     );
 
                     expect(await burdeForståttRadio()).toBeChecked();
-                    expect(await under4xNeiRadio()).toBeChecked();
+                    expect(await under4xJaRadio()).toBeChecked();
                     expect(await begrunnelseSkalIkkeUnnlates()).toHaveValue(
                         'Nav skal ikke la være å kreve beløpet tilbake'
                     );
