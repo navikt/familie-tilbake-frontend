@@ -31,11 +31,15 @@ export const ActionBar: FC<ActionBarConfig> = ({
 
     const visMeny = !erNyModell;
     const visStegflyt = nyStegflyt && harKravgrunnlag;
-
+    const navAriaLabel = visMeny
+        ? 'Meny og navigasjonsknapper'
+        : visStegflyt
+          ? 'Behandlingens steg og navigasjonsknapper'
+          : 'Navigasjonsknapper';
     return (
         <nav
             className={`flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
-            aria-label={visMeny ? 'Meny og behandlingens steg' : 'Behandlingens steg og handlinger'}
+            aria-label={navAriaLabel}
         >
             {visMeny && <Behandlingsmeny />}
             {visStegflyt && <KompaktStegflyt />}

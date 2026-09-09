@@ -10,9 +10,9 @@ import { useStegflyt } from '@/komponenter/stegflyt/useStegflyt';
 const SKJUL_NAVN = 'sr-only';
 
 const SIRKEL_BASE =
-    'flex size-[1.5625rem] shrink-0 items-center justify-center rounded-full border-2 text-[1rem] font-ax-bold leading-[1.25rem]';
+    'flex size-6.5 shrink-0 items-center justify-center rounded-full border-2 text-ax-medium font-ax-bold';
 
-const NAVN_BASE = 'whitespace-nowrap text-[1rem] font-ax-bold leading-[1.25rem]';
+const NAVN_BASE = 'whitespace-nowrap text-ax-medium font-ax-bold';
 
 const sirkelKlasser = ({ erGjeldende, erTilgjengelig }: StegflytSteg): string => {
     if (erGjeldende) {
@@ -21,7 +21,7 @@ const sirkelKlasser = ({ erGjeldende, erTilgjengelig }: StegflytSteg): string =>
     if (erTilgjengelig) {
         return `${SIRKEL_BASE} border-ax-border-accent-strong text-ax-text-accent-subtle group-hover:bg-ax-bg-accent-moderate-hoverA`;
     }
-    return `${SIRKEL_BASE} border-dashed border-ax-border-neutral-strong text-ax-text-neutral-subtle`;
+    return `${SIRKEL_BASE} border-ax-border-neutral-strong text-ax-text-neutral-subtle`;
 };
 
 const navnKlasser = (

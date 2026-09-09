@@ -9,7 +9,6 @@ export type SidebarState = {
     valgtSide: Menysider | null;
     veksleÅpen: () => void;
     åpne: () => void;
-    lukk: () => void;
     åpneModal: () => void;
     lukkModal: () => void;
     settValgtSide: (side: Menysider) => void;
@@ -27,9 +26,6 @@ export const useSidebarStore = create<SidebarState>()(
             },
             åpne: (): void => {
                 set({ erÅpen: true });
-            },
-            lukk: (): void => {
-                set({ erÅpen: false });
             },
             åpneModal: (): void => {
                 set({ modalErÅpen: true });
