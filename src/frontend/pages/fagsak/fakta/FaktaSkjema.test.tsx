@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import type { BehandlingOppdaterFaktaData, FaktaOmFeilutbetaling } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect, vi } from 'vitest';
 
@@ -117,6 +117,40 @@ describe('Fakta om feilutbetaling', () => {
     });
 
     describe('Rettslig grunnlag', () => {
+        test('Markerer en ny periode grønn i tre sekunder', () => {
+            vi.useFakeTimers();
+
+            try {
+                renderFakta({
+                    perioder: [
+                        {
+                            ...faktaOmFeilutbetaling().perioder[0],
+                            endringIKravgrunnlag: {
+                                type: 'ny_periode',
+                                fom: '1969-04-20',
+                                tom: '1969-04-31',
+                                beløp: 6900,
+                            },
+                        },
+                    ],
+                });
+
+                const nyPeriodeRad = within(screen.getByRole('table')).getByRole('row', {
+                    name: /20\.04\.1969/,
+                });
+
+                expect(nyPeriodeRad).toHaveClass('!bg-ax-bg-success-soft');
+
+                act(() => vi.advanceTimersByTime(2999));
+                expect(nyPeriodeRad).toHaveClass('!bg-ax-bg-success-soft');
+
+                act(() => vi.advanceTimersByTime(1));
+                expect(nyPeriodeRad).not.toHaveClass('!bg-ax-bg-success-soft');
+            } finally {
+                vi.useRealTimers();
+            }
+        });
+
         test('Forhåndsutfylt rettslig grunnlag fra backend', () => {
             renderFakta();
 

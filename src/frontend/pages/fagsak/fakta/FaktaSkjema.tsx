@@ -386,6 +386,19 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
     erSiste,
 }: PeriodeRadProps) => {
     const { behandlingILesemodus } = useBehandlingState();
+    const [visNyPeriodeMarkering, setVisNyPeriodeMarkering] = useState(
+        periodeInfo.endringIKravgrunnlag?.type === 'ny_periode'
+    );
+
+    useEffect(() => {
+        if (!visNyPeriodeMarkering) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => setVisNyPeriodeMarkering(false), 3000);
+        return (): void => window.clearTimeout(timeoutId);
+    }, [visNyPeriodeMarkering]);
+
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(
             muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel === bestemmelse
@@ -397,7 +410,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
         });
     };
     return (
-        <Table.Row>
+        <Table.Row className={visNyPeriodeMarkering ? 'bg-ax-bg-success-soft!' : undefined}>
             <Table.DataCell className={`pl-2 ${erSiste ? 'border-b-0 rounded-bl-xl' : ''}`}>
                 {formatterDatostring(periodeInfo.fom)}–{formatterDatostring(periodeInfo.tom)}
             </Table.DataCell>
