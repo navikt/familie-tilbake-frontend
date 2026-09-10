@@ -438,36 +438,6 @@ export type PeriodeMedTekstDto = {
     særligeGrunnerAnnetAvsnitt?: string | null;
 };
 
-export type BrukeruttalelseDto = {
-    harBrukerUttaltSeg: UttalelseVurderingEnum;
-    uttalelsesdetaljer?: Array<Uttalelsesdetaljer> | null;
-    kommentar?: string | null;
-};
-
-export type Uttalelsesdetaljer = {
-    uttalelsesdato: string;
-    hvorBrukerenUttalteSeg: string;
-    uttalelseBeskrivelse: string;
-};
-
-export type Ressurs = {
-    data?: null;
-    status: StatusEnum;
-    melding: string;
-    frontendFeilmelding?: string | null;
-    stacktrace?: string | null;
-};
-
-export type FristUtsettelseDto = {
-    nyFrist?: string | null;
-    begrunnelse?: string | null;
-};
-
-export type ForhåndsvarselUnntakDto = {
-    begrunnelseForUnntak: BegrunnelseForUnntakEnum2;
-    beskrivelse: string;
-};
-
 export type BestillBrevDto = {
     behandlingId: string;
     brevmalkode: BrevmalkodeEnum;
@@ -529,6 +499,14 @@ export type Verge = {
 export type ForhåndsvisningHenleggelsesbrevDto = {
     behandlingId: string;
     fritekst?: string | null;
+};
+
+export type Ressurs = {
+    data?: null;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
 };
 
 export type RessursUuid = {
@@ -914,27 +892,6 @@ export type Section = {
 export type Varselbrevtekst = {
     overskrift: string;
     avsnitter: Array<Section>;
-};
-
-export type ForhåndsvarselDto = {
-    varselbrevDto?: VarselbrevDto | null;
-    brukeruttalelse?: BrukeruttalelseDto | null;
-    utsettUttalelseFrist?: FristUtsettelseDto | null;
-    forhåndsvarselUnntak?: ForhåndsvarselUnntakDto | null;
-};
-
-export type RessursForhåndsvarselDto = {
-    data?: ForhåndsvarselDto | null;
-    status: StatusEnum;
-    melding: string;
-    frontendFeilmelding?: string | null;
-    stacktrace?: string | null;
-};
-
-export type VarselbrevDto = {
-    varselbrevSendtTid?: string | null;
-    opprinneligFristForUttalelse?: string | null;
-    tekstFraSaksbehandler?: string | null;
 };
 
 export type PersonIdent = {
@@ -1644,11 +1601,6 @@ export type TypeEnum8 =
     | 'ARBEIDSAVKLARINGSPENGER'
     | 'TILTAKSPENGER'
     | 'DAGPENGER';
-
-export type BegrunnelseForUnntakEnum2 =
-    | 'IKKE_PRAKTISK_MULIG'
-    | 'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING'
-    | 'ÅPENBART_UNØDVENDIG';
 
 export type BrevmalkodeEnum =
     | 'INNHENT_DOKUMENTASJON'
@@ -2652,63 +2604,6 @@ export type LagreUtkastVedtaksbrevResponses = {
 export type LagreUtkastVedtaksbrevResponse =
     LagreUtkastVedtaksbrevResponses[keyof LagreUtkastVedtaksbrevResponses];
 
-export type LagreBrukeruttalelseData = {
-    body: BrukeruttalelseDto;
-    path: {
-        behandlingId: string;
-    };
-    query?: never;
-    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/uttalelse';
-};
-
-export type LagreBrukeruttalelseResponses = {
-    /**
-     * OK
-     */
-    200: Ressurs;
-};
-
-export type LagreBrukeruttalelseResponse =
-    LagreBrukeruttalelseResponses[keyof LagreBrukeruttalelseResponses];
-
-export type UtsettUttalelseFristData = {
-    body: FristUtsettelseDto;
-    path: {
-        behandlingId: string;
-    };
-    query?: never;
-    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/utsettelse';
-};
-
-export type UtsettUttalelseFristResponses = {
-    /**
-     * OK
-     */
-    200: Ressurs;
-};
-
-export type UtsettUttalelseFristResponse =
-    UtsettUttalelseFristResponses[keyof UtsettUttalelseFristResponses];
-
-export type ForhåndsvarselUnntakData = {
-    body: ForhåndsvarselUnntakDto;
-    path: {
-        behandlingId: string;
-    };
-    query?: never;
-    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/unntak';
-};
-
-export type ForhåndsvarselUnntakResponses = {
-    /**
-     * OK
-     */
-    200: Ressurs;
-};
-
-export type ForhåndsvarselUnntakResponse =
-    ForhåndsvarselUnntakResponses[keyof ForhåndsvarselUnntakResponses];
-
 export type ForhåndsvisBrevData = {
     body: BestillBrevDto;
     path: {
@@ -3207,25 +3102,6 @@ export type HentForhåndsvarselTekstResponses = {
 
 export type HentForhåndsvarselTekstResponse =
     HentForhåndsvarselTekstResponses[keyof HentForhåndsvarselTekstResponses];
-
-export type HentForhåndsvarselinfoData = {
-    body?: never;
-    path: {
-        behandlingId: string;
-    };
-    query?: never;
-    url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/v1';
-};
-
-export type HentForhåndsvarselinfoResponses = {
-    /**
-     * OK
-     */
-    200: RessursForhåndsvarselDto;
-};
-
-export type HentForhåndsvarselinfoResponse =
-    HentForhåndsvarselinfoResponses[keyof HentForhåndsvarselinfoResponses];
 
 export type HentUrlTilArbeidOgInntektData = {
     body?: never;

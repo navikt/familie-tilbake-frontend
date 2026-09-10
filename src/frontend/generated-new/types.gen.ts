@@ -57,7 +57,8 @@ export type BeregningsresultatVurdering =
     | 'Uaktsomhet'
     | 'GrovUaktsomhet'
     | 'BurdeForstått'
-    | 'Forstod';
+    | 'Forstod'
+    | 'Foreldet';
 
 export type Beregningsresultatsperiode = {
     readonly fom: string;
@@ -103,7 +104,9 @@ export type Element = RentekstElement;
 export type EndretPeriode = {
     readonly fom: string;
     readonly tom: string;
-    endringIBeløp: number;
+    gammelPeriode: Periode;
+    nyttBeløp: number;
+    gammeltBeløp: number;
 };
 
 export type Error = {
@@ -149,6 +152,12 @@ export type Feilutbetaling = {
     readonly fom: string;
     readonly tom: string;
     revurdering: Revurdering;
+};
+
+export type FjernetPeriode = {
+    readonly fom: string;
+    readonly tom: string;
+    beløp: number;
 };
 
 export type ForaarsaketAvMottaker = {
@@ -270,7 +279,10 @@ export type KravgrunnlagForskjell =
       } & NyPeriode)
     | ({
           type: 'endret_periode';
-      } & EndretPeriode);
+      } & EndretPeriode)
+    | ({
+          type: 'fjernet_periode';
+      } & FjernetPeriode);
 
 export type Logginnslag = {
     behandlingId: string;
@@ -690,7 +702,8 @@ export type DelerWritable = {
 };
 
 export type EndretPeriodeWritable = {
-    endringIBeløp: number;
+    nyttBeløp: number;
+    gammeltBeløp: number;
 };
 
 export type FaktaOmFeilutbetalingWritable = {
@@ -716,6 +729,10 @@ export type FaktaPeriodeWritable = {
 export type FeilutbetalingWritable = {
     beløp: number;
     revurdering: Revurdering;
+};
+
+export type FjernetPeriodeWritable = {
+    beløp: number;
 };
 
 export type ForaarsaketAvMottakerWritable = {
@@ -803,7 +820,10 @@ export type KravgrunnlagForskjellWritable =
       } & NyPeriodeWritable)
     | ({
           type: 'endret_periode';
-      } & EndretPeriodeWritable);
+      } & EndretPeriodeWritable)
+    | ({
+          type: 'fjernet_periode';
+      } & FjernetPeriodeWritable);
 
 export type MomentWritable = {
     moment: string;

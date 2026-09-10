@@ -118,17 +118,6 @@ export const zFritekstavsnittDto = z.object({
     perioderMedTekst: z.array(zPeriodeMedTekstDto).min(0).max(100),
 });
 
-export const zUttalelsesdetaljer = z.object({
-    uttalelsesdato: z.iso.date(),
-    hvorBrukerenUttalteSeg: z.string(),
-    uttalelseBeskrivelse: z.string(),
-});
-
-export const zFristUtsettelseDto = z.object({
-    nyFrist: z.iso.date().nullish(),
-    begrunnelse: z.string().nullish(),
-});
-
 export const zHentForhåndvisningVedtaksbrevPdfDto = z.object({
     behandlingId: z.uuid(),
     oppsummeringstekst: z.string().min(0).max(10000).nullish(),
@@ -240,12 +229,6 @@ export const zSection = z.object({
 export const zVarselbrevtekst = z.object({
     overskrift: z.string(),
     avsnitter: z.array(zSection),
-});
-
-export const zVarselbrevDto = z.object({
-    varselbrevSendtTid: z.iso.date().nullish(),
-    opprinneligFristForUttalelse: z.iso.date().nullish(),
-    tekstFraSaksbehandler: z.string().nullish(),
 });
 
 export const zPersonIdent = z.object({
@@ -422,16 +405,16 @@ export const zRessursString = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zRessurs = z.object({
-    data: z.null().optional(),
+export const zRessursByte = z.object({
+    data: z.string().nullish(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
     stacktrace: z.string().nullish(),
 });
 
-export const zRessursByte = z.object({
-    data: z.string().nullish(),
+export const zRessurs = z.object({
+    data: z.null().optional(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
@@ -689,12 +672,6 @@ export const zUttalelseVurderingEnum = z.enum([
     'JA',
     'NEI',
 ]);
-
-export const zBrukeruttalelseDto = z.object({
-    harBrukerUttaltSeg: zUttalelseVurderingEnum,
-    uttalelsesdetaljer: z.array(zUttalelsesdetaljer).nullish(),
-    kommentar: z.string().nullish(),
-});
 
 export const zTilbakeførtEnum = z.enum(['NyttKravgrunnlag', 'Underkjent']);
 
@@ -1230,32 +1207,6 @@ export const zTilbakekrevingEntity = z.object({
     nestePåminnelse: z.iso.datetime().nullish(),
     opprettelsesvalg: zOpprettelsesvalgEnum,
     bruker: zBrukerEntity.nullish(),
-});
-
-export const zBegrunnelseForUnntakEnum2 = z.enum([
-    'IKKE_PRAKTISK_MULIG',
-    'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
-    'ÅPENBART_UNØDVENDIG',
-]);
-
-export const zForhåndsvarselUnntakDto = z.object({
-    begrunnelseForUnntak: zBegrunnelseForUnntakEnum2,
-    beskrivelse: z.string(),
-});
-
-export const zForhåndsvarselDto = z.object({
-    varselbrevDto: zVarselbrevDto.nullish(),
-    brukeruttalelse: zBrukeruttalelseDto.nullish(),
-    utsettUttalelseFrist: zFristUtsettelseDto.nullish(),
-    forhåndsvarselUnntak: zForhåndsvarselUnntakDto.nullish(),
-});
-
-export const zRessursForhåndsvarselDto = z.object({
-    data: zForhåndsvarselDto.nullish(),
-    status: zStatusEnum,
-    melding: z.string(),
-    frontendFeilmelding: z.string().nullish(),
-    stacktrace: z.string().nullish(),
 });
 
 export const zBrevmalkodeEnum = z.enum([
@@ -2470,39 +2421,6 @@ export const zLagreUtkastVedtaksbrevPath = z.object({
  */
 export const zLagreUtkastVedtaksbrevResponse = zRessursString;
 
-export const zLagreBrukeruttalelseBody = zBrukeruttalelseDto;
-
-export const zLagreBrukeruttalelsePath = z.object({
-    behandlingId: z.uuid(),
-});
-
-/**
- * OK
- */
-export const zLagreBrukeruttalelseResponse = zRessurs;
-
-export const zUtsettUttalelseFristBody = zFristUtsettelseDto;
-
-export const zUtsettUttalelseFristPath = z.object({
-    behandlingId: z.uuid(),
-});
-
-/**
- * OK
- */
-export const zUtsettUttalelseFristResponse = zRessurs;
-
-export const zForhåndsvarselUnntakBody = zForhåndsvarselUnntakDto;
-
-export const zForhåndsvarselUnntakPath = z.object({
-    behandlingId: z.uuid(),
-});
-
-/**
- * OK
- */
-export const zForhåndsvarselUnntakResponse = zRessurs;
-
 export const zForhåndsvisBrevBody = zBestillBrevDto;
 
 export const zForhåndsvisBrevPath = z.object({
@@ -2742,15 +2660,6 @@ export const zHentForhåndsvarselTekstPath = z.object({
  * OK
  */
 export const zHentForhåndsvarselTekstResponse = zRessursVarselbrevtekst;
-
-export const zHentForhåndsvarselinfoPath = z.object({
-    behandlingId: z.uuid(),
-});
-
-/**
- * OK
- */
-export const zHentForhåndsvarselinfoResponse = zRessursForhåndsvarselDto;
 
 export const zHentUrlTilArbeidOgInntektHeaders = z.object({
     'x-person-ident': zPersonIdent,

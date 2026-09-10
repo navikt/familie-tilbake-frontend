@@ -14,6 +14,7 @@ export const zBeregningsresultatVurdering = z.enum([
     'GrovUaktsomhet',
     'BurdeForstått',
     'Forstod',
+    'Foreldet',
 ]);
 
 export const zBeregningsresultatsperiode = z.object({
@@ -61,15 +62,6 @@ export const zDokumentInfo = z.object({
 
 export const zDokumentType = z.enum(['VARSELBREV', 'VEDTAKSBREV']);
 
-export const zEndretPeriode = z.object({
-    fom: z.iso.date().readonly(),
-    tom: z.iso.date().readonly(),
-    endringIBeløp: z
-        .int()
-        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
-        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
-});
-
 export const zError = z.object({
     tittel: z.string(),
     melding: z.string(),
@@ -77,6 +69,15 @@ export const zError = z.object({
 
 export const zFakta = z.object({
     rettsligGrunnlag: z.array(z.string()),
+});
+
+export const zFjernetPeriode = z.object({
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
 });
 
 export const zForhaandsvarselInfo = z.object({
@@ -148,15 +149,6 @@ export const zNyPeriode = z.object({
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
 });
 
-export const zKravgrunnlagForskjell = z.discriminatedUnion('type', [
-    zNyPeriode.extend({ type: z.literal('ny_periode') }),
-    zEndretPeriode.extend({ type: z.literal('endret_periode') }),
-]);
-
-export const zBehandling = z.object({
-    kravgrunnlagEndret: z.array(zKravgrunnlagForskjell).optional(),
-});
-
 export const zOppsummertPeriode = z.object({
     fom: z.string(),
     tom: z.string(),
@@ -178,6 +170,30 @@ export const zOppsummeringsdata = z.object({
 export const zPeriode = z.object({
     fom: z.iso.date().readonly(),
     tom: z.iso.date().readonly(),
+});
+
+export const zEndretPeriode = z.object({
+    fom: z.iso.date().readonly(),
+    tom: z.iso.date().readonly(),
+    gammelPeriode: zPeriode,
+    nyttBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    gammeltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+});
+
+export const zKravgrunnlagForskjell = z.discriminatedUnion('type', [
+    zNyPeriode.extend({ type: z.literal('ny_periode') }),
+    zEndretPeriode.extend({ type: z.literal('endret_periode') }),
+    zFjernetPeriode.extend({ type: z.literal('fjernet_periode') }),
+]);
+
+export const zBehandling = z.object({
+    kravgrunnlagEndret: z.array(zKravgrunnlagForskjell).optional(),
 });
 
 export const zPeriodeInfo = z.object({
@@ -703,10 +719,14 @@ export const zBeregningsresultatWritable = z.object({
 });
 
 export const zEndretPeriodeWritable = z.object({
-    endringIBeløp: z
+    nyttBeløp: z
         .int()
-        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
-        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    gammeltBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
 });
 
 export const zFaktaPeriodeWritable = z.object({
@@ -753,6 +773,13 @@ export const zFaktaOmFeilutbetalingWritable = z.object({
         .nullable(),
 });
 
+export const zFjernetPeriodeWritable = z.object({
+    beløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+});
+
 export const zForhaandsvarselUnntakWritable = z.object({
     begrunnelseForUnntak: zVarslingsunntak,
     beskrivelse: z.string(),
@@ -788,6 +815,7 @@ export const zNyPeriodeWritable = z.object({
 export const zKravgrunnlagForskjellWritable = z.discriminatedUnion('type', [
     zNyPeriodeWritable.extend({ type: z.literal('ny_periode') }),
     zEndretPeriodeWritable.extend({ type: z.literal('endret_periode') }),
+    zFjernetPeriodeWritable.extend({ type: z.literal('fjernet_periode') }),
 ]);
 
 export const zBehandlingWritable = z.object({

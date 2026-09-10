@@ -1,5 +1,10 @@
 import type { JSX } from 'react';
-import type { BehandlingOppdaterFaktaData, FaktaOmFeilutbetaling } from '@/generated-new';
+import type { EndretKravgrunnlag } from '@/generated';
+import type {
+    BehandlingOppdaterFaktaData,
+    FaktaOmFeilutbetaling,
+    FaktaPeriode,
+} from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
@@ -66,6 +71,22 @@ const faktaOmFeilutbetaling = (
     },
     ...overrides,
 });
+
+const lagEndretPeriodeIKravgrunnlag = (
+    gammeltBeløp: number,
+    nyttBeløp: number
+): FaktaPeriode['endringIKravgrunnlag'] =>
+    ({
+        type: 'endret_periode',
+        fom: '1969-04-20',
+        tom: '1969-04-31',
+        gammelPeriode: {
+            fom: '1969-04-20',
+            tom: '1969-04-31',
+        },
+        gammeltBeløp,
+        nyttBeløp,
+    }) satisfies FaktaPeriode['endringIKravgrunnlag'];
 
 const renderFakta = (
     overrides?: Partial<FaktaOmFeilutbetaling>,
@@ -139,16 +160,171 @@ describe('Fakta om feilutbetaling', () => {
                     name: /20\.04\.1969/,
                 });
 
-                expect(nyPeriodeRad).toHaveClass('!bg-ax-bg-success-soft');
+                expect(nyPeriodeRad).toHaveClass('bg-ax-bg-success-soft!');
 
                 act(() => vi.advanceTimersByTime(2999));
-                expect(nyPeriodeRad).toHaveClass('!bg-ax-bg-success-soft');
+                expect(nyPeriodeRad).toHaveClass('bg-ax-bg-success-soft!');
 
                 act(() => vi.advanceTimersByTime(1));
-                expect(nyPeriodeRad).not.toHaveClass('!bg-ax-bg-success-soft');
+                expect(nyPeriodeRad).not.toHaveClass('bg-ax-bg-success-soft!');
             } finally {
                 vi.useRealTimers();
             }
+        });
+
+        test.each([
+            { gammeltBeløp: 5900, nyttBeløp: 6900, ikonnavn: 'Beløpet er økt' },
+            { gammeltBeløp: 7900, nyttBeløp: 6900, ikonnavn: 'Beløpet er redusert' },
+        ])(
+            'Markerer endret beløp med tag og retningspil',
+            ({ gammeltBeløp, nyttBeløp, ikonnavn }) => {
+                vi.useFakeTimers();
+
+                try {
+                    renderFakta({
+                        perioder: [
+                            {
+                                ...faktaOmFeilutbetaling().perioder[0],
+                                endringIKravgrunnlag: lagEndretPeriodeIKravgrunnlag(
+                                    gammeltBeløp,
+                                    nyttBeløp
+                                ),
+                            },
+                        ],
+                    });
+
+                    const periodeRad = within(screen.getByRole('table')).getByRole('row', {
+                        name: /20\.04\.1969/,
+                    });
+                    const markertBeløp = within(periodeRad)
+                        .getByText('6 900')
+                        .closest('.aksel-tag');
+
+                    expect(markertBeløp).toHaveAttribute('data-color', 'success');
+                    expect(within(periodeRad).getByTitle(ikonnavn)).toBeInTheDocument();
+
+                    act(() => vi.advanceTimersByTime(3000));
+
+                    expect(markertBeløp).toHaveAttribute('data-color', 'success');
+                    expect(within(periodeRad).getByTitle(ikonnavn)).toBeInTheDocument();
+                } finally {
+                    vi.useRealTimers();
+                }
+            }
+        );
+
+        test('Oppdaterer beløp og retning når fakta oppdateres på nytt', () => {
+            const client = createTestQueryClient();
+            const wrapMedProviders = (fakta: FaktaOmFeilutbetaling): JSX.Element => (
+                <FagsakContext value={lagFagsak()}>
+                    <TestBehandlingProvider behandling={lagBehandling({ behandlingId: 'unik' })}>
+                        <QueryClientProvider client={client}>
+                            <FaktaSkjema faktaOmFeilutbetaling={fakta} />
+                        </QueryClientProvider>
+                    </TestBehandlingProvider>
+                </FagsakContext>
+            );
+            const lagFaktaMedBeløpsendring = (
+                feilutbetaltBeløp: number,
+                gammeltBeløp: number
+            ): FaktaOmFeilutbetaling =>
+                faktaOmFeilutbetaling({
+                    perioder: [
+                        {
+                            ...faktaOmFeilutbetaling().perioder[0],
+                            feilutbetaltBeløp,
+                            endringIKravgrunnlag: lagEndretPeriodeIKravgrunnlag(
+                                gammeltBeløp,
+                                feilutbetaltBeløp
+                            ),
+                        },
+                    ],
+                });
+
+            const { rerender } = render(wrapMedProviders(lagFaktaMedBeløpsendring(7900, 6900)));
+            const periodeRad = within(screen.getByRole('table')).getByRole('row', {
+                name: /20\.04\.1969/,
+            });
+
+            expect(within(periodeRad).getByText('7 900')).toBeInTheDocument();
+            expect(within(periodeRad).getByTitle('Beløpet er økt')).toBeInTheDocument();
+
+            rerender(wrapMedProviders(lagFaktaMedBeløpsendring(5900, 7900)));
+
+            expect(within(periodeRad).getByText('5 900')).toBeInTheDocument();
+            expect(within(periodeRad).getByTitle('Beløpet er redusert')).toBeInTheDocument();
+            expect(within(periodeRad).queryByText('7 900')).not.toBeInTheDocument();
+        });
+
+        test('Skjuler en ny periode frem til kravgrunnlaget er bekreftet', () => {
+            const client = createTestQueryClient();
+            const endretKravgrunnlag: EndretKravgrunnlag = {
+                gammeltBeløp: 6900,
+                nyttBeløp: 8100,
+                gammelPeriode: {
+                    fom: '1969-04-20',
+                    tom: '1969-04-31',
+                    fomMåned: '1969-04',
+                    tomMåned: '1969-04',
+                },
+                nyPeriode: {
+                    fom: '1969-05-01',
+                    tom: '1969-05-31',
+                    fomMåned: '1969-05',
+                    tomMåned: '1969-05',
+                },
+                endringer: [],
+            };
+            const wrapMedProviders = (
+                fakta: FaktaOmFeilutbetaling,
+                skjulNyePerioder: boolean
+            ): JSX.Element => (
+                <FagsakContext value={lagFagsak()}>
+                    <TestBehandlingProvider
+                        behandling={lagBehandling({
+                            behandlingId: 'unik',
+                            endretKravgrunnlag: skjulNyePerioder ? endretKravgrunnlag : undefined,
+                        })}
+                    >
+                        <QueryClientProvider client={client}>
+                            <FaktaSkjema faktaOmFeilutbetaling={fakta} />
+                        </QueryClientProvider>
+                    </TestBehandlingProvider>
+                </FagsakContext>
+            );
+            const opprinneligFakta = faktaOmFeilutbetaling();
+            const faktaMedNyPeriode = faktaOmFeilutbetaling({
+                perioder: [
+                    ...opprinneligFakta.perioder,
+                    {
+                        ...opprinneligFakta.perioder[0],
+                        id: 'ny-periode',
+                        fom: '1969-05-01',
+                        tom: '1969-05-31',
+                        feilutbetaltBeløp: 1200,
+                        endringIKravgrunnlag: {
+                            type: 'ny_periode',
+                            fom: '1969-05-01',
+                            tom: '1969-05-31',
+                            beløp: 1200,
+                        },
+                    },
+                ],
+            });
+
+            const { rerender } = render(wrapMedProviders(opprinneligFakta, false));
+            expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(2);
+
+            rerender(wrapMedProviders(faktaMedNyPeriode, true));
+            expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(2);
+
+            rerender(wrapMedProviders(faktaMedNyPeriode, false));
+
+            const tabell = within(screen.getByRole('table'));
+            expect(tabell.getAllByRole('row')).toHaveLength(3);
+            expect(tabell.getByRole('row', { name: /01\.05\.1969–31\.05\.1969/ })).toHaveClass(
+                'bg-ax-bg-success-soft!'
+            );
         });
 
         test('Forhåndsutfylt rettslig grunnlag fra backend', () => {

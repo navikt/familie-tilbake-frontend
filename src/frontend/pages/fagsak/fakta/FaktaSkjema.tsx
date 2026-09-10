@@ -16,7 +16,7 @@ import type {
 import type { OppdaterFaktaOmFeilutbetalingSchema } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
+import { ArrowDownIcon, ArrowUpIcon } from '@navikt/aksel-icons';
 import {
     // Button,
     DatePicker,
@@ -26,6 +26,7 @@ import {
     RadioGroup,
     Select,
     Table,
+    Tag,
     Textarea,
     useDatepicker,
 } from '@navikt/ds-react';
@@ -69,7 +70,7 @@ type Props = {
 };
 
 export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
-    const { behandlingId } = useBehandling();
+    const { behandlingId, endretKravgrunnlag } = useBehandling();
     const { behandlingILesemodus } = useBehandlingState();
     const { actionBarStegtekst, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
@@ -77,13 +78,23 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
 
     const navigerTilNeste = useStegNavigering('FORHÅNDSVARSEL');
+    const skjulNyePerioder = !!endretKravgrunnlag;
+    const synligePerioder = useMemo(
+        () =>
+            skjulNyePerioder
+                ? faktaOmFeilutbetaling.perioder.filter(
+                      periode => periode.endringIKravgrunnlag?.type !== 'ny_periode'
+                  )
+                : faktaOmFeilutbetaling.perioder,
+        [faktaOmFeilutbetaling.perioder, skjulNyePerioder]
+    );
 
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(
             lagOppdaterFaktaOmFeilutbetalingSchema(faktaOmFeilutbetaling.usikker4xRettsgebyr)
         ),
         defaultValues: {
-            perioder: faktaOmFeilutbetaling.perioder.map(periode => ({
+            perioder: synligePerioder.map(periode => ({
                 ...periode,
                 rettsligGrunnlag:
                     periode.rettsligGrunnlag.length > 0
@@ -113,10 +124,36 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
         criteriaMode: 'all',
     });
 
-    const perioder = useFieldArray({
+    const { fields: perioder, replace: erstattPerioder } = useFieldArray({
         control: methods.control,
         name: 'perioder',
-    }).fields;
+        keyName: 'feltId',
+    });
+
+    useEffect(() => {
+        const harSammePerioder =
+            perioder.length === synligePerioder.length &&
+            perioder.every(
+                (periode, periodeIndex) => periode.id === synligePerioder[periodeIndex]?.id
+            );
+        if (harSammePerioder) {
+            return;
+        }
+
+        const skjemaperioderById = new Map(
+            (methods.getValues('perioder') ?? []).map(periode => [periode.id, periode] as const)
+        );
+        erstattPerioder(
+            synligePerioder.map(periode => ({
+                id: periode.id,
+                rettsligGrunnlag:
+                    skjemaperioderById.get(periode.id)?.rettsligGrunnlag ??
+                    (periode.rettsligGrunnlag.length > 0
+                        ? periode.rettsligGrunnlag
+                        : [{ bestemmelse: '', grunnlag: '' }]),
+            }))
+        );
+    }, [erstattPerioder, methods, perioder, synligePerioder]);
 
     const iDag = useMemo(() => new Date(), []);
 
@@ -182,10 +219,8 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
         return unsubscribe;
     }, [methods, setIkkePersistertKomponent, nullstillIkkePersisterteKomponenter]);
 
-    const dataForPeriode = (id: string): FaktaPeriode =>
-        // Siden disse kommer fra samme kall skal det ikke være mulig å ende opp med tomt svar
-        // biome-ignore lint/style/noNonNullAssertion: perioden finnes garantert siden id kommer fra samme kall
-        perioder.find(periode => periode.id === id)! as FaktaPeriode;
+    const dataForPeriode = (periodeIndex: number): FaktaPeriode => synligePerioder[periodeIndex];
+
     const onSubmit: SubmitHandler<OppdaterFaktaOmFeilutbetaling> = (
         data: OppdaterFaktaOmFeilutbetaling
     ): void => {
@@ -266,10 +301,10 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
                             <Table.Body>
                                 {perioder.map((periode, periodeIndex) => (
                                     <PeriodeRad
-                                        key={periode.id}
+                                        key={periode.feltId}
                                         periode={periode}
                                         periodeIndex={periodeIndex}
-                                        periodeInfo={dataForPeriode(periode.id)}
+                                        periodeInfo={dataForPeriode(periodeIndex)}
                                         muligeRettsligGrunnlag={
                                             faktaOmFeilutbetaling.muligeRettsligGrunnlag
                                         }
@@ -386,8 +421,9 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
     erSiste,
 }: PeriodeRadProps) => {
     const { behandlingILesemodus } = useBehandlingState();
+    const endringIKravgrunnlag = periodeInfo.endringIKravgrunnlag;
     const [visNyPeriodeMarkering, setVisNyPeriodeMarkering] = useState(
-        periodeInfo.endringIKravgrunnlag?.type === 'ny_periode'
+        endringIKravgrunnlag?.type === 'ny_periode'
     );
 
     useEffect(() => {
@@ -399,6 +435,12 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
         return (): void => window.clearTimeout(timeoutId);
     }, [visNyPeriodeMarkering]);
 
+    const beløpsendring =
+        endringIKravgrunnlag?.type === 'endret_periode' &&
+        endringIKravgrunnlag.gammeltBeløp !== endringIKravgrunnlag.nyttBeløp
+            ? endringIKravgrunnlag
+            : undefined;
+
     const tilgjengeligeGrunnlag = (bestemmelse: string): BestemmelseEllerGrunnlag[] =>
         muligeRettsligGrunnlag.find(
             muligGrunnlag => muligGrunnlag.bestemmelse.nøkkel === bestemmelse
@@ -409,6 +451,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
             shouldDirty: true,
         });
     };
+
     return (
         <Table.Row className={visNyPeriodeMarkering ? 'bg-ax-bg-success-soft!' : undefined}>
             <Table.DataCell className={`pl-2 ${erSiste ? 'border-b-0 rounded-bl-xl' : ''}`}>
@@ -474,9 +517,26 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
                 ))}
             </Table.DataCell>
             <Table.DataCell
-                className={`text-end text-ax-text-brand-magenta ${erSiste ? 'border-b-0 rounded-br-xl' : ''}`}
+                className={`text-end ${beløpsendring ? '' : 'text-ax-text-brand-magenta'} ${erSiste ? 'border-b-0 rounded-br-xl' : ''}`}
             >
-                {formatCurrencyNoKr(periodeInfo.feilutbetaltBeløp)}
+                {beløpsendring ? (
+                    <Tag
+                        variant="moderate"
+                        data-color="success"
+                        size="small"
+                        icon={
+                            beløpsendring.nyttBeløp < beløpsendring.gammeltBeløp ? (
+                                <ArrowDownIcon title="Beløpet er redusert" />
+                            ) : (
+                                <ArrowUpIcon title="Beløpet er økt" />
+                            )
+                        }
+                    >
+                        {formatCurrencyNoKr(periodeInfo.feilutbetaltBeløp)}
+                    </Tag>
+                ) : (
+                    formatCurrencyNoKr(periodeInfo.feilutbetaltBeløp)
+                )}
             </Table.DataCell>
             {/* <Table.DataCell className="text-center">
                 <Button

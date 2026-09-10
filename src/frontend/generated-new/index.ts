@@ -174,6 +174,8 @@ export type {
     FaktaPeriodeWritable,
     Feilutbetaling,
     FeilutbetalingWritable,
+    FjernetPeriode,
+    FjernetPeriodeWritable,
     ForaarsaketAvMottaker,
     ForaarsaketAvMottakerWritable,
     ForhaandsvarselErSendt,

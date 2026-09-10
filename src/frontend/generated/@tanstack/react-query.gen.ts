@@ -27,7 +27,6 @@ import {
     fjernVerge,
     flyttBehandlingTilFakta,
     flyttBehandlingTilFakta1,
-    forhåndsvarselUnntak,
     forhåndsvisBrev,
     henleggBehandling,
     hentBehandling,
@@ -36,7 +35,6 @@ import {
     hentDokument,
     hentFagsak,
     hentFaktaomfeilutbetaling,
-    hentForhåndsvarselinfo,
     hentForhåndsvarselTekst,
     hentForhåndsvisningHenleggelsesbrev,
     hentForhåndsvisningVarselbrev,
@@ -60,7 +58,6 @@ import {
     korrigerKravgrunnlag,
     korrigerKravgrunnlag1,
     lagOppdaterOppgaveTaskForBehandling,
-    lagreBrukeruttalelse,
     lagreUtkastVedtaksbrev,
     leggTilBrevmottaker,
     migrerAlleSaker,
@@ -82,7 +79,6 @@ import {
     taBehandlingAvVent,
     tvingHenleggBehandling,
     utførBehandlingssteg,
-    utsettUttalelseFrist,
 } from '../sdk.gen';
 import type {
     AngreSammenslåingData,
@@ -125,8 +121,6 @@ import type {
     FlyttBehandlingTilFakta1Response,
     FlyttBehandlingTilFaktaData,
     FlyttBehandlingTilFaktaResponse,
-    ForhåndsvarselUnntakData,
-    ForhåndsvarselUnntakResponse,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponse,
     HenleggBehandlingData,
@@ -143,8 +137,6 @@ import type {
     HentFagsakResponse,
     HentFaktaomfeilutbetalingData,
     HentFaktaomfeilutbetalingResponse,
-    HentForhåndsvarselinfoData,
-    HentForhåndsvarselinfoResponse,
     HentForhåndsvarselTekstData,
     HentForhåndsvarselTekstResponse,
     HentForhåndsvisningHenleggelsesbrevData,
@@ -190,8 +182,6 @@ import type {
     KorrigerKravgrunnlagData,
     KorrigerKravgrunnlagResponse,
     LagOppdaterOppgaveTaskForBehandlingData,
-    LagreBrukeruttalelseData,
-    LagreBrukeruttalelseResponse,
     LagreUtkastVedtaksbrevData,
     LagreUtkastVedtaksbrevResponse,
     LeggTilBrevmottakerData,
@@ -227,8 +217,6 @@ import type {
     TvingHenleggBehandlingResponse,
     UtførBehandlingsstegData,
     UtførBehandlingsstegResponse,
-    UtsettUttalelseFristData,
-    UtsettUttalelseFristResponse,
 } from '../types.gen';
 
 /**
@@ -1176,87 +1164,6 @@ export const lagreUtkastVedtaksbrevMutation = (
 };
 
 /**
- * Lagrer brukerens uttalelse
- */
-export const lagreBrukeruttalelseMutation = (
-    options?: Partial<Options<LagreBrukeruttalelseData>>
-): UseMutationOptions<
-    LagreBrukeruttalelseResponse,
-    AxiosError<DefaultError>,
-    Options<LagreBrukeruttalelseData>
-> => {
-    const mutationOptions: UseMutationOptions<
-        LagreBrukeruttalelseResponse,
-        AxiosError<DefaultError>,
-        Options<LagreBrukeruttalelseData>
-    > = {
-        mutationFn: async fnOptions => {
-            const { data } = await lagreBrukeruttalelse({
-                ...options,
-                ...fnOptions,
-                throwOnError: true,
-            });
-            return data;
-        },
-    };
-    return mutationOptions;
-};
-
-/**
- * Skal utsette uttalelse frist
- */
-export const utsettUttalelseFristMutation = (
-    options?: Partial<Options<UtsettUttalelseFristData>>
-): UseMutationOptions<
-    UtsettUttalelseFristResponse,
-    AxiosError<DefaultError>,
-    Options<UtsettUttalelseFristData>
-> => {
-    const mutationOptions: UseMutationOptions<
-        UtsettUttalelseFristResponse,
-        AxiosError<DefaultError>,
-        Options<UtsettUttalelseFristData>
-    > = {
-        mutationFn: async fnOptions => {
-            const { data } = await utsettUttalelseFrist({
-                ...options,
-                ...fnOptions,
-                throwOnError: true,
-            });
-            return data;
-        },
-    };
-    return mutationOptions;
-};
-
-/**
- * Skal ikke sendes forhåndsvarsel
- */
-export const forhåndsvarselUnntakMutation = (
-    options?: Partial<Options<ForhåndsvarselUnntakData>>
-): UseMutationOptions<
-    ForhåndsvarselUnntakResponse,
-    AxiosError<DefaultError>,
-    Options<ForhåndsvarselUnntakData>
-> => {
-    const mutationOptions: UseMutationOptions<
-        ForhåndsvarselUnntakResponse,
-        AxiosError<DefaultError>,
-        Options<ForhåndsvarselUnntakData>
-    > = {
-        mutationFn: async fnOptions => {
-            const { data } = await forhåndsvarselUnntak({
-                ...options,
-                ...fnOptions,
-                throwOnError: true,
-            });
-            return data;
-        },
-    };
-    return mutationOptions;
-};
-
-/**
  * Forhåndsvis brev
  */
 export const forhåndsvisBrevMutation = (
@@ -1964,31 +1871,6 @@ export const hentForhåndsvarselTekstOptions = (options: Options<HentForhåndsva
             return data;
         },
         queryKey: hentForhåndsvarselTekstQueryKey(options),
-    });
-
-export const hentForhåndsvarselinfoQueryKey = (options: Options<HentForhåndsvarselinfoData>) =>
-    createQueryKey('hentForhåndsvarselinfo', options);
-
-/**
- * Hent forhåndsvarselinformasjon
- */
-export const hentForhåndsvarselinfoOptions = (options: Options<HentForhåndsvarselinfoData>) =>
-    queryOptions<
-        HentForhåndsvarselinfoResponse,
-        AxiosError<DefaultError>,
-        HentForhåndsvarselinfoResponse,
-        ReturnType<typeof hentForhåndsvarselinfoQueryKey>
-    >({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await hentForhåndsvarselinfo({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true,
-            });
-            return data;
-        },
-        queryKey: hentForhåndsvarselinfoQueryKey(options),
     });
 
 export const hentUrlTilArbeidOgInntektQueryKey = (

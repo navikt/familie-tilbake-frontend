@@ -47,8 +47,6 @@ import type {
     FlyttBehandlingTilFakta1Responses,
     FlyttBehandlingTilFaktaData,
     FlyttBehandlingTilFaktaResponses,
-    ForhåndsvarselUnntakData,
-    ForhåndsvarselUnntakResponses,
     ForhåndsvisBrevData,
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
@@ -65,8 +63,6 @@ import type {
     HentFagsakResponses,
     HentFaktaomfeilutbetalingData,
     HentFaktaomfeilutbetalingResponses,
-    HentForhåndsvarselinfoData,
-    HentForhåndsvarselinfoResponses,
     HentForhåndsvarselTekstData,
     HentForhåndsvarselTekstResponses,
     HentForhåndsvisningHenleggelsesbrevData,
@@ -113,8 +109,6 @@ import type {
     KorrigerKravgrunnlagResponses,
     LagOppdaterOppgaveTaskForBehandlingData,
     LagOppdaterOppgaveTaskForBehandlingResponses,
-    LagreBrukeruttalelseData,
-    LagreBrukeruttalelseResponses,
     LagreUtkastVedtaksbrevData,
     LagreUtkastVedtaksbrevResponses,
     LeggTilBrevmottakerData,
@@ -155,8 +149,6 @@ import type {
     TvingHenleggBehandlingResponses,
     UtførBehandlingsstegData,
     UtførBehandlingsstegResponses,
-    UtsettUttalelseFristData,
-    UtsettUttalelseFristResponses,
 } from './types.gen';
 
 export type Options<
@@ -698,57 +690,6 @@ export const lagreUtkastVedtaksbrev = <ThrowOnError extends boolean = false>(
     });
 
 /**
- * Lagrer brukerens uttalelse
- */
-export const lagreBrukeruttalelse = <ThrowOnError extends boolean = false>(
-    options: Options<LagreBrukeruttalelseData, ThrowOnError>
-): RequestResult<LagreBrukeruttalelseResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).post<LagreBrukeruttalelseResponses, unknown, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/uttalelse',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
-    });
-
-/**
- * Skal utsette uttalelse frist
- */
-export const utsettUttalelseFrist = <ThrowOnError extends boolean = false>(
-    options: Options<UtsettUttalelseFristData, ThrowOnError>
-): RequestResult<UtsettUttalelseFristResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).post<UtsettUttalelseFristResponses, unknown, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/utsettelse',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
-    });
-
-/**
- * Skal ikke sendes forhåndsvarsel
- */
-export const forhåndsvarselUnntak = <ThrowOnError extends boolean = false>(
-    options: Options<ForhåndsvarselUnntakData, ThrowOnError>
-): RequestResult<ForhåndsvarselUnntakResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).post<ForhåndsvarselUnntakResponses, unknown, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/unntak',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
-    });
-
-/**
  * Forhåndsvis brev
  */
 export const forhåndsvisBrev = <ThrowOnError extends boolean = false>(
@@ -1155,19 +1096,6 @@ export const hentForhåndsvarselTekst = <ThrowOnError extends boolean = false>(
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/dokument/varselbrevtekst/{behandlingId}',
-        ...options,
-    });
-
-/**
- * Hent forhåndsvarselinformasjon
- */
-export const hentForhåndsvarselinfo = <ThrowOnError extends boolean = false>(
-    options: Options<HentForhåndsvarselinfoData, ThrowOnError>
-): RequestResult<HentForhåndsvarselinfoResponses, unknown, ThrowOnError> =>
-    (options.client ?? client).get<HentForhåndsvarselinfoResponses, unknown, ThrowOnError>({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/dokument/forhåndsvarsel/behandling/{behandlingId}/v1',
         ...options,
     });
 
