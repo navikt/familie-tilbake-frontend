@@ -10,6 +10,7 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import {
+    behandlingHentVedtaksresultatQueryKey,
     behandlingLagreVilkaarsvurderingMutation,
     behandlingVilkaarsvurderingOptions,
     behandlingVilkaarsvurderingQueryKey,
@@ -56,16 +57,19 @@ export const Vilkårsvurdering: FC = () => {
 
     const { valgtPeriode, setValgtPeriodeId } = usePeriodeIUrl(perioder);
 
-    const invaliderVilkårsvurdering = (): void => {
+    const invalidererVilkårsvurderingOgResultat = (): void => {
         queryClient.invalidateQueries({
             queryKey: behandlingVilkaarsvurderingQueryKey({ path: { behandlingId } }),
+        });
+        queryClient.invalidateQueries({
+            queryKey: behandlingHentVedtaksresultatQueryKey({ path: { behandlingId } }),
         });
     };
 
     queryClient.setMutationDefaults(LAGRE_VILKÅRSVURDERING_MUTATION_KEY, {
         ...behandlingLagreVilkaarsvurderingMutation(),
         onSuccess: async (): Promise<void> => {
-            invaliderVilkårsvurdering();
+            invalidererVilkårsvurderingOgResultat();
             await queryClient.invalidateQueries({
                 queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
             });
@@ -119,7 +123,7 @@ export const Vilkårsvurdering: FC = () => {
                             key={valgtPeriode.id}
                             valgtPeriode={valgtPeriode}
                             vilkårsperioder={vilkår.vilkårsperioder}
-                            hentVilkårsvurdering={invaliderVilkårsvurdering}
+                            hentVilkårsvurdering={invalidererVilkårsvurderingOgResultat}
                         />
                     </VilkårsvurderingLesedataProvider>
                 )}
