@@ -73,7 +73,7 @@ export const Sidebar: FC = () => {
                     : 'w-16 shrink-0 items-center p-4 pt-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
             }`}
         >
-            <Activity mode={visPanel ? 'visible' : 'hidden'}>
+            <Activity key={behandlingId} mode={visPanel ? 'visible' : 'hidden'}>
                 <SidebarPanel
                     aktivTabRef={aktivTabRef}
                     veksleknapp={
