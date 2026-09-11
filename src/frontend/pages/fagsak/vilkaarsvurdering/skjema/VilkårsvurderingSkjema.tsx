@@ -4,11 +4,14 @@ import type { VilkårsvurderingSkjemaFelter } from './schema';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { ForstoEllerBurdeForståttFelter } from './forsto-eller-burde-forstått/ForstoEllerBurdeForståttFelter';
 import { ForårsaketAvMottakerenFelter } from './forårsaket-av-mottakeren/ForårsaketAvMottakerenFelter';
 import { GodTroFelter } from './god-tro/GodTroFelter';
 
 export const VilkårsvurderingSkjema: FC = () => {
+    const { behandlingILesemodus } = useBehandlingState();
     const {
         control,
         register,
@@ -28,6 +31,7 @@ export const VilkårsvurderingSkjema: FC = () => {
                 legend="Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?"
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={valg}
                 error={errors.valg?.message}
             >

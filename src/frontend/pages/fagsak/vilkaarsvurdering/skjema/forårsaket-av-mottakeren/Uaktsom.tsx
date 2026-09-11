@@ -4,12 +4,15 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Textarea } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SærligeGrunner } from '../SærligeGrunner';
 import { Under4xRettsgebyr } from '../Under4xRettsgebyr';
 
 export const Uaktsom: FC = () => {
     const { erUnder4xRettsgebyr } = useVilkårsvurderingLesedata();
+    const { behandlingILesemodus } = useBehandlingState();
     const {
         register,
         formState: { errors },
@@ -25,6 +28,7 @@ export const Uaktsom: FC = () => {
                 minRows={3}
                 resize
                 maxLength={3000}
+                readOnly={behandlingILesemodus}
             />
             {erUnder4xRettsgebyr ? (
                 <Under4xRettsgebyr
