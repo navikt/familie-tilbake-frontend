@@ -12,6 +12,8 @@ import {
 } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { useVilkårsvurderingLesedata } from '../../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from '../SimulertBeløp';
 
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
+    const { behandlingILesemodus } = useBehandlingState();
     const { register, setValue, control, getFieldState, formState } =
         useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterReduksjonGodTro } = useVilkårsvurderingLesedata();
@@ -56,6 +59,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                 name={reduksjonName}
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={erDetReduksjonÅrsaker}
                 error={feil(`${navnPrefix}.erDetReduksjonÅrsaker`)}
             >
@@ -76,6 +80,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                         description="Kryss av for det som er avgjørende i vurderingen din"
                         size="small"
                         className="max-w-xl"
+                        readOnly={behandlingILesemodus}
                         value={relevansJaGodTro}
                         error={feil(`${navnPrefix}.jaGodTro.relevans`)}
                         onChange={(value: string[]): void =>
@@ -95,6 +100,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                             error={feil(`${navnPrefix}.jaGodTro.annetBegrunnelse`)}
                             size="small"
                             className="max-w-xl"
+                            readOnly={behandlingILesemodus}
                         />
                     )}
                     <Textarea
@@ -106,6 +112,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                     />
                     <TextField
                         label="Hvor mange prosent skal beløpet reduseres med?"
@@ -124,6 +131,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                         type="number"
                         min={0}
                         max={100}
+                        readOnly={behandlingILesemodus}
                     />
                     <SimulertBeløp reduksjon reduksjonsprosent={prosentReduksjon ?? 0} />
                 </>
@@ -136,6 +144,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                         description="Kryss av for det som er avgjørende i vurderingen din"
                         size="small"
                         className="max-w-xl"
+                        readOnly={behandlingILesemodus}
                         value={relevansNeiGodTro}
                         error={feil(`${navnPrefix}.neiGodTro.relevans`)}
                         onChange={(value: string[]): void =>
@@ -155,6 +164,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                             error={feil(`${navnPrefix}.neiGodTro.annetBegrunnelse`)}
                             size="small"
                             className="max-w-xl"
+                            readOnly={behandlingILesemodus}
                         />
                     )}
                     <Textarea
@@ -166,6 +176,7 @@ export const Reduksjon: FC<Props> = ({ navnPrefix }: Props) => {
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                     />
                     <SimulertBeløp />
                 </>

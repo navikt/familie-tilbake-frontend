@@ -4,10 +4,13 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { BurdeForstått } from './BurdeForstått';
 import { Forsto } from './Forsto';
 
 export const ForstoEllerBurdeForståttFelter: FC = () => {
+    const { behandlingILesemodus } = useBehandlingState();
     const { control, register, formState } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const forståelse = useWatch({
         name: 'forstoEllerBurdeForstått.forståelse',
@@ -23,6 +26,7 @@ export const ForstoEllerBurdeForståttFelter: FC = () => {
                 legend="Vurder mottakerens forståelse på utbetalingstidspunktet"
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={forståelse}
                 error={formState.errors.forstoEllerBurdeForstått?.forståelse?.message}
             >

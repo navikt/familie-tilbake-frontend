@@ -5,6 +5,8 @@ import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { HStack, InfoCard, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { SimulertBeløp } from './SimulertBeløp';
 import { SærligeGrunner } from './SærligeGrunner';
 
@@ -15,6 +17,7 @@ type Props = {
 };
 
 export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: Props) => {
+    const { behandlingILesemodus } = useBehandlingState();
     const { register, control, setValue, getFieldState, formState } =
         useFormContext<VilkårsvurderingSkjemaFelter>();
     const feil = (navn: Parameters<typeof getFieldState>[0]): string | undefined =>
@@ -38,6 +41,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                 legend="Skal beløpet kreves tilbake? (sjette avsnitt)"
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={unnlatelseVerdi}
                 error={feil(`${navnPrefix}.unnlatelse`)}
                 onChange={(value: string): void =>
@@ -63,6 +67,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                         {...register(`${navnPrefix}.skalIkkeUnnlates.begrunnelse`)}
                         error={feil(`${navnPrefix}.skalIkkeUnnlates.begrunnelse`)}
                     />
@@ -83,6 +88,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                         {...register(`${navnPrefix}.skalUnnlates.begrunnelse`)}
                         error={feil(`${navnPrefix}.skalUnnlates.begrunnelse`)}
                     />

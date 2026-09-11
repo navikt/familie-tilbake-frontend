@@ -4,11 +4,14 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { Deler } from './Deler';
 import { Hele } from './Hele';
 import { Ingenting } from './Ingenting';
 
 export const GodTroFelter: FC = () => {
+    const { behandlingILesemodus } = useBehandlingState();
     const {
         register,
         control,
@@ -31,12 +34,14 @@ export const GodTroFelter: FC = () => {
                 minRows={3}
                 resize
                 maxLength={3000}
+                readOnly={behandlingILesemodus}
             />
             <RadioGroup
                 name={beløpIBeholdName}
                 legend="Hvor mye av det feilutbetalte beløpet er i behold?"
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={beløpIBehold}
                 error={errors.godTro?.beløpIBehold?.message}
             >

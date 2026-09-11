@@ -4,9 +4,12 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Textarea } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { SimulertBeløp } from '../SimulertBeløp';
 
 export const Forsett: FC = () => {
+    const { behandlingILesemodus } = useBehandlingState();
     const {
         register,
         formState: { errors },
@@ -22,6 +25,7 @@ export const Forsett: FC = () => {
                 minRows={3}
                 resize
                 maxLength={3000}
+                readOnly={behandlingILesemodus}
             />
             <SimulertBeløp renter />
         </>

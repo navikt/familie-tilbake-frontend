@@ -12,6 +12,8 @@ import {
 } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { useVilkårsvurderingLesedata } from '../VilkårsvurderingLesedataContext';
 import { SimulertBeløp } from './SimulertBeløp';
 
@@ -26,6 +28,7 @@ export const SærligeGrunner: FC<Props> = ({
     renter = false,
     reduksjon = false,
 }: Props) => {
+    const { behandlingILesemodus } = useBehandlingState();
     const { register, setValue, control, getFieldState, formState } =
         useFormContext<VilkårsvurderingSkjemaFelter>();
     const { momenterSærligeGrunner } = useVilkårsvurderingLesedata();
@@ -63,6 +66,7 @@ export const SærligeGrunner: FC<Props> = ({
                 legend="Er det særlige grunner til å redusere beløpet?"
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={erDetReduksjonÅrsaker}
                 error={feil(`${navnPrefix}.erDetReduksjonÅrsaker`)}
             >
@@ -82,6 +86,7 @@ export const SærligeGrunner: FC<Props> = ({
                         legend="Hvilke særlige grunner taler for å redusere beløpet?"
                         size="small"
                         className="max-w-xl"
+                        readOnly={behandlingILesemodus}
                         value={særligeGrunnerFor}
                         error={feil(`${navnPrefix}.jaSærligeGrunner.særligeGrunnerFor`)}
                         onChange={(value: string[]): void =>
@@ -103,6 +108,7 @@ export const SærligeGrunner: FC<Props> = ({
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
                             className="max-w-xl"
+                            readOnly={behandlingILesemodus}
                             {...register(`${navnPrefix}.jaSærligeGrunner.annetBegrunnelse`)}
                             error={feil(`${navnPrefix}.jaSærligeGrunner.annetBegrunnelse`)}
                         />
@@ -114,6 +120,7 @@ export const SærligeGrunner: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                         {...register(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
                         error={feil(`${navnPrefix}.jaSærligeGrunner.begrunnelse`)}
                     />
@@ -121,6 +128,7 @@ export const SærligeGrunner: FC<Props> = ({
                         label="Hvor mange prosent skal beløpet reduseres med?"
                         size="small"
                         className="max-w-xl"
+                        readOnly={behandlingILesemodus}
                         value={prosentReduksjon ?? ''}
                         error={feil(`${navnPrefix}.jaSærligeGrunner.prosentReduksjon`)}
                         style={{ width: '100px' }}
@@ -145,6 +153,7 @@ export const SærligeGrunner: FC<Props> = ({
                         legend="Hvilke særlige grunner taler mot å redusere beløpet?"
                         size="small"
                         className="max-w-xl"
+                        readOnly={behandlingILesemodus}
                         value={særligeGrunnerMot}
                         error={feil(`${navnPrefix}.neiSærligeGrunner.særligeGrunnerMot`)}
                         onChange={(value: string[]): void =>
@@ -167,6 +176,7 @@ export const SærligeGrunner: FC<Props> = ({
                             label="Beskriv kort hva du legger i alternativet “Annet”"
                             size="small"
                             className="max-w-xl"
+                            readOnly={behandlingILesemodus}
                             {...register(`${navnPrefix}.neiSærligeGrunner.annetBegrunnelse`)}
                             error={feil(`${navnPrefix}.neiSærligeGrunner.annetBegrunnelse`)}
                         />
@@ -178,6 +188,7 @@ export const SærligeGrunner: FC<Props> = ({
                         minRows={3}
                         resize
                         maxLength={3000}
+                        readOnly={behandlingILesemodus}
                         {...register(`${navnPrefix}.neiSærligeGrunner.begrunnelse`)}
                         error={feil(`${navnPrefix}.neiSærligeGrunner.begrunnelse`)}
                     />

@@ -4,11 +4,14 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { Forsett } from './Forsett';
 import { GrovtUaktsom } from './GrovtUaktsom';
 import { Uaktsom } from './Uaktsom';
 
 export const ForårsaketAvMottakerenFelter: FC = () => {
+    const { behandlingILesemodus } = useBehandlingState();
     const { control, register, formState } = useFormContext<VilkårsvurderingSkjemaFelter>();
     const uaktsomhet = useWatch({
         name: 'forårsaketAvMottaker.aktsomhet',
@@ -22,6 +25,7 @@ export const ForårsaketAvMottakerenFelter: FC = () => {
                 legend="Vurder mottakerens uaktsomhet i perioden"
                 size="small"
                 className="max-w-xl"
+                readOnly={behandlingILesemodus}
                 value={uaktsomhet}
                 error={formState.errors.forårsaketAvMottaker?.aktsomhet?.message}
             >
