@@ -1,4 +1,4 @@
-import type { FC, ReactNode, RefObject } from 'react';
+import type { FC, ReactNode } from 'react';
 import type { BehandlingsstegsinfoDto } from '@/generated';
 
 import { Heading, Link, LocalAlert, VStack } from '@navikt/ds-react';
@@ -33,6 +33,7 @@ import {
 } from '@/utils/sider';
 
 import { BEHANDLING_HØYDE, BEHANDLING_MINSTEBREDDE, BehandlingGrid } from './BehandlingGrid';
+import { BehandlingInnhold } from './BehandlingInnhold';
 import { Fakta } from './fakta/Fakta';
 import { FaktaSkeleton } from './fakta/FaktaSkeleton';
 import { FaktaProvider } from './fakta/gammel-fakta/FaktaContext';
@@ -104,39 +105,29 @@ type BehandlingLayoutProps = {
     children: ReactNode;
     skalHaActionBar: boolean;
     visHøyremeny?: boolean;
-    dialogRef: RefObject<HTMLDialogElement | null>;
 };
 
 const BehandlingLayout: FC<BehandlingLayoutProps> = ({
     children,
     visHøyremeny = true,
-    dialogRef,
     skalHaActionBar,
 }: BehandlingLayoutProps) => (
     <>
-        <div className="flex-1 overflow-auto min-h-0 min-w-0 justify-between flex flex-col">
+        <BehandlingInnhold className="flex-1 overflow-auto min-h-0 min-w-0 justify-between flex-col">
             {children}
             {skalHaActionBar && <GlobalActionBar />}
-        </div>
-        {visHøyremeny && <Sidebar dialogRef={dialogRef} />}
+        </BehandlingInnhold>
+        {visHøyremeny && <Sidebar />}
     </>
 );
 
-type HenlagtBehandlingProps = {
-    dialogRef: RefObject<HTMLDialogElement | null>;
-};
-
-const HenlagtBehandling: FC<HenlagtBehandlingProps> = ({ dialogRef }: HenlagtBehandlingProps) => (
-    <BehandlingLayout dialogRef={dialogRef} skalHaActionBar={false}>
+const HenlagtBehandling: FC = () => (
+    <BehandlingLayout skalHaActionBar={false}>
         <section className="px-6 text-center" aria-label="Behandlingen er henlagt">
             <Heading size="small">Behandlingen er henlagt</Heading>
         </section>
     </BehandlingLayout>
 );
-
-type VenterPåKravgrunnlagBehandlingProps = {
-    dialogRef: RefObject<HTMLDialogElement | null>;
-};
 
 const VenterPåKravgrunnlagActionBar: FC = () => {
     useActionBar({
@@ -148,10 +139,8 @@ const VenterPåKravgrunnlagActionBar: FC = () => {
     return null;
 };
 
-const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> = ({
-    dialogRef,
-}: VenterPåKravgrunnlagBehandlingProps) => (
-    <BehandlingLayout dialogRef={dialogRef} skalHaActionBar>
+const VenterPåKravgrunnlagBehandling: FC = () => (
+    <BehandlingLayout skalHaActionBar>
         <Heading size="medium" visuallyHidden>
             Behandlingen venter på kravgrunnlag
         </Heading>
@@ -159,14 +148,8 @@ const VenterPåKravgrunnlagBehandling: FC<VenterPåKravgrunnlagBehandlingProps> 
     </BehandlingLayout>
 );
 
-type HistoriskBehandlingProps = {
-    dialogRef: RefObject<HTMLDialogElement | null>;
-};
-
-const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({
-    dialogRef,
-}: HistoriskBehandlingProps) => (
-    <BehandlingLayout dialogRef={dialogRef} visHøyremeny={false} skalHaActionBar={false}>
+const HistoriskBehandling: FC = () => (
+    <BehandlingLayout visHøyremeny={false} skalHaActionBar={false}>
         <VStack gap="space-20">
             <Suspense fallback="Historiske vurderinger laster...">
                 <HistoriskeVurderingermeny />
@@ -199,11 +182,7 @@ const HistoriskBehandling: FC<HistoriskBehandlingProps> = ({
     </BehandlingLayout>
 );
 
-type AktivBehandlingProps = {
-    dialogRef: RefObject<HTMLDialogElement | null>;
-};
-
-const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlingProps) => {
+const AktivBehandling: FC = () => {
     const behandling = useBehandling();
     const { toggles } = useToggles();
     const nyStegflyt = useNyStegflyt();
@@ -222,6 +201,8 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
         const oppdaterBredde = (): void => {
             if (contentRef.current) {
                 const rect = contentRef.current.getBoundingClientRect();
+                // Innholdet er skjult når panelet tar over skjermen, og da er målingen ubrukelig.
+                if (rect.width === 0) return;
                 setInnholdsbredde(rect.width);
                 setInnholdVenstrePosisjon(rect.left);
             }
@@ -233,8 +214,8 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
 
     return (
         <>
-            <section
-                className="flex flex-col gap-4 min-h-0 min-w-0"
+            <BehandlingInnhold
+                className="flex-col gap-4 min-h-0 min-w-0"
                 aria-label="Oversikt over behandlingen, steg, innhold og handlingsmeny"
             >
                 {!nyStegflyt && <Stegflyt />}
@@ -322,9 +303,9 @@ const AktivBehandling: FC<AktivBehandlingProps> = ({ dialogRef }: AktivBehandlin
                     </Routes>
                 </section>
                 <GlobalActionBar />
-            </section>
+            </BehandlingInnhold>
 
-            <Sidebar dialogRef={dialogRef} />
+            <Sidebar />
         </>
     );
 };
@@ -335,7 +316,6 @@ const Behandling: FC = () => {
     const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
     const { setRolle, setErNyModell } = useBehandlingStore();
     const location = useLocation();
-    const dialogRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
         setErNyModell(behandling.erNyModell);
@@ -348,17 +328,17 @@ const Behandling: FC = () => {
     }, [behandling.erNyModell, behandling.innloggetRolle, setErNyModell, setRolle]);
 
     if (behandling.erBehandlingHenlagt) {
-        return <HenlagtBehandling dialogRef={dialogRef} />;
+        return <HenlagtBehandling />;
     }
 
     if (!harKravgrunnlag) {
-        return <VenterPåKravgrunnlagBehandling dialogRef={dialogRef} />;
+        return <VenterPåKravgrunnlagBehandling />;
     }
 
     const ønsketSide = location.pathname.split('/')[7];
     const erHistoriskeVerdier = erHistoriskSide(ønsketSide);
     if (erHistoriskeVerdier) {
-        return <HistoriskBehandling dialogRef={dialogRef} />;
+        return <HistoriskBehandling />;
     }
 
     const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
@@ -375,7 +355,7 @@ const Behandling: FC = () => {
         return <Navigate to={`${behandlingUrl}/${standardSide?.href ?? 'fakta'}`} replace />;
     }
 
-    return <AktivBehandling dialogRef={dialogRef} />;
+    return <AktivBehandling />;
 };
 
 const venteBeskjed = (ventegrunn: BehandlingsstegsinfoDto): string =>

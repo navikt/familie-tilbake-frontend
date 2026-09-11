@@ -11,7 +11,7 @@ const settSkjermbredde = (bredde: number): void => {
 
 describe('SidebarVeksleknapp', () => {
     beforeEach(() => {
-        useSidebarStore.setState({ erÅpen: true });
+        useSidebarStore.setState({ erÅpen: true, erÅpenPåSmalSkjerm: false });
         settSkjermbredde(1280);
     });
 
@@ -35,14 +35,24 @@ describe('SidebarVeksleknapp', () => {
         );
     });
 
-    test('Forteller at knappen åpner en dialog på små skjermer', () => {
+    test('Viser åpneknapp på små skjermer, der panelet starter lukket', () => {
         settSkjermbredde(800);
         render(<SidebarVeksleknapp />);
 
         const knapp = screen.getByRole('button', { name: 'Åpne informasjonspanelet' });
-        expect(knapp).toHaveAttribute('aria-haspopup', 'dialog');
-        expect(knapp).not.toHaveAttribute('aria-controls');
-        expect(knapp).not.toHaveAttribute('aria-expanded');
+        expect(knapp).toHaveAttribute('aria-expanded', 'false');
+        expect(knapp).toHaveAttribute('aria-controls', 'informasjonspanel');
+        expect(knapp).not.toHaveAttribute('aria-haspopup');
+    });
+
+    test('Åpner panelet på små skjermer uten å endre det lagrede valget', async () => {
+        settSkjermbredde(800);
+        render(<SidebarVeksleknapp />);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Åpne informasjonspanelet' }));
+
+        expect(useSidebarStore.getState().erÅpenPåSmalSkjerm).toBe(true);
+        expect(useSidebarStore.getState().erÅpen).toBe(true);
     });
 
     test('Åpner panelet igjen ved nytt klikk', async () => {

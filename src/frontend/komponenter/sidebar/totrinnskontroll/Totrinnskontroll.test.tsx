@@ -7,6 +7,7 @@ import type { Totrinnkontroll } from '@/typer/totrinnTyper';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { Activity, useState } from 'react';
 import { vi } from 'vitest';
 
 import { FagsakContext } from '@/context/FagsakContext';
@@ -68,12 +69,33 @@ const setupMocks = (totrinnkontroll: Totrinnkontroll): void => {
 const godkjennTekst = {
     name: 'Godkjenn vedtaket',
 };
+
 const godkjennKnapp = (): HTMLElement => screen.getByRole('button', godkjennTekst);
 
 const sendTilSaksbehandlerKnapp = (): HTMLElement =>
     screen.getByRole('button', {
         name: 'Send til saksbehandler',
     });
+
+/**
+ * Etterligner sidebaren, som holder panelet montert med <Activity> når det lukkes.
+ * Effekter avmonteres når panelet skjules og kjøres på nytt når det vises igjen.
+ */
+const TotrinnskontrollIPanel = (): React.ReactElement => {
+    const [synlig, setSynlig] = useState(true);
+    return (
+        <>
+            <button type="button" onClick={(): void => setSynlig(forrige => !forrige)}>
+                Veksle panel
+            </button>
+            <Activity mode={synlig ? 'visible' : 'hidden'}>
+                <TotrinnskontrollProvider>
+                    <Totrinnskontroll />
+                </TotrinnskontrollProvider>
+            </Activity>
+        </>
+    );
+};
 
 describe('Totrinnskontroll', () => {
     let user: UserEvent;
@@ -273,5 +295,49 @@ describe('Totrinnskontroll', () => {
         );
 
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    test('Beholder påbegynt vurdering når panelet lukkes og åpnes igjen', async () => {
+        const gjerTotrinnkontrollKall = vi.fn().mockResolvedValue({
+            status: RessursStatus.Suksess,
+            data: {
+                totrinnsstegsinfo: [
+                    lagTotrinnsStegInfo('FAKTA'),
+                    lagTotrinnsStegInfo('VILKÅRSVURDERING'),
+                    lagTotrinnsStegInfo('FORESLÅ_VEDTAK'),
+                ],
+            },
+        });
+        mockUseBehandlingApi.mockImplementation(() => ({ gjerTotrinnkontrollKall }));
+
+        const queryClient = createTestQueryClient();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <FagsakContext value={lagFagsak()}>
+                    <TestBehandlingProvider behandling={lagBehandling({ kanEndres: true })}>
+                        <TotrinnskontrollIPanel />
+                    </TestBehandlingProvider>
+                </FagsakContext>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByRole('link', { name: 'Fakta' })).toBeInTheDocument();
+
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
+        await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-false'));
+        await user.type(
+            screen.getByRole('textbox', { name: 'Begrunnelse' }),
+            'Må vurderes på nytt'
+        );
+
+        await user.click(screen.getByRole('button', { name: 'Veksle panel' }));
+        await user.click(screen.getByRole('button', { name: 'Veksle panel' }));
+
+        expect(gjerTotrinnkontrollKall).toHaveBeenCalledTimes(1);
+        expect(screen.getByTestId('stegetGodkjent_idx_steg_0-true')).toBeChecked();
+        expect(screen.getByTestId('stegetGodkjent_idx_steg_1-false')).toBeChecked();
+        expect(screen.getByRole('textbox', { name: 'Begrunnelse' })).toHaveValue(
+            'Må vurderes på nytt'
+        );
     });
 });

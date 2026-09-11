@@ -3,14 +3,15 @@ import type { Menysider } from '@/komponenter/sidebar/menysider';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-export type SidebarState = {
+type SidebarState = {
+    // Brukerens lagrede valg, som gjelder når skjermen har plass til panelet ved siden av.
     erÅpen: boolean;
-    modalErÅpen: boolean;
+    // Gjelder kun inneværende økt: på smal skjerm dekker panelet behandlingen, så det skal
+    // alltid starte lukket uten å overskrive det lagrede valget over.
+    erÅpenPåSmalSkjerm: boolean;
     valgtSide: Menysider | null;
-    veksleÅpen: () => void;
-    åpne: () => void;
-    åpneModal: () => void;
-    lukkModal: () => void;
+    settÅpen: (åpen: boolean) => void;
+    settÅpenPåSmalSkjerm: (åpen: boolean) => void;
     settValgtSide: (side: Menysider) => void;
     nullstillValgtSide: () => void;
 };
@@ -19,19 +20,13 @@ export const useSidebarStore = create<SidebarState>()(
     persist(
         set => ({
             erÅpen: true,
-            modalErÅpen: false,
+            erÅpenPåSmalSkjerm: false,
             valgtSide: null,
-            veksleÅpen: (): void => {
-                set(state => ({ erÅpen: !state.erÅpen }));
+            settÅpen: (åpen: boolean): void => {
+                set({ erÅpen: åpen });
             },
-            åpne: (): void => {
-                set({ erÅpen: true });
-            },
-            åpneModal: (): void => {
-                set({ modalErÅpen: true });
-            },
-            lukkModal: (): void => {
-                set({ modalErÅpen: false });
+            settÅpenPåSmalSkjerm: (åpen: boolean): void => {
+                set({ erÅpenPåSmalSkjerm: åpen });
             },
             settValgtSide: (side: Menysider): void => {
                 set({ valgtSide: side });
@@ -48,5 +43,3 @@ export const useSidebarStore = create<SidebarState>()(
         }
     )
 );
-
-export const useSidebarErÅpen = (): boolean => useSidebarStore(state => state.erÅpen);

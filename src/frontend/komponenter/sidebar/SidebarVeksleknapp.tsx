@@ -15,9 +15,9 @@ type Props = {
 };
 
 export const SidebarVeksleknapp: FC<Props> = ({ ref, onVeksle }: Props) => {
-    const { erStorSkjerm, innholdErSynlig, veksle } = useSidebarVisning();
+    const { visPanel, veksle } = useSidebarVisning();
 
-    const tekst = innholdErSynlig ? 'Lukk informasjonspanelet' : 'Åpne informasjonspanelet';
+    const tekst = visPanel ? 'Lukk informasjonspanelet' : 'Åpne informasjonspanelet';
 
     const håndterKlikk = (): void => {
         sporHendelse(Hendelser.KNAPP_KLIKKET, {
@@ -29,24 +29,15 @@ export const SidebarVeksleknapp: FC<Props> = ({ ref, onVeksle }: Props) => {
         onVeksle?.();
     };
 
-    const dialogegenskaper = erStorSkjerm
-        ? { 'aria-expanded': innholdErSynlig, 'aria-controls': SIDEBAR_PANEL_ID }
-        : { 'aria-haspopup': 'dialog' as const };
-
     return (
         <Button
             ref={ref}
             data-color="neutral"
             size="small"
             variant="tertiary"
-            {...dialogegenskaper}
-            icon={
-                innholdErSynlig ? (
-                    <SidebarRightIcon title={tekst} />
-                ) : (
-                    <SidebarLeftIcon title={tekst} />
-                )
-            }
+            aria-expanded={visPanel}
+            aria-controls={SIDEBAR_PANEL_ID}
+            icon={visPanel ? <SidebarRightIcon title={tekst} /> : <SidebarLeftIcon title={tekst} />}
             onClick={håndterKlikk}
         />
     );

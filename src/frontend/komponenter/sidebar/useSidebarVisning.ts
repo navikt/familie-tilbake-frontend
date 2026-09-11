@@ -1,57 +1,59 @@
 import type { Menysider } from './menysider';
 
+import { useCallback } from 'react';
+
 import { useErStorSkjerm } from '@/hooks/useErStorSkjerm';
 import { useSidebarStore } from '@/stores/sidebarStore';
 
 type SidebarVisning = {
     erStorSkjerm: boolean;
     visPanel: boolean;
-    visModal: boolean;
-    innholdErSynlig: boolean;
+    tarOverSkjermen: boolean;
     veksle: () => void;
+    lukkPåSmalSkjerm: () => void;
     åpneSide: (side: Menysider) => void;
-    lukkModal: () => void;
 };
 
 export const useSidebarVisning = (): SidebarVisning => {
     const erStorSkjerm = useErStorSkjerm();
     const erÅpen = useSidebarStore(state => state.erÅpen);
-    const modalErÅpen = useSidebarStore(state => state.modalErÅpen);
-    const veksleÅpen = useSidebarStore(state => state.veksleÅpen);
-    const åpne = useSidebarStore(state => state.åpne);
-    const åpneModal = useSidebarStore(state => state.åpneModal);
-    const lukkModal = useSidebarStore(state => state.lukkModal);
+    const erÅpenPåSmalSkjerm = useSidebarStore(state => state.erÅpenPåSmalSkjerm);
+    const settÅpen = useSidebarStore(state => state.settÅpen);
+    const settÅpenPåSmalSkjerm = useSidebarStore(state => state.settÅpenPåSmalSkjerm);
     const settValgtSide = useSidebarStore(state => state.settValgtSide);
 
-    const visPanel = erStorSkjerm && erÅpen;
-    const visModal = !erStorSkjerm && modalErÅpen;
+    const visPanel = erStorSkjerm ? erÅpen : erÅpenPåSmalSkjerm;
 
-    const veksle = (): void => {
+    const veksle = useCallback((): void => {
         if (erStorSkjerm) {
-            veksleÅpen();
-        } else if (modalErÅpen) {
-            lukkModal();
+            settÅpen(!erÅpen);
         } else {
-            åpneModal();
+            settÅpenPåSmalSkjerm(!erÅpenPåSmalSkjerm);
         }
-    };
+    }, [erStorSkjerm, erÅpen, erÅpenPåSmalSkjerm, settÅpen, settÅpenPåSmalSkjerm]);
 
-    const åpneSide = (side: Menysider): void => {
-        settValgtSide(side);
-        if (erStorSkjerm) {
-            åpne();
-        } else {
-            åpneModal();
-        }
-    };
+    const åpneSide = useCallback(
+        (side: Menysider): void => {
+            settValgtSide(side);
+            if (erStorSkjerm) {
+                settÅpen(true);
+            } else {
+                settÅpenPåSmalSkjerm(true);
+            }
+        },
+        [erStorSkjerm, settValgtSide, settÅpen, settÅpenPåSmalSkjerm]
+    );
+
+    const lukkPåSmalSkjerm = useCallback((): void => {
+        settÅpenPåSmalSkjerm(false);
+    }, [settÅpenPåSmalSkjerm]);
 
     return {
         erStorSkjerm,
         visPanel,
-        visModal,
-        innholdErSynlig: visPanel || visModal,
+        tarOverSkjermen: visPanel && !erStorSkjerm,
         veksle,
+        lukkPåSmalSkjerm,
         åpneSide,
-        lukkModal,
     };
 };

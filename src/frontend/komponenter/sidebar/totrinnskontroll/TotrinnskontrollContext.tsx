@@ -8,6 +8,7 @@
  */
 
 import type { StegEnum } from '@/generated';
+import type { BehandlingDto } from '@/generated/types.gen';
 import type { FatteVedtakStegPayload, TotrinnsStegVurdering } from '@/typer/api';
 import type { Totrinnkontroll } from '@/typer/totrinnTyper';
 import type { SynligSteg } from '@/utils/sider';
@@ -15,7 +16,7 @@ import type { TotrinnGodkjenningOption, TotrinnStegSkjemaData } from './typer/to
 
 import { useQueryClient } from '@tanstack/react-query';
 import createUseContext from 'constate';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useBehandlingApi } from '@/api/behandling';
@@ -65,15 +66,31 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const navigate = useNavigate();
     const [feilmelding, setFeilmelding] = useState<string>('');
     const [laster, setLaster] = useState(false);
+    const behandlingenTotrinnkontrollErHentetFor = useRef<BehandlingDto | null>(null);
+    const skjemaDataErByggetFra = useRef<Ressurs<Totrinnkontroll> | undefined>(undefined);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         setStegErBehandlet(erStegBehandlet('FATTE_VEDTAK'));
         setErLesevisning(!behandling.kanEndres || erBehandlingReturnertFraBeslutter());
+        // Sidebaren holder panelet montert med <Activity> når det lukkes, og effekter
+        // kjøres på nytt når det åpnes igjen. Uten denne sjekken ville totrinnkontrollen
+        // blitt hentet på nytt og overskrevet påbegynte vurderinger.
+        if (behandlingenTotrinnkontrollErHentetFor.current === behandling) {
+            return;
+        }
+        behandlingenTotrinnkontrollErHentetFor.current = behandling;
         hentTotrinnkontroll();
     }, [behandling]);
 
     useEffect(() => {
+        // Effekten kjøres på nytt når panelet gjenåpnes (se <Activity> i sidebaren). Skjemaet
+        // skal kun bygges på nytt når totrinnkontrollen faktisk er hentet på nytt, ellers
+        // hadde påbegynte vurderinger blitt overskrevet med serververdiene.
+        if (skjemaDataErByggetFra.current === totrinnkontroll) {
+            return;
+        }
+        skjemaDataErByggetFra.current = totrinnkontroll;
         if (totrinnkontroll?.status === RessursStatus.Suksess) {
             const totrinn = totrinnkontroll.data.totrinnsstegsinfo;
             setSkjemaData(
