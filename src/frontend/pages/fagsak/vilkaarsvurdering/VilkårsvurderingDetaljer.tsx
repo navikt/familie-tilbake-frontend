@@ -19,6 +19,7 @@ import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
+import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 
 import { DelPeriode } from './del-periode/DelPeriode';
@@ -48,6 +49,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     hentVilkårsvurdering,
 }: InnholdProps) => {
     const { behandlingId } = useBehandling();
+    const { behandlingILesemodus } = useBehandlingState();
     const { erUnder4xRettsgebyr, momenterSærligeGrunner, momenterReduksjonGodTro } =
         useVilkårsvurderingLesedata();
     const visGlobalAlert = useVisGlobalAlert();
@@ -111,37 +113,43 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
                     {`${valgtPeriode.fom}–${valgtPeriode.tom}`}
                 </Heading>
                 <HStack gap="space-4">
-                    {valgtVilkårsperiode.vilkårsvurdering.delbarePerioder.length > 1 && (
-                        <DelPeriode
-                            key={`${valgtVilkårsperiode.vilkårsvurdering.fom}-${valgtVilkårsperiode.vilkårsvurdering.tom}`}
-                            periode={
-                                {
-                                    fom: valgtVilkårsperiode.vilkårsvurdering.fom,
-                                    tom: valgtVilkårsperiode.vilkårsvurdering.tom,
-                                } satisfies Periode
-                            }
-                            delbarePerioder={valgtVilkårsperiode.vilkårsvurdering.delbarePerioder}
-                            erVurdert={erPeriodeVurdert(valgtPeriode.vurdering)}
-                            hentVilkårsvurdering={hentVilkårsvurdering}
-                        />
+                    {!behandlingILesemodus && (
+                        <>
+                            {valgtVilkårsperiode.vilkårsvurdering.delbarePerioder.length > 1 && (
+                                <DelPeriode
+                                    key={`${valgtVilkårsperiode.vilkårsvurdering.fom}-${valgtVilkårsperiode.vilkårsvurdering.tom}`}
+                                    periode={
+                                        {
+                                            fom: valgtVilkårsperiode.vilkårsvurdering.fom,
+                                            tom: valgtVilkårsperiode.vilkårsvurdering.tom,
+                                        } satisfies Periode
+                                    }
+                                    delbarePerioder={
+                                        valgtVilkårsperiode.vilkårsvurdering.delbarePerioder
+                                    }
+                                    erVurdert={erPeriodeVurdert(valgtPeriode.vurdering)}
+                                    hentVilkårsvurdering={hentVilkårsvurdering}
+                                />
+                            )}
+                            <SlåSammen
+                                valgtPeriodeId={valgtPeriode.id}
+                                vilkårsperioder={vilkårsperioder.map(({ vilkårsvurdering }) => ({
+                                    periodeId: vilkårsvurdering.id,
+                                    periode: {
+                                        fom: vilkårsvurdering.fom,
+                                        tom: vilkårsvurdering.tom,
+                                    } satisfies Periode,
+                                    delbarePerioder: vilkårsvurdering.delbarePerioder,
+                                }))}
+                                hentVilkårsvurdering={hentVilkårsvurdering}
+                            />
+                            <LagreKnapp
+                                skjema={skjema}
+                                laster={lagreMutation.isPending}
+                                lagre={methods.handleSubmit(onSubmit)}
+                            />
+                        </>
                     )}
-                    <SlåSammen
-                        valgtPeriodeId={valgtPeriode.id}
-                        vilkårsperioder={vilkårsperioder.map(({ vilkårsvurdering }) => ({
-                            periodeId: vilkårsvurdering.id,
-                            periode: {
-                                fom: vilkårsvurdering.fom,
-                                tom: vilkårsvurdering.tom,
-                            } satisfies Periode,
-                            delbarePerioder: vilkårsvurdering.delbarePerioder,
-                        }))}
-                        hentVilkårsvurdering={hentVilkårsvurdering}
-                    />
-                    <LagreKnapp
-                        skjema={skjema}
-                        laster={lagreMutation.isPending}
-                        lagre={methods.handleSubmit(onSubmit)}
-                    />
                 </HStack>
             </HStack>
             <form

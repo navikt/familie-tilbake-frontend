@@ -4,9 +4,12 @@ import type { VilkårsvurderingSkjemaFelter } from '../schema';
 import { Textarea, TextField } from '@navikt/ds-react';
 import { useFormContext } from 'react-hook-form';
 
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+
 import { Reduksjon } from './Reduksjon';
 
 export const Deler: FC = () => {
+    const { behandlingILesemodus } = useBehandlingState();
     const {
         register,
         formState: { errors },
@@ -22,6 +25,7 @@ export const Deler: FC = () => {
                 minRows={3}
                 resize
                 maxLength={3000}
+                readOnly={behandlingILesemodus}
             />
             <TextField
                 label="Hvor mange kroner er i behold?"
@@ -34,6 +38,7 @@ export const Deler: FC = () => {
                 className="max-w-xl"
                 type="number"
                 min={1}
+                readOnly={behandlingILesemodus}
             />
             <Reduksjon navnPrefix="godTro.deler" />
         </>
