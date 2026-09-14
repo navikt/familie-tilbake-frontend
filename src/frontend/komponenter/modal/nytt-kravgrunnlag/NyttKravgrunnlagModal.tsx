@@ -1,10 +1,11 @@
 import type { FC } from 'react';
+import type { EndretKravgrunnlag } from '@/generated';
 import type {
-    EndretKravgrunnlag,
-    EndretPeriodeDto,
-    FjernetPeriodeDto,
-    NyPeriodeDto,
-} from '@/generated';
+    EndretPeriode,
+    FjernetPeriode,
+    KravgrunnlagForskjell,
+    NyPeriode,
+} from '@/generated-new';
 
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from '@navikt/aksel-icons';
 import {
@@ -34,7 +35,7 @@ import { formatCurrencyNoKr, formatterDatostring, hentPeriodelengde } from '@/ut
 const periodensVarighet = (fom: string, tom: string): number => Date.parse(tom) - Date.parse(fom);
 
 type FjernetPeriodeKortProps = {
-    periode: FjernetPeriodeDto;
+    periode: FjernetPeriode;
 };
 
 const FjernetPeriodeKort: FC<FjernetPeriodeKortProps> = ({ periode }: FjernetPeriodeKortProps) => {
@@ -79,7 +80,7 @@ const FjernetPeriodeKort: FC<FjernetPeriodeKortProps> = ({ periode }: FjernetPer
 };
 
 type NyPeriodeKortProps = {
-    periode: NyPeriodeDto;
+    periode: NyPeriode;
 };
 
 const NyPeriodeKort: FC<NyPeriodeKortProps> = ({ periode }: NyPeriodeKortProps) => {
@@ -124,7 +125,7 @@ const NyPeriodeKort: FC<NyPeriodeKortProps> = ({ periode }: NyPeriodeKortProps) 
 };
 
 type EndretPeriodeKortProps = {
-    periode: EndretPeriodeDto;
+    periode: EndretPeriode;
 };
 
 const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriodeKortProps) => {
@@ -254,7 +255,9 @@ const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriod
 };
 
 type Props = {
-    endretKravgrunnlag: EndretKravgrunnlag;
+    endretKravgrunnlag: Omit<EndretKravgrunnlag, 'endringer'> & {
+        endringer: EndretKravgrunnlag['endringer'] | KravgrunnlagForskjell[];
+    };
     onFullført: () => void;
 };
 
@@ -325,16 +328,10 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
 
-    const { endringer } = endretKravgrunnlag;
-    const fjernedePerioder = endringer.filter(
-        (endring): endring is FjernetPeriodeDto => endring.type === 'FjernetPeriodeDto'
-    );
-    const nyePerioder = endringer.filter(
-        (endring): endring is NyPeriodeDto => endring.type === 'NyPeriodeDto'
-    );
-    const endretPerioder = endringer.filter(
-        (endring): endring is EndretPeriodeDto => 'gammelPeriode' in endring
-    );
+    const endringer = endretKravgrunnlag.endringer;
+    const fjernedePerioder = endringer.filter(endring => endring.type === 'fjernet_periode');
+    const nyePerioder = endringer.filter(endring => endring.type === 'ny_periode');
+    const endretPerioder = endringer.filter(endring => endring.type === 'endret_periode');
 
     const { tittel, beskrivelse } = hentModalTekst(
         nyePerioder.length,

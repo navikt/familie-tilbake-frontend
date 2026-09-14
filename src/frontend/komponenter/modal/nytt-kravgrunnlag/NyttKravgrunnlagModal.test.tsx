@@ -1,10 +1,6 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type {
-    EndretKravgrunnlag,
-    EndretPeriodeDto,
-    FjernetPeriodeDto,
-    NyPeriodeDto,
-} from '@/generated';
+import type { EndretKravgrunnlag } from '@/generated';
+import type { KravgrunnlagForskjell } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
@@ -18,36 +14,46 @@ import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { NyttKravgrunnlagModal } from './NyttKravgrunnlagModal';
 
-const lagNyPeriode = (overrides: Partial<NyPeriodeDto> = {}): NyPeriodeDto =>
+type NyPeriode = Extract<KravgrunnlagForskjell, { type: 'ny_periode' }>;
+type EndretPeriode = Extract<KravgrunnlagForskjell, { type: 'endret_periode' }>;
+type FjernetPeriode = Extract<KravgrunnlagForskjell, { type: 'fjernet_periode' }>;
+
+const lagNyPeriode = (overrides: Partial<NyPeriode> = {}): NyPeriode =>
     ({
-        type: 'NyPeriodeDto',
+        type: 'ny_periode',
         fom: '2026-09-21',
         tom: '2026-09-27',
         beløp: 10000,
         ...overrides,
-    }) satisfies NyPeriodeDto;
+    }) satisfies NyPeriode;
 
-const lagEndretPeriode = (overrides: Partial<EndretPeriodeDto> = {}): EndretPeriodeDto =>
+const lagEndretPeriode = (overrides: Partial<EndretPeriode> = {}): EndretPeriode =>
     ({
-        type: 'EndretPeriodeDto',
+        type: 'endret_periode',
         fom: '2026-08-10',
         tom: '2026-08-24',
         gammelPeriode: { fom: '2026-08-10', tom: '2026-08-10' },
         gammeltBeløp: 5000,
         nyttBeløp: 20000,
         ...overrides,
-    }) satisfies EndretPeriodeDto;
+    }) satisfies EndretPeriode;
 
-const lagFjernetPeriode = (overrides: Partial<FjernetPeriodeDto> = {}): FjernetPeriodeDto =>
+const lagFjernetPeriode = (overrides: Partial<FjernetPeriode> = {}): FjernetPeriode =>
     ({
-        type: 'FjernetPeriodeDto',
+        type: 'fjernet_periode',
         fom: '2024-01-01',
         tom: '2024-12-31',
         beløp: 55000,
         ...overrides,
-    }) satisfies FjernetPeriodeDto;
+    }) satisfies FjernetPeriode;
 
-const lagEndretKravgrunnlag = (overrides: Partial<EndretKravgrunnlag> = {}): EndretKravgrunnlag =>
+type EndretKravgrunnlagModalData = Omit<EndretKravgrunnlag, 'endringer'> & {
+    endringer: KravgrunnlagForskjell[];
+};
+
+const lagEndretKravgrunnlag = (
+    overrides: Partial<EndretKravgrunnlagModalData> = {}
+): EndretKravgrunnlagModalData =>
     ({
         gammeltBeløp: 10000,
         nyttBeløp: 15000,
@@ -65,9 +71,11 @@ const lagEndretKravgrunnlag = (overrides: Partial<EndretKravgrunnlag> = {}): End
         },
         endringer: [lagEndretPeriode()],
         ...overrides,
-    }) satisfies EndretKravgrunnlag;
+    }) satisfies EndretKravgrunnlagModalData;
 
-const renderModal = (endretKravgrunnlag: EndretKravgrunnlag = lagEndretKravgrunnlag()): void => {
+const renderModal = (
+    endretKravgrunnlag: EndretKravgrunnlagModalData = lagEndretKravgrunnlag()
+): void => {
     render(
         <QueryClientProvider client={createTestQueryClient()}>
             <FagsakContext value={lagFagsak()}>
