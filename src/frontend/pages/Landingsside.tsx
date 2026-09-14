@@ -12,6 +12,7 @@ const ytelser = [
     'Kontantstøtte',
     'Tilleggsstønader',
     'Tiltakspenger',
+    'Dagpenger',
 ];
 
 export const Landingsside: FC = () => (

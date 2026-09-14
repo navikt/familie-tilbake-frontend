@@ -76,7 +76,7 @@ export const Header: FC = () => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (!fagsakBehandlingUrl) {
+        if (!fagsakBehandlingUrl && fagsystem && eksternFagsakId) {
             return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;
         }
         return fagsakBehandlingUrl;
@@ -148,14 +148,18 @@ export const Header: FC = () => {
                                     as="a"
                                     target="_blank"
                                     href={gosysUrl}
-                                    onClick={(): void =>
-                                        sporHendelse(Hendelser.NAVIGERE, {
-                                            lenketekst: 'Gosys',
-                                            destinasjon: gosysUrl,
-                                            lenkegruppe: 'systemer-og-oppslagsverk',
-                                            kontekst: Sporingskontekst.Header,
-                                        })
-                                    }
+                                    onClick={(): void => {
+                                        if (gosysBaseUrl) {
+                                            sporHendelse(Hendelser.NAVIGERE, {
+                                                lenketekst: personIdent
+                                                    ? 'Gosys personoversikt'
+                                                    : 'Gosys',
+                                                destinasjon: gosysBaseUrl,
+                                                lenkegruppe: 'systemer-og-oppslagsverk',
+                                                kontekst: Sporingskontekst.Header,
+                                            });
+                                        }
+                                    }}
                                 >
                                     {personIdent ? 'Gosys personoversikt' : 'Gosys'}
                                     <ExternalLinkIcon aria-hidden />
@@ -166,20 +170,24 @@ export const Header: FC = () => {
                                     as="a"
                                     target="_blank"
                                     href={modiaUrl}
-                                    onClick={(): void =>
-                                        sporHendelse(Hendelser.NAVIGERE, {
-                                            lenketekst: 'Modia',
-                                            destinasjon: modiaUrl,
-                                            lenkegruppe: 'systemer-og-oppslagsverk',
-                                            kontekst: Sporingskontekst.Header,
-                                        })
-                                    }
+                                    onClick={(): void => {
+                                        if (modiaBaseUrl) {
+                                            sporHendelse(Hendelser.NAVIGERE, {
+                                                lenketekst: personIdent
+                                                    ? 'Modia personoversikt'
+                                                    : 'Modia',
+                                                destinasjon: modiaBaseUrl,
+                                                lenkegruppe: 'systemer-og-oppslagsverk',
+                                                kontekst: Sporingskontekst.Header,
+                                            });
+                                        }
+                                    }}
                                 >
                                     {personIdent ? 'Modia personoversikt' : 'Modia'}
                                     <ExternalLinkIcon aria-hidden />
                                 </Dropdown.Menu.GroupedList.Item>
                             )}
-                            {!erHistoriskVisning && (
+                            {saksoversiktUrl && (
                                 <Dropdown.Menu.GroupedList.Item
                                     as="a"
                                     target="_blank"
@@ -187,7 +195,9 @@ export const Header: FC = () => {
                                     onClick={(): void =>
                                         sporHendelse(Hendelser.NAVIGERE, {
                                             lenketekst: 'Gå til saksoversikt',
-                                            destinasjon: saksoversiktUrl,
+                                            destinasjon: fagsakBehandlingUrl
+                                                ? 'fagsakBehandlingUrl'
+                                                : 'oppbygd url',
                                             lenkegruppe: 'systemer-og-oppslagsverk',
                                             kontekst: Sporingskontekst.Header,
                                         })
