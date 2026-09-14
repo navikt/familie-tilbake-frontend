@@ -431,7 +431,7 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
             return;
         }
 
-        const timeoutId = window.setTimeout(() => setVisNyPeriodeMarkering(false), 3000);
+        const timeoutId = window.setTimeout(() => setVisNyPeriodeMarkering(false), 5000);
         return (): void => window.clearTimeout(timeoutId);
     }, [visNyPeriodeMarkering]);
 

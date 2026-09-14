@@ -138,7 +138,7 @@ describe('Fakta om feilutbetaling', () => {
     });
 
     describe('Rettslig grunnlag', () => {
-        test('Markerer en ny periode grønn i tre sekunder', () => {
+        test('Markerer en ny periode grønn i fem sekunder', () => {
             vi.useFakeTimers();
 
             try {
@@ -162,7 +162,7 @@ describe('Fakta om feilutbetaling', () => {
 
                 expect(nyPeriodeRad).toHaveClass('bg-ax-bg-success-soft!');
 
-                act(() => vi.advanceTimersByTime(2999));
+                act(() => vi.advanceTimersByTime(4999));
                 expect(nyPeriodeRad).toHaveClass('bg-ax-bg-success-soft!');
 
                 act(() => vi.advanceTimersByTime(1));
@@ -203,7 +203,7 @@ describe('Fakta om feilutbetaling', () => {
                     expect(markertBeløp).toHaveAttribute('data-color', 'success');
                     expect(within(periodeRad).getByTitle(ikonnavn)).toBeInTheDocument();
 
-                    act(() => vi.advanceTimersByTime(3000));
+                    act(() => vi.advanceTimersByTime(5000));
 
                     expect(markertBeløp).toHaveAttribute('data-color', 'success');
                     expect(within(periodeRad).getByTitle(ikonnavn)).toBeInTheDocument();
