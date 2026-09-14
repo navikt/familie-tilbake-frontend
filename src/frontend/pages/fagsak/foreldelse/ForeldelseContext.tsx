@@ -19,8 +19,9 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { behandlingHentVedtaksresultatQueryKey } from '@/generated-new/@tanstack/react-query.gen';
+import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
-import { sorterFeilutbetaltePerioder } from '@/utils';
+import { hentFrontendFeilmelding, sorterFeilutbetaltePerioder } from '@/utils';
 import { useStegNavigering } from '@/utils/sider';
 
 const utledValgtPeriode = (
@@ -76,6 +77,7 @@ export type ForeldelseHook = {
 };
 
 const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
+    const visGlobalAlert = useVisGlobalAlert();
     const behandling = useBehandling();
     const { erStegBehandlet, erStegAutoutført, nullstillIkkePersisterteKomponenter } =
         useBehandlingState();
@@ -234,7 +236,6 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         };
         sendInnForeldelse(behandling.behandlingId, payload).then(
             async (respons: Ressurs<string>) => {
-                setSenderInn(false);
                 if (respons.status === RessursStatus.Suksess) {
                     await queryClient.refetchQueries({
                         queryKey: hentBehandlingQueryKey({
@@ -247,6 +248,14 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
                         }),
                     });
                     naviger();
+                } else {
+                    setSenderInn(false);
+                    visGlobalAlert({
+                        title: 'Kunne ikke lagre foreldesesvurderingen',
+                        message:
+                            hentFrontendFeilmelding(respons) ?? 'Ukjent feil ved sending av vedtak',
+                        status: 'error',
+                    });
                 }
             }
         );

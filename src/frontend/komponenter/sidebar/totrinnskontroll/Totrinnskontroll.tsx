@@ -41,7 +41,6 @@ export const Totrinnskontroll: FC = () => {
         disableBekreft,
         sendTilSaksbehandler,
         senderInn,
-        fatteVedtakRespons,
         angreSendTilBeslutter,
         feilmelding,
         erLesevisning,
@@ -57,23 +56,9 @@ export const Totrinnskontroll: FC = () => {
     if (totrinnkontroll?.status !== RessursStatus.Suksess) {
         return null;
     }
-    const skalViseFeilmelding =
-        fatteVedtakRespons &&
-        (fatteVedtakRespons.status === RessursStatus.Feilet ||
-            fatteVedtakRespons.status === RessursStatus.FunksjonellFeil);
 
     return (
         <VStack gap="space-16">
-            {skalViseFeilmelding && (
-                <LocalAlert status="error">
-                    <LocalAlert.Header>
-                        <LocalAlert.Title>Kunne ikke sende vedtaket</LocalAlert.Title>
-                    </LocalAlert.Header>
-                    <LocalAlert.Content>
-                        {fatteVedtakRespons.frontendFeilmelding}
-                    </LocalAlert.Content>
-                </LocalAlert>
-            )}
             {!erLesevisning && (
                 <Steginformasjon
                     behandletSteg={stegErBehandlet}

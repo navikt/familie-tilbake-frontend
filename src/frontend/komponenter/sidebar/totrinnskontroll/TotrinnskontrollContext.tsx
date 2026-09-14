@@ -57,7 +57,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const [nonUsedKey, setNonUsedKey] = useState<string>(Date.now().toString());
     const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
     const [senderInn, setSenderInn] = useState<boolean>(false);
-    const [fatteVedtakRespons, setFatteVedtakRespons] = useState<Ressurs<string>>();
     const [disableBekreft, setDisableBekreft] = useState<boolean>(true);
     const [sendTilSaksbehandler, setSendTilSaksbehandler] = useState<boolean>(true);
     const { erStegBehandlet, erBehandlingReturnertFraBeslutter } = useBehandlingState();
@@ -270,14 +269,20 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                         });
                     }
                     onSuccess?.();
-                } else if (
-                    respons.status === RessursStatus.Feilet ||
-                    respons.status === RessursStatus.FunksjonellFeil
-                ) {
-                    setFatteVedtakRespons(respons);
+                } else {
+                    visGlobalAlert({
+                        title: 'Kunne ikke fatte vedtak',
+                        message:
+                            hentFrontendFeilmelding(respons) ?? 'Ukjent feil ved sending av vedtak',
+                        status: 'error',
+                    });
                 }
             } catch {
-                setFatteVedtakRespons(byggFeiletRessurs('Ukjent feil ved sending av vedtak'));
+                visGlobalAlert({
+                    title: 'Kunne ikke fatte vedtak',
+                    message: 'Ukjent feil ved sending av vedtak',
+                    status: 'error',
+                });
             } finally {
                 setSenderInn(false);
             }
@@ -302,7 +307,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         sendTilSaksbehandler,
         senderInn,
         nonUsedKey,
-        fatteVedtakRespons,
         angreSendTilBeslutter,
         feilmelding,
         erLesevisning,
