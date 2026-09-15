@@ -38,7 +38,7 @@ export const ActionBar: FC<ActionBarConfig> = ({
           : 'Navigasjonsknapper';
     return (
         <nav
-            className={`flex bg-ax-bg-default px-6 py-3 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
+            className={`flex bg-ax-bg-default px-6 py-2 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
             aria-label={navAriaLabel}
         >
             {visMeny && <Behandlingsmeny />}

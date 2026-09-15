@@ -70,7 +70,7 @@ export const Sidebar: FC = () => {
             className={`flex flex-col min-h-0 ${
                 visPanel
                     ? 'min-w-0 gap-2'
-                    : 'w-16 shrink-0 items-center p-4 pt-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
+                    : 'w-16 shrink-0 items-center p-4 gap-4 rounded-2xl border border-ax-border-brand-blue-subtle bg-ax-bg-default'
             }`}
         >
             <Activity key={behandlingId} mode={visPanel ? 'visible' : 'hidden'}>

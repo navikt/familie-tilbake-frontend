@@ -106,7 +106,7 @@ export const Vilkårsvurdering: FC = () => {
                 </HStack>
                 <StatusTag tilbakeført={vilkår.tilbakeført} ferdigvurdert={vilkår.ferdigvurdert} />
             </HStack>
-            <div className="flex flex-col ax-md:flex-row min-h-0 h-full">
+            <div className="flex flex-col ax-md:flex-row min-h-0 h-full gap-4">
                 <VilkårsvurderingPeriodeListe
                     perioder={perioder}
                     erUnder4xRettsgebyr={vilkår.erUnder4xRettsgebyr}

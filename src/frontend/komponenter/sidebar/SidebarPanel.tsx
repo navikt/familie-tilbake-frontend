@@ -35,7 +35,7 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp, aktivTabRef }: Props) => 
                 settValgtSide(value as Menysider);
             }}
             fill
-            className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default flex-1 flex flex-col min-h-0 p-4 pt-2 gap-4"
+            className="border border-ax-border-brand-blue-subtle rounded-2xl bg-ax-bg-default flex-1 flex flex-col min-h-0 px-4 py-2 gap-4"
         >
             <div className="flex flex-row gap-2 items-center">
                 <Tabs.List className="grow min-w-0">
