@@ -101,7 +101,6 @@ describe('Totrinnskontroll', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Vis og fyll ut - godkjenner', async () => {

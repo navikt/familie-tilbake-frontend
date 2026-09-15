@@ -61,7 +61,6 @@ describe('HenleggModal', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
         setupMocks();
     });
 

@@ -231,7 +231,6 @@ describe('VilkårsvurderingPeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
         mockKanIlleggeRenter.value = true;
     });
 

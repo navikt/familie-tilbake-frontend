@@ -64,10 +64,6 @@ const renderBrevmottakere = (behandling: BehandlingDto): void => {
 };
 
 describe('Brevmottakere', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     describe('Default bruker brevmottaker', () => {
         test('Viser default bruker som brevmottaker med korrekt informasjon', () => {
             renderBrevmottakere(lagBehandling());

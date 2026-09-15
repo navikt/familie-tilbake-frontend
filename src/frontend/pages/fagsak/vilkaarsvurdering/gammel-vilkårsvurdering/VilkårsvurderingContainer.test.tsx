@@ -98,7 +98,6 @@ describe('VilkårsvurderingContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
         Element.prototype.scrollIntoView = vi.fn();
     });
 

@@ -59,7 +59,6 @@ const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): voi
 
 describe('Stegflyt', () => {
     beforeEach(() => {
-        vi.clearAllMocks();
         mockUseLocation.mockReturnValue({
             pathname: '/fagsystem/BA/fagsak/123/behandling/456/fakta',
         });

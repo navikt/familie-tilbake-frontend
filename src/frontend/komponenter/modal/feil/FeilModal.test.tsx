@@ -26,9 +26,6 @@ const renderFeilModal = (
 };
 
 describe('FeilModal', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
     test('Viser feil-modalen med 400 Bad Request riktig', () => {
         const feilMelding = 'Du mangler nødvendige data i forespørselen din.';
         const mockFeil = new Feil(feilMelding, 400);

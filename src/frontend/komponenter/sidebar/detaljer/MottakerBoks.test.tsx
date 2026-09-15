@@ -47,10 +47,6 @@ const renderBrukerInformasjon = (
 };
 
 describe('MottakerBoks', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     test('Viser heading', () => {
         renderBrukerInformasjon();
         expect(screen.getByRole('heading', { name: 'Mottaker' })).toBeInTheDocument();

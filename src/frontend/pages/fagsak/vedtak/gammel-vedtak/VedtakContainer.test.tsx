@@ -132,7 +132,6 @@ describe('VedtakContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Vis og fyll ut - 1 fritekst påkrevet', async () => {

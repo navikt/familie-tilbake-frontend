@@ -94,7 +94,6 @@ describe('NyttKravgrunnlagModal', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Viser kort for endring i eksisterende periode', async () => {

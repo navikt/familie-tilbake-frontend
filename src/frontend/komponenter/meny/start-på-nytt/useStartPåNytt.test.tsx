@@ -43,10 +43,6 @@ const wrapper: FC<WrapperProps> = ({ children }: WrapperProps) => (
 );
 
 describe('useStartPåNytt', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     test('Burde håndtere tilbakestilling til fakta med status suksess', async () => {
         mockRequest.mockResolvedValueOnce({
             status: RessursStatus.Suksess,

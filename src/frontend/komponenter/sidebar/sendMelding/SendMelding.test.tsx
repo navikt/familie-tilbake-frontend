@@ -61,7 +61,6 @@ describe('SendMelding', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Fyller ut skjema og sender varsel', async () => {

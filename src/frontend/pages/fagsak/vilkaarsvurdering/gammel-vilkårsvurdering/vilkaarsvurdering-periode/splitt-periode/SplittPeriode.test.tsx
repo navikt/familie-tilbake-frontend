@@ -15,7 +15,6 @@ describe('SplittPeriode - Vilkårsvurdering', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Åpning av modal', async () => {

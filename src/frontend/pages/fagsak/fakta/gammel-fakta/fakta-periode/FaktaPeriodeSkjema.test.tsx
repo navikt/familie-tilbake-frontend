@@ -69,10 +69,6 @@ const mockPeriode: FaktaPeriodeSkjemaData = {
     ...lagFaktaPeriode(),
 };
 
-beforeEach(() => {
-    vi.clearAllMocks();
-});
-
 describe('FaktaPeriodeSkjema', () => {
     test('Skal sette default verdi til HendelseType.Annet når det kun er ett element i hendelseTyper lista', async () => {
         renderComponent(mockPeriode, [HendelseType.Annet]);

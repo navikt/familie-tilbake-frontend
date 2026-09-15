@@ -19,10 +19,6 @@ vi.mock('./useStartPåNytt', () => ({
 }));
 
 describe('StartPåNytt', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     test('Viser feilmodal når behandling tilbake til fakta feiler', async () => {
         const user = userEvent.setup();
         const mockMutate = vi.fn();

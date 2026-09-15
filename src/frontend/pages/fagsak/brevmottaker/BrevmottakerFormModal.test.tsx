@@ -138,7 +138,6 @@ describe('BrevmottakerFormModal', () => {
 
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     describe('Grunnleggende rendering', () => {

@@ -29,10 +29,6 @@ const utførKallSomFeilerMed = async (feil: AxiosError): Promise<ReturnType<type
 };
 
 describe('HttpProvider - utlogging ved 401', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     test('logger ut saksbehandler ved ekte 401', async () => {
         const feil = new AxiosError('Request failed with status code 401');
         feil.response = { status: 401 } as AxiosResponse;

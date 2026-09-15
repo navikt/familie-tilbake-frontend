@@ -18,10 +18,6 @@ const lagAxiosFeil = (httpStatus?: number): AxiosError => {
 };
 
 describe('App - innloggingsstatus', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     test('viser laster mens innlogget bruker hentes', () => {
         vi.mocked(hentInnloggetBruker).mockReturnValue(
             new Promise(() => {

@@ -119,7 +119,6 @@ describe('VilkårsvurderingPerioder', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
         setupMocks();
         Element.prototype.scrollIntoView = vi.fn();
     });

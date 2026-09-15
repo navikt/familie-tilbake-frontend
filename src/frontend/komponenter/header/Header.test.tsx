@@ -46,7 +46,6 @@ const setUpMocks = (): void => {
 
 describe('Header', () => {
     beforeEach(() => {
-        vi.clearAllMocks();
         setUpMocks();
     });
 

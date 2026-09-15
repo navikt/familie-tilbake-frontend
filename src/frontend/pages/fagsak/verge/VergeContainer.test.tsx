@@ -72,7 +72,6 @@ describe('VergeContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Fyller ut advokat', async () => {

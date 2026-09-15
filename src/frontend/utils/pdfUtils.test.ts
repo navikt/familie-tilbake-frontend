@@ -27,10 +27,6 @@ Object.defineProperty(globalThis, 'Blob', {
 });
 
 describe('pdfUtils', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     describe('handlePdfData', () => {
         it('skal returnere data som det er hvis det starter med "blob:"', () => {
             const blobUrl = 'blob:http://localhost:3000/12345678-1234-1234-1234-123456789012';

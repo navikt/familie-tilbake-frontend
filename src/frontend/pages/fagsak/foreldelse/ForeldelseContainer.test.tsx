@@ -162,7 +162,6 @@ describe('ForeldelseContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     test('Vis og fyll ut perioder og send inn', async () => {

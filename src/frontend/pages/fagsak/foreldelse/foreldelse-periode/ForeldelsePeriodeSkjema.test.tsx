@@ -57,7 +57,6 @@ describe('ForeldelsePeriodeSkjema', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
-        vi.clearAllMocks();
     });
 
     const bekreftPeriodeKnapp = (): HTMLElement =>
