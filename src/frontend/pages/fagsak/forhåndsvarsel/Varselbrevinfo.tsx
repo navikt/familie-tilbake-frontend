@@ -13,9 +13,15 @@ type Props = {
     varselbrevUrl: string | null;
     sendtTid: string;
     laster?: boolean;
+    onSeBrevet: () => void;
 };
 
-export const Varselbrevinfo: FC<Props> = ({ varselbrevUrl, sendtTid, laster = false }: Props) => {
+export const Varselbrevinfo: FC<Props> = ({
+    varselbrevUrl,
+    sendtTid,
+    laster = false,
+    onSeBrevet,
+}: Props) => {
     const [visModal, setVisModal] = useState(false);
 
     return (
@@ -58,13 +64,14 @@ export const Varselbrevinfo: FC<Props> = ({ varselbrevUrl, sendtTid, laster = fa
                         size="small"
                         data-color="neutral"
                         variant="secondary"
-                        loading={laster || !varselbrevUrl}
+                        loading={laster}
                         onClick={(): void => {
                             sporHendelse(Hendelser.KNAPP_KLIKKET, {
                                 tekst: 'Se brevet',
                                 kontekst: Sporingskontekst.Forhåndsvarsel,
                                 komponentId: 'vis-sendt-varselbrev',
                             });
+                            onSeBrevet();
                             setVisModal(true);
                         }}
                     >

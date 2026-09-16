@@ -16,6 +16,8 @@ import {
     hentBehandlingQueryKey,
 } from '@/generated/@tanstack/react-query.gen';
 import {
+    type Error as ApiError,
+    type BehandlingHentDokumentError,
     type BehandlingLagreBrukersuttalelseError,
     type BehandlingLagreForhaandsvarselUnntakError,
     type BehandlingSendVarselbrevData,
@@ -23,6 +25,7 @@ import {
     type BehandlingUtsettUttalelsesfristData,
     type BehandlingUtsettUttalelsesfristError,
     type BehandlingUtsettUttalelsesfristResponse,
+    behandlingHentDokument,
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
     type ForhaandsvarselSteg,
@@ -34,7 +37,6 @@ import {
     behandlingForhandsvarselOptions,
     behandlingForhandsvarselQueryKey,
     behandlingHentDokumentInfoOptions,
-    behandlingHentDokumentOptions,
     behandlingLagreBrukersuttalelseMutation,
     behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
@@ -79,6 +81,20 @@ const utledForhåndsvarselDefaultValues = (
     };
 };
 
+const lesFeilmeldingFraBlob = async (
+    error: AxiosError<BehandlingHentDokumentError>
+): Promise<ApiError | undefined> => {
+    const data = error.response?.data;
+    if (!(data instanceof Blob)) {
+        return undefined;
+    }
+    try {
+        return JSON.parse(await data.text());
+    } catch {
+        return undefined;
+    }
+};
+
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
     const queryClient = useQueryClient();
@@ -110,6 +126,30 @@ export const Forhåndsvarsel: FC = () => {
         ...forhåndsvisBrevMutation(),
     });
 
+    queryClient.setMutationDefaults(['hentSendtDokument'], {
+        mutationFn: async ({
+            journalpostId,
+            dokumentInfoId,
+        }: {
+            journalpostId: string;
+            dokumentInfoId: string;
+        }) => {
+            const { data } = await behandlingHentDokument({
+                path: { behandlingId, journalpostId, dokumentInfoId },
+                throwOnError: true,
+            });
+            return data;
+        },
+        onError: async (error: AxiosError<BehandlingHentDokumentError>) => {
+            const feilmelding = await lesFeilmeldingFraBlob(error);
+            visGlobalAlert({
+                title: 'Kunne ikke vise forhåndsvarselet',
+                message: feilmelding?.melding ?? 'Prøv igjen senere.',
+                status: 'error',
+            });
+        },
+    });
+
     return <ForhåndsvarselInnhold />;
 };
 
@@ -135,28 +175,35 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     const varselErSendt = forhåndsvarselSteg.type === 'sendt';
 
-    const { data: { journalpostId, dokumentId } = {}, isLoading: dokumentInfoLaster } = useQuery({
+    const { data: { journalpostId, dokumentId } = {} } = useQuery({
         ...behandlingHentDokumentInfoOptions({
             path: { behandlingId, dokumentType: 'VARSELBREV' },
         }),
         enabled: varselErSendt,
     });
 
-    const { data: sendtDokument, isLoading: sendtDokumentLaster } = useQuery({
-        ...behandlingHentDokumentOptions({
-            path: {
-                behandlingId,
-                journalpostId: journalpostId ?? '',
-                dokumentInfoId: dokumentId ?? '',
-            },
-        }),
-        enabled: !!journalpostId && !!dokumentId,
+    const hentSendtDokument = useMutation<
+        Blob,
+        AxiosError<BehandlingHentDokumentError>,
+        { journalpostId: string; dokumentInfoId: string }
+    >({
+        mutationKey: ['hentSendtDokument'],
     });
 
     const varselbrevUrl = useMemo(() => {
-        if (!sendtDokument) return null;
-        return URL.createObjectURL(new Blob([sendtDokument], { type: 'application/pdf' }));
-    }, [sendtDokument]);
+        if (!hentSendtDokument.data) return null;
+        return URL.createObjectURL(new Blob([hentSendtDokument.data], { type: 'application/pdf' }));
+    }, [hentSendtDokument.data]);
+
+    const onSeVarselbrev = (): void => {
+        if (
+            (hentSendtDokument.isIdle || hentSendtDokument.isError) &&
+            journalpostId &&
+            dokumentId
+        ) {
+            hentSendtDokument.mutate({ journalpostId, dokumentInfoId: dokumentId });
+        }
+    };
 
     const erRedigerbarForhåndsvarselFlyt =
         forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
@@ -438,7 +485,8 @@ export const ForhåndsvarselInnhold: FC = () => {
                             <Varselbrevinfo
                                 varselbrevUrl={varselbrevUrl}
                                 sendtTid={forhåndsvarselSteg.forhåndsvarselInfo.varselbrevSendtTid}
-                                laster={dokumentInfoLaster || sendtDokumentLaster}
+                                laster={hentSendtDokument.isPending}
+                                onSeBrevet={onSeVarselbrev}
                             />
                         )}
                         <Fristinfo

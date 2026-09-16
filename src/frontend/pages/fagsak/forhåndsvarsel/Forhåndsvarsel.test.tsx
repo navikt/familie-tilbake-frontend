@@ -14,7 +14,6 @@ import {
     behandlingFaktaQueryKey,
     behandlingForhandsvarselQueryKey,
     behandlingHentDokumentInfoOptions,
-    behandlingHentDokumentOptions,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
@@ -122,16 +121,9 @@ const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
         { journalpostId, dokumentId }
     );
 
-    queryClient.setQueryData(
-        behandlingHentDokumentOptions({
-            path: {
-                behandlingId: BEHANDLING_ID,
-                journalpostId,
-                dokumentInfoId: dokumentId,
-            },
-        }).queryKey,
-        new Blob(['PDF content'], { type: 'application/pdf' })
-    );
+    queryClient.setMutationDefaults(['hentSendtDokument'], {
+        mutationFn: async () => new Blob(['PDF content'], { type: 'application/pdf' }),
+    });
 };
 
 const renderMedQueryClient = (queryClient: QueryClient): void => {
