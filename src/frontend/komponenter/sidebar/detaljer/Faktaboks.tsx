@@ -152,9 +152,9 @@ const RESULTAT_META: Record<BehandlingsresultatstypeEnum, TagProps['data-color']
     HENLAGT_TEKNISK_VEDLIKEHOLD: 'danger',
     HENLAGT_MANGLENDE_KRAVGRUNNLAG: 'danger',
     IKKE_FASTSATT: 'danger',
-    INGEN_TILBAKEBETALING: 'brand-magenta',
+    INGEN_TILBAKEBETALING: 'success',
     DELVIS_TILBAKEBETALING: 'meta-purple',
-    FULL_TILBAKEBETALING: 'info',
+    FULL_TILBAKEBETALING: 'brand-magenta',
 };
 
 type ResultatProps = {

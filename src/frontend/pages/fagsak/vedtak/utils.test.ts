@@ -251,13 +251,13 @@ describe('vedtaksresultatFarger', () => {
         expect(vedtaksresultatFarger[resultat]).toBe('meta-purple');
     });
 
-    test('ingen tilbakebetaling har farge brand-magenta', () => {
+    test('ingen tilbakebetaling har farge success', () => {
         const resultat: Vedtaksresultat = 'IngenTilbakebetaling';
-        expect(vedtaksresultatFarger[resultat]).toBe('brand-magenta');
+        expect(vedtaksresultatFarger[resultat]).toBe('success');
     });
 
-    test('full tilbakebetaling har farge info', () => {
+    test('full tilbakebetaling har farge brand-magenta', () => {
         const resultat: Vedtaksresultat = 'FullTilbakebetaling';
-        expect(vedtaksresultatFarger[resultat]).toBe('info');
+        expect(vedtaksresultatFarger[resultat]).toBe('brand-magenta');
     });
 });

@@ -1,37 +1,31 @@
+import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { DelresultatEnum } from '@/generated-new';
-import type { PeriodeTag, Vilkårsperiode, Vurderingsstatus } from './typer';
+import type { Vilkårsperiode, Vurderingsstatus } from './typer';
 
-import {
-    ArrowUndoIcon,
-    ExclamationmarkTriangleIcon,
-    HeadCloudIcon,
-    PercentIcon,
-    QuestionmarkCircleIcon,
-    SealCheckmarkIcon,
-    SealXMarkIcon,
-    XMarkIcon,
-} from '@navikt/aksel-icons';
+import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { Heading, HStack, Tag, Tooltip } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
 
 import { erPeriodeVurdert } from './utils';
 
+type PeriodeTag = {
+    label: string;
+    'data-color': TagProps['data-color'];
+};
+
 const resultat: Record<DelresultatEnum, PeriodeTag> = {
     FULL_TILBAKEKREVING: {
         label: 'Full tilbakekreving',
-        icon: <ArrowUndoIcon aria-hidden />,
         'data-color': 'brand-magenta',
     },
     DELVIS_TILBAKEKREVING: {
         label: 'Delvis tilbakekreving',
-        icon: <PercentIcon aria-hidden />,
         'data-color': 'meta-purple',
     },
     INGEN_TILBAKEKREVING: {
         label: 'Ingen tilbakekreving',
-        icon: <XMarkIcon aria-hidden />,
         'data-color': 'success',
     },
 };
@@ -39,29 +33,24 @@ const resultat: Record<DelresultatEnum, PeriodeTag> = {
 const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
     IKKE_VURDERT: {
         label: 'Ikke vurdert',
-        icon: <QuestionmarkCircleIcon aria-hidden />,
         'data-color': 'neutral',
     },
-    GOD_TRO: { label: 'God tro', icon: <SealCheckmarkIcon aria-hidden />, 'data-color': 'success' },
+    GOD_TRO: { label: 'God tro', 'data-color': 'success' },
     FORSETT: {
         label: 'Forsett',
-        icon: <SealXMarkIcon aria-hidden />,
         'data-color': 'brand-magenta',
     },
     GROVT_UAKTSOMHET: {
         label: 'Grovt uaktsomt',
-        icon: <SealXMarkIcon aria-hidden />,
         'data-color': 'warning',
     },
     UAKTSOMT: {
         label: 'Uaktsomt',
-        icon: <SealXMarkIcon aria-hidden />,
         'data-color': 'meta-purple',
     },
-    FORSTO: { label: 'Forsto', icon: <HeadCloudIcon aria-hidden />, 'data-color': 'meta-lime' },
+    FORSTO: { label: 'Forsto', 'data-color': 'meta-lime' },
     BURDE_FORSTÅTT: {
         label: 'Burde forstått',
-        icon: <HeadCloudIcon aria-hidden />,
         'data-color': 'brand-beige',
     },
 };
@@ -126,7 +115,6 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                                 >
                                     <Tag
                                         variant="moderate"
-                                        icon={vurdering[periode.vurdering].icon}
                                         size="small"
                                         className="w-fit"
                                         data-color={vurdering[periode.vurdering]['data-color']}
@@ -140,7 +128,6 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                                     >
                                         <Tag
                                             variant="moderate"
-                                            icon={resultat[periode.resultat].icon}
                                             size="small"
                                             className="w-fit"
                                             data-color={resultat[periode.resultat]['data-color']}

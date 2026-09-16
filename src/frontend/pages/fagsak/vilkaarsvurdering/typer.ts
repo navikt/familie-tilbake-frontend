@@ -1,5 +1,3 @@
-import type { TagProps } from '@navikt/ds-react';
-import type { ReactNode } from 'react';
 import type { DelresultatEnum } from '@/generated-new';
 
 export type Vurderingsstatus =
@@ -10,12 +8,6 @@ export type Vurderingsstatus =
     | 'UAKTSOMT'
     | 'FORSTO'
     | 'BURDE_FORSTÅTT';
-
-export type PeriodeTag = {
-    label: string;
-    icon: ReactNode;
-    'data-color': TagProps['data-color'];
-};
 
 export type Vilkårsperiode = {
     id: string;

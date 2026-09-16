@@ -1,7 +1,7 @@
 import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { BehandlingForeslaaVedtakError } from '@/generated-new';
+import type { BehandlingForeslaaVedtakError, Vedtaksresultat } from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
 
 import { Heading, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds-react';
@@ -16,7 +16,6 @@ import {
     behandlingHentVedtaksresultatOptions,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { useActionBar } from '@/hooks/useActionBar';
-import { vedtaksresultater } from '@/kodeverk';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { useStegNavigering } from '@/utils/sider';
 
@@ -25,6 +24,12 @@ import { VedtakSkeleton } from './VedtakSkeleton';
 import { VEDTAKSBREV_FORM_ID, Vedtaksbrev } from './Vedtaksbrev';
 import { Vedtakstabell } from './Vedtakstabell';
 import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
+
+const vedtaksresultater: Record<Vedtaksresultat, string> = {
+    FullTilbakebetaling: 'Full tilbakekreving',
+    DelvisTilbakebetaling: 'Delvis tilbakekreving',
+    IngenTilbakebetaling: 'Ingen tilbakekreving',
+};
 
 export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();

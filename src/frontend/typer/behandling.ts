@@ -28,7 +28,7 @@ export const behandlingsstatuser: Record<BehandlingstatusEnum, string> = {
 export const behandlingsresultater: Record<BehandlingsresultatstypeEnum, string> = {
     INGEN_TILBAKEBETALING: 'Ingen tilbakekreving',
     DELVIS_TILBAKEBETALING: 'Delvis tilbakekreving',
-    FULL_TILBAKEBETALING: 'Full tilbakebetaling',
+    FULL_TILBAKEBETALING: 'Full tilbakekreving',
     HENLAGT: 'Henlagt',
     HENLAGT_FEILOPPRETTET: 'Henlagt (feilaktig opprettet)',
     HENLAGT_FEILOPPRETTET_MED_BREV: 'Henlagt (feilaktig opprettet), med brev',

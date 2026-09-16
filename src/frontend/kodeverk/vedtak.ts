@@ -1,11 +1,3 @@
-import type { Vedtaksresultat } from '@/generated-new';
-
-export const vedtaksresultater: Record<Vedtaksresultat, string> = {
-    FullTilbakebetaling: 'Full tilbakebetaling',
-    DelvisTilbakebetaling: 'Delvis tilbakebetaling',
-    IngenTilbakebetaling: 'Ingen tilbakebetaling',
-};
-
 export enum GamleVedtaksresultat {
     FullTilbakebetaling = 'FULL_TILBAKEBETALING',
     DelvisTilbakebetaling = 'DELVIS_TILBAKEBETALING',

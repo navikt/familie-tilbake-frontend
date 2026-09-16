@@ -71,9 +71,9 @@ describe('Faktaboks', () => {
 
     test.each<[BehandlingsresultatstypeEnum, TagProps['data-color']]>([
         ['HENLAGT', 'danger'],
-        ['INGEN_TILBAKEBETALING', 'brand-magenta'],
+        ['INGEN_TILBAKEBETALING', 'success'],
         ['DELVIS_TILBAKEBETALING', 'meta-purple'],
-        ['FULL_TILBAKEBETALING', 'info'],
+        ['FULL_TILBAKEBETALING', 'brand-magenta'],
     ])('Resultat tag variant %s', (resultat, forventetDataColor) => {
         renderFaktaboks({ resultatstype: resultat });
         const tags = screen.getAllByText(behandlingsresultater[resultat]);
