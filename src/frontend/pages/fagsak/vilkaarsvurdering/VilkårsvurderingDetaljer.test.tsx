@@ -220,11 +220,11 @@ const under4xNeiRadio = async (): Promise<HTMLElement> =>
     within(await under4xRadioGroup()).getByRole('radio', { name: 'Nei' });
 const begrunnelseSkalUnnlates = async (): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
-        name: 'Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake',
+        name: 'Begrunn hvorfor beløpet ikke skal kreves tilbake',
     });
 const begrunnelseSkalIkkeUnnlates = async (): Promise<HTMLElement> =>
     await screen.findByRole('textbox', {
-        name: 'Begrunn hvorfor du vurderer at tilbakekrevingen ikke skal unnlates',
+        name: 'Begrunn hvorfor beløpet skal kreves tilbake',
     });
 
 const beløpIBeholdRadioGroup = (): HTMLElement =>

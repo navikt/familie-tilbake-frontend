@@ -61,7 +61,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
             {unnlatelseVerdi === 'skalIkkeUnnlates' && (
                 <>
                     <Textarea
-                        label="Begrunn hvorfor du vurderer at tilbakekrevingen ikke skal unnlates"
+                        label="Begrunn hvorfor beløpet skal kreves tilbake"
                         size="small"
                         className="max-w-xl"
                         minRows={3}
@@ -82,7 +82,7 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
             {unnlatelseVerdi === 'skalUnnlates' && (
                 <>
                     <Textarea
-                        label="Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake"
+                        label="Begrunn hvorfor beløpet ikke skal kreves tilbake"
                         size="small"
                         className="max-w-xl"
                         minRows={3}

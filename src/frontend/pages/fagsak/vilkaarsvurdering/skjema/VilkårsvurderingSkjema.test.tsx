@@ -358,9 +358,7 @@ describe('VilkårsvurderingSkjema', () => {
             );
             await user.click(radioIGruppe('Skal beløpet kreves tilbake? (sjette avsnitt)', 'Nei'));
             await user.type(
-                tekstfelt(
-                    'Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake'
-                ),
+                tekstfelt('Begrunn hvorfor beløpet ikke skal kreves tilbake'),
                 'Beløpet er lavt'
             );
             await user.click(lagreKnapp());
@@ -1186,9 +1184,7 @@ describe('VilkårsvurderingSkjema', () => {
 
                 const jaValg = radioIGruppe(UNNLATELSE_LEGEND, 'Ja');
                 const neiValg = radioIGruppe(UNNLATELSE_LEGEND, 'Nei');
-                const begrunnelse = tekstfelt(
-                    'Begrunn hvorfor du vurderer at tilbakekrevingen ikke skal unnlates'
-                );
+                const begrunnelse = tekstfelt('Begrunn hvorfor beløpet skal kreves tilbake');
 
                 expect(jaValg).toBeChecked();
                 expect(erSkrivebeskyttet(radiogruppe(UNNLATELSE_LEGEND))).toBe(true);
@@ -1208,9 +1204,7 @@ describe('VilkårsvurderingSkjema', () => {
                     erUnder4xRettsgebyr: true,
                 });
 
-                const begrunnelse = tekstfelt(
-                    'Begrunn hvorfor du vurderer at Nav skal la være å kreve beløpet tilbake'
-                );
+                const begrunnelse = tekstfelt('Begrunn hvorfor beløpet ikke skal kreves tilbake');
                 expect(begrunnelse).toHaveAttribute('readonly');
 
                 await user.type(begrunnelse, 'endret');
