@@ -64,7 +64,7 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp, aktivTabRef }: Props) => 
                     <Heading level="2" size="small">
                         {MENYSIDE_META[side].tittel}
                     </Heading>
-                    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
+                    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable px-1">
                         <SidebarInnhold valgtMenyside={side} />
                     </div>
                 </Tabs.Panel>

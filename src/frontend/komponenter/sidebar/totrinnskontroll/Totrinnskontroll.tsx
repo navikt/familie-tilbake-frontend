@@ -58,7 +58,7 @@ export const Totrinnskontroll: FC = () => {
     }
 
     return (
-        <VStack gap="space-16">
+        <VStack gap="space-16" padding="space-2">
             {!erLesevisning && (
                 <Steginformasjon
                     behandletSteg={stegErBehandlet}
