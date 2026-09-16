@@ -58,7 +58,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const [stegErBehandlet, setStegErBehandlet] = useState<boolean>(false);
     const [senderInn, setSenderInn] = useState<boolean>(false);
     const [disableBekreft, setDisableBekreft] = useState<boolean>(true);
-    const [sendTilSaksbehandler, setSendTilSaksbehandler] = useState<boolean>(true);
     const { erStegBehandlet, erBehandlingReturnertFraBeslutter } = useBehandlingState();
     const { gjerTotrinnkontrollKall, sendInnFatteVedtak, kallAngreSendTilBeslutter } =
         useBehandlingApi();
@@ -122,7 +121,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                     (totrinn.godkjent === OptionIkkeGodkjent && !totrinn.begrunnelse)
             );
         setDisableBekreft(stegIkkeVurdert || harValideringsFeil);
-        setSendTilSaksbehandler(!stegIkkeVurdert && !harValideringsFeil && !alleGodkjent);
     }, [skjemaData, nonUsedKey]);
 
     const hentTotrinnkontroll = (): void => {
@@ -254,7 +252,10 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                             path: { behandlingId: behandling.behandlingId },
                         }),
                     });
-                    if (sendTilSaksbehandler) {
+                    const skalReturneres = skjemaData.some(
+                        steg => steg.godkjent === OptionIkkeGodkjent
+                    );
+                    if (skalReturneres) {
                         visGlobalAlert({
                             title: 'Sendt til saksbehandler',
                             message:
@@ -304,7 +305,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
         oppdaterBegrunnelse,
         sendInnSkjema,
         disableBekreft,
-        sendTilSaksbehandler,
         senderInn,
         nonUsedKey,
         angreSendTilBeslutter,

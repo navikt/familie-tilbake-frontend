@@ -72,9 +72,9 @@ const godkjennTekst = {
 
 const godkjennKnapp = (): HTMLElement => screen.getByRole('button', godkjennTekst);
 
-const sendTilSaksbehandlerKnapp = (): HTMLElement =>
+const returnerTilSaksbehandlerKnapp = (): HTMLElement =>
     screen.getByRole('button', {
-        name: 'Send til saksbehandler',
+        name: 'Returner til saksbehandler',
     });
 
 /**
@@ -121,7 +121,9 @@ describe('Totrinnskontroll', () => {
         expect(screen.getAllByRole('link')).toHaveLength(3);
 
         expect(await screen.findByRole('button', godkjennTekst)).toBeDisabled();
-        expect(sendTilSaksbehandlerKnapp()).toBeDisabled();
+        expect(
+            screen.queryByRole('button', { name: 'Returner til saksbehandler' })
+        ).not.toBeInTheDocument();
 
         await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
         await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-true'));
@@ -148,7 +150,9 @@ describe('Totrinnskontroll', () => {
         expect(screen.getAllByRole('link')).toHaveLength(4);
 
         expect(godkjennKnapp()).toBeDisabled();
-        expect(sendTilSaksbehandlerKnapp()).toBeDisabled();
+        expect(
+            screen.queryByRole('button', { name: 'Returner til saksbehandler' })
+        ).not.toBeInTheDocument();
 
         await user.click(screen.getByTestId('stegetGodkjent_idx_steg_0-true'));
         await user.click(screen.getByTestId('stegetGodkjent_idx_steg_1-true'));
@@ -162,7 +166,7 @@ describe('Totrinnskontroll', () => {
             'Vurder på nytt!!!!'
         );
 
-        await user.click(sendTilSaksbehandlerKnapp());
+        await user.click(returnerTilSaksbehandlerKnapp());
     });
 
     test('Vis utfylt - sendt tilbake', async () => {
@@ -192,7 +196,7 @@ describe('Totrinnskontroll', () => {
         ).not.toBeInTheDocument();
         expect(
             screen.queryByRole('button', {
-                name: 'Send til saksbehandler',
+                name: 'Returner til saksbehandler',
             })
         ).not.toBeInTheDocument();
 
@@ -227,7 +231,7 @@ describe('Totrinnskontroll', () => {
         ).not.toBeInTheDocument();
         expect(
             screen.queryByRole('button', {
-                name: 'Send til saksbehandler',
+                name: 'Returner til saksbehandler',
             })
         ).not.toBeInTheDocument();
 
