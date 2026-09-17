@@ -9,15 +9,9 @@ type Props = {
 };
 
 export const SendtVedtaksbrev: FC<Props> = ({ sendtBrevUrl, feilmelding, erFeil }: Props) => (
-    <section className="sticky top-0 w-full border rounded-xl border-ax-border-brand-blue-subtle flex flex-col h-[calc(100vh-17.8rem)] overflow-hidden">
+    <section className="sticky top-0 w-full border rounded-xl border-ax-border-brand-blue-subtle h-[calc(100vh-17.8rem)] overflow-hidden">
         {erFeil ? (
-            <VStack
-                gap="space-16"
-                padding="space-16"
-                align="center"
-                justify="center"
-                className="h-full"
-            >
+            <div className="h-full flex justify-center items-center p-4">
                 <InlineMessage size="small" status="error">
                     <VStack gap="space-8">
                         <BodyShort size="small" weight="semibold">
@@ -26,7 +20,7 @@ export const SendtVedtaksbrev: FC<Props> = ({ sendtBrevUrl, feilmelding, erFeil 
                         {feilmelding && <BodyShort size="small">{feilmelding}</BodyShort>}
                     </VStack>
                 </InlineMessage>
-            </VStack>
+            </div>
         ) : sendtBrevUrl ? (
             <object
                 className="h-full w-full rounded-xl"

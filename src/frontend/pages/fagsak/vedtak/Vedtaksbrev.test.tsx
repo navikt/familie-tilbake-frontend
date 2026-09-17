@@ -1,21 +1,63 @@
+import type { RenderResult } from '@testing-library/react';
 import type { Avsnitt, Brevmottaker, VedtaksbrevData } from '@/generated-new';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
+import { behandlingHentDokumentInfoOptions } from '@/generated-new/@tanstack/react-query.gen';
+import { behandlingHentDokument } from '@/generated-new/sdk.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 
-const renderVedtaksbrev = (vedtaksbrevData: VedtaksbrevData): void => {
-    const client = new QueryClient();
+vi.mock('@/generated-new/sdk.gen', async importOriginal => ({
+    ...(await importOriginal<typeof import('@/generated-new/sdk.gen')>()),
+    behandlingHentDokument: vi.fn(),
+}));
+
+const behandlingHentDokumentMock = vi.mocked(behandlingHentDokument);
+
+const BEHANDLING_ID = 'uuid-1';
+const JOURNALPOST_ID = 'jp-123';
+const DOKUMENT_ID = 'dok-456';
+
+const renderVedtaksbrev = (
+    vedtaksbrevData: VedtaksbrevData,
+    queryClient: QueryClient = new QueryClient(),
+    behandlingILesemodus = false
+): RenderResult =>
     render(
-        <QueryClientProvider client={client}>
-            <TestBehandlingProvider>
+        <QueryClientProvider client={queryClient}>
+            <TestBehandlingProvider stateOverrides={{ behandlingILesemodus }}>
                 <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={vitest.fn()} />
             </TestBehandlingProvider>
         </QueryClientProvider>
     );
+
+const lagQueryClientMedSendtBrev = (): QueryClient => {
+    const queryClient = new QueryClient({
+        defaultOptions: { queries: { retry: false } },
+    });
+    queryClient.setQueryData(
+        behandlingHentDokumentInfoOptions({
+            path: { behandlingId: BEHANDLING_ID, dokumentType: 'VEDTAKSBREV' },
+        }).queryKey,
+        { journalpostId: JOURNALPOST_ID, dokumentId: DOKUMENT_ID }
+    );
+    return queryClient;
+};
+
+const lagBlobFeil = (innhold: string): unknown => ({
+    response: { data: new Blob([innhold], { type: 'application/json' }) },
+});
+
+const renderMedFeilendeDokumenthenting = (
+    feil: unknown,
+    queryClient: QueryClient = lagQueryClientMedSendtBrev()
+): RenderResult => {
+    behandlingHentDokumentMock.mockRejectedValue(feil);
+    return renderVedtaksbrev(lagVedtaksbrevData(), queryClient, true);
 };
 
 const standardTextareaDescription = 'Tekstområde med plass til 3000 tegn.';
@@ -109,6 +151,58 @@ describe('Vedtaksbrev', () => {
             `${tredjeAvsnittForklaring} ${standardTextareaDescription}`
         );
         expect(tredjePeriodeAvsnitt).toHaveValue('Tredje textarea');
+    });
+
+    describe('feilmelding for sendt vedtaksbrev', () => {
+        beforeEach(() => {
+            behandlingHentDokumentMock.mockReset();
+        });
+
+        test('skal vise feilmeldingen fra feilresponsens blob', async () => {
+            renderMedFeilendeDokumenthenting(
+                lagBlobFeil(JSON.stringify({ melding: 'Dokumentet er ikke journalført ennå.' }))
+            );
+
+            expect(
+                await screen.findByText('Kunne ikke hente det sendte vedtaksbrevet')
+            ).toBeInTheDocument();
+            expect(
+                await screen.findByText('Dokumentet er ikke journalført ennå.')
+            ).toBeInTheDocument();
+        });
+
+        test('skal vise standardtekst når bloben ikke inneholder en gyldig feilmelding', async () => {
+            renderMedFeilendeDokumenthenting(lagBlobFeil('ikke gyldig json'));
+
+            expect(await screen.findByText('Prøv igjen senere.')).toBeInTheDocument();
+        });
+
+        test('skal vise standardtekst når feilen ikke har en blob-respons', async () => {
+            renderMedFeilendeDokumenthenting({ response: { data: { melding: 'noe feil' } } });
+
+            expect(await screen.findByText('Prøv igjen senere.')).toBeInTheDocument();
+        });
+
+        test('skal ikke hente dokumentet på nytt når komponenten mountes på nytt etter en feil', async () => {
+            const queryClient = lagQueryClientMedSendtBrev();
+            const { unmount } = renderMedFeilendeDokumenthenting(
+                lagBlobFeil(JSON.stringify({ melding: 'Dokumentet er ikke journalført ennå.' })),
+                queryClient
+            );
+
+            expect(
+                await screen.findByText('Dokumentet er ikke journalført ennå.')
+            ).toBeInTheDocument();
+            expect(behandlingHentDokumentMock).toHaveBeenCalledTimes(1);
+
+            unmount();
+            renderVedtaksbrev(lagVedtaksbrevData(), queryClient, true);
+
+            expect(
+                await screen.findByText('Kunne ikke hente det sendte vedtaksbrevet')
+            ).toBeInTheDocument();
+            expect(behandlingHentDokumentMock).toHaveBeenCalledTimes(1);
+        });
     });
 });
 

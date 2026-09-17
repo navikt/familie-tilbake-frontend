@@ -103,6 +103,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         }),
         enabled: harSendtBrev,
         retry: false,
+        retryOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
         refetchOnReconnect: false,
