@@ -110,7 +110,6 @@ export const Vedtak: FC = () => {
                     >
                         <Tag
                             data-color={vedtaksresultatFarger[beregningsresultat.vedtaksresultat]}
-                            size="medium"
                             variant="moderate"
                         >
                             {vedtaksresultater[beregningsresultat.vedtaksresultat]}
@@ -118,7 +117,6 @@ export const Vedtak: FC = () => {
                     </Tooltip>
                 )}
             </section>
-
             {erVedtaksresultatFeil ? (
                 <InlineMessage size="small" status="error">
                     Kunne ikke hente vedtaksresultat. Prøv å laste siden på nytt.
@@ -128,7 +126,6 @@ export const Vedtak: FC = () => {
             ) : (
                 beregningsresultat && <Vedtakstabell beregningsresultat={beregningsresultat} />
             )}
-
             {erVedtaksbrevFeil ? (
                 <InlineMessage size="small" status="error">
                     Kunne ikke hente vedtaksbrevdata. Prøv å laste siden på nytt.

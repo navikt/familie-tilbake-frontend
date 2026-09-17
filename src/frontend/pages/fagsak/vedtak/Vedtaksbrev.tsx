@@ -9,12 +9,10 @@ import type {
 import type { VedtaksbrevFormData } from './schema';
 
 import {
-    BodyShort,
     Button,
     Heading,
     HStack,
     InlineMessage,
-    Link,
     Pagination,
     Skeleton,
     Tag,
@@ -37,8 +35,10 @@ import {
     behandlingOppdaterVedtaksbrevMutation,
     brevLagSvgVedtaksbrevMutation,
 } from '@/generated-new/@tanstack/react-query.gen';
+import { lesFeilmeldingFraBlob } from '@/utils/blobFeilmelding';
 import { fraIsoStringTilDatoOgKlokkeslett } from '@/utils/dato';
 
+import { SendtVedtaksbrev } from './SendtVedtaksbrev';
 import { vedtaksbrevResolver } from './schema';
 import {
     tilFormData,
@@ -93,7 +93,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const harSendtBrev = !!journalpostId && !!dokumentId;
     const venterPåDokumentInfo = behandlingILesemodus && dokumentInfo === undefined;
 
-    const { data: sendtDokument } = useQuery({
+    const { data: sendtDokument, error: sendtDokumentFeil } = useQuery({
         ...behandlingHentDokumentOptions({
             path: {
                 behandlingId,
@@ -102,7 +102,29 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
             },
         }),
         enabled: harSendtBrev,
+        retry: false,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
     });
+
+    const [sendtDokumentFeilmelding, setSendtDokumentFeilmelding] = useState<string | undefined>();
+
+    useEffect(() => {
+        if (!sendtDokumentFeil) {
+            setSendtDokumentFeilmelding(undefined);
+            return;
+        }
+        let avbrutt = false;
+        lesFeilmeldingFraBlob(sendtDokumentFeil).then(feil => {
+            if (!avbrutt) {
+                setSendtDokumentFeilmelding(feil?.melding ?? 'Prøv igjen senere.');
+            }
+        });
+        return (): void => {
+            avbrutt = true;
+        };
+    }, [sendtDokumentFeil]);
 
     const sendtBrevUrl = useMemo(() => {
         if (!sendtDokument) return null;
@@ -183,7 +205,13 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 
     if (harSendtBrev || venterPåDokumentInfo) {
-        return <SendtVedtaksbrev sendtBrevUrl={sendtBrevUrl} />;
+        return (
+            <SendtVedtaksbrev
+                sendtBrevUrl={sendtBrevUrl}
+                feilmelding={sendtDokumentFeilmelding}
+                erFeil={!!sendtDokumentFeil}
+            />
+        );
     }
 
     return (
@@ -219,38 +247,6 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
 
 const ForhåndsvisningSkjelett: FC = () => (
     <Skeleton variant="rounded" className="aspect-[1/1.414] w-full max-w-md" height={600} />
-);
-
-type SendtVedtaksbrevProps = {
-    sendtBrevUrl: string | null;
-};
-
-const SendtVedtaksbrev: FC<SendtVedtaksbrevProps> = ({ sendtBrevUrl }: SendtVedtaksbrevProps) => (
-    <section className="sticky top-0 w-full border rounded-xl border-ax-border-brand-blue-subtle flex flex-col h-[calc(100vh-17.8rem)] overflow-hidden">
-        {sendtBrevUrl ? (
-            <object
-                className="h-full w-full rounded-xl"
-                data={sendtBrevUrl}
-                type="application/pdf"
-                aria-label="Sendt vedtaksbrev"
-            >
-                <VStack
-                    gap="space-16"
-                    padding="space-16"
-                    align="center"
-                    justify="center"
-                    className="h-full"
-                >
-                    <BodyShort>Kunne ikke vise vedtaksbrevet her.</BodyShort>
-                    <Link href={sendtBrevUrl} target="_blank" rel="noopener noreferrer">
-                        Åpne vedtaksbrevet i ny fane
-                    </Link>
-                </VStack>
-            </object>
-        ) : (
-            <Skeleton variant="rounded" className="h-full w-full" />
-        )}
-    </section>
 );
 
 type ForhåndsvisningProps = {

@@ -16,7 +16,6 @@ import {
     hentBehandlingQueryKey,
 } from '@/generated/@tanstack/react-query.gen';
 import {
-    type Error as ApiError,
     type BehandlingHentDokumentError,
     type BehandlingLagreBrukersuttalelseError,
     type BehandlingLagreForhaandsvarselUnntakError,
@@ -46,6 +45,7 @@ import { useActionBar } from '@/hooks/useActionBar';
 import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesmodal';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils';
+import { lesFeilmeldingFraBlob } from '@/utils/blobFeilmelding';
 import { useStegNavigering } from '@/utils/sider';
 
 import { StatusTag } from '../StegStatus';
@@ -79,20 +79,6 @@ const utledForhåndsvarselDefaultValues = (
             ? { brukeruttalelse: tilUttalelseSkjema(brukeruttalelse) }
             : {}),
     };
-};
-
-const lesFeilmeldingFraBlob = async (
-    error: AxiosError<BehandlingHentDokumentError>
-): Promise<ApiError | undefined> => {
-    const data = error.response?.data;
-    if (!(data instanceof Blob)) {
-        return undefined;
-    }
-    try {
-        return JSON.parse(await data.text());
-    } catch {
-        return undefined;
-    }
 };
 
 export const Forhåndsvarsel: FC = () => {
