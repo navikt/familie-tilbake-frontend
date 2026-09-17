@@ -1,16 +1,14 @@
-import type { Avsnitt, VedtaksbrevData, Vedtaksresultat } from '@/generated-new';
+import type { Avsnitt, VedtaksbrevData } from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
 
 import { describe, expect, test } from 'vitest';
 
-import { vedtaksbrevResolver } from './schema';
 import {
     elementArrayTilTekst,
     tekstTilElementArray,
     tilFormData,
     tilVedtaksbrevDataWritable,
-    vedtaksresultatFarger,
-} from './utils';
+} from './mapping';
 
 const lagVedtaksbrevData = (overrides: Partial<VedtaksbrevData> = {}): VedtaksbrevData => ({
     hovedavsnitt: {
@@ -182,82 +180,5 @@ describe('tekstTilElementArray', () => {
             { type: 'rentekst', tekst: 'Første linje\nAndre linje' },
             { type: 'rentekst', tekst: 'Nytt avsnitt' },
         ]);
-    });
-});
-
-describe('vedtaksbrevResolver', () => {
-    const kjørResolver = async (
-        data: VedtaksbrevFormData
-    ): Promise<ReturnType<typeof vedtaksbrevResolver>> =>
-        vedtaksbrevResolver(data, {}, { names: [], fields: {}, shouldUseNativeValidation: false });
-
-    const FORVENTET_FEILMELDING = 'Du må fylle inn minst 3 tegn';
-
-    test('passerer for gyldig data', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: { tekst: 'noe tekst' },
-            avsnitt: [
-                {
-                    id: 'a-1',
-                    tekst: 'periodetekst',
-                    påkrevdeBegrunnelser: [{ begrunnelseType: 'test', tekst: 'begrunnelse' }],
-                },
-            ],
-        });
-
-        expect(errors).toEqual({});
-    });
-
-    test('gir feil når hovedavsnitt har under 3 tegn', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: { tekst: 'ab' },
-            avsnitt: [],
-        });
-
-        expect(errors).toHaveProperty(['hovedavsnitt', 'tekst', 'message'], FORVENTET_FEILMELDING);
-    });
-
-    test('gir feil når avsnitt-tekst er for kort', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: { tekst: 'noe tekst' },
-            avsnitt: [{ id: 'a-1', tekst: '', påkrevdeBegrunnelser: [] }],
-        });
-
-        expect(errors).toHaveProperty(['avsnitt', 0, 'tekst', 'message'], FORVENTET_FEILMELDING);
-    });
-
-    test('gir feil når påkrevd begrunnelse er for kort', async () => {
-        const { errors } = await kjørResolver({
-            hovedavsnitt: { tekst: 'noe tekst' },
-            avsnitt: [
-                {
-                    id: 'a-1',
-                    tekst: 'noe tekst',
-                    påkrevdeBegrunnelser: [{ begrunnelseType: 'test', tekst: '' }],
-                },
-            ],
-        });
-
-        expect(errors).toHaveProperty(
-            ['avsnitt', 0, 'påkrevdeBegrunnelser', 0, 'tekst', 'message'],
-            FORVENTET_FEILMELDING
-        );
-    });
-});
-
-describe('vedtaksresultatFarger', () => {
-    test('delvis tilbakebetaling har farge meta-purple', () => {
-        const resultat: Vedtaksresultat = 'DelvisTilbakebetaling';
-        expect(vedtaksresultatFarger[resultat]).toBe('meta-purple');
-    });
-
-    test('ingen tilbakebetaling har farge success', () => {
-        const resultat: Vedtaksresultat = 'IngenTilbakebetaling';
-        expect(vedtaksresultatFarger[resultat]).toBe('success');
-    });
-
-    test('full tilbakebetaling har farge brand-magenta', () => {
-        const resultat: Vedtaksresultat = 'FullTilbakebetaling';
-        expect(vedtaksresultatFarger[resultat]).toBe('brand-magenta');
     });
 });

@@ -1,8 +1,8 @@
 import type { AxiosError } from 'axios';
 import type { FC } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import type { BehandlingForeslaaVedtakError, Vedtaksresultat } from '@/generated-new';
-import type { VedtaksbrevFormData } from './schema';
+import type { BehandlingForeslaaVedtakError } from '@/generated-new';
+import type { VedtaksbrevFormData } from './brev/schema';
 
 import { Heading, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -19,17 +19,12 @@ import { useActionBar } from '@/hooks/useActionBar';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { useStegNavigering } from '@/utils/sider';
 
-import { vedtaksresultatFarger } from './utils';
-import { VedtakSkeleton } from './VedtakSkeleton';
-import { VEDTAKSBREV_FORM_ID, Vedtaksbrev } from './Vedtaksbrev';
+import { Vedtaksbrev } from './brev/Vedtaksbrev';
+import { VedtaksbrevSkeleton } from './brev/VedtaksbrevSkeleton';
+import { VEDTAKSBREV_FORM_ID } from './brev/VedtaksbrevSkjema';
 import { Vedtakstabell } from './Vedtakstabell';
 import { VedtakstabellSkeleton } from './VedtakstabellSkeleton';
-
-const vedtaksresultater: Record<Vedtaksresultat, string> = {
-    FullTilbakebetaling: 'Full tilbakekreving',
-    DelvisTilbakebetaling: 'Delvis tilbakekreving',
-    IngenTilbakebetaling: 'Ingen tilbakekreving',
-};
+import { vedtaksresultater, vedtaksresultatFarger } from './vedtaksresultat';
 
 export const Vedtak: FC = () => {
     const { behandlingId } = useBehandling();
@@ -131,7 +126,7 @@ export const Vedtak: FC = () => {
                     Kunne ikke hente vedtaksbrevdata. Prøv å laste siden på nytt.
                 </InlineMessage>
             ) : lasterVedtaksbrev ? (
-                <VedtakSkeleton />
+                <VedtaksbrevSkeleton />
             ) : (
                 vedtaksbrevData && (
                     <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={onSubmit} />

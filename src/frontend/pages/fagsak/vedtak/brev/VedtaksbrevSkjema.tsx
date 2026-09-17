@@ -9,7 +9,7 @@ import { get, useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 
-import { VEDTAKSBREV_FORM_ID } from './Vedtaksbrev';
+export const VEDTAKSBREV_FORM_ID = 'vedtaksbrev-skjema';
 
 type Props = {
     vedtaksbrevData: VedtaksbrevData;

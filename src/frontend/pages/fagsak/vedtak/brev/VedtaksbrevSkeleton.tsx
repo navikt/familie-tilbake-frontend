@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { Heading, HStack, Skeleton, VStack } from '@navikt/ds-react';
 
-export const VedtakSkeleton: FC = () => {
+export const VedtaksbrevSkeleton: FC = () => {
     return (
         <VStack gap="space-24">
             <div className="grid grid-cols-1 ax-md:grid-cols-2 gap-4">
