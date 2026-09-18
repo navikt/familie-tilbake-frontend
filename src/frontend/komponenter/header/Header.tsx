@@ -2,7 +2,14 @@ import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { InnloggetRolleEnum } from '@/generated';
 
-import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
+import {
+    ExternalLinkIcon,
+    LeaveIcon,
+    MenuGridIcon,
+    MoonIcon,
+    ShieldLockIcon,
+    SunIcon,
+} from '@navikt/aksel-icons';
 import { Dropdown, HStack, InternalHeader, Spacer, Tag } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -220,6 +227,22 @@ export const Header: FC = () => {
                 />
                 <Dropdown.Menu>
                     <Dropdown.Menu.List>
+                        <Dropdown.Menu.List.Item
+                            as={Link}
+                            to="/personvern"
+                            onClick={(): void =>
+                                sporHendelse(Hendelser.NAVIGERE, {
+                                    lenketekst: 'Personvern',
+                                    destinasjon: '/personvern',
+                                    lenkegruppe: 'brukermeny',
+                                    kontekst: Sporingskontekst.Header,
+                                })
+                            }
+                        >
+                            Personvern
+                            <Spacer />
+                            <ShieldLockIcon aria-hidden fontSize="1.5rem" />
+                        </Dropdown.Menu.List.Item>
                         <Dropdown.Menu.List.Item as="a" href={`${window.origin}/oauth2/logout`}>
                             Logg ut
                             <Spacer />

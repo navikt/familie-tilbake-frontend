@@ -15,6 +15,7 @@ import { Toasts } from './komponenter/toast/Toasts';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { Serverfeil } from './pages/feilsider/serverfeil';
 import { Uautorisert } from './pages/feilsider/Uautorisert';
+import { Personvern } from './pages/Personvern';
 import { skalGjenforsøke } from './utils/httpUtils';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
                             },
                         ],
                     },
+                    { path: '/personvern', element: <Personvern /> },
                     { path: '*', element: <IkkeFunnet /> },
                 ],
             },
