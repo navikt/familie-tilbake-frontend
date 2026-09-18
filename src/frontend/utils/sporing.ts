@@ -19,6 +19,12 @@ const SPORING_DEV: Sporingsoppsett = {
     skriptUrl: 'https://cdn.nav.no/team-researchops/sporing/sporing-dev.js',
 };
 
+// Sporingskode og skript hentet fra Innblikk (innblikk.ansatt.nav.no/sporingskoder)
+const SPORING_PROD: Sporingsoppsett = {
+    websiteId: '226376e1-7fdd-47df-bb34-31d7ba1c5c9f',
+    skriptUrl: 'https://cdn.nav.no/team-researchops/sporing/sporing.js',
+};
+
 // Minimal type for det vi faktisk bruker av sporingsskriptets API. Holdes lokal
 // (ikke global augmentering av Window) slik at resten av koden går via
 // sporHendelse i stedet for å røre window.sporing direkte.
@@ -37,6 +43,8 @@ const hentSporing = (): SporingApi | undefined =>
 
 const erDev = (): boolean => window.location.hostname.indexOf('dev.nav.no') > -1;
 
+const erProd = (): boolean => window.location.hostname.endsWith('intern.nav.no');
+
 let gjeldendeYtelsestype: SchemaEnum4 | undefined;
 
 export const settSporingsYtelsestype = (ytelsestype: SchemaEnum4 | undefined): void => {
@@ -48,8 +56,10 @@ const hentSporingsoppsett = (): Sporingsoppsett | undefined => {
         return SPORING_DEV;
     }
 
-    // TODO: Registrer appen i Innblikk prod og legg til et SPORING_PROD-oppsett
-    // (sporing.js + prod-sporingskode) som returneres her for intern.nav.no.
+    if (erProd()) {
+        return SPORING_PROD;
+    }
+
     return undefined;
 };
 
