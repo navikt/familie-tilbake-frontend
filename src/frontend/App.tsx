@@ -15,6 +15,7 @@ import { Toasts } from './komponenter/toast/Toasts';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { Serverfeil } from './pages/feilsider/serverfeil';
 import { Uautorisert } from './pages/feilsider/Uautorisert';
+import { skalGjenforsøke } from './utils/httpUtils';
 
 const Landingsside = lazyImportMedRetry(() => import('./pages/Landingsside'), 'Landingsside');
 const FagsakSide = lazyImportMedRetry(() => import('./pages/fagsak/Fagsak'), 'FagsakSide');
@@ -106,6 +107,7 @@ export const App: FC = () => {
         defaultOptions: {
             queries: {
                 staleTime: 5 * 60 * 1000, // 5 minutter
+                retry: skalGjenforsøke,
             },
         },
     });

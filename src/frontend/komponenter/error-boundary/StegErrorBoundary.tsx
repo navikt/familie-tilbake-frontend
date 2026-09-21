@@ -1,8 +1,13 @@
-import type { ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, FC, ReactNode } from 'react';
 import type { SynligSteg } from '@/utils/sider';
 
 import { Button, Heading, Link, List, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';
+import { useLocation } from 'react-router';
+
+import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useActionBar } from '@/hooks/useActionBar';
+import { useStegflyt } from '@/komponenter/stegflyt/useStegflyt';
 
 type Props = {
     steg: SynligSteg;
@@ -11,7 +16,6 @@ type Props = {
 
 type State = {
     hasError: boolean;
-    error: Error | null;
 };
 
 const mapSynligStegTilStegNavn = (steg: SynligSteg): string => {
@@ -35,14 +39,47 @@ const mapSynligStegTilStegNavn = (steg: SynligSteg): string => {
     }
 };
 
-export class StegErrorBoundary extends Component<Props, State> {
+const StegFeilActionBar: FC<{ steg: SynligSteg }> = ({ steg }: { steg: SynligSteg }) => {
+    const { actionBarStegtekst } = useBehandlingState();
+    const { steg: stegflyt, gåTilSteg } = useStegflyt('steg-feil-action-bar');
+
+    const gjeldende = stegflyt.find(({ steg: stegtype }) => stegtype === steg.steg);
+    const forrige = gjeldende ? stegflyt[gjeldende.nummer - 2] : undefined;
+    const neste = gjeldende ? stegflyt[gjeldende.nummer] : undefined;
+    const forrigeTilgjengelig = forrige?.erTilgjengelig ? forrige : undefined;
+    const nesteTilgjengelig = neste?.erTilgjengelig ? neste : undefined;
+
+    const fellesConfig = {
+        stegtekst: actionBarStegtekst(steg.steg),
+        forrigeAriaLabel: forrigeTilgjengelig
+            ? `Gå til forrige steg, ${forrigeTilgjengelig.navn}`
+            : undefined,
+        onForrige: forrigeTilgjengelig
+            ? (): void => gåTilSteg(forrigeTilgjengelig.nummer)
+            : undefined,
+    };
+
+    useActionBar(
+        nesteTilgjengelig
+            ? {
+                  ...fellesConfig,
+                  nesteAriaLabel: `Gå til neste steg, ${nesteTilgjengelig.navn}`,
+                  onNeste: (): void => gåTilSteg(nesteTilgjengelig.nummer),
+              }
+            : { ...fellesConfig, skjulNeste: true }
+    );
+
+    return null;
+};
+
+class StegErrorBoundaryInternal extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { hasError: false, error: null };
+        this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error: Error): State {
-        return { hasError: true, error };
+    static getDerivedStateFromError(): State {
+        return { hasError: true };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -52,6 +89,7 @@ export class StegErrorBoundary extends Component<Props, State> {
         if (this.state.hasError) {
             return (
                 <VStack gap="space-24">
+                    <StegFeilActionBar steg={this.props.steg} />
                     <Heading size="medium">{mapSynligStegTilStegNavn(this.props.steg)}</Heading>
 
                     <LocalAlert status="error">
@@ -88,7 +126,7 @@ export class StegErrorBoundary extends Component<Props, State> {
                         <Button
                             variant="secondary"
                             size="small"
-                            onClick={(): void => this.setState({ hasError: false, error: null })}
+                            onClick={(): void => this.setState({ hasError: false })}
                         >
                             Prøv på nytt
                         </Button>
@@ -100,3 +138,13 @@ export class StegErrorBoundary extends Component<Props, State> {
         return this.props.children;
     }
 }
+
+export const StegErrorBoundary: FC<Props> = ({ steg, children }: Props) => {
+    const { pathname } = useLocation();
+
+    return (
+        <StegErrorBoundaryInternal key={pathname} steg={steg}>
+            {children}
+        </StegErrorBoundaryInternal>
+    );
+};
