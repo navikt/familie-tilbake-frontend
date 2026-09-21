@@ -1,19 +1,11 @@
 import type { FC } from 'react';
-import type { Beregningsresultat, BeregningsresultatVurdering } from '@/generated-new/types.gen';
+import type { Beregningsresultat } from '@/generated-new/types.gen';
 
-import { ExpansionCard, Table } from '@navikt/ds-react';
+import { ExpansionCard, Table, Tag } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-const vurderingstekster: Record<BeregningsresultatVurdering | string, string> = {
-    Forsett: 'Forsett',
-    GrovUaktsomhet: 'Grov uaktsom',
-    Uaktsomhet: 'Uaktsom',
-    GodTro: 'God tro',
-    Forstod: 'Forsto',
-    BurdeForstått: 'Burde forstått',
-};
+import { vurderingsmapper, vurderingstag } from '@/utils/vurderingstag';
 
 type Props = {
     beregningsresultat: Beregningsresultat;
@@ -104,7 +96,18 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                     {formatCurrencyNoKr(periode.feilutbetaltBeløp)} kr
                                 </Table.DataCell>
                                 <Table.DataCell>
-                                    {vurderingstekster[periode.vurdering]}
+                                    <Tag
+                                        variant="moderate"
+                                        size="small"
+                                        className="w-fit"
+                                        data-color={
+                                            vurderingstag[vurderingsmapper[periode.vurdering]][
+                                                'data-color'
+                                            ]
+                                        }
+                                    >
+                                        {vurderingstag[vurderingsmapper[periode.vurdering]].label}
+                                    </Tag>
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
                                     {periode.beløpIbehold
