@@ -34,7 +34,9 @@ export const Under4xRettsgebyr: FC<Props> = ({ navnPrefix, renter, reduksjon }: 
         <>
             <InfoCard data-color="warning" className="max-w-xl" size="small">
                 <InfoCard.Header icon={<ExclamationmarkTriangleIcon aria-hidden />}>
-                    <InfoCard.Title>Beløpet er under fire ganger rettsgebyret</InfoCard.Title>
+                    <InfoCard.Title>
+                        Det totale feilutbetalte beløpet er under fire ganger rettsgebyret
+                    </InfoCard.Title>
                 </InfoCard.Header>
             </InfoCard>
             <RadioGroup

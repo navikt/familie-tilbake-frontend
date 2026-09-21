@@ -143,9 +143,9 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                             <span className="text-ax-text-brand-magenta flex flex-row gap-2">
                                 Feilutbetalt: {formatCurrencyNoKr(periode.feilutbetalt)}
                                 {erUnder4xRettsgebyr && (
-                                    <Tooltip content="Totalbeløpet er under fire ganger rettsgebyret">
+                                    <Tooltip content="Det totale feilutbetalte beløpet er under fire ganger rettsgebyret">
                                         <ExclamationmarkTriangleIcon
-                                            aria-label="Advarsel: Totalbeløpet er under fire ganger rettsgebyret"
+                                            aria-label="Advarsel: Det totale feilutbetalte beløpet er under fire ganger rettsgebyret"
                                             className="text-ax-text-neutral-subtle"
                                         />
                                     </Tooltip>
