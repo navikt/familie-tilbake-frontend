@@ -64,7 +64,8 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         defaultValues: utledDefaultValues(
             valgtVilkårsperiode.vilkårsvurdering,
             valgtVilkårsperiode.simulertBeløp,
-            erPeriodeVurdert(valgtPeriode.vurdering)
+            erPeriodeVurdert(valgtPeriode.vurdering),
+            erUnder4xRettsgebyr
         ),
     });
 

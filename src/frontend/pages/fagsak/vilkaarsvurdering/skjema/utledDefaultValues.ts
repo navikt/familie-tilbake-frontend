@@ -94,34 +94,53 @@ const tomUnnlatelse = (
     },
 });
 
-const utledUnnlatelse = (unnlatelse: Unnlatelse): UnnlatelseFelter => {
+const hentSærligeGrunner = (unnlatelse: Unnlatelse): SærligeGrunnerFelter | null =>
+    unnlatelse.unnlatelse === 'skalUnnlates'
+        ? null
+        : utledSærligeGrunner(unnlatelse.erDetSærligeGrunner);
+
+const utledUnnlatelse = (
+    unnlatelse: Unnlatelse,
+    erUnder4xRettsgebyr: boolean
+): UnnlatelseFelter => {
     const felter = tomUnnlatelse();
-    felter.unnlatelse = unnlatelse.unnlatelse;
+    const særligeGrunner = hentSærligeGrunner(unnlatelse);
+
+    if (!erUnder4xRettsgebyr) {
+        felter.unnlatelse = 'ikkeAktuelt';
+        if (særligeGrunner) {
+            felter.ikkeAktuelt = { erDetSærligeGrunner: særligeGrunner };
+        }
+        return felter;
+    }
+
     switch (unnlatelse.unnlatelse) {
         case 'skalUnnlates':
-            felter.skalUnnlates = {
-                begrunnelse: unnlatelse.begrunnelse,
-            };
-            break;
+            felter.unnlatelse = 'skalUnnlates';
+            felter.skalUnnlates = { begrunnelse: unnlatelse.begrunnelse };
+            return felter;
         case 'skalIkkeUnnlates':
+            felter.unnlatelse = 'skalIkkeUnnlates';
             felter.skalIkkeUnnlates = {
                 begrunnelse: unnlatelse.begrunnelse,
-                erDetSærligeGrunner: utledSærligeGrunner(unnlatelse.erDetSærligeGrunner),
+                erDetSærligeGrunner: særligeGrunner ?? tomSærligeGrunner(),
             };
-            break;
+            return felter;
         case 'ikkeAktuelt':
-            felter.ikkeAktuelt = {
-                erDetSærligeGrunner: utledSærligeGrunner(unnlatelse.erDetSærligeGrunner),
+            felter.unnlatelse = 'skalIkkeUnnlates';
+            felter.skalIkkeUnnlates = {
+                begrunnelse: '',
+                erDetSærligeGrunner: særligeGrunner ?? tomSærligeGrunner(),
             };
-            break;
+            return felter;
     }
-    return felter;
 };
 
 export const utledDefaultValues = (
     vilkårsvurdering: Vilkaarsvurdering,
     simulertBeløp: number,
-    erVurdert: boolean
+    erVurdert: boolean,
+    erUnder4xRettsgebyr: boolean
 ): VilkårsvurderingSkjemaFelter => {
     const { id, valg } = vilkårsvurdering;
 
@@ -180,13 +199,13 @@ export const utledDefaultValues = (
             case 'forsto':
                 defaultValues.forstoEllerBurdeForstått.forsto = {
                     begrunnelse: forståelse.begrunnelse,
-                    unnlatelse: utledUnnlatelse(forståelse.unnlatelse),
+                    unnlatelse: utledUnnlatelse(forståelse.unnlatelse, erUnder4xRettsgebyr),
                 };
                 break;
             case 'burdeForstått':
                 defaultValues.forstoEllerBurdeForstått.burdeForstått = {
                     begrunnelse: forståelse.begrunnelse,
-                    unnlatelse: utledUnnlatelse(forståelse.unnlatelse),
+                    unnlatelse: utledUnnlatelse(forståelse.unnlatelse, erUnder4xRettsgebyr),
                 };
                 break;
         }
@@ -198,7 +217,7 @@ export const utledDefaultValues = (
             case 'uaktsomt':
                 defaultValues.forårsaketAvMottaker.uaktsomt = {
                     begrunnelse: valg.aktsomhet.begrunnelse,
-                    unnlatelse: utledUnnlatelse(valg.aktsomhet.unnlatelse),
+                    unnlatelse: utledUnnlatelse(valg.aktsomhet.unnlatelse, erUnder4xRettsgebyr),
                 };
                 break;
             case 'grovtUaktsomt':

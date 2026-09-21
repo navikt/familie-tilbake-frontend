@@ -1541,4 +1541,81 @@ describe('VilkårsvurderingSkjema', () => {
             });
         });
     });
+
+    describe('Særlige grunner ved endret erUnder4xRettsgebyr', () => {
+        const forstoMedSkalIkkeUnnlates = (
+            erDetSærligeGrunner: ReduksjonArsaker
+        ): VilkaarsvurderingValg => ({
+            vurdering: 'forsto_eller_burde_forstått',
+            forståelse: {
+                forståelse: 'forsto',
+                begrunnelse: 'Mottakeren forsto',
+                unnlatelse: {
+                    unnlatelse: 'skalIkkeUnnlates',
+                    begrunnelse: 'Skal ikke unnlates',
+                    erDetSærligeGrunner,
+                },
+            },
+        });
+
+        test('burde vise og lagre lagrede særlige grunner når beløpet ikke lenger er under 4x rettsgebyr', async () => {
+            const sendtRequest = renderSkjema({
+                erUnder4xRettsgebyr: false,
+                vurdering: 'FORSTO',
+                valg: forstoMedSkalIkkeUnnlates(neiSærligeGrunner),
+            });
+
+            expect(radioIGruppe(SÆRLIGE_GRUNNER_LEGEND, 'Nei')).toBeChecked();
+            const begrunnelse = tekstfelt(
+                'Begrunn hvorfor du vurderer at det ikke er særlige grunner til å redusere beløpet'
+            );
+            expect(begrunnelse).toHaveValue('Det er ikke særlige grunner til å redusere');
+
+            await user.clear(begrunnelse);
+            await user.type(begrunnelse, 'Oppdatert begrunnelse');
+            await user.click(lagreKnapp());
+
+            await expect(sendtRequest).resolves.toEqual({
+                path: { behandlingId: BEHANDLING_ID, periodeId: PERIODE_ID },
+                body: {
+                    id: PERIODE_ID,
+                    fom: FOM,
+                    tom: TOM,
+                    delbarePerioder,
+                    valg: {
+                        vurdering: 'forsto_eller_burde_forstått',
+                        forståelse: {
+                            forståelse: 'forsto',
+                            begrunnelse: 'Mottakeren forsto',
+                            unnlatelse: {
+                                unnlatelse: 'ikkeAktuelt',
+                                erDetSærligeGrunner: {
+                                    erDetReduksjonÅrsaker: 'nei',
+                                    særligeGrunnerMot: [NAVS_FEIL, ANNET],
+                                    begrunnelse: 'Oppdatert begrunnelse',
+                                    annetBegrunnelse: 'Annet mot reduksjon',
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+        });
+
+        test('burde vise lagrede særlige grunner i unnlatelsesgrenen når beløpet nå er under 4x rettsgebyr', () => {
+            renderSkjema({
+                erUnder4xRettsgebyr: true,
+                vurdering: 'FORSTO',
+                valg: forstoEllerBurdeForstått('forsto', neiSærligeGrunner),
+            });
+
+            expect(radioIGruppe(UNNLATELSE_LEGEND, 'Ja')).toBeChecked();
+            expect(radioIGruppe(SÆRLIGE_GRUNNER_LEGEND, 'Nei')).toBeChecked();
+            expect(
+                tekstfelt(
+                    'Begrunn hvorfor du vurderer at det ikke er særlige grunner til å redusere beløpet'
+                )
+            ).toHaveValue('Det er ikke særlige grunner til å redusere');
+        });
+    });
 });
