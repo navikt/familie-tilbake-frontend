@@ -65,7 +65,7 @@ export type ForeldelseHook = {
         valgtPeriode: ForeldelsePeriodeSkjemeData | undefined
     ) => ForeldelsePeriodeSkjemeData | undefined;
     allePerioderBehandlet: boolean;
-    harUlagredeEndringer: boolean;
+    harBekreftet: boolean;
     navigerTilNeste: () => void;
     navigerTilForrige: () => void;
     senderInn: boolean;
@@ -89,6 +89,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const [valgtPeriode, setValgtPeriode] = useState<ForeldelsePeriodeSkjemeData>();
     const [allePerioderBehandlet, setAllePerioderBehandlet] = useState(false);
     const [senderInn, setSenderInn] = useState(false);
+    const [harBekreftet, setHarBekreftet] = useState(false);
     const { gjerForeldelseKall, sendInnForeldelse } = useBehandlingApi();
 
     const navigerTilNeste = useStegNavigering('VILKÅRSVURDERING');
@@ -168,6 +169,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
         perioder.splice(index, 1, periode);
         setSkjemaData(perioder);
+        setHarBekreftet(true);
         const førsteUbehandletPeriode = perioder.find(
             per => !per.begrunnelse || !per.foreldelsesvurderingstype
         );
@@ -182,38 +184,8 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         const index = perioder.findIndex(bfp => bfp.index === periode.index);
         perioder.splice(index, 1, ...nyePerioder);
         setSkjemaData(perioder);
+        setHarBekreftet(true);
         setValgtPeriode(nyePerioder[0]);
-    };
-
-    const erTom = (val: string | null | undefined): boolean => {
-        return val === null || val === undefined || val === '';
-    };
-
-    const erForskjellig = (a: string | null | undefined, b: string | null | undefined): boolean => {
-        if (erTom(a) && erTom(b)) return false;
-        return a !== b;
-    };
-
-    const harEndretOpplysninger = (): boolean => {
-        if (foreldelse?.status === RessursStatus.Suksess) {
-            const hentetPerioder = foreldelse.data.foreldetPerioder;
-            return skjemaData.some(skjemaPeriode => {
-                if (skjemaPeriode.erSplittet) return true;
-                const periode = hentetPerioder.find(
-                    per =>
-                        per.periode.fom === skjemaPeriode.periode.fom &&
-                        per.periode.tom === skjemaPeriode.periode.tom
-                );
-                return (
-                    skjemaPeriode.begrunnelse !== periode?.begrunnelse ||
-                    skjemaPeriode.foreldelsesvurderingstype !==
-                        periode?.foreldelsesvurderingstype ||
-                    erForskjellig(skjemaPeriode.foreldelsesfrist, periode?.foreldelsesfrist) ||
-                    erForskjellig(skjemaPeriode.oppdagelsesdato, periode?.oppdagelsesdato)
-                );
-            });
-        }
-        return false;
     };
 
     const sendInnSkjema = (naviger: () => void): void => {
@@ -270,7 +242,7 @@ const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
         valgtPeriode,
         setValgtPeriode,
         allePerioderBehandlet,
-        harUlagredeEndringer: harEndretOpplysninger(),
+        harBekreftet,
         navigerTilNeste,
         navigerTilForrige,
         senderInn,

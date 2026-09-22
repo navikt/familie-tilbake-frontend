@@ -307,11 +307,11 @@ describe('ForeldelseContainer', () => {
         expect(andrePeriodeValgt()).toBeInTheDocument();
     });
 
-    test('Skal vise "Neste"-knapp etter bekreft uten endring', async () => {
+    test('Skal vise "Lagre og gå videre"-knapp etter bekreft', async () => {
         setupMock(lagForeldelseResponse({ foreldetPerioder: [førsteVurdertePeriode] }));
         renderForeldelseContainer({ behandlet: true });
         await user.click(await screen.findByRole('button', bekreftPeriodeTekst));
-        expect(gåVidereKnapp()).toBeInTheDocument();
+        expect(lagreOgGåVidereKnapp()).toBeInTheDocument();
     });
 
     describe('Knappetekst på neste/forrige', () => {

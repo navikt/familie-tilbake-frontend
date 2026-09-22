@@ -31,35 +31,33 @@ export const ForeldelseContainer: FC = () => {
         erAutoutført,
         navigerTilNeste,
         navigerTilForrige,
-        stegErBehandlet,
         sendInnSkjema,
         senderInn,
         allePerioderBehandlet,
-        harUlagredeEndringer,
+        harBekreftet,
     } = useForeldelse();
     const behandling = useBehandling();
     const { behandlingILesemodus, actionBarStegtekst } = useBehandlingState();
 
-    const skalNavigere =
-        !harUlagredeEndringer || erAutoutført || (stegErBehandlet && behandlingILesemodus);
-    const onNeste = skalNavigere ? navigerTilNeste : (): void => sendInnSkjema(navigerTilNeste);
-    const onForrige = skalNavigere
-        ? navigerTilForrige
-        : (): void => sendInnSkjema(navigerTilForrige);
+    const kanLagre = !erAutoutført && !behandlingILesemodus;
+    const skalLagre = kanLagre && harBekreftet;
+
+    const onNeste = skalLagre ? (): void => sendInnSkjema(navigerTilNeste) : navigerTilNeste;
+    const onForrige = skalLagre ? (): void => sendInnSkjema(navigerTilForrige) : navigerTilForrige;
     const finnesForhåndsvarsel = behandling.behandlingsstegsinfo.some(
         steg => steg.behandlingssteg === 'FORHÅNDSVARSEL'
     );
 
     useActionBar({
         stegtekst: actionBarStegtekst('FORELDELSE'),
-        forrigeAriaLabel: forrigeAriaLabel(finnesForhåndsvarsel, !skalNavigere),
-        nesteAriaLabel: skalNavigere
-            ? 'Gå videre til vilkårsvurderingssteget'
-            : 'Lagre og gå videre til vilkårsvurderingssteget',
+        forrigeAriaLabel: forrigeAriaLabel(finnesForhåndsvarsel, skalLagre),
+        nesteAriaLabel: skalLagre
+            ? 'Lagre og gå videre til vilkårsvurderingssteget'
+            : 'Gå videre til vilkårsvurderingssteget',
         onForrige,
         onNeste,
-        nesteTekst: skalNavigere ? 'Neste' : 'Lagre og gå til neste',
-        forrigeTekst: skalNavigere ? 'Forrige' : 'Lagre og gå til forrige',
+        nesteTekst: skalLagre ? 'Lagre og gå til neste' : 'Neste',
+        forrigeTekst: skalLagre ? 'Lagre og gå til forrige' : 'Forrige',
         disableNeste: !allePerioderBehandlet,
         isLoading: senderInn,
     });
