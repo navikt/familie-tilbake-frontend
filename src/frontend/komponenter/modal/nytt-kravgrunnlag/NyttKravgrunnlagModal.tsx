@@ -29,8 +29,8 @@ import {
     behandlingBenyttNyesteKravgrunnlagMutation,
     behandlingFaktaQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
-import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { formatCurrencyNoKr, formatterDatostring, hentPeriodelengde } from '@/utils';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 
 const periodensVarighet = (fom: string, tom: string): number => Date.parse(tom) - Date.parse(fom);
 

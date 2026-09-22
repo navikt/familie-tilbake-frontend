@@ -20,9 +20,9 @@ import { type FC, useRef, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSplittPeriodeMutation } from '@/generated-new/@tanstack/react-query.gen';
-import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 
 import { hentSplittedePerioder } from './utils';
 

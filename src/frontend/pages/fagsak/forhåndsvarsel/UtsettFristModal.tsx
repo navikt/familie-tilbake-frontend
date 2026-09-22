@@ -18,8 +18,8 @@ import { get, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
-import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { dateTilIsoDatoString } from '@/utils/dato';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 
 const utsettFristSchema = zod.object({
     nyFrist: zod.iso.date({ message: 'Du må velge en ny frist' }),

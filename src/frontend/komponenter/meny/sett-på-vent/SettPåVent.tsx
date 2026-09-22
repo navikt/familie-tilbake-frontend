@@ -13,9 +13,8 @@ import { Datovelger } from '@/komponenter/datovelger/Datovelger';
 import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
 import { manuelleVenteÅrsaker, venteårsaker } from '@/typer/behandling';
 import { dagensDato } from '@/utils/dato';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-import { MODAL_BREDDE } from '../utils';
 
 export const SettPåVent: FC = () => {
     const { behandlingId } = useBehandling();

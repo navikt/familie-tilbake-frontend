@@ -7,9 +7,9 @@ import { useRef } from 'react';
 
 import { behandlingsårsaker } from '@/typer/behandling';
 import { hentFrontendFeilmelding } from '@/utils';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
-import { MODAL_BREDDE } from '../utils';
 import { useRevurderSkjema } from './RevurderSkjemaContext';
 
 export const Revurder: FC = () => {

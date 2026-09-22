@@ -12,10 +12,9 @@ import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { AlertType, ToastTyper } from '@/komponenter/toast/typer';
 import { type Ressurs, RessursStatus } from '@/typer/ressurs';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { useStegNavigering } from '@/utils/sider';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-import { MODAL_BREDDE } from '../utils';
 
 export const LeggTilFjernBrevmottakere: FC = () => {
     const { behandlingId, manuelleBrevmottakere, behandlingsstegsinfo } = useBehandling();

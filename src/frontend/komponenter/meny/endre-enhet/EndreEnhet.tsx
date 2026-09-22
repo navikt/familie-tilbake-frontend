@@ -7,9 +7,9 @@ import { useRef } from 'react';
 
 import { RessursStatus } from '@/typer/ressurs';
 import { hentFrontendFeilmelding } from '@/utils';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
-import { MODAL_BREDDE } from '../utils';
 import { useEndreEnhet } from './EndreEnhetContext';
 
 type Arbeidsfordelingsenhet = {

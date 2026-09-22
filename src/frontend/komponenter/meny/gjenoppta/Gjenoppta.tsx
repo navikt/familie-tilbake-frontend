@@ -8,9 +8,8 @@ import { useRef } from 'react';
 import { useBehandling } from '@/context/BehandlingContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { usePåVentBehandling } from '@/komponenter/modal/på-vent/PåVentContext';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-import { MODAL_BREDDE } from '../utils';
 
 export const Gjenoppta: FC = () => {
     const behandling = useBehandling();

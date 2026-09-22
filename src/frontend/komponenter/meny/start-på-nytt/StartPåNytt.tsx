@@ -4,9 +4,9 @@ import { ArrowCirclepathReverseIcon } from '@navikt/aksel-icons';
 import { ActionMenu, BodyLong, Button, Modal } from '@navikt/ds-react';
 
 import { FeilModal } from '@/komponenter/modal/feil/FeilModal';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
-import { MODAL_BREDDE } from '../utils';
 import { useStartPåNytt } from './useStartPåNytt';
 
 export const StartPåNytt: FC = () => {

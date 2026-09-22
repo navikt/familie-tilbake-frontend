@@ -8,9 +8,9 @@ import { type FC, useRef } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { behandlingSlaaSammenPerioderMutation } from '@/generated-new/@tanstack/react-query.gen';
-import { MODAL_BREDDE } from '@/komponenter/meny/utils';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { formatterDatostring } from '@/utils';
+import { MODAL_BREDDE } from '@/utils/modalUtils';
 
 import { finnSammenslåingsforslag } from './utils';
 
