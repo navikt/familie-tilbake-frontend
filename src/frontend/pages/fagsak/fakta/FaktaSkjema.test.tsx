@@ -63,7 +63,7 @@ const faktaOmFeilutbetaling = (
         },
     ],
     ferdigvurdert: false,
-    usikker4xRettsgebyr: false,
+    status4xRettsgebyret: 'OVER',
     rettsgebyrÅrFraSaksbehandler: null,
     vurdering: {
         årsak: null,
@@ -594,21 +594,21 @@ describe('Fakta om feilutbetaling', () => {
         });
     });
 
-    describe('Siste utbetalingsår (usikker4xRettsgebyr)', () => {
+    describe('Siste utbetalingsår (status4xRettsgebyret)', () => {
         const rettsgebyrÅr = (): HTMLElement =>
             screen.getByRole('combobox', { name: /Hvilket år var siste utbetaling\?/ });
 
-        test('Vises ikke når usikker4xRettsgebyr er false', () => {
-            renderFakta({ usikker4xRettsgebyr: false });
+        test('Vises ikke når status4xRettsgebyret ikke er usikker', () => {
+            renderFakta({ status4xRettsgebyret: 'OVER' });
 
             expect(
                 screen.queryByRole('combobox', { name: 'Hvilket år var siste utbetaling?' })
             ).not.toBeInTheDocument();
         });
 
-        test('Vises når usikker4xRettsgebyr er true og forhåndsutfylles fra backend', () => {
+        test('Vises når status4xRettsgebyret er USIKKER og forhåndsutfylles fra backend', () => {
             renderFakta({
-                usikker4xRettsgebyr: true,
+                status4xRettsgebyret: 'USIKKER',
                 rettsgebyrÅrFraSaksbehandler: 2022,
                 perioder: [
                     {
@@ -629,7 +629,7 @@ describe('Fakta om feilutbetaling', () => {
             vi.useFakeTimers();
             vi.setSystemTime(new Date('2023-06-15'));
             renderFakta({
-                usikker4xRettsgebyr: true,
+                status4xRettsgebyret: 'USIKKER',
                 rettsgebyrÅrFraSaksbehandler: null,
                 perioder: [
                     {
@@ -656,7 +656,7 @@ describe('Fakta om feilutbetaling', () => {
 
         test('Setter valgt år i submit-body', async () => {
             const mutationBody = renderFakta({
-                usikker4xRettsgebyr: true,
+                status4xRettsgebyret: 'USIKKER',
                 rettsgebyrÅrFraSaksbehandler: null,
                 perioder: [
                     {
@@ -687,7 +687,7 @@ describe('Fakta om feilutbetaling', () => {
         });
 
         test('Er readonly i lesemodus', () => {
-            renderFakta({ usikker4xRettsgebyr: true }, { behandlingILesemodus: true });
+            renderFakta({ status4xRettsgebyret: 'USIKKER' }, { behandlingILesemodus: true });
 
             expect(rettsgebyrÅr().closest('.aksel-form-field')).toHaveClass(
                 'aksel-form-field--readonly'
@@ -696,7 +696,7 @@ describe('Fakta om feilutbetaling', () => {
 
         test('Viser feilmelding ved submit uten valgt år', async () => {
             renderFakta({
-                usikker4xRettsgebyr: true,
+                status4xRettsgebyret: 'USIKKER',
                 rettsgebyrÅrFraSaksbehandler: null,
                 vurdering: {
                     årsak: 'årsak',
@@ -715,9 +715,9 @@ describe('Fakta om feilutbetaling', () => {
             );
         });
 
-        test('Sender null når usikker4xRettsgebyr er false selv om backend har en tallverdi', async () => {
+        test('Sender null når status4xRettsgebyret er OVER selv om backend har en tallverdi', async () => {
             const mutationBody = renderFakta({
-                usikker4xRettsgebyr: false,
+                status4xRettsgebyret: 'OVER',
                 rettsgebyrÅrFraSaksbehandler: 0,
                 vurdering: {
                     årsak: 'årsak',

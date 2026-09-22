@@ -897,6 +897,13 @@ export const zForeldelsesvurderingEntity = z.object({
     oppdaget: z.iso.date().nullish(),
 });
 
+export const zVurderingstypeEnum = z.enum([
+    'IKKE_VURDERT',
+    'VARSEL_SENDT',
+    'MÅ_VURDERES_PÅ_NYTT',
+    'UNNTAK',
+]);
+
 export const zBegrunnelseForUnntakEnum = z.enum([
     'IKKE_PRAKTISK_MULIG',
     'UKJENT_ADRESSE_ELLER_URIMELIG_ETTERSPORING',
@@ -913,6 +920,8 @@ export const zForhåndsvarselUnntakEntity = z.object({
 });
 
 export const zForhåndsvarselEntity = z.object({
+    id: z.uuid(),
+    vurderingstype: zVurderingstypeEnum,
     brukeruttalelseEntity: zBrukeruttalelseEntity.nullish(),
     forhåndsvarselUnntakEntity: zForhåndsvarselUnntakEntity.nullish(),
     uttalelsesfristEntity: zUttalelsesfristEntity.nullish(),

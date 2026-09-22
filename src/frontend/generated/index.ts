@@ -525,6 +525,7 @@ export type {
     Vurdering,
     VurderingAvBrukersUttalelseDto,
     VurderingEnum,
+    VurderingstypeEnum,
     VurderingTypeEnum,
     VurdertAktsomhetDto,
     VurdertAktsomhetEntity,

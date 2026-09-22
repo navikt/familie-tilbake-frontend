@@ -26,6 +26,7 @@ const lagForhåndsvarselResponse = (
 ): ForhaandsvarselResponse => ({
     forhaandsvarselSteg: { type: 'ikke_vurdert' },
     brukeruttalelse: null,
+    ferdigvurdert: false,
     ...overrides,
 });
 
@@ -57,7 +58,7 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
     perioder: [],
     vurdering: { årsak: null },
     ferdigvurdert: false,
-    usikker4xRettsgebyr: false,
+    status4xRettsgebyret: 'OVER',
     rettsgebyrÅrFraSaksbehandler: null,
 });
 
@@ -106,8 +107,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Sendt brev: viser spørsmål med Ja/Nei', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -127,8 +128,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Sendt brev: Nei deaktivert når frist ikke er utløpt', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -147,8 +148,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Sendt brev: Ja/Nei aktiv når frist er utløpt', () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -168,8 +169,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Sendt brev: Ja viser dato, kanal og beskrivelse', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -200,8 +201,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Sendt brev: Nei viser kommentarfelt', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'sendt',
                     forhåndsvarselInfo: {
                         tekstFraSaksbehandler: 'Tekst',
@@ -226,8 +227,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Unntak §16c: viser spørsmål "Har brukeren uttalt seg?" og feilmelding uten valg', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'unntak',
                     begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
                     beskrivelse: 'Kort begrunnelse',
@@ -247,8 +248,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Unntak §16c + Ja: viser felter og feilmeldinger uten verdier', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'unntak',
                     begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
                     beskrivelse: 'Kort begrunnelse',
@@ -272,8 +273,8 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
     test('Unntak §16c + Nei: viser kommentarfelt og feilmelding uten verdi', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
+                ferdigvurdert: true,
                 forhaandsvarselSteg: {
-                    ferdigvurdert: true,
                     type: 'unntak',
                     begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
                     beskrivelse: 'Kort begrunnelse',

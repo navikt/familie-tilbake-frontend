@@ -91,7 +91,9 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
 
     const methods = useForm<OppdaterFaktaOmFeilutbetalingSchema>({
         resolver: zodResolver(
-            lagOppdaterFaktaOmFeilutbetalingSchema(faktaOmFeilutbetaling.usikker4xRettsgebyr)
+            lagOppdaterFaktaOmFeilutbetalingSchema(
+                faktaOmFeilutbetaling.status4xRettsgebyret === 'USIKKER'
+            )
         ),
         defaultValues: {
             perioder: synligePerioder.map(periode => ({
@@ -226,9 +228,10 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
     ): void => {
         const body: OppdaterFaktaOmFeilutbetaling = {
             ...data,
-            rettsgebyrÅrFraSaksbehandler: faktaOmFeilutbetaling.usikker4xRettsgebyr
-                ? data.rettsgebyrÅrFraSaksbehandler
-                : null,
+            rettsgebyrÅrFraSaksbehandler:
+                faktaOmFeilutbetaling.status4xRettsgebyret === 'USIKKER'
+                    ? data.rettsgebyrÅrFraSaksbehandler
+                    : null,
         };
         oppdaterMutation.mutate(
             { body, path: { behandlingId } },
@@ -333,7 +336,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
                         maxLength={3000}
                         description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at brukeren har fått utbetalt for mye"
                     />
-                    {faktaOmFeilutbetaling.usikker4xRettsgebyr && (
+                    {faktaOmFeilutbetaling.status4xRettsgebyret === 'USIKKER' && (
                         <Select
                             label="Hvilket år var siste utbetaling?"
                             description="For å kunne regne ut riktig rettsgebyr trenger vi denne informasjonen"

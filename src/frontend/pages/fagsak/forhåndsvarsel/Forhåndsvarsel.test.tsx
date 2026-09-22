@@ -38,6 +38,7 @@ const lagForhåndsvarselResponse = (
 ): ForhaandsvarselResponse => ({
     forhaandsvarselSteg: { type: 'ikke_vurdert' },
     brukeruttalelse: null,
+    ferdigvurdert: false,
     ...overrides,
 });
 
@@ -69,14 +70,13 @@ const lagFaktaOmFeilutbetaling = (vedtaksdato = '2025-01-15'): FaktaOmFeilutbeta
     perioder: [],
     vurdering: { årsak: null },
     ferdigvurdert: false,
-    usikker4xRettsgebyr: false,
+    status4xRettsgebyret: 'OVER',
     rettsgebyrÅrFraSaksbehandler: null,
 });
 
 const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselResponse => ({
     forhaandsvarselSteg: {
         type: 'sendt',
-        ferdigvurdert: true,
         forhåndsvarselInfo: {
             tekstFraSaksbehandler: 'Varselbrev er sendt',
             varselbrevSendtTid: '2025-01-10T10:00:00Z',
@@ -87,6 +87,7 @@ const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselRespo
         },
     },
     brukeruttalelse: null,
+    ferdigvurdert: true,
 });
 
 const opprettQueryClientMedForhåndsvarselData = (

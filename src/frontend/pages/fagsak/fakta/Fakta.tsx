@@ -41,7 +41,6 @@ export const Fakta: FC = () => {
             });
         },
     });
-    const erUnder4xRettsgebyr = true; //TODO må få fra backenden
     const sistePeriodeTom =
         faktaOmFeilutbetaling.perioder[faktaOmFeilutbetaling.perioder.length - 1].tom;
     return (
@@ -73,10 +72,10 @@ export const Fakta: FC = () => {
                         </dt>
                         <dd className="text-ax-xlarge text-ax-text-brand-magenta flex gap-2 items-center">
                             {formatCurrencyNoKr(faktaOmFeilutbetaling.feilutbetaling.beløp)}
-                            {erUnder4xRettsgebyr && (
-                                <Tooltip content="Totalbeløpet er under fire ganger rettsgebyret">
+                            {faktaOmFeilutbetaling.status4xRettsgebyret === 'UNDER' && (
+                                <Tooltip content="Det totale feilutbetalte beløpet er under fire ganger rettsgebyret">
                                     <ExclamationmarkTriangleIcon
-                                        aria-label="Advarsel: Totalbeløpet er under fire ganger rettsgebyret"
+                                        aria-label="Advarsel: Det totale feilutbetalte beløpet er under fire ganger rettsgebyret"
                                         className="text-ax-text-neutral-subtle"
                                     />
                                 </Tooltip>

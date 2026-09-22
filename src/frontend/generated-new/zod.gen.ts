@@ -472,8 +472,6 @@ export const zUttalelsesfrist = z.object({
 });
 
 export const zForhaandsvarselErSendt = z.object({
-    tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
-    ferdigvurdert: z.boolean().readonly(),
     forhåndsvarselInfo: zForhaandsvarselInfo,
     uttalelsesfrist: zUttalelsesfrist,
 });
@@ -500,8 +498,6 @@ export const zVarslingsunntak = z.enum([
 ]);
 
 export const zForhaandsvarselUnntak = z.object({
-    tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
-    ferdigvurdert: z.boolean().readonly(),
     begrunnelseForUnntak: zVarslingsunntak,
     beskrivelse: z.string(),
 });
@@ -525,6 +521,8 @@ export const zForhaandsvarselSteg = z.union([
 ]);
 
 export const zForhaandsvarselResponse = z.object({
+    tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
+    ferdigvurdert: z.boolean().readonly(),
     forhaandsvarselSteg: zForhaandsvarselSteg,
     brukeruttalelse: zUttalelse.nullable(),
 });
@@ -610,6 +608,8 @@ export const zVedtaksbrevData = z.object({
     saksnummer: z.string(),
 });
 
+export const zStatus4xRettsgebyretEnum = z.enum(['USIKKER', 'OVER', 'UNDER']).readonly();
+
 export const zAvEnum = z.enum(['NAV', 'BRUKER', 'IKKE_VURDERT']);
 
 export const zOppdaget = z.object({
@@ -668,7 +668,7 @@ export const zFaktaOmFeilutbetaling = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
         .nullable(),
-    usikker4xRettsgebyr: z.boolean().readonly(),
+    status4xRettsgebyret: zStatus4xRettsgebyretEnum,
 });
 
 export const zDelresultatEnum = z
@@ -803,11 +803,6 @@ export const zFjernetPeriodeWritable = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-});
-
-export const zForhaandsvarselUnntakWritable = z.object({
-    begrunnelseForUnntak: zVarslingsunntak,
-    beskrivelse: z.string(),
 });
 
 export const zMomentWritable = z.object({
@@ -1002,7 +997,7 @@ export const zForhaandsvarselStegWritable = z.union([
         .object({
             type: z.literal('unntak'),
         })
-        .and(zForhaandsvarselUnntakWritable),
+        .and(zForhaandsvarselUnntak),
 ]);
 
 export const zForhaandsvarselResponseWritable = z.object({

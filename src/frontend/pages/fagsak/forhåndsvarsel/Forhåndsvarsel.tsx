@@ -156,7 +156,12 @@ export const ForhåndsvarselInnhold: FC = () => {
         })
     );
 
-    const { forhaandsvarselSteg: forhåndsvarselSteg, brukeruttalelse } = response;
+    const {
+        forhaandsvarselSteg: forhåndsvarselSteg,
+        brukeruttalelse,
+        tilbakeført,
+        ferdigvurdert,
+    } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
     const varselErSendt = forhåndsvarselSteg.type === 'sendt';
@@ -348,8 +353,6 @@ export const ForhåndsvarselInnhold: FC = () => {
                 unntak: {
                     begrunnelseForUnntak: data.begrunnelseForUnntak,
                     beskrivelse: data.beskrivelse,
-                    // backenden trenger denne men er bare readonly
-                    ferdigvurdert: false,
                 },
                 uttalelse: tilUttalelsePayload(data.brukeruttalelse, 'unntak'),
             });
@@ -434,18 +437,7 @@ export const ForhåndsvarselInnhold: FC = () => {
 
                             {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                         </HStack>
-                        <StatusTag
-                            tilbakeført={
-                                forhåndsvarselSteg.type !== 'ikke_vurdert'
-                                    ? forhåndsvarselSteg.tilbakeført
-                                    : undefined
-                            }
-                            ferdigvurdert={
-                                forhåndsvarselSteg.type !== 'ikke_vurdert'
-                                    ? forhåndsvarselSteg.ferdigvurdert
-                                    : false
-                            }
-                        />
+                        <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
                     </HStack>
                     <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
                 </FormProvider>
@@ -460,10 +452,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                                 </InlineMessage>
                             )}
                         </HStack>
-                        <StatusTag
-                            tilbakeført={forhåndsvarselSteg.tilbakeført}
-                            ferdigvurdert={forhåndsvarselSteg.ferdigvurdert}
-                        />
+                        <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
                     </HStack>
 
                     <VStack gap="space-8" className="md:col-start-2 md:row-start-2">

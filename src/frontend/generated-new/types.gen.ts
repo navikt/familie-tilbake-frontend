@@ -130,7 +130,7 @@ export type FaktaOmFeilutbetaling = {
     perioder: Array<FaktaPeriode>;
     vurdering: Vurdering;
     rettsgebyrÅrFraSaksbehandler: number | null;
-    readonly usikker4xRettsgebyr: boolean;
+    status4xRettsgebyret: Status4xRettsgebyretEnum;
 };
 
 export type FaktaPeriode = {
@@ -168,8 +168,6 @@ export type ForaarsaketAvMottaker = {
 };
 
 export type ForhaandsvarselErSendt = {
-    readonly tilbakeført?: ArsakTilTilbakeforing;
-    readonly ferdigvurdert: boolean;
     forhåndsvarselInfo: ForhaandsvarselInfo;
     uttalelsesfrist: Uttalelsesfrist;
 };
@@ -180,6 +178,8 @@ export type ForhaandsvarselInfo = {
 };
 
 export type ForhaandsvarselResponse = {
+    readonly tilbakeført?: ArsakTilTilbakeforing;
+    readonly ferdigvurdert: boolean;
     forhaandsvarselSteg: ForhaandsvarselSteg;
     brukeruttalelse: Uttalelse | null;
 };
@@ -196,8 +196,6 @@ export type ForhaandsvarselSteg =
       } & ForhaandsvarselUnntak);
 
 export type ForhaandsvarselUnntak = {
-    readonly tilbakeført?: ArsakTilTilbakeforing;
-    readonly ferdigvurdert: boolean;
     begrunnelseForUnntak: Varslingsunntak;
     beskrivelse: string;
 };
@@ -639,6 +637,8 @@ export type Ytelse = {
     bestemtEntall: string;
 };
 
+export type Status4xRettsgebyretEnum = 'USIKKER' | 'OVER' | 'UNDER';
+
 export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
@@ -765,12 +765,7 @@ export type ForhaandsvarselStegWritable =
       } & ForhaandsvarselErSendtWritable)
     | ({
           type: 'unntak';
-      } & ForhaandsvarselUnntakWritable);
-
-export type ForhaandsvarselUnntakWritable = {
-    begrunnelseForUnntak: Varslingsunntak;
-    beskrivelse: string;
-};
+      } & ForhaandsvarselUnntak);
 
 export type ForstaaelseWritable =
     | ({

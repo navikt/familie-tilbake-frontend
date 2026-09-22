@@ -223,6 +223,8 @@ export type ForeslåVedtakStegEntity = {
 };
 
 export type ForhåndsvarselEntity = {
+    id: string;
+    vurderingstype: VurderingstypeEnum;
     brukeruttalelseEntity?: BrukeruttalelseEntity | null;
     forhåndsvarselUnntakEntity?: ForhåndsvarselUnntakEntity | null;
     uttalelsesfristEntity?: UttalelsesfristEntity | null;
@@ -1549,6 +1551,8 @@ export type TypeEnum5 =
     | 'FORELDET'
     | 'IKKE_VURDERT'
     | 'AUTOMATISK_IKKE_FORELDET';
+
+export type VurderingstypeEnum = 'IKKE_VURDERT' | 'VARSEL_SENDT' | 'MÅ_VURDERES_PÅ_NYTT' | 'UNNTAK';
 
 export type BegrunnelseForUnntakEnum =
     | 'IKKE_PRAKTISK_MULIG'
