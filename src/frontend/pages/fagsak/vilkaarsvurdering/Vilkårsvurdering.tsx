@@ -39,6 +39,7 @@ const mapTilVilkårsperioder = (vilkår: Vilkaar): Vilkårsperiode[] =>
         vurdering: utledVurdering(periode.vilkårsvurdering.valg),
         resultat: periode.delresultat,
         rettsligGrunnlag: periode.fakta.rettsligGrunnlag,
+        tilbakeført: periode.vilkårsvurdering.tilbakeført,
     }));
 
 export const Vilkårsvurdering: FC = () => {

@@ -119,6 +119,8 @@ import type {
     OppdaterBehandlendeEnhetPåBehandlingResponses,
     OppdaterFagsysteminfoData,
     OppdaterFagsysteminfoResponses,
+    OppdaterInstutisjonData,
+    OppdaterInstutisjonResponses,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponses,
     OpprettBehandlingData,
@@ -636,6 +638,19 @@ export const dumpFagsak = <ThrowOnError extends boolean = false>(
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/dump/{behandlingId}',
         ...options,
+    });
+
+export const oppdaterInstutisjon = <ThrowOnError extends boolean = false>(
+    options: Options<OppdaterInstutisjonData, ThrowOnError>
+): RequestResult<OppdaterInstutisjonResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<OppdaterInstutisjonResponses, unknown, ThrowOnError>({
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/bytt-institusjon/{behandlingId}',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 
 /**

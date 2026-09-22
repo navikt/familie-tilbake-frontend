@@ -685,22 +685,12 @@ export const zUttalelseVurderingEnum = z.enum([
     'NEI',
 ]);
 
-export const zTilbakeførtEnum = z.enum(['NyttKravgrunnlag', 'Underkjent']);
-
 export const zBrukeruttalelseEntity = z.object({
     id: z.uuid(),
     behandlingRef: z.uuid(),
     uttalelseVurdering: zUttalelseVurderingEnum,
     uttalelseInfoEntity: zUttalelseInfoEntity.nullish(),
     kommentar: z.string().nullish(),
-    tilbakeført: zTilbakeførtEnum.optional(),
-});
-
-export const zForeslåVedtakStegEntity = z.object({
-    id: z.uuid(),
-    behandlingRef: z.uuid(),
-    vurdert: z.boolean(),
-    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zTypeEnum4 = z.enum(['BEHANDLING', 'UKJENT']);
@@ -883,6 +873,15 @@ export const zFaktaFeilutbetalingsperiodeDto = z.object({
 
 export const zUttalelseEnum = z.enum(['Ja', 'Nei', 'IkkeAktuelt', 'IkkeVurdert']);
 
+export const zTilbakeførtEnum = z.enum(['NyttKravgrunnlag', 'Underkjent']);
+
+export const zForeslåVedtakStegEntity = z.object({
+    id: z.uuid(),
+    behandlingRef: z.uuid(),
+    vurdert: z.boolean(),
+    tilbakeført: zTilbakeførtEnum.optional(),
+});
+
 export const zTypeEnum5 = z.enum([
     'IKKE_FORELDET',
     'TILLEGGSFRIST',
@@ -917,6 +916,7 @@ export const zForhåndsvarselEntity = z.object({
     brukeruttalelseEntity: zBrukeruttalelseEntity.nullish(),
     forhåndsvarselUnntakEntity: zForhåndsvarselUnntakEntity.nullish(),
     uttalelsesfristEntity: zUttalelsesfristEntity.nullish(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zTypeEnum6 = z.enum(['JustertBeløp', 'NyPeriode', 'FjernetPeriode']);
@@ -1088,6 +1088,7 @@ export const zVilkårsvurderingsperiodeEntity = z.object({
     begrunnelseForTilbakekreving: z.string().nullish(),
     vurdering: zAktsomhetsvurderingEntity,
     endringIKravgrunnlag: zForskjellEntity.nullish(),
+    tilbakeført: zTilbakeførtEnum.optional(),
 });
 
 export const zVilkårsvurderingstegEntity = z.object({
@@ -2422,6 +2423,12 @@ export const zDumpFagsakPath = z.object({
  * OK
  */
 export const zDumpFagsakResponse = zTilbakekrevingEntity;
+
+export const zOppdaterInstutisjonBody = z.string();
+
+export const zOppdaterInstutisjonPath = z.object({
+    behandlingId: z.uuid(),
+});
 
 export const zSimulerMottakAvKravgrunnlagBody = z.string();
 

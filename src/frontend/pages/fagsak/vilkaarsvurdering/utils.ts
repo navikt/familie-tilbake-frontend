@@ -37,7 +37,9 @@ export const erPeriodeVurdert = (vurdering: Vilkårsperiode['vurdering']): boole
 /**
  * Finner hvilken periode som skal være valgt som standard.
  * Perioder antas sortert med nyeste nederst (sist i listen).
- * - Velger den første (eldste i tid) uvurderte perioden, slik at saksbehandler
+ * - Velger den første perioden som er tilbakeført pga. nytt kravgrunnlag, slik at
+ *   saksbehandler ledes til perioden som krever bekreftelse av tidligere vurdering.
+ * - Ellers velges den første (eldste i tid) uvurderte perioden, slik at saksbehandler
  *   ledes til neste periode som mangler vurdering.
  * - Hvis alle perioder er vurdert, velges den nyeste (nederste) perioden.
  */
@@ -47,9 +49,13 @@ export const finnStandardValgtPeriode = (
     if (perioder.length === 0) {
         return undefined;
     }
+    const tilbakeført = perioder.find(periode => periode.tilbakeført === 'NyttKravgrunnlag');
+    if (tilbakeført) {
+        return tilbakeført;
+    }
     const uvurderte = perioder.filter(periode => !erPeriodeVurdert(periode.vurdering));
     if (uvurderte.length > 0) {
         return uvurderte[0];
     }
-    return perioder[perioder.length - 1];
+    return perioder.at(-1);
 };

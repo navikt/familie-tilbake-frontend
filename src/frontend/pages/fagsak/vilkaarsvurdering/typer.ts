@@ -1,4 +1,4 @@
-import type { DelresultatEnum } from '@/generated-new';
+import type { ArsakTilTilbakeforing, DelresultatEnum } from '@/generated-new';
 
 export type Vurderingsstatus =
     | 'IKKE_VURDERT'
@@ -17,4 +17,5 @@ export type Vilkårsperiode = {
     vurdering: Vurderingsstatus;
     resultat: DelresultatEnum;
     rettsligGrunnlag: string[];
+    tilbakeført?: ArsakTilTilbakeforing;
 };

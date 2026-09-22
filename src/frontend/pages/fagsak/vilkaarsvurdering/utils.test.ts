@@ -171,5 +171,33 @@ describe('Vilkårsvurdering - utils', () => {
 
             expect(finnStandardValgtPeriode(perioder)?.id).toBe('mai');
         });
+
+        test('burde velge periode som er tilbakeført pga. nytt kravgrunnlag', () => {
+            const perioder = [
+                lagPeriode({ id: 'mars', vurdering: 'IKKE_VURDERT' }),
+                lagPeriode({
+                    id: 'april',
+                    vurdering: 'FORSETT',
+                    tilbakeført: 'NyttKravgrunnlag',
+                }),
+                lagPeriode({ id: 'mai', vurdering: 'IKKE_VURDERT' }),
+            ];
+
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('april');
+        });
+
+        test('burde velge første tilbakeførte periode når flere er tilbakeført', () => {
+            const perioder = [
+                lagPeriode({ id: 'mars', vurdering: 'GOD_TRO' }),
+                lagPeriode({
+                    id: 'april',
+                    vurdering: 'FORSETT',
+                    tilbakeført: 'NyttKravgrunnlag',
+                }),
+                lagPeriode({ id: 'mai', vurdering: 'UAKTSOMT', tilbakeført: 'NyttKravgrunnlag' }),
+            ];
+
+            expect(finnStandardValgtPeriode(perioder)?.id).toBe('april');
+        });
     });
 });

@@ -132,7 +132,6 @@ export type BrukeruttalelseEntity = {
     uttalelseVurdering: UttalelseVurderingEnum;
     uttalelseInfoEntity?: UttalelseInfoEntity | null;
     kommentar?: string | null;
-    tilbakeført?: TilbakeførtEnum;
 };
 
 export type DatoperiodeEntity = {
@@ -227,6 +226,7 @@ export type ForhåndsvarselEntity = {
     brukeruttalelseEntity?: BrukeruttalelseEntity | null;
     forhåndsvarselUnntakEntity?: ForhåndsvarselUnntakEntity | null;
     uttalelsesfristEntity?: UttalelsesfristEntity | null;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type ForhåndsvarselUnntakEntity = {
@@ -389,6 +389,7 @@ export type VilkårsvurderingsperiodeEntity = {
     begrunnelseForTilbakekreving?: string | null;
     vurdering: AktsomhetsvurderingEntity;
     endringIKravgrunnlag?: ForskjellEntity | null;
+    tilbakeført?: TilbakeførtEnum;
 };
 
 export type VilkårsvurderingstegEntity = {
@@ -1389,8 +1390,6 @@ export type UttalelseVurderingEnum =
     | 'JA'
     | 'NEI';
 
-export type TilbakeførtEnum = 'NyttKravgrunnlag' | 'Underkjent';
-
 export type TypeEnum4 = 'BEHANDLING' | 'UKJENT';
 
 export type RevurderingsårsakEnum2 = 'NYE_OPPLYSNINGER' | 'KORRIGERING' | 'KLAGE' | 'UKJENT';
@@ -1540,6 +1539,8 @@ export type RettsligGrunnlagUnderkategoriEnum =
     | 'BARN_STARTET_PÅ_SKOLEN';
 
 export type UttalelseEnum = 'Ja' | 'Nei' | 'IkkeAktuelt' | 'IkkeVurdert';
+
+export type TilbakeførtEnum = 'NyttKravgrunnlag' | 'Underkjent';
 
 export type TypeEnum5 =
     | 'IKKE_FORELDET'
@@ -2577,6 +2578,22 @@ export type DumpFagsakResponses = {
 };
 
 export type DumpFagsakResponse = DumpFagsakResponses[keyof DumpFagsakResponses];
+
+export type OppdaterInstutisjonData = {
+    body: string;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/bytt-institusjon/{behandlingId}';
+};
+
+export type OppdaterInstutisjonResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type SimulerMottakAvKravgrunnlagData = {
     body: string;

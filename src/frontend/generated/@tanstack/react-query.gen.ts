@@ -63,6 +63,7 @@ import {
     migrerAlleSaker,
     oppdaterBehandlendeEnhetPåBehandling,
     oppdaterFagsysteminfo,
+    oppdaterInstutisjon,
     oppdaterManuellBrevmottaker,
     opprettBehandling,
     opprettBehandlingManuellTask,
@@ -190,6 +191,7 @@ import type {
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponse,
     OppdaterFagsysteminfoData,
+    OppdaterInstutisjonData,
     OppdaterManuellBrevmottakerData,
     OppdaterManuellBrevmottakerResponse,
     OpprettBehandlingData,
@@ -1083,6 +1085,26 @@ export const dumpFagsakMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await dumpFagsak({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const oppdaterInstutisjonMutation = (
+    options?: Partial<Options<OppdaterInstutisjonData>>
+): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<OppdaterInstutisjonData>> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<DefaultError>,
+        Options<OppdaterInstutisjonData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await oppdaterInstutisjon({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,

@@ -43,6 +43,18 @@ export const zBeregningsresultatsperiode = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    rentebeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    skattebeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    redusertBeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
 });
 
 export const zBestemmelseEllerGrunnlag = z.object({
@@ -153,9 +165,9 @@ export const zOppsummertPeriode = z.object({
     fom: z.string(),
     tom: z.string(),
     feilutbetaltBeløp: z.string(),
-    vurdering: z.string(),
-    andelAvBeløp: z.string(),
-    renteprosent: z.string(),
+    redusertBeløp: z.string(),
+    rentebeløp: z.string(),
+    skatt: z.string().nullable(),
     tilbakekrevingsbeløp: z.string(),
     tilbakekrevesBeløpEtterSkatt: z.string(),
 });
@@ -576,6 +588,7 @@ export const zVilkaarsvurdering = z.object({
     endringIKravgrunnlag: zKravgrunnlagForskjell.readonly().optional(),
     delbarePerioder: z.array(zPeriodeInfo).readonly(),
     valg: zVilkaarsvurderingValg,
+    tilbakeført: zArsakTilTilbakeforing.optional(),
 });
 
 export const zYtelse = z.object({
@@ -708,6 +721,18 @@ export const zBeregningsresultatsperiodeWritable = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     tilbakekrevesBeløpEtterSkatt: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    rentebeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    skattebeløp: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    redusertBeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
@@ -1028,6 +1053,7 @@ export const zVilkaarsvurderingValgWritable = z.union([
 export const zVilkaarsvurderingWritable = z.object({
     id: z.uuid(),
     valg: zVilkaarsvurderingValgWritable,
+    tilbakeført: zArsakTilTilbakeforing.optional(),
 });
 
 export const zVilkaarsperiodeWritable = z.object({

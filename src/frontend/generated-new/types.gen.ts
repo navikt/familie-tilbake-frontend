@@ -69,6 +69,9 @@ export type Beregningsresultatsperiode = {
     renteprosent: number | null;
     tilbakekrevingsbeløp: number;
     tilbakekrevesBeløpEtterSkatt: number;
+    rentebeløp: number;
+    skattebeløp: number;
+    redusertBeløp: number;
 };
 
 export type BestemmelseEllerGrunnlag = {
@@ -348,9 +351,9 @@ export type OppsummertPeriode = {
     fom: string;
     tom: string;
     feilutbetaltBeløp: string;
-    vurdering: string;
-    andelAvBeløp: string;
-    renteprosent: string;
+    redusertBeløp: string;
+    rentebeløp: string;
+    skatt: string | null;
     tilbakekrevingsbeløp: string;
     tilbakekrevesBeløpEtterSkatt: string;
 };
@@ -604,6 +607,7 @@ export type Vilkaarsvurdering = {
     readonly endringIKravgrunnlag?: KravgrunnlagForskjell;
     readonly delbarePerioder: Array<PeriodeInfo>;
     valg: VilkaarsvurderingValg;
+    tilbakeført?: ArsakTilTilbakeforing;
 };
 
 export type VilkaarsvurderingIkkeVurdert = {
@@ -688,6 +692,9 @@ export type BeregningsresultatsperiodeWritable = {
     renteprosent: number | null;
     tilbakekrevingsbeløp: number;
     tilbakekrevesBeløpEtterSkatt: number;
+    rentebeløp: number;
+    skattebeløp: number;
+    redusertBeløp: number;
 };
 
 export type BurdeForstaattWritable = {
@@ -941,6 +948,7 @@ export type VilkaarsperiodeWritable = {
 export type VilkaarsvurderingWritable = {
     id: string;
     valg: VilkaarsvurderingValgWritable;
+    tilbakeført?: ArsakTilTilbakeforing;
 };
 
 export type VilkaarsvurderingValgWritable =

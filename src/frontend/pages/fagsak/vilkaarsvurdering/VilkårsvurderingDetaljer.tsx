@@ -15,7 +15,7 @@ import type { Vilkårsperiode } from './typer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack } from '@navikt/ds-react';
 import { useMutation } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -29,6 +29,7 @@ import { utledDefaultValues } from './skjema/utledDefaultValues';
 import { utledWritable } from './skjema/utledWritable';
 import { VilkårsvurderingSkjema } from './skjema/VilkårsvurderingSkjema';
 import { SlåSammen } from './slå-sammen-periode/SlåSammen';
+import { TidligereVurderingModal } from './TidligereVurderingModal';
 import { UlagretEndringerVakt } from './UlagretEndringerVakt';
 import { erPeriodeVurdert } from './utils';
 import { useVilkårsvurderingLesedata } from './VilkårsvurderingLesedataContext';
@@ -53,6 +54,11 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     const { erUnder4xRettsgebyr, momenterSærligeGrunner, momenterReduksjonGodTro } =
         useVilkårsvurderingLesedata();
     const visGlobalAlert = useVisGlobalAlert();
+
+    const [tidligereVurderingHåndtert, setTidligereVurderingHåndtert] = useState(false);
+    const visTidligereVurderingModal =
+        valgtVilkårsperiode.vilkårsvurdering.tilbakeført === 'NyttKravgrunnlag' &&
+        !tidligereVurderingHåndtert;
 
     const skjema = useMemo(
         () => lagVilkårsvurderingSkjema(erUnder4xRettsgebyr, valgtVilkårsperiode.feilutbetaltBeløp),
@@ -84,9 +90,10 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         },
     });
 
-    const onSubmit: SubmitHandler<VilkårsvurderingSkjemaFelter> = (
-        data: VilkårsvurderingSkjemaFelter
-    ) => {
+    const lagreVilkårsvurdering = (
+        data: VilkårsvurderingSkjemaFelter,
+        etterLagring?: () => void
+    ): void => {
         lagreMutation.mutate(
             {
                 path: { behandlingId, periodeId: valgtPeriode.id },
@@ -98,13 +105,47 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
                 }),
             },
             {
-                onSuccess: () => methods.reset({ ...data, erVurdert: true }),
+                onSuccess: () => {
+                    methods.reset({ ...data, erVurdert: true });
+                    etterLagring?.();
+                },
             }
         );
     };
 
+    const onSubmit: SubmitHandler<VilkårsvurderingSkjemaFelter> = (
+        data: VilkårsvurderingSkjemaFelter
+    ) => {
+        lagreVilkårsvurdering(data);
+    };
+
+    const startVurderingPåNytt = (): void => {
+        setTidligereVurderingHåndtert(true);
+        methods.reset(
+            utledDefaultValues(
+                { ...valgtVilkårsperiode.vilkårsvurdering, valg: { vurdering: 'ikke_vurdert' } },
+                valgtVilkårsperiode.simulertBeløp,
+                false,
+                erUnder4xRettsgebyr
+            )
+        );
+    };
+
+    const brukTidligereVurdering = (): void => {
+        methods.handleSubmit(data => {
+            lagreVilkårsvurdering(data, () => setTidligereVurderingHåndtert(true));
+        })();
+    };
+
     return (
         <FormProvider {...methods}>
+            {visTidligereVurderingModal && (
+                <TidligereVurderingModal
+                    laster={lagreMutation.isPending}
+                    onStartVurderingPåNytt={startVurderingPåNytt}
+                    onBrukTidligereVurdering={brukTidligereVurdering}
+                />
+            )}
             <UlagretEndringerVakt />
             <HStack
                 justify="space-between"
