@@ -154,7 +154,7 @@ describe('FeilModal', () => {
         const fagsakId = '12345';
         const behandlingId = '6bc22b78-4ce4-4eed-9476-247f599cef95';
 
-        renderFeilModal(mockFeil, behandlingId, lagFagsak({ eksternFagsakId: fagsakId }));
+        renderFeilModal(mockFeil, behandlingId, lagFagsak({ tilbakekrevingSakId: fagsakId }));
 
         expect(screen.getByText(`Fagsak ID: ${fagsakId}`)).toBeInTheDocument();
         expect(screen.getByText(`Behandling ID: ${behandlingId}`)).toBeInTheDocument();

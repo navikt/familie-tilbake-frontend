@@ -10,8 +10,8 @@ import { Behandlingsmeny } from '@/komponenter/meny/Meny';
 
 export const HistoriskeVurderingermeny: FC = () => {
     const { eksternBrukId, erNyModell } = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
-    const basePath = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}`;
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
+    const basePath = `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${eksternBrukId}`;
     const location = useLocation();
     const behandlingsPath = location.pathname.split('/').at(-1);
 

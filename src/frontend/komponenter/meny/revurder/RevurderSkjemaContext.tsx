@@ -25,7 +25,7 @@ type RevurderSkjemaHook = {
 const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): RevurderSkjemaHook => {
     const { behandlingId } = useBehandling();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
-    const { fagsystem, eksternFagsakId, ytelsestype } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId, ytelsestype } = useFagsak();
     const { utførRedirect } = useRedirectEtterLagring();
 
     const { skjema, kanSendeSkjema, onSubmit, nullstillSkjema } = useSkjema<
@@ -64,7 +64,7 @@ const useRevurderSkjema = (dialogRef: RefObject<HTMLDialogElement | null>): Revu
                 (response: Ressurs<string>) => {
                     if (response.status === RessursStatus.Suksess) {
                         utførRedirect(
-                            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${response.data}`
+                            `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${response.data}`
                         );
                         dialogRef.current?.close();
                     }

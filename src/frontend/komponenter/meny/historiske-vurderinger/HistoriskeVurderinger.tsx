@@ -10,7 +10,7 @@ import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 export const HistoriskeVurderinger: FC = () => {
     const { eksternBrukId, ansvarligSaksbehandler } = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
 
     const { innloggetSaksbehandler } = useApp();
     const harTilgang =
@@ -20,7 +20,7 @@ export const HistoriskeVurderinger: FC = () => {
             <ActionMenu.Item
                 className="text-xl cursor-pointer"
                 as="a"
-                href={`/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}/inaktiv`}
+                href={`/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${eksternBrukId}/inaktiv`}
                 icon={<ClockDashedIcon aria-hidden />}
                 onSelect={(): void =>
                     sporHendelse(Hendelser.ACTIONMENU_VALG_VALGT, {

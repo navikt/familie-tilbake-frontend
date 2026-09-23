@@ -790,6 +790,7 @@ export type BehandlingsoppsummeringDto = {
 };
 
 export type FagsakDto = {
+    tilbakekrevingSakId: string;
     eksternFagsakId: string;
     ytelsestype: SchemaEnum4;
     fagsystem: SchemaEnum2;

@@ -59,10 +59,10 @@ export const SYNLIGE_STEG: Record<SynligeStegType, SynligSteg> = {
 };
 
 export const useStegNavigering = (steg?: SynligeStegType): (() => Promise<void> | void) => {
-    const { fagsystem, eksternFagsakId } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const { eksternBrukId } = useBehandling();
     const navigate = useNavigate();
-    const url = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${eksternBrukId}${steg ? `/${SYNLIGE_STEG[steg].href}` : ''}`;
+    const url = `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${eksternBrukId}${steg ? `/${SYNLIGE_STEG[steg].href}` : ''}`;
     return () => navigate(url);
 };
 

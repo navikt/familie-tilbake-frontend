@@ -17,9 +17,9 @@ import { BehandlingContainer } from './Behandling';
 import { BehandlingSkeleton } from './BehandlingSkeleton';
 
 const FagsakStoreSynk: FC = () => {
-    const { fagsystem, eksternFagsakId, bruker, fagsakBehandlingUrl } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId, bruker, fagsakBehandlingUrl } = useFagsak();
     const {
-        setEksternFagsakId,
+        setTilbakekrevingSakId,
         setFagsystem,
         setPersonIdent,
         setFagsakBehandlingUrl,
@@ -28,17 +28,17 @@ const FagsakStoreSynk: FC = () => {
 
     useEffect(() => {
         setPersonIdent(bruker.personIdent);
-        setEksternFagsakId(eksternFagsakId);
+        setTilbakekrevingSakId(tilbakekrevingSakId);
         setFagsystem(fagsystem);
         setFagsakBehandlingUrl(fagsakBehandlingUrl);
 
         return (): void => resetFagsak();
     }, [
         fagsystem,
-        eksternFagsakId,
+        tilbakekrevingSakId,
         bruker.personIdent,
         fagsakBehandlingUrl,
-        setEksternFagsakId,
+        setTilbakekrevingSakId,
         setFagsystem,
         setPersonIdent,
         setFagsakBehandlingUrl,
@@ -49,17 +49,17 @@ const FagsakStoreSynk: FC = () => {
 };
 
 export const FagsakSide: FC = () => {
-    const { fagsystem: fagsystemParam, fagsakId: eksternFagsakId } = useParams();
+    const { fagsystem: fagsystemParam, fagsakId: tilbakekrevingSakId } = useParams();
     const fagsystem = tilFagsystem(fagsystemParam);
 
-    if (!fagsystem || !eksternFagsakId) {
+    if (!fagsystem || !tilbakekrevingSakId) {
         return <IkkeFunnet />;
     }
 
     return (
         <Suspense fallback={<BehandlingSkeleton />}>
             <FagsakErrorBoundary>
-                <FagsakProvider fagsystem={fagsystem} eksternFagsakId={eksternFagsakId}>
+                <FagsakProvider fagsystem={fagsystem} tilbakekrevingSakId={tilbakekrevingSakId}>
                     <FagsakStoreSynk />
                     <Outlet />
                 </FagsakProvider>

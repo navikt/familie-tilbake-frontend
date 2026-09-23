@@ -1520,6 +1520,7 @@ export const zFrontendBrukerDto = z.object({
 });
 
 export const zFagsakDto = z.object({
+    tilbakekrevingSakId: z.string(),
     eksternFagsakId: z.string(),
     ytelsestype: zSchemaEnum4,
     fagsystem: zSchemaEnum2,

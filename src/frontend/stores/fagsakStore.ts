@@ -3,11 +3,11 @@ import type { SchemaEnum2 } from '@/generated';
 import { create } from 'zustand';
 
 type FagsakStore = {
-    eksternFagsakId: string | undefined;
+    tilbakekrevingSakId: string | undefined;
     fagsystem: SchemaEnum2 | undefined;
     personIdent: string | undefined;
     fagsakBehandlingUrl: string | null | undefined;
-    setEksternFagsakId: (eksternFagsakId: string | undefined) => void;
+    setTilbakekrevingSakId: (tilbakekrevingSakId: string | undefined) => void;
     setFagsystem: (fagsystem: SchemaEnum2 | undefined) => void;
     setPersonIdent: (personIdent: string | undefined) => void;
     setFagsakBehandlingUrl: (fagsakBehandlingUrl: string | null | undefined) => void;
@@ -15,18 +15,19 @@ type FagsakStore = {
 };
 
 export const useFagsakStore = create<FagsakStore>(set => ({
-    eksternFagsakId: undefined,
+    tilbakekrevingSakId: undefined,
     fagsystem: undefined,
     personIdent: undefined,
     fagsakBehandlingUrl: undefined,
-    setEksternFagsakId: (eksternFagsakId: string | undefined): void => set({ eksternFagsakId }),
+    setTilbakekrevingSakId: (tilbakekrevingSakId: string | undefined): void =>
+        set({ tilbakekrevingSakId }),
     setFagsystem: (fagsystem: SchemaEnum2 | undefined): void => set({ fagsystem }),
     setPersonIdent: (personIdent: string | undefined): void => set({ personIdent }),
     setFagsakBehandlingUrl: (fagsakBehandlingUrl: string | null | undefined): void =>
         set({ fagsakBehandlingUrl }),
     resetFagsak: (): void =>
         set({
-            eksternFagsakId: undefined,
+            tilbakekrevingSakId: undefined,
             fagsystem: undefined,
             personIdent: undefined,
             fagsakBehandlingUrl: undefined,

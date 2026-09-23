@@ -18,7 +18,7 @@ type Props = {
 
 export const FeilModal: FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) => {
     const { behandlingId } = useBehandling();
-    const { eksternFagsakId } = useFagsak();
+    const { tilbakekrevingSakId } = useFagsak();
     const feilObjekt = hentFeilObjekt(hentStatus(feil));
     return (
         <Modal open onClose={lukkFeilModal} aria-labelledby="modal-heading" portal>
@@ -64,7 +64,7 @@ export const FeilModal: FC<Props> = ({ feil, lukkFeilModal, beskjed }: Props) =>
                     </VStack>
 
                     <VStack gap="space-4" className="text-sm text-[#010B18AD]">
-                        <span>Fagsak ID: {eksternFagsakId}</span>
+                        <span>Fagsak ID: {tilbakekrevingSakId}</span>
                         <span>Behandling ID: {behandlingId}</span>
                     </VStack>
                 </VStack>

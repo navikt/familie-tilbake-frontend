@@ -1,6 +1,7 @@
 import type { FagsakDto, FrontendBrukerDto } from '@/generated';
 
 export const lagFagsak = (overrides: Partial<FagsakDto> = {}): FagsakDto => ({
+    tilbakekrevingSakId: 'id-1',
     eksternFagsakId: 'id-1',
     ytelsestype: 'OVERGANGSSTØNAD',
     fagsystem: 'EF',

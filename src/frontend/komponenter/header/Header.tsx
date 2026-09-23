@@ -37,13 +37,13 @@ export const Header: FC = () => {
     });
     const { aInntektUrl: reserveAInntektUrl, modiaBaseUrl, gosysBaseUrl } = brukerlenker || {};
     const { behandlingId, rolle, erNyModell } = useBehandlingStore();
-    const { fagsystem, eksternFagsakId, personIdent, fagsakBehandlingUrl } = useFagsakStore();
+    const { fagsystem, tilbakekrevingSakId, personIdent, fagsakBehandlingUrl } = useFagsakStore();
 
     const { request } = useHttp();
     const { data: personligAInntektUrl } = useQuery({
         queryKey: ['hentAInntektUrl', personIdent],
-        queryFn: () => hentAInntektUrl(request, personIdent, eksternFagsakId, behandlingId),
-        enabled: !!personIdent && !!eksternFagsakId && !!behandlingId,
+        queryFn: () => hentAInntektUrl(request, personIdent, tilbakekrevingSakId, behandlingId),
+        enabled: !!personIdent && !!tilbakekrevingSakId && !!behandlingId,
         retry: 1,
     });
 
@@ -76,11 +76,11 @@ export const Header: FC = () => {
         if (erHistoriskVisning) {
             return `${location.pathname.replace(behandlingsPath, '')}`;
         }
-        if (!fagsakBehandlingUrl && fagsystem && eksternFagsakId) {
-            return `/redirect/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/saksoversikt`;
+        if (!fagsakBehandlingUrl && fagsystem && tilbakekrevingSakId) {
+            return `/redirect/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/saksoversikt`;
         }
         return fagsakBehandlingUrl;
-    }, [erHistoriskVisning, fagsystem, eksternFagsakId, behandlingsPath, fagsakBehandlingUrl]);
+    }, [erHistoriskVisning, fagsystem, tilbakekrevingSakId, behandlingsPath, fagsakBehandlingUrl]);
     const { theme, toggleTheme } = useTheme();
 
     return (

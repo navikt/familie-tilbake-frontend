@@ -47,7 +47,7 @@ const renderKompaktStegflyt = (
                 element: (
                     <QueryClientProvider client={queryClient}>
                         <FagsakContext
-                            value={lagFagsak({ eksternFagsakId: '123', fagsystem: 'BA' })}
+                            value={lagFagsak({ tilbakekrevingSakId: '123', fagsystem: 'BA' })}
                         >
                             <Suspense fallback={<div>Laster...</div>}>
                                 <BehandlingProvider behandlingId="123">

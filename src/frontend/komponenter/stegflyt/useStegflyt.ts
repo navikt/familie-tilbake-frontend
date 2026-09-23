@@ -33,11 +33,11 @@ export type Stegflytdata = {
  */
 export const useStegflyt = (komponentId: string): Stegflytdata => {
     const behandling: BehandlingDto = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const location = useLocation();
     const navigate = useNavigate();
 
-    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${behandling.eksternBrukId}`;
 
     const synligeSteg = Object.values(SYNLIGE_STEG).filter(({ steg }) => visSide(steg, behandling));
 

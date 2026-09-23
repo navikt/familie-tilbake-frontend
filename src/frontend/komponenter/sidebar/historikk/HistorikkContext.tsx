@@ -12,7 +12,7 @@ import { byggFeiletRessurs, byggHenterRessurs, type Ressurs } from '@/typer/ress
 
 const [HistorikkProvider, useHistorikk] = createUseContext(() => {
     const behandling = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const [historikkInnslag, setHistorikkInnslag] = useState<Ressurs<HistorikkInnslag[]>>();
     const navigate = useNavigate();
     const { request } = useHttp();
@@ -41,7 +41,7 @@ const [HistorikkProvider, useHistorikk] = createUseContext(() => {
 
     const navigerTilSide = (side: SynligSteg): void => {
         navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+            `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${behandling.eksternBrukId}/${side.href}`
         );
     };
 

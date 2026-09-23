@@ -311,7 +311,7 @@ const AktivBehandling: FC = () => {
 };
 
 const Behandling: FC = () => {
-    const { fagsystem, eksternFagsakId } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const behandling = useBehandling();
     const { harKravgrunnlag, aktivtSteg } = useBehandlingState();
     const { setRolle, setErNyModell } = useBehandlingStore();
@@ -341,7 +341,7 @@ const Behandling: FC = () => {
         return <HistoriskBehandling />;
     }
 
-    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}`;
+    const behandlingUrl = `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${behandling.eksternBrukId}`;
 
     if (behandling.endretKravgrunnlag && ønsketSide !== SYNLIGE_STEG.FAKTA.href) {
         return <Navigate to={`${behandlingUrl}/${SYNLIGE_STEG.FAKTA.href}`} replace />;

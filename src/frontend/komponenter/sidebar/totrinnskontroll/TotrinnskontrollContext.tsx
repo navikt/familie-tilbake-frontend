@@ -48,7 +48,7 @@ const stegRekkefølge: StegEnum[] = [
 
 const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
     const behandling = useBehandling();
-    const { fagsystem, eksternFagsakId } = useFagsak();
+    const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const visGlobalAlert = useVisGlobalAlert();
     const queryClient = useQueryClient();
     const [totrinnkontroll, setTotrinnkontroll] = useState<Ressurs<Totrinnkontroll>>();
@@ -292,7 +292,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
 
     const navigerTilSide = (side: SynligSteg): void => {
         navigate(
-            `/fagsystem/${fagsystem}/fagsak/${eksternFagsakId}/behandling/${behandling.eksternBrukId}/${side.href}`
+            `/fagsystem/${fagsystem}/fagsak/${tilbakekrevingSakId}/behandling/${behandling.eksternBrukId}/${side.href}`
         );
     };
 

@@ -43,7 +43,7 @@ const renderStegflyt = (behandling: BehandlingDto = createMockBehandling()): voi
         <QueryClientProvider client={queryClient}>
             <FagsakContext
                 value={lagFagsak({
-                    eksternFagsakId: '123',
+                    tilbakekrevingSakId: '123',
                     fagsystem: 'BA',
                 })}
             >

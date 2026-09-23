@@ -56,7 +56,7 @@ const IkkeStøttetError = ({ error }: { error: FagsakIkkeStøttetError }): React
                 </VStack>
                 <p className="text-ax-text-neutral-subtle flex flex-col text-ax-small">
                     <span>Fagsystem: {error.fagsystem}</span>
-                    {error.fagsakId && <span>Fagsak: {error.fagsakId}</span>}
+                    {error.tilbakekrevingSakId && <span>Fagsak: {error.tilbakekrevingSakId}</span>}
                 </p>
             </VStack>
         </div>

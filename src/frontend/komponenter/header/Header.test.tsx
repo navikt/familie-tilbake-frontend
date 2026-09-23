@@ -30,7 +30,7 @@ const renderHeader = (): void => {
 const setUpMocks = (): void => {
     useBehandlingStore.setState({ behandlingId: undefined });
     useFagsakStore.setState({
-        eksternFagsakId: undefined,
+        tilbakekrevingSakId: undefined,
         fagsystem: undefined,
         personIdent: undefined,
     });
@@ -65,7 +65,7 @@ describe('Header', () => {
         const personIdent = '12345678910';
         useBehandlingStore.setState({ behandlingId: 'test-behandling-id' });
         useFagsakStore.setState({
-            eksternFagsakId: 'test-fagsak-id',
+            tilbakekrevingSakId: 'test-fagsak-id',
             fagsystem: 'BA',
             personIdent,
         });

@@ -12,19 +12,24 @@ export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
 
 type Props = {
     fagsystem: Fagsystem;
-    eksternFagsakId: string;
+    tilbakekrevingSakId: string;
     children: ReactNode;
 };
 
 export class FagsakIkkeStøttetError extends Error {
     tittel: string;
     fagsystem: Fagsystem;
-    fagsakId?: string;
-    constructor(tittel: string, message: string, fagsystem: Fagsystem, fagsakId?: string) {
+    tilbakekrevingSakId?: string;
+    constructor(
+        tittel: string,
+        message: string,
+        fagsystem: Fagsystem,
+        tilbakekrevingSakId?: string
+    ) {
         super(message);
         this.tittel = tittel;
         this.fagsystem = fagsystem;
-        this.fagsakId = fagsakId;
+        this.tilbakekrevingSakId = tilbakekrevingSakId;
     }
 }
 
@@ -34,9 +39,13 @@ export class FagsakIkkeFunnetError extends Error {}
 const erIkkeGjenforsøkbar = (error: unknown): boolean =>
     error instanceof FagsakIkkeStøttetError || error instanceof FagsakIkkeFunnetError;
 
-export const FagsakProvider = ({ fagsystem, eksternFagsakId, children }: Props): ReactElement => {
+export const FagsakProvider = ({
+    fagsystem,
+    tilbakekrevingSakId,
+    children,
+}: Props): ReactElement => {
     const { data: fagsak } = useSuspenseQuery({
-        queryKey: ['fagsak', fagsystem, eksternFagsakId],
+        queryKey: ['fagsak', fagsystem, tilbakekrevingSakId],
         // biome-ignore lint/suspicious/noExplicitAny: error-objektet kan ha ulik form avhengig av feilen som oppstår, og er utypet i SDK-et
         retry: (count: number, error: any) => {
             return count < 2 && !erIkkeGjenforsøkbar(error);
@@ -45,14 +54,14 @@ export const FagsakProvider = ({ fagsystem, eksternFagsakId, children }: Props):
             const result = await hentFagsak({
                 path: {
                     fagsystem: fagsystem,
-                    eksternFagsakId: eksternFagsakId,
+                    eksternFagsakId: tilbakekrevingSakId,
                 },
             }).catch(e => {
                 if (e instanceof Error) {
                     throw e;
                 }
                 throw new Error(
-                    `Kunne ikke laste fagsak for ${fagsystem}/${eksternFagsakId}. Fagsaken finnes ikke eller du har ikke tilgang.`,
+                    `Kunne ikke laste fagsak for ${fagsystem}/${tilbakekrevingSakId}. Fagsaken finnes ikke eller du har ikke tilgang.`,
                     { cause: e }
                 );
             });
@@ -64,20 +73,20 @@ export const FagsakProvider = ({ fagsystem, eksternFagsakId, children }: Props):
                             (result.error as ModellError).tittel,
                             (result.error as ModellError).melding,
                             fagsystem,
-                            eksternFagsakId
+                            tilbakekrevingSakId
                         );
                     case 400:
                     case 404:
                         throw new FagsakIkkeFunnetError(
-                            `Fant ingen fagsak for fagsystem: ${fagsystem} og fagsak: ${eksternFagsakId}.`
+                            `Fant ingen fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
                         );
                     case 403:
                         throw new Error(
-                            `Du har ikke tilgang til fagsak for fagsystem: ${fagsystem} og fagsak: ${eksternFagsakId}.`
+                            `Du har ikke tilgang til fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
                         );
                     default:
                         throw new Error(
-                            `En feil har oppstått. Kunne ikke laste fagsak for fagsystem: ${fagsystem} og fagsak: ${eksternFagsakId}.`
+                            `En feil har oppstått. Kunne ikke laste fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
                         );
                 }
             }
