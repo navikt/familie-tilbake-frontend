@@ -385,4 +385,20 @@ describe('ForeldelseContainer', () => {
             'Automatisk vurdert: Ikke foreldet'
         );
     });
+
+    test('Viser "Del opp perioden" i gammel modell', async () => {
+        setupMock(lagForeldelseResponse({ foreldetPerioder: [foreldelsesperioder[0]] }));
+        renderForeldelseContainer({ behandling: lagBehandling({ erNyModell: false }) });
+
+        expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Del opp perioden' })).toBeInTheDocument();
+    });
+
+    test('Skjuler "Del opp perioden" i ny modell', async () => {
+        setupMock(lagForeldelseResponse({ foreldetPerioder: [foreldelsesperioder[0]] }));
+        renderForeldelseContainer({ behandling: lagBehandling({ erNyModell: true }) });
+
+        expect(await screen.findByText('Detaljer for valgt periode')).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Del opp perioden' })).not.toBeInTheDocument();
+    });
 });

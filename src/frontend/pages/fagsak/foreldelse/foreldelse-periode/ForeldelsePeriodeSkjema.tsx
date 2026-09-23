@@ -133,7 +133,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                         Detaljer for valgt periode
                     </Heading>
 
-                    {!erLesevisning && kanSplittePeriode(periode) && (
+                    {!erNyModell && !erLesevisning && kanSplittePeriode(periode) && (
                         <SplittPeriode periode={periode} onBekreft={onSplitPeriode} />
                     )}
                 </HStack>
