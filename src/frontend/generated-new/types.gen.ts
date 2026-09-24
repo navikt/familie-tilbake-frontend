@@ -64,14 +64,12 @@ export type Beregningsresultatsperiode = {
     readonly fom: string;
     readonly tom: string;
     feilutbetaltBeløp: number;
+    beløpIbehold: number | null;
     vurdering: BeregningsresultatVurdering;
-    andelAvBeløp: number | null;
+    reduksjonprosent: number | null;
     renteprosent: number | null;
-    tilbakekrevingsbeløp: number;
-    tilbakekrevesBeløpEtterSkatt: number;
-    rentebeløp: number;
     skattebeløp: number;
-    redusertBeløp: number;
+    tilbakekrevingsbeløp: number;
 };
 
 export type BestemmelseEllerGrunnlag = {
@@ -687,14 +685,12 @@ export type BeregningsresultatWritable = {
 
 export type BeregningsresultatsperiodeWritable = {
     feilutbetaltBeløp: number;
+    beløpIbehold: number | null;
     vurdering: BeregningsresultatVurdering;
-    andelAvBeløp: number | null;
+    reduksjonprosent: number | null;
     renteprosent: number | null;
-    tilbakekrevingsbeløp: number;
-    tilbakekrevesBeløpEtterSkatt: number;
-    rentebeløp: number;
     skattebeløp: number;
-    redusertBeløp: number;
+    tilbakekrevingsbeløp: number;
 };
 
 export type BurdeForstaattWritable = {

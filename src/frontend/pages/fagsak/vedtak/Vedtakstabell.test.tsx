@@ -13,26 +13,22 @@ const lagBeregningsresultat = (overrides?: Partial<Beregningsresultat>): Beregni
             tom: '2024-03-31',
             feilutbetaltBeløp: 10000,
             vurdering: 'Forsett',
-            andelAvBeløp: 100,
             renteprosent: 10,
             tilbakekrevingsbeløp: 11000,
-            tilbakekrevesBeløpEtterSkatt: 8000,
-            rentebeløp: 1000,
             skattebeløp: 3000,
-            redusertBeløp: 0,
+            beløpIbehold: 0,
+            reduksjonprosent: 0,
         },
         {
             fom: '2024-04-01',
             tom: '2024-06-30',
             feilutbetaltBeløp: 5000,
             vurdering: 'GodTro',
-            andelAvBeløp: 50,
             renteprosent: 0,
             tilbakekrevingsbeløp: 2500,
-            tilbakekrevesBeløpEtterSkatt: 2000,
-            rentebeløp: 0,
             skattebeløp: 500,
-            redusertBeløp: 0,
+            beløpIbehold: 0,
+            reduksjonprosent: 0,
         },
     ],
     ...overrides,
@@ -47,10 +43,11 @@ describe('Vedtakstabell', () => {
         expect(screen.getByRole('columnheader', { name: 'Periode' })).toBeInTheDocument();
         expect(screen.getByRole('columnheader', { name: 'Feilutbetalt' })).toBeInTheDocument();
         expect(screen.getByRole('columnheader', { name: 'Vurdering' })).toBeInTheDocument();
-        expect(screen.getByRole('columnheader', { name: 'Beløpsandel' })).toBeInTheDocument();
+        expect(screen.getByRole('columnheader', { name: 'I behold' })).toBeInTheDocument();
+        expect(screen.getByRole('columnheader', { name: 'Reduksjon' })).toBeInTheDocument();
         expect(screen.getByRole('columnheader', { name: 'Renter' })).toBeInTheDocument();
-        expect(screen.getByRole('columnheader', { name: 'Før skatt' })).toBeInTheDocument();
-        expect(screen.getByRole('columnheader', { name: 'Etter skatt' })).toBeInTheDocument();
+        expect(screen.getByRole('columnheader', { name: 'Skatt' })).toBeInTheDocument();
+        expect(screen.getByRole('columnheader', { name: 'Beløp' })).toBeInTheDocument();
     });
 
     test('viser periodedata med riktig formatering i hver celle', () => {
@@ -61,12 +58,13 @@ describe('Vedtakstabell', () => {
 
         const celler = hentCeller(rader[1]);
         expect(celler[0]).toHaveTextContent('01.01.2024\u201331.03.2024');
-        expect(celler[1]).toHaveTextContent('10 000');
+        expect(celler[1]).toHaveTextContent('10 000 kr');
         expect(celler[2]).toHaveTextContent('Forsett');
-        expect(celler[3]).toHaveTextContent('100%');
-        expect(celler[4]).toHaveTextContent('10%');
-        expect(celler[5]).toHaveTextContent('11 000');
-        expect(celler[6]).toHaveTextContent('8 000');
+        expect(celler[3]).toHaveTextContent('Ikke relevant');
+        expect(celler[4]).toHaveTextContent('0 kr');
+        expect(celler[5]).toHaveTextContent('10 %');
+        expect(celler[6]).toHaveTextContent('-3 000 kr');
+        expect(celler[7]).toHaveTextContent('11 000 kr');
     });
 
     test('mapper vurderingstekster korrekt', () => {
@@ -79,52 +77,44 @@ describe('Vedtakstabell', () => {
                             tom: '2024-01-31',
                             feilutbetaltBeløp: 1000,
                             vurdering: 'Forsett',
-                            andelAvBeløp: 100,
                             renteprosent: 10,
                             tilbakekrevingsbeløp: 1100,
-                            tilbakekrevesBeløpEtterSkatt: 800,
-                            rentebeløp: 100,
                             skattebeløp: 300,
-                            redusertBeløp: 0,
+                            beløpIbehold: 0,
+                            reduksjonprosent: 0,
                         },
                         {
                             fom: '2024-02-01',
                             tom: '2024-02-29',
                             feilutbetaltBeløp: 1000,
                             vurdering: 'GrovUaktsomhet',
-                            andelAvBeløp: 100,
                             renteprosent: 10,
                             tilbakekrevingsbeløp: 1100,
-                            tilbakekrevesBeløpEtterSkatt: 800,
-                            rentebeløp: 100,
                             skattebeløp: 300,
-                            redusertBeløp: 0,
+                            beløpIbehold: 0,
+                            reduksjonprosent: 0,
                         },
                         {
                             fom: '2024-03-01',
                             tom: '2024-03-31',
                             feilutbetaltBeløp: 1000,
                             vurdering: 'Uaktsomhet',
-                            andelAvBeløp: 50,
                             renteprosent: 0,
                             tilbakekrevingsbeløp: 500,
-                            tilbakekrevesBeløpEtterSkatt: 400,
-                            rentebeløp: 0,
                             skattebeløp: 100,
-                            redusertBeløp: 0,
+                            beløpIbehold: 0,
+                            reduksjonprosent: 0,
                         },
                         {
                             fom: '2024-04-01',
                             tom: '2024-04-30',
                             feilutbetaltBeløp: 1000,
                             vurdering: 'GodTro',
-                            andelAvBeløp: 0,
                             renteprosent: 0,
                             tilbakekrevingsbeløp: 0,
-                            tilbakekrevesBeløpEtterSkatt: 0,
-                            rentebeløp: 0,
                             skattebeløp: 0,
-                            redusertBeløp: 0,
+                            beløpIbehold: 0,
+                            reduksjonprosent: 0,
                         },
                     ],
                 })}
@@ -144,21 +134,22 @@ describe('Vedtakstabell', () => {
         const rader = screen.getAllByRole('row');
         const sumCeller = hentCeller(rader[rader.length - 1]);
 
-        expect(sumCeller[0]).toHaveTextContent('Sum');
-        expect(sumCeller[1]).toHaveTextContent('15 000'); // 10000 + 5000
-        expect(sumCeller[5]).toHaveTextContent('13 500'); // 11000 + 2500
-        expect(sumCeller[6]).toHaveTextContent('10 000'); // 8000 + 2000
+        expect(sumCeller[0]).toHaveTextContent('Totalt beløp');
+        expect(sumCeller[1]).toHaveTextContent('15 000 kr'); // 10000 + 5000
+        expect(sumCeller[3]).toHaveTextContent('0 kr');
+        expect(sumCeller[6]).toHaveTextContent('-3 500 kr'); // 3000 + 500
+        expect(sumCeller[7]).toHaveTextContent('13 500 kr'); // 11000 + 2500
     });
 
-    test('tomme celler i sumraden for vurdering, andel og renter', () => {
+    test('viser tomme celler i sumraden', () => {
         render(<Vedtakstabell beregningsresultat={lagBeregningsresultat()} />);
 
         const rader = screen.getAllByRole('row');
         const sumCeller = hentCeller(rader[rader.length - 1]);
 
         expect(sumCeller[2]).toHaveTextContent('');
-        expect(sumCeller[3]).toHaveTextContent('');
         expect(sumCeller[4]).toHaveTextContent('');
+        expect(sumCeller[5]).toHaveTextContent('');
     });
 
     test('viser én periode korrekt med riktige summer', () => {
@@ -171,13 +162,11 @@ describe('Vedtakstabell', () => {
                             tom: '2025-12-31',
                             feilutbetaltBeløp: 3500,
                             vurdering: 'GrovUaktsomhet',
-                            andelAvBeløp: 75,
+                            beløpIbehold: 123,
+                            reduksjonprosent: 75,
                             renteprosent: 10,
                             tilbakekrevingsbeløp: 2625,
-                            tilbakekrevesBeløpEtterSkatt: 1900,
-                            rentebeløp: 250,
                             skattebeløp: 725,
-                            redusertBeløp: 0,
                         },
                     ],
                 })}
@@ -188,8 +177,9 @@ describe('Vedtakstabell', () => {
         expect(rader).toHaveLength(3); // 1 header + 1 periode + 1 sum
 
         const sumCeller = hentCeller(rader[2]);
-        expect(sumCeller[1]).toHaveTextContent('3 500');
-        expect(sumCeller[5]).toHaveTextContent('2 625');
-        expect(sumCeller[6]).toHaveTextContent('1 900');
+        expect(sumCeller[1]).toHaveTextContent('3 500 kr');
+        expect(sumCeller[3]).toHaveTextContent('123 kr');
+        expect(sumCeller[6]).toHaveTextContent('-725 kr');
+        expect(sumCeller[7]).toHaveTextContent('2 625 kr');
     });
 });

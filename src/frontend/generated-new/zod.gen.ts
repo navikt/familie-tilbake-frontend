@@ -24,8 +24,13 @@ export const zBeregningsresultatsperiode = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    beløpIbehold: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
     vurdering: zBeregningsresultatVurdering,
-    andelAvBeløp: z
+    reduksjonprosent: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
@@ -35,23 +40,11 @@ export const zBeregningsresultatsperiode = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
         .nullable(),
-    tilbakekrevingsbeløp: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    tilbakekrevesBeløpEtterSkatt: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    rentebeløp: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     skattebeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    redusertBeløp: z
+    tilbakekrevingsbeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
@@ -705,8 +698,13 @@ export const zBeregningsresultatsperiodeWritable = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+    beløpIbehold: z
+        .int()
+        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
+        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
+        .nullable(),
     vurdering: zBeregningsresultatVurdering,
-    andelAvBeløp: z
+    reduksjonprosent: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
@@ -716,23 +714,11 @@ export const zBeregningsresultatsperiodeWritable = z.object({
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
         .nullable(),
-    tilbakekrevingsbeløp: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    tilbakekrevesBeløpEtterSkatt: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    rentebeløp: z
-        .int()
-        .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
-        .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
     skattebeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
-    redusertBeløp: z
+    tilbakekrevingsbeløp: z
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
