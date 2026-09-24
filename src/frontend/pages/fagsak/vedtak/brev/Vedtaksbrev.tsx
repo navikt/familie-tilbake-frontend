@@ -71,7 +71,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const [pdfSider, setPdfSider] = useState<string[]>([]);
     const [gjeldendeSide, setGjeldendeSide] = useState(1);
 
-    const { data: dokumentInfo } = useQuery({
+    const { data: dokumentInfo, error: dokumentInfoFeil } = useQuery({
         ...behandlingHentDokumentInfoOptions({
             path: { behandlingId, dokumentType: 'VEDTAKSBREV' },
         }),
@@ -81,7 +81,10 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const journalpostId = dokumentInfo?.journalpostId ?? undefined;
     const dokumentId = dokumentInfo?.dokumentId ?? undefined;
     const harSendtBrev = !!journalpostId && !!dokumentId;
-    const venterPåDokumentInfo = behandlingILesemodus && dokumentInfo === undefined;
+    const dokumentInfoHarFeilet =
+        behandlingILesemodus && dokumentInfo === undefined && !!dokumentInfoFeil;
+    const venterPåDokumentInfo =
+        behandlingILesemodus && dokumentInfo === undefined && !dokumentInfoFeil;
 
     const { data: sendtDokument, error: sendtDokumentFeil } = useQuery({
         ...behandlingHentDokumentOptions({
@@ -102,6 +105,12 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const [sendtDokumentFeilmelding, setSendtDokumentFeilmelding] = useState<string | undefined>();
 
     useEffect(() => {
+        if (dokumentInfoHarFeilet) {
+            setSendtDokumentFeilmelding(
+                dokumentInfoFeil?.response?.data?.melding ?? 'Prøv igjen senere.'
+            );
+            return;
+        }
         if (!sendtDokumentFeil) {
             setSendtDokumentFeilmelding(undefined);
             return;
@@ -115,7 +124,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         return (): void => {
             avbrutt = true;
         };
-    }, [sendtDokumentFeil]);
+    }, [sendtDokumentFeil, dokumentInfoHarFeilet, dokumentInfoFeil]);
 
     const sendtBrevUrl = useMemo(() => {
         if (!sendtDokument) return null;
@@ -186,7 +195,8 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         oppdaterForhåndsvisning(vedtaksbrevData);
     });
 
-    const skalViseForhåndsvisning = !harSendtBrev && !venterPåDokumentInfo;
+    const skalViseForhåndsvisning =
+        !harSendtBrev && !venterPåDokumentInfo && !dokumentInfoHarFeilet;
 
     useEffect(() => {
         if (!skalViseForhåndsvisning) return;
@@ -195,12 +205,12 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 
-    if (harSendtBrev || venterPåDokumentInfo) {
+    if (harSendtBrev || venterPåDokumentInfo || dokumentInfoHarFeilet) {
         return (
             <SendtVedtaksbrev
                 sendtBrevUrl={sendtBrevUrl}
                 feilmelding={sendtDokumentFeilmelding}
-                erFeil={!!sendtDokumentFeil}
+                erFeil={!!sendtDokumentFeil || dokumentInfoHarFeilet}
             />
         );
     }
