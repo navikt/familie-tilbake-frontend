@@ -1,6 +1,6 @@
 import { AxiosError, AxiosHeaders } from 'axios';
 
-import { erGjenforsøkbarHttpFeil, erServerFeil, skalGjenforsøke } from './httpUtils';
+import { erInnenforHentPåNyttStatusKode, erServerFeil, skalForsøkePåNytt } from './httpUtils';
 
 const lagAxiosFeil = (status: number): AxiosError => {
     const config = { headers: new AxiosHeaders() };
@@ -25,37 +25,40 @@ describe('erServerFeil', () => {
     });
 });
 
-describe('erGjenforsøkbarHttpFeil', () => {
+describe('erInnenforHentPåNyttStatusKode', () => {
     test.each([400, 401, 403, 404, 409, 422])(
         'burde ikke gjenforsøke klientfeil %i',
         (status: number) => {
-            expect(erGjenforsøkbarHttpFeil(lagAxiosFeil(status))).toBe(false);
+            expect(erInnenforHentPåNyttStatusKode(lagAxiosFeil(status))).toBe(false);
         }
     );
 
-    test.each([408, 425, 429])('burde gjenforsøke midlertidig klientfeil %i', (status: number) => {
-        expect(erGjenforsøkbarHttpFeil(lagAxiosFeil(status))).toBe(true);
+    test.each([408, 425, 429])(
+        'burde hente på nytt for midlertidig klientfeil %i',
+        (status: number) => {
+            expect(erInnenforHentPåNyttStatusKode(lagAxiosFeil(status))).toBe(true);
+        }
+    );
+
+    test('burde hente på nytt for serverfeil', () => {
+        expect(erInnenforHentPåNyttStatusKode(lagAxiosFeil(500))).toBe(true);
     });
 
-    test('burde gjenforsøke serverfeil', () => {
-        expect(erGjenforsøkbarHttpFeil(lagAxiosFeil(500))).toBe(true);
-    });
-
-    test('burde gjenforsøke feil uten statuskode, som nettverksfeil', () => {
-        expect(erGjenforsøkbarHttpFeil(new Error('Network Error'))).toBe(true);
+    test('burde hente på nytt for feil uten statuskode, som nettverksfeil', () => {
+        expect(erInnenforHentPåNyttStatusKode(new Error('Network Error'))).toBe(true);
     });
 });
 
-describe('skalGjenforsøke', () => {
-    test('burde ikke gjenforsøke 403 selv på første forsøk', () => {
-        expect(skalGjenforsøke(0, lagAxiosFeil(403))).toBe(false);
+describe('skalForsøkePåNytt', () => {
+    test('burde ikke hente på nytt for 403 selv på første forsøk', () => {
+        expect(skalForsøkePåNytt(0, lagAxiosFeil(403))).toBe(false);
     });
 
-    test('burde gjenforsøke serverfeil inntil to ganger', () => {
+    test('burde hente på nytt for serverfeil inntil to ganger', () => {
         const feil = lagAxiosFeil(500);
 
-        expect(skalGjenforsøke(0, feil)).toBe(true);
-        expect(skalGjenforsøke(1, feil)).toBe(true);
-        expect(skalGjenforsøke(2, feil)).toBe(false);
+        expect(skalForsøkePåNytt(0, feil)).toBe(true);
+        expect(skalForsøkePåNytt(1, feil)).toBe(true);
+        expect(skalForsøkePåNytt(2, feil)).toBe(false);
     });
 });

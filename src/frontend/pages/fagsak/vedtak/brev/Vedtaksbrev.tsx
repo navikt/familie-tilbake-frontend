@@ -76,6 +76,11 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
             path: { behandlingId, dokumentType: 'VEDTAKSBREV' },
         }),
         enabled: behandlingILesemodus,
+        retry: false,
+        retryOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
     });
 
     const journalpostId = dokumentInfo?.journalpostId ?? undefined;

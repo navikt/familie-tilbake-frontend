@@ -14,16 +14,16 @@ const hentHttpStatus = (error: unknown): number | undefined => {
     return undefined;
 };
 
-const GJENFORSØKBARE_KLIENTFEIL = new Set([408, 425, 429]);
+const FORSØKES_PÅ_NYTT_KLIENTFEIL = new Set([408, 425, 429]);
 
-export const erGjenforsøkbarHttpFeil = (error: unknown): boolean => {
+export const erInnenforHentPåNyttStatusKode = (error: unknown): boolean => {
     const status = hentHttpStatus(error);
     if (status === undefined) return true;
-    if (status >= 400 && status < 500) return GJENFORSØKBARE_KLIENTFEIL.has(status);
+    if (status >= 400 && status < 500) return FORSØKES_PÅ_NYTT_KLIENTFEIL.has(status);
     return true;
 };
 
 const MAKS_ANTALL_FORSØK = 2;
 
-export const skalGjenforsøke = (antallFeilendeForsøk: number, error: unknown): boolean =>
-    antallFeilendeForsøk < MAKS_ANTALL_FORSØK && erGjenforsøkbarHttpFeil(error);
+export const skalForsøkePåNytt = (antallFeilendeForsøk: number, error: unknown): boolean =>
+    antallFeilendeForsøk < MAKS_ANTALL_FORSØK && erInnenforHentPåNyttStatusKode(error);
