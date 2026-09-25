@@ -676,14 +676,7 @@ export const zBrukerEntity = z.object({
     dødsdato: z.iso.date().nullish(),
 });
 
-export const zUttalelseVurderingEnum = z.enum([
-    'JA_ETTER_FORHÅNDSVARSEL',
-    'NEI_ETTER_FORHÅNDSVARSEL',
-    'UNNTAK_ALLEREDE_UTTALT_SEG',
-    'UNNTAK_INGEN_UTTALELSE',
-    'JA',
-    'NEI',
-]);
+export const zUttalelseVurderingEnum = z.enum(['JA', 'NEI']);
 
 export const zBrukeruttalelseEntity = z.object({
     id: z.uuid(),

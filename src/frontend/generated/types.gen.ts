@@ -1385,13 +1385,7 @@ export type SpråkkodeEnum = 'NB' | 'NN';
 
 export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
 
-export type UttalelseVurderingEnum =
-    | 'JA_ETTER_FORHÅNDSVARSEL'
-    | 'NEI_ETTER_FORHÅNDSVARSEL'
-    | 'UNNTAK_ALLEREDE_UTTALT_SEG'
-    | 'UNNTAK_INGEN_UTTALELSE'
-    | 'JA'
-    | 'NEI';
+export type UttalelseVurderingEnum = 'JA' | 'NEI';
 
 export type TypeEnum4 = 'BEHANDLING' | 'UKJENT';
 
