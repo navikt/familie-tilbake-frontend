@@ -33,7 +33,7 @@ const valgtPeriode = (vurdering: Vilkårsperiode['vurdering'] = 'FORSETT'): Vilk
 
 const lagVilkårsperiode = (
     simulertBeløp: number,
-    valg: VilkaarsvurderingValg = { vurdering: 'ikke_vurdert' }
+    vilkårsvurdering?: Partial<Vilkaarsvurdering>
 ): Vilkaarsperiode => ({
     feilutbetaltBeløp: 10000,
     delresultat: 'FULL_TILBAKEKREVING',
@@ -44,7 +44,8 @@ const lagVilkårsperiode = (
         fom: '2023-01-01',
         tom: '2023-12-31',
         delbarePerioder: [],
-        valg,
+        valg: { vurdering: 'ikke_vurdert' },
+        ...vilkårsvurdering,
     },
 });
 
@@ -93,7 +94,7 @@ const lagVilkårsDetaljer = (
     simulertBeløp: number = 10000,
     erUnder4xRettsgebyr = false,
     vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
-    valg?: VilkaarsvurderingValg
+    vilkårsvurdering?: Partial<Vilkaarsvurdering>
 ): ReactElement => (
     <QueryClientProvider client={createTestQueryClient()}>
         <TestBehandlingProvider>
@@ -104,7 +105,7 @@ const lagVilkårsDetaljer = (
             >
                 <VilkårsvurderingDetaljer
                     valgtPeriode={valgtPeriode(vurdering)}
-                    vilkårsperioder={[lagVilkårsperiode(simulertBeløp, valg)]}
+                    vilkårsperioder={[lagVilkårsperiode(simulertBeløp, vilkårsvurdering)]}
                     hentVilkårsvurdering={(): void => undefined}
                 />
             </VilkårsvurderingLesedataProvider>
@@ -115,9 +116,10 @@ const lagVilkårsDetaljer = (
 const renderVilkårsDetaljer = (
     simulertBeløp: number = 10000,
     erUnder4xRettsgebyr = false,
-    vurdering: Vilkårsperiode['vurdering'] = 'FORSETT'
+    vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
+    vilkårsvurdering?: Partial<Vilkaarsvurdering>
 ): void => {
-    render(lagVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr, vurdering));
+    render(lagVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr, vurdering, vilkårsvurdering));
 };
 
 const begrunnelseGodTro = async (): Promise<HTMLElement> =>
@@ -298,6 +300,38 @@ describe('VilkårsvurderingDetaljer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
+    });
+
+    test('viser modal for tilbakeført periode med tidligere vurdering', () => {
+        renderVilkårsDetaljer(10000, false, 'FORSETT', {
+            valg: {
+                vurdering: 'forårsaket_av_mottaker',
+                aktsomhet: {
+                    aktsomhet: 'forsettlig',
+                    begrunnelse: 'Mottaker handlet med forsett',
+                },
+            },
+            tilbakeført: 'NyttKravgrunnlag',
+        });
+
+        expect(
+            screen.getByRole('heading', {
+                name: 'Det finnes en tidligere vurdering for denne perioden',
+            })
+        ).toBeInTheDocument();
+    });
+
+    test('viser ikke modal for ny periode uten tidligere vurdering', () => {
+        renderVilkårsDetaljer(10000, false, 'IKKE_VURDERT', {
+            valg: { vurdering: 'ikke_vurdert' },
+            tilbakeført: 'NyttKravgrunnlag',
+        });
+
+        expect(
+            screen.queryByRole('heading', {
+                name: 'Det finnes en tidligere vurdering for denne perioden',
+            })
+        ).not.toBeInTheDocument();
     });
 
     describe('Forsto eller burde forstått', () => {
@@ -655,11 +689,11 @@ describe('VilkårsvurderingDetaljer', () => {
                     begrunnelse: 'Ingenting av beløpet er i behold',
                 },
             };
-            const { rerender } = render(lagVilkårsDetaljer(7500, false, 'GOD_TRO', valg));
+            const { rerender } = render(lagVilkårsDetaljer(7500, false, 'GOD_TRO', { valg }));
 
             expect(screen.getByText('7 500 kroner')).toBeInTheDocument();
 
-            rerender(lagVilkårsDetaljer(5000, false, 'GOD_TRO', valg));
+            rerender(lagVilkårsDetaljer(5000, false, 'GOD_TRO', { valg }));
 
             expect(screen.queryByText('7 500 kroner')).not.toBeInTheDocument();
             expect(screen.getByText('5 000 kroner')).toBeInTheDocument();

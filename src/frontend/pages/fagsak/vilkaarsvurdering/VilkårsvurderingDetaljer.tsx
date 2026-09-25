@@ -58,6 +58,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     const [tidligereVurderingHåndtert, setTidligereVurderingHåndtert] = useState(false);
     const visTidligereVurderingModal =
         valgtVilkårsperiode.vilkårsvurdering.tilbakeført === 'NyttKravgrunnlag' &&
+        valgtVilkårsperiode.vilkårsvurdering.valg.vurdering !== 'ikke_vurdert' &&
         !tidligereVurderingHåndtert;
 
     const skjema = useMemo(
