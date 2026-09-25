@@ -1,19 +1,14 @@
-import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { DelresultatEnum } from '@/generated-new';
-import type { Vilkårsperiode, Vurderingsstatus } from './typer';
+import type { Vilkårsperiode } from './typer';
 
 import { ExclamationmarkTriangleIcon } from '@navikt/aksel-icons';
 import { Heading, HStack, Tag, Tooltip } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
+import { type PeriodeTag, vurderingstag } from '@/utils/vurderingstag';
 
 import { erPeriodeVurdert } from './utils';
-
-type PeriodeTag = {
-    label: string;
-    'data-color': TagProps['data-color'];
-};
 
 const resultat: Record<DelresultatEnum, PeriodeTag> = {
     FULL_TILBAKEKREVING: {
@@ -30,33 +25,8 @@ const resultat: Record<DelresultatEnum, PeriodeTag> = {
     },
 };
 
-const vurdering: Record<Vurderingsstatus, PeriodeTag> = {
-    IKKE_VURDERT: {
-        label: 'Ikke vurdert',
-        'data-color': 'neutral',
-    },
-    GOD_TRO: { label: 'God tro', 'data-color': 'success' },
-    FORSETT: {
-        label: 'Forsett',
-        'data-color': 'brand-magenta',
-    },
-    GROVT_UAKTSOMHET: {
-        label: 'Grovt uaktsomt',
-        'data-color': 'warning',
-    },
-    UAKTSOMT: {
-        label: 'Uaktsomt',
-        'data-color': 'meta-purple',
-    },
-    FORSTO: { label: 'Forsto', 'data-color': 'meta-lime' },
-    BURDE_FORSTÅTT: {
-        label: 'Burde forstått',
-        'data-color': 'brand-beige',
-    },
-};
-
 const periodeKortAriaLabel = (periode: Vilkårsperiode): string => {
-    const vurderingLabel = vurdering[periode.vurdering].label;
+    const vurderingLabel = vurderingstag[periode.vurdering].label;
     const resultatLabel = periode.resultat ? resultat[periode.resultat].label : undefined;
     const feilutbetaltLabel = formatCurrencyNoKr(periode.feilutbetalt);
     const rettsligGrunnlagLabel =
@@ -111,15 +81,15 @@ export const VilkårsvurderingPeriodeListe: FC<Props> = ({
                         >
                             <HStack gap="space-8">
                                 <Tooltip
-                                    content={`Vurdering: ${vurdering[periode.vurdering].label}`}
+                                    content={`Vurdering: ${vurderingstag[periode.vurdering].label}`}
                                 >
                                     <Tag
                                         variant="moderate"
                                         size="small"
                                         className="w-fit"
-                                        data-color={vurdering[periode.vurdering]['data-color']}
+                                        data-color={vurderingstag[periode.vurdering]['data-color']}
                                     >
-                                        {vurdering[periode.vurdering].label}
+                                        {vurderingstag[periode.vurdering].label}
                                     </Tag>
                                 </Tooltip>
                                 {periode.vurdering !== 'IKKE_VURDERT' && (

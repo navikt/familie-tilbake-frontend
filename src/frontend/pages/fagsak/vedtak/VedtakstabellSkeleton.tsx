@@ -5,25 +5,32 @@ import { ExpansionCard, Skeleton, Table } from '@navikt/ds-react';
 const SkeletonRad: FC = () => (
     <Table.Row>
         <Table.DataCell>
-            <Skeleton variant="text" width="80%" />
+            {/* Periode */}
+            <Skeleton variant="text" width="150%" />
         </Table.DataCell>
         <Table.DataCell align="right">
-            <Skeleton variant="text" width="60%" />
+            {/* Feilutbetalt */}
+            <Skeleton variant="text" width="60%" className="ml-auto" />
         </Table.DataCell>
         <Table.DataCell>
+            {/* Vurdering */}
             <Skeleton variant="text" width="70%" />
         </Table.DataCell>
         <Table.DataCell align="right">
-            <Skeleton variant="text" width="40%" />
+            {/* I behold */}
+            <Skeleton variant="text" width="40%" className="ml-auto" />
         </Table.DataCell>
         <Table.DataCell align="right">
-            <Skeleton variant="text" width="40%" />
+            {/* Reduksjon */}
+            <Skeleton variant="text" width="40%" className="ml-auto" />
         </Table.DataCell>
         <Table.DataCell align="right">
-            <Skeleton variant="text" width="60%" />
+            {/* Renter */}
+            <Skeleton variant="text" width="60%" className="ml-auto" />
         </Table.DataCell>
         <Table.DataCell align="right">
-            <Skeleton variant="text" width="60%" />
+            {/* Beløp */}
+            <Skeleton variant="text" width="60%" className="ml-auto" />
         </Table.DataCell>
     </Table.Row>
 );
@@ -41,8 +48,8 @@ export const VedtakstabellSkeleton: FC = () => {
                     Oppsummering av vedtaket
                 </ExpansionCard.Title>
             </ExpansionCard.Header>
-            <ExpansionCard.Content>
-                <Table size="small">
+            <ExpansionCard.Content className="py-0">
+                <Table zebraStripes>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell scope="col">Periode</Table.HeaderCell>
@@ -51,16 +58,16 @@ export const VedtakstabellSkeleton: FC = () => {
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col">Vurdering</Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
-                                Beløpsandel
+                                I behold
+                            </Table.HeaderCell>
+                            <Table.HeaderCell scope="col" align="right">
+                                Reduksjon
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
                                 Renter
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
-                                Før skatt
-                            </Table.HeaderCell>
-                            <Table.HeaderCell scope="col" align="right">
-                                Etter skatt
+                                Beløp
                             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>

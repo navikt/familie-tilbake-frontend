@@ -1,19 +1,11 @@
 import type { FC } from 'react';
-import type { Beregningsresultat, BeregningsresultatVurdering } from '@/generated-new/types.gen';
+import type { Beregningsresultat } from '@/generated-new/types.gen';
 
-import { ExpansionCard, Table } from '@navikt/ds-react';
+import { ExpansionCard, Table, Tag } from '@navikt/ds-react';
 
 import { formatCurrencyNoKr, formatterDatostring } from '@/utils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-const vurderingstekster: Record<BeregningsresultatVurdering | string, string> = {
-    Forsett: 'Forsett',
-    GrovUaktsomhet: 'Grov uaktsom',
-    Uaktsomhet: 'Uaktsom',
-    GodTro: 'God tro',
-    Forstod: 'Forsto',
-    BurdeForstått: 'Burde forstått',
-};
+import { vurderingsmapper, vurderingstag } from '@/utils/vurderingstag';
 
 type Props = {
     beregningsresultat: Beregningsresultat;
@@ -22,24 +14,8 @@ type Props = {
 export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
     const { beregningsresultatsperioder } = beregningsresultat;
 
-    const totalFeilutbetalt = beregningsresultatsperioder.reduce(
-        (sum, periode) => sum + periode.feilutbetaltBeløp,
-        0
-    );
     const erSkattRelevant = beregningsresultatsperioder.some(periode => periode.skattebeløp);
-    const totalSkatt = beregningsresultatsperioder.reduce(
-        (sum, periode) => sum + (periode.skattebeløp || 0),
-        0
-    );
 
-    const totalTilbakekrevingsbeløp = beregningsresultatsperioder.reduce(
-        (sum, periode) => sum + periode.tilbakekrevingsbeløp,
-        0
-    );
-    const totaltBeløpIBehold = beregningsresultatsperioder.reduce(
-        (sum, periode) => sum + (periode.beløpIbehold || 0),
-        0
-    );
     return (
         <ExpansionCard
             size="small"
@@ -104,24 +80,35 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                     {formatCurrencyNoKr(periode.feilutbetaltBeløp)} kr
                                 </Table.DataCell>
                                 <Table.DataCell>
-                                    {vurderingstekster[periode.vurdering]}
+                                    <Tag
+                                        variant="moderate"
+                                        size="small"
+                                        className="w-fit"
+                                        data-color={
+                                            vurderingstag[vurderingsmapper[periode.vurdering]][
+                                                'data-color'
+                                            ]
+                                        }
+                                    >
+                                        {vurderingstag[vurderingsmapper[periode.vurdering]].label}
+                                    </Tag>
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
-                                    {periode.beløpIbehold
-                                        ? `${formatCurrencyNoKr(periode.beløpIbehold)} kr`
+                                    {periode.beløpIBehold
+                                        ? `${formatCurrencyNoKr(periode.beløpIBehold)} kr`
                                         : 'Ikke relevant'}
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
-                                    {periode.reduksjonprosent
-                                        ? `${100 - periode.reduksjonprosent} %`
-                                        : '0 kr'}
+                                    {periode.reduksjon
+                                        ? `–${formatCurrencyNoKr(periode.reduksjon)} kr`
+                                        : ''}
                                 </Table.DataCell>
                                 <Table.DataCell align="right">
-                                    {periode.renteprosent ? `${periode.renteprosent} %` : 'Nei'}
+                                    {`${formatCurrencyNoKr(periode.rentebeløp)} kr`}
                                 </Table.DataCell>
                                 {erSkattRelevant && (
                                     <Table.DataCell align="right">
-                                        -{formatCurrencyNoKr(periode.skattebeløp)} kr
+                                        –{formatCurrencyNoKr(periode.skattebeløp)} kr
                                     </Table.DataCell>
                                 )}
                                 <Table.DataCell align="right">
@@ -137,25 +124,27 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 align="right"
                                 className="text-ax-text-brand-magenta border-b-0 font-bold"
                             >
-                                {formatCurrencyNoKr(totalFeilutbetalt)} kr
+                                {formatCurrencyNoKr(beregningsresultat.totaltFeilutbetaltBeløp)} kr
                             </Table.DataCell>
                             {/* Vurdering */}
                             <Table.DataCell className="border-b-0" />
                             <Table.DataCell align="right" className="border-b-0">
-                                {formatCurrencyNoKr(totaltBeløpIBehold)} kr
+                                {formatCurrencyNoKr(beregningsresultat.totaltBeløpIBehold)} kr
                             </Table.DataCell>
-                            {/* Reduksjon */}
-                            <Table.DataCell className="border-b-0" />
                             <Table.DataCell align="right" className="border-b-0">
-                                {/* Renter, skal være et beløp */}
+                                –{formatCurrencyNoKr(beregningsresultat.totaltReduksjon)} kr
+                            </Table.DataCell>
+                            <Table.DataCell align="right" className="border-b-0">
+                                {formatCurrencyNoKr(beregningsresultat.totaltRentebeløp)} kr
                             </Table.DataCell>
                             {erSkattRelevant && (
                                 <Table.DataCell align="right" className="border-b-0">
-                                    -{formatCurrencyNoKr(totalSkatt)} kr
+                                    –{formatCurrencyNoKr(beregningsresultat.totaltSkattebeløp)} kr
                                 </Table.DataCell>
                             )}
                             <Table.DataCell align="right" className="border-b-0 font-bold">
-                                {formatCurrencyNoKr(totalTilbakekrevingsbeløp)} kr
+                                {formatCurrencyNoKr(beregningsresultat.totaltTilbakekrevingsbeløp)}
+                                 kr
                             </Table.DataCell>
                         </Table.Row>
                     </Table.Body>

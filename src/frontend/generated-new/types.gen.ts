@@ -49,6 +49,12 @@ export type BelopIBehold =
 export type Beregningsresultat = {
     beregningsresultatsperioder: Array<Beregningsresultatsperiode>;
     vedtaksresultat: Vedtaksresultat;
+    totaltFeilutbetaltBeløp: number;
+    totaltBeløpIBehold: number;
+    totaltReduksjon: number;
+    totaltRentebeløp: number;
+    totaltSkattebeløp: number;
+    totaltTilbakekrevingsbeløp: number;
 };
 
 export type BeregningsresultatVurdering =
@@ -64,10 +70,10 @@ export type Beregningsresultatsperiode = {
     readonly fom: string;
     readonly tom: string;
     feilutbetaltBeløp: number;
-    beløpIbehold: number | null;
     vurdering: BeregningsresultatVurdering;
-    reduksjonprosent: number | null;
-    renteprosent: number | null;
+    beløpIBehold: number | null;
+    reduksjon: number | null;
+    rentebeløp: number;
     skattebeløp: number;
     tilbakekrevingsbeløp: number;
 };
@@ -685,14 +691,20 @@ export type BelopIBeholdWritable =
 export type BeregningsresultatWritable = {
     beregningsresultatsperioder: Array<BeregningsresultatsperiodeWritable>;
     vedtaksresultat: Vedtaksresultat;
+    totaltFeilutbetaltBeløp: number;
+    totaltBeløpIBehold: number;
+    totaltReduksjon: number;
+    totaltRentebeløp: number;
+    totaltSkattebeløp: number;
+    totaltTilbakekrevingsbeløp: number;
 };
 
 export type BeregningsresultatsperiodeWritable = {
     feilutbetaltBeløp: number;
-    beløpIbehold: number | null;
     vurdering: BeregningsresultatVurdering;
-    reduksjonprosent: number | null;
-    renteprosent: number | null;
+    beløpIBehold: number | null;
+    reduksjon: number | null;
+    rentebeløp: number;
     skattebeløp: number;
     tilbakekrevingsbeløp: number;
 };
