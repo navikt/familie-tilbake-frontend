@@ -26,6 +26,7 @@ const lagForhåndsvarselResponse = (
 ): ForhaandsvarselResponse => ({
     forhaandsvarselSteg: { type: 'ikke_vurdert' },
     brukeruttalelse: null,
+    sendtVarselbrev: null,
     ferdigvurdert: false,
     ...overrides,
 });

@@ -94,8 +94,9 @@ export type Deler = {
 };
 
 export type DokumentInfo = {
-    journalpostId: string | null;
-    dokumentId: string | null;
+    brevSendt: string;
+    journalpostId: string;
+    dokumentId: string;
 };
 
 export type DokumentType = 'VARSELBREV' | 'VEDTAKSBREV';
@@ -180,6 +181,7 @@ export type ForhaandsvarselResponse = {
     readonly ferdigvurdert: boolean;
     forhaandsvarselSteg: ForhaandsvarselSteg;
     brukeruttalelse: Uttalelse | null;
+    sendtVarselbrev: DokumentInfo | null;
 };
 
 export type ForhaandsvarselSteg =
@@ -518,6 +520,8 @@ export type Uttalelse = {
 };
 
 export type UttalelseVurdering =
+    | 'JA'
+    | 'NEI'
     | 'JA_ETTER_FORHÅNDSVARSEL'
     | 'NEI_ETTER_FORHÅNDSVARSEL'
     | 'UNNTAK_ALLEREDE_UTTALT_SEG'
@@ -750,6 +754,7 @@ export type ForhaandsvarselErSendtWritable = {
 export type ForhaandsvarselResponseWritable = {
     forhaandsvarselSteg: ForhaandsvarselStegWritable;
     brukeruttalelse: Uttalelse | null;
+    sendtVarselbrev: DokumentInfo | null;
 };
 
 export type ForhaandsvarselStegWritable =

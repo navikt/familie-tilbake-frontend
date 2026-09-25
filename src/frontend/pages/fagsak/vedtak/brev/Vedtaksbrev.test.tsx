@@ -43,7 +43,7 @@ const lagQueryClientMedSendtBrev = (): QueryClient => {
         behandlingHentDokumentInfoOptions({
             path: { behandlingId: BEHANDLING_ID, dokumentType: 'VEDTAKSBREV' },
         }).queryKey,
-        { journalpostId: JOURNALPOST_ID, dokumentId: DOKUMENT_ID }
+        { brevSendt: '2025-01-10', journalpostId: JOURNALPOST_ID, dokumentId: DOKUMENT_ID }
     );
     return queryClient;
 };

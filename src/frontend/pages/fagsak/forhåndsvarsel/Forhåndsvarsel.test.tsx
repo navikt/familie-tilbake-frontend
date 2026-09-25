@@ -38,6 +38,7 @@ const lagForhåndsvarselResponse = (
 ): ForhaandsvarselResponse => ({
     forhaandsvarselSteg: { type: 'ikke_vurdert' },
     brukeruttalelse: null,
+    sendtVarselbrev: null,
     ferdigvurdert: false,
     ...overrides,
 });
@@ -87,6 +88,7 @@ const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselRespo
         },
     },
     brukeruttalelse: null,
+    sendtVarselbrev: null,
     ferdigvurdert: true,
 });
 
@@ -119,7 +121,7 @@ const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
         behandlingHentDokumentInfoOptions({
             path: { behandlingId: BEHANDLING_ID, dokumentType: 'VARSELBREV' },
         }).queryKey,
-        { journalpostId, dokumentId }
+        { brevSendt: '2025-01-10', journalpostId, dokumentId }
     );
 
     queryClient.setMutationDefaults(['hentSendtDokument'], {

@@ -319,7 +319,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     ) => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
-            body: tilUttalelsePayload(data.brukeruttalelse, 'sendt'),
+            body: tilUttalelsePayload(data.brukeruttalelse),
         });
     };
 
@@ -354,7 +354,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                     begrunnelseForUnntak: data.begrunnelseForUnntak,
                     beskrivelse: data.beskrivelse,
                 },
-                uttalelse: tilUttalelsePayload(data.brukeruttalelse, 'unntak'),
+                uttalelse: tilUttalelsePayload(data.brukeruttalelse),
             });
         } else {
             lagreUnntak.mutate({

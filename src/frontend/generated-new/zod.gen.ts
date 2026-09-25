@@ -61,8 +61,9 @@ export const zBrevmottaker = z.object({
 });
 
 export const zDokumentInfo = z.object({
-    journalpostId: z.string().nullable(),
-    dokumentId: z.string().nullable(),
+    brevSendt: z.iso.date(),
+    journalpostId: z.string(),
+    dokumentId: z.string(),
 });
 
 export const zDokumentType = z.enum(['VARSELBREV', 'VEDTAKSBREV']);
@@ -444,6 +445,8 @@ export const zUpdateUttalelsesfrist = z.object({
 });
 
 export const zUttalelseVurdering = z.enum([
+    'JA',
+    'NEI',
     'JA_ETTER_FORHÅNDSVARSEL',
     'NEI_ETTER_FORHÅNDSVARSEL',
     'UNNTAK_ALLEREDE_UTTALT_SEG',
@@ -518,6 +521,7 @@ export const zForhaandsvarselResponse = z.object({
     ferdigvurdert: z.boolean().readonly(),
     forhaandsvarselSteg: zForhaandsvarselSteg,
     brukeruttalelse: zUttalelse.nullable(),
+    sendtVarselbrev: zDokumentInfo.nullable(),
 });
 
 export const zUnntak = z.object({
@@ -989,6 +993,7 @@ export const zForhaandsvarselStegWritable = z.union([
 export const zForhaandsvarselResponseWritable = z.object({
     forhaandsvarselSteg: zForhaandsvarselStegWritable,
     brukeruttalelse: zUttalelse.nullable(),
+    sendtVarselbrev: zDokumentInfo.nullable(),
 });
 
 export const zVedtaksbrevDataWritable = z.object({

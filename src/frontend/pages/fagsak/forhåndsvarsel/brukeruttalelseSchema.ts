@@ -27,23 +27,16 @@ export const brukeruttalelseSchema = z.object({ brukeruttalelse: brukeruttalelse
 export type BrukeruttalelseFelter = z.infer<typeof brukeruttalelseFelter>;
 export type BrukeruttalelseFormData = z.infer<typeof brukeruttalelseSchema>;
 
-type UttalelseScenario = 'sendt' | 'unntak';
-
-export const tilUttalelsePayload = (
-    felter: BrukeruttalelseFelter,
-    kontekst: UttalelseScenario
-): Uttalelse =>
+export const tilUttalelsePayload = (felter: BrukeruttalelseFelter): Uttalelse =>
     felter.harUttaltSeg === 'ja'
         ? {
-              harBrukerUttaltSeg:
-                  kontekst === 'sendt' ? 'JA_ETTER_FORHÅNDSVARSEL' : 'UNNTAK_ALLEREDE_UTTALT_SEG',
+              harBrukerUttaltSeg: 'JA',
               uttalelsesdato: felter.uttalelsesdato,
               hvorBrukerenUttalteSeg: felter.hvorBrukerenUttalteSeg,
               beskrivelse: felter.beskrivelse,
           }
         : {
-              harBrukerUttaltSeg:
-                  kontekst === 'sendt' ? 'NEI_ETTER_FORHÅNDSVARSEL' : 'UNNTAK_INGEN_UTTALELSE',
+              harBrukerUttaltSeg: 'NEI',
               beskrivelse: felter.beskrivelse,
           };
 
@@ -51,6 +44,7 @@ export const tilUttalelseSkjema = (
     uttalelse: Uttalelse | null
 ): BrukeruttalelseFelter | undefined => {
     switch (uttalelse?.harBrukerUttaltSeg) {
+        case 'JA':
         case 'JA_ETTER_FORHÅNDSVARSEL':
         case 'UNNTAK_ALLEREDE_UTTALT_SEG':
             return {
@@ -59,6 +53,7 @@ export const tilUttalelseSkjema = (
                 hvorBrukerenUttalteSeg: uttalelse.hvorBrukerenUttalteSeg ?? '',
                 beskrivelse: uttalelse.beskrivelse ?? '',
             };
+        case 'NEI':
         case 'NEI_ETTER_FORHÅNDSVARSEL':
         case 'UNNTAK_INGEN_UTTALELSE':
             return { harUttaltSeg: 'nei', beskrivelse: uttalelse.beskrivelse ?? '' };
