@@ -143,8 +143,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 </Table.DataCell>
                             )}
                             <Table.DataCell align="right" className="border-b-0 font-bold">
-                                {formatCurrencyNoKr(beregningsresultat.totaltTilbakekrevingsbeløp)}
-                                 kr
+                                {`${formatCurrencyNoKr(beregningsresultat.totaltTilbakekrevingsbeløp)} kr`}
                             </Table.DataCell>
                         </Table.Row>
                     </Table.Body>

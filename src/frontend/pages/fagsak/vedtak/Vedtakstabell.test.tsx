@@ -129,7 +129,7 @@ describe('Vedtakstabell', () => {
 
         const rader = screen.getAllByRole('row');
         expect(hentCeller(rader[1])[2]).toHaveTextContent('Forsett');
-        expect(hentCeller(rader[2])[2]).toHaveTextContent('Grov uaktsom');
+        expect(hentCeller(rader[2])[2]).toHaveTextContent('Grovt uaktsom');
         expect(hentCeller(rader[3])[2]).toHaveTextContent('Uaktsom');
         expect(hentCeller(rader[4])[2]).toHaveTextContent('God tro');
     });
