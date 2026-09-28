@@ -65,6 +65,11 @@ const hentSporingsoppsett = (): Sporingsoppsett | undefined => {
 
 let trackerLoaded = false;
 
+export const vaskSporingsUrl = (pathname: string, search: string): string =>
+    `${pathname
+        .replace(/(\/fagsak\/)[^/]+/g, '$1[FAGSAK_ID]')
+        .replace(/(\/behandling\/)[^/]+/g, '$1[BEHANDLING_ID]')}${search}`;
+
 /**
  * Hendelsesnavn fra Navs taksonomi. Bruk alltid en av disse framfor
  * egendefinerte navn, slik at data kan sammenliknes på tvers av Nav-løsninger.
@@ -177,6 +182,6 @@ export const sporHendelse = <THendelse extends Hendelsesnavn>(
         ...standardPayload,
         name: navn,
         data: Object.keys(beriketData).length > 0 ? beriketData : undefined,
-        url: `${window.location.pathname}${window.location.search}`,
+        url: vaskSporingsUrl(window.location.pathname, window.location.search),
     }));
 };
