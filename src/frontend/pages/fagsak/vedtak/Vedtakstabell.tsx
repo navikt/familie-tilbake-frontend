@@ -14,7 +14,7 @@ type Props = {
 export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
     const { beregningsresultatsperioder } = beregningsresultat;
 
-    const VisSkattKolonne = beregningsresultatsperioder.some(periode => periode.skattebeløp);
+    const VisSkattKolonne = beregningsresultatsperioder.some(periode => periode.skattebeløp > 0);
     const visIBeholdKolonne = beregningsresultatsperioder.some(
         periode => periode.vurdering === 'GodTro'
     );
