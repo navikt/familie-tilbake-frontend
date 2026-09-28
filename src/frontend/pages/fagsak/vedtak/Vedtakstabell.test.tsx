@@ -33,7 +33,7 @@ const lagBeregningsresultat = (overrides?: Partial<Beregningsresultat>): Beregni
             rentebeløp: 0,
             tilbakekrevingsbeløp: 2500,
             skattebeløp: 500,
-            beløpIBehold: 0,
+            beløpIBehold: 123,
             reduksjon: 0,
         },
     ],
@@ -44,7 +44,18 @@ const hentCeller = (rad: HTMLElement): HTMLElement[] => within(rad).getAllByRole
 
 describe('Vedtakstabell', () => {
     test('viser alle kolonneheadere', () => {
-        render(<Vedtakstabell beregningsresultat={lagBeregningsresultat()} />);
+        render(
+            <Vedtakstabell
+                beregningsresultat={lagBeregningsresultat({
+                    beregningsresultatsperioder:
+                        lagBeregningsresultat().beregningsresultatsperioder.map(periode =>
+                            periode.vurdering === 'GodTro'
+                                ? { ...periode, beløpIBehold: 100 }
+                                : periode
+                        ),
+                })}
+            />
+        );
 
         expect(screen.getByRole('columnheader', { name: 'Periode' })).toBeInTheDocument();
         expect(screen.getByRole('columnheader', { name: 'Feilutbetalt' })).toBeInTheDocument();
@@ -92,8 +103,53 @@ describe('Vedtakstabell', () => {
         expect(hentCeller(screen.getAllByRole('row')[1])).toHaveLength(7);
     });
 
+    test('viser ikke reduksjonskolonnen når alle perioder har forsett', () => {
+        render(
+            <Vedtakstabell
+                beregningsresultat={lagBeregningsresultat({
+                    beregningsresultatsperioder:
+                        lagBeregningsresultat().beregningsresultatsperioder.map(periode => ({
+                            ...periode,
+                            vurdering: 'Forsett',
+                            beløpIBehold: 0,
+                        })),
+                })}
+            />
+        );
+
+        expect(screen.queryByRole('columnheader', { name: 'Reduksjon' })).not.toBeInTheDocument();
+    });
+
+    test('viser reduksjonskolonnen når en periode har en annen vurdering enn forsett', () => {
+        render(
+            <Vedtakstabell
+                beregningsresultat={lagBeregningsresultat({
+                    beregningsresultatsperioder: [
+                        {
+                            ...lagBeregningsresultat().beregningsresultatsperioder[0],
+                            vurdering: 'Uaktsomhet',
+                        },
+                    ],
+                })}
+            />
+        );
+
+        expect(screen.getByRole('columnheader', { name: 'Reduksjon' })).toBeInTheDocument();
+    });
+
     test('viser beløpet for god tro selv når beløpet er nullstilt', () => {
-        render(<Vedtakstabell beregningsresultat={lagBeregningsresultat()} />);
+        render(
+            <Vedtakstabell
+                beregningsresultat={lagBeregningsresultat({
+                    beregningsresultatsperioder:
+                        lagBeregningsresultat().beregningsresultatsperioder.map(periode =>
+                            periode.vurdering === 'GodTro'
+                                ? { ...periode, beløpIBehold: 0 }
+                                : periode
+                        ),
+                })}
+            />
+        );
 
         const rader = screen.getAllByRole('row');
         expect(hentCeller(rader[2])[3]).toHaveTextContent('0 kr');

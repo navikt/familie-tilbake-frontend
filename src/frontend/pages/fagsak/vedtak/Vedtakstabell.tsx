@@ -18,6 +18,9 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
     const visIBeholdKolonne = beregningsresultatsperioder.some(
         periode => periode.vurdering === 'GodTro'
     );
+    const visReduksjonKolonne = beregningsresultatsperioder.some(
+        periode => periode.vurdering !== 'Forsett'
+    );
 
     return (
         <ExpansionCard
@@ -55,9 +58,11 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                     I behold
                                 </Table.HeaderCell>
                             )}
-                            <Table.HeaderCell scope="col" align="right">
-                                Reduksjon
-                            </Table.HeaderCell>
+                            {visReduksjonKolonne && (
+                                <Table.HeaderCell scope="col" align="right">
+                                    Reduksjon
+                                </Table.HeaderCell>
+                            )}
                             <Table.HeaderCell scope="col" align="right">
                                 Renter
                             </Table.HeaderCell>
@@ -104,11 +109,13 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                             : 'Ikke relevant'}
                                     </Table.DataCell>
                                 )}
-                                <Table.DataCell align="right">
-                                    {periode.reduksjon
-                                        ? `–${formatCurrencyNoKr(periode.reduksjon)} kr`
-                                        : ''}
-                                </Table.DataCell>
+                                {visReduksjonKolonne && (
+                                    <Table.DataCell align="right">
+                                        {periode.reduksjon
+                                            ? `–${formatCurrencyNoKr(periode.reduksjon)} kr`
+                                            : ''}
+                                    </Table.DataCell>
+                                )}
                                 <Table.DataCell align="right">
                                     {`${formatCurrencyNoKr(periode.rentebeløp)} kr`}
                                 </Table.DataCell>
@@ -139,9 +146,11 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                     {formatCurrencyNoKr(beregningsresultat.totaltBeløpIBehold)} kr
                                 </Table.DataCell>
                             )}
-                            <Table.DataCell align="right" className="border-b-0">
-                                –{formatCurrencyNoKr(beregningsresultat.totaltReduksjon)} kr
-                            </Table.DataCell>
+                            {visReduksjonKolonne && (
+                                <Table.DataCell align="right" className="border-b-0">
+                                    –{formatCurrencyNoKr(beregningsresultat.totaltReduksjon)} kr
+                                </Table.DataCell>
+                            )}
                             <Table.DataCell align="right" className="border-b-0">
                                 {formatCurrencyNoKr(beregningsresultat.totaltRentebeløp)} kr
                             </Table.DataCell>
