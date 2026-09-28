@@ -25,6 +25,7 @@ import { erHistoriskSide } from '@/utils/sider';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
+import { ViktigInfoModal } from './ViktigInfoModal';
 
 const rolleMapper: Record<
     InnloggetRolleEnum,
@@ -106,6 +107,7 @@ export const Header: FC = () => {
             >
                 Nav - Tilbakekreving
             </InternalHeader.Title>
+            <ViktigInfoModal />
             <Høytidspynt />
             <Spacer />
 
