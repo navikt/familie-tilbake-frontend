@@ -42,6 +42,9 @@ const lagBeregningsresultat = (overrides?: Partial<Beregningsresultat>): Beregni
 
 const hentCeller = (rad: HTMLElement): HTMLElement[] => within(rad).getAllByRole('cell');
 
+const hentKolonnenavn = (): string[] =>
+    screen.getAllByRole('columnheader').map(kolonne => kolonne.textContent ?? '');
+
 describe('Vedtakstabell', () => {
     test('viser alle kolonneheadere', () => {
         render(
@@ -78,7 +81,7 @@ describe('Vedtakstabell', () => {
         expect(celler[1]).toHaveTextContent('10 000 kr');
         expect(celler[2]).toHaveTextContent('Forsett');
         expect(celler[3]).toHaveTextContent('Ikke relevant');
-        expect(celler[4]).toHaveTextContent('');
+        expect(celler[4]).toHaveTextContent('0 kr');
         expect(celler[5]).toHaveTextContent('10 kr');
         expect(celler[6]).toHaveTextContent('–3 000 kr');
         expect(celler[7]).toHaveTextContent('11 000 kr');
@@ -100,7 +103,14 @@ describe('Vedtakstabell', () => {
 
         expect(screen.queryByRole('columnheader', { name: 'I behold' })).not.toBeInTheDocument();
         expect(screen.getAllByRole('row')).toHaveLength(3);
-        expect(hentCeller(screen.getAllByRole('row')[1])).toHaveLength(7);
+        expect(hentKolonnenavn()).toEqual([
+            'Periode',
+            'Feilutbetalt',
+            'Vurdering',
+            'Renter',
+            'Skatt',
+            'Beløp',
+        ]);
     });
 
     test('viser ikke reduksjonskolonnen når alle perioder har forsett', () => {
@@ -137,14 +147,14 @@ describe('Vedtakstabell', () => {
         expect(screen.getByRole('columnheader', { name: 'Reduksjon' })).toBeInTheDocument();
     });
 
-    test('viser beløpet for god tro selv når beløpet er nullstilt', () => {
+    test('viser 0 kr for god tro når beløp i behold er null', () => {
         render(
             <Vedtakstabell
                 beregningsresultat={lagBeregningsresultat({
                     beregningsresultatsperioder:
                         lagBeregningsresultat().beregningsresultatsperioder.map(periode =>
                             periode.vurdering === 'GodTro'
-                                ? { ...periode, beløpIBehold: 0 }
+                                ? { ...periode, beløpIBehold: null }
                                 : periode
                         ),
                 })}
@@ -225,20 +235,20 @@ describe('Vedtakstabell', () => {
         expect(sumCeller[0]).toHaveTextContent('Totalt beløp');
         expect(sumCeller[1]).toHaveTextContent('15 000 kr'); // 10000 + 5000
         expect(sumCeller[3]).toHaveTextContent('0 kr');
-        expect(sumCeller[4]).toHaveTextContent('–0 kr');
+        expect(sumCeller[4]).toHaveTextContent('0 kr');
         expect(sumCeller[5]).toHaveTextContent('10 kr');
         expect(sumCeller[6]).toHaveTextContent('–3 500 kr'); // 3000 + 500
         expect(sumCeller[7]).toHaveTextContent('13 500 kr'); // 11000 + 2500
     });
 
-    test('viser tomme celler i sumraden', () => {
+    test('viser 0 kr i sumraden når reduksjonen er nullstilt', () => {
         render(<Vedtakstabell beregningsresultat={lagBeregningsresultat()} />);
 
         const rader = screen.getAllByRole('row');
         const sumCeller = hentCeller(rader[rader.length - 1]);
 
         expect(sumCeller[2]).toHaveTextContent('');
-        expect(sumCeller[4]).toHaveTextContent('–0 kr');
+        expect(sumCeller[4]).toHaveTextContent('0 kr');
         expect(sumCeller[5]).toHaveTextContent('10 kr');
     });
 

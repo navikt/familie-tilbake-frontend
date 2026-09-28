@@ -11,6 +11,9 @@ type Props = {
     beregningsresultat: Beregningsresultat;
 };
 
+const formaterMinusbeløp = (beløp: number | null | undefined): string =>
+    beløp ? `–${formatCurrencyNoKr(beløp)} kr` : '0 kr';
+
 export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
     const { beregningsresultatsperioder } = beregningsresultat;
 
@@ -111,9 +114,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 )}
                                 {visReduksjonKolonne && (
                                     <Table.DataCell align="right">
-                                        {periode.reduksjon
-                                            ? `–${formatCurrencyNoKr(periode.reduksjon)} kr`
-                                            : ''}
+                                        {formaterMinusbeløp(periode.reduksjon)}
                                     </Table.DataCell>
                                 )}
                                 <Table.DataCell align="right">
@@ -121,7 +122,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 </Table.DataCell>
                                 {VisSkattKolonne && (
                                     <Table.DataCell align="right">
-                                        –{formatCurrencyNoKr(periode.skattebeløp)} kr
+                                        {formaterMinusbeløp(periode.skattebeløp)}
                                     </Table.DataCell>
                                 )}
                                 <Table.DataCell align="right">
@@ -148,7 +149,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                             )}
                             {visReduksjonKolonne && (
                                 <Table.DataCell align="right" className="border-b-0">
-                                    –{formatCurrencyNoKr(beregningsresultat.totaltReduksjon)} kr
+                                    {formaterMinusbeløp(beregningsresultat.totaltReduksjon)}
                                 </Table.DataCell>
                             )}
                             <Table.DataCell align="right" className="border-b-0">
@@ -156,7 +157,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                             </Table.DataCell>
                             {VisSkattKolonne && (
                                 <Table.DataCell align="right" className="border-b-0">
-                                    –{formatCurrencyNoKr(beregningsresultat.totaltSkattebeløp)} kr
+                                    {formaterMinusbeløp(beregningsresultat.totaltSkattebeløp)}
                                 </Table.DataCell>
                             )}
                             <Table.DataCell align="right" className="border-b-0 font-bold">
