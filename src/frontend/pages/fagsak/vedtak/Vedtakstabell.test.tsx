@@ -73,6 +73,32 @@ describe('Vedtakstabell', () => {
         expect(celler[7]).toHaveTextContent('11 000 kr');
     });
 
+    test('viser ikke i behold-kolonnen når ingen perioder har god tro-vurdering', () => {
+        render(
+            <Vedtakstabell
+                beregningsresultat={lagBeregningsresultat({
+                    beregningsresultatsperioder: [
+                        {
+                            ...lagBeregningsresultat().beregningsresultatsperioder[0],
+                            vurdering: 'Forsett',
+                        },
+                    ],
+                })}
+            />
+        );
+
+        expect(screen.queryByRole('columnheader', { name: 'I behold' })).not.toBeInTheDocument();
+        expect(screen.getAllByRole('row')).toHaveLength(3);
+        expect(hentCeller(screen.getAllByRole('row')[1])).toHaveLength(7);
+    });
+
+    test('viser beløpet for god tro selv når beløpet er nullstilt', () => {
+        render(<Vedtakstabell beregningsresultat={lagBeregningsresultat()} />);
+
+        const rader = screen.getAllByRole('row');
+        expect(hentCeller(rader[2])[3]).toHaveTextContent('0 kr');
+    });
+
     test('mapper vurderingstekster korrekt', () => {
         render(
             <Vedtakstabell
@@ -192,9 +218,10 @@ describe('Vedtakstabell', () => {
 
         const sumCeller = hentCeller(rader[2]);
         expect(sumCeller[1]).toHaveTextContent('3 500 kr');
-        expect(sumCeller[3]).toHaveTextContent('123 kr');
-        expect(sumCeller[6]).toHaveTextContent('–725 kr');
-        expect(sumCeller[7]).toHaveTextContent('2 625 kr');
+        expect(sumCeller[3]).toHaveTextContent('–75 kr');
+        expect(sumCeller[4]).toHaveTextContent('10 kr');
+        expect(sumCeller[5]).toHaveTextContent('–725 kr');
+        expect(sumCeller[6]).toHaveTextContent('2 625 kr');
     });
 
     test('viser reduksjon og skatt som minusbeløp', () => {
@@ -228,9 +255,9 @@ describe('Vedtakstabell', () => {
         const periodeCeller = hentCeller(rader[1]);
         const sumCeller = hentCeller(rader[2]);
 
-        expect(periodeCeller[4]).toHaveTextContent('–250 kr');
-        expect(periodeCeller[6]).toHaveTextContent('–725 kr');
-        expect(sumCeller[4]).toHaveTextContent('–250 kr');
-        expect(sumCeller[6]).toHaveTextContent('–725 kr');
+        expect(periodeCeller[3]).toHaveTextContent('–250 kr');
+        expect(periodeCeller[5]).toHaveTextContent('–725 kr');
+        expect(sumCeller[3]).toHaveTextContent('–250 kr');
+        expect(sumCeller[5]).toHaveTextContent('–725 kr');
     });
 });

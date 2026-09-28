@@ -14,7 +14,10 @@ type Props = {
 export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
     const { beregningsresultatsperioder } = beregningsresultat;
 
-    const erSkattRelevant = beregningsresultatsperioder.some(periode => periode.skattebeløp);
+    const VisSkattKolonne = beregningsresultatsperioder.some(periode => periode.skattebeløp);
+    const visIBeholdKolonne = beregningsresultatsperioder.some(
+        periode => periode.vurdering === 'GodTro'
+    );
 
     return (
         <ExpansionCard
@@ -47,17 +50,18 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 Feilutbetalt
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col">Vurdering</Table.HeaderCell>
-                            <Table.HeaderCell scope="col" align="right">
-                                I behold
-                                {/* Vises ikke alltid (kun hvis det er en periode med god tro), Ikke relevant når det ikke gjelder */}
-                            </Table.HeaderCell>
+                            {visIBeholdKolonne && (
+                                <Table.HeaderCell scope="col" align="right">
+                                    I behold
+                                </Table.HeaderCell>
+                            )}
                             <Table.HeaderCell scope="col" align="right">
                                 Reduksjon
                             </Table.HeaderCell>
                             <Table.HeaderCell scope="col" align="right">
                                 Renter
                             </Table.HeaderCell>
-                            {erSkattRelevant && (
+                            {VisSkattKolonne && (
                                 <Table.HeaderCell scope="col" align="right">
                                     Skatt
                                 </Table.HeaderCell>
@@ -93,11 +97,13 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                         {vurderingstag[vurderingsmapper[periode.vurdering]].label}
                                     </Tag>
                                 </Table.DataCell>
-                                <Table.DataCell align="right">
-                                    {periode.beløpIBehold
-                                        ? `${formatCurrencyNoKr(periode.beløpIBehold)} kr`
-                                        : 'Ikke relevant'}
-                                </Table.DataCell>
+                                {visIBeholdKolonne && (
+                                    <Table.DataCell align="right">
+                                        {periode.vurdering === 'GodTro'
+                                            ? `${formatCurrencyNoKr(periode.beløpIBehold ?? 0)} kr`
+                                            : 'Ikke relevant'}
+                                    </Table.DataCell>
+                                )}
                                 <Table.DataCell align="right">
                                     {periode.reduksjon
                                         ? `–${formatCurrencyNoKr(periode.reduksjon)} kr`
@@ -106,7 +112,7 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                                 <Table.DataCell align="right">
                                     {`${formatCurrencyNoKr(periode.rentebeløp)} kr`}
                                 </Table.DataCell>
-                                {erSkattRelevant && (
+                                {VisSkattKolonne && (
                                     <Table.DataCell align="right">
                                         –{formatCurrencyNoKr(periode.skattebeløp)} kr
                                     </Table.DataCell>
@@ -128,16 +134,18 @@ export const Vedtakstabell: FC<Props> = ({ beregningsresultat }: Props) => {
                             </Table.DataCell>
                             {/* Vurdering */}
                             <Table.DataCell className="border-b-0" />
-                            <Table.DataCell align="right" className="border-b-0">
-                                {formatCurrencyNoKr(beregningsresultat.totaltBeløpIBehold)} kr
-                            </Table.DataCell>
+                            {visIBeholdKolonne && (
+                                <Table.DataCell align="right" className="border-b-0">
+                                    {formatCurrencyNoKr(beregningsresultat.totaltBeløpIBehold)} kr
+                                </Table.DataCell>
+                            )}
                             <Table.DataCell align="right" className="border-b-0">
                                 –{formatCurrencyNoKr(beregningsresultat.totaltReduksjon)} kr
                             </Table.DataCell>
                             <Table.DataCell align="right" className="border-b-0">
                                 {formatCurrencyNoKr(beregningsresultat.totaltRentebeløp)} kr
                             </Table.DataCell>
-                            {erSkattRelevant && (
+                            {VisSkattKolonne && (
                                 <Table.DataCell align="right" className="border-b-0">
                                     –{formatCurrencyNoKr(beregningsresultat.totaltSkattebeløp)} kr
                                 </Table.DataCell>
