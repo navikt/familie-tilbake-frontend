@@ -70,7 +70,10 @@ export const Vedtak: FC = () => {
     });
 
     const onSubmit: SubmitHandler<VedtaksbrevFormData> = () => {
-        foreslåVedtak.mutate({ path: { behandlingId } });
+        visGlobalAlert({
+            title: 'Fryseperiode 9. oktober kl. 16:00–19. oktober kl. 08:00',
+            status: 'error',
+        });
     };
 
     const fellesActionBarConfig = {

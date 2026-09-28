@@ -16,6 +16,7 @@ import { vi } from 'vitest';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { Underavsnittstype, Vurdering } from '@/kodeverk';
+import { useGlobalAlertStore } from '@/stores/globalAlertStore';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
@@ -132,6 +133,7 @@ describe('VedtakContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
+        useGlobalAlertStore.setState({ alerts: [] });
     });
 
     test('Vis og fyll ut - 1 fritekst påkrevet', async () => {
@@ -759,7 +761,8 @@ describe('VedtakContainer', () => {
         expect(screen.getByText('Denne friteksten var lagt til ekstra')).toBeInTheDocument();
     });
 
-    test('Viser bekreftelsesmodal når bruker klikker Send til godkjenning', async () => {
+    // test('Viser bekreftelsesmodal når bruker klikker Send til godkjenning', async () => {
+    test('Viser feilmelding om fryseperiode når bruker klikker Send til godkjenning', async () => {
         const vedtaksbrevAvsnitt = [
             lagOppsummeringAvsnitt(),
             lagPeriodeAvsnitt([
@@ -784,46 +787,53 @@ describe('VedtakContainer', () => {
             })
         );
 
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
+        // expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-        expect(
-            screen.getByRole('button', {
-                name: 'Avbryt',
-            })
-        ).toBeInTheDocument();
-    });
+        //         expect(
+        //             screen.getByRole('button', {
+        //                 name: 'Avbryt',
+        //             })
+        //         ).toBeInTheDocument();
+        //     });
 
-    test('Lukker bekreftelsesmodal etter vellykket sending til godkjenning', async () => {
-        const vedtaksbrevAvsnitt = [
-            lagOppsummeringAvsnitt(),
-            lagPeriodeAvsnitt([
-                lagVedaksbrevUnderavsnitt({
-                    underavsnittstype: Underavsnittstype.Fakta,
-                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
-                    fritekstTillatt: true,
-                    fritekstPåkrevet: false,
-                }),
-            ]),
-        ];
-        setupMock(vedtaksbrevAvsnitt, beregningsresultat);
-        renderVedtakContainer(lagBehandling({ kanEndres: true }));
+        //     test('Lukker bekreftelsesmodal etter vellykket sending til godkjenning', async () => {
+        //         const vedtaksbrevAvsnitt = [
+        //             lagOppsummeringAvsnitt(),
+        //             lagPeriodeAvsnitt([
+        //                 lagVedaksbrevUnderavsnitt({
+        //                     underavsnittstype: Underavsnittstype.Fakta,
+        //                     brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+        //                     fritekstTillatt: true,
+        //                     fritekstPåkrevet: false,
+        //                 }),
+        //             ]),
+        //         ];
+        //         setupMock(vedtaksbrevAvsnitt, beregningsresultat);
+        //         renderVedtakContainer(lagBehandling({ kanEndres: true }));
 
-        expect(await screen.findByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
+        //         expect(await screen.findByText('Du må betale tilbake barnetrygden')).toBeInTheDocument();
 
-        await user.click(
-            screen.getByRole('button', {
-                name: 'Send til godkjenning hos beslutter',
-            })
-        );
+        //         await user.click(
+        //             screen.getByRole('button', {
+        //                 name: 'Send til godkjenning hos beslutter',
+        //             })
+        //         );
 
-        const modal = screen.getByRole('dialog');
+        //         const modal = screen.getByRole('dialog');
 
-        await user.click(
-            within(modal).getByRole('button', {
-                name: 'Send til godkjenning',
-            })
-        );
+        //         await user.click(
+        //             within(modal).getByRole('button', {
+        //                 name: 'Send til godkjenning',
+        //             })
+        //         );
 
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        expect(useGlobalAlertStore.getState().alerts).toEqual([
+            expect.objectContaining({
+                title: 'Fryseperiode 9. oktober kl. 16:00–19. oktober kl. 08:00',
+                status: 'error',
+            }),
+        ]);
     });
 });
