@@ -11,6 +11,7 @@ import type { Vilkårsperiode } from './typer';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { type UserEvent, userEvent } from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
@@ -681,6 +682,7 @@ describe('VilkårsvurderingDetaljer', () => {
         });
 
         test('oppdaterer simulertBeløp når perioden blir refetchet etter lagring', () => {
+            const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
             const valg: VilkaarsvurderingValg = {
                 vurdering: 'god_tro',
                 begrunnelse: 'Mottaker var i aktsom god tro',
@@ -693,10 +695,16 @@ describe('VilkårsvurderingDetaljer', () => {
 
             expect(screen.getByText('7 500 kroner')).toBeInTheDocument();
 
+            scrollIntoView.mockClear();
             rerender(lagVilkårsDetaljer(5000, false, 'GOD_TRO', { valg }));
 
             expect(screen.queryByText('7 500 kroner')).not.toBeInTheDocument();
             expect(screen.getByText('5 000 kroner')).toBeInTheDocument();
+            expect(scrollIntoView).toHaveBeenCalledWith({
+                behavior: 'smooth',
+                block: 'nearest',
+            });
+            scrollIntoView.mockRestore();
         });
 
         test('skjuler simulertBeløp så snart saksbehandleren endrer noe', async () => {

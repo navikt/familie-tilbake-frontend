@@ -20,6 +20,9 @@ global.console = {
 
 Object.assign(global, { TextEncoder });
 
+// jsdom implementerer ikke scrollIntoView, som brukes når simulert beløp vises.
+Element.prototype.scrollIntoView = vi.fn();
+
 // jsdom implementerer ikke ResizeObserver. Komponenter som måler tilgjengelig
 // plass trenger den for å kunne rendres i test.
 if (!('ResizeObserver' in global)) {
