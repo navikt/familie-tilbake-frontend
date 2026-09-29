@@ -3,7 +3,7 @@ import type { ChangeHandler, SubmitHandler } from 'react-hook-form';
 import type { RessursVarselbrevtekst, Section, Varselbrevtekst } from '@/generated';
 import type { IkkeVurdertFormData } from './schema';
 
-import { BodyLong, Box, Heading, Textarea, VStack } from '@navikt/ds-react';
+import { BodyLong, Box, Heading, InlineMessage, Textarea, VStack } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { Fragment, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -12,7 +12,7 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { hentForhåndsvarselTekstOptions } from '@/generated/@tanstack/react-query.gen';
 import { behandlingFaktaOptions } from '@/generated-new/@tanstack/react-query.gen';
-import { formatterDatostringLangt } from '@/utils/dateUtils';
+import { formatterDatostring, formatterDatostringLangt } from '@/utils/dateUtils';
 
 import { SkalSendeForhåndsvarsel } from './SkalSendeForhåndsvarsel';
 import { Unntak } from './Unntak';
@@ -21,6 +21,7 @@ import { useUlagretForhåndsvarsel } from './useUlagretForhåndsvarsel';
 export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
 type Props = {
+    sendtVarselDato?: string;
     onValgEndring?: (valg: 'send' | 'unntak' | undefined) => void;
     onSubmit: SubmitHandler<IkkeVurdertFormData>;
 };
@@ -31,7 +32,7 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
     return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
 };
 
-export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }: Props) => {
+export const IkkeVurdert: FC<Props> = ({ sendtVarselDato, onValgEndring, onSubmit }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();
 
@@ -86,6 +87,13 @@ export const IkkeVurdert: FC<Props> = ({ onValgEndring, onSubmit }: Props) => {
                     onChange={handleValgChange}
                     {...radioProps}
                 />
+
+                {valg === 'unntak' && sendtVarselDato && (
+                    <InlineMessage size="small" status="info" className="max-w-xl">
+                        Nytt forhåndsvarsel sendes ikke. Det eksisterende brevet fra{' '}
+                        {formatterDatostring(sendtVarselDato)} gjelder fortsatt.
+                    </InlineMessage>
+                )}
 
                 {valg === 'send' && varselbrevtekster && (
                     <Box

@@ -161,6 +161,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         brukeruttalelse,
         tilbakeført,
         ferdigvurdert,
+        sendtVarselbrev,
     } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
@@ -439,7 +440,11 @@ export const ForhåndsvarselInnhold: FC = () => {
                         </HStack>
                         <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
                     </HStack>
-                    <IkkeVurdert onValgEndring={setValg} onSubmit={onSubmit} />
+                    <IkkeVurdert
+                        sendtVarselDato={sendtVarselbrev?.brevSendt}
+                        onValgEndring={setValg}
+                        onSubmit={onSubmit}
+                    />
                 </FormProvider>
             ) : (
                 <div className="grid grid-cols-1 gap-6 items-start">

@@ -272,6 +272,35 @@ describe('Forhåndsvarsel', () => {
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
     });
 
+    describe('Tidligere sendt varselbrev', () => {
+        const nyttForhåndsvarselSendesIkkeTekst =
+            'Nytt forhåndsvarsel sendes ikke. Det eksisterende brevet fra 10.01.2025 gjelder fortsatt.';
+
+        test('Nei: viser at eksisterende brev gjelder når varsel er sendt tidligere', async () => {
+            renderForhåndsvarsel(
+                lagForhåndsvarselResponse({
+                    sendtVarselbrev: {
+                        brevSendt: '2025-01-10',
+                        journalpostId: 'jp-123',
+                        dokumentId: 'dok-456',
+                    },
+                })
+            );
+
+            await velgUnntak(user);
+
+            expect(screen.getByText(nyttForhåndsvarselSendesIkkeTekst)).toBeInTheDocument();
+        });
+
+        test('Nei: viser ikke melding når varsel ikke er sendt tidligere', async () => {
+            renderForhåndsvarsel();
+
+            await velgUnntak(user);
+
+            expect(screen.queryByText(nyttForhåndsvarselSendesIkkeTekst)).not.toBeInTheDocument();
+        });
+    });
+
     describe('Forhåndsvis varselbrev', () => {
         test('burde vise "Vis brevet"-knapp når forhåndsvarsel skal sendes', async () => {
             renderForhåndsvarsel();
