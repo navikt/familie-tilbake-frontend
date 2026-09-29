@@ -13,7 +13,6 @@ import { hentForhåndsvarselTekstQueryKey } from '@/generated/@tanstack/react-qu
 import {
     behandlingFaktaQueryKey,
     behandlingForhandsvarselQueryKey,
-    behandlingHentDokumentInfoOptions,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
@@ -88,7 +87,7 @@ const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselRespo
         },
     },
     brukeruttalelse: null,
-    sendtVarselbrev: null,
+    sendtVarselbrev: { brevSendt: '2025-01-10', journalpostId: 'jp-123', dokumentId: 'dok-456' },
     ferdigvurdert: true,
 });
 
@@ -114,16 +113,6 @@ const opprettQueryClientMedForhåndsvarselData = (
 };
 
 const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
-    const journalpostId = 'jp-123';
-    const dokumentId = 'dok-456';
-
-    queryClient.setQueryData(
-        behandlingHentDokumentInfoOptions({
-            path: { behandlingId: BEHANDLING_ID, dokumentType: 'VARSELBREV' },
-        }).queryKey,
-        { brevSendt: '2025-01-10', journalpostId, dokumentId }
-    );
-
     queryClient.setMutationDefaults(['hentSendtDokument'], {
         mutationFn: async () => new Blob(['PDF content'], { type: 'application/pdf' }),
     });

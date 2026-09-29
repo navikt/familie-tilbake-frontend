@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import type { ChangeHandler, SubmitHandler } from 'react-hook-form';
 import type { RessursVarselbrevtekst, Section, Varselbrevtekst } from '@/generated';
 import type { IkkeVurdertFormData } from './schema';
@@ -23,6 +23,7 @@ export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 type Props = {
     sendtVarselDato?: string;
     erNyttKravgrunnlag?: boolean;
+    sidekolonne?: ReactNode;
     onValgEndring?: (valg: 'send' | 'unntak' | undefined) => void;
     onSubmit: SubmitHandler<IkkeVurdertFormData>;
 };
@@ -36,6 +37,7 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
 export const IkkeVurdert: FC<Props> = ({
     sendtVarselDato,
     erNyttKravgrunnlag,
+    sidekolonne,
     onValgEndring,
     onSubmit,
 }: Props) => {
@@ -87,13 +89,16 @@ export const IkkeVurdert: FC<Props> = ({
     return (
         <VStack asChild gap="space-24">
             <form id={FORHÅNDSVARSEL_FORM_ID} onSubmit={handleSubmit(onSubmit)}>
-                <SkalSendeForhåndsvarsel
-                    readOnly={behandlingILesemodus}
-                    error={errors.valg?.message}
-                    erNyttKravgrunnlag={erNyttKravgrunnlag}
-                    onChange={handleValgChange}
-                    {...radioProps}
-                />
+                <div className="grid grid-cols-1 gap-6 items-start md:grid-cols-[minmax(0,1fr)_auto]">
+                    <SkalSendeForhåndsvarsel
+                        readOnly={behandlingILesemodus}
+                        error={errors.valg?.message}
+                        erNyttKravgrunnlag={erNyttKravgrunnlag}
+                        onChange={handleValgChange}
+                        {...radioProps}
+                    />
+                    {sidekolonne}
+                </div>
 
                 {valg === 'unntak' && sendtVarselDato && (
                     <InlineMessage size="small" status="info" className="max-w-xl">

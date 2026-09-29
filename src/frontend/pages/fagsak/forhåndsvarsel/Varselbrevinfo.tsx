@@ -61,6 +61,7 @@ export const Varselbrevinfo: FC<Props> = ({
                         </VStack>
                     </HStack>
                     <Button
+                        type="button"
                         size="small"
                         data-color="neutral"
                         variant="secondary"

@@ -5,7 +5,7 @@ import type { IkkeVurdertFormData } from './schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack, InlineMessage, VStack } from '@navikt/ds-react';
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
@@ -35,7 +35,6 @@ import {
 import {
     behandlingForhandsvarselOptions,
     behandlingForhandsvarselQueryKey,
-    behandlingHentDokumentInfoOptions,
     behandlingLagreBrukersuttalelseMutation,
     behandlingLagreForhaandsvarselUnntakMutation,
     behandlingSendVarselbrevMutation,
@@ -165,15 +164,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
-    const varselErSendt = forhåndsvarselSteg.type === 'sendt';
     const erNyttKravgrunnlag = tilbakeført === 'NyttKravgrunnlag';
-
-    const { data: { journalpostId, dokumentId } = {} } = useQuery({
-        ...behandlingHentDokumentInfoOptions({
-            path: { behandlingId, dokumentType: 'VARSELBREV' },
-        }),
-        enabled: varselErSendt,
-    });
 
     const hentSendtDokument = useMutation<
         Blob,
@@ -189,12 +180,11 @@ export const ForhåndsvarselInnhold: FC = () => {
     }, [hentSendtDokument.data]);
 
     const onSeVarselbrev = (): void => {
-        if (
-            (hentSendtDokument.isIdle || hentSendtDokument.isError) &&
-            journalpostId &&
-            dokumentId
-        ) {
-            hentSendtDokument.mutate({ journalpostId, dokumentInfoId: dokumentId });
+        if ((hentSendtDokument.isIdle || hentSendtDokument.isError) && sendtVarselbrev) {
+            hentSendtDokument.mutate({
+                journalpostId: sendtVarselbrev.journalpostId,
+                dokumentInfoId: sendtVarselbrev.dokumentId,
+            });
         }
     };
 
@@ -421,79 +411,75 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     useActionBar(actionBarConfig);
 
+    const erInternVurdering =
+        forhåndsvarselSteg.type === 'sendt' ||
+        valg === 'unntak' ||
+        (forhåndsvarselSteg.type === 'unntak' && valg !== 'send');
+
+    const sidekolonne = (sendtVarselbrev || forhåndsvarselSteg.type === 'sendt') && (
+        <VStack gap="space-8">
+            {sendtVarselbrev && (
+                <Varselbrevinfo
+                    varselbrevUrl={varselbrevUrl}
+                    sendtTid={sendtVarselbrev.brevSendt}
+                    laster={hentSendtDokument.isPending}
+                    onSeBrevet={onSeVarselbrev}
+                />
+            )}
+            {forhåndsvarselSteg.type === 'sendt' && (
+                <Fristinfo
+                    uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
+                    onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
+                />
+            )}
+        </VStack>
+    );
+
     return (
         <VStack gap="space-24">
-            {erRedigerbarForhåndsvarselFlyt ? (
-                <FormProvider {...methods}>
-                    <HStack gap="space-16" className="justify-between">
-                        <HStack className="gap-x-4">
-                            <HStack gap="space-0 space-32" align="center">
-                                <Heading size="medium">Forhåndsvarsel</Heading>
-                                {(valg === 'unntak' ||
-                                    (forhåndsvarselSteg.type === 'unntak' && valg !== 'send')) && (
-                                    <InlineMessage size="small" status="info">
-                                        Intern vurdering (ikke synlig i vedtaksbrev)
-                                    </InlineMessage>
-                                )}
-                            </HStack>
-
-                            {visForhåndsvisning && <ForhåndsvisVarselbrev />}
-                        </HStack>
-                        <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
-                    </HStack>
-                    <IkkeVurdert
-                        sendtVarselDato={sendtVarselbrev?.brevSendt}
-                        erNyttKravgrunnlag={erNyttKravgrunnlag}
-                        onValgEndring={setValg}
-                        onSubmit={onSubmit}
-                    />
-                </FormProvider>
-            ) : (
-                <div className="grid grid-cols-1 gap-6 items-start">
-                    <HStack className="md:col-span-2 justify-between">
+            <FormProvider {...methods}>
+                <HStack gap="space-16" className="justify-between">
+                    <HStack className="gap-x-4">
                         <HStack gap="space-0 space-32" align="center">
                             <Heading size="medium">Forhåndsvarsel</Heading>
-                            {forhåndsvarselSteg.type === 'sendt' && (
+                            {erInternVurdering && (
                                 <InlineMessage size="small" status="info">
                                     Intern vurdering (ikke synlig i vedtaksbrev)
                                 </InlineMessage>
                             )}
                         </HStack>
-                        <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
+
+                        {visForhåndsvisning && <ForhåndsvisVarselbrev />}
                     </HStack>
-
-                    <VStack gap="space-8" className="md:col-start-2 md:row-start-2">
-                        {forhåndsvarselSteg.type === 'sendt' && (
-                            <Varselbrevinfo
-                                varselbrevUrl={varselbrevUrl}
-                                sendtTid={forhåndsvarselSteg.forhåndsvarselInfo.varselbrevSendtTid}
-                                laster={hentSendtDokument.isPending}
-                                onSeBrevet={onSeVarselbrev}
+                    <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
+                </HStack>
+                {forhåndsvarselSteg.type === 'sendt' ? (
+                    <VStack gap="space-24">
+                        <div className="grid grid-cols-1 gap-6 items-start md:grid-cols-[minmax(0,1fr)_auto]">
+                            <SkalSendeForhåndsvarsel
+                                name="valg"
+                                value="send"
+                                erNyttKravgrunnlag={erNyttKravgrunnlag}
+                                readOnly
                             />
-                        )}
-                        <Fristinfo
-                            uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
-                            onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
+                            {sidekolonne}
+                        </div>
+                        <SendtVarsel
+                            {...forhåndsvarselSteg}
+                            brukeruttalelse={brukeruttalelse}
+                            onSubmit={onSubmitBrukeruttalelse}
                         />
                     </VStack>
-
-                    <VStack gap="space-24" className="md:col-start-1 md:row-start-2">
-                        <SkalSendeForhåndsvarsel
-                            name="valg"
-                            value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
-                            erNyttKravgrunnlag={erNyttKravgrunnlag}
-                            readOnly
-                        />
-                        {forhåndsvarselSteg.type === 'sendt' && (
-                            <SendtVarsel
-                                {...forhåndsvarselSteg}
-                                brukeruttalelse={brukeruttalelse}
-                                onSubmit={onSubmitBrukeruttalelse}
-                            />
-                        )}
-                    </VStack>
-                </div>
-            )}
+                ) : (
+                    <IkkeVurdert
+                        sendtVarselDato={sendtVarselbrev?.brevSendt}
+                        erNyttKravgrunnlag={erNyttKravgrunnlag}
+                        sidekolonne={sidekolonne}
+                        onValgEndring={setValg}
+                        onSubmit={onSubmit}
+                    />
+                )}
+            </FormProvider>
             <UtsettFristModal
                 dialogRef={utsettFristModalRef}
                 onUtsettFrist={sendUtsettFrist}
