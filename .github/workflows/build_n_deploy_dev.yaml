@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Deploy til dev-gcp team namespace
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@v3
         env:
           CLUSTER: dev-gcp
           RESOURCE: build_n_deploy/naiserator/naiserator_dev_gcp.yaml
