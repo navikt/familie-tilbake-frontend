@@ -166,6 +166,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
     const varselErSendt = forhåndsvarselSteg.type === 'sendt';
+    const erNyttKravgrunnlag = tilbakeført === 'NyttKravgrunnlag';
 
     const { data: { journalpostId, dokumentId } = {} } = useQuery({
         ...behandlingHentDokumentInfoOptions({
@@ -442,6 +443,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                     </HStack>
                     <IkkeVurdert
                         sendtVarselDato={sendtVarselbrev?.brevSendt}
+                        erNyttKravgrunnlag={erNyttKravgrunnlag}
                         onValgEndring={setValg}
                         onSubmit={onSubmit}
                     />
@@ -479,6 +481,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                         <SkalSendeForhåndsvarsel
                             name="valg"
                             value={forhåndsvarselSteg.type === 'sendt' ? 'send' : 'unntak'}
+                            erNyttKravgrunnlag={erNyttKravgrunnlag}
                             readOnly
                         />
                         {forhåndsvarselSteg.type === 'sendt' && (

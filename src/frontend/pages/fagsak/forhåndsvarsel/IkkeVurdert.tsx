@@ -22,6 +22,7 @@ export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
 type Props = {
     sendtVarselDato?: string;
+    erNyttKravgrunnlag?: boolean;
     onValgEndring?: (valg: 'send' | 'unntak' | undefined) => void;
     onSubmit: SubmitHandler<IkkeVurdertFormData>;
 };
@@ -32,7 +33,12 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
     return `Det er gjort en endring i saken din ${formatertDato}. Dette gjør at tidligere utbetalinger ikke lenger er riktige, og at du har fått utbetalt for mye.`;
 };
 
-export const IkkeVurdert: FC<Props> = ({ sendtVarselDato, onValgEndring, onSubmit }: Props) => {
+export const IkkeVurdert: FC<Props> = ({
+    sendtVarselDato,
+    erNyttKravgrunnlag,
+    onValgEndring,
+    onSubmit,
+}: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const { behandlingId } = useBehandling();
 
@@ -84,6 +90,7 @@ export const IkkeVurdert: FC<Props> = ({ sendtVarselDato, onValgEndring, onSubmi
                 <SkalSendeForhåndsvarsel
                     readOnly={behandlingILesemodus}
                     error={errors.valg?.message}
+                    erNyttKravgrunnlag={erNyttKravgrunnlag}
                     onChange={handleValgChange}
                     {...radioProps}
                 />

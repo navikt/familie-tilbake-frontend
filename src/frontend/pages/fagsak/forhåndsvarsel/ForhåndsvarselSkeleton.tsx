@@ -14,7 +14,7 @@ export const ForhåndsvarselSkeleton: FC = () => {
                     Skal det sendes forhåndsvarsel om tilbakekreving?
                 </BodyShort>
                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
-                    Brukeren skal som klar hovedregel varsles før vedtak om tilbakekreving fattes,
+                    Mottakeren skal som klar hovedregel varsles før vedtak om tilbakekreving fattes,
                     slik at de får mulighet til å uttale seg.
                 </BodyShort>
                 <Skeleton variant="rounded" width="60px" height={24} />

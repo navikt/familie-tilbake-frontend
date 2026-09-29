@@ -299,6 +299,16 @@ describe('Forhåndsvarsel', () => {
 
             expect(screen.queryByText(nyttForhåndsvarselSendesIkkeTekst)).not.toBeInTheDocument();
         });
+
+        test('viser spørsmål om nytt forhåndsvarsel når tilbakeført pga. nytt kravgrunnlag', () => {
+            renderForhåndsvarsel(lagForhåndsvarselResponse({ tilbakeført: 'NyttKravgrunnlag' }));
+
+            expect(
+                screen.getByRole('radiogroup', {
+                    name: /skal det sendes et nytt forhåndsvarsel om tilbakekreving/i,
+                })
+            ).toBeInTheDocument();
+        });
     });
 
     describe('Forhåndsvis varselbrev', () => {
