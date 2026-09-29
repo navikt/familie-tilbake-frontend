@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import type { VilkårsvurderingSkjemaFelter } from './schema';
 
 import { HStack, VStack } from '@navikt/ds-react';
+import { useEffect, useRef } from 'react';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
 import { formatCurrencyNoKr } from '@/utils/miscUtils';
@@ -30,13 +31,23 @@ export const SimulertBeløp: FC<Props> = ({
     const erVurdert = useWatch({ name: 'erVurdert', control: control });
     const { isDirty } = useFormState({ control });
     const visSimulertBeløp = erVurdert && !isDirty;
+    const simulertBeløpRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (visSimulertBeløp) {
+            simulertBeløpRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [visSimulertBeløp]);
 
     if (!visSimulertBeløp && !renter && !reduksjon) {
         return null;
     }
 
     return (
-        <HStack className="border border-ax-border-info-subtle rounded-xl bg-ax-bg-info-soft p-4 font-semibold">
+        <HStack
+            ref={simulertBeløpRef}
+            className="border border-ax-border-info-subtle rounded-xl bg-ax-bg-info-soft p-4 font-semibold"
+        >
             {(reduksjon || renter) && (
                 <HStack gap="space-4" className="w-1/2 min-w-0 flex-nowrap">
                     {reduksjon && (

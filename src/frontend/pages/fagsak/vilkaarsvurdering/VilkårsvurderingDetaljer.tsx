@@ -39,6 +39,8 @@ type InnholdProps = {
     valgtVilkårsperiode: Vilkaarsperiode;
     vilkårsperioder: Vilkaarsperiode[];
     hentVilkårsvurdering: () => void;
+    tidligereVurderingHåndtert: boolean;
+    setTidligereVurderingHåndtert: (håndtert: boolean) => void;
 };
 
 export const LAGRE_VILKÅRSVURDERING_MUTATION_KEY = ['lagreVilkårsvurdering'] as const;
@@ -48,6 +50,8 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     valgtVilkårsperiode,
     vilkårsperioder,
     hentVilkårsvurdering,
+    tidligereVurderingHåndtert,
+    setTidligereVurderingHåndtert,
 }: InnholdProps) => {
     const { behandlingId } = useBehandling();
     const { behandlingILesemodus } = useBehandlingState();
@@ -55,7 +59,6 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
         useVilkårsvurderingLesedata();
     const visGlobalAlert = useVisGlobalAlert();
 
-    const [tidligereVurderingHåndtert, setTidligereVurderingHåndtert] = useState(false);
     const visTidligereVurderingModal =
         valgtVilkårsperiode.vilkårsvurdering.tilbakeført === 'NyttKravgrunnlag' &&
         valgtVilkårsperiode.vilkårsvurdering.valg.vurdering !== 'ikke_vurdert' &&
@@ -216,6 +219,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
     vilkårsperioder,
     hentVilkårsvurdering,
 }: Props) => {
+    const [tidligereVurderingHåndtert, setTidligereVurderingHåndtert] = useState(false);
     const valgtVilkårsperiode = vilkårsperioder.find(
         ({ vilkårsvurdering: { id } }) => id === valgtPeriode.id
     );
@@ -232,6 +236,8 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                     valgtVilkårsperiode={valgtVilkårsperiode}
                     vilkårsperioder={vilkårsperioder}
                     hentVilkårsvurdering={hentVilkårsvurdering}
+                    tidligereVurderingHåndtert={tidligereVurderingHåndtert}
+                    setTidligereVurderingHåndtert={setTidligereVurderingHåndtert}
                 />
             )}
         </section>
