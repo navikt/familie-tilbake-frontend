@@ -21,17 +21,17 @@ importers:
         specifier: 5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(react-hook-form@7.88.0(react@19.3.0))(zod@4.6.5)
       '@navikt/aksel-icons':
-        specifier: 8.16.2
-        version: 8.16.2
+        specifier: 8.17.2
+        version: 8.17.2
       '@navikt/ds-css':
-        specifier: 8.16.2
-        version: 8.16.2
+        specifier: 8.17.2
+        version: 8.17.2
       '@navikt/ds-react':
-        specifier: 8.16.2
-        version: 8.16.2(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: 8.17.2
+        version: 8.17.2(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@navikt/ds-tailwind':
-        specifier: 8.16.2
-        version: 8.16.2
+        specifier: 8.17.2
+        version: 8.17.2
       '@sentry/browser':
         specifier: 10.74.0
         version: 10.74.0
@@ -699,14 +699,14 @@ packages:
     resolution: {integrity: sha512-9I2Zn6+NJLfaGoz9jN3lpwDgAYvfGeNYdbAIjJOqzs4Tpc+VU3Jqq4IofSUBKajiDS8k9fZIg18/z13mpk1bsA==}
     engines: {node: '>=8'}
 
-  '@navikt/aksel-icons@8.16.2':
-    resolution: {integrity: sha512-d2GWooeIEJYq8NYJIJJhMo84Vac6SyCvLJDFWG6RSj8vcgFanQMnKAram1zd48UO/rjuuZZk99p4UZt4jsD0RA==}
+  '@navikt/aksel-icons@8.17.2':
+    resolution: {integrity: sha512-P4N/SrXu1BFaanvp83AWb58hP2qutfmL5u+wBpoxtcSP5uSXDmNdT0qtsE8E7kvdY+cCPKfetHLlGX5O7xRD5g==}
 
-  '@navikt/ds-css@8.16.2':
-    resolution: {integrity: sha512-RMKKQ1OTXGPwSGPsWEvOXpRTxA+QhnHc4oGG0ePg7AeeGQvYE/VjtySL2ddOYwAR8BygyvuB/sDrjm5AkQQ0cw==}
+  '@navikt/ds-css@8.17.2':
+    resolution: {integrity: sha512-k+xkEVF5ZBSM5UoLjqDsRAn/mBrlLXL3S8JLQj3syW1i4HIu6N6FaIGMveZeobZef5rIBWwhLGsIJ8doWtgyOQ==}
 
-  '@navikt/ds-react@8.16.2':
-    resolution: {integrity: sha512-pJGVltBJT5hNwo+fZee5qaM+Kc+hZZgPU7WoXbUbZxUtTbhHM+5uFo4J5ceMU2KBUhamtqtRGso2dXdztyEiHQ==}
+  '@navikt/ds-react@8.17.2':
+    resolution: {integrity: sha512-gVCKqF0rwlclmwpd3U3vAO1db49RhOpzVw+lCBz05RGCxH4ynmeTakuy2xI7MUsnIbiTB3LeBvnOsA23ynh1Dw==}
     peerDependencies:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -715,11 +715,11 @@ packages:
       '@types/react':
         optional: true
 
-  '@navikt/ds-tailwind@8.16.2':
-    resolution: {integrity: sha512-Wdmb/ik6ai4o+EJQgceNh7XQD+ZYsDtoiou1wzu9BaykYHzwNNrZhE3o224624rYANo2orBn+wBExAOF9a1NHA==}
+  '@navikt/ds-tailwind@8.17.2':
+    resolution: {integrity: sha512-vnk1Rh10u58SArtWY1eoVRc3W5pvQIcb6XLwmTicCO0nSnMhTSPOFnrtTLaMxj0yqwncunQgu7L3ziN5EZ1MsQ==}
 
-  '@navikt/ds-tokens@8.16.2':
-    resolution: {integrity: sha512-WXtLRb034uUN1SUBEg+AYUrAu0zm+P0xuUheIWABEDpWnVGmfXDng7lIW5JDFbut3rQIa1xfzvUfeL3ghc4eng==}
+  '@navikt/ds-tokens@8.17.2':
+    resolution: {integrity: sha512-oDKFZxlgt/L2zNPCma03fo1sls5E9bUTybMh8/ELh7btS3Kurv7fvwlF7CMW8mWTa+/yh1oqLXY/ONp4+/mPTg==}
 
   '@opentelemetry/api-logs@0.221.0':
     resolution: {integrity: sha512-OlanaW1vv7ufTqQ3/fPLI4arGt5ZoM+P8abOMki6uEYnpRazepSWDwDnnw+la7kE26SHVC18//SMccrDvLKOXQ==}
@@ -3431,16 +3431,16 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@navikt/aksel-icons@8.16.2': {}
+  '@navikt/aksel-icons@8.17.2': {}
 
-  '@navikt/ds-css@8.16.2': {}
+  '@navikt/ds-css@8.17.2': {}
 
-  '@navikt/ds-react@8.16.2(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@navikt/ds-react@8.17.2(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@floating-ui/react': 0.27.20(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@floating-ui/react-dom': 2.1.9(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@navikt/aksel-icons': 8.16.2
-      '@navikt/ds-tokens': 8.16.2
+      '@navikt/aksel-icons': 8.17.2
+      '@navikt/ds-tokens': 8.17.2
       date-fns: 4.4.0
       react: 19.3.0
       react-day-picker: 10.0.1(@types/react@19.3.0)(react@19.3.0)
@@ -3448,9 +3448,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@navikt/ds-tailwind@8.16.2': {}
+  '@navikt/ds-tailwind@8.17.2': {}
 
-  '@navikt/ds-tokens@8.16.2': {}
+  '@navikt/ds-tokens@8.17.2': {}
 
   '@opentelemetry/api-logs@0.221.0':
     dependencies:
