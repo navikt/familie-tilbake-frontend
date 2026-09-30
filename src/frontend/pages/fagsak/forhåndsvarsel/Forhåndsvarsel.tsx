@@ -193,7 +193,7 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     const methods = useForm<IkkeVurdertFormData>({
         resolver: zodResolver(ikkeVurdertSchema),
-        shouldUnregister: true,
+        shouldUnregister: false,
         defaultValues: utledForhåndsvarselDefaultValues(forhåndsvarselSteg, brukeruttalelse),
     });
 
@@ -367,11 +367,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         onForrige: navigerTilForrige,
     };
 
-    const erUnntakUtenKravTilBrukeruttalelse =
-        forhåndsvarselSteg.type === 'unntak' &&
-        forhåndsvarselSteg.begrunnelseForUnntak !== 'ÅPENBART_UNØDVENDIG';
-
-    const skalSubmitteSkjema = isDirty || !erUnntakUtenKravTilBrukeruttalelse;
+    const skalSubmitteSkjema = !ferdigvurdert || isDirty;
 
     const sendEllerLagreForhåndsvarselConfig = {
         type: 'submit' as const,

@@ -153,6 +153,9 @@ const skalSendesRadiogruppe = (): HTMLElement =>
 const nesteKnapp = (): HTMLElement =>
     screen.getByRole('button', { name: 'Lagre og gå videre til foreldelsessteget' });
 
+const navigerTilNesteKnapp = (): HTMLElement =>
+    screen.getByRole('button', { name: 'Gå videre til foreldelsessteget' });
+
 const sendKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Send forhåndsvarselet' });
 
 const bekreftelsesmodal = (): Promise<HTMLElement> =>
@@ -162,6 +165,9 @@ const unntakRadiogruppe = (): HTMLElement =>
     screen.getByRole('radiogroup', {
         name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
     });
+
+const uttalelseRadiogruppeVedUnntak = (): HTMLElement =>
+    screen.getByRole('radiogroup', { name: /har brukeren uttalt seg\?/i });
 
 const utsettFristKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Utsett frist' });
 
@@ -212,6 +218,98 @@ describe('Forhåndsvarsel', () => {
         expect(
             screen.getByText('Du må velge om det skal sendes forhåndsvarsel')
         ).toBeInTheDocument();
+    });
+
+    test('Vurdert unntak uten endringer viser Neste', () => {
+        renderForhåndsvarsel(
+            lagForhåndsvarselResponse({
+                forhaandsvarselSteg: {
+                    type: 'unntak',
+                    begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                    beskrivelse: 'test',
+                },
+                brukeruttalelse: {
+                    harBrukerUttaltSeg: 'UNNTAK_ALLEREDE_UTTALT_SEG',
+                    uttalelsesdato: '2026-08-10',
+                    hvorBrukerenUttalteSeg: 'test',
+                    beskrivelse: 'test',
+                },
+                ferdigvurdert: true,
+            })
+        );
+
+        expect(navigerTilNesteKnapp()).toHaveTextContent('Neste');
+    });
+
+    test('§16c: beholder preutfylt brukeruttalelse når begrunnelsen endres og settes tilbake', async () => {
+        renderForhåndsvarsel(
+            lagForhåndsvarselResponse({
+                forhaandsvarselSteg: {
+                    type: 'unntak',
+                    begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                    beskrivelse: 'test',
+                },
+                brukeruttalelse: {
+                    harBrukerUttaltSeg: 'UNNTAK_ALLEREDE_UTTALT_SEG',
+                    uttalelsesdato: '2026-08-10',
+                    hvorBrukerenUttalteSeg: 'telefon',
+                    beskrivelse: 'Brukeren kjente til saken',
+                },
+                ferdigvurdert: true,
+            })
+        );
+
+        const unntak = unntakRadiogruppe();
+        await user.click(
+            within(unntak).getByRole('radio', {
+                name: /ukjent adresse og ettersporing er urimelig/i,
+            })
+        );
+        await user.click(
+            within(unntak).getByRole('radio', {
+                name: /åpenbart unødvendig eller mottaker av varselet er allerede kjent/i,
+            })
+        );
+
+        expect(
+            within(uttalelseRadiogruppeVedUnntak()).getByRole('radio', { name: 'Ja' })
+        ).toBeChecked();
+        expect(screen.getByRole('textbox', { name: /når uttalte brukeren seg\?/i })).toHaveValue(
+            '10.08.2026'
+        );
+        expect(
+            screen.getByRole('textbox', { name: /hvordan uttalte brukeren seg\?/i })
+        ).toHaveValue('telefon');
+        expect(
+            screen.getByRole('textbox', { name: /beskriv hva brukeren har uttalt seg om/i })
+        ).toHaveValue('Brukeren kjente til saken');
+    });
+
+    test('Vurdert unntak med endringer viser lagreknapp', async () => {
+        renderForhåndsvarsel(
+            lagForhåndsvarselResponse({
+                forhaandsvarselSteg: {
+                    type: 'unntak',
+                    begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                    beskrivelse: 'test',
+                },
+                brukeruttalelse: {
+                    harBrukerUttaltSeg: 'UNNTAK_ALLEREDE_UTTALT_SEG',
+                    uttalelsesdato: '2026-08-10',
+                    hvorBrukerenUttalteSeg: 'test',
+                    beskrivelse: 'test',
+                },
+                ferdigvurdert: true,
+            })
+        );
+
+        await user.clear(
+            screen.getByRole('textbox', {
+                name: /forklar hvorfor forhåndsvarselet ikke skal bli sendt/i,
+            })
+        );
+
+        expect(nesteKnapp()).toBeInTheDocument();
     });
 
     test('Ja: viser brevseksjon med preutfylt tekst, "Vis brevet" og send-knapp i actionbar', async () => {
