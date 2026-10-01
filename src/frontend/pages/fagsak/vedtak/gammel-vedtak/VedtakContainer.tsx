@@ -133,7 +133,12 @@ export const VedtakContainer: FC = () => {
                   nesteTekst: 'Send til godkjenning',
                   nesteAriaLabel: 'Send til godkjenning hos beslutter',
                   disableNeste: senderInn || disableBekreft || harValideringsFeil,
-                  onNeste: (): void => bekreftelsesmodalRef.current?.showModal(),
+                  onNeste: (): void => {
+                      visGlobalAlert({
+                          title: 'Fryseperiode 9. oktober kl. 16:00–19. oktober kl. 08:00',
+                          status: 'error',
+                      });
+                  },
               }
     );
 
