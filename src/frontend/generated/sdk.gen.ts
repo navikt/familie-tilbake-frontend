@@ -107,6 +107,8 @@ import type {
     KorrigerKravgrunnlag1Responses,
     KorrigerKravgrunnlagData,
     KorrigerKravgrunnlagResponses,
+    LagBehandlingUrlData,
+    LagBehandlingUrlResponses,
     LagOppdaterOppgaveTaskForBehandlingData,
     LagOppdaterOppgaveTaskForBehandlingResponses,
     LagreUtkastVedtaksbrevData,
@@ -1019,6 +1021,19 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
     >({
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave/{fagsystem}',
+        ...options,
+    });
+
+/**
+ * Hent URL for ytelser i gammel modell
+ */
+export const lagBehandlingUrl = <ThrowOnError extends boolean = false>(
+    options?: Options<LagBehandlingUrlData, ThrowOnError>
+): RequestResult<LagBehandlingUrlResponses, unknown, ThrowOnError> =>
+    (options?.client ?? client).get<LagBehandlingUrlResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/behandling-url',
         ...options,
     });
 

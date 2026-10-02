@@ -104,6 +104,11 @@ export const zForsettlig = z.object({
 
 export const zFritekst = z.string().min(3).max(3000);
 
+export const zHovedavsnittBortfaltKravbrev = z.object({
+    tittel: z.string().min(3).max(300),
+    innhold: z.array(z.string()),
+});
+
 export const zHovedavsnittVarselbrev = z.object({
     tittel: z.string().min(3).max(300),
     innhold: z.array(z.string()),
@@ -164,6 +169,10 @@ export const zNyPeriode = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+});
+
+export const zOpprettRevurderingResponse = z.object({
+    url: z.string(),
 });
 
 export const zOppsummertPeriode = z.object({
@@ -255,6 +264,10 @@ export const zSignatur = z.object({
     enhetNavn: z.string(),
     ansvarligSaksbehandler: z.string(),
     besluttendeSaksbehandler: z.string().nullable(),
+});
+
+export const zSignaturAutomatisk = z.object({
+    enhetNavn: z.string(),
 });
 
 export const zSkalIkkeReduseres = z.object({
@@ -388,6 +401,15 @@ export const zFaktaPeriode = z.object({
 export const zUnderavsnittElement = z.object({
     tittel: z.string(),
     underavsnitt: z.array(zElement),
+});
+
+export const zBortfaltKravbrevData = z.object({
+    hovedavsnitt: zHovedavsnittBortfaltKravbrev,
+    underavsnitt: z.array(zUnderavsnittElement),
+    brevGjelder: zBrevmottaker,
+    signatur: zSignaturAutomatisk,
+    sendtDato: z.string(),
+    saksnummer: z.string(),
 });
 
 export const zRotElement = z.discriminatedUnion('type', [
@@ -1248,6 +1270,11 @@ export const zBehandlingOpprettRevurderingPath = z.object({
     behandlingId: z.uuid(),
 });
 
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingOpprettRevurderingResponse = zOpprettRevurderingResponse;
+
 export const zBehandlingHentVarselbrevTeksterPath = z.object({
     behandlingId: z.uuid(),
 });
@@ -1337,6 +1364,13 @@ export const zBehandlingHentDokumentInfoPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingHentDokumentInfoResponse = zDokumentInfo;
+
+export const zBrevLagSvgBortfaltKravbrevBody = zBortfaltKravbrevData;
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevLagSvgBortfaltKravbrevResponse = z.string();
 
 export const zBrevLagSvgVarselbrevBody = zVarselbrevData;
 
