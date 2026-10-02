@@ -5,6 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use, useMemo } from 'react';
 
 import { hentBehandlingOptions } from '@/generated/@tanstack/react-query.gen';
+import { ApiStatusError } from '@/utils/httpUtils';
 
 export const finnBehandlingId = (
     behandlinger: BehandlingsoppsummeringDto[],
@@ -32,7 +33,12 @@ export const BehandlingProvider = ({ behandlingId, children }: Props): ReactElem
 
     const behandling = useMemo((): BehandlingDto => {
         if (!behandlingResponse?.data) {
-            throw new Error('Kunne ikke laste behandling');
+            const feilmelding =
+                behandlingResponse?.frontendFeilmelding ?? behandlingResponse?.melding;
+            if (behandlingResponse?.status === 'IKKE_TILGANG') {
+                throw new ApiStatusError(403, feilmelding);
+            }
+            throw new ApiStatusError(500, feilmelding);
         }
         return behandlingResponse.data;
     }, [behandlingResponse]);

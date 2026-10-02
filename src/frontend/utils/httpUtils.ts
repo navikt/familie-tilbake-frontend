@@ -1,7 +1,17 @@
 export const erServerFeil = (status?: number): boolean =>
     typeof status === 'number' && status >= 500 && status < 600;
 
-const hentHttpStatus = (error: unknown): number | undefined => {
+export class ApiStatusError extends Error {
+    constructor(
+        public readonly status: number,
+        public readonly feilmelding?: string
+    ) {
+        super(`API-kallet feilet med status ${status}`);
+        this.name = 'ApiStatusError';
+    }
+}
+
+export const hentHttpStatus = (error: unknown): number | undefined => {
     if (typeof error !== 'object' || error === null) return undefined;
 
     const { status, response } = error as {
@@ -11,6 +21,19 @@ const hentHttpStatus = (error: unknown): number | undefined => {
 
     if (typeof status === 'number') return status;
     if (typeof response?.status === 'number') return response.status;
+    return undefined;
+};
+
+export const hentFeilmelding = (error: unknown): string | undefined => {
+    if (error instanceof ApiStatusError) return error.feilmelding;
+    if (typeof error !== 'object' || error === null) return undefined;
+
+    const { response } = error as {
+        response?: { data?: { frontendFeilmelding?: unknown; melding?: unknown } };
+    };
+    const { frontendFeilmelding, melding } = response?.data ?? {};
+    if (typeof frontendFeilmelding === 'string') return frontendFeilmelding;
+    if (typeof melding === 'string') return melding;
     return undefined;
 };
 

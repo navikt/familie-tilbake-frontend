@@ -48,7 +48,7 @@ describe('App - innloggingsstatus', () => {
         await waitFor(() =>
             expect(screen.getByText('Oi, dette fungerte visst ikke')).toBeInTheDocument()
         );
-        expect(screen.getByText('Statuskode 500')).toBeInTheDocument();
+        expect(screen.getByText('500 Internal Server Error')).toBeInTheDocument();
     });
 
     test('viser serverfeil uten statuskode ved nettverksfeil', async () => {
