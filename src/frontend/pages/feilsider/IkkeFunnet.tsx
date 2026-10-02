@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { BodyShort, Heading, Link, List, Page, VStack } from '@navikt/ds-react';
+import { BodyShort, Heading, List, Page, VStack } from '@navikt/ds-react';
 
 export const IkkeFunnet: FC = () => {
     return (
@@ -20,14 +20,6 @@ export const IkkeFunnet: FC = () => {
                     <BodyShort className="font-semibold">Hva kan du gjøre?</BodyShort>
                     <List size="small">
                         <List.Item>Prøve en annen lenke</List.Item>
-                        <List.Item>
-                            <Link
-                                href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
-                                target="_blank"
-                            >
-                                Meld feilen i porten
-                            </Link>
-                        </List.Item>
                     </List>
                 </VStack>
             </VStack>
