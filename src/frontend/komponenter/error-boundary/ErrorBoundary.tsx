@@ -6,7 +6,7 @@ import { captureException, withScope } from '@sentry/core';
 import { Component } from 'react';
 
 import { apiLoggFeil } from '@/api/axios';
-import { Serverfeil } from '@/pages/feilsider/serverfeil';
+import { InternServerFeil } from '@/pages/feilsider/InternServerFeil';
 
 type Props = {
     autentisertSaksbehandler?: Saksbehandler;
@@ -55,7 +55,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     render(): ReactNode {
         if (this.state.hasError) {
-            return <Serverfeil />;
+            return <InternServerFeil />;
         }
 
         return this.props.children;

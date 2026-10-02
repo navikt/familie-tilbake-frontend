@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { render, screen } from '@testing-library/react';
 
-import { FagsakIkkeFunnetError, FagsakIkkeStøttetError } from '@/context/FagsakContext';
+import { ApiStatusError } from '@/utils/httpUtils';
 
 import { FagsakErrorBoundary } from './FagsakErrorBoundary';
 
@@ -25,7 +25,7 @@ describe('FagsakErrorBoundary', () => {
     });
 
     test('burde vise 404-siden når fagsaken ikke finnes', () => {
-        const Kaster = lagKomponentSomKaster(new FagsakIkkeFunnetError('Fant ingen fagsak'));
+        const Kaster = lagKomponentSomKaster(new ApiStatusError(404));
 
         render(
             <FagsakErrorBoundary>
@@ -38,9 +38,9 @@ describe('FagsakErrorBoundary', () => {
         ).toBeInTheDocument();
     });
 
-    test('burde vise egen melding når fagsystemet ikke er støttet', () => {
+    test('burde vise 403-siden med feilmelding fra backend når fagsakskallet ikke gir tilgang', () => {
         const Kaster = lagKomponentSomKaster(
-            new FagsakIkkeStøttetError('Ikke støttet', 'Ytelsen støttes ikke ennå', 'BA', '123')
+            new ApiStatusError(403, 'Du mangler rolle for å se denne saken')
         );
 
         render(
@@ -49,12 +49,14 @@ describe('FagsakErrorBoundary', () => {
             </FagsakErrorBoundary>
         );
 
-        expect(screen.getByRole('heading', { name: 'Ikke støttet' })).toBeInTheDocument();
-        expect(screen.getByText('Ytelsen støttes ikke ennå')).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: 'Ingen tilgang til behandlingen' })
+        ).toBeInTheDocument();
+        expect(screen.getByText('Du mangler rolle for å se denne saken')).toBeInTheDocument();
     });
 
-    test('burde vise generell feilmelding ved uventede feil', () => {
-        const Kaster = lagKomponentSomKaster(new Error('Noe uventet'));
+    test('burde vise 500-siden ved uventede feil', () => {
+        const Kaster = lagKomponentSomKaster(new ApiStatusError(500));
 
         render(
             <FagsakErrorBoundary>
@@ -62,8 +64,9 @@ describe('FagsakErrorBoundary', () => {
             </FagsakErrorBoundary>
         );
 
-        expect(screen.getByText('Noe uventet')).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Prøv på nytt' })).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: 'Oi, dette fungerte visst ikke' })
+        ).toBeInTheDocument();
     });
 
     test('burde vise innholdet når ingen feil oppstår', () => {

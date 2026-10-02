@@ -1,11 +1,11 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { FagsakDto, SchemaEnum2 as Fagsystem } from '@/generated';
-import type { Error as ModellError } from '@/generated-new';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use, useEffect } from 'react';
 
 import { hentFagsak } from '@/generated/sdk.gen';
+import { ApiStatusError } from '@/utils/httpUtils';
 import { settSporingsYtelsestype } from '@/utils/sporing';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
@@ -16,29 +16,6 @@ type Props = {
     children: ReactNode;
 };
 
-export class FagsakIkkeStøttetError extends Error {
-    tittel: string;
-    fagsystem: Fagsystem;
-    tilbakekrevingSakId?: string;
-    constructor(
-        tittel: string,
-        message: string,
-        fagsystem: Fagsystem,
-        tilbakekrevingSakId?: string
-    ) {
-        super(message);
-        this.tittel = tittel;
-        this.fagsystem = fagsystem;
-        this.tilbakekrevingSakId = tilbakekrevingSakId;
-    }
-}
-
-export class FagsakIkkeFunnetError extends Error {}
-
-// Feil som skyldes ugyldig input gir samme svar uansett hvor mange ganger vi spør
-const erIkkeGjenforsøkbar = (error: unknown): boolean =>
-    error instanceof FagsakIkkeStøttetError || error instanceof FagsakIkkeFunnetError;
-
 export const FagsakProvider = ({
     fagsystem,
     tilbakekrevingSakId,
@@ -46,52 +23,18 @@ export const FagsakProvider = ({
 }: Props): ReactElement => {
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, tilbakekrevingSakId],
-        // biome-ignore lint/suspicious/noExplicitAny: error-objektet kan ha ulik form avhengig av feilen som oppstår, og er utypet i SDK-et
-        retry: (count: number, error: any) => {
-            return count < 2 && !erIkkeGjenforsøkbar(error);
-        },
         queryFn: async () => {
-            const result = await hentFagsak({
-                path: {
-                    fagsystem: fagsystem,
-                    eksternFagsakId: tilbakekrevingSakId,
-                },
-            }).catch(e => {
-                if (e instanceof Error) {
-                    throw e;
-                }
-                throw new Error(
-                    `Kunne ikke laste fagsak for ${fagsystem}/${tilbakekrevingSakId}. Fagsaken finnes ikke eller du har ikke tilgang.`,
-                    { cause: e }
-                );
+            const { data } = await hentFagsak({
+                path: { fagsystem, eksternFagsakId: tilbakekrevingSakId },
+                throwOnError: true,
             });
 
-            if (!result.data?.data) {
-                switch (result.status) {
-                    case 405:
-                        throw new FagsakIkkeStøttetError(
-                            (result.error as ModellError).tittel,
-                            (result.error as ModellError).melding,
-                            fagsystem,
-                            tilbakekrevingSakId
-                        );
-                    case 400:
-                    case 404:
-                        throw new FagsakIkkeFunnetError(
-                            `Fant ingen fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
-                        );
-                    case 403:
-                        throw new Error(
-                            `Du har ikke tilgang til fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
-                        );
-                    default:
-                        throw new Error(
-                            `En feil har oppstått. Kunne ikke laste fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
-                        );
-                }
+            if (!data.data) {
+                const feilmelding = data.frontendFeilmelding ?? data.melding;
+                throw new ApiStatusError(data.status === 'IKKE_TILGANG' ? 403 : 500, feilmelding);
             }
 
-            return result.data.data;
+            return data.data;
         },
     });
 

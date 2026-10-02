@@ -1,26 +1,25 @@
 import type { FC } from 'react';
 
-import { BodyShort, Box, Button, Heading, Page, VStack } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Page, VStack } from '@navikt/ds-react';
 
 export const Uautorisert: FC = () => {
     return (
-        <Page.Block width="xl" gutters>
-            <Box paddingBlock="space-80 space-64" data-aksel-template="403-v2">
-                <VStack gap="space-48" align="start">
-                    <div>
-                        <BodyShort textColor="subtle" size="small">
-                            Statuskode 401
-                        </BodyShort>
-                        <Heading size="large" spacing>
-                            Sesjonen din har utløpt
-                        </Heading>
-                        <BodyShort spacing>
-                            Du er ikke lenger innlogget. Last siden på nytt for å logge inn igjen.
-                        </BodyShort>
-                    </div>
-                    <Button onClick={(): void => location.reload()}>Last siden på nytt</Button>
-                </VStack>
-            </Box>
+        <Page.Block width="2xl" gutters className="h-screen pt-20 md:px-40 px-10">
+            <VStack gap="space-16">
+                <div>
+                    <BodyShort textColor="subtle" size="small">
+                        401 Unauthorized
+                    </BodyShort>
+                    <Heading size="large">Sesjonen din har utløpt</Heading>
+                </div>
+                <BodyShort className="max-w-xl">
+                    Du er ikke lenger innlogget. Last siden på nytt for å logge inn igjen.
+                </BodyShort>
+
+                <Button className="w-fit" onClick={(): void => location.reload()}>
+                    Last siden på nytt
+                </Button>
+            </VStack>
         </Page.Block>
     );
 };

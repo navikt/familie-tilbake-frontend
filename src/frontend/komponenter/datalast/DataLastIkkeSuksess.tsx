@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { InlineMessage, LocalAlert } from '@navikt/ds-react';
 
-import { Serverfeil } from '@/pages/feilsider/serverfeil';
+import { InternServerFeil } from '@/pages/feilsider/InternServerFeil';
 import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 
 import { HenterData } from './HenterData';
@@ -43,7 +43,7 @@ export const DataLastIkkeSuksess: FC<Props> = ({
             ressurs.status === RessursStatus.FunksjonellFeil
     );
     if (serverFeil && visFeilSide) {
-        return <Serverfeil />;
+        return <InternServerFeil />;
     }
     if (feiletRessurs) {
         return <InlineMessage status="error">{feiletRessurs.frontendFeilmelding}</InlineMessage>;
