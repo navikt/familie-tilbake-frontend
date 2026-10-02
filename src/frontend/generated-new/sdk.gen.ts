@@ -72,6 +72,8 @@ import type {
     BehandlingVilkaarsvurderingsperioderData,
     BehandlingVilkaarsvurderingsperioderErrors,
     BehandlingVilkaarsvurderingsperioderResponses,
+    BrevLagSvgBortfaltKravbrevData,
+    BrevLagSvgBortfaltKravbrevResponses,
     BrevLagSvgVarselbrevData,
     BrevLagSvgVarselbrevResponses,
     BrevLagSvgVedtaksbrevData,
@@ -292,6 +294,7 @@ export const behandlingOpprettRevurdering = <ThrowOnError extends boolean = fals
         BehandlingOpprettRevurderingErrors,
         ThrowOnError
     >({
+        responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/revurdering',
         ...options,
         headers: {
@@ -478,6 +481,19 @@ export const behandlingHentDokumentInfo = <ThrowOnError extends boolean = false>
         responseType: 'json',
         url: '/api/v1/behandling/{behandlingId}/{dokumentType}/gjeldende',
         ...options,
+    });
+
+export const brevLagSvgBortfaltKravbrev = <ThrowOnError extends boolean = false>(
+    options: Options<BrevLagSvgBortfaltKravbrevData, ThrowOnError>
+): RequestResult<BrevLagSvgBortfaltKravbrevResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<BrevLagSvgBortfaltKravbrevResponses, unknown, ThrowOnError>({
+        responseType: 'blob',
+        url: '/api/v1/brev/bortfalt-krav/svg',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 
 export const brevLagSvgVarselbrev = <ThrowOnError extends boolean = false>(

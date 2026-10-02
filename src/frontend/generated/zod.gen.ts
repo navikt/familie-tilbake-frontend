@@ -384,6 +384,7 @@ export const zSchemaEnum = z.enum([
     'JOURNALFØR_VEDTAK',
     'DISTRIUBER_VEDTAK',
     'AVSLUTTET',
+    'SPERRET',
 ]);
 
 export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS', 'TP', 'DP']);
@@ -495,6 +496,14 @@ export const zRessursListKravgrunnlagsinfo = z.object({
     stacktrace: z.string().nullish(),
 });
 
+export const zRessursListString = z.object({
+    data: z.array(z.string()).nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
 export const zRessursMapStringBoolean = z.object({
     data: z.record(z.string(), z.boolean()).nullish(),
     status: zStatusEnum,
@@ -573,6 +582,7 @@ export const zVenteårsakEnum = z.enum([
     'UTVIDET_TILSVAR_FRIST',
     'ENDRE_TILKJENT_YTELSE',
     'VENT_PÅ_MULIG_MOTREGNING',
+    'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI',
     'MANGLER_STØTTE',
 ]);
 
@@ -580,6 +590,11 @@ export const zBehandlingPåVentDto = z.object({
     venteårsak: zVenteårsakEnum,
     tidsfrist: z.iso.date(),
     begrunnelse: z.string().nullish(),
+});
+
+export const zVenterDto = z.object({
+    grunn: zVenteårsakEnum,
+    frist: z.iso.date(),
 });
 
 export const zBehandlingsresultatstypeEnum = z.enum([
@@ -2054,6 +2069,7 @@ export const zVenteårsakEnum2 = z.enum([
     'UTVIDET_TILSVAR_FRIST',
     'ENDRE_TILKJENT_YTELSE',
     'VENT_PÅ_MULIG_MOTREGNING',
+    'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI',
     'MANGLER_STØTTE',
 ]);
 
@@ -2080,6 +2096,7 @@ export const zBehandlingDto = z.object({
     ansvarligSaksbehandler: z.string(),
     ansvarligBeslutter: z.string().nullish(),
     erBehandlingPåVent: z.boolean(),
+    venter: zVenterDto.nullish(),
     kanHenleggeBehandling: z.boolean(),
     kanRevurderingOpprettes: z.boolean(),
     harVerge: z.boolean(),
@@ -2189,6 +2206,7 @@ export const zBehandlingDtoWritable = z.object({
     ansvarligSaksbehandler: z.string(),
     ansvarligBeslutter: z.string().nullish(),
     erBehandlingPåVent: z.boolean(),
+    venter: zVenterDto.nullish(),
     kanHenleggeBehandling: z.boolean(),
     kanRevurderingOpprettes: z.boolean(),
     harVerge: z.boolean(),
@@ -2673,6 +2691,17 @@ export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOp
     z.object({
         fagsystem: zSchemaEnum2,
     });
+
+export const zLagBehandlingUrlQuery = z.object({
+    vedtakId: z.int().optional(),
+    vedtakGjelderId: z.string().optional(),
+    fagsystemId: z.string().optional(),
+});
+
+/**
+ * OK
+ */
+export const zLagBehandlingUrlResponse = zRessursListString;
 
 /**
  * OK
