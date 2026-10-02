@@ -6,7 +6,9 @@ import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { ToggleName, useToggle } from '@/context/TogglesContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
+import { RevurderNyModell } from '@/komponenter/meny/revurder/RevurderNyModell';
 import { KompaktStegflyt } from '@/komponenter/stegflyt/KompaktStegflyt';
 import { useNyStegflyt } from '@/komponenter/stegflyt/useNyStegflyt';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
@@ -25,11 +27,13 @@ export const ActionBar: FC<ActionBarConfig> = ({
     disableNeste = false,
     type = 'button',
 }: ActionBarConfig) => {
-    const { erNyModell } = useBehandling();
+    const { erNyModell, status } = useBehandling();
     const { harKravgrunnlag } = useBehandlingState();
     const nyStegflyt = useNyStegflyt();
+    const revurderingPåskrudd = useToggle(ToggleName.Revurdering);
 
     const visMeny = !erNyModell;
+    const visRevurder = erNyModell && status === 'AVSLUTTET' && revurderingPåskrudd;
     const visStegflyt = nyStegflyt && harKravgrunnlag;
     const navAriaLabel = visMeny
         ? 'Meny og navigasjonsknapper'
@@ -38,10 +42,11 @@ export const ActionBar: FC<ActionBarConfig> = ({
           : 'Navigasjonsknapper';
     return (
         <nav
-            className={`flex bg-ax-bg-default px-6 py-2 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
+            className={`flex bg-ax-bg-default px-6 py-2 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt || visRevurder ? 'justify-between' : 'justify-end'}`}
             aria-label={navAriaLabel}
         >
             {visMeny && <Behandlingsmeny />}
+            {visRevurder && <RevurderNyModell />}
             {visStegflyt && <KompaktStegflyt />}
 
             <HStack gap="space-32" wrap={false} className="shrink-0">
