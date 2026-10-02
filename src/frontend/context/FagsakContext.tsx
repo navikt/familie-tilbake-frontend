@@ -5,7 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use, useEffect } from 'react';
 
 import { hentFagsak } from '@/generated/sdk.gen';
-import { ApiStatusError, hentHttpStatus } from '@/utils/httpUtils';
+import { ApiStatusError, hentFeilmelding, hentHttpStatus } from '@/utils/httpUtils';
 import { settSporingsYtelsestype } from '@/utils/sporing';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
@@ -48,7 +48,9 @@ export const FagsakProvider = ({
             });
 
             const httpStatus = hentHttpStatus(result);
-            const feilmelding = result.data?.frontendFeilmelding ?? result.data?.melding;
+
+            const feilmelding =
+                hentFeilmelding(result) ?? result.data?.frontendFeilmelding ?? result.data?.melding;
             if (httpStatus && httpStatus >= 400) {
                 throw new ApiStatusError(httpStatus, feilmelding);
             }
