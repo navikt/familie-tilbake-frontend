@@ -355,6 +355,18 @@ export const zStandardtekst = z.object({
     underavsnitt: z.array(zElement),
 });
 
+export const zTilbakekrevingRevurderingsarsak = z.enum([
+    'REVURDERING_KLAGE_NFP',
+    'REVURDERING_KLAGE_KA',
+    'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+]);
+
+export const zTilbakekrevingRevurdering = z.object({
+    revurderingsarsak: zTilbakekrevingRevurderingsarsak,
+});
+
 export const zUnderavsnittElement = z.object({
     tittel: z.string(),
     underavsnitt: z.array(zElement),
@@ -1190,6 +1202,17 @@ export const zBehandlingHentDokumentResponse = z.string();
 export const zBehandlingBenyttNyesteKravgrunnlagPath = z.object({
     behandlingId: z.uuid(),
 });
+
+export const zBehandlingOpprettRevurderingBody = zTilbakekrevingRevurdering;
+
+export const zBehandlingOpprettRevurderingPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingOpprettRevurderingResponse = z.string();
 
 export const zBehandlingHentVarselbrevTeksterPath = z.object({
     behandlingId: z.uuid(),

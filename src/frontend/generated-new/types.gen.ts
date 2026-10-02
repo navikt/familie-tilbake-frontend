@@ -487,6 +487,17 @@ export type Standardtekst = {
     underavsnitt: Array<Element>;
 };
 
+export type TilbakekrevingRevurdering = {
+    revurderingsarsak: TilbakekrevingRevurderingsarsak;
+};
+
+export type TilbakekrevingRevurderingsarsak =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+
 export type Uaktsomt = {
     begrunnelse: string;
     unnlatelse: Unnlatelse;
@@ -1353,6 +1364,39 @@ export type BehandlingBenyttNyesteKravgrunnlagResponses = {
      */
     200: unknown;
 };
+
+export type BehandlingOpprettRevurderingData = {
+    body: TilbakekrevingRevurdering;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/revurdering';
+};
+
+export type BehandlingOpprettRevurderingErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingOpprettRevurderingError =
+    BehandlingOpprettRevurderingErrors[keyof BehandlingOpprettRevurderingErrors];
+
+export type BehandlingOpprettRevurderingResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: string;
+};
+
+export type BehandlingOpprettRevurderingResponse =
+    BehandlingOpprettRevurderingResponses[keyof BehandlingOpprettRevurderingResponses];
 
 export type BehandlingHentVarselbrevTeksterData = {
     body?: never;
