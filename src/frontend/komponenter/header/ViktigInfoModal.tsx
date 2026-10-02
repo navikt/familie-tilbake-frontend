@@ -43,7 +43,8 @@ export const ViktigInfoModal: FC = () => {
                 <Modal.Body>
                     <BodyLong>
                         Skatteetaten avvikler PAK og migrerer til Innfri. I denne perioden er det
-                        ikke mulig å sende vedtak til beslutter i Tilbakeløsningen.
+                        ikke mulig å sende vedtak til beslutter eller godkjenne vedtak i
+                        Tilbakeløsningen.
                     </BodyLong>
                 </Modal.Body>
                 <Modal.Footer>
