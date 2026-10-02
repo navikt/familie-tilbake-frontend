@@ -5,7 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use, useEffect } from 'react';
 
 import { hentFagsak } from '@/generated/sdk.gen';
-import { ApiStatusError, hentFeilmelding, hentHttpStatus } from '@/utils/httpUtils';
+import { ApiStatusError } from '@/utils/httpUtils';
 import { settSporingsYtelsestype } from '@/utils/sporing';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
@@ -16,10 +16,6 @@ type Props = {
     children: ReactNode;
 };
 
-// Feil som skyldes ugyldig input gir samme svar uansett hvor mange ganger vi spør
-const erIkkeGjenforsøkbar = (error: unknown): boolean =>
-    error instanceof ApiStatusError && error.status >= 400 && error.status < 500;
-
 export const FagsakProvider = ({
     fagsystem,
     tilbakekrevingSakId,
@@ -27,42 +23,18 @@ export const FagsakProvider = ({
 }: Props): ReactElement => {
     const { data: fagsak } = useSuspenseQuery({
         queryKey: ['fagsak', fagsystem, tilbakekrevingSakId],
-        // biome-ignore lint/suspicious/noExplicitAny: error-objektet kan ha ulik form avhengig av feilen som oppstår, og er utypet i SDK-et
-        retry: (count: number, error: any) => {
-            return count < 2 && !erIkkeGjenforsøkbar(error);
-        },
         queryFn: async () => {
-            const result = await hentFagsak({
-                path: {
-                    fagsystem: fagsystem,
-                    eksternFagsakId: tilbakekrevingSakId,
-                },
-            }).catch(e => {
-                if (e instanceof Error) {
-                    throw e;
-                }
-                throw new Error(
-                    `Kunne ikke laste fagsak for ${fagsystem}/${tilbakekrevingSakId}. Fagsaken finnes ikke eller du har ikke tilgang.`,
-                    { cause: e }
-                );
+            const { data } = await hentFagsak({
+                path: { fagsystem, eksternFagsakId: tilbakekrevingSakId },
+                throwOnError: true,
             });
 
-            const httpStatus = hentHttpStatus(result);
-
-            const feilmelding =
-                hentFeilmelding(result) ?? result.data?.frontendFeilmelding ?? result.data?.melding;
-            if (httpStatus && httpStatus >= 400) {
-                throw new ApiStatusError(httpStatus, feilmelding);
+            if (!data.data) {
+                const feilmelding = data.frontendFeilmelding ?? data.melding;
+                throw new ApiStatusError(data.status === 'IKKE_TILGANG' ? 403 : 500, feilmelding);
             }
 
-            if (!result.data?.data) {
-                if (result.data?.status === 'IKKE_TILGANG') {
-                    throw new ApiStatusError(403, feilmelding);
-                }
-                throw new ApiStatusError(httpStatus ?? 500, feilmelding);
-            }
-
-            return result.data.data;
+            return data.data;
         },
     });
 
