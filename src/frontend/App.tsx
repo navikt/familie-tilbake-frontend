@@ -12,7 +12,6 @@ import { ErrorBoundary } from './komponenter/error-boundary/ErrorBoundary';
 import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting';
 import { Header } from './komponenter/header/Header';
 import { Toasts } from './komponenter/toast/Toasts';
-import { Forbudt } from './pages/feilsider/Forbudt';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
 import { InternServerFeil } from './pages/feilsider/InternServerFeil';
 import { Uautorisert } from './pages/feilsider/Uautorisert';
@@ -38,16 +37,7 @@ const AppLayout: FC = () => {
         case 'laster':
             return <SideLaster />;
         case 'feilet':
-            switch (innloggingsstatus.httpStatus) {
-                case 401:
-                    return <Uautorisert />;
-                case 403:
-                    return <Forbudt />;
-                case 404:
-                    return <IkkeFunnet />;
-                default:
-                    return <InternServerFeil />;
-            }
+            return innloggingsstatus.httpStatus === 401 ? <Uautorisert /> : <InternServerFeil />;
         case 'innlogget':
             return (
                 <>
