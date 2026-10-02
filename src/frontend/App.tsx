@@ -12,8 +12,9 @@ import { ErrorBoundary } from './komponenter/error-boundary/ErrorBoundary';
 import { lazyImportMedRetry } from './komponenter/feilInnlasting/FeilInnlasting';
 import { Header } from './komponenter/header/Header';
 import { Toasts } from './komponenter/toast/Toasts';
+import { Forbudt } from './pages/feilsider/Forbudt';
 import { IkkeFunnet } from './pages/feilsider/IkkeFunnet';
-import { Serverfeil } from './pages/feilsider/serverfeil';
+import { InternServerFeil } from './pages/feilsider/InternServerFeil';
 import { Uautorisert } from './pages/feilsider/Uautorisert';
 import { Personvern } from './pages/Personvern';
 import { skalForsøkePåNytt } from './utils/httpUtils';
@@ -27,22 +28,26 @@ const SideLaster: FC = () => (
         <Heading size="medium" visuallyHidden>
             Laster inn siden
         </Heading>
-        <Loader size="2xlarge" title="Laster inn siden" variant="neutral" />
+        <Loader size="2xlarge" title="Laster inn siden" />
     </div>
 );
 
 const AppLayout: FC = () => {
     const { innloggingsstatus } = useApp();
-
     switch (innloggingsstatus.status) {
         case 'laster':
             return <SideLaster />;
         case 'feilet':
-            return innloggingsstatus.httpStatus === 401 ? (
-                <Uautorisert />
-            ) : (
-                <Serverfeil httpStatus={innloggingsstatus.httpStatus} />
-            );
+            switch (innloggingsstatus.httpStatus) {
+                case 401:
+                    return <Uautorisert />;
+                case 403:
+                    return <Forbudt />;
+                case 404:
+                    return <IkkeFunnet />;
+                default:
+                    return <InternServerFeil />;
+            }
         case 'innlogget':
             return (
                 <>

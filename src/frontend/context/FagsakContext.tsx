@@ -1,11 +1,11 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { FagsakDto, SchemaEnum2 as Fagsystem } from '@/generated';
-import type { Error as ModellError } from '@/generated-new';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createContext, use, useEffect } from 'react';
 
 import { hentFagsak } from '@/generated/sdk.gen';
+import { ApiStatusError, hentHttpStatus } from '@/utils/httpUtils';
 import { settSporingsYtelsestype } from '@/utils/sporing';
 
 export const FagsakContext = createContext<FagsakDto | undefined>(undefined);
@@ -16,28 +16,9 @@ type Props = {
     children: ReactNode;
 };
 
-export class FagsakIkkeStøttetError extends Error {
-    tittel: string;
-    fagsystem: Fagsystem;
-    tilbakekrevingSakId?: string;
-    constructor(
-        tittel: string,
-        message: string,
-        fagsystem: Fagsystem,
-        tilbakekrevingSakId?: string
-    ) {
-        super(message);
-        this.tittel = tittel;
-        this.fagsystem = fagsystem;
-        this.tilbakekrevingSakId = tilbakekrevingSakId;
-    }
-}
-
-export class FagsakIkkeFunnetError extends Error {}
-
 // Feil som skyldes ugyldig input gir samme svar uansett hvor mange ganger vi spør
 const erIkkeGjenforsøkbar = (error: unknown): boolean =>
-    error instanceof FagsakIkkeStøttetError || error instanceof FagsakIkkeFunnetError;
+    error instanceof ApiStatusError && error.status >= 400 && error.status < 500;
 
 export const FagsakProvider = ({
     fagsystem,
@@ -66,29 +47,17 @@ export const FagsakProvider = ({
                 );
             });
 
+            const httpStatus = hentHttpStatus(result);
+            const feilmelding = result.data?.frontendFeilmelding ?? result.data?.melding;
+            if (httpStatus && httpStatus >= 400) {
+                throw new ApiStatusError(httpStatus, feilmelding);
+            }
+
             if (!result.data?.data) {
-                switch (result.status) {
-                    case 405:
-                        throw new FagsakIkkeStøttetError(
-                            (result.error as ModellError).tittel,
-                            (result.error as ModellError).melding,
-                            fagsystem,
-                            tilbakekrevingSakId
-                        );
-                    case 400:
-                    case 404:
-                        throw new FagsakIkkeFunnetError(
-                            `Fant ingen fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
-                        );
-                    case 403:
-                        throw new Error(
-                            `Du har ikke tilgang til fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
-                        );
-                    default:
-                        throw new Error(
-                            `En feil har oppstått. Kunne ikke laste fagsak for fagsystem: ${fagsystem} og fagsak: ${tilbakekrevingSakId}.`
-                        );
+                if (result.data?.status === 'IKKE_TILGANG') {
+                    throw new ApiStatusError(403, feilmelding);
                 }
+                throw new ApiStatusError(httpStatus ?? 500, feilmelding);
             }
 
             return result.data.data;
