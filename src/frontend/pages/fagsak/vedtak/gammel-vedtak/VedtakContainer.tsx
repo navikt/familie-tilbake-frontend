@@ -23,6 +23,7 @@ import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesm
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { RessursStatus } from '@/typer/ressurs';
 import { HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
+import { hentFrontendFeilmelding } from '@/utils/ressursUtils';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { ForhåndsvisVedtaksbrev } from './forhåndsvis-vedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -101,14 +102,14 @@ export const VedtakContainer: FC = () => {
         !erRevurderingKlageKA;
 
     useEffect(() => {
-        if (
-            foreslåVedtakRespons?.status === RessursStatus.Feilet ||
-            foreslåVedtakRespons?.status === RessursStatus.FunksjonellFeil
-        ) {
+        const feilmelding = foreslåVedtakRespons
+            ? hentFrontendFeilmelding(foreslåVedtakRespons)
+            : undefined;
+        if (feilmelding) {
             bekreftelsesmodalRef.current?.close();
             visGlobalAlert({
                 title: 'Kunne ikke sende til godkjenning',
-                message: foreslåVedtakRespons?.frontendFeilmelding,
+                message: feilmelding,
                 status: 'error',
                 visPortenLenke: true,
             });

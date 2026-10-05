@@ -16,6 +16,7 @@ import { vi } from 'vitest';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { Underavsnittstype, Vurdering } from '@/kodeverk';
+import { useGlobalAlertStore } from '@/stores/globalAlertStore';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
@@ -97,7 +98,14 @@ const beregningsresultat: Beregningsresultat = {
     vurderingAvBrukersUttalelse: { harBrukerUttaltSeg: HarBrukerUttaltSegValg.Nei },
 };
 
-const setupMock = (avsnitt: VedtaksbrevAvsnitt[], resultat: Beregningsresultat): void => {
+const setupMock = (
+    avsnitt: VedtaksbrevAvsnitt[],
+    resultat: Beregningsresultat,
+    sendInnRespons: Ressurs<string> = {
+        status: RessursStatus.Suksess,
+        data: 'suksess',
+    }
+): void => {
     mockUseBehandlingApi.mockImplementation(() => ({
         gjerVedtaksbrevteksterKall: (): Promise<Ressurs<VedtaksbrevAvsnitt[]>> => {
             const ressurs: Ressurs<VedtaksbrevAvsnitt[]> = {
@@ -113,13 +121,7 @@ const setupMock = (avsnitt: VedtaksbrevAvsnitt[], resultat: Beregningsresultat):
             };
             return Promise.resolve(ressurs);
         },
-        sendInnForeslåVedtak: (): Promise<Ressurs<string>> => {
-            const ressurs: Ressurs<string> = {
-                status: RessursStatus.Suksess,
-                data: 'suksess',
-            };
-            return Promise.resolve(ressurs);
-        },
+        sendInnForeslåVedtak: (): Promise<Ressurs<string>> => Promise.resolve(sendInnRespons),
     }));
 
     mockUseSammenslåPerioder.mockImplementation(() => ({
@@ -132,6 +134,7 @@ describe('VedtakContainer', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
+        useGlobalAlertStore.setState({ alerts: [] });
     });
 
     test('Vis og fyll ut - 1 fritekst påkrevet', async () => {
@@ -825,5 +828,46 @@ describe('VedtakContainer', () => {
         );
 
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    test('Viser global alert når sending til godkjenning feiler med serverfeil', async () => {
+        const vedtaksbrevAvsnitt = [
+            lagOppsummeringAvsnitt(),
+            lagPeriodeAvsnitt([
+                lagVedaksbrevUnderavsnitt({
+                    underavsnittstype: Underavsnittstype.Fakta,
+                    brødtekst: 'Du har fått 1 333 kroner for mye utbetalt.',
+                    fritekstTillatt: true,
+                    fritekstPåkrevet: false,
+                }),
+            ]),
+        ];
+        setupMock(vedtaksbrevAvsnitt, beregningsresultat, {
+            status: RessursStatus.ServerFeil,
+            frontendFeilmelding: 'En teknisk feil oppstod.',
+        });
+        renderVedtakContainer(lagBehandling({ kanEndres: true }));
+
+        await screen.findByText('Du må betale tilbake barnetrygden');
+        await user.click(
+            screen.getByRole('button', {
+                name: 'Send til godkjenning hos beslutter',
+            })
+        );
+        await user.click(
+            within(screen.getByRole('dialog')).getByRole('button', {
+                name: 'Send til godkjenning',
+            })
+        );
+
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        expect(useGlobalAlertStore.getState().alerts).toMatchObject([
+            {
+                title: 'Kunne ikke sende til godkjenning',
+                message: 'En teknisk feil oppstod.',
+                status: 'error',
+                visPortenLenke: true,
+            },
+        ]);
     });
 });

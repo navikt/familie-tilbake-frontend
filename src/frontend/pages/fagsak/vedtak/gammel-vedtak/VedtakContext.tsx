@@ -264,7 +264,9 @@ const [VedtakProvider, useVedtak] = createUseContext(() => {
                     onSuccess?.();
                 } else if (
                     respons.status === RessursStatus.Feilet ||
-                    respons.status === RessursStatus.FunksjonellFeil
+                    respons.status === RessursStatus.FunksjonellFeil ||
+                    respons.status === RessursStatus.IkkeTilgang ||
+                    respons.status === RessursStatus.ServerFeil
                 ) {
                     setForeslåVedtakRespons(respons);
                 }
