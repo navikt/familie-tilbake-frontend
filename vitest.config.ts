@@ -34,8 +34,7 @@ export default defineConfig({
         ],
         deps: {
             optimizer: {
-                web: {
-                    enabled: true,
+                client: {
                     include: [
                         'react',
                         'react-dom',
