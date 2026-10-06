@@ -101,7 +101,7 @@ describe('NyttKravgrunnlagModal', () => {
 
         expect(
             await screen.findByRole('heading', {
-                name: 'Endringer i perioden',
+                name: 'Endringer i kravgrunnlaget',
                 level: 1,
             })
         ).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe('NyttKravgrunnlagModal', () => {
         renderModal(lagEndretKravgrunnlag({ endringer: [lagFjernetPeriode()] }));
 
         expect(
-            await screen.findByRole('heading', { name: 'Endringer i perioden', level: 1 })
+            await screen.findByRole('heading', { name: 'En periode er fjernet', level: 1 })
         ).toBeInTheDocument();
         expect(
             screen.getByRole('heading', {
@@ -214,7 +214,7 @@ describe('NyttKravgrunnlagModal', () => {
         renderModal(lagEndretKravgrunnlag({ endringer: [lagNyPeriode(), lagEndretPeriode()] }));
 
         expect(
-            await screen.findByRole('heading', { name: 'Endringer i periodene', level: 1 })
+            await screen.findByRole('heading', { name: 'Endringer i kravgrunnlaget', level: 1 })
         ).toBeInTheDocument();
         expect(
             screen.getByText(
@@ -240,7 +240,7 @@ describe('NyttKravgrunnlagModal', () => {
         );
 
         expect(
-            await screen.findByRole('heading', { name: 'Endringer i periodene', level: 1 })
+            await screen.findByRole('heading', { name: 'Endringer i kravgrunnlaget', level: 1 })
         ).toBeInTheDocument();
         expect(
             screen.getByText(
@@ -273,7 +273,7 @@ describe('NyttKravgrunnlagModal', () => {
         expect(modal).toBeInTheDocument();
         expect(
             screen.getByRole('heading', {
-                name: 'Endringer i perioden',
+                name: 'Endringer i kravgrunnlaget',
                 level: 1,
             })
         ).toBeInTheDocument();

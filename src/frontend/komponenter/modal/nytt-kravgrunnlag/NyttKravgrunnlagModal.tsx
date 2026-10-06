@@ -278,43 +278,41 @@ const hentModalTekst = (
     const harNyePerioder = antallNyePerioder > 0;
     const harEndretPerioder = antallEndredePerioder > 0;
     const harFjernedePerioder = antallFjernedePerioder > 0;
-    const antallBerørtePerioder =
-        antallNyePerioder + antallEndredePerioder + antallFjernedePerioder;
-    const tittelPerioder = antallBerørtePerioder === 1 ? 'perioden' : 'periodene';
 
     if (harFjernedePerioder && harNyePerioder && harEndretPerioder) {
         return {
-            tittel: `Endringer i ${tittelPerioder}`,
+            tittel: `Endringer i kravgrunnlaget`,
             beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet, ${periodeFrase(antallNyePerioder)} er lagt til og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
         };
     }
     if (harFjernedePerioder && harNyePerioder) {
         return {
-            tittel: `Endringer i ${tittelPerioder}`,
+            tittel: `Endringer i kravgrunnlaget`,
             beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet og ${periodeFrase(antallNyePerioder)} er lagt til som må vurderes på nytt.`,
         };
     }
     if (harFjernedePerioder && harEndretPerioder) {
         return {
-            tittel: `Endringer i ${tittelPerioder}`,
+            tittel: `Endringer i kravgrunnlaget`,
             beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
         };
     }
     if (harFjernedePerioder) {
         return {
-            tittel: `Endringer i ${tittelPerioder}`,
+            tittel:
+                antallFjernedePerioder > 1 ? 'Flere perioder er fjernet' : 'En periode er fjernet',
             beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet, og du må vurdere saken på nytt.`,
         };
     }
     if (harNyePerioder && harEndretPerioder) {
         return {
-            tittel: `Endringer i ${tittelPerioder}`,
+            tittel: `Endringer i kravgrunnlaget`,
             beskrivelse: `Det er registrert ${periodeFrase(antallNyePerioder)} og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
         };
     }
     if (harEndretPerioder) {
         return {
-            tittel: `Endringer i ${tittelPerioder}`,
+            tittel: `Endringer i kravgrunnlaget`,
             beskrivelse: `Det er registrert endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
         };
     }
