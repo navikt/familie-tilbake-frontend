@@ -224,7 +224,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
             });
     };
 
-    const sendInnSkjema = async (onSuccess?: () => void): Promise<void> => {
+    const sendInnSkjema = async (lukkModal?: () => void): Promise<void> => {
         if (validerToTrinn()) {
             if (senderInn) {
                 return;
@@ -269,7 +269,6 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                             status: 'success',
                         });
                     }
-                    onSuccess?.();
                 } else {
                     visGlobalAlert({
                         title: 'Kunne ikke fatte vedtak',
@@ -285,6 +284,7 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                     status: 'error',
                 });
             } finally {
+                lukkModal?.();
                 setSenderInn(false);
             }
         }
