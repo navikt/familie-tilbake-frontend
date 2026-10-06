@@ -266,9 +266,10 @@ type ModalTekst = {
     beskrivelse: string;
 };
 
-const periodeOrd = (antall: number): string => (antall === 1 ? 'periode' : 'perioder');
-
-const periodeFrase = (antall: number): string => `${antall} ${periodeOrd(antall)}`;
+const periodeFrase = (antall: number, erNyPeriode: boolean = false): string =>
+    antall === 1
+        ? `en ${erNyPeriode ? 'ny ' : ''}periode`
+        : `flere ${erNyPeriode ? 'nye ' : ''}perioder`;
 
 const hentModalTekst = (
     antallNyePerioder: number,
@@ -279,46 +280,22 @@ const hentModalTekst = (
     const harEndretPerioder = antallEndredePerioder > 0;
     const harFjernedePerioder = antallFjernedePerioder > 0;
 
-    if (harFjernedePerioder && harNyePerioder && harEndretPerioder) {
-        return {
-            tittel: `Endringer i kravgrunnlaget`,
-            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet, ${periodeFrase(antallNyePerioder)} er lagt til og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
-        };
-    }
-    if (harFjernedePerioder && harNyePerioder) {
-        return {
-            tittel: `Endringer i kravgrunnlaget`,
-            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet og ${periodeFrase(antallNyePerioder)} er lagt til som må vurderes på nytt.`,
-        };
-    }
-    if (harFjernedePerioder && harEndretPerioder) {
-        return {
-            tittel: `Endringer i kravgrunnlaget`,
-            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
-        };
-    }
-    if (harFjernedePerioder) {
+    if (harFjernedePerioder && !harNyePerioder && !harEndretPerioder) {
         return {
             tittel:
                 antallFjernedePerioder > 1 ? 'Flere perioder er fjernet' : 'En periode er fjernet',
-            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet, og du må vurdere saken på nytt.`,
+            beskrivelse: `Det er registrert at ${periodeFrase(antallFjernedePerioder)} er fjernet i kravgrunnlaget, og du må vurdere på nytt.`,
         };
     }
-    if (harNyePerioder && harEndretPerioder) {
+    if (harNyePerioder && !harFjernedePerioder && !harEndretPerioder) {
         return {
-            tittel: `Endringer i kravgrunnlaget`,
-            beskrivelse: `Det er registrert ${periodeFrase(antallNyePerioder)} og endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
-        };
-    }
-    if (harEndretPerioder) {
-        return {
-            tittel: `Endringer i kravgrunnlaget`,
-            beskrivelse: `Det er registrert endringer i ${periodeFrase(antallEndredePerioder)} som må vurderes på nytt.`,
+            tittel: antallNyePerioder > 1 ? 'Nye perioder må vurderes' : 'Ny periode må vurderes',
+            beskrivelse: `Det er registrert ${periodeFrase(antallNyePerioder, true)} i kravgrunnlaget som må vurderes.`,
         };
     }
     return {
-        tittel: antallNyePerioder > 1 ? 'Nye perioder må vurderes' : 'Ny periode må vurderes',
-        beskrivelse: `Det er registrert ${periodeFrase(antallNyePerioder)} i kravgrunnlaget som må vurderes.`,
+        tittel: 'Endringer i kravgrunnlaget',
+        beskrivelse: 'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.',
     };
 };
 

@@ -96,6 +96,77 @@ describe('NyttKravgrunnlagModal', () => {
         user = userEvent.setup();
     });
 
+    test.each([
+        {
+            tilfelle: 'kun en ny periode',
+            endringer: [lagNyPeriode()],
+            beskrivelse: 'Det er registrert en ny periode i kravgrunnlaget som må vurderes.',
+        },
+        {
+            tilfelle: 'kun flere nye perioder',
+            endringer: [lagNyPeriode(), lagNyPeriode({ fom: '2026-10-01', tom: '2026-10-31' })],
+            beskrivelse: 'Det er registrert flere nye perioder i kravgrunnlaget som må vurderes.',
+        },
+        {
+            tilfelle: 'kun en fjernet periode',
+            endringer: [lagFjernetPeriode()],
+            beskrivelse:
+                'Det er registrert at en periode er fjernet i kravgrunnlaget, og du må vurdere på nytt.',
+        },
+        {
+            tilfelle: 'kun flere fjernede perioder',
+            endringer: [
+                lagFjernetPeriode(),
+                lagFjernetPeriode({ fom: '2025-01-01', tom: '2025-12-31' }),
+            ],
+            beskrivelse:
+                'Det er registrert at flere perioder er fjernet i kravgrunnlaget, og du må vurdere på nytt.',
+        },
+    ])('Viser riktig beskrivelse for $tilfelle', async ({ endringer, beskrivelse }) => {
+        renderModal(lagEndretKravgrunnlag({ endringer }));
+
+        expect(await screen.findByText(beskrivelse)).toBeInTheDocument();
+    });
+
+    test.each([
+        { tilfelle: 'ingen perioder', endringer: [] },
+        { tilfelle: 'kun endret periode', endringer: [lagEndretPeriode()] },
+        {
+            tilfelle: 'kun flere endrede perioder',
+            endringer: [
+                lagEndretPeriode(),
+                lagEndretPeriode({ fom: '2026-09-01', tom: '2026-09-30' }),
+            ],
+        },
+        {
+            tilfelle: 'nye og fjernede perioder',
+            endringer: [lagNyPeriode(), lagFjernetPeriode()],
+        },
+        {
+            tilfelle: 'nye og endrede perioder',
+            endringer: [lagNyPeriode(), lagEndretPeriode()],
+        },
+        {
+            tilfelle: 'fjernede og endrede perioder',
+            endringer: [lagFjernetPeriode(), lagEndretPeriode()],
+        },
+        {
+            tilfelle: 'nye, fjernede og endrede perioder',
+            endringer: [lagNyPeriode(), lagFjernetPeriode(), lagEndretPeriode()],
+        },
+    ])('Viser generell beskrivelse for $tilfelle', async ({ endringer }) => {
+        renderModal(lagEndretKravgrunnlag({ endringer }));
+
+        expect(
+            await screen.findByText(
+                'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: 'Endringer i kravgrunnlaget', level: 1 })
+        ).toBeInTheDocument();
+    });
+
     test('Viser kort for endring i eksisterende periode', async () => {
         renderModal();
 
@@ -218,7 +289,7 @@ describe('NyttKravgrunnlagModal', () => {
         ).toBeInTheDocument();
         expect(
             screen.getByText(
-                'Det er registrert 1 periode og endringer i 1 periode som må vurderes på nytt.'
+                'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.'
             )
         ).toBeInTheDocument();
         expect(
@@ -244,7 +315,7 @@ describe('NyttKravgrunnlagModal', () => {
         ).toBeInTheDocument();
         expect(
             screen.getByText(
-                'Det er registrert at 1 periode er fjernet, 1 periode er lagt til og endringer i 1 periode som må vurderes på nytt.'
+                'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.'
             )
         ).toBeInTheDocument();
         expect(
