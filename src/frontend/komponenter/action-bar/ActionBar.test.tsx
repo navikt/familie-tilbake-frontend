@@ -1,5 +1,6 @@
 import type { BehandlingDto } from '@/generated';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
@@ -9,6 +10,7 @@ import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagBehandling, lagFaktaSteg, lagForeldelseSteg } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { TestTogglesProvider } from '@/testdata/togglesContextFactory';
+import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { ActionBar } from './ActionBar';
 
@@ -18,26 +20,34 @@ const renderActionBar = (
     isLoading: boolean = false,
     behandling?: BehandlingDto,
     harKravgrunnlag: boolean = true,
-    nyStegflytPåskrudd: boolean = true
+    nyStegflytPåskrudd: boolean = true,
+    revurderingPåskrudd: boolean = false
 ): void => {
     render(
         <MemoryRouter initialEntries={['/fagsystem/BA/fagsak/1/behandling/2/fakta']}>
-            <TestTogglesProvider påskrudde={nyStegflytPåskrudd ? [ToggleName.NyStegflyt] : []}>
-                <FagsakContext value={lagFagsak()}>
-                    <TestBehandlingProvider
-                        behandling={behandling}
-                        stateOverrides={{ harKravgrunnlag }}
-                    >
-                        <ActionBar
-                            stegtekst="Steg 2 av 5"
-                            forrigeAriaLabel="gå tilbake til faktasteget"
-                            nesteAriaLabel="gå videre til vilkårsvurderingssteget"
-                            onNeste={onNeste}
-                            isLoading={isLoading}
-                            onForrige={onForrige}
-                        />
-                    </TestBehandlingProvider>
-                </FagsakContext>
+            <TestTogglesProvider
+                påskrudde={[
+                    ...(nyStegflytPåskrudd ? [ToggleName.NyStegflyt] : []),
+                    ...(revurderingPåskrudd ? [ToggleName.Revurdering] : []),
+                ]}
+            >
+                <QueryClientProvider client={createTestQueryClient()}>
+                    <FagsakContext value={lagFagsak()}>
+                        <TestBehandlingProvider
+                            behandling={behandling}
+                            stateOverrides={{ harKravgrunnlag }}
+                        >
+                            <ActionBar
+                                stegtekst="Steg 2 av 5"
+                                forrigeAriaLabel="gå tilbake til faktasteget"
+                                nesteAriaLabel="gå videre til vilkårsvurderingssteget"
+                                onNeste={onNeste}
+                                isLoading={isLoading}
+                                onForrige={onForrige}
+                            />
+                        </TestBehandlingProvider>
+                    </FagsakContext>
+                </QueryClientProvider>
             </TestTogglesProvider>
         </MemoryRouter>
     );
@@ -104,6 +114,71 @@ describe('ActionBar', () => {
     });
 
     describe('Ny modell', () => {
+        test.each<{
+            erNyModell: boolean;
+            status: BehandlingDto['status'];
+            kanRevurderingOpprettes: boolean;
+            toggle: boolean;
+            synlig: boolean;
+        }>([
+            {
+                erNyModell: true,
+                status: 'AVSLUTTET',
+                kanRevurderingOpprettes: false,
+                toggle: true,
+                synlig: true,
+            },
+            {
+                erNyModell: true,
+                status: 'AVSLUTTET',
+                kanRevurderingOpprettes: true,
+                toggle: true,
+                synlig: true,
+            },
+            {
+                erNyModell: true,
+                status: 'AVSLUTTET',
+                kanRevurderingOpprettes: true,
+                toggle: false,
+                synlig: false,
+            },
+            {
+                erNyModell: true,
+                status: 'OPPRETTET',
+                kanRevurderingOpprettes: true,
+                toggle: true,
+                synlig: false,
+            },
+            {
+                erNyModell: false,
+                status: 'AVSLUTTET',
+                kanRevurderingOpprettes: true,
+                toggle: true,
+                synlig: false,
+            },
+        ])(
+            'Revurder-knapp: ny modell=$erNyModell, status=$status, kan revurderes=$kanRevurderingOpprettes, toggle=$toggle',
+            ({ erNyModell, status, kanRevurderingOpprettes, toggle, synlig }) => {
+                renderActionBar(
+                    vi.fn(),
+                    vi.fn(),
+                    false,
+                    lagBehandling({ erNyModell, status, kanRevurderingOpprettes }),
+                    true,
+                    true,
+                    toggle
+                );
+
+                if (synlig) {
+                    expect(screen.getByRole('button', { name: 'Revurder' })).toBeInTheDocument();
+                } else {
+                    expect(
+                        screen.queryByRole('button', { name: 'Revurder' })
+                    ).not.toBeInTheDocument();
+                }
+            }
+        );
+
         const lagNyModellBehandling = (
             behandlingsstegsinfo = [lagFaktaSteg(), lagForeldelseSteg()]
         ): BehandlingDto =>
