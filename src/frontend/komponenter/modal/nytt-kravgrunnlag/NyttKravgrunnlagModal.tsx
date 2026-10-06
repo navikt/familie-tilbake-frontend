@@ -7,7 +7,7 @@ import type {
     NyPeriode,
 } from '@/generated-new';
 
-import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from '@navikt/aksel-icons';
+import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {
     Alert,
     BodyLong,
@@ -15,111 +15,138 @@ import {
     Box,
     Button,
     Heading,
+    HGrid,
     HStack,
+    Loader,
     Modal,
     Tag,
     VStack,
 } from '@navikt/ds-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { add, addDays, format, intervalToDuration, parseISO } from 'date-fns';
+import { Fragment, useEffect } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import {
     behandlingBenyttNyesteKravgrunnlagMutation,
+    behandlingFaktaOptions,
     behandlingFaktaQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { formatCurrencyNoKr, formatterDatostring, hentPeriodelengde } from '@/utils';
 import { MODAL_BREDDE } from '@/utils/modalUtils';
 
-const periodensVarighet = (fom: string, tom: string): number => Date.parse(tom) - Date.parse(fom);
-
-type FjernetPeriodeKortProps = {
-    periode: FjernetPeriode;
-};
-
-const FjernetPeriodeKort: FC<FjernetPeriodeKortProps> = ({ periode }: FjernetPeriodeKortProps) => {
-    const periodelengde = hentPeriodelengde(periode.fom, periode.tom);
-    return (
-        <Box borderColor="warning" borderWidth="1" borderRadius="12" overflow="hidden">
-            <Box
-                background="warning-moderate"
-                borderColor="warning"
-                borderWidth="0 0 1 0"
-                paddingInline="space-16"
-                paddingBlock="space-6"
-            >
-                <Heading level="2" size="xsmall" className="text-ax-text-warning">
-                    Detaljer om perioden som er fjernet
-                </Heading>
-            </Box>
-            <HStack
-                gap="space-32"
-                paddingInline="space-16"
-                paddingBlock="space-8 space-12"
-                className="bg-ax-bg-default"
-            >
-                <VStack gap="space-8">
-                    <BodyShort weight="semibold">Periode</BodyShort>
-                    <VStack>
-                        <BodyShort>
-                            {formatterDatostring(periode.fom)}–{formatterDatostring(periode.tom)}
-                        </BodyShort>
-                        {periodelengde && <BodyShort size="small">{periodelengde}</BodyShort>}
-                    </VStack>
-                </VStack>
-                <VStack gap="space-8">
-                    <BodyShort weight="semibold">Feilutbetalt</BodyShort>
-                    <BodyShort className="text-ax-text-brand-magenta">
-                        {formatCurrencyNoKr(periode.beløp)}
-                    </BodyShort>
-                </VStack>
-            </HStack>
-        </Box>
+const hentVarighetsendring = (periode: EndretPeriode): string | null => {
+    // Sammenlign kalenderlengdene fra samme startdato for å bevare hele måneder og år.
+    const fellesStart = parseISO('2000-01-01');
+    const gammelSlutt = add(
+        fellesStart,
+        intervalToDuration({
+            start: parseISO(periode.gammelPeriode.fom),
+            end: addDays(parseISO(periode.gammelPeriode.tom), 1),
+        })
     );
+    const nySlutt = add(
+        fellesStart,
+        intervalToDuration({
+            start: parseISO(periode.fom),
+            end: addDays(parseISO(periode.tom), 1),
+        })
+    );
+    if (gammelSlutt.getTime() === nySlutt.getTime()) {
+        return null;
+    }
+    const erKortere = nySlutt < gammelSlutt;
+    const start = erKortere ? nySlutt : gammelSlutt;
+    const slutt = erKortere ? gammelSlutt : nySlutt;
+    const endring = hentPeriodelengde(
+        format(start, 'yyyy-MM-dd'),
+        format(addDays(slutt, -1), 'yyyy-MM-dd')
+    );
+    return `${erKortere ? '–' : '+'}${endring}`;
 };
 
-type NyPeriodeKortProps = {
-    periode: NyPeriode;
+type PeriodeKortProps = {
+    perioder: NyPeriode[] | FjernetPeriode[];
+    type: 'lagtTil' | 'fjernet' | 'uendret';
 };
 
-const NyPeriodeKort: FC<NyPeriodeKortProps> = ({ periode }: NyPeriodeKortProps) => {
-    const periodelengde = hentPeriodelengde(periode.fom, periode.tom);
+const PeriodeKort: FC<PeriodeKortProps> = ({ perioder, type }: PeriodeKortProps) => {
+    const kortUtseende = {
+        lagtTil: {
+            farge: 'success',
+            bakgrunn: 'success-moderate',
+            tekstfarge: 'text-ax-text-success',
+            tittel: 'Lagt til',
+        },
+        fjernet: {
+            farge: 'warning',
+            bakgrunn: 'warning-moderate',
+            tekstfarge: 'text-ax-text-warning',
+            tittel: 'Fjernet',
+        },
+        uendret: {
+            farge: 'neutral-subtle',
+            bakgrunn: 'neutral-moderate',
+            tekstfarge: 'text-ax-text-neutral',
+            tittel: 'Ingen endringer',
+        },
+    } as const;
+    const { farge, bakgrunn, tekstfarge, tittel } = kortUtseende[type];
+
     return (
-        <Box borderColor="success" borderWidth="1" borderRadius="12" overflow="hidden">
+        <Box
+            as="section"
+            aria-label={tittel}
+            borderColor={farge}
+            borderWidth="1"
+            borderRadius="12"
+            overflow="hidden"
+        >
             <Box
-                background="success-moderate"
-                borderColor="success"
+                background={bakgrunn}
+                borderColor={farge}
                 borderWidth="0 0 1 0"
                 paddingInline="space-16"
                 paddingBlock="space-6"
             >
-                <Heading level="2" size="xsmall" className="text-ax-text-success">
-                    Detaljer om den nye perioden
+                <Heading level="2" size="xsmall" className={tekstfarge}>
+                    {tittel}
                 </Heading>
             </Box>
-            <HStack
-                gap="space-32"
+            <VStack
+                gap="space-8"
                 paddingInline="space-16"
                 paddingBlock="space-8 space-12"
                 className="bg-ax-bg-default"
             >
-                <VStack gap="space-8">
+                <HGrid columns="1fr 1fr" gap="space-32">
                     <BodyShort weight="semibold">Periode</BodyShort>
-                    <VStack>
-                        <BodyShort>
-                            {formatterDatostring(periode.fom)}–{formatterDatostring(periode.tom)}
-                        </BodyShort>
-                        {periodelengde && <BodyShort size="small">{periodelengde}</BodyShort>}
-                    </VStack>
-                </VStack>
-                <VStack gap="space-8">
                     <BodyShort weight="semibold">Feilutbetalt</BodyShort>
-                    <BodyShort className="text-ax-text-brand-magenta">
-                        {formatCurrencyNoKr(periode.beløp)}
-                    </BodyShort>
-                </VStack>
-            </HStack>
+                </HGrid>
+                {perioder.map((periode, indeks) => {
+                    const periodelengde = hentPeriodelengde(periode.fom, periode.tom);
+                    return (
+                        <Fragment key={`${periode.fom}-${periode.tom}`}>
+                            {indeks > 0 && <hr className="border-ax-border-neutral-subtle" />}
+                            <HGrid columns="1fr 1fr" gap="space-32">
+                                <VStack gap="space-8">
+                                    <BodyShort>
+                                        {formatterDatostring(periode.fom)}–
+                                        {formatterDatostring(periode.tom)}
+                                    </BodyShort>
+                                    {periodelengde && (
+                                        <BodyShort size="small">{periodelengde}</BodyShort>
+                                    )}
+                                </VStack>
+                                <BodyShort className="text-ax-text-brand-magenta">
+                                    {formatCurrencyNoKr(periode.beløp)}
+                                </BodyShort>
+                            </HGrid>
+                        </Fragment>
+                    );
+                })}
+            </VStack>
         </Box>
     );
 };
@@ -134,16 +161,18 @@ const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriod
         periode.gammelPeriode.tom
     );
     const nyPeriodelengde = hentPeriodelengde(periode.fom, periode.tom);
-    const nyPeriodeErKortere =
-        periodensVarighet(periode.fom, periode.tom) <
-        periodensVarighet(periode.gammelPeriode.fom, periode.gammelPeriode.tom);
-    const nyttBeløpErMindre = periode.nyttBeløp < periode.gammeltBeløp;
-    const periodeErEndret =
-        periode.gammelPeriode.fom !== periode.fom || periode.gammelPeriode.tom !== periode.tom;
-    const beløpErEndret = periode.gammeltBeløp !== periode.nyttBeløp;
+    const varighetsendring = hentVarighetsendring(periode);
+    const beløpsendring = periode.nyttBeløp - periode.gammeltBeløp;
 
     return (
-        <Box borderColor="info" borderWidth="1" borderRadius="12" overflow="hidden">
+        <Box
+            as="section"
+            aria-label="Endringer"
+            borderColor="info"
+            borderWidth="1"
+            borderRadius="12"
+            overflow="hidden"
+        >
             <Box
                 background="info-moderate"
                 borderColor="info"
@@ -152,104 +181,67 @@ const EndretPeriodeKort: FC<EndretPeriodeKortProps> = ({ periode }: EndretPeriod
                 paddingBlock="space-6"
             >
                 <Heading level="2" size="xsmall" className="text-ax-text-info">
-                    Detaljer om endringer i den eksisterende perioden
+                    Endringer
                 </Heading>
             </Box>
-            <VStack
-                gap="space-24"
+            <HGrid
+                columns="1fr auto 1fr"
+                gap="space-16"
+                align="center"
                 paddingInline="space-16"
                 paddingBlock="space-8 space-12"
                 className="bg-ax-bg-default"
             >
-                <VStack gap="space-8">
-                    <BodyShort weight="semibold">Periode</BodyShort>
-                    {periodeErEndret ? (
-                        <HStack gap="space-16" align="center" wrap={false}>
-                            <VStack align="start">
-                                <BodyShort>
-                                    {formatterDatostring(periode.gammelPeriode.fom)}–
-                                    {formatterDatostring(periode.gammelPeriode.tom)}
-                                </BodyShort>
-                                {gammelPeriodelengde && (
-                                    <Tag variant="moderate" data-color="danger" size="small">
-                                        {gammelPeriodelengde}
-                                    </Tag>
-                                )}
-                            </VStack>
-                            <ArrowRightIcon
-                                aria-label="endres til"
-                                fontSize="1.5rem"
-                                className="shrink-0"
-                            />
-                            <VStack align="start">
-                                <BodyShort>
-                                    {formatterDatostring(periode.fom)}–
-                                    {formatterDatostring(periode.tom)}
-                                </BodyShort>
-                                {nyPeriodelengde && (
-                                    <Tag
-                                        variant="moderate"
-                                        data-color="success"
-                                        size="small"
-                                        icon={
-                                            nyPeriodeErKortere ? (
-                                                <ArrowDownIcon aria-hidden />
-                                            ) : (
-                                                <ArrowUpIcon aria-hidden />
-                                            )
-                                        }
-                                    >
-                                        {nyPeriodelengde}
-                                    </Tag>
-                                )}
-                            </VStack>
-                        </HStack>
-                    ) : (
-                        <VStack align="start">
-                            <BodyShort>
-                                {formatterDatostring(periode.fom)}–
-                                {formatterDatostring(periode.tom)}
-                            </BodyShort>
-                            {nyPeriodelengde && (
-                                <BodyShort size="small">{nyPeriodelengde}</BodyShort>
-                            )}
-                        </VStack>
-                    )}
+                <VStack gap="space-8" className="min-w-0">
+                    <BodyShort weight="semibold">Før</BodyShort>
+                    <BodyShort>
+                        {formatterDatostring(periode.gammelPeriode.fom)}–
+                        {formatterDatostring(periode.gammelPeriode.tom)}
+                    </BodyShort>
+                    {gammelPeriodelengde && <BodyShort>{gammelPeriodelengde}</BodyShort>}
+                    <BodyShort className="text-ax-text-brand-magenta">
+                        {formatCurrencyNoKr(periode.gammeltBeløp)} kr
+                    </BodyShort>
                 </VStack>
-                <VStack gap="space-8">
-                    <BodyShort weight="semibold">Feilutbetalt</BodyShort>
-                    {beløpErEndret ? (
-                        <HStack gap="space-16" align="center" wrap={false}>
-                            <Tag variant="moderate" data-color="danger" size="small">
-                                {formatCurrencyNoKr(periode.gammeltBeløp)}
-                            </Tag>
-                            <ArrowRightIcon
-                                aria-label="endres til"
-                                fontSize="1.5rem"
-                                className="shrink-0"
-                            />
+                <ArrowRightIcon aria-hidden fontSize="1.5rem" />
+                <VStack gap="space-8" className="min-w-0">
+                    <BodyShort weight="semibold">Etter endring</BodyShort>
+                    <BodyShort>
+                        {formatterDatostring(periode.fom)}–{formatterDatostring(periode.tom)}
+                    </BodyShort>
+                    {nyPeriodelengde && (
+                        <HStack gap="space-8" align="center">
+                            <BodyShort>{nyPeriodelengde}</BodyShort>
+                            {varighetsendring && (
+                                <Tag
+                                    variant="moderate"
+                                    data-color={
+                                        varighetsendring.startsWith('–') ? 'danger' : 'success'
+                                    }
+                                    size="small"
+                                >
+                                    {varighetsendring}
+                                </Tag>
+                            )}
+                        </HStack>
+                    )}
+                    <HStack gap="space-8" align="center">
+                        <BodyShort className="text-ax-text-brand-magenta">
+                            {formatCurrencyNoKr(periode.nyttBeløp)} kr
+                        </BodyShort>
+                        {beløpsendring !== 0 && (
                             <Tag
                                 variant="moderate"
-                                data-color="success"
+                                data-color={beløpsendring < 0 ? 'danger' : 'success'}
                                 size="small"
-                                icon={
-                                    nyttBeløpErMindre ? (
-                                        <ArrowDownIcon aria-hidden />
-                                    ) : (
-                                        <ArrowUpIcon aria-hidden />
-                                    )
-                                }
                             >
-                                {formatCurrencyNoKr(periode.nyttBeløp)}
+                                {beløpsendring > 0 ? '+' : '–'}
+                                {formatCurrencyNoKr(Math.abs(beløpsendring))} kr
                             </Tag>
-                        </HStack>
-                    ) : (
-                        <BodyShort className="text-ax-text-brand-magenta">
-                            {formatCurrencyNoKr(periode.nyttBeløp)}
-                        </BodyShort>
-                    )}
+                        )}
+                    </HStack>
                 </VStack>
-            </VStack>
+            </HGrid>
         </Box>
     );
 };
@@ -300,13 +292,35 @@ const hentModalTekst = (
 };
 
 export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullført }: Props) => {
-    const { behandlingId } = useBehandling();
+    const { behandlingId, erNyModell } = useBehandling();
     const queryClient = useQueryClient();
+    const fakta = useQuery({
+        ...behandlingFaktaOptions({ path: { behandlingId } }),
+        enabled: erNyModell,
+    });
 
     const endringer = endretKravgrunnlag.endringer;
     const fjernedePerioder = endringer.filter(endring => endring.type === 'fjernet_periode');
     const nyePerioder = endringer.filter(endring => endring.type === 'ny_periode');
     const endretPerioder = endringer.filter(endring => endring.type === 'endret_periode');
+    const uendredePerioder = fakta.data?.perioder
+        .filter(
+            periode =>
+                !periode.endringIKravgrunnlag &&
+                !periode.splittbarePerioder.some(delperiode => delperiode.endringIKravgrunnlag) &&
+                !endringer.some(
+                    endring =>
+                        (periode.fom <= endring.tom && periode.tom >= endring.fom) ||
+                        ('gammelPeriode' in endring &&
+                            periode.fom <= endring.gammelPeriode.tom &&
+                            periode.tom >= endring.gammelPeriode.fom)
+                )
+        )
+        .map(periode => ({
+            fom: periode.fom,
+            tom: periode.tom,
+            beløp: periode.feilutbetaltBeløp,
+        }));
 
     const { tittel, beskrivelse } = hentModalTekst(
         nyePerioder.length,
@@ -358,21 +372,39 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
             <Modal.Body>
                 <VStack gap="space-16">
                     <BodyLong>{beskrivelse}</BodyLong>
-                    {fjernedePerioder.map(periode => (
-                        <FjernetPeriodeKort
-                            key={`${periode.fom}-${periode.tom}`}
-                            periode={periode}
-                        />
-                    ))}
-                    {nyePerioder.map(periode => (
-                        <NyPeriodeKort key={`${periode.fom}-${periode.tom}`} periode={periode} />
-                    ))}
+                    {fjernedePerioder.length > 0 && (
+                        <PeriodeKort perioder={fjernedePerioder} type="fjernet" />
+                    )}
+                    {nyePerioder.length > 0 && (
+                        <PeriodeKort perioder={nyePerioder} type="lagtTil" />
+                    )}
                     {endretPerioder.map(periode => (
                         <EndretPeriodeKort
                             key={`${periode.fom}-${periode.tom}`}
                             periode={periode}
                         />
                     ))}
+                    {erNyModell && fakta.isPending && (
+                        <Loader title="Henter øvrige perioder i kravgrunnlaget" />
+                    )}
+                    {erNyModell && fakta.isError && (
+                        <Alert variant="error" size="small">
+                            Kunne ikke hente øvrige perioder i kravgrunnlaget.
+                            <Button
+                                variant="tertiary"
+                                size="small"
+                                onClick={(): void => {
+                                    void fakta.refetch();
+                                }}
+                                loading={fakta.isFetching}
+                            >
+                                Prøv igjen
+                            </Button>
+                        </Alert>
+                    )}
+                    {uendredePerioder && uendredePerioder.length > 0 && (
+                        <PeriodeKort perioder={uendredePerioder} type="uendret" />
+                    )}
                     {benyttNyesteKravgrunnlag.isError && (
                         <Alert variant="error" size="small">
                             Kunne ikke ta i bruk det nye kravgrunnlaget. Prøv igjen.
