@@ -28,6 +28,7 @@ const lagForhåndsvarselResponse = (
     brukeruttalelse: null,
     sendtVarselbrev: null,
     ferdigvurdert: false,
+    uttalelsesfrist: null,
     ...overrides,
 });
 
@@ -117,6 +118,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
                     },
                     uttalelsesfrist: { opprinneligFrist: '2025-02-20' },
                 },
+                uttalelsesfrist: { opprinneligFrist: '2025-02-20' },
             })
         );
 
@@ -138,6 +140,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
                     },
                     uttalelsesfrist: { opprinneligFrist: '2099-02-20' },
                 },
+                uttalelsesfrist: { opprinneligFrist: '2099-02-20' },
             })
         );
 
@@ -158,6 +161,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
                     },
                     uttalelsesfrist: { opprinneligFrist: '2020-02-20' },
                 },
+                uttalelsesfrist: { opprinneligFrist: '2020-02-20' },
             })
         );
 
@@ -179,6 +183,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
                     },
                     uttalelsesfrist: { opprinneligFrist: '2020-02-20' },
                 },
+                uttalelsesfrist: { opprinneligFrist: '2020-02-20' },
             })
         );
 
@@ -211,6 +216,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
                     },
                     uttalelsesfrist: { opprinneligFrist: '2020-02-20' },
                 },
+                uttalelsesfrist: { opprinneligFrist: '2020-02-20' },
             })
         );
 

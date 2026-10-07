@@ -39,6 +39,7 @@ const lagForhåndsvarselResponse = (
     brukeruttalelse: null,
     sendtVarselbrev: null,
     ferdigvurdert: false,
+    uttalelsesfrist: null,
     ...overrides,
 });
 
@@ -89,6 +90,10 @@ const lagSendtForhåndsvarselResponse = (nyFrist?: string): ForhaandsvarselRespo
     brukeruttalelse: null,
     sendtVarselbrev: { brevSendt: '2025-01-10', journalpostId: 'jp-123', dokumentId: 'dok-456' },
     ferdigvurdert: true,
+    uttalelsesfrist: {
+        opprinneligFrist: '2025-01-22',
+        nyFrist,
+    },
 });
 
 const opprettQueryClientMedForhåndsvarselData = (

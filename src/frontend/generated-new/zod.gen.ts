@@ -355,6 +355,12 @@ export const zStandardtekst = z.object({
     underavsnitt: z.array(zElement),
 });
 
+export const zTilbakekrevingRevurderingsarsak = z.enum(['REVURDERING_ANNEN_ÅRSAK']);
+
+export const zTilbakekrevingRevurdering = z.object({
+    revurderingsarsak: zTilbakekrevingRevurderingsarsak,
+});
+
 export const zUnderavsnittElement = z.object({
     tittel: z.string(),
     underavsnitt: z.array(zElement),
@@ -521,6 +527,7 @@ export const zForhaandsvarselResponse = z.object({
     forhaandsvarselSteg: zForhaandsvarselSteg,
     brukeruttalelse: zUttalelse.nullable(),
     sendtVarselbrev: zDokumentInfo.nullable(),
+    uttalelsesfrist: zUttalelsesfrist.nullable(),
 });
 
 export const zUnntak = z.object({
@@ -1040,6 +1047,7 @@ export const zForhaandsvarselResponseWritable = z.object({
     forhaandsvarselSteg: zForhaandsvarselStegWritable,
     brukeruttalelse: zUttalelse.nullable(),
     sendtVarselbrev: zDokumentInfo.nullable(),
+    uttalelsesfrist: zUttalelsesfristWritable.nullable(),
 });
 
 export const zVedtaksbrevDataWritable = z.object({
@@ -1188,6 +1196,12 @@ export const zBehandlingHentDokumentPath = z.object({
 export const zBehandlingHentDokumentResponse = z.string();
 
 export const zBehandlingBenyttNyesteKravgrunnlagPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+export const zBehandlingOpprettRevurderingBody = zTilbakekrevingRevurdering;
+
+export const zBehandlingOpprettRevurderingPath = z.object({
     behandlingId: z.uuid(),
 });
 

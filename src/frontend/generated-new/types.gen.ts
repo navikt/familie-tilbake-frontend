@@ -188,6 +188,7 @@ export type ForhaandsvarselResponse = {
     forhaandsvarselSteg: ForhaandsvarselSteg;
     brukeruttalelse: Uttalelse | null;
     sendtVarselbrev: DokumentInfo | null;
+    uttalelsesfrist: Uttalelsesfrist | null;
 };
 
 export type ForhaandsvarselSteg =
@@ -487,6 +488,12 @@ export type Standardtekst = {
     underavsnitt: Array<Element>;
 };
 
+export type TilbakekrevingRevurdering = {
+    revurderingsarsak: TilbakekrevingRevurderingsarsak;
+};
+
+export type TilbakekrevingRevurderingsarsak = 'REVURDERING_ANNEN_ÅRSAK';
+
 export type Uaktsomt = {
     begrunnelse: string;
     unnlatelse: Unnlatelse;
@@ -767,6 +774,7 @@ export type ForhaandsvarselResponseWritable = {
     forhaandsvarselSteg: ForhaandsvarselStegWritable;
     brukeruttalelse: Uttalelse | null;
     sendtVarselbrev: DokumentInfo | null;
+    uttalelsesfrist: UttalelsesfristWritable | null;
 };
 
 export type ForhaandsvarselStegWritable =
@@ -1348,6 +1356,36 @@ export type BehandlingBenyttNyesteKravgrunnlagError =
     BehandlingBenyttNyesteKravgrunnlagErrors[keyof BehandlingBenyttNyesteKravgrunnlagErrors];
 
 export type BehandlingBenyttNyesteKravgrunnlagResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
+export type BehandlingOpprettRevurderingData = {
+    body: TilbakekrevingRevurdering;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/revurdering';
+};
+
+export type BehandlingOpprettRevurderingErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingOpprettRevurderingError =
+    BehandlingOpprettRevurderingErrors[keyof BehandlingOpprettRevurderingErrors];
+
+export type BehandlingOpprettRevurderingResponses = {
     /**
      * The request has succeeded.
      */

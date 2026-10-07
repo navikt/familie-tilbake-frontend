@@ -161,6 +161,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         tilbakeført,
         ferdigvurdert,
         sendtVarselbrev,
+        uttalelsesfrist,
     } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
@@ -422,9 +423,9 @@ export const ForhåndsvarselInnhold: FC = () => {
                     onSeBrevet={onSeVarselbrev}
                 />
             )}
-            {forhåndsvarselSteg.type === 'sendt' && (
+            {uttalelsesfrist && (
                 <Fristinfo
-                    uttalelsesfrist={forhåndsvarselSteg.uttalelsesfrist}
+                    uttalelsesfrist={uttalelsesfrist}
                     onUtsettFrist={(): void => utsettFristModalRef.current?.showModal()}
                 />
             )}

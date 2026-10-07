@@ -51,6 +51,9 @@ import type {
     BehandlingOppdaterVedtaksbrevData,
     BehandlingOppdaterVedtaksbrevErrors,
     BehandlingOppdaterVedtaksbrevResponses,
+    BehandlingOpprettRevurderingData,
+    BehandlingOpprettRevurderingErrors,
+    BehandlingOpprettRevurderingResponses,
     BehandlingSendVarselbrevData,
     BehandlingSendVarselbrevErrors,
     BehandlingSendVarselbrevResponses,
@@ -273,6 +276,26 @@ export const behandlingBenyttNyesteKravgrunnlag = <ThrowOnError extends boolean 
         BehandlingBenyttNyesteKravgrunnlagErrors,
         ThrowOnError
     >({ url: '/api/v1/behandling/{behandlingId}/kravgrunnlag/benytt-nyeste', ...options });
+
+export const behandlingOpprettRevurdering = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingOpprettRevurderingData, ThrowOnError>
+): RequestResult<
+    BehandlingOpprettRevurderingResponses,
+    BehandlingOpprettRevurderingErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).post<
+        BehandlingOpprettRevurderingResponses,
+        BehandlingOpprettRevurderingErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/behandling/{behandlingId}/revurdering',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
 
 export const behandlingHentVarselbrevTekster = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingHentVarselbrevTeksterData, ThrowOnError>

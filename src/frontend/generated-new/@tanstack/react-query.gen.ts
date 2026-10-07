@@ -21,6 +21,7 @@ import {
     behandlingLagreVilkaarsvurdering,
     behandlingOppdaterFakta,
     behandlingOppdaterVedtaksbrev,
+    behandlingOpprettRevurdering,
     behandlingSendVarselbrev,
     behandlingSlaaSammenPerioder,
     behandlingSplittPeriode,
@@ -76,6 +77,8 @@ import type {
     BehandlingOppdaterVedtaksbrevData,
     BehandlingOppdaterVedtaksbrevError,
     BehandlingOppdaterVedtaksbrevResponse,
+    BehandlingOpprettRevurderingData,
+    BehandlingOpprettRevurderingError,
     BehandlingSendVarselbrevData,
     BehandlingSendVarselbrevError,
     BehandlingSlaaSammenPerioderData,
@@ -405,6 +408,30 @@ export const behandlingBenyttNyesteKravgrunnlagMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await behandlingBenyttNyesteKravgrunnlag({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const behandlingOpprettRevurderingMutation = (
+    options?: Partial<Options<BehandlingOpprettRevurderingData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BehandlingOpprettRevurderingError>,
+    Options<BehandlingOpprettRevurderingData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BehandlingOpprettRevurderingError>,
+        Options<BehandlingOpprettRevurderingData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await behandlingOpprettRevurdering({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,
