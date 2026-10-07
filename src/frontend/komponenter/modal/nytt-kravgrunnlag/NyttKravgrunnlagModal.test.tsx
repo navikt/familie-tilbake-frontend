@@ -9,7 +9,6 @@ import { userEvent } from '@testing-library/user-event';
 import { FagsakContext } from '@/context/FagsakContext';
 import { behandlingFaktaQueryKey } from '@/generated-new/@tanstack/react-query.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
-import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
@@ -18,6 +17,21 @@ import { NyttKravgrunnlagModal } from './NyttKravgrunnlagModal';
 type NyPeriode = Extract<KravgrunnlagForskjell, { type: 'ny_periode' }>;
 type EndretPeriode = Extract<KravgrunnlagForskjell, { type: 'endret_periode' }>;
 type FjernetPeriode = Extract<KravgrunnlagForskjell, { type: 'fjernet_periode' }>;
+
+const varighetsdifferanse = /^[+–].*(dag|måned|år)/;
+const fargeattributt = 'data-color';
+
+const hentOverskrift = (navn: string, nivå: number = 2): HTMLElement =>
+    screen.getByRole('heading', { name: navn, level: nivå });
+
+const finnOverskrift = (navn: string, nivå: number = 2): Promise<HTMLElement> =>
+    screen.findByRole('heading', { name: navn, level: nivå });
+
+const søkEtterOverskrift = (navn: string): HTMLElement | null =>
+    screen.queryByRole('heading', { name: navn });
+
+const finnBoks = async (navn: string): Promise<ReturnType<typeof within>> =>
+    within(await screen.findByRole('region', { name: navn }));
 
 const lagNyPeriode = (overrides: Partial<NyPeriode> = {}): NyPeriode =>
     ({
@@ -106,12 +120,7 @@ const renderModal = (
     render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
-                <TestBehandlingProvider
-                    behandling={lagBehandling({
-                        behandlingId: 'uuid-1',
-                        erNyModell: perioder !== undefined,
-                    })}
-                >
+                <TestBehandlingProvider>
                     <NyttKravgrunnlagModal
                         endretKravgrunnlag={endretKravgrunnlag}
                         onFullført={vi.fn()}
@@ -204,33 +213,21 @@ describe('NyttKravgrunnlagModal', () => {
                 'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.'
             )
         ).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', { name: 'Endringer i kravgrunnlaget', level: 1 })
-        ).toBeInTheDocument();
+        expect(hentOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
     });
 
     test('Viser kort for endring i eksisterende periode', async () => {
         renderModal();
 
-        expect(
-            await screen.findByRole('heading', {
-                name: 'Endringer i kravgrunnlaget',
-                level: 1,
-            })
-        ).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', {
-                name: 'Endringer',
-                level: 2,
-            })
-        ).toBeInTheDocument();
+        expect(await finnOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
+        expect(hentOverskrift('Endringer')).toBeInTheDocument();
         expect(screen.getByText('10.08.2026–10.08.2026')).toBeInTheDocument();
         expect(screen.getByText('10.08.2026–24.08.2026')).toBeInTheDocument();
         expect(screen.getByText('Før')).toBeInTheDocument();
         expect(screen.getByText('Etter endring')).toBeInTheDocument();
         expect(screen.getByText('5 000 kr')).toBeInTheDocument();
         expect(screen.getByText('20 000 kr')).toBeInTheDocument();
-        expect(screen.queryByRole('heading', { name: 'Lagt til' })).not.toBeInTheDocument();
+        expect(søkEtterOverskrift('Lagt til')).not.toBeInTheDocument();
     });
 
     test('Uendret periode og endret beløp: viser begge kolonner, kun beløpsdifferanse', async () => {
@@ -238,27 +235,18 @@ describe('NyttKravgrunnlagModal', () => {
             lagEndretKravgrunnlag({
                 endringer: [
                     lagEndretPeriode({
-                        fom: '2026-08-10',
-                        tom: '2026-08-24',
                         gammelPeriode: { fom: '2026-08-10', tom: '2026-08-24' },
-                        gammeltBeløp: 5000,
-                        nyttBeløp: 20000,
                     }),
                 ],
             })
         );
 
-        expect(
-            await screen.findByRole('heading', {
-                name: 'Endringer',
-                level: 2,
-            })
-        ).toBeInTheDocument();
+        expect(await finnOverskrift('Endringer')).toBeInTheDocument();
         expect(screen.getAllByText('10.08.2026–24.08.2026')).toHaveLength(2);
         expect(screen.getByText('5 000 kr')).toBeInTheDocument();
         expect(screen.getByText('20 000 kr')).toBeInTheDocument();
-        expect(screen.getByText('+15 000 kr')).toHaveAttribute('data-color', 'success');
-        expect(screen.queryByText(/^[+–].*(dag|måned|år)/)).not.toBeInTheDocument();
+        expect(screen.getByText('+15 000 kr')).toHaveAttribute(fargeattributt, 'success');
+        expect(screen.queryByText(varighetsdifferanse)).not.toBeInTheDocument();
     });
 
     test('Endret periode og uendret beløp: viser begge kolonner, kun varighetsdifferanse', async () => {
@@ -266,26 +254,19 @@ describe('NyttKravgrunnlagModal', () => {
             lagEndretKravgrunnlag({
                 endringer: [
                     lagEndretPeriode({
-                        fom: '2026-08-10',
                         tom: '2026-08-31',
                         gammelPeriode: { fom: '2026-08-10', tom: '2026-08-24' },
-                        gammeltBeløp: 5000,
                         nyttBeløp: 5000,
                     }),
                 ],
             })
         );
 
-        expect(
-            await screen.findByRole('heading', {
-                name: 'Endringer',
-                level: 2,
-            })
-        ).toBeInTheDocument();
+        expect(await finnOverskrift('Endringer')).toBeInTheDocument();
         expect(screen.getByText('10.08.2026–24.08.2026')).toBeInTheDocument();
         expect(screen.getByText('10.08.2026–31.08.2026')).toBeInTheDocument();
         expect(screen.getAllByText('5 000 kr')).toHaveLength(2);
-        expect(screen.getByText('+7 dager')).toHaveAttribute('data-color', 'success');
+        expect(screen.getByText('+7 dager')).toHaveAttribute(fargeattributt, 'success');
         expect(screen.queryByText(/^[+–].* kr$/)).not.toBeInTheDocument();
     });
 
@@ -357,12 +338,12 @@ describe('NyttKravgrunnlagModal', () => {
                 })
             );
 
-            const boks = within(await screen.findByRole('region', { name: 'Endringer' }));
+            const boks = await finnBoks('Endringer');
             expect(boks.getByText('Før')).toBeInTheDocument();
             expect(boks.getByText('Etter endring')).toBeInTheDocument();
             expect(boks.getByText('15 000 kr')).toBeInTheDocument();
-            expect(boks.getByText(varighetsendring)).toHaveAttribute('data-color', farge);
-            expect(boks.getByText(beløpsendring)).toHaveAttribute('data-color', farge);
+            expect(boks.getByText(varighetsendring)).toHaveAttribute(fargeattributt, farge);
+            expect(boks.getByText(beløpsendring)).toHaveAttribute(fargeattributt, farge);
         }
     );
 
@@ -379,9 +360,9 @@ describe('NyttKravgrunnlagModal', () => {
             })
         );
 
-        const boks = within(await screen.findByRole('region', { name: 'Endringer' }));
+        const boks = await finnBoks('Endringer');
         expect(boks.getAllByText('1 måned')).toHaveLength(2);
-        expect(boks.queryByText(/^[+–].*(dag|måned|år)/)).not.toBeInTheDocument();
+        expect(boks.queryByText(varighetsdifferanse)).not.toBeInTheDocument();
     });
 
     test('Uendret varighet og beløp står alene uten differanse-tagger', async () => {
@@ -392,14 +373,13 @@ describe('NyttKravgrunnlagModal', () => {
                         gammelPeriode: { fom: '2026-01-01', tom: '2026-01-31' },
                         fom: '2026-02-01',
                         tom: '2026-02-28',
-                        gammeltBeløp: 5000,
                         nyttBeløp: 5000,
                     }),
                 ],
             })
         );
 
-        const boks = within(await screen.findByRole('region', { name: 'Endringer' }));
+        const boks = await finnBoks('Endringer');
         expect(boks.getAllByText('1 måned')).toHaveLength(2);
         expect(boks.getAllByText('5 000 kr')).toHaveLength(2);
         expect(boks.queryByText(/^[+–]/)).not.toBeInTheDocument();
@@ -411,14 +391,10 @@ describe('NyttKravgrunnlagModal', () => {
         expect(
             await screen.findByRole('heading', { name: 'Ny periode må vurderes', level: 1 })
         ).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Lagt til', level: 2 })).toBeInTheDocument();
+        expect(hentOverskrift('Lagt til')).toBeInTheDocument();
         expect(screen.getByText('21.09.2026–27.09.2026')).toBeInTheDocument();
         expect(screen.getByText('10 000')).toBeInTheDocument();
-        expect(
-            screen.queryByRole('heading', {
-                name: 'Endringer',
-            })
-        ).not.toBeInTheDocument();
+        expect(søkEtterOverskrift('Endringer')).not.toBeInTheDocument();
     });
 
     test('Viser kun kort for fjernet periode når det bare er en fjernet periode', async () => {
@@ -427,36 +403,24 @@ describe('NyttKravgrunnlagModal', () => {
         expect(
             await screen.findByRole('heading', { name: 'En periode er fjernet', level: 1 })
         ).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', {
-                name: 'Fjernet',
-                level: 2,
-            })
-        ).toBeInTheDocument();
+        expect(hentOverskrift('Fjernet')).toBeInTheDocument();
         expect(screen.getByText('01.01.2024–31.12.2024')).toBeInTheDocument();
         expect(screen.getByText('1 år')).toBeInTheDocument();
         expect(screen.getByText('55 000')).toBeInTheDocument();
-        expect(screen.queryByRole('heading', { name: 'Lagt til' })).not.toBeInTheDocument();
+        expect(søkEtterOverskrift('Lagt til')).not.toBeInTheDocument();
     });
 
     test('Viser begge kortene når det er både ny periode og endring i eksisterende', async () => {
         renderModal(lagEndretKravgrunnlag({ endringer: [lagNyPeriode(), lagEndretPeriode()] }));
 
-        expect(
-            await screen.findByRole('heading', { name: 'Endringer i kravgrunnlaget', level: 1 })
-        ).toBeInTheDocument();
+        expect(await finnOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
         expect(
             screen.getByText(
                 'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.'
             )
         ).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Lagt til', level: 2 })).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', {
-                name: 'Endringer',
-                level: 2,
-            })
-        ).toBeInTheDocument();
+        expect(hentOverskrift('Lagt til')).toBeInTheDocument();
+        expect(hentOverskrift('Endringer')).toBeInTheDocument();
     });
 
     test('Viser fjernet, ny og endret periode', async () => {
@@ -466,27 +430,15 @@ describe('NyttKravgrunnlagModal', () => {
             })
         );
 
-        expect(
-            await screen.findByRole('heading', { name: 'Endringer i kravgrunnlaget', level: 1 })
-        ).toBeInTheDocument();
+        expect(await finnOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
         expect(
             screen.getByText(
                 'Det er registrert endringer i kravgrunnlaget som må vurderes på nytt.'
             )
         ).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', {
-                name: 'Fjernet',
-                level: 2,
-            })
-        ).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Lagt til', level: 2 })).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', {
-                name: 'Endringer',
-                level: 2,
-            })
-        ).toBeInTheDocument();
+        expect(hentOverskrift('Fjernet')).toBeInTheDocument();
+        expect(hentOverskrift('Lagt til')).toBeInTheDocument();
+        expect(hentOverskrift('Endringer')).toBeInTheDocument();
     });
 
     test.each([
@@ -505,7 +457,7 @@ describe('NyttKravgrunnlagModal', () => {
                 })
             );
 
-            const boks = within(await screen.findByRole('region', { name: tittel }));
+            const boks = await finnBoks(tittel);
             expect(boks.getAllByRole('heading', { name: tittel, level: 2 })).toHaveLength(1);
             expect(boks.getAllByText('Periode')).toHaveLength(1);
             expect(boks.getAllByText('Feilutbetalt')).toHaveLength(1);
@@ -525,7 +477,7 @@ describe('NyttKravgrunnlagModal', () => {
     ])('Viser ingen skillelinje for én periode i $tittel', async ({ tittel, periode }) => {
         renderModal(lagEndretKravgrunnlag({ endringer: [periode] }));
 
-        const boks = within(await screen.findByRole('region', { name: tittel }));
+        const boks = await finnBoks(tittel);
         expect(boks.queryByRole('separator')).not.toBeInTheDocument();
     });
 
@@ -565,7 +517,7 @@ describe('NyttKravgrunnlagModal', () => {
             ]
         );
 
-        const boks = within(await screen.findByRole('region', { name: 'Ingen endringer' }));
+        const boks = await finnBoks('Ingen endringer');
         expect(
             boks.getByRole('heading', { name: 'Ingen endringer', level: 2 })
         ).toBeInTheDocument();
@@ -585,7 +537,7 @@ describe('NyttKravgrunnlagModal', () => {
     test('Viser én uendret periode uten skillelinje', async () => {
         renderModal(lagEndretKravgrunnlag(), [lagFaktaPeriode()]);
 
-        const boks = within(await screen.findByRole('region', { name: 'Ingen endringer' }));
+        const boks = await finnBoks('Ingen endringer');
         expect(boks.queryByRole('separator')).not.toBeInTheDocument();
     });
 
@@ -643,11 +595,6 @@ describe('NyttKravgrunnlagModal', () => {
         await user.keyboard('{Escape}');
 
         expect(modal).toBeInTheDocument();
-        expect(
-            screen.getByRole('heading', {
-                name: 'Endringer i kravgrunnlaget',
-                level: 1,
-            })
-        ).toBeInTheDocument();
+        expect(hentOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
     });
 });
