@@ -1,15 +1,19 @@
 import type { ErrorInfo, ReactNode } from 'react';
+import type { SchemaEnum2 as Fagsystem } from '@/generated';
 
 import { Component } from 'react';
 
 import { Forbudt } from '@/pages/feilsider/Forbudt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { InternServerFeil } from '@/pages/feilsider/InternServerFeil';
+import { KravgrunnlagetErEndret } from '@/pages/feilsider/KravgrunnlagetErEndret';
 import { Uautorisert } from '@/pages/feilsider/Uautorisert';
 import { hentFeilmelding, hentHttpStatus } from '@/utils/httpUtils';
 
 type Props = {
     children: ReactNode;
+    fagsystem: Fagsystem;
+    fagsakId: string;
 };
 
 type State = {
@@ -40,6 +44,13 @@ export class FagsakErrorBoundary extends Component<Props, State> {
                     return <Forbudt feilmelding={hentFeilmelding(this.state.error)} />;
                 case 404:
                     return <IkkeFunnet />;
+                case 405:
+                    return (
+                        <KravgrunnlagetErEndret
+                            fagsystem={this.props.fagsystem}
+                            fagsakId={this.props.fagsakId}
+                        />
+                    );
                 default:
                     return <InternServerFeil />;
             }

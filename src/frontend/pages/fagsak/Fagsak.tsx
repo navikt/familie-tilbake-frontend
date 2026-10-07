@@ -58,7 +58,7 @@ export const FagsakSide: FC = () => {
 
     return (
         <Suspense fallback={<BehandlingSkeleton />}>
-            <FagsakErrorBoundary>
+            <FagsakErrorBoundary fagsystem={fagsystem} fagsakId={tilbakekrevingSakId}>
                 <FagsakProvider fagsystem={fagsystem} tilbakekrevingSakId={tilbakekrevingSakId}>
                     <FagsakStoreSynk />
                     <Outlet />

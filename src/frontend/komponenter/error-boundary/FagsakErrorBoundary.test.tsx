@@ -28,7 +28,7 @@ describe('FagsakErrorBoundary', () => {
         const Kaster = lagKomponentSomKaster(new ApiStatusError(404));
 
         render(
-            <FagsakErrorBoundary>
+            <FagsakErrorBoundary fagsystem="TS" fagsakId="123">
                 <Kaster />
             </FagsakErrorBoundary>
         );
@@ -44,7 +44,7 @@ describe('FagsakErrorBoundary', () => {
         );
 
         render(
-            <FagsakErrorBoundary>
+            <FagsakErrorBoundary fagsystem="TS" fagsakId="123">
                 <Kaster />
             </FagsakErrorBoundary>
         );
@@ -59,7 +59,7 @@ describe('FagsakErrorBoundary', () => {
         const Kaster = lagKomponentSomKaster(new ApiStatusError(500));
 
         render(
-            <FagsakErrorBoundary>
+            <FagsakErrorBoundary fagsystem="TS" fagsakId="123">
                 <Kaster />
             </FagsakErrorBoundary>
         );
@@ -69,9 +69,25 @@ describe('FagsakErrorBoundary', () => {
         ).toBeInTheDocument();
     });
 
+    test('burde vise siden for endret kravgrunnlag ved status 405', () => {
+        const Kaster = lagKomponentSomKaster(new ApiStatusError(405));
+
+        render(
+            <FagsakErrorBoundary fagsystem="TS" fagsakId="123">
+                <Kaster />
+            </FagsakErrorBoundary>
+        );
+
+        expect(
+            screen.getByRole('heading', { name: 'Kravgrunnlaget er endret' })
+        ).toBeInTheDocument();
+        expect(screen.getByText('Fagsystem: TS')).toBeInTheDocument();
+        expect(screen.getByText('Fagsak: 123')).toBeInTheDocument();
+    });
+
     test('burde vise innholdet når ingen feil oppstår', () => {
         render(
-            <FagsakErrorBoundary>
+            <FagsakErrorBoundary fagsystem="TS" fagsakId="123">
                 <p>Fagsakinnhold</p>
             </FagsakErrorBoundary>
         );
