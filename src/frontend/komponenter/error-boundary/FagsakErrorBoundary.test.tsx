@@ -69,8 +69,17 @@ describe('FagsakErrorBoundary', () => {
         ).toBeInTheDocument();
     });
 
-    test('burde vise siden for endret kravgrunnlag ved status 405', () => {
-        const Kaster = lagKomponentSomKaster(new ApiStatusError(405));
+    test('burde vise feilmeldingens tittel og melding ved status 405', () => {
+        const feil = Object.assign(new Error('Kravgrunnlaget er bortfalt'), {
+            response: {
+                status: 405,
+                data: {
+                    tittel: 'Kravgrunnlag bortfalt',
+                    melding: 'Kravgrunnlaget kan ikke behandles videre.',
+                },
+            },
+        });
+        const Kaster = lagKomponentSomKaster(feil);
 
         render(
             <FagsakErrorBoundary fagsystem="TS" fagsakId="123">
@@ -78,9 +87,8 @@ describe('FagsakErrorBoundary', () => {
             </FagsakErrorBoundary>
         );
 
-        expect(
-            screen.getByRole('heading', { name: 'Kravgrunnlaget er endret' })
-        ).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Kravgrunnlag bortfalt' })).toBeInTheDocument();
+        expect(screen.getByText('Kravgrunnlaget kan ikke behandles videre.')).toBeInTheDocument();
         expect(screen.getByText('Fagsystem: TS')).toBeInTheDocument();
         expect(screen.getByText('Fagsak: 123')).toBeInTheDocument();
     });

@@ -11,6 +11,20 @@ export class ApiStatusError extends Error {
     }
 }
 
+export type FeilmeldingDetaljer = {
+    tittel: string;
+    melding: string;
+};
+
+export const hentFeilmeldingTittelOgMelding = (error: unknown): FeilmeldingDetaljer => {
+    const { response } = error as {
+        response: {
+            data: FeilmeldingDetaljer;
+        };
+    };
+    return response.data;
+};
+
 export const hentHttpStatus = (error: unknown): number | undefined => {
     if (typeof error !== 'object' || error === null) return undefined;
 

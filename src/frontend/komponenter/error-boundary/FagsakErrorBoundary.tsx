@@ -6,9 +6,9 @@ import { Component } from 'react';
 import { Forbudt } from '@/pages/feilsider/Forbudt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
 import { InternServerFeil } from '@/pages/feilsider/InternServerFeil';
-import { KravgrunnlagetErEndret } from '@/pages/feilsider/KravgrunnlagetErEndret';
+import { KravgrunnlagErSperretEllerBortfalt } from '@/pages/feilsider/KravgrunnlagetErSperretEllerBortfalt';
 import { Uautorisert } from '@/pages/feilsider/Uautorisert';
-import { hentFeilmelding, hentHttpStatus } from '@/utils/httpUtils';
+import { hentFeilmelding, hentFeilmeldingTittelOgMelding, hentHttpStatus } from '@/utils/httpUtils';
 
 type Props = {
     children: ReactNode;
@@ -44,13 +44,17 @@ export class FagsakErrorBoundary extends Component<Props, State> {
                     return <Forbudt feilmelding={hentFeilmelding(this.state.error)} />;
                 case 404:
                     return <IkkeFunnet />;
-                case 405:
+                case 405: {
+                    const { tittel, melding } = hentFeilmeldingTittelOgMelding(this.state.error);
                     return (
-                        <KravgrunnlagetErEndret
+                        <KravgrunnlagErSperretEllerBortfalt
                             fagsystem={this.props.fagsystem}
                             fagsakId={this.props.fagsakId}
+                            tittel={tittel}
+                            melding={melding}
                         />
                     );
+                }
                 default:
                     return <InternServerFeil />;
             }
