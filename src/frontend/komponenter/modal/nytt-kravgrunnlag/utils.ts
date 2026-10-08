@@ -4,19 +4,16 @@ import { add, addDays, format, intervalToDuration, parseISO } from 'date-fns';
 
 import { hentPeriodelengde } from '@/utils';
 
-export type PeriodeKortData = {
-    fom: string;
-    tom: string;
-    beløp: number;
-};
-
-export type ModalTekst = {
-    tittel: string;
-    beskrivelse: string;
-};
-
+/**
+ * Finner endringen i varighet mellom gammel og ny periode, f.eks. «+2 måneder» eller «–1 dag».
+ *
+ * Måneder har ulikt antall dager, så varighetene kan ikke sammenlignes direkte.
+ * Februar og mars er begge «1 måned», men 28 og 31 dager. Begge varighetene legges
+ * derfor til en felles startdato, og differansen mellom sluttdatoene brukes.
+ *
+ * @returns Endringen med fortegn, eller `null` hvis varigheten er uendret.
+ */
 export const hentVarighetsendring = (periode: EndretPeriode): string | null => {
-    // Sammenlign kalenderlengdene fra samme startdato for å bevare hele måneder og år.
     const fellesStart = parseISO('2000-01-01');
     const gammelSlutt = add(
         fellesStart,
@@ -50,6 +47,11 @@ const periodeFrase = (antall: number, erNyPeriode: boolean = false): string =>
         ? `en ${erNyPeriode ? 'ny ' : ''}periode`
         : `flere ${erNyPeriode ? 'nye ' : ''}perioder`;
 
+export type ModalTekst = {
+    tittel: string;
+    beskrivelse: string;
+};
+
 export const hentModalTekst = (
     antallNyePerioder: number,
     antallEndredePerioder: number,
@@ -78,25 +80,36 @@ export const hentModalTekst = (
     };
 };
 
+export type PeriodeKortData = {
+    fom: string;
+    tom: string;
+    beløp: number;
+};
+
+type Periode = { fom: string; tom: string };
+
+const overlapper = (a: Periode, b: Periode): boolean => a.fom <= b.tom && a.tom >= b.fom;
+
+/**
+ * Finner periodene i kravgrunnlaget som ikke berøres av noen endring, til boksen «Ingen endringer».
+ *
+ * Fakta gjelder fortsatt det gamle kravgrunnlaget mens modalen vises, så periodene sammenlignes
+ * med endringene i det nye. En periode regnes som endret hvis den overlapper med den nye
+ * perioden eller med `gammelPeriode`. Overlapp med `gammelPeriode` trengs fordi fakta
+ * fortsatt har de gamle datoene for perioder som er flyttet eller forkortet.
+ */
 export const hentUendredePerioder = (
     perioder: FaktaPeriode[],
-    endringer: Array<{
-        fom: string;
-        tom: string;
-        gammelPeriode?: { fom: string; tom: string };
-    }>
+    endringer: Array<Periode & { gammelPeriode?: Periode }>
 ): PeriodeKortData[] =>
     perioder
         .filter(
             periode =>
-                !periode.endringIKravgrunnlag &&
-                !periode.splittbarePerioder.some(delperiode => delperiode.endringIKravgrunnlag) &&
                 !endringer.some(
                     endring =>
-                        (periode.fom <= endring.tom && periode.tom >= endring.fom) ||
-                        (endring.gammelPeriode &&
-                            periode.fom <= endring.gammelPeriode.tom &&
-                            periode.tom >= endring.gammelPeriode.fom)
+                        overlapper(periode, endring) ||
+                        (endring.gammelPeriode !== undefined &&
+                            overlapper(periode, endring.gammelPeriode))
                 )
         )
         .map(periode => ({

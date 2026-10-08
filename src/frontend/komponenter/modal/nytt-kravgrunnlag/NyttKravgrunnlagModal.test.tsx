@@ -4,7 +4,7 @@ import type { EndretKravgrunnlag } from '@/generated';
 import type { FaktaOmFeilutbetaling, FaktaPeriode, KravgrunnlagForskjell } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { AxiosError } from 'axios';
 
@@ -599,33 +599,20 @@ describe('NyttKravgrunnlagModal', () => {
                 fom: '2024-12-15',
                 tom: '2025-02-15',
             }),
-            lagFaktaPeriode({
-                id: 'markert',
-                fom: '2025-03-01',
-                tom: '2025-03-31',
-                endringIKravgrunnlag: lagNyPeriode(),
-            }),
-            lagFaktaPeriode({
-                id: 'delvis-endret',
-                fom: '2025-04-01',
-                tom: '2025-04-30',
-                splittbarePerioder: [
-                    {
-                        id: 'delperiode',
-                        fom: '2025-04-01',
-                        tom: '2025-04-15',
-                        feilutbetaltBeløp: 2000,
-                        rettsligGrunnlag: [],
-                        endringIKravgrunnlag: lagNyPeriode({
-                            fom: '2025-04-01',
-                            tom: '2025-04-15',
-                        }),
-                    },
-                ],
-            }),
         ]);
 
         expect(screen.queryByRole('region', { name: 'Ingen endringer' })).not.toBeInTheDocument();
+    });
+
+    test('Viser periode under Ingen endringer selv om den er markert fra et tidligere kravgrunnlag', async () => {
+        renderModal(lagEndretKravgrunnlag({ endringer: [lagNyPeriode()] }), [
+            lagFaktaPeriode({
+                endringIKravgrunnlag: lagNyPeriode({ fom: '2025-01-01', tom: '2025-01-31' }),
+            }),
+        ]);
+
+        const boks = await finnBoks('Ingen endringer');
+        expect(boks.getByText('01.01.2025–31.01.2025')).toBeInTheDocument();
     });
 
     test('Lukker ikke modalen når man trykker Escape', async () => {
@@ -680,7 +667,7 @@ describe('NyttKravgrunnlagModal', () => {
 
             await startVurderingen();
 
-            await vi.waitFor(() => expect(lukkModal).toHaveBeenCalledOnce());
+            await waitFor(() => expect(lukkModal).toHaveBeenCalledOnce());
             expect(behandlingFaktaMock).toHaveBeenCalledOnce();
             expect(screen.queryByRole('heading', { name: /^Feil:/ })).not.toBeInTheDocument();
         });
