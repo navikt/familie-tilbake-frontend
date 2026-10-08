@@ -27,7 +27,11 @@ import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { behandlingssteg } from '@/typer/behandling';
 import { byggFeiletRessurs, byggHenterRessurs, type Ressurs, RessursStatus } from '@/typer/ressurs';
-import { hentFrontendFeilmelding, validerTekstMaksLengde } from '@/utils';
+import {
+    hentFrontendFeilmelding,
+    hentGlobalAlertFeilmelding,
+    validerTekstMaksLengde,
+} from '@/utils';
 
 import { OptionIkkeGodkjent, totrinnGodkjenningOptions } from './typer/totrinnSkjemaTyper';
 
@@ -270,10 +274,15 @@ const [TotrinnskontrollProvider, useTotrinnskontroll] = createUseContext(() => {
                         });
                     }
                 } else {
+                    const feilmelding = hentGlobalAlertFeilmelding(
+                        respons,
+                        'Kunne ikke fatte vedtak'
+                    );
                     visGlobalAlert({
-                        title: 'Kunne ikke fatte vedtak',
-                        message:
-                            hentFrontendFeilmelding(respons) ?? 'Ukjent feil ved sending av vedtak',
+                        ...(feilmelding ?? {
+                            title: 'Kunne ikke fatte vedtak',
+                            message: 'Ukjent feil ved fatting av vedtak',
+                        }),
                         status: 'error',
                     });
                 }

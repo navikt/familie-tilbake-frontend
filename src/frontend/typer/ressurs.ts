@@ -1,3 +1,5 @@
+import type { Error as ApiError } from '@/generated-new';
+
 import { erServerFeil } from '@/utils/httpUtils';
 
 export enum RessursStatus {
@@ -15,6 +17,7 @@ export type ApiRessurs<T> = {
     melding: string;
     stacktrace: string;
     status: RessursStatus;
+    tittel?: string | null;
     frontendFeilmelding?: string;
     httpStatusCode?: number;
 };
@@ -26,21 +29,25 @@ export type Ressurs<T> =
       }
     | {
           frontendFeilmelding: string;
+          apiFeilmelding?: ApiError;
           status: RessursStatus.Feilet;
           httpStatusCode?: number;
       }
     | {
           frontendFeilmelding: string;
+          apiFeilmelding?: ApiError;
           status: RessursStatus.FunksjonellFeil;
           httpStatusCode?: number;
       }
     | {
           frontendFeilmelding: string;
+          apiFeilmelding?: ApiError;
           status: RessursStatus.IkkeTilgang;
           httpStatusCode?: number;
       }
     | {
           frontendFeilmelding: string;
+          apiFeilmelding?: ApiError;
           status: RessursStatus.ServerFeil;
           httpStatusCode?: number;
       }

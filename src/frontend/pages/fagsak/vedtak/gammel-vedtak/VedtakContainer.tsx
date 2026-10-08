@@ -23,7 +23,7 @@ import { Bekreftelsesmodal } from '@/komponenter/modal/bekreftelse/Bekreftelsesm
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { RessursStatus } from '@/typer/ressurs';
 import { HarBrukerUttaltSegValg } from '@/typer/tilbakekrevingstyper';
-import { hentFrontendFeilmelding } from '@/utils/ressursUtils';
+import { hentGlobalAlertFeilmelding } from '@/utils/ressursUtils';
 
 import { BrevmottakereAlert } from './BrevmottakereAlert';
 import { ForhåndsvisVedtaksbrev } from './forhåndsvis-vedtaksbrev/ForhåndsvisVedtaksbrev';
@@ -103,13 +103,12 @@ export const VedtakContainer: FC = () => {
 
     useEffect(() => {
         const feilmelding = foreslåVedtakRespons
-            ? hentFrontendFeilmelding(foreslåVedtakRespons)
+            ? hentGlobalAlertFeilmelding(foreslåVedtakRespons, 'Kunne ikke sende til godkjenning')
             : undefined;
         if (feilmelding) {
             bekreftelsesmodalRef.current?.close();
             visGlobalAlert({
-                title: 'Kunne ikke sende til godkjenning',
-                message: feilmelding,
+                ...feilmelding,
                 status: 'error',
                 visPortenLenke: true,
             });

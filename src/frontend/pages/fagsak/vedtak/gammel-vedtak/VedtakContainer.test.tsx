@@ -844,7 +844,11 @@ describe('VedtakContainer', () => {
         ];
         setupMock(vedtaksbrevAvsnitt, beregningsresultat, {
             status: RessursStatus.ServerFeil,
-            frontendFeilmelding: 'En teknisk feil oppstod.',
+            apiFeilmelding: {
+                tittel: 'Kunne ikke behandle vedtaket',
+                melding: 'En teknisk feil oppstod.',
+            },
+            frontendFeilmelding: 'Alternativ frontend-feilmelding.',
         });
         renderVedtakContainer(lagBehandling({ kanEndres: true }));
 
@@ -863,7 +867,7 @@ describe('VedtakContainer', () => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         expect(useGlobalAlertStore.getState().alerts).toMatchObject([
             {
-                title: 'Kunne ikke sende til godkjenning',
+                title: 'Kunne ikke behandle vedtaket',
                 message: 'En teknisk feil oppstod.',
                 status: 'error',
                 visPortenLenke: true,
