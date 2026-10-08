@@ -1,4 +1,4 @@
-import type { VilkaarsvurderingValg } from '@/generated-new';
+import type { Unnlatelse, VilkaarsvurderingValg } from '@/generated-new';
 import type { Vilkårsperiode, Vurderingsstatus } from './typer';
 
 export const utledVurdering = (valg: VilkaarsvurderingValg): Vurderingsstatus => {
@@ -33,6 +33,23 @@ export const utledVurdering = (valg: VilkaarsvurderingValg): Vurderingsstatus =>
 
 export const erPeriodeVurdert = (vurdering: Vilkårsperiode['vurdering']): boolean =>
     vurdering !== 'IKKE_VURDERT';
+
+const hentUnnlatelse = (valg: VilkaarsvurderingValg): Unnlatelse | undefined => {
+    switch (valg.vurdering) {
+        case 'forsto_eller_burde_forstått':
+            return valg.forståelse.unnlatelse;
+        case 'forårsaket_av_mottaker':
+            return valg.aktsomhet.aktsomhet === 'uaktsomt' ? valg.aktsomhet.unnlatelse : undefined;
+        default:
+            return undefined;
+    }
+};
+
+// `ikkeAktuelt` lagres kun når beløpet var over 4x rettsgebyr da perioden ble vurdert
+export const harBlittUnder4xRettsgebyr = (
+    valg: VilkaarsvurderingValg,
+    erUnder4xRettsgebyr: boolean
+): boolean => erUnder4xRettsgebyr && hentUnnlatelse(valg)?.unnlatelse === 'ikkeAktuelt';
 
 /**
  * Finner hvilken periode som skal være valgt som standard.

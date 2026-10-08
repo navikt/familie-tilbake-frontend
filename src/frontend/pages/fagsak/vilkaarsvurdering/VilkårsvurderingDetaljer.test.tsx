@@ -335,6 +335,40 @@ describe('VilkårsvurderingDetaljer', () => {
         ).not.toBeInTheDocument();
     });
 
+    test('viser egen modaltekst og viser valideringsfeil når beløpet har blitt under 4x rettsgebyr', async () => {
+        renderVilkårsDetaljer(5000, true, 'FORSTO', {
+            valg: {
+                vurdering: 'forsto_eller_burde_forstått',
+                forståelse: {
+                    forståelse: 'forsto',
+                    begrunnelse: 'Mottaker forsto feilen',
+                    unnlatelse: {
+                        unnlatelse: 'ikkeAktuelt',
+                        erDetSærligeGrunner: {
+                            erDetReduksjonÅrsaker: 'nei',
+                            særligeGrunnerMot: [{ moment: 'GRAD_AV_UAKTSOMHET', beskrivelse: '' }],
+                            begrunnelse: 'Begrunnelse mot særlige grunner',
+                            annetBegrunnelse: null,
+                        },
+                    },
+                },
+            },
+            tilbakeført: 'NyttKravgrunnlag',
+        });
+
+        const modalOverskrift = screen.getByRole('heading', {
+            name: 'Du kan bruke deler av den tidligere vurderingen',
+        });
+        expect(
+            screen.getByText(/Det nye beløpet er under fire ganger rettsgebyret\./)
+        ).toBeInTheDocument();
+
+        await user.click(screen.getByRole('button', { name: 'Bruk tidligere vurdering' }));
+
+        expect(await begrunnelseSkalIkkeUnnlates()).toBeInvalid();
+        expect(modalOverskrift).not.toBeInTheDocument();
+    });
+
     describe('Forsto eller burde forstått', () => {
         describe('Forsto', () => {
             const velgForsto = async (

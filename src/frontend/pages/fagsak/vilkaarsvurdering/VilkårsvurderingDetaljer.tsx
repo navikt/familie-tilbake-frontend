@@ -31,7 +31,7 @@ import { VilkårsvurderingSkjema } from './skjema/VilkårsvurderingSkjema';
 import { SlåSammen } from './slå-sammen-periode/SlåSammen';
 import { TidligereVurderingModal } from './TidligereVurderingModal';
 import { UlagretEndringerVakt } from './UlagretEndringerVakt';
-import { erPeriodeVurdert } from './utils';
+import { erPeriodeVurdert, harBlittUnder4xRettsgebyr } from './utils';
 import { useVilkårsvurderingLesedata } from './VilkårsvurderingLesedataContext';
 
 type InnholdProps = {
@@ -136,9 +136,12 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     };
 
     const brukTidligereVurdering = (): void => {
-        methods.handleSubmit(data => {
-            lagreVilkårsvurdering(data, () => setTidligereVurderingHåndtert(true));
-        })();
+        methods.handleSubmit(
+            data => {
+                lagreVilkårsvurdering(data, () => setTidligereVurderingHåndtert(true));
+            },
+            () => setTidligereVurderingHåndtert(true)
+        )();
     };
 
     return (
@@ -146,6 +149,10 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
             {visTidligereVurderingModal && (
                 <TidligereVurderingModal
                     laster={lagreMutation.isPending}
+                    harBlittUnder4xRettsgebyr={harBlittUnder4xRettsgebyr(
+                        valgtVilkårsperiode.vilkårsvurdering.valg,
+                        erUnder4xRettsgebyr
+                    )}
                     onStartVurderingPåNytt={startVurderingPåNytt}
                     onBrukTidligereVurdering={brukTidligereVurdering}
                 />

@@ -6,12 +6,14 @@ import { MODAL_BREDDE } from '@/utils/modalUtils';
 
 type Props = {
     laster: boolean;
+    harBlittUnder4xRettsgebyr: boolean;
     onStartVurderingPåNytt: () => void;
     onBrukTidligereVurdering: () => void;
 };
 
 export const TidligereVurderingModal: FC<Props> = ({
     laster,
+    harBlittUnder4xRettsgebyr,
     onStartVurderingPåNytt,
     onBrukTidligereVurdering,
 }: Props) => (
@@ -20,7 +22,9 @@ export const TidligereVurderingModal: FC<Props> = ({
         onClose={(): void => undefined}
         onBeforeClose={(): boolean => false}
         header={{
-            heading: 'Det finnes en tidligere vurdering for denne perioden',
+            heading: harBlittUnder4xRettsgebyr
+                ? 'Du kan bruke deler av den tidligere vurderingen'
+                : 'Det finnes en tidligere vurdering for denne perioden',
             size: 'medium',
             closeButton: false,
         }}
@@ -29,8 +33,9 @@ export const TidligereVurderingModal: FC<Props> = ({
     >
         <Modal.Body>
             <BodyLong>
-                Du kan bruke den tidligere vurderingen og gå videre til neste steg. Hvis du velger å
-                vurdere perioden på nytt, blir den tidligere vurderingen erstattet.
+                {harBlittUnder4xRettsgebyr
+                    ? 'Det nye beløpet er under fire ganger rettsgebyret. Du kan bruke deler av den tidligere vurderingen og gå videre til neste steg. Hvis du velger å lage en ny vurdering, blir den tidligere vurderingen erstattet.'
+                    : 'Du kan bruke den tidligere vurderingen og gå videre til neste steg. Hvis du velger å vurdere perioden på nytt, blir den tidligere vurderingen erstattet.'}
             </BodyLong>
         </Modal.Body>
         <Modal.Footer>
