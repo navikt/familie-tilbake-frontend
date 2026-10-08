@@ -22,7 +22,7 @@ export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
 type Props = {
     sendtVarselDato?: string;
-    erNyttKravgrunnlag?: boolean;
+    erNyttForhåndsvarsel?: boolean;
     sidekolonne?: ReactNode;
     onValgEndring?: (valg: 'send' | 'unntak' | undefined) => void;
     onSubmit: SubmitHandler<IkkeVurdertFormData>;
@@ -36,7 +36,7 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
 
 export const IkkeVurdert: FC<Props> = ({
     sendtVarselDato,
-    erNyttKravgrunnlag,
+    erNyttForhåndsvarsel,
     sidekolonne,
     onValgEndring,
     onSubmit,
@@ -93,7 +93,7 @@ export const IkkeVurdert: FC<Props> = ({
                     <SkalSendeForhåndsvarsel
                         readOnly={behandlingILesemodus}
                         error={errors.valg?.message}
-                        erNyttKravgrunnlag={erNyttKravgrunnlag}
+                        erNyttForhåndsvarsel={erNyttForhåndsvarsel}
                         onChange={handleValgChange}
                         {...radioProps}
                     />

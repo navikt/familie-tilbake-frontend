@@ -165,7 +165,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     } = response;
     const [valg, setValg] = useState<'send' | 'unntak'>();
 
-    const erNyttKravgrunnlag = tilbakeført === 'NyttKravgrunnlag';
+    const erNyttForhåndsvarsel = tilbakeført === 'NyttKravgrunnlag' && !!sendtVarselbrev;
 
     const hentSendtDokument = useMutation<
         Blob,
@@ -456,7 +456,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                             <SkalSendeForhåndsvarsel
                                 name="valg"
                                 value="send"
-                                erNyttKravgrunnlag={erNyttKravgrunnlag}
+                                erNyttForhåndsvarsel={erNyttForhåndsvarsel}
                                 readOnly
                             />
                             {sidekolonne}
@@ -470,7 +470,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                 ) : (
                     <IkkeVurdert
                         sendtVarselDato={sendtVarselbrev?.brevSendt}
-                        erNyttKravgrunnlag={erNyttKravgrunnlag}
+                        erNyttForhåndsvarsel={erNyttForhåndsvarsel}
                         sidekolonne={sidekolonne}
                         onValgEndring={setValg}
                         onSubmit={onSubmit}

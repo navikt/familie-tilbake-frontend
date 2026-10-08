@@ -8,7 +8,7 @@ type Props = {
     readOnly?: boolean;
     value?: 'send' | 'unntak';
     error?: string;
-    erNyttKravgrunnlag?: boolean;
+    erNyttForhåndsvarsel?: boolean;
     onChange?: ChangeHandler;
     onBlur?: ChangeHandler;
 };
@@ -18,13 +18,13 @@ export const SkalSendeForhåndsvarsel: FC<Props> = ({
     readOnly,
     value,
     error,
-    erNyttKravgrunnlag,
+    erNyttForhåndsvarsel,
     ...radioProps
 }: Props) => (
     <RadioGroup
         name={name}
         legend={
-            erNyttKravgrunnlag
+            erNyttForhåndsvarsel
                 ? 'Skal det sendes et nytt forhåndsvarsel om tilbakekreving?'
                 : 'Skal det sendes forhåndsvarsel om tilbakekreving?'
         }

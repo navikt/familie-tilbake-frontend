@@ -392,12 +392,31 @@ describe('Forhåndsvarsel', () => {
             expect(screen.queryByText(nyttForhåndsvarselSendesIkkeTekst)).not.toBeInTheDocument();
         });
 
-        test('viser spørsmål om nytt forhåndsvarsel når tilbakeført pga. nytt kravgrunnlag', () => {
-            renderForhåndsvarsel(lagForhåndsvarselResponse({ tilbakeført: 'NyttKravgrunnlag' }));
+        test('viser spørsmål om nytt forhåndsvarsel når varsel er sendt og tilbakeført pga. nytt kravgrunnlag', () => {
+            renderForhåndsvarsel(
+                lagForhåndsvarselResponse({
+                    tilbakeført: 'NyttKravgrunnlag',
+                    sendtVarselbrev: {
+                        brevSendt: '2025-01-10',
+                        journalpostId: 'jp-123',
+                        dokumentId: 'dok-456',
+                    },
+                })
+            );
 
             expect(
                 screen.getByRole('radiogroup', {
                     name: /skal det sendes et nytt forhåndsvarsel om tilbakekreving/i,
+                })
+            ).toBeInTheDocument();
+        });
+
+        test('viser vanlig spørsmål når tilbakeført pga. nytt kravgrunnlag uten tidligere sendt varsel', () => {
+            renderForhåndsvarsel(lagForhåndsvarselResponse({ tilbakeført: 'NyttKravgrunnlag' }));
+
+            expect(
+                screen.getByRole('radiogroup', {
+                    name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
                 })
             ).toBeInTheDocument();
         });
