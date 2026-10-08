@@ -449,15 +449,7 @@ export const zUpdateUttalelsesfrist = z.object({
     begrunnelse: z.string().optional(),
 });
 
-export const zUttalelseVurdering = z.enum([
-    'JA',
-    'NEI',
-    'JA_ETTER_FORHÅNDSVARSEL',
-    'NEI_ETTER_FORHÅNDSVARSEL',
-    'UNNTAK_ALLEREDE_UTTALT_SEG',
-    'UNNTAK_INGEN_UTTALELSE',
-    'IKKE_VURDERT',
-]);
+export const zUttalelseVurdering = z.enum(['JA', 'NEI', 'IKKE_VURDERT']);
 
 export const zUttalelse = z.object({
     harBrukerUttaltSeg: zUttalelseVurdering,
@@ -544,6 +536,11 @@ export const zVedtaksbrevRedigerbareData = z.object({
 export const zVedtaksbrevRedigerbareDataUpdate = z.object({
     hovedavsnitt: zHovedavsnittUpdate,
     avsnitt: z.array(zAvsnittUpdateItem),
+});
+
+export const zVedtaksdokument = z.object({
+    journalpostId: z.string(),
+    dokumentInfoId: z.string(),
 });
 
 export const zVedtaksresultat = z.enum([
@@ -1308,3 +1305,16 @@ export const zBrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
  * The request has succeeded.
  */
 export const zBrevLagSvgVedtaksbrevResponse = z.string();
+
+export const zDokumenterHentVedtaksdokumenterPath = z.object({
+    vedtakId: z
+        .string()
+        .min(1)
+        .max(64)
+        .regex(/^[0-9]+$/),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zDokumenterHentVedtaksdokumenterResponse = z.array(zVedtaksdokument);

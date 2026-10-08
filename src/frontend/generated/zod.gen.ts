@@ -627,13 +627,7 @@ export const zBehandlerEntity = z.object({
 
 export const zTypeEnum3 = z.enum(['TILBAKEKREVING', 'REVURDERING_TILBAKEKREVING']);
 
-export const zRevurderingsårsakEnum = z.enum([
-    'REVURDERING_KLAGE_NFP',
-    'REVURDERING_KLAGE_KA',
-    'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
-    'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
-    'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
-]);
+export const zRevurderingsårsakEnum = z.enum(['REVURDERING_ANNEN_ÅRSAK']);
 
 export const zForrigeBehandlingsstatusEnum = z.enum([
     'OPPRETTET',
@@ -995,6 +989,7 @@ export const zKravgrunnlagHendelseEntity = z.object({
     referanse: z.string(),
     perioder: z.array(zKravgrunnlagPeriodeEntity),
     opprettet: z.iso.datetime(),
+    korrigering: z.boolean(),
 });
 
 export const zHistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse = z.object({
@@ -1439,6 +1434,7 @@ export const zGetårsakstypeEnum = z.enum([
     'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
     'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
     'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+    'REVURDERING_ANNEN_ÅRSAK',
 ]);
 
 export const zOpprettRevurderingDto = z.object({
@@ -1541,6 +1537,14 @@ export const zRessursFagsakDto = z.object({
     stacktrace: z.string().nullish(),
 });
 
+export const zGetårsakEnum = z.enum([
+    'REVURDERING_KLAGE_NFP',
+    'REVURDERING_KLAGE_KA',
+    'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+]);
+
 export const zStatusEnum3 = z.enum([
     'AVSLUTTET',
     'FATTER_VEDTAK',
@@ -1560,7 +1564,7 @@ export const zBehandling = z.object({
     behandlingId: z.uuid(),
     opprettetTidspunkt: z.iso.datetime(),
     aktiv: z.boolean(),
-    getårsak: zGetårsakstypeEnum.optional(),
+    getårsak: zGetårsakEnum.optional(),
     type: zTypeEnum3,
     status: zStatusEnum3,
     vedtaksdato: z.iso.datetime().nullish(),
@@ -2003,6 +2007,15 @@ export const zResultatstypeEnum = z.enum([
     'FULL_TILBAKEBETALING',
 ]);
 
+export const zBehandlingsårsakstypeEnum = z.enum([
+    'REVURDERING_KLAGE_NFP',
+    'REVURDERING_KLAGE_KA',
+    'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+    'REVURDERING_ANNEN_ÅRSAK',
+]);
+
 export const zSaksbehandlingstypeEnum = z.enum([
     'ORDINÆR',
     'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP',
@@ -2062,7 +2075,7 @@ export const zBehandlingDto = z.object({
     behandlingsstegsinfo: z.array(zBehandlingsstegsinfoDto),
     fagsystemsbehandlingId: z.string(),
     eksternFagsakId: z.string(),
-    behandlingsårsakstype: zRevurderingsårsakEnum.optional(),
+    behandlingsårsakstype: zBehandlingsårsakstypeEnum.optional(),
     støtterManuelleBrevmottakere: z.boolean(),
     harManuelleBrevmottakere: z.boolean(),
     manuelleBrevmottakere: z.array(zManuellBrevmottakerResponsDto),
@@ -2156,7 +2169,7 @@ export const zBehandlingDtoWritable = z.object({
     behandlingsstegsinfo: z.array(zBehandlingsstegsinfoDto),
     fagsystemsbehandlingId: z.string(),
     eksternFagsakId: z.string(),
-    behandlingsårsakstype: zRevurderingsårsakEnum.optional(),
+    behandlingsårsakstype: zBehandlingsårsakstypeEnum.optional(),
     støtterManuelleBrevmottakere: z.boolean(),
     harManuelleBrevmottakere: z.boolean(),
     manuelleBrevmottakere: z.array(zManuellBrevmottakerResponsDto),

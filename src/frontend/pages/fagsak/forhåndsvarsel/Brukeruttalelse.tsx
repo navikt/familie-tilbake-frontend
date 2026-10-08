@@ -36,7 +36,7 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
         formState: { errors },
     } = useFormContext<BrukeruttalelseFormData>();
 
-    const harUttaltSeg = useWatch({ control, name: 'brukeruttalelse.harUttaltSeg' });
+    const harBrukerUttaltSeg = useWatch({ control, name: 'brukeruttalelse.harBrukerUttaltSeg' });
     const [uttalelsesdatoFeil, setUttalelsesdatoFeil] = useState<string | undefined>(undefined);
 
     const iDag = useMemo(() => new Date(), []);
@@ -63,7 +63,7 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
         },
     });
 
-    const { name: radioName, ...radioProps } = register('brukeruttalelse.harUttaltSeg');
+    const { name: radioName, ...radioProps } = register('brukeruttalelse.harBrukerUttaltSeg');
 
     return (
         <VStack gap="space-24">
@@ -77,17 +77,17 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
                 size="small"
                 readOnly={behandlingILesemodus}
                 className="max-w-xl"
-                error={get(errors, 'brukeruttalelse.harUttaltSeg.message')}
+                error={get(errors, 'brukeruttalelse.harBrukerUttaltSeg.message')}
             >
-                <Radio value="ja" {...radioProps}>
+                <Radio value="JA" {...radioProps}>
                     Ja
                 </Radio>
-                <Radio value="nei" {...radioProps} disabled={fristIkkeUtgått}>
+                <Radio value="NEI" {...radioProps} disabled={fristIkkeUtgått}>
                     Nei
                 </Radio>
             </RadioGroup>
 
-            {harUttaltSeg === 'ja' && (
+            {harBrukerUttaltSeg === 'JA' && (
                 <>
                     <DatePicker {...datepickerProps} dropdownCaption>
                         <DatePicker.Input
@@ -131,7 +131,7 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
                 </>
             )}
 
-            {harUttaltSeg === 'nei' && (
+            {harBrukerUttaltSeg === 'NEI' && (
                 <Textarea
                     {...register('brukeruttalelse.beskrivelse')}
                     size="small"

@@ -30,6 +30,7 @@ import {
     behandlingVilkaarsvurderingsperioder,
     brevLagSvgVarselbrev,
     brevLagSvgVedtaksbrev,
+    dokumenterHentVedtaksdokumenter,
     type Options,
 } from '../sdk.gen';
 import type {
@@ -98,6 +99,9 @@ import type {
     BrevLagSvgVarselbrevResponse,
     BrevLagSvgVedtaksbrevData,
     BrevLagSvgVedtaksbrevResponse,
+    DokumenterHentVedtaksdokumenterData,
+    DokumenterHentVedtaksdokumenterError,
+    DokumenterHentVedtaksdokumenterResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -733,3 +737,42 @@ export const brevLagSvgVedtaksbrevMutation = (
     };
     return mutationOptions;
 };
+
+export const dokumenterHentVedtaksdokumenterQueryKey = (
+    options: Options<DokumenterHentVedtaksdokumenterData>
+) => createQueryKey('dokumenterHentVedtaksdokumenter', options);
+
+/**
+ * Henter alle brev for vedtaket. Ta bare med brev som har både journalpostId
+ * og dokumentInfoId. Samle treff fra flere iverksettelser i gammel og ny modell,
+ * fjern duplikater, og returner tom liste når det ikke finnes treff.
+ *
+ * Den nye modellen kan hente brev fra flere behandlinger på samme sak.
+ * Tvangsgrunnlag API kontrollerer koblingen mellom skyldner og vedtakId.
+ * Familie-tilbake håndterer autentisering og tilgang.
+ *
+ * vedtakId må bestå av 1–64 ASCII-sifre, med en tallverdi på høyst
+ * 9223372036854775807. Innledende nuller er tillatt.
+ * Returner 400 ved ugyldig vedtakId, 401 ved ugyldig eller manglende
+ * autentisering og 403 når kalleren mangler tilgang.
+ */
+export const dokumenterHentVedtaksdokumenterOptions = (
+    options: Options<DokumenterHentVedtaksdokumenterData>
+) =>
+    queryOptions<
+        DokumenterHentVedtaksdokumenterResponse,
+        AxiosError<DokumenterHentVedtaksdokumenterError>,
+        DokumenterHentVedtaksdokumenterResponse,
+        ReturnType<typeof dokumenterHentVedtaksdokumenterQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await dokumenterHentVedtaksdokumenter({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: dokumenterHentVedtaksdokumenterQueryKey(options),
+    });

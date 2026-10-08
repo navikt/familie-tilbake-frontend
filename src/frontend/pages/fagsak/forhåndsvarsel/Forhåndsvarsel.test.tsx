@@ -234,7 +234,7 @@ describe('Forhåndsvarsel', () => {
                     beskrivelse: 'test',
                 },
                 brukeruttalelse: {
-                    harBrukerUttaltSeg: 'UNNTAK_ALLEREDE_UTTALT_SEG',
+                    harBrukerUttaltSeg: 'JA',
                     uttalelsesdato: '2026-08-10',
                     hvorBrukerenUttalteSeg: 'test',
                     beskrivelse: 'test',
@@ -255,7 +255,7 @@ describe('Forhåndsvarsel', () => {
                     beskrivelse: 'test',
                 },
                 brukeruttalelse: {
-                    harBrukerUttaltSeg: 'UNNTAK_ALLEREDE_UTTALT_SEG',
+                    harBrukerUttaltSeg: 'JA',
                     uttalelsesdato: '2026-08-10',
                     hvorBrukerenUttalteSeg: 'telefon',
                     beskrivelse: 'Brukeren kjente til saken',
@@ -290,6 +290,43 @@ describe('Forhåndsvarsel', () => {
         ).toHaveValue('Brukeren kjente til saken');
     });
 
+    test('Tilbakeført: preutfyller lagret uttalelse først når saksbehandler velger Ja', async () => {
+        renderForhåndsvarsel(
+            lagForhåndsvarselResponse({
+                forhaandsvarselSteg: { type: 'ikke_vurdert' },
+                brukeruttalelse: {
+                    harBrukerUttaltSeg: 'JA',
+                    uttalelsesdato: '2026-09-14',
+                    hvorBrukerenUttalteSeg: 'telefon',
+                    beskrivelse: 'Brukeren kjente til saken',
+                },
+                tilbakeført: 'NyttKravgrunnlag',
+            })
+        );
+
+        await velgUnntak(user);
+        await user.click(
+            within(unntakRadiogruppe()).getByRole('radio', {
+                name: /åpenbart unødvendig eller mottaker av varselet er allerede kjent/i,
+            })
+        );
+
+        const uttalelse = uttalelseRadiogruppeVedUnntak();
+        expect(within(uttalelse).getByRole('radio', { name: 'Ja' })).not.toBeChecked();
+
+        await user.click(within(uttalelse).getByRole('radio', { name: 'Ja' }));
+
+        expect(screen.getByRole('textbox', { name: /når uttalte brukeren seg\?/i })).toHaveValue(
+            '14.09.2026'
+        );
+        expect(
+            screen.getByRole('textbox', { name: /hvordan uttalte brukeren seg\?/i })
+        ).toHaveValue('telefon');
+        expect(
+            screen.getByRole('textbox', { name: /beskriv hva brukeren har uttalt seg om/i })
+        ).toHaveValue('Brukeren kjente til saken');
+    });
+
     test('Vurdert unntak med endringer viser lagreknapp', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
@@ -299,7 +336,7 @@ describe('Forhåndsvarsel', () => {
                     beskrivelse: 'test',
                 },
                 brukeruttalelse: {
-                    harBrukerUttaltSeg: 'UNNTAK_ALLEREDE_UTTALT_SEG',
+                    harBrukerUttaltSeg: 'JA',
                     uttalelsesdato: '2026-08-10',
                     hvorBrukerenUttalteSeg: 'test',
                     beskrivelse: 'test',

@@ -13,6 +13,7 @@ export const behandlingsårsaker: Record<GetårsakstypeEnum, string> = {
     REVURDERING_OPPLYSNINGER_OM_FORELDELSE: 'Nye opplysninger om foreldelse',
     REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT:
         'Feilutbetalt beløp helt eller delvis bortfalt',
+    REVURDERING_ANNEN_ÅRSAK: 'Annen årsak',
 };
 
 export const behandlingsstatuser: Record<BehandlingstatusEnum, string> = {

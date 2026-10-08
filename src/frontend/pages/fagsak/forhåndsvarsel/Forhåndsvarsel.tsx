@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Heading, HStack, InlineMessage, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
+import { type DefaultValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -48,11 +48,7 @@ import { lesFeilmeldingFraBlob } from '@/utils/blobFeilmelding';
 import { useStegNavigering } from '@/utils/sider';
 
 import { StatusTag } from '../StegStatus';
-import {
-    type BrukeruttalelseFormData,
-    tilUttalelsePayload,
-    tilUttalelseSkjema,
-} from './brukeruttalelseSchema';
+import { type BrukeruttalelseFormData, tilUttalelseSkjema } from './brukeruttalelseSchema';
 import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
 import { Fristinfo } from './Fristinfo';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
@@ -65,9 +61,11 @@ import { Varselbrevinfo } from './Varselbrevinfo';
 const utledForhåndsvarselDefaultValues = (
     forhåndsvarselSteg: ForhaandsvarselSteg,
     brukeruttalelse: Uttalelse | null
-): IkkeVurdertFormData | undefined => {
+): DefaultValues<IkkeVurdertFormData> | undefined => {
     if (forhåndsvarselSteg.type !== 'unntak') {
-        return undefined;
+        if (brukeruttalelse?.harBrukerUttaltSeg !== 'JA') return undefined;
+        const { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse } = brukeruttalelse;
+        return { brukeruttalelse: { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse } };
     }
 
     return {
@@ -312,7 +310,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     ) => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
-            body: tilUttalelsePayload(data.brukeruttalelse),
+            body: data.brukeruttalelse,
         });
     };
 
@@ -347,7 +345,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                     begrunnelseForUnntak: data.begrunnelseForUnntak,
                     beskrivelse: data.beskrivelse,
                 },
-                uttalelse: tilUttalelsePayload(data.brukeruttalelse),
+                uttalelse: data.brukeruttalelse,
             });
         } else {
             lagreUnntak.mutate({

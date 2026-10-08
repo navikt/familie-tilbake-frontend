@@ -293,6 +293,7 @@ export type KravgrunnlagHendelseEntity = {
     referanse: string;
     perioder: Array<KravgrunnlagPeriodeEntity>;
     opprettet: string;
+    korrigering: boolean;
 };
 
 export type KravgrunnlagPeriodeEntity = {
@@ -840,7 +841,7 @@ export type Behandling = {
     behandlingId: string;
     opprettetTidspunkt: string;
     aktiv: boolean;
-    getårsak?: GetårsakstypeEnum;
+    getårsak?: GetårsakEnum;
     type: TypeEnum3;
     status: StatusEnum3;
     vedtaksdato?: string | null;
@@ -1198,7 +1199,7 @@ export type BehandlingDto = {
     behandlingsstegsinfo: Array<BehandlingsstegsinfoDto>;
     fagsystemsbehandlingId: string;
     eksternFagsakId: string;
-    behandlingsårsakstype?: RevurderingsårsakEnum;
+    behandlingsårsakstype?: BehandlingsårsakstypeEnum;
     støtterManuelleBrevmottakere: boolean;
     harManuelleBrevmottakere: boolean;
     manuelleBrevmottakere: Array<ManuellBrevmottakerResponsDto>;
@@ -1362,12 +1363,7 @@ export type TypeEnum2 = 'SAKSBEHANDLER' | 'VEDTAKSLØSNING';
 
 export type TypeEnum3 = 'TILBAKEKREVING' | 'REVURDERING_TILBAKEKREVING';
 
-export type RevurderingsårsakEnum =
-    | 'REVURDERING_KLAGE_NFP'
-    | 'REVURDERING_KLAGE_KA'
-    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
-    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
-    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+export type RevurderingsårsakEnum = 'REVURDERING_ANNEN_ÅRSAK';
 
 export type ForrigeBehandlingsstatusEnum =
     | 'OPPRETTET'
@@ -1667,7 +1663,8 @@ export type GetårsakstypeEnum =
     | 'REVURDERING_KLAGE_KA'
     | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
     | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
-    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT'
+    | 'REVURDERING_ANNEN_ÅRSAK';
 
 export type BehandlingstatusEnum =
     | 'AVSLUTTET'
@@ -1690,6 +1687,13 @@ export type StatusEnum2 =
     | 'DISTRIUBER_VEDTAK';
 
 export type KjønnEnum2 = 'MANN' | 'KVINNE' | 'UKJENT';
+
+export type GetårsakEnum =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
 
 export type StatusEnum3 =
     | 'AVSLUTTET'
@@ -1915,6 +1919,14 @@ export type ResultatstypeEnum =
     | 'DELVIS_TILBAKEBETALING'
     | 'FULL_TILBAKEBETALING';
 
+export type BehandlingsårsakstypeEnum =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT'
+    | 'REVURDERING_ANNEN_ÅRSAK';
+
 export type SaksbehandlingstypeEnum =
     | 'ORDINÆR'
     | 'AUTOMATISK_IKKE_INNKREVING_LAVT_BELØP'
@@ -1964,7 +1976,7 @@ export type BehandlingDtoWritable = {
     behandlingsstegsinfo: Array<BehandlingsstegsinfoDto>;
     fagsystemsbehandlingId: string;
     eksternFagsakId: string;
-    behandlingsårsakstype?: RevurderingsårsakEnum;
+    behandlingsårsakstype?: BehandlingsårsakstypeEnum;
     støtterManuelleBrevmottakere: boolean;
     harManuelleBrevmottakere: boolean;
     manuelleBrevmottakere: Array<ManuellBrevmottakerResponsDto>;

@@ -76,6 +76,9 @@ import type {
     BrevLagSvgVarselbrevResponses,
     BrevLagSvgVedtaksbrevData,
     BrevLagSvgVedtaksbrevResponses,
+    DokumenterHentVedtaksdokumenterData,
+    DokumenterHentVedtaksdokumenterErrors,
+    DokumenterHentVedtaksdokumenterResponses,
 } from './types.gen';
 
 export type Options<
@@ -501,4 +504,35 @@ export const brevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+/**
+ * Henter alle brev for vedtaket. Ta bare med brev som har både journalpostId
+ * og dokumentInfoId. Samle treff fra flere iverksettelser i gammel og ny modell,
+ * fjern duplikater, og returner tom liste når det ikke finnes treff.
+ *
+ * Den nye modellen kan hente brev fra flere behandlinger på samme sak.
+ * Tvangsgrunnlag API kontrollerer koblingen mellom skyldner og vedtakId.
+ * Familie-tilbake håndterer autentisering og tilgang.
+ *
+ * vedtakId må bestå av 1–64 ASCII-sifre, med en tallverdi på høyst
+ * 9223372036854775807. Innledende nuller er tillatt.
+ * Returner 400 ved ugyldig vedtakId, 401 ved ugyldig eller manglende
+ * autentisering og 403 når kalleren mangler tilgang.
+ */
+export const dokumenterHentVedtaksdokumenter = <ThrowOnError extends boolean = false>(
+    options: Options<DokumenterHentVedtaksdokumenterData, ThrowOnError>
+): RequestResult<
+    DokumenterHentVedtaksdokumenterResponses,
+    DokumenterHentVedtaksdokumenterErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).get<
+        DokumenterHentVedtaksdokumenterResponses,
+        DokumenterHentVedtaksdokumenterErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/dokumenter/vedtak/{vedtakId}',
+        ...options,
     });

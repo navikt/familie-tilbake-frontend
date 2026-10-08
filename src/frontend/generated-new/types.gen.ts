@@ -532,14 +532,7 @@ export type Uttalelse = {
     beskrivelse?: string;
 };
 
-export type UttalelseVurdering =
-    | 'JA'
-    | 'NEI'
-    | 'JA_ETTER_FORHÅNDSVARSEL'
-    | 'NEI_ETTER_FORHÅNDSVARSEL'
-    | 'UNNTAK_ALLEREDE_UTTALT_SEG'
-    | 'UNNTAK_INGEN_UTTALELSE'
-    | 'IKKE_VURDERT';
+export type UttalelseVurdering = 'JA' | 'NEI' | 'IKKE_VURDERT';
 
 export type Uttalelsesfrist = {
     nyFrist?: string;
@@ -589,6 +582,11 @@ export type VedtaksbrevRedigerbareData = {
 export type VedtaksbrevRedigerbareDataUpdate = {
     hovedavsnitt: HovedavsnittUpdate;
     avsnitt: Array<AvsnittUpdateItem>;
+};
+
+export type Vedtaksdokument = {
+    journalpostId: string;
+    dokumentInfoId: string;
 };
 
 export type Vedtaksresultat =
@@ -1751,3 +1749,43 @@ export type BrevLagSvgVedtaksbrevResponses = {
 
 export type BrevLagSvgVedtaksbrevResponse =
     BrevLagSvgVedtaksbrevResponses[keyof BrevLagSvgVedtaksbrevResponses];
+
+export type DokumenterHentVedtaksdokumenterData = {
+    body?: never;
+    path: {
+        /**
+         * 1–64 ASCII-sifre. Innledende nuller er tillatt, og tallverdien kan ikke overstige 9223372036854775807.
+         */
+        vedtakId: string;
+    };
+    query?: never;
+    url: '/api/v1/dokumenter/vedtak/{vedtakId}';
+};
+
+export type DokumenterHentVedtaksdokumenterErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Access is unauthorized.
+     */
+    401: Error;
+    /**
+     * Access is forbidden.
+     */
+    403: Error;
+};
+
+export type DokumenterHentVedtaksdokumenterError =
+    DokumenterHentVedtaksdokumenterErrors[keyof DokumenterHentVedtaksdokumenterErrors];
+
+export type DokumenterHentVedtaksdokumenterResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Array<Vedtaksdokument>;
+};
+
+export type DokumenterHentVedtaksdokumenterResponse =
+    DokumenterHentVedtaksdokumenterResponses[keyof DokumenterHentVedtaksdokumenterResponses];

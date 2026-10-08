@@ -26,6 +26,7 @@ export {
     behandlingVilkaarsvurderingsperioder,
     brevLagSvgVarselbrev,
     brevLagSvgVedtaksbrev,
+    dokumenterHentVedtaksdokumenter,
     type Options,
 } from './sdk.gen';
 export type {
@@ -166,6 +167,11 @@ export type {
     Deler,
     DelerWritable,
     DelresultatEnum,
+    DokumenterHentVedtaksdokumenterData,
+    DokumenterHentVedtaksdokumenterError,
+    DokumenterHentVedtaksdokumenterErrors,
+    DokumenterHentVedtaksdokumenterResponse,
+    DokumenterHentVedtaksdokumenterResponses,
     DokumentInfo,
     DokumentType,
     Element,
@@ -280,6 +286,7 @@ export type {
     VedtaksbrevRedigerbareData,
     VedtaksbrevRedigerbareDataUpdate,
     VedtaksbrevRedigerbareDataWritable,
+    Vedtaksdokument,
     Vedtaksresultat,
     Vilkaar,
     Vilkaarsperiode,

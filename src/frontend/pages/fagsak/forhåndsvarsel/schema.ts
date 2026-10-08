@@ -27,7 +27,7 @@ const unntakSchema = z
                 code: 'custom',
                 input: validationContext.value,
                 message: 'Du må velge om brukeren har uttalt seg',
-                path: ['brukeruttalelse', 'harUttaltSeg'],
+                path: ['brukeruttalelse', 'harBrukerUttaltSeg'],
             });
         }
     });
