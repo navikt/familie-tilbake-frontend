@@ -376,7 +376,7 @@ export const BehandlingContainer: FC = () => {
             {behandling.endretKravgrunnlag && visNyttKravgrunnlagModal && (
                 <NyttKravgrunnlagModal
                     endretKravgrunnlag={behandling.endretKravgrunnlag}
-                    onFullført={(): void => setVisNyttKravgrunnlagModal(false)}
+                    lukkModal={(): void => setVisNyttKravgrunnlagModal(false)}
                 />
             )}
             {ventegrunn && !visVenteModal && (

@@ -1,8 +1,13 @@
+import type { AxiosError } from 'axios';
 import type { FC, KeyboardEvent } from 'react';
 import type { EndretKravgrunnlag } from '@/generated';
-import type { KravgrunnlagForskjell } from '@/generated-new';
+import type {
+    BehandlingBenyttNyesteKravgrunnlagError,
+    BehandlingFaktaError,
+    KravgrunnlagForskjell,
+} from '@/generated-new';
 
-import { Alert, BodyLong, Button, Loader, Modal, VStack } from '@navikt/ds-react';
+import { BodyLong, Button, Modal, VStack } from '@navikt/ds-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useBehandling } from '@/context/BehandlingContext';
@@ -15,6 +20,7 @@ import {
 import { MODAL_BREDDE } from '@/utils/modalUtils';
 
 import { EndretPeriodeKort } from './EndretPeriodeKort';
+import { FeilVarsel } from './FeilVarsel';
 import { PeriodeKort } from './PeriodeKort';
 import { hentModalTekst, hentUendredePerioder } from './utils';
 
@@ -22,10 +28,10 @@ type Props = {
     endretKravgrunnlag: Omit<EndretKravgrunnlag, 'endringer'> & {
         endringer: EndretKravgrunnlag['endringer'] | KravgrunnlagForskjell[];
     };
-    onFullført: () => void;
+    lukkModal: () => void;
 };
 
-export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullført }: Props) => {
+export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, lukkModal }: Props) => {
     const { behandlingId, erNyModell } = useBehandling();
     const queryClient = useQueryClient();
     const fakta = useQuery({
@@ -47,21 +53,34 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
         fjernedePerioder.length
     );
 
-    const benyttNyesteKravgrunnlag = useMutation({
-        ...behandlingBenyttNyesteKravgrunnlagMutation(),
-        onSuccess: async () => {
+    const hentOppdatertFakta = useMutation<void, AxiosError<BehandlingFaktaError>>({
+        mutationFn: async () => {
+            await queryClient.invalidateQueries(
+                { queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }) },
+                { throwOnError: true }
+            );
             await queryClient.invalidateQueries({
                 queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
             });
-            await queryClient.invalidateQueries({
-                queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }),
-            });
-            onFullført();
         },
+        onSuccess: lukkModal,
+    });
+
+    const benyttNyesteKravgrunnlag = useMutation<
+        unknown,
+        AxiosError<BehandlingBenyttNyesteKravgrunnlagError>,
+        { path: { behandlingId: string } }
+    >({
+        ...behandlingBenyttNyesteKravgrunnlagMutation(),
+        onSuccess: () => hentOppdatertFakta.mutate(),
     });
 
     const startVurdering = (): void => {
-        benyttNyesteKravgrunnlag.mutate({ path: { behandlingId } });
+        if (benyttNyesteKravgrunnlag.isSuccess) {
+            hentOppdatertFakta.mutate();
+        } else {
+            benyttNyesteKravgrunnlag.mutate({ path: { behandlingId } });
+        }
     };
 
     return (
@@ -97,18 +116,29 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
                             periode={periode}
                         />
                     ))}
-                    {fakta.isError && (
-                        <Alert variant="error" size="small">
-                            Kunne ikke hente øvrige perioder i kravgrunnlaget.
-                        </Alert>
+                    {fakta.isError && !benyttNyesteKravgrunnlag.isSuccess && (
+                        <FeilVarsel
+                            feil={fakta.error}
+                            standardTittel="Kunne ikke hente øvrige perioder i kravgrunnlaget"
+                            standardMelding="Perioder uten endringer kan ikke vises. Du kan fortsatt starte vurderingen."
+                        />
                     )}
                     {uendredePerioder && uendredePerioder.length > 0 && (
                         <PeriodeKort perioder={uendredePerioder} type="uendret" />
                     )}
                     {benyttNyesteKravgrunnlag.isError && (
-                        <Alert variant="error" size="small">
-                            Kunne ikke ta i bruk det nye kravgrunnlaget. Prøv igjen.
-                        </Alert>
+                        <FeilVarsel
+                            feil={benyttNyesteKravgrunnlag.error}
+                            standardTittel="Kunne ikke ta i bruk det nye kravgrunnlaget"
+                            standardMelding="Prøv å starte vurderingen på nytt."
+                        />
+                    )}
+                    {hentOppdatertFakta.isError && (
+                        <FeilVarsel
+                            feil={hentOppdatertFakta.error}
+                            standardTittel="Kunne ikke hente oppdatert fakta"
+                            standardMelding="Det nye kravgrunnlaget er tatt i bruk, men fakta om feilutbetalingen kunne ikke hentes. Prøv igjen."
+                        />
                     )}
                 </VStack>
             </Modal.Body>
@@ -116,7 +146,11 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, onFullfø
                 <Button
                     size="small"
                     onClick={startVurdering}
-                    loading={benyttNyesteKravgrunnlag.isPending || fakta.isPending}
+                    loading={
+                        benyttNyesteKravgrunnlag.isPending ||
+                        hentOppdatertFakta.isPending ||
+                        fakta.isLoading
+                    }
                 >
                     Start vurderingen
                 </Button>

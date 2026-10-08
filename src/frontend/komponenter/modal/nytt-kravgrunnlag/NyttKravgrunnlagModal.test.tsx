@@ -1,18 +1,41 @@
 import type { UserEvent } from '@testing-library/user-event';
+import type { AxiosResponse } from 'axios';
 import type { EndretKravgrunnlag } from '@/generated';
 import type { FaktaOmFeilutbetaling, FaktaPeriode, KravgrunnlagForskjell } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { AxiosError } from 'axios';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { behandlingFaktaQueryKey } from '@/generated-new/@tanstack/react-query.gen';
+import { behandlingBenyttNyesteKravgrunnlag, behandlingFakta } from '@/generated-new/sdk.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { NyttKravgrunnlagModal } from './NyttKravgrunnlagModal';
+
+vi.mock('@/generated-new/sdk.gen', async importOriginal => ({
+    ...(await importOriginal<typeof import('@/generated-new/sdk.gen')>()),
+    behandlingBenyttNyesteKravgrunnlag: vi.fn(),
+    behandlingFakta: vi.fn(),
+}));
+
+const benyttNyesteKravgrunnlagMock = vi.mocked(behandlingBenyttNyesteKravgrunnlag);
+const behandlingFaktaMock = vi.mocked(behandlingFakta);
+
+const lagAxiosFeil = (data?: { tittel: string; melding: string }): AxiosError => {
+    const feil = new AxiosError('Kallet feilet');
+    if (data) {
+        feil.response = { status: 500, data } as AxiosResponse;
+    }
+    return feil;
+};
+
+const lagVellykketSvar = <T,>(data: T): never => ({ data }) as never;
 
 type NyPeriode = Extract<KravgrunnlagForskjell, { type: 'ny_periode' }>;
 type EndretPeriode = Extract<KravgrunnlagForskjell, { type: 'endret_periode' }>;
@@ -32,6 +55,13 @@ const søkEtterOverskrift = (navn: string): HTMLElement | null =>
 
 const finnBoks = async (navn: string): Promise<ReturnType<typeof within>> =>
     within(await screen.findByRole('region', { name: navn }));
+
+const finnFeilvarsel = async (tittel: string): Promise<ReturnType<typeof within>> => {
+    const overskrift = await screen.findByRole('heading', { name: `Feil: ${tittel}` });
+    const varsel = overskrift.closest('section');
+    if (!varsel) throw new Error(`Fant ikke varsel med tittel ${tittel}`);
+    return within(varsel);
+};
 
 const lagNyPeriode = (overrides: Partial<NyPeriode> = {}): NyPeriode =>
     ({
@@ -88,42 +118,50 @@ const lagEndretKravgrunnlag = (
         ...overrides,
     }) satisfies EndretKravgrunnlagModalData;
 
+const lagFakta = (perioder: FaktaPeriode[]): FaktaOmFeilutbetaling => ({
+    feilutbetaling: {
+        beløp: 15000,
+        fom: '2024-01-01',
+        tom: '2026-12-31',
+        revurdering: {
+            årsak: 'Ukjent',
+            vedtaksdato: '2026-01-01',
+            resultat: 'INNVILGET',
+        },
+    },
+    tidligereVarsletBeløp: null,
+    muligeRettsligGrunnlag: [],
+    perioder,
+    ferdigvurdert: false,
+    status4xRettsgebyret: 'OVER',
+    rettsgebyrÅrFraSaksbehandler: null,
+    vurdering: { årsak: null, oppdaget: undefined },
+});
+
+type RenderValg = {
+    erNyModell?: boolean;
+    lukkModal?: () => void;
+};
+
 const renderModal = (
     endretKravgrunnlag: EndretKravgrunnlagModalData = lagEndretKravgrunnlag(),
-    perioder?: FaktaPeriode[]
+    perioder?: FaktaPeriode[],
+    { erNyModell = false, lukkModal = vi.fn() }: RenderValg = {}
 ): void => {
     const queryClient = createTestQueryClient();
     if (perioder) {
         queryClient.setQueryData<FaktaOmFeilutbetaling>(
             behandlingFaktaQueryKey({ path: { behandlingId: 'uuid-1' } }),
-            {
-                feilutbetaling: {
-                    beløp: 15000,
-                    fom: '2024-01-01',
-                    tom: '2026-12-31',
-                    revurdering: {
-                        årsak: 'Ukjent',
-                        vedtaksdato: '2026-01-01',
-                        resultat: 'INNVILGET',
-                    },
-                },
-                tidligereVarsletBeløp: null,
-                muligeRettsligGrunnlag: [],
-                perioder,
-                ferdigvurdert: false,
-                status4xRettsgebyret: 'OVER',
-                rettsgebyrÅrFraSaksbehandler: null,
-                vurdering: { årsak: null, oppdaget: undefined },
-            }
+            lagFakta(perioder)
         );
     }
     render(
         <QueryClientProvider client={queryClient}>
             <FagsakContext value={lagFagsak()}>
-                <TestBehandlingProvider>
+                <TestBehandlingProvider behandling={lagBehandling({ erNyModell })}>
                     <NyttKravgrunnlagModal
                         endretKravgrunnlag={endretKravgrunnlag}
-                        onFullført={vi.fn()}
+                        lukkModal={lukkModal}
                     />
                 </TestBehandlingProvider>
             </FagsakContext>
@@ -145,6 +183,8 @@ describe('NyttKravgrunnlagModal', () => {
     let user: UserEvent;
     beforeEach(() => {
         user = userEvent.setup();
+        benyttNyesteKravgrunnlagMock.mockReset();
+        behandlingFaktaMock.mockReset();
     });
 
     test.each([
@@ -596,5 +636,121 @@ describe('NyttKravgrunnlagModal', () => {
 
         expect(modal).toBeInTheDocument();
         expect(hentOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
+    });
+
+    describe('Henting av øvrige perioder', () => {
+        test('Viser feilmelding fra backend når fakta ikke kan hentes', async () => {
+            behandlingFaktaMock.mockRejectedValue(
+                lagAxiosFeil({ tittel: 'Fakta utilgjengelig', melding: 'Tjenesten svarer ikke.' })
+            );
+            renderModal(lagEndretKravgrunnlag(), undefined, { erNyModell: true });
+
+            const varsel = await finnFeilvarsel('Fakta utilgjengelig');
+            expect(varsel.getByText('Tjenesten svarer ikke.')).toBeInTheDocument();
+            expect(søkEtterOverskrift('Ingen endringer')).not.toBeInTheDocument();
+        });
+
+        test('Viser standard feilmelding når fakta feiler uten melding fra backend', async () => {
+            behandlingFaktaMock.mockRejectedValue(lagAxiosFeil());
+            renderModal(lagEndretKravgrunnlag(), undefined, { erNyModell: true });
+
+            const varsel = await finnFeilvarsel(
+                'Kunne ikke hente øvrige perioder i kravgrunnlaget'
+            );
+            expect(
+                varsel.getByText(
+                    'Perioder uten endringer kan ikke vises. Du kan fortsatt starte vurderingen.'
+                )
+            ).toBeInTheDocument();
+        });
+    });
+
+    describe('Start vurderingen', () => {
+        const startVurderingen = async (): Promise<void> =>
+            user.click(await screen.findByRole('button', { name: 'Start vurderingen' }));
+
+        test('Lukker modalen når kravgrunnlaget er tatt i bruk og fakta er hentet', async () => {
+            const lukkModal = vi.fn();
+            benyttNyesteKravgrunnlagMock.mockResolvedValue(lagVellykketSvar(undefined));
+            behandlingFaktaMock.mockResolvedValue(lagVellykketSvar(lagFakta([lagFaktaPeriode()])));
+            renderModal(lagEndretKravgrunnlag(), [lagFaktaPeriode()], {
+                erNyModell: true,
+                lukkModal,
+            });
+
+            await startVurderingen();
+
+            await vi.waitFor(() => expect(lukkModal).toHaveBeenCalledOnce());
+            expect(behandlingFaktaMock).toHaveBeenCalledOnce();
+            expect(screen.queryByRole('heading', { name: /^Feil:/ })).not.toBeInTheDocument();
+        });
+
+        test('Viser feilmelding fra backend når kravgrunnlaget ikke kan tas i bruk', async () => {
+            const lukkModal = vi.fn();
+            benyttNyesteKravgrunnlagMock.mockRejectedValue(
+                lagAxiosFeil({ tittel: 'Behandlingen er låst', melding: 'Prøv igjen senere.' })
+            );
+            renderModal(lagEndretKravgrunnlag(), undefined, { lukkModal });
+
+            await startVurderingen();
+
+            const varsel = await finnFeilvarsel('Behandlingen er låst');
+            expect(varsel.getByText('Prøv igjen senere.')).toBeInTheDocument();
+            expect(lukkModal).not.toHaveBeenCalled();
+            expect(behandlingFaktaMock).not.toHaveBeenCalled();
+        });
+
+        test('Viser standard feilmelding når kravgrunnlaget feiler uten melding fra backend', async () => {
+            benyttNyesteKravgrunnlagMock.mockRejectedValue(lagAxiosFeil());
+            renderModal();
+
+            await startVurderingen();
+
+            const varsel = await finnFeilvarsel('Kunne ikke ta i bruk det nye kravgrunnlaget');
+            expect(varsel.getByText('Prøv å starte vurderingen på nytt.')).toBeInTheDocument();
+        });
+
+        test('Viser feilmelding når fakta ikke kan hentes, og prøver bare fakta på nytt', async () => {
+            const lukkModal = vi.fn();
+            benyttNyesteKravgrunnlagMock.mockResolvedValue(lagVellykketSvar(undefined));
+            behandlingFaktaMock.mockRejectedValueOnce(
+                lagAxiosFeil({ tittel: 'Fakta utilgjengelig', melding: 'Tjenesten svarer ikke.' })
+            );
+            renderModal(lagEndretKravgrunnlag(), [lagFaktaPeriode()], {
+                erNyModell: true,
+                lukkModal,
+            });
+
+            await startVurderingen();
+
+            const varsel = await finnFeilvarsel('Fakta utilgjengelig');
+            expect(varsel.getByText('Tjenesten svarer ikke.')).toBeInTheDocument();
+            expect(
+                screen.getAllByRole('heading', { name: 'Feil: Fakta utilgjengelig' })
+            ).toHaveLength(1);
+            expect(lukkModal).not.toHaveBeenCalled();
+
+            behandlingFaktaMock.mockResolvedValue(lagVellykketSvar(lagFakta([lagFaktaPeriode()])));
+            await startVurderingen();
+
+            await vi.waitFor(() => expect(lukkModal).toHaveBeenCalledOnce());
+            expect(benyttNyesteKravgrunnlagMock).toHaveBeenCalledOnce();
+            expect(behandlingFaktaMock).toHaveBeenCalledTimes(2);
+        });
+
+        test('Viser standard feilmelding når fakta feiler uten melding fra backend', async () => {
+            benyttNyesteKravgrunnlagMock.mockResolvedValue(lagVellykketSvar(undefined));
+            behandlingFaktaMock.mockRejectedValue(lagAxiosFeil());
+            renderModal(lagEndretKravgrunnlag(), [lagFaktaPeriode()], { erNyModell: true });
+
+            await startVurderingen();
+
+            const varsel = await finnFeilvarsel('Kunne ikke hente oppdatert fakta');
+            expect(
+                varsel.getByText(
+                    'Det nye kravgrunnlaget er tatt i bruk, men fakta om feilutbetalingen kunne ikke hentes. Prøv igjen.'
+                )
+            ).toBeInTheDocument();
+        });
     });
 });
