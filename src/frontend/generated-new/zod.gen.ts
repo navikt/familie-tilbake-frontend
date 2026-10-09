@@ -113,7 +113,6 @@ export const zIkkeVurdert = z.record(z.string(), z.unknown());
 
 export const zIngenUttalelse = z.object({
     kommentar: z.string(),
-    beskrivelse: z.string(),
 });
 
 export const zIngenting = z.object({

@@ -48,11 +48,7 @@ import { lesFeilmeldingFraBlob } from '@/utils/blobFeilmelding';
 import { useStegNavigering } from '@/utils/sider';
 
 import { StatusTag } from '../StegStatus';
-import {
-    type BrukeruttalelseFormData,
-    tilUttalelsePayload,
-    tilUttalelseSkjema,
-} from './brukeruttalelseSchema';
+import { type BrukeruttalelseFormData, tilUttalelseSkjema } from './brukeruttalelseSchema';
 import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
 import { Fristinfo } from './Fristinfo';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
@@ -312,7 +308,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     ) => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
-            body: tilUttalelsePayload(data.brukeruttalelse),
+            body: data.brukeruttalelse,
         });
     };
 
@@ -347,7 +343,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                     begrunnelseForUnntak: data.begrunnelseForUnntak,
                     beskrivelse: data.beskrivelse,
                 },
-                uttalelse: tilUttalelsePayload(data.brukeruttalelse),
+                uttalelse: data.brukeruttalelse,
             });
         } else {
             lagreUnntak.mutate({

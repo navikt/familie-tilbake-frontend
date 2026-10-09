@@ -282,7 +282,6 @@ export type IkkeVurdert = {
 
 export type IngenUttalelse = {
     kommentar: string;
-    beskrivelse: string;
 };
 
 export type Ingenting = {

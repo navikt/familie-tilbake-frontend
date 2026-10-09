@@ -33,9 +33,8 @@ export const tilUttalelseSkjema = (
 ): DefaultValues<BrukeruttalelseFelter> | undefined => {
     switch (uttalelse?.harBrukerUttaltSeg) {
         case 'JA':
-            return uttalelse;
         case 'NEI':
-            return { harBrukerUttaltSeg: 'NEI', kommentar: uttalelse.kommentar };
+            return uttalelse;
         case 'HAR_TIDLIGERE_VURDERING': {
             const { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse } = uttalelse;
             return { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse };
@@ -44,7 +43,3 @@ export const tilUttalelseSkjema = (
             return undefined;
     }
 };
-
-// Midlertidig: backend leser NEI-kommentaren fra `beskrivelse` av hensyn til bakoverkompatibilitet.
-export const tilUttalelsePayload = (felter: BrukeruttalelseFelter): UttalelseVurdering =>
-    felter.harBrukerUttaltSeg === 'NEI' ? { ...felter, beskrivelse: felter.kommentar } : felter;

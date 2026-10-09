@@ -68,7 +68,7 @@ export const Brukeruttalelse: FC<Props> = ({ fristForUttalelse }: Props) => {
         <VStack gap="space-24">
             <RadioGroup
                 name={radioName}
-                legend={'Har brukeren uttalt seg?'}
+                legend="Har brukeren uttalt seg?"
                 size="small"
                 readOnly={behandlingILesemodus}
                 className="max-w-xl"
