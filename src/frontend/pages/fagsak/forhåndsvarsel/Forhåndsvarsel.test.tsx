@@ -290,12 +290,12 @@ describe('Forhåndsvarsel', () => {
         ).toHaveValue('Brukeren kjente til saken');
     });
 
-    test('Tilbakeført: preutfyller lagret uttalelse først når saksbehandler velger Ja', async () => {
+    test('Tilbakeført: preutfyller tidligere uttalelse først når saksbehandler velger Ja', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 forhaandsvarselSteg: { type: 'ikke_vurdert' },
                 brukeruttalelse: {
-                    harBrukerUttaltSeg: 'JA',
+                    harBrukerUttaltSeg: 'HAR_TIDLIGERE_VURDERING',
                     uttalelsesdato: '2026-09-14',
                     hvorBrukerenUttalteSeg: 'telefon',
                     beskrivelse: 'Brukeren kjente til saken',
@@ -325,6 +325,31 @@ describe('Forhåndsvarsel', () => {
         expect(
             screen.getByRole('textbox', { name: /beskriv hva brukeren har uttalt seg om/i })
         ).toHaveValue('Brukeren kjente til saken');
+    });
+
+    test('§16c: Nei viser tom kommentar selv om Ja-uttalelsen er preutfylt', async () => {
+        renderForhåndsvarsel(
+            lagForhåndsvarselResponse({
+                forhaandsvarselSteg: {
+                    type: 'unntak',
+                    begrunnelseForUnntak: 'ÅPENBART_UNØDVENDIG',
+                    beskrivelse: 'test',
+                },
+                brukeruttalelse: {
+                    harBrukerUttaltSeg: 'JA',
+                    uttalelsesdato: '2026-08-10',
+                    hvorBrukerenUttalteSeg: 'telefon',
+                    beskrivelse: 'Brukeren kjente til saken',
+                },
+                ferdigvurdert: true,
+            })
+        );
+
+        await user.click(
+            within(uttalelseRadiogruppeVedUnntak()).getByRole('radio', { name: 'Nei' })
+        );
+
+        expect(screen.getByRole('textbox', { name: /kommentar til valget over/i })).toHaveValue('');
     });
 
     test('Vurdert unntak med endringer viser lagreknapp', async () => {

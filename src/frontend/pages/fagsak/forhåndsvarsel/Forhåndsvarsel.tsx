@@ -30,7 +30,7 @@ import {
     type ForhaandsvarselSteg,
     type ForhaandsvarselUnntak,
     type UpdateUttalelsesfrist,
-    type Uttalelse,
+    type UttalelseVurdering,
 } from '@/generated-new';
 import {
     behandlingForhandsvarselOptions,
@@ -48,7 +48,11 @@ import { lesFeilmeldingFraBlob } from '@/utils/blobFeilmelding';
 import { useStegNavigering } from '@/utils/sider';
 
 import { StatusTag } from '../StegStatus';
-import { type BrukeruttalelseFormData, tilUttalelseSkjema } from './brukeruttalelseSchema';
+import {
+    type BrukeruttalelseFormData,
+    tilUttalelsePayload,
+    tilUttalelseSkjema,
+} from './brukeruttalelseSchema';
 import { ForhåndsvisVarselbrev } from './ForhåndsvisVarselbrev';
 import { Fristinfo } from './Fristinfo';
 import { FORHÅNDSVARSEL_FORM_ID, IkkeVurdert } from './IkkeVurdert';
@@ -60,12 +64,10 @@ import { Varselbrevinfo } from './Varselbrevinfo';
 
 const utledForhåndsvarselDefaultValues = (
     forhåndsvarselSteg: ForhaandsvarselSteg,
-    brukeruttalelse: Uttalelse | null
+    brukeruttalelse: UttalelseVurdering | null
 ): DefaultValues<IkkeVurdertFormData> | undefined => {
     if (forhåndsvarselSteg.type !== 'unntak') {
-        if (brukeruttalelse?.harBrukerUttaltSeg !== 'JA') return undefined;
-        const { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse } = brukeruttalelse;
-        return { brukeruttalelse: { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse } };
+        return { brukeruttalelse: tilUttalelseSkjema(brukeruttalelse) };
     }
 
     return {
@@ -237,7 +239,7 @@ export const ForhåndsvarselInnhold: FC = () => {
             uttalelse,
         }: {
             unntak: ForhaandsvarselUnntak;
-            uttalelse: Uttalelse;
+            uttalelse: UttalelseVurdering;
         }) => {
             await behandlingLagreForhaandsvarselUnntak({
                 path: { behandlingId },
@@ -310,7 +312,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     ) => {
         lagreBrukeruttalelse.mutate({
             path: { behandlingId },
-            body: data.brukeruttalelse,
+            body: tilUttalelsePayload(data.brukeruttalelse),
         });
     };
 
@@ -345,7 +347,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                     begrunnelseForUnntak: data.begrunnelseForUnntak,
                     beskrivelse: data.beskrivelse,
                 },
-                uttalelse: data.brukeruttalelse,
+                uttalelse: tilUttalelsePayload(data.brukeruttalelse),
             });
         } else {
             lagreUnntak.mutate({

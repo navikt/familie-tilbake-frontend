@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { ForhaandsvarselErSendt, Uttalelse } from '@/generated-new';
+import type { ForhaandsvarselErSendt, UttalelseVurdering } from '@/generated-new';
 import type { BrukeruttalelseFormData } from './brukeruttalelseSchema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,7 +12,7 @@ import { useUlagretForhåndsvarsel } from './useUlagretForhåndsvarsel';
 export const BRUKERUTTALELSE_FORM_ID = 'brukeruttalelse-form';
 
 type SendtVarselProps = ForhaandsvarselErSendt & {
-    brukeruttalelse: Uttalelse | null;
+    brukeruttalelse: UttalelseVurdering | null;
     onSubmit: SubmitHandler<BrukeruttalelseFormData>;
 };
 

@@ -59,6 +59,14 @@ export const zBrevmottaker = z.object({
     personIdent: z.string(),
 });
 
+export const zBrukeruttalelse = z.object({
+    uttalelsesdato: z.iso.date(),
+    hvorBrukerenUttalteSeg: z.string(),
+    beskrivelse: z.string(),
+});
+
+export const zBrukeruttalelseIkkeVurdert = z.record(z.string(), z.unknown());
+
 export const zDokumentInfo = z.object({
     brevSendt: z.iso.date(),
     journalpostId: z.string(),
@@ -102,6 +110,11 @@ export const zHovedavsnittVarselbrev = z.object({
 });
 
 export const zIkkeVurdert = z.record(z.string(), z.unknown());
+
+export const zIngenUttalelse = z.object({
+    kommentar: z.string(),
+    beskrivelse: z.string(),
+});
 
 export const zIngenting = z.object({
     begrunnelse: z.string(),
@@ -355,6 +368,8 @@ export const zStandardtekst = z.object({
     underavsnitt: z.array(zElement),
 });
 
+export const zTidligereBrukeruttalelse = zBrukeruttalelse;
+
 export const zTilbakekrevingRevurderingsarsak = z.enum(['REVURDERING_ANNEN_ÅRSAK']);
 
 export const zTilbakekrevingRevurdering = z.object({
@@ -449,14 +464,28 @@ export const zUpdateUttalelsesfrist = z.object({
     begrunnelse: z.string().optional(),
 });
 
-export const zUttalelseVurdering = z.enum(['JA', 'NEI', 'IKKE_VURDERT']);
-
-export const zUttalelse = z.object({
-    harBrukerUttaltSeg: zUttalelseVurdering,
-    uttalelsesdato: z.iso.date().optional(),
-    hvorBrukerenUttalteSeg: z.string().optional(),
-    beskrivelse: z.string().optional(),
-});
+export const zUttalelseVurdering = z.union([
+    z
+        .object({
+            harBrukerUttaltSeg: z.literal('JA'),
+        })
+        .and(zBrukeruttalelse),
+    z
+        .object({
+            harBrukerUttaltSeg: z.literal('HAR_TIDLIGERE_VURDERING'),
+        })
+        .and(zTidligereBrukeruttalelse),
+    z
+        .object({
+            harBrukerUttaltSeg: z.literal('NEI'),
+        })
+        .and(zIngenUttalelse),
+    z
+        .object({
+            harBrukerUttaltSeg: z.literal('IKKE_VURDERT'),
+        })
+        .and(zBrukeruttalelseIkkeVurdert),
+]);
 
 export const zUttalelsesfrist = z.object({
     nyFrist: z.iso.date().optional(),
@@ -517,7 +546,7 @@ export const zForhaandsvarselResponse = z.object({
     tilbakeført: zArsakTilTilbakeforing.readonly().optional(),
     ferdigvurdert: z.boolean().readonly(),
     forhaandsvarselSteg: zForhaandsvarselSteg,
-    brukeruttalelse: zUttalelse.nullable(),
+    brukeruttalelse: zUttalelseVurdering.nullable(),
     sendtVarselbrev: zDokumentInfo.nullable(),
     uttalelsesfrist: zUttalelsesfrist.nullable(),
 });
@@ -1042,7 +1071,7 @@ export const zForhaandsvarselStegWritable = z.union([
 
 export const zForhaandsvarselResponseWritable = z.object({
     forhaandsvarselSteg: zForhaandsvarselStegWritable,
-    brukeruttalelse: zUttalelse.nullable(),
+    brukeruttalelse: zUttalelseVurdering.nullable(),
     sendtVarselbrev: zDokumentInfo.nullable(),
     uttalelsesfrist: zUttalelsesfristWritable.nullable(),
 });
@@ -1175,7 +1204,7 @@ export const zBehandlingUtsettUttalelsesfristPath = z.object({
  */
 export const zBehandlingUtsettUttalelsesfristResponse = zUttalelsesfrist;
 
-export const zBehandlingLagreBrukersuttalelseBody = zUttalelse;
+export const zBehandlingLagreBrukersuttalelseBody = zUttalelseVurdering;
 
 export const zBehandlingLagreBrukersuttalelsePath = z.object({
     behandlingId: z.uuid(),

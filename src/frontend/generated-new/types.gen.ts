@@ -88,6 +88,16 @@ export type Brevmottaker = {
     personIdent: string;
 };
 
+export type Brukeruttalelse = {
+    uttalelsesdato: string;
+    hvorBrukerenUttalteSeg: string;
+    beskrivelse: string;
+};
+
+export type BrukeruttalelseIkkeVurdert = {
+    [key: string]: unknown;
+};
+
 export type BurdeForstaatt = {
     begrunnelse: string;
     unnlatelse: Unnlatelse;
@@ -186,7 +196,7 @@ export type ForhaandsvarselResponse = {
     readonly tilbakeført?: ArsakTilTilbakeforing;
     readonly ferdigvurdert: boolean;
     forhaandsvarselSteg: ForhaandsvarselSteg;
-    brukeruttalelse: Uttalelse | null;
+    brukeruttalelse: UttalelseVurdering | null;
     sendtVarselbrev: DokumentInfo | null;
     uttalelsesfrist: Uttalelsesfrist | null;
 };
@@ -268,6 +278,11 @@ export type IkkeAktuelt = {
 
 export type IkkeVurdert = {
     [key: string]: unknown;
+};
+
+export type IngenUttalelse = {
+    kommentar: string;
+    beskrivelse: string;
 };
 
 export type Ingenting = {
@@ -488,6 +503,8 @@ export type Standardtekst = {
     underavsnitt: Array<Element>;
 };
 
+export type TidligereBrukeruttalelse = Brukeruttalelse;
+
 export type TilbakekrevingRevurdering = {
     revurderingsarsak: TilbakekrevingRevurderingsarsak;
 };
@@ -525,14 +542,19 @@ export type UpdateUttalelsesfrist = {
     begrunnelse?: string;
 };
 
-export type Uttalelse = {
-    harBrukerUttaltSeg: UttalelseVurdering;
-    uttalelsesdato?: string;
-    hvorBrukerenUttalteSeg?: string;
-    beskrivelse?: string;
-};
-
-export type UttalelseVurdering = 'JA' | 'NEI' | 'IKKE_VURDERT';
+export type UttalelseVurdering =
+    | ({
+          harBrukerUttaltSeg: 'JA';
+      } & Brukeruttalelse)
+    | ({
+          harBrukerUttaltSeg: 'HAR_TIDLIGERE_VURDERING';
+      } & TidligereBrukeruttalelse)
+    | ({
+          harBrukerUttaltSeg: 'NEI';
+      } & IngenUttalelse)
+    | ({
+          harBrukerUttaltSeg: 'IKKE_VURDERT';
+      } & BrukeruttalelseIkkeVurdert);
 
 export type Uttalelsesfrist = {
     nyFrist?: string;
@@ -770,7 +792,7 @@ export type ForhaandsvarselErSendtWritable = {
 
 export type ForhaandsvarselResponseWritable = {
     forhaandsvarselSteg: ForhaandsvarselStegWritable;
-    brukeruttalelse: Uttalelse | null;
+    brukeruttalelse: UttalelseVurdering | null;
     sendtVarselbrev: DokumentInfo | null;
     uttalelsesfrist: UttalelsesfristWritable | null;
 };
@@ -1266,7 +1288,7 @@ export type BehandlingUtsettUttalelsesfristResponse =
     BehandlingUtsettUttalelsesfristResponses[keyof BehandlingUtsettUttalelsesfristResponses];
 
 export type BehandlingLagreBrukersuttalelseData = {
-    body: Uttalelse;
+    body: UttalelseVurdering;
     path: {
         behandlingId: string;
     };

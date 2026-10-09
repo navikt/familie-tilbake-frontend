@@ -1381,7 +1381,7 @@ export type SpråkkodeEnum = 'NB' | 'NN';
 
 export type KjønnEnum = 'MANN' | 'KVINNE' | 'UKJENT';
 
-export type UttalelseVurderingEnum = 'JA' | 'NEI';
+export type UttalelseVurderingEnum = 'JA' | 'TILBAKEFØRT' | 'NEI';
 
 export type TypeEnum4 = 'BEHANDLING' | 'UKJENT';
 

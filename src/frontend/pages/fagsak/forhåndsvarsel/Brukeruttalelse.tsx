@@ -133,7 +133,7 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
 
             {harBrukerUttaltSeg === 'NEI' && (
                 <Textarea
-                    {...register('brukeruttalelse.beskrivelse')}
+                    {...register('brukeruttalelse.kommentar')}
                     size="small"
                     readOnly={behandlingILesemodus}
                     label="Kommentar til valget over"
@@ -141,7 +141,7 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
                     minRows={3}
                     resize
                     className="max-w-xl"
-                    error={get(errors, 'brukeruttalelse.beskrivelse.message')}
+                    error={get(errors, 'brukeruttalelse.kommentar.message')}
                 />
             )}
         </VStack>

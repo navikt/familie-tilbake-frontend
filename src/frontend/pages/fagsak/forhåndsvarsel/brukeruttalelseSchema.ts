@@ -1,5 +1,5 @@
 import type { DefaultValues } from 'react-hook-form';
-import type { Uttalelse } from '@/generated-new';
+import type { UttalelseVurdering } from '@/generated-new';
 
 import { z } from 'zod';
 
@@ -14,7 +14,7 @@ const harUttaltSegSchema = z.object({
 
 const harIkkeUttaltSegSchema = z.object({
     harBrukerUttaltSeg: z.literal('NEI'),
-    beskrivelse: fritekst,
+    kommentar: fritekst,
 });
 
 export const brukeruttalelseFelter = z.discriminatedUnion(
@@ -29,8 +29,22 @@ export type BrukeruttalelseFelter = z.infer<typeof brukeruttalelseFelter>;
 export type BrukeruttalelseFormData = z.infer<typeof brukeruttalelseSchema>;
 
 export const tilUttalelseSkjema = (
-    uttalelse: Uttalelse | null
-): DefaultValues<BrukeruttalelseFelter> | undefined =>
-    uttalelse?.harBrukerUttaltSeg === 'JA' || uttalelse?.harBrukerUttaltSeg === 'NEI'
-        ? { ...uttalelse, harBrukerUttaltSeg: uttalelse.harBrukerUttaltSeg }
-        : undefined;
+    uttalelse: UttalelseVurdering | null
+): DefaultValues<BrukeruttalelseFelter> | undefined => {
+    switch (uttalelse?.harBrukerUttaltSeg) {
+        case 'JA':
+            return uttalelse;
+        case 'NEI':
+            return { harBrukerUttaltSeg: 'NEI', kommentar: uttalelse.kommentar };
+        case 'HAR_TIDLIGERE_VURDERING': {
+            const { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse } = uttalelse;
+            return { uttalelsesdato, hvorBrukerenUttalteSeg, beskrivelse };
+        }
+        default:
+            return undefined;
+    }
+};
+
+// Midlertidig: backend leser NEI-kommentaren fra `beskrivelse` av hensyn til bakoverkompatibilitet.
+export const tilUttalelsePayload = (felter: BrukeruttalelseFelter): UttalelseVurdering =>
+    felter.harBrukerUttaltSeg === 'NEI' ? { ...felter, beskrivelse: felter.kommentar } : felter;
