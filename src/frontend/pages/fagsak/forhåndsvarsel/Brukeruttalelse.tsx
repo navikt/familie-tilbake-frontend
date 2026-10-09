@@ -21,11 +21,10 @@ import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { dateTilIsoDatoString } from '@/utils/dato';
 
 type Props = {
-    varselErSendt: boolean;
     fristForUttalelse?: string;
 };
 
-export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }: Props) => {
+export const Brukeruttalelse: FC<Props> = ({ fristForUttalelse }: Props) => {
     const { behandlingILesemodus } = useBehandlingState();
     const {
         register,
@@ -69,11 +68,7 @@ export const Brukeruttalelse: FC<Props> = ({ varselErSendt, fristForUttalelse }:
         <VStack gap="space-24">
             <RadioGroup
                 name={radioName}
-                legend={
-                    varselErSendt
-                        ? 'Har brukeren uttalt seg etter forhåndsvarselet ble sendt?'
-                        : 'Har brukeren uttalt seg?'
-                }
+                legend={'Har brukeren uttalt seg?'}
                 size="small"
                 readOnly={behandlingILesemodus}
                 className="max-w-xl"

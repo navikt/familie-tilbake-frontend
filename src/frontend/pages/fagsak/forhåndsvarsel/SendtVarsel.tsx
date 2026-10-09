@@ -31,7 +31,7 @@ const SendtVarselSkjema: FC<SendtVarselSkjemaProps> = ({
 
     return (
         <form id={BRUKERUTTALELSE_FORM_ID} onSubmit={handleSubmit(onSubmit)}>
-            <Brukeruttalelse varselErSendt fristForUttalelse={fristForUttalelse} />
+            <Brukeruttalelse fristForUttalelse={fristForUttalelse} />
         </form>
     );
 };

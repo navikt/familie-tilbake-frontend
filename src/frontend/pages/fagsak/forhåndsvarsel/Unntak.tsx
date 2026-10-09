@@ -68,9 +68,7 @@ export const Unntak: FC = () => {
                 resize
                 error={'beskrivelse' in errors ? errors.beskrivelse?.message : undefined}
             />
-            {begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && (
-                <Brukeruttalelse varselErSendt={false} />
-            )}
+            {begrunnelseForUnntak === 'ÅPENBART_UNØDVENDIG' && <Brukeruttalelse />}
         </VStack>
     );
 };
