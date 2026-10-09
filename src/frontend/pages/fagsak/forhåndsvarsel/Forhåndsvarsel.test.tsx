@@ -446,6 +446,27 @@ describe('Forhåndsvarsel', () => {
             expect(screen.getByText(nyttForhåndsvarselSendesIkkeTekst)).toBeInTheDocument();
         });
 
+        test('Nei: viser at eksisterende brev og frist for uttalelse gjelder når frist finnes', async () => {
+            renderForhåndsvarsel(
+                lagForhåndsvarselResponse({
+                    sendtVarselbrev: {
+                        brevSendt: '2025-01-10',
+                        journalpostId: 'jp-123',
+                        dokumentId: 'dok-456',
+                    },
+                    uttalelsesfrist: { opprinneligFrist: '2025-01-22', nyFrist: '2025-02-05' },
+                })
+            );
+
+            await velgUnntak(user);
+
+            expect(
+                screen.getByText(
+                    'Nytt forhåndsvarsel sendes ikke. Det eksisterende brevet fra 10.01.2025 og fristen for uttalelse (05.02.2025) gjelder fortsatt.'
+                )
+            ).toBeInTheDocument();
+        });
+
         test('Nei: viser ikke melding når varsel ikke er sendt tidligere', async () => {
             renderForhåndsvarsel();
 

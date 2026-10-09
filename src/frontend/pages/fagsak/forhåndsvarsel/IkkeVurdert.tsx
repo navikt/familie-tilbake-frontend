@@ -22,6 +22,7 @@ export const FORHÅNDSVARSEL_FORM_ID = 'forhåndsvarsel-form';
 
 type Props = {
     sendtVarselDato?: string;
+    fristForUttalelse?: string;
     erNyttForhåndsvarsel?: boolean;
     sidekolonne?: ReactNode;
     onValgEndring?: (valg: 'send' | 'unntak' | undefined) => void;
@@ -36,6 +37,7 @@ const lagStønadstekst = (vedtaksdato: string | undefined): string | undefined =
 
 export const IkkeVurdert: FC<Props> = ({
     sendtVarselDato,
+    fristForUttalelse,
     erNyttForhåndsvarsel,
     sidekolonne,
     onValgEndring,
@@ -103,7 +105,10 @@ export const IkkeVurdert: FC<Props> = ({
                 {valg === 'unntak' && sendtVarselDato && (
                     <InlineMessage size="small" status="info" className="max-w-xl">
                         Nytt forhåndsvarsel sendes ikke. Det eksisterende brevet fra{' '}
-                        {formatterDatostring(sendtVarselDato)} gjelder fortsatt.
+                        {formatterDatostring(sendtVarselDato)}
+                        {fristForUttalelse &&
+                            ` og fristen for uttalelse (${formatterDatostring(fristForUttalelse)})`}{' '}
+                        gjelder fortsatt.
                     </InlineMessage>
                 )}
 

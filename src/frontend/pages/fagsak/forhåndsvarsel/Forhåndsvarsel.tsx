@@ -470,6 +470,9 @@ export const ForhåndsvarselInnhold: FC = () => {
                 ) : (
                     <IkkeVurdert
                         sendtVarselDato={sendtVarselbrev?.brevSendt}
+                        fristForUttalelse={
+                            uttalelsesfrist?.nyFrist ?? uttalelsesfrist?.opprinneligFrist
+                        }
                         erNyttForhåndsvarsel={erNyttForhåndsvarsel}
                         sidekolonne={sidekolonne}
                         onValgEndring={setValg}
