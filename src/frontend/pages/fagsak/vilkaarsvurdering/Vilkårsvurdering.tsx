@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import type { Vilkaar } from '@/generated-new';
-import type { Vilkårsperiode } from './typer';
+import type { Vilkårsperiode, Vurderingsstatus } from './typer';
 
 import { Heading, HStack, InlineMessage, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -49,12 +49,35 @@ export const Vilkårsvurdering: FC = () => {
     const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
+    const [lokalePeriodevurderinger, setLokalePeriodevurderinger] = useState<
+        Map<string, Vurderingsstatus>
+    >(() => new Map());
 
     const { data: vilkår } = useSuspenseQuery(
         behandlingVilkaarsvurderingOptions({ path: { behandlingId } })
     );
 
-    const perioder = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
+    const perioderFraServer = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
+    const perioder = useMemo(
+        () =>
+            perioderFraServer.map(periode => ({
+                ...periode,
+                vurdering: lokalePeriodevurderinger.get(periode.id) ?? periode.vurdering,
+            })),
+        [lokalePeriodevurderinger, perioderFraServer]
+    );
+
+    useEffect(() => {
+        setLokalePeriodevurderinger(lokale => {
+            const oppdatert = new Map(lokale);
+            for (const periode of perioderFraServer) {
+                if (oppdatert.get(periode.id) === periode.vurdering) {
+                    oppdatert.delete(periode.id);
+                }
+            }
+            return oppdatert;
+        });
+    }, [perioderFraServer]);
 
     const { valgtPeriode, setValgtPeriodeId } = usePeriodeIUrl(perioder);
 
@@ -65,6 +88,10 @@ export const Vilkårsvurdering: FC = () => {
         queryClient.invalidateQueries({
             queryKey: behandlingHentVedtaksresultatQueryKey({ path: { behandlingId } }),
         });
+    };
+
+    const oppdaterPeriodevurdering = (periodeId: string, vurdering: Vurderingsstatus): void => {
+        setLokalePeriodevurderinger(perioder => new Map(perioder).set(periodeId, vurdering));
     };
 
     queryClient.setMutationDefaults(LAGRE_VILKÅRSVURDERING_MUTATION_KEY, {
@@ -125,6 +152,7 @@ export const Vilkårsvurdering: FC = () => {
                             valgtPeriode={valgtPeriode}
                             vilkårsperioder={vilkår.vilkårsperioder}
                             hentVilkårsvurdering={invalidererVilkårsvurderingOgResultat}
+                            oppdaterPeriodevurdering={oppdaterPeriodevurdering}
                         />
                     </VilkårsvurderingLesedataProvider>
                 )}
