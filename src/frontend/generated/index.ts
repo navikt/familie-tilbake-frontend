@@ -496,6 +496,8 @@ export type {
     TypeEnum7,
     TypeEnum8,
     TypeEnum9,
+    UendretPeriodeDto,
+    UendretPeriodeDtoWritable,
     Underavsnitt,
     UnderavsnittstypeEnum,
     Unnlates4RettsgebyrEnum,

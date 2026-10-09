@@ -1222,7 +1222,7 @@ export type EndretKravgrunnlag = {
     nyttBeløp: number;
     gammelPeriode: Datoperiode;
     nyPeriode: Datoperiode;
-    endringer: Array<EndretPeriodeDto | FjernetPeriodeDto | NyPeriodeDto>;
+    endringer: Array<EndretPeriodeDto | FjernetPeriodeDto | NyPeriodeDto | UendretPeriodeDto>;
 };
 
 export type EndretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
@@ -1263,6 +1263,13 @@ export type RessursBehandlingDto = {
     melding: string;
     frontendFeilmelding?: string | null;
     stacktrace?: string | null;
+};
+
+export type UendretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    readonly fom: string;
+    readonly tom: string;
+    beløp: number;
+    type: 'UendretPeriodeDto';
 };
 
 export type RessursVergeDto = {
@@ -1992,7 +1999,12 @@ export type EndretKravgrunnlagWritable = {
     nyttBeløp: number;
     gammelPeriode: Datoperiode;
     nyPeriode: Datoperiode;
-    endringer: Array<EndretPeriodeDtoWritable | FjernetPeriodeDtoWritable | NyPeriodeDtoWritable>;
+    endringer: Array<
+        | EndretPeriodeDtoWritable
+        | FjernetPeriodeDtoWritable
+        | NyPeriodeDtoWritable
+        | UendretPeriodeDtoWritable
+    >;
 };
 
 export type EndretPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
@@ -2017,6 +2029,11 @@ export type RessursBehandlingDtoWritable = {
     melding: string;
     frontendFeilmelding?: string | null;
     stacktrace?: string | null;
+};
+
+export type UendretPeriodeDtoWritable = Omit<KravgrunnlagForskjellDto, 'type'> & {
+    beløp: number;
+    type: 'UendretPeriodeDtoWritable';
 };
 
 export type TvingHenleggBehandlingData = {

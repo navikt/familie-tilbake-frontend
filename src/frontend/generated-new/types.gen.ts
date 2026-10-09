@@ -304,7 +304,10 @@ export type KravgrunnlagForskjell =
       } & EndretPeriode)
     | ({
           type: 'fjernet_periode';
-      } & FjernetPeriode);
+      } & FjernetPeriode)
+    | ({
+          type: 'uendret_periode';
+      } & UendretPeriode);
 
 export type Logginnslag = {
     behandlingId: string;
@@ -513,6 +516,12 @@ export type TilbakekrevingRevurderingsarsak = 'REVURDERING_ANNEN_ÅRSAK';
 export type Uaktsomt = {
     begrunnelse: string;
     unnlatelse: Unnlatelse;
+};
+
+export type UendretPeriode = {
+    readonly fom: string;
+    readonly tom: string;
+    beløp: number;
 };
 
 export type UnderavsnittElement = {
@@ -865,7 +874,10 @@ export type KravgrunnlagForskjellWritable =
       } & EndretPeriodeWritable)
     | ({
           type: 'fjernet_periode';
-      } & FjernetPeriodeWritable);
+      } & FjernetPeriodeWritable)
+    | ({
+          type: 'uendret_periode';
+      } & UendretPeriodeWritable);
 
 export type MomentWritable = {
     moment: string;
@@ -937,6 +949,10 @@ export type SkalReduseresWritable = {
 export type UaktsomtWritable = {
     begrunnelse: string;
     unnlatelse: UnnlatelseWritable;
+};
+
+export type UendretPeriodeWritable = {
+    beløp: number;
 };
 
 export type UnnlatelseWritable =

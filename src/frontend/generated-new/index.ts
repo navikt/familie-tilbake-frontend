@@ -273,6 +273,8 @@ export type {
     TilbakekrevingRevurderingsarsak,
     Uaktsomt,
     UaktsomtWritable,
+    UendretPeriode,
+    UendretPeriodeWritable,
     UnderavsnittElement,
     Unnlatelse,
     UnnlatelseWritable,

@@ -8,7 +8,7 @@ import type {
 } from '@/generated-new';
 
 import { BodyLong, Button, Modal, VStack } from '@navikt/ds-react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
@@ -22,7 +22,7 @@ import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { EndretPeriodeKort } from './EndretPeriodeKort';
 import { FeilVarsel } from './FeilVarsel';
 import { PeriodeKort } from './PeriodeKort';
-import { hentModalTekst, hentUendredePerioder } from './utils';
+import { hentModalTekst } from './utils';
 
 type Props = {
     endretKravgrunnlag: Omit<EndretKravgrunnlag, 'endringer'> & {
@@ -34,18 +34,19 @@ type Props = {
 export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, lukkModal }: Props) => {
     const { behandlingId, erNyModell } = useBehandling();
     const queryClient = useQueryClient();
-    const fakta = useQuery({
-        ...behandlingFaktaOptions({ path: { behandlingId } }),
-        enabled: erNyModell,
-    });
-
     const endringer = endretKravgrunnlag.endringer;
-    const fjernedePerioder = endringer.filter(endring => endring.type === 'fjernet_periode');
-    const nyePerioder = endringer.filter(endring => endring.type === 'ny_periode');
-    const endretPerioder = endringer.filter(endring => endring.type === 'endret_periode');
-    const uendredePerioder = fakta.data
-        ? hentUendredePerioder(fakta.data.perioder, endringer)
-        : undefined;
+    const fjernedePerioder = endringer.filter(
+        endring => endring.type === 'fjernet_periode' || endring.type === 'FjernetPeriodeDto'
+    );
+    const nyePerioder = endringer.filter(
+        endring => endring.type === 'ny_periode' || endring.type === 'NyPeriodeDto'
+    );
+    const endretPerioder = endringer.filter(
+        endring => endring.type === 'endret_periode' || endring.type === 'EndretPeriodeDto'
+    );
+    const uendredePerioder = endringer.filter(
+        endring => endring.type === 'uendret_periode' || endring.type === 'UendretPeriodeDto'
+    );
 
     const { tittel, beskrivelse } = hentModalTekst(
         nyePerioder.length,
@@ -55,10 +56,13 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, lukkModal
 
     const hentOppdatertFakta = useMutation<void, AxiosError<BehandlingFaktaError>>({
         mutationFn: async () => {
-            await queryClient.invalidateQueries(
-                { queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }) },
-                { throwOnError: true }
-            );
+            await queryClient.invalidateQueries({
+                queryKey: behandlingFaktaQueryKey({ path: { behandlingId } }),
+                refetchType: 'none',
+            });
+            if (erNyModell) {
+                await queryClient.fetchQuery(behandlingFaktaOptions({ path: { behandlingId } }));
+            }
             await queryClient.invalidateQueries({
                 queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
             });
@@ -116,14 +120,7 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, lukkModal
                             periode={periode}
                         />
                     ))}
-                    {fakta.isError && !benyttNyesteKravgrunnlag.isSuccess && (
-                        <FeilVarsel
-                            feil={fakta.error}
-                            standardTittel="Kunne ikke hente øvrige perioder i kravgrunnlaget"
-                            standardMelding="Perioder uten endringer kan ikke vises. Du kan fortsatt starte vurderingen."
-                        />
-                    )}
-                    {uendredePerioder && uendredePerioder.length > 0 && (
+                    {uendredePerioder.length > 0 && (
                         <PeriodeKort perioder={uendredePerioder} type="uendret" />
                     )}
                     {benyttNyesteKravgrunnlag.isError && (
@@ -146,11 +143,7 @@ export const NyttKravgrunnlagModal: FC<Props> = ({ endretKravgrunnlag, lukkModal
                 <Button
                     size="small"
                     onClick={startVurdering}
-                    loading={
-                        benyttNyesteKravgrunnlag.isPending ||
-                        hentOppdatertFakta.isPending ||
-                        fakta.isLoading
-                    }
+                    loading={benyttNyesteKravgrunnlag.isPending || hentOppdatertFakta.isPending}
                 >
                     Start vurderingen
                 </Button>

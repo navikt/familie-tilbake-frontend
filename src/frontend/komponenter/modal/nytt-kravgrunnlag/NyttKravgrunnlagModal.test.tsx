@@ -40,6 +40,7 @@ const lagVellykketSvar = <T,>(data: T): never => ({ data }) as never;
 type NyPeriode = Extract<KravgrunnlagForskjell, { type: 'ny_periode' }>;
 type EndretPeriode = Extract<KravgrunnlagForskjell, { type: 'endret_periode' }>;
 type FjernetPeriode = Extract<KravgrunnlagForskjell, { type: 'fjernet_periode' }>;
+type UendretPeriode = Extract<KravgrunnlagForskjell, { type: 'uendret_periode' }>;
 
 const varighetsdifferanse = /^[+–].*(dag|måned|år)/;
 const fargeattributt = 'data-color';
@@ -92,8 +93,16 @@ const lagFjernetPeriode = (overrides: Partial<FjernetPeriode> = {}): FjernetPeri
         ...overrides,
     }) satisfies FjernetPeriode;
 
+const lagUendretPeriode = (overrides: Partial<UendretPeriode> = {}): UendretPeriode => ({
+    type: 'uendret_periode',
+    fom: '2025-01-01',
+    tom: '2025-01-31',
+    beløp: 5000,
+    ...overrides,
+});
+
 type EndretKravgrunnlagModalData = Omit<EndretKravgrunnlag, 'endringer'> & {
-    endringer: KravgrunnlagForskjell[];
+    endringer: EndretKravgrunnlag['endringer'] | KravgrunnlagForskjell[];
 };
 
 const lagEndretKravgrunnlag = (
@@ -484,6 +493,7 @@ describe('NyttKravgrunnlagModal', () => {
     test.each([
         { tittel: 'Lagt til', lagPeriode: lagNyPeriode },
         { tittel: 'Fjernet', lagPeriode: lagFjernetPeriode },
+        { tittel: 'Ingen endringer', lagPeriode: lagUendretPeriode },
     ])(
         'Samler flere perioder i boksen $tittel med skillelinjer',
         async ({ tittel, lagPeriode }) => {
@@ -514,6 +524,7 @@ describe('NyttKravgrunnlagModal', () => {
     test.each([
         { tittel: 'Lagt til', periode: lagNyPeriode() },
         { tittel: 'Fjernet', periode: lagFjernetPeriode() },
+        { tittel: 'Ingen endringer', periode: lagUendretPeriode() },
     ])('Viser ingen skillelinje for én periode i $tittel', async ({ tittel, periode }) => {
         renderModal(lagEndretKravgrunnlag({ endringer: [periode] }));
 
@@ -521,40 +532,26 @@ describe('NyttKravgrunnlagModal', () => {
         expect(boks.queryByRole('separator')).not.toBeInTheDocument();
     });
 
-    test('Viser øvrige perioder samlet under Ingen endringer', async () => {
+    test('Viser uendrede perioder fra backend uten å hente fakta', async () => {
         const nyPeriode = lagNyPeriode();
         const fjernetPeriode = lagFjernetPeriode();
         const endretPeriode = lagEndretPeriode();
         renderModal(
             lagEndretKravgrunnlag({
-                endringer: [nyPeriode, fjernetPeriode, endretPeriode],
+                endringer: [
+                    nyPeriode,
+                    fjernetPeriode,
+                    endretPeriode,
+                    lagUendretPeriode(),
+                    lagUendretPeriode({
+                        fom: '2025-02-01',
+                        tom: '2025-02-28',
+                        beløp: 6000,
+                    }),
+                ],
             }),
-            [
-                lagFaktaPeriode(),
-                lagFaktaPeriode({
-                    id: 'uendret-2',
-                    fom: '2025-02-01',
-                    tom: '2025-02-28',
-                    feilutbetaltBeløp: 6000,
-                }),
-                lagFaktaPeriode({
-                    id: 'ny',
-                    fom: nyPeriode.fom,
-                    tom: nyPeriode.tom,
-                    endringIKravgrunnlag: nyPeriode,
-                }),
-                lagFaktaPeriode({
-                    id: 'fjernet',
-                    fom: fjernetPeriode.fom,
-                    tom: fjernetPeriode.tom,
-                }),
-                lagFaktaPeriode({
-                    id: 'endret',
-                    fom: endretPeriode.fom,
-                    tom: endretPeriode.tom,
-                    endringIKravgrunnlag: endretPeriode,
-                }),
-            ]
+            undefined,
+            { erNyModell: true }
         );
 
         const boks = await finnBoks('Ingen endringer');
@@ -572,47 +569,52 @@ describe('NyttKravgrunnlagModal', () => {
         expect(boks.queryByText('21.09.2026–27.09.2026')).not.toBeInTheDocument();
         expect(boks.queryByText('01.01.2024–31.12.2024')).not.toBeInTheDocument();
         expect(boks.queryByText('10.08.2026–24.08.2026')).not.toBeInTheDocument();
+        expect(behandlingFaktaMock).not.toHaveBeenCalled();
     });
 
-    test('Viser én uendret periode uten skillelinje', async () => {
+    test('Utleder ikke uendrede perioder fra fakta når backend ikke sender noen', () => {
         renderModal(lagEndretKravgrunnlag(), [lagFaktaPeriode()]);
-
-        const boks = await finnBoks('Ingen endringer');
-        expect(boks.queryByRole('separator')).not.toBeInTheDocument();
-    });
-
-    test('Viser ikke Ingen endringer når alle periodene berøres av endringer', () => {
-        const endretPeriode = lagEndretPeriode({
-            fom: '2025-01-01',
-            tom: '2025-01-31',
-            gammelPeriode: { fom: '2024-12-01', tom: '2024-12-31' },
-        });
-        renderModal(lagEndretKravgrunnlag({ endringer: [endretPeriode] }), [
-            lagFaktaPeriode(),
-            lagFaktaPeriode({
-                id: 'gammel',
-                fom: '2024-12-01',
-                tom: '2024-12-31',
-            }),
-            lagFaktaPeriode({
-                id: 'overlapp',
-                fom: '2024-12-15',
-                tom: '2025-02-15',
-            }),
-        ]);
 
         expect(screen.queryByRole('region', { name: 'Ingen endringer' })).not.toBeInTheDocument();
     });
 
-    test('Viser periode under Ingen endringer selv om den er markert fra et tidligere kravgrunnlag', async () => {
-        renderModal(lagEndretKravgrunnlag({ endringer: [lagNyPeriode()] }), [
-            lagFaktaPeriode({
-                endringIKravgrunnlag: lagNyPeriode({ fom: '2025-01-01', tom: '2025-01-31' }),
+    test('Viser perioder med diskriminatorene fra det eldre API-et', async () => {
+        renderModal(
+            lagEndretKravgrunnlag({
+                endringer: [
+                    { ...lagNyPeriode(), type: 'NyPeriodeDto' },
+                    { ...lagFjernetPeriode(), type: 'FjernetPeriodeDto' },
+                    { ...lagEndretPeriode(), type: 'EndretPeriodeDto' },
+                    { ...lagUendretPeriode(), type: 'UendretPeriodeDto' },
+                ],
+            })
+        );
+
+        expect(await finnOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
+        expect(hentOverskrift('Lagt til')).toBeInTheDocument();
+        expect(hentOverskrift('Fjernet')).toBeInTheDocument();
+        expect(hentOverskrift('Endringer')).toBeInTheDocument();
+        const boks = await finnBoks('Ingen endringer');
+        expect(boks.getByText('01.01.2025–31.01.2025')).toBeInTheDocument();
+        expect(boks.getByText('5 000')).toBeInTheDocument();
+    });
+
+    test('Bruker backendens klassifisering selv om en uendret periode overlapper en endring', async () => {
+        renderModal(
+            lagEndretKravgrunnlag({
+                endringer: [
+                    lagNyPeriode({ fom: '2025-01-01', tom: '2025-01-31' }),
+                    lagUendretPeriode(),
+                ],
             }),
-        ]);
+            [lagFaktaPeriode({ feilutbetaltBeløp: 9000 })]
+        );
 
         const boks = await finnBoks('Ingen endringer');
         expect(boks.getByText('01.01.2025–31.01.2025')).toBeInTheDocument();
+        expect(boks.getByText('5 000')).toBeInTheDocument();
+        expect(boks.queryByText('9 000')).not.toBeInTheDocument();
+        expect(hentOverskrift('Ny periode må vurderes', 1)).toBeInTheDocument();
     });
 
     test('Lukker ikke modalen når man trykker Escape', async () => {
@@ -625,33 +627,6 @@ describe('NyttKravgrunnlagModal', () => {
         expect(hentOverskrift('Endringer i kravgrunnlaget', 1)).toBeInTheDocument();
     });
 
-    describe('Henting av øvrige perioder', () => {
-        test('Viser feilmelding fra backend når fakta ikke kan hentes', async () => {
-            behandlingFaktaMock.mockRejectedValue(
-                lagAxiosFeil({ tittel: 'Fakta utilgjengelig', melding: 'Tjenesten svarer ikke.' })
-            );
-            renderModal(lagEndretKravgrunnlag(), undefined, { erNyModell: true });
-
-            const varsel = await finnFeilvarsel('Fakta utilgjengelig');
-            expect(varsel.getByText('Tjenesten svarer ikke.')).toBeInTheDocument();
-            expect(søkEtterOverskrift('Ingen endringer')).not.toBeInTheDocument();
-        });
-
-        test('Viser standard feilmelding når fakta feiler uten melding fra backend', async () => {
-            behandlingFaktaMock.mockRejectedValue(lagAxiosFeil());
-            renderModal(lagEndretKravgrunnlag(), undefined, { erNyModell: true });
-
-            const varsel = await finnFeilvarsel(
-                'Kunne ikke hente øvrige perioder i kravgrunnlaget'
-            );
-            expect(
-                varsel.getByText(
-                    'Perioder uten endringer kan ikke vises. Du kan fortsatt starte vurderingen.'
-                )
-            ).toBeInTheDocument();
-        });
-    });
-
     describe('Start vurderingen', () => {
         const startVurderingen = async (): Promise<void> =>
             user.click(await screen.findByRole('button', { name: 'Start vurderingen' }));
@@ -660,7 +635,7 @@ describe('NyttKravgrunnlagModal', () => {
             const lukkModal = vi.fn();
             benyttNyesteKravgrunnlagMock.mockResolvedValue(lagVellykketSvar(undefined));
             behandlingFaktaMock.mockResolvedValue(lagVellykketSvar(lagFakta([lagFaktaPeriode()])));
-            renderModal(lagEndretKravgrunnlag(), [lagFaktaPeriode()], {
+            renderModal(lagEndretKravgrunnlag(), undefined, {
                 erNyModell: true,
                 lukkModal,
             });

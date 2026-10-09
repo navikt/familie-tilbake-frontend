@@ -1,4 +1,4 @@
-import type { EndretPeriode, FaktaPeriode } from '@/generated-new';
+import type { EndretPeriode } from '@/generated-new';
 
 import { add, addDays, format, intervalToDuration, parseISO } from 'date-fns';
 
@@ -85,35 +85,3 @@ export type PeriodeKortData = {
     tom: string;
     beløp: number;
 };
-
-type Periode = { fom: string; tom: string };
-
-const overlapper = (a: Periode, b: Periode): boolean => a.fom <= b.tom && a.tom >= b.fom;
-
-/**
- * Finner periodene i kravgrunnlaget som ikke berøres av noen endring, til boksen «Ingen endringer».
- *
- * Fakta gjelder fortsatt det gamle kravgrunnlaget mens modalen vises, så periodene sammenlignes
- * med endringene i det nye. En periode regnes som endret hvis den overlapper med den nye
- * perioden eller med `gammelPeriode`. Overlapp med `gammelPeriode` trengs fordi fakta
- * fortsatt har de gamle datoene for perioder som er flyttet eller forkortet.
- */
-export const hentUendredePerioder = (
-    perioder: FaktaPeriode[],
-    endringer: Array<Periode & { gammelPeriode?: Periode }>
-): PeriodeKortData[] =>
-    perioder
-        .filter(
-            periode =>
-                !endringer.some(
-                    endring =>
-                        overlapper(periode, endring) ||
-                        (endring.gammelPeriode !== undefined &&
-                            overlapper(periode, endring.gammelPeriode))
-                )
-        )
-        .map(periode => ({
-            fom: periode.fom,
-            tom: periode.tom,
-            beløp: periode.feilutbetaltBeløp,
-        }));

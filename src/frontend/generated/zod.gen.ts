@@ -344,6 +344,18 @@ export const zEndretPeriodeDto = zKravgrunnlagForskjellDto.and(
     })
 );
 
+export const zUendretPeriodeDto = zKravgrunnlagForskjellDto.and(
+    z.object({
+        fom: z.iso.date().readonly(),
+        tom: z.iso.date().readonly(),
+        beløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('UendretPeriodeDto'),
+    })
+);
+
 export const zEndretKravgrunnlag = z.object({
     gammeltBeløp: z
         .int()
@@ -355,7 +367,9 @@ export const zEndretKravgrunnlag = z.object({
         .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     gammelPeriode: zDatoperiode,
     nyPeriode: zDatoperiode,
-    endringer: z.array(z.union([zEndretPeriodeDto, zFjernetPeriodeDto, zNyPeriodeDto])),
+    endringer: z.array(
+        z.union([zEndretPeriodeDto, zFjernetPeriodeDto, zNyPeriodeDto, zUendretPeriodeDto])
+    ),
 });
 
 export const zSchemaEnum = z.enum([
@@ -2128,6 +2142,16 @@ export const zNyPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
     })
 );
 
+export const zUendretPeriodeDtoWritable = zKravgrunnlagForskjellDto.and(
+    z.object({
+        beløp: z
+            .int()
+            .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+            .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+        type: z.literal('UendretPeriodeDtoWritable'),
+    })
+);
+
 export const zEndretKravgrunnlagWritable = z.object({
     gammeltBeløp: z
         .int()
@@ -2140,7 +2164,12 @@ export const zEndretKravgrunnlagWritable = z.object({
     gammelPeriode: zDatoperiode,
     nyPeriode: zDatoperiode,
     endringer: z.array(
-        z.union([zEndretPeriodeDtoWritable, zFjernetPeriodeDtoWritable, zNyPeriodeDtoWritable])
+        z.union([
+            zEndretPeriodeDtoWritable,
+            zFjernetPeriodeDtoWritable,
+            zNyPeriodeDtoWritable,
+            zUendretPeriodeDtoWritable,
+        ])
     ),
 });
 
