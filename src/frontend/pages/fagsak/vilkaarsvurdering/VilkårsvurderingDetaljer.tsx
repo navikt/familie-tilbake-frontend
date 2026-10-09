@@ -31,7 +31,7 @@ import { VilkårsvurderingSkjema } from './skjema/VilkårsvurderingSkjema';
 import { SlåSammen } from './slå-sammen-periode/SlåSammen';
 import { TidligereVurderingModal } from './TidligereVurderingModal';
 import { UlagretEndringerVakt } from './UlagretEndringerVakt';
-import { erPeriodeVurdert, harBlittUnder4xRettsgebyr } from './utils';
+import { erPeriodeVurdert, harBlittUnder4xRettsgebyr, utledVurdering } from './utils';
 import { useVilkårsvurderingLesedata } from './VilkårsvurderingLesedataContext';
 
 type InnholdProps = {
@@ -39,6 +39,7 @@ type InnholdProps = {
     valgtVilkårsperiode: Vilkaarsperiode;
     vilkårsperioder: Vilkaarsperiode[];
     hentVilkårsvurdering: () => void;
+    oppdaterPeriodevurdering: (periodeId: string, vurdering: Vilkårsperiode['vurdering']) => void;
     tidligereVurderingHåndtert: boolean;
     setTidligereVurderingHåndtert: (håndtert: boolean) => void;
 };
@@ -50,6 +51,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
     valgtVilkårsperiode,
     vilkårsperioder,
     hentVilkårsvurdering,
+    oppdaterPeriodevurdering,
     tidligereVurderingHåndtert,
     setTidligereVurderingHåndtert,
 }: InnholdProps) => {
@@ -109,8 +111,12 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
                 }),
             },
             {
-                onSuccess: () => {
+                onSuccess: (lagretVilkårsvurdering: BehandlingLagreVilkaarsvurderingResponse) => {
                     methods.reset({ ...data, erVurdert: true });
+                    oppdaterPeriodevurdering(
+                        valgtPeriode.id,
+                        utledVurdering(lagretVilkårsvurdering.valg)
+                    );
                     etterLagring?.();
                 },
             }
@@ -125,6 +131,7 @@ const VilkårsvurderingDetaljerInnhold: FC<InnholdProps> = ({
 
     const startVurderingPåNytt = (): void => {
         setTidligereVurderingHåndtert(true);
+        oppdaterPeriodevurdering(valgtPeriode.id, 'IKKE_VURDERT');
         methods.reset(
             utledDefaultValues(
                 { ...valgtVilkårsperiode.vilkårsvurdering, valg: { vurdering: 'ikke_vurdert' } },
@@ -219,12 +226,14 @@ type Props = {
     valgtPeriode: Vilkårsperiode;
     vilkårsperioder: Vilkaarsperiode[];
     hentVilkårsvurdering: () => void;
+    oppdaterPeriodevurdering: (periodeId: string, vurdering: Vilkårsperiode['vurdering']) => void;
 };
 
 export const VilkårsvurderingDetaljer: FC<Props> = ({
     valgtPeriode,
     vilkårsperioder,
     hentVilkårsvurdering,
+    oppdaterPeriodevurdering,
 }: Props) => {
     const [tidligereVurderingHåndtert, setTidligereVurderingHåndtert] = useState(false);
     const valgtVilkårsperiode = vilkårsperioder.find(
@@ -243,6 +252,7 @@ export const VilkårsvurderingDetaljer: FC<Props> = ({
                     valgtVilkårsperiode={valgtVilkårsperiode}
                     vilkårsperioder={vilkårsperioder}
                     hentVilkårsvurdering={hentVilkårsvurdering}
+                    oppdaterPeriodevurdering={oppdaterPeriodevurdering}
                     tidligereVurderingHåndtert={tidligereVurderingHåndtert}
                     setTidligereVurderingHåndtert={setTidligereVurderingHåndtert}
                 />

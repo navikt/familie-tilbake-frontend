@@ -95,7 +95,11 @@ const lagVilkårsDetaljer = (
     simulertBeløp: number = 10000,
     erUnder4xRettsgebyr = false,
     vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
-    vilkårsvurdering?: Partial<Vilkaarsvurdering>
+    vilkårsvurdering?: Partial<Vilkaarsvurdering>,
+    oppdaterPeriodevurdering: (
+        periodeId: string,
+        vurdering: Vilkårsperiode['vurdering']
+    ) => void = (): void => undefined
 ): ReactElement => (
     <QueryClientProvider client={createTestQueryClient()}>
         <TestBehandlingProvider>
@@ -108,6 +112,7 @@ const lagVilkårsDetaljer = (
                     valgtPeriode={valgtPeriode(vurdering)}
                     vilkårsperioder={[lagVilkårsperiode(simulertBeløp, vilkårsvurdering)]}
                     hentVilkårsvurdering={(): void => undefined}
+                    oppdaterPeriodevurdering={oppdaterPeriodevurdering}
                 />
             </VilkårsvurderingLesedataProvider>
         </TestBehandlingProvider>
@@ -118,9 +123,18 @@ const renderVilkårsDetaljer = (
     simulertBeløp: number = 10000,
     erUnder4xRettsgebyr = false,
     vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
-    vilkårsvurdering?: Partial<Vilkaarsvurdering>
+    vilkårsvurdering?: Partial<Vilkaarsvurdering>,
+    oppdaterPeriodevurdering?: (periodeId: string, vurdering: Vilkårsperiode['vurdering']) => void
 ): void => {
-    render(lagVilkårsDetaljer(simulertBeløp, erUnder4xRettsgebyr, vurdering, vilkårsvurdering));
+    render(
+        lagVilkårsDetaljer(
+            simulertBeløp,
+            erUnder4xRettsgebyr,
+            vurdering,
+            vilkårsvurdering,
+            oppdaterPeriodevurdering
+        )
+    );
 };
 
 const begrunnelseGodTro = async (): Promise<HTMLElement> =>
@@ -320,6 +334,30 @@ describe('VilkårsvurderingDetaljer', () => {
                 name: 'Det finnes en tidligere vurdering for denne perioden',
             })
         ).toBeInTheDocument();
+    });
+
+    test('marker valgt periode som ikke vurdert når ny vurdering startes', async () => {
+        const oppdaterPeriodevurdering = vi.fn();
+        renderVilkårsDetaljer(
+            10000,
+            false,
+            'FORSETT',
+            {
+                valg: {
+                    vurdering: 'forårsaket_av_mottaker',
+                    aktsomhet: {
+                        aktsomhet: 'forsettlig',
+                        begrunnelse: 'Mottaker handlet med forsett',
+                    },
+                },
+                tilbakeført: 'NyttKravgrunnlag',
+            },
+            oppdaterPeriodevurdering
+        );
+
+        await user.click(screen.getByRole('button', { name: 'Start vurdering på nytt' }));
+
+        expect(oppdaterPeriodevurdering).toHaveBeenCalledWith('1', 'IKKE_VURDERT');
     });
 
     test('viser ikke modal for ny periode uten tidligere vurdering', () => {
@@ -672,6 +710,7 @@ describe('VilkårsvurderingDetaljer', () => {
                                 valgtPeriode={valgtPeriode()}
                                 vilkårsperioder={[vilkårsperiode]}
                                 hentVilkårsvurdering={(): void => undefined}
+                                oppdaterPeriodevurdering={(): void => undefined}
                             />
                         </VilkårsvurderingLesedataProvider>
                     </TestBehandlingProvider>
@@ -1288,6 +1327,7 @@ describe('Registrering av ulagrede endringer', () => {
                             valgtPeriode={valgtPeriode()}
                             vilkårsperioder={[lagVilkårsperiode(10000)]}
                             hentVilkårsvurdering={(): void => undefined}
+                            oppdaterPeriodevurdering={(): void => undefined}
                         />
                     </VilkårsvurderingLesedataProvider>
                 </TestBehandlingProvider>
