@@ -1,8 +1,8 @@
 ---
 name: aksel-component
 description: Scaffold en responsiv React-komponent med Aksel Design System og riktige spacing-tokens
+disable-model-invocation: true
 ---
-
 Du lager en ny React-komponent med Navs Aksel Design System.
 
 ## Viktige regler
