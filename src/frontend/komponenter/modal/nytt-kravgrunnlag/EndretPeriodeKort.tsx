@@ -50,7 +50,7 @@ export const EndretPeriodeKort: FC<Props> = ({ periode }: Props) => {
                 className="bg-ax-bg-default"
             >
                 <VStack gap="space-8" className="min-w-0">
-                    <BodyShort weight="semibold">Før</BodyShort>
+                    <BodyShort weight="semibold">Før endring</BodyShort>
                     <BodyShort>
                         {formatterDatostring(periode.gammelPeriode.fom)}–
                         {formatterDatostring(periode.gammelPeriode.tom)}

@@ -525,7 +525,11 @@ const PeriodeRad: FC<PeriodeRadProps> = ({
                 {beløpsendring ? (
                     <Tag
                         variant="moderate"
-                        data-color="success"
+                        data-color={
+                            beløpsendring.nyttBeløp < beløpsendring.gammeltBeløp
+                                ? 'danger'
+                                : 'success'
+                        }
                         size="small"
                         icon={
                             beløpsendring.nyttBeløp < beløpsendring.gammeltBeløp ? (

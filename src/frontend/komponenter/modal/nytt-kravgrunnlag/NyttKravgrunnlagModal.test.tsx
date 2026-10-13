@@ -272,7 +272,7 @@ describe('NyttKravgrunnlagModal', () => {
         expect(hentOverskrift('Endringer')).toBeInTheDocument();
         expect(screen.getByText('10.08.2026–10.08.2026')).toBeInTheDocument();
         expect(screen.getByText('10.08.2026–24.08.2026')).toBeInTheDocument();
-        expect(screen.getByText('Før')).toBeInTheDocument();
+        expect(screen.getByText('Før endring')).toBeInTheDocument();
         expect(screen.getByText('Etter endring')).toBeInTheDocument();
         expect(screen.getByText('5 000 kr')).toBeInTheDocument();
         expect(screen.getByText('20 000 kr')).toBeInTheDocument();
@@ -388,7 +388,7 @@ describe('NyttKravgrunnlagModal', () => {
             );
 
             const boks = await finnBoks('Endringer');
-            expect(boks.getByText('Før')).toBeInTheDocument();
+            expect(boks.getByText('Før endring')).toBeInTheDocument();
             expect(boks.getByText('Etter endring')).toBeInTheDocument();
             expect(boks.getByText('15 000 kr')).toBeInTheDocument();
             expect(boks.getByText(varighetsendring)).toHaveAttribute(fargeattributt, farge);

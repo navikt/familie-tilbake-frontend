@@ -173,11 +173,21 @@ describe('Fakta om feilutbetaling', () => {
         });
 
         test.each([
-            { gammeltBeløp: 5900, nyttBeløp: 6900, ikonnavn: 'Beløpet er økt' },
-            { gammeltBeløp: 7900, nyttBeløp: 6900, ikonnavn: 'Beløpet er redusert' },
+            {
+                gammeltBeløp: 5900,
+                nyttBeløp: 6900,
+                ikonnavn: 'Beløpet er økt',
+                farge: 'success',
+            },
+            {
+                gammeltBeløp: 7900,
+                nyttBeløp: 6900,
+                ikonnavn: 'Beløpet er redusert',
+                farge: 'danger',
+            },
         ])(
             'Markerer endret beløp med tag og retningspil',
-            ({ gammeltBeløp, nyttBeløp, ikonnavn }) => {
+            ({ gammeltBeløp, nyttBeløp, ikonnavn, farge }) => {
                 vi.useFakeTimers();
 
                 try {
@@ -200,12 +210,12 @@ describe('Fakta om feilutbetaling', () => {
                         .getByText('6 900')
                         .closest('.aksel-tag');
 
-                    expect(markertBeløp).toHaveAttribute('data-color', 'success');
+                    expect(markertBeløp).toHaveAttribute('data-color', farge);
                     expect(within(periodeRad).getByTitle(ikonnavn)).toBeInTheDocument();
 
                     act(() => vi.advanceTimersByTime(5000));
 
-                    expect(markertBeløp).toHaveAttribute('data-color', 'success');
+                    expect(markertBeløp).toHaveAttribute('data-color', farge);
                     expect(within(periodeRad).getByTitle(ikonnavn)).toBeInTheDocument();
                 } finally {
                     vi.useRealTimers();
