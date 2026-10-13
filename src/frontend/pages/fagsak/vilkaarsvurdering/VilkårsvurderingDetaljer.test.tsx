@@ -96,10 +96,7 @@ const lagVilkårsDetaljer = (
     erUnder4xRettsgebyr = false,
     vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
     vilkårsvurdering?: Partial<Vilkaarsvurdering>,
-    oppdaterPeriodevurdering: (
-        periodeId: string,
-        vurdering: Vilkårsperiode['vurdering']
-    ) => void = (): void => undefined
+    markerStartetPåNytt: (periodeId: string) => void = (): void => undefined
 ): ReactElement => (
     <QueryClientProvider client={createTestQueryClient()}>
         <TestBehandlingProvider>
@@ -112,7 +109,7 @@ const lagVilkårsDetaljer = (
                     valgtPeriode={valgtPeriode(vurdering)}
                     vilkårsperioder={[lagVilkårsperiode(simulertBeløp, vilkårsvurdering)]}
                     hentVilkårsvurdering={(): void => undefined}
-                    oppdaterPeriodevurdering={oppdaterPeriodevurdering}
+                    markerStartetPåNytt={markerStartetPåNytt}
                 />
             </VilkårsvurderingLesedataProvider>
         </TestBehandlingProvider>
@@ -124,7 +121,7 @@ const renderVilkårsDetaljer = (
     erUnder4xRettsgebyr = false,
     vurdering: Vilkårsperiode['vurdering'] = 'FORSETT',
     vilkårsvurdering?: Partial<Vilkaarsvurdering>,
-    oppdaterPeriodevurdering?: (periodeId: string, vurdering: Vilkårsperiode['vurdering']) => void
+    markerStartetPåNytt?: (periodeId: string) => void
 ): void => {
     render(
         lagVilkårsDetaljer(
@@ -132,7 +129,7 @@ const renderVilkårsDetaljer = (
             erUnder4xRettsgebyr,
             vurdering,
             vilkårsvurdering,
-            oppdaterPeriodevurdering
+            markerStartetPåNytt
         )
     );
 };
@@ -337,7 +334,7 @@ describe('VilkårsvurderingDetaljer', () => {
     });
 
     test('marker valgt periode som ikke vurdert når ny vurdering startes', async () => {
-        const oppdaterPeriodevurdering = vi.fn();
+        const markerStartetPåNytt = vi.fn();
         renderVilkårsDetaljer(
             10000,
             false,
@@ -352,12 +349,12 @@ describe('VilkårsvurderingDetaljer', () => {
                 },
                 tilbakeført: 'NyttKravgrunnlag',
             },
-            oppdaterPeriodevurdering
+            markerStartetPåNytt
         );
 
         await user.click(screen.getByRole('button', { name: 'Start vurdering på nytt' }));
 
-        expect(oppdaterPeriodevurdering).toHaveBeenCalledWith('1', 'IKKE_VURDERT');
+        expect(markerStartetPåNytt).toHaveBeenCalledWith('1');
     });
 
     test('viser ikke modal for ny periode uten tidligere vurdering', () => {
@@ -710,7 +707,7 @@ describe('VilkårsvurderingDetaljer', () => {
                                 valgtPeriode={valgtPeriode()}
                                 vilkårsperioder={[vilkårsperiode]}
                                 hentVilkårsvurdering={(): void => undefined}
-                                oppdaterPeriodevurdering={(): void => undefined}
+                                markerStartetPåNytt={(): void => undefined}
                             />
                         </VilkårsvurderingLesedataProvider>
                     </TestBehandlingProvider>
@@ -1327,7 +1324,7 @@ describe('Registrering av ulagrede endringer', () => {
                             valgtPeriode={valgtPeriode()}
                             vilkårsperioder={[lagVilkårsperiode(10000)]}
                             hentVilkårsvurdering={(): void => undefined}
-                            oppdaterPeriodevurdering={(): void => undefined}
+                            markerStartetPåNytt={(): void => undefined}
                         />
                     </VilkårsvurderingLesedataProvider>
                 </TestBehandlingProvider>

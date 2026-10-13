@@ -1,10 +1,15 @@
 import type { FC } from 'react';
-import type { Vilkaar } from '@/generated-new';
-import type { Vilkårsperiode, Vurderingsstatus } from './typer';
+import type {
+    BehandlingLagreVilkaarsvurderingData,
+    BehandlingLagreVilkaarsvurderingResponse,
+    Vilkaar,
+} from '@/generated-new';
+import type { Options } from '@/generated-new/client';
+import type { Vilkårsperiode } from './typer';
 
 import { Heading, HStack, InlineMessage, VStack } from '@navikt/ds-react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -49,35 +54,21 @@ export const Vilkårsvurdering: FC = () => {
     const navigerTilNeste = useStegNavigering('FORESLÅ_VEDTAK');
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
-    const [lokalePeriodevurderinger, setLokalePeriodevurderinger] = useState<
-        Map<string, Vurderingsstatus>
-    >(() => new Map());
+    const [startetPåNytt, setStartetPåNytt] = useState<ReadonlySet<string>>(() => new Set());
 
     const { data: vilkår } = useSuspenseQuery(
         behandlingVilkaarsvurderingOptions({ path: { behandlingId } })
     );
 
-    const perioderFraServer = useMemo(() => mapTilVilkårsperioder(vilkår), [vilkår]);
     const perioder = useMemo(
         () =>
-            perioderFraServer.map(periode => ({
-                ...periode,
-                vurdering: lokalePeriodevurderinger.get(periode.id) ?? periode.vurdering,
-            })),
-        [lokalePeriodevurderinger, perioderFraServer]
+            mapTilVilkårsperioder(vilkår).map(periode =>
+                startetPåNytt.has(periode.id)
+                    ? { ...periode, vurdering: 'IKKE_VURDERT' as const }
+                    : periode
+            ),
+        [vilkår, startetPåNytt]
     );
-
-    useEffect(() => {
-        setLokalePeriodevurderinger(lokale => {
-            const oppdatert = new Map(lokale);
-            for (const periode of perioderFraServer) {
-                if (oppdatert.get(periode.id) === periode.vurdering) {
-                    oppdatert.delete(periode.id);
-                }
-            }
-            return oppdatert;
-        });
-    }, [perioderFraServer]);
 
     const { valgtPeriode, setValgtPeriodeId } = usePeriodeIUrl(perioder);
 
@@ -90,16 +81,31 @@ export const Vilkårsvurdering: FC = () => {
         });
     };
 
-    const oppdaterPeriodevurdering = (periodeId: string, vurdering: Vurderingsstatus): void => {
-        setLokalePeriodevurderinger(perioder => new Map(perioder).set(periodeId, vurdering));
+    const markerStartetPåNytt = (periodeId: string): void => {
+        setStartetPåNytt(forrige => new Set(forrige).add(periodeId));
     };
 
     queryClient.setMutationDefaults(LAGRE_VILKÅRSVURDERING_MUTATION_KEY, {
         ...behandlingLagreVilkaarsvurderingMutation(),
-        onSuccess: async (): Promise<void> => {
-            invalidererVilkårsvurderingOgResultat();
-            await queryClient.invalidateQueries({
-                queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+        onSuccess: async (
+            _: BehandlingLagreVilkaarsvurderingResponse,
+            { path: { periodeId } }: Options<BehandlingLagreVilkaarsvurderingData>
+        ): Promise<void> => {
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: behandlingVilkaarsvurderingQueryKey({ path: { behandlingId } }),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: behandlingHentVedtaksresultatQueryKey({ path: { behandlingId } }),
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: hentBehandlingQueryKey({ path: { behandlingId } }),
+                }),
+            ]);
+            setStartetPåNytt(forrige => {
+                const neste = new Set(forrige);
+                neste.delete(periodeId);
+                return neste;
             });
         },
     });
@@ -152,7 +158,7 @@ export const Vilkårsvurdering: FC = () => {
                             valgtPeriode={valgtPeriode}
                             vilkårsperioder={vilkår.vilkårsperioder}
                             hentVilkårsvurdering={invalidererVilkårsvurderingOgResultat}
-                            oppdaterPeriodevurdering={oppdaterPeriodevurdering}
+                            markerStartetPåNytt={markerStartetPåNytt}
                         />
                     </VilkårsvurderingLesedataProvider>
                 )}
