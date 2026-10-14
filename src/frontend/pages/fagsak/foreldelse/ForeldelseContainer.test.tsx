@@ -154,7 +154,9 @@ const førstePeriodeValgt = (): HTMLElement => screen.getByText('01.01.2020–31
 const andrePeriodeValgt = (): HTMLElement => screen.getByText('01.05.2020–30.06.2020');
 
 const oppdagelsesdato = (): HTMLElement =>
-    screen.getByLabelText('Dato for når feilutbetaling ble oppdaget');
+    screen.getByRole('textbox', {
+        name: 'Når fikk Nav kunnskap om feilutbetalingen, eller når burde Nav ha fått slik kunnskap?',
+    });
 const foreldelsesfrist = (): HTMLElement =>
     screen.getByRole('textbox', { name: 'Foreldelsesfrist' });
 

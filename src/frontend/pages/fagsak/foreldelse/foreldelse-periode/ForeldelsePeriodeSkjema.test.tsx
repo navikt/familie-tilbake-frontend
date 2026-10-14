@@ -47,7 +47,8 @@ const foreldelsesfristDato = (): HTMLElement =>
     screen.getByRole('textbox', {
         name: 'Foreldelsesfrist',
     });
-const oppdagelsesdatoTekst = 'Dato for når feilutbetaling ble oppdaget';
+const oppdagelsesdatoTekst =
+    'Når fikk Nav kunnskap om feilutbetalingen, eller når burde Nav ha fått slik kunnskap?';
 const oppdagelsesdato = (): HTMLElement =>
     screen.getByRole('textbox', {
         name: oppdagelsesdatoTekst,

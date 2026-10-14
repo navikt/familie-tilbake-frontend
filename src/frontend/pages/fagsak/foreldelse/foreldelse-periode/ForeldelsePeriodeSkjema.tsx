@@ -1,20 +1,9 @@
 import type { ForeldelsesvurderingstypeEnum } from '@/generated';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
-import { ExternalLinkIcon } from '@navikt/aksel-icons';
-import {
-    BodyLong,
-    Button,
-    Heading,
-    HStack,
-    Link,
-    Radio,
-    RadioGroup,
-    Textarea,
-    VStack,
-} from '@navikt/ds-react';
+import { Button, Heading, HStack, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
 import { differenceInMonths, parseISO } from 'date-fns';
-import { type FC, type ReactNode, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
@@ -71,53 +60,6 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
     const ugyldigOppdagelsesdatoValgt =
         skjema.visFeilmeldinger &&
         skjema.felter.oppdagelsesdato.valideringsstatus === Valideringsstatus.Feil;
-
-    const lagForeldelsesfristHjelpetekst = (): ReactNode => {
-        if (skjema.felter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST') {
-            return (
-                <BodyLong size="small">
-                    Skatteetaten trenger tid for fristavbrytende tiltak. Husk å legge til nok tid
-                    ved fastsettelse av frist.{' '}
-                    {!erNyModell && (
-                        <>
-                            Se rutine for&nbsp;
-                            <Link
-                                href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
-                                target="_blank"
-                            >
-                                foreldelse av tilbakebetalingskrav
-                                <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
-                            </Link>
-                        </>
-                    )}
-                </BodyLong>
-            );
-        } else if (skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET') {
-            return (
-                <BodyLong size="small" className="flex flex-col gap-2">
-                    <span>
-                        Skatteetaten trenger tid for fristavbrytende tiltak. Husk å legge til nok
-                        tid ved fastsettelse av frist.
-                    </span>
-                    Sett foreldelsesfristen minimum 6 uker frem i tid.{' '}
-                    {!erNyModell && (
-                        <>
-                            Se rutine for&nbsp;
-                            <Link
-                                href="https://navno.sharepoint.com/sites/TeamFamiliekopi/Shared%20Documents/Forms/AllItems.aspx?FolderCTID=0x012000AFBC2229208A6546861937F2075F148E&id=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving%2FForeldelse%20av%20tilbakebetalingskrav%2Epdf&parent=%2Fsites%2FTeamFamiliekopi%2FShared%20Documents%2FBarnetrygd%20%2D%20feilutbetaling%20og%20tilbakekreving%2FRutiner%20for%20tilbakekreving"
-                                target="_blank"
-                            >
-                                foreldelse av tilbakebetalingskrav
-                                <ExternalLinkIcon aria-label="Gå til rutine for foreldelse" />
-                            </Link>
-                        </>
-                    )}
-                </BodyLong>
-            );
-        } else {
-            return null;
-        }
-    };
 
     const kanSplittePeriode = (periode: ForeldelsePeriodeSkjemeData): boolean => {
         const fom = parseISO(periode.periode.fom);
@@ -191,8 +133,8 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                     {erMedTilleggsfrist && (
                         <Datovelger
                             felt={skjema.felter.oppdagelsesdato}
-                            label="Dato for når feilutbetaling ble oppdaget"
-                            description="Datoen kommer i vedtaksbrevet"
+                            label="Når fikk Nav kunnskap om feilutbetalingen, eller når burde Nav ha fått slik kunnskap?"
+                            description="Datoen brukes til å vurdere når tilleggsfristen begynner å løpe og kommer i vedtaksbrevet"
                             visFeilmeldinger={ugyldigOppdagelsesdatoValgt}
                             readOnly={erLesevisning}
                             kanKunVelgeFortid
@@ -202,23 +144,20 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                         />
                     )}
                     {(erForeldet || erMedTilleggsfrist) && (
-                        <>
-                            <Datovelger
-                                felt={skjema.felter.foreldelsesfrist}
-                                label="Foreldelsesfrist"
-                                description={
-                                    !erMedTilleggsfrist
-                                        ? 'Datoen kommer i vedtaksbrevet'
-                                        : 'Vil ikke vises i vedtaksbrevet.'
-                                }
-                                visFeilmeldinger={ugyldigForeldelsesfristValgt}
-                                readOnly={erLesevisning}
-                                settIkkePersistertKomponent={(): void =>
-                                    setIkkePersistertKomponent('foreldelse')
-                                }
-                            />
-                            {!erLesevisning && <>{lagForeldelsesfristHjelpetekst()}</>}
-                        </>
+                        <Datovelger
+                            felt={skjema.felter.foreldelsesfrist}
+                            label="Foreldelsesfrist"
+                            description={
+                                erMedTilleggsfrist
+                                    ? 'Sett fristen ett år frem i tid fra det tidspunktet Nav fikk eller burde fått kunnskap om feilutbetalingen'
+                                    : 'Foreldelsesfristen settes minimum seks uker frem i tid fra vedtakstidspunktet. Dette skyldes at Skatteetaten må ha tid for å sette igang fristavbrytende tiltak'
+                            }
+                            visFeilmeldinger={ugyldigForeldelsesfristValgt}
+                            readOnly={erLesevisning}
+                            settIkkePersistertKomponent={(): void =>
+                                setIkkePersistertKomponent('foreldelse')
+                            }
+                        />
                     )}
                 </>
 
