@@ -35,7 +35,7 @@ describe('Faktaboks', () => {
         renderFaktaboks({}, 'BARNETRYGD');
         expect(
             screen.getByRole('heading', {
-                name: `Tilbakekreving av ${'BARNETRYGD'.toLocaleLowerCase()}`,
+                name: 'Tilbakekreving av barnetrygd',
             })
         ).toBeInTheDocument();
     });

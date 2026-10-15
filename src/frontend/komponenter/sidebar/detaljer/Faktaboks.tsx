@@ -30,12 +30,16 @@ export const Faktaboks: FC = () => {
     return (
         <section
             aria-label="Tilbakekrevingsinformasjon"
-            className="flex flex-col gap-2 rounded-xl border border-ax-border-brand-blue-subtle p-4"
+            className="flex flex-col gap-2 rounded-xl border border-ax-border-brand-blue-subtle py-4 px-2"
         >
-            <Heading level="3" size="xsmall" className="text-ax-text-neutral-subtle">
+            <Heading
+                level="3"
+                size="xsmall"
+                className="text-ax-text-neutral-subtle hyphens-auto wrap-break-word"
+            >
                 {`Tilbakekreving av ${ytelsestype.toLocaleLowerCase()}`}
             </Heading>
-            <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
+            <dl className="grid grid-cols-[136px_minmax(0,1fr)] ax-xl:grid-cols-[152px_minmax(0,1fr)] gap-y-2 gap-x-4 text-ax-text-neutral">
                 {behandling.behandlingsårsakstype && (
                     <>
                         <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
@@ -78,7 +82,7 @@ export const Faktaboks: FC = () => {
                     <Buildings3Icon {...ICON_PROPS} />
                     Enhet
                 </dt>
-                <dd className="text-ax-medium items-start flex">
+                <dd className="text-ax-medium min-w-0 hyphens-auto wrap-break-word">
                     {behandling.enhetskode} {behandling.enhetsnavn}
                 </dd>
             </dl>
