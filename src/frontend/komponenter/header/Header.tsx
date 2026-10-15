@@ -1,6 +1,7 @@
 import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { InnloggetRolleEnum } from '@/generated';
+import type { PersonvernState } from '@/pages/Personvern';
 
 import {
     ExternalLinkIcon,
@@ -13,7 +14,7 @@ import {
 import { Dropdown, HStack, InternalHeader, Spacer, Tag } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import { hentAInntektUrl, hentBrukerlenkeBaseUrl } from '@/api/brukerlenker';
 import { useHttp } from '@/api/http/HttpProvider';
@@ -38,6 +39,7 @@ const rolleMapper: Record<
 };
 
 export const Header: FC = () => {
+    const routeLocation = useLocation();
     const { innloggetSaksbehandler } = useApp();
     const { data: brukerlenker } = useQuery({
         queryKey: ['hentBrukerlenkeBaseUrl'],
@@ -48,6 +50,9 @@ export const Header: FC = () => {
     const { fagsystem, tilbakekrevingSakId, personIdent, fagsakBehandlingUrl } = useFagsakStore();
 
     const { request } = useHttp();
+    const behandlingssti = /^\/fagsystem\/[^/]+\/fagsak\/[^/]+\/behandling\/[^/]+/.exec(
+        routeLocation.pathname
+    )?.[0];
     const { data: personligAInntektUrl } = useQuery({
         queryKey: ['hentAInntektUrl', personIdent],
         queryFn: () => hentAInntektUrl(request, personIdent, tilbakekrevingSakId, behandlingId),
@@ -232,6 +237,10 @@ export const Header: FC = () => {
                         <Dropdown.Menu.List.Item
                             as={Link}
                             to="/personvern"
+                            state={
+                                behandlingssti &&
+                                ({ returnTo: behandlingssti } satisfies PersonvernState)
+                            }
                             onClick={(): void =>
                                 sporHendelse(Hendelser.NAVIGERE, {
                                     lenketekst: 'Personvern',

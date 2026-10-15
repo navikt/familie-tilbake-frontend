@@ -1,13 +1,35 @@
 import type { FC } from 'react';
 
-import { BodyLong, Heading, Link, Page, VStack } from '@navikt/ds-react';
+import { ArrowLeftIcon } from '@navikt/aksel-icons';
+import { BodyLong, Button, Heading, Link, Page, VStack } from '@navikt/ds-react';
+import { Link as ReactRouterLink, useLocation } from 'react-router';
+import { z } from 'zod';
+
+const personvernStateSchema = z.object({
+    returnTo: z.string().regex(/^\/fagsystem\/[^/]+\/fagsak\/[^/]+\/behandling\/[^/]+$/),
+});
+
+export type PersonvernState = z.infer<typeof personvernStateSchema>;
 
 export const Personvern: FC = () => {
+    const location = useLocation();
+    const state = personvernStateSchema.safeParse(location.state);
+
     return (
         <div className="h-[calc(100vh-48px)] overflow-y-auto">
             <div className="bg-ax-bg-brand-blue-soft py-8">
                 <Page.Block width="text" gutters>
                     <VStack gap="space-16">
+                        <Button
+                            as={ReactRouterLink}
+                            to={state.success ? state.data.returnTo : '/'}
+                            role="link"
+                            variant="tertiary"
+                            icon={<ArrowLeftIcon aria-hidden />}
+                            className="self-start"
+                        >
+                            {state.success ? 'Tilbake til behandlingen' : 'Til forsiden'}
+                        </Button>
                         <Heading size="xlarge">Personvern</Heading>
                         <BodyLong className="font-semibold">
                             Slik håndterer vi personvern og sikkerhet i Tilbakeløsningen
