@@ -35,8 +35,24 @@ describe('Faktaboks', () => {
         renderFaktaboks({}, 'BARNETRYGD');
         expect(
             screen.getByRole('heading', {
-                name: `Tilbakekreving av ${'BARNETRYGD'.toLocaleLowerCase()}`,
+                name: (navn: string) =>
+                    navn.replaceAll('\u00AD', '') === 'Tilbakekreving av barnetrygd',
             })
+        ).toBeInTheDocument();
+    });
+
+    test('Deler lange ytelsesnavn på riktig sted', () => {
+        renderFaktaboks(
+            { enhetskode: '4491', enhetsnavn: 'Nav arbeid og ytelser arbeidsavklaringspenger' },
+            'ARBEIDSAVKLARINGSPENGER'
+        );
+        expect(
+            screen.getByRole('heading', {
+                name: 'Tilbakekreving av arbeidsavklarings\u00ADpenger',
+            })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('4491 Nav arbeid og ytelser arbeids\u00ADavklarings\u00ADpenger')
         ).toBeInTheDocument();
     });
 
