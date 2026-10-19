@@ -5,6 +5,8 @@ import { createRoot } from 'react-dom/client';
 import './api/http/configureHeyApi';
 import { App } from './App';
 import { initGrafanaFaro } from './utils/grafanaFaro';
+import { erOvervåkingsUrl } from './utils/overvaking';
+import { lagBegrensetSentryTransport } from './utils/sentryTransport';
 import { loadTracker } from './utils/sporing';
 import { configureZod } from './utils/zodConfig';
 
@@ -16,7 +18,12 @@ if (process.env.NODE_ENV !== 'development') {
     Sentry.init({
         dsn: 'https://e88ebf3bc63346d6a4c2baba674afed3@sentry.gc.nav.no/83',
         environment,
-        integrations: [Sentry.browserTracingIntegration()],
+        integrations: [
+            Sentry.browserTracingIntegration({
+                shouldCreateSpanForRequest: (url: string) => !erOvervåkingsUrl(url),
+            }),
+        ],
+        transport: lagBegrensetSentryTransport,
         tracesSampleRate: 0.2,
     });
 }

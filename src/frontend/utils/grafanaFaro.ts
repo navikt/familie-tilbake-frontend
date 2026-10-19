@@ -1,5 +1,7 @@
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 
+import { overvåkingsUrler } from './overvaking';
+
 enum TelemetryCollectorURL {
     Prod = 'https://telemetry.nav.no/collect',
     Dev = 'https://telemetry.ekstern.dev.nav.no/collect',
@@ -27,10 +29,16 @@ const getTelemetryCollectorURL = (): TelemetryCollectorURL => {
 };
 
 export function initGrafanaFaro(): void {
+    // Ressursmålingen i Faro bruker den globale instansen, også når isolate er satt.
     (erDev() || erProd()) &&
         initializeFaro({
-            isolate: true,
             url: getTelemetryCollectorURL(),
+            ignoreUrls: overvåkingsUrler,
+            batching: {
+                enabled: true,
+                sendTimeout: 10_000,
+                itemLimit: 100,
+            },
             app: {
                 name: 'familie-tilbake-frontend',
             },
