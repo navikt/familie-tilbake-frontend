@@ -61,10 +61,10 @@ pnpm install
 ### 2. Sett opp miljøvariabler
 
 ```bash
-sh hent-og-lagre-miljøvariabler.sh
+bash hent-og-lagre-miljøvariabler.sh
 ```
 
-> Krever at du er pålogget naisdevice og innlogget med `gcloud auth login`.
+Skriptet henter lokal Entra ID-konfigurasjon fra [localauth](https://github.com/navikt/localauth) uten å hente eller lagre reelle secrets. Du må være på NAV-nettverket for å nå tjenesten. Localauth deployes separat til dev-gcp fra `.nais/localauth.yaml` ved å kjøre GitHub Actions-workflowen **Deploy localauth til dev** manuelt. Den deployes ikke ved vanlige frontend-endringer.
 
 ### 3. Start Docker-tjenester
 
@@ -84,17 +84,17 @@ Bundler backend (esbuild → `node_dist/server.js`) og starter Express-serveren 
 
 ### 5. Start backend-API
 
-Applikasjonen krever at [familie-tilbake](https://github.com/navikt/familie-tilbake) kjører lokalt. Start med `LauncherLocalPostgres`. For testdata, se [familie-tilbake-e2e](https://github.com/navikt/familie-tilbake-e2e).
+Som standard går lokal frontend mot dev-backend. For å bruke backend lokalt i stedet, endre `ENV` til `local` og `TILBAKE_SCOPE` til `api://dev-gcp.tilbake.tilbakekreving-backend-lokal/.default` i `.env`. Start da [familie-tilbake](https://github.com/navikt/familie-tilbake) lokalt med `LauncherLocalPostgres`. For testdata, se [familie-tilbake-e2e](https://github.com/navikt/familie-tilbake-e2e).
 
 ## Miljøvariabler
 
-Miljøvariabler genereres automatisk via `hent-og-lagre-miljøvariabler.sh` og lagres i `.env`.
+Lokal innloggingskonfigurasjon genereres fra localauth via `hent-og-lagre-miljøvariabler.sh` og lagres i `.login.env`. Øvrige lokale innstillinger lagres i `.env`. Ingen reelle Entra ID-secrets lastes ned.
 
-For å kjøre mot backend i preprod, legg til følgende i `.env`:
+Skriptet setter dev-backend som standard. For å kjøre mot backend lokalt, bruk:
 
 ```env
-ENV=lokalt-mot-preprod
-TILBAKE_SCOPE=api://dev-gcp.tilbake.familie-tilbake/.default
+ENV=local
+TILBAKE_SCOPE=api://dev-gcp.tilbake.tilbakekreving-backend-lokal/.default
 ```
 
 ## Scripts

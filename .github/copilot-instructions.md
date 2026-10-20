@@ -247,7 +247,7 @@ Komponent re-renderer
 - **Local**: Mock backend eller proxy til preprod
 - **Dev**: GCP dev-cluster, preprod backend
 - **Prod**: GCP prod-cluster, prod backend
-- Miljøvariabler lastes via `hent-og-lagre-miljøvariabler.sh` (krever gcloud auth)
+- Lokal Entra ID-konfigurasjon lastes fra localauth via `hent-og-lagre-miljøvariabler.sh`; lokale secrets skal ikke hentes fra Kubernetes.
 
 ### Relaterte tjenester
 - **Backend API**: [familie-tilbake](https://github.com/navikt/familie-tilbake)
