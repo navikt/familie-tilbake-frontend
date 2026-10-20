@@ -150,7 +150,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                             description={
                                 erMedTilleggsfrist
                                     ? 'Sett fristen ett år frem i tid fra det tidspunktet Nav fikk eller burde fått kunnskap om feilutbetalingen'
-                                    : 'Foreldelsesfristen settes ni uker frem i tid fra vedtakstidspunktet. Dette skyldes at Skatteetaten må ha tid for å sette igang fristavbrytende tiltak'
+                                    : 'Foreldelsesfristen settes minimum ni uker frem i tid fra vedtakstidspunktet. Dette skyldes at Skatteetaten må ha tid for å sette igang fristavbrytende tiltak'
                             }
                             visFeilmeldinger={ugyldigForeldelsesfristValgt}
                             readOnly={erLesevisning}
