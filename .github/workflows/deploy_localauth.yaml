@@ -1,0 +1,25 @@
+name: Deploy localauth til dev
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-localauth-dev
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy localauth til dev-gcp
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Deploy localauth
+        uses: nais/deploy/actions/deploy@d003bddf74ce5b96fa3056ae60bd4b9b3bbc89ef # v3
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/localauth.yaml

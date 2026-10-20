@@ -58,12 +58,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Deploy localauth til dev-gcp
-        uses: nais/deploy/actions/deploy@v3
-        env:
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/localauth.yaml
-
       - name: Deploy til dev-gcp team namespace
         uses: nais/deploy/actions/deploy@v3
         env:
