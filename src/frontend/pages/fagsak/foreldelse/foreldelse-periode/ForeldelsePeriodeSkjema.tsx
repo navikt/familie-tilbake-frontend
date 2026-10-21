@@ -18,13 +18,9 @@ import { SplittPeriode } from './splitt-periode/SplittPeriode';
 
 type Props = {
     periode: ForeldelsePeriodeSkjemeData;
-    erAllePeriodeneAutomatiskVurdert: boolean;
 };
 
-export const ForeldelsePeriodeSkjema: FC<Props> = ({
-    periode,
-    erAllePeriodeneAutomatiskVurdert,
-}: Props) => {
+export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
     const { erNyModell } = useBehandling();
     const { erAutoutført, oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
@@ -36,20 +32,19 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({
     // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
-        skjema.felter.foreldelsesvurderingstype.onChange(
-            periode?.foreldelsesvurderingstype ||
-                (erAllePeriodeneAutomatiskVurdert ? 'AUTOMATISK_VURDERT_IKKE_FORELDET' : '')
-        );
+        skjema.felter.foreldelsesvurderingstype.onChange(periode?.foreldelsesvurderingstype || '');
         skjema.felter.foreldelsesfrist.onChange(
             periode?.foreldelsesfrist ? isoStringTilDate(periode.foreldelsesfrist) : undefined
         );
         skjema.felter.oppdagelsesdato.onChange(
             periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
         );
-    }, [periode, erAllePeriodeneAutomatiskVurdert]);
+    }, [periode]);
 
     const erForeldet = skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET';
     const erMedTilleggsfrist = skjema.felter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST';
+    const erAutomatiskVurdert =
+        periode.foreldelsesvurderingstype === 'AUTOMATISK_VURDERT_IKKE_FORELDET';
 
     const ugyldigVurderingValgt =
         skjema.visFeilmeldinger &&
@@ -105,7 +100,7 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({
                         setIkkePersistertKomponent('foreldelse');
                     }}
                 >
-                    {erAllePeriodeneAutomatiskVurdert && (
+                    {erAutomatiskVurdert && (
                         <Radio
                             key="AUTOMATISK_VURDERT_IKKE_FORELDET"
                             name="foreldet"

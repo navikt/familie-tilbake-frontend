@@ -153,12 +153,7 @@ export const ForeldelseContainer: FC = () => {
                         </LocalAlert>
                     )}
 
-                    {skjemaData.length > 0 && (
-                        <ForeldelsePerioder
-                            perioder={skjemaData}
-                            erAllePeriodeneAutomatiskVurdert={erAllePerioderAutomatiskVurdert}
-                        />
-                    )}
+                    {skjemaData.length > 0 && <ForeldelsePerioder perioder={skjemaData} />}
                 </>
             ) : (
                 <DataLastIkkeSuksess ressurser={[foreldelse]} />

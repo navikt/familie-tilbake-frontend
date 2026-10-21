@@ -17,16 +17,10 @@ vi.mock('../ForeldelseContext', () => {
     };
 });
 
-const renderForeldelsePeriodeSkjema = (
-    periode: ForeldelsePeriodeSkjemeData,
-    erAllePeriodeneAutomatiskVurdert = false
-): void => {
+const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): void => {
     render(
         <TestBehandlingProvider>
-            <ForeldelsePeriodeSkjema
-                periode={periode}
-                erAllePeriodeneAutomatiskVurdert={erAllePeriodeneAutomatiskVurdert}
-            />
+            <ForeldelsePeriodeSkjema periode={periode} />
         </TestBehandlingProvider>
     );
 };
@@ -136,18 +130,40 @@ describe('ForeldelsePeriodeSkjema', () => {
         expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
 
-    test('Velger automatisk vurdert ikke foreldet som standard', () => {
-        renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData(), true);
+    test('Viser og velger automatisk vurdert ikke foreldet for en automatisk vurdert periode', () => {
+        renderForeldelsePeriodeSkjema(
+            lagForeldelsePeriodeSkjemaData({
+                foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
+            })
+        );
 
         expect(automatiskIkkeForeldetRadio()).toBeChecked();
     });
 
     test('Oppdaterer valgt verdi når en annen vurdering velges', async () => {
-        renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData(), true);
+        renderForeldelsePeriodeSkjema(
+            lagForeldelsePeriodeSkjemaData({
+                foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
+            })
+        );
 
         expect(automatiskIkkeForeldetRadio()).toBeChecked();
         await user.click(ikkeForeldetRadio());
         expect(ikkeForeldetRadio()).toBeChecked();
+    });
+
+    test('Viser ikke automatisk vurdering for en manuelt vurdert periode', () => {
+        renderForeldelsePeriodeSkjema(
+            lagForeldelsePeriodeSkjemaData({
+                foreldelsesvurderingstype: 'IKKE_FORELDET',
+            })
+        );
+
+        expect(
+            within(erPeriodenForeldetRadioGruppe()).queryByRole('radio', {
+                name: 'Automatisk vurdert ikke foreldet',
+            })
+        ).not.toBeInTheDocument();
     });
 
     test('Åpner vurdert periode med tilleggsfrist', () => {
