@@ -41,9 +41,13 @@ const lagTidslinjeRader = (
 
 type Props = {
     perioder: ForeldelsePeriodeSkjemeData[];
+    erAllePeriodeneAutomatiskVurdert: boolean;
 };
 
-export const ForeldelsePerioder: FC<Props> = ({ perioder }: Props) => {
+export const ForeldelsePerioder: FC<Props> = ({
+    perioder,
+    erAllePeriodeneAutomatiskVurdert,
+}: Props) => {
     const { valgtPeriode, setValgtPeriode } = useForeldelse();
     const tidslinjeRader = lagTidslinjeRader(perioder, valgtPeriode);
 
@@ -56,10 +60,15 @@ export const ForeldelsePerioder: FC<Props> = ({ perioder }: Props) => {
         setValgtPeriode(foreldelsePeriode);
     };
 
-    return perioder && tidslinjeRader ? (
+    return tidslinjeRader ? (
         <>
             <TilbakeTidslinje rader={tidslinjeRader} onSelectPeriode={onSelectPeriode} />
-            {!!valgtPeriode && <ForeldelsePeriodeSkjema periode={valgtPeriode} />}
+            {!!valgtPeriode && (
+                <ForeldelsePeriodeSkjema
+                    periode={valgtPeriode}
+                    erAllePeriodeneAutomatiskVurdert={erAllePeriodeneAutomatiskVurdert}
+                />
+            )}
         </>
     ) : null;
 };

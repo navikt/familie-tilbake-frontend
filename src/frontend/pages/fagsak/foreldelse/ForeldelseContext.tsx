@@ -54,28 +54,6 @@ const utledValgtPeriode = (
     return undefined;
 };
 
-export type ForeldelseHook = {
-    foreldelse: Ressurs<ForeldelseResponse> | undefined;
-    erAutoutført: boolean | undefined;
-    stegErBehandlet: boolean;
-    skjemaData: ForeldelsePeriodeSkjemeData[];
-    oppdaterPeriode: (periode: ForeldelsePeriodeSkjemeData) => void;
-    valgtPeriode: ForeldelsePeriodeSkjemeData | undefined;
-    setValgtPeriode: (
-        valgtPeriode: ForeldelsePeriodeSkjemeData | undefined
-    ) => ForeldelsePeriodeSkjemeData | undefined;
-    allePerioderBehandlet: boolean;
-    harBekreftet: boolean;
-    navigerTilNeste: () => void;
-    navigerTilForrige: () => void;
-    senderInn: boolean;
-    sendInnSkjema: (naviger: () => void) => void;
-    onSplitPeriode: (
-        periode: ForeldelsePeriodeSkjemeData,
-        nyePerioder: ForeldelsePeriodeSkjemeData[]
-    ) => void;
-};
-
 const [ForeldelseProvider, useForeldelse] = createUseContext(() => {
     const visGlobalAlert = useVisGlobalAlert();
     const behandling = useBehandling();

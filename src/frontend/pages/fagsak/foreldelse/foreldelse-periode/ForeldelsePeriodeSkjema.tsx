@@ -18,9 +18,13 @@ import { SplittPeriode } from './splitt-periode/SplittPeriode';
 
 type Props = {
     periode: ForeldelsePeriodeSkjemeData;
+    erAllePeriodeneAutomatiskVurdert: boolean;
 };
 
-export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
+export const ForeldelsePeriodeSkjema: FC<Props> = ({
+    periode,
+    erAllePeriodeneAutomatiskVurdert,
+}: Props) => {
     const { erNyModell } = useBehandling();
     const { erAutoutført, oppdaterPeriode, onSplitPeriode } = useForeldelse();
     const { skjema, onBekreft } = useForeldelsePeriodeSkjema(
@@ -32,19 +36,17 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: Se på om dette er en bug eller tiltenkt funksjonalitet. Vurder useEffectEvent senere.
     useEffect(() => {
         skjema.felter.begrunnelse.onChange(periode?.begrunnelse || '');
-        const foreldelsesvurderingstype = periode?.foreldelsesvurderingstype;
-        const vurderingstype =
-            foreldelsesvurderingstype === 'AUTOMATISK_VURDERT_IKKE_FORELDET'
-                ? 'IKKE_FORELDET'
-                : foreldelsesvurderingstype || '';
-        skjema.felter.foreldelsesvurderingstype.onChange(vurderingstype);
+        skjema.felter.foreldelsesvurderingstype.onChange(
+            periode?.foreldelsesvurderingstype ||
+                (erAllePeriodeneAutomatiskVurdert ? 'AUTOMATISK_VURDERT_IKKE_FORELDET' : '')
+        );
         skjema.felter.foreldelsesfrist.onChange(
             periode?.foreldelsesfrist ? isoStringTilDate(periode.foreldelsesfrist) : undefined
         );
         skjema.felter.oppdagelsesdato.onChange(
             periode?.oppdagelsesdato ? isoStringTilDate(periode.oppdagelsesdato) : undefined
         );
-    }, [periode]);
+    }, [periode, erAllePeriodeneAutomatiskVurdert]);
 
     const erForeldet = skjema.felter.foreldelsesvurderingstype.verdi === 'FORELDET';
     const erMedTilleggsfrist = skjema.felter.foreldelsesvurderingstype.verdi === 'TILLEGGSFRIST';
@@ -103,6 +105,15 @@ export const ForeldelsePeriodeSkjema: FC<Props> = ({ periode }: Props) => {
                         setIkkePersistertKomponent('foreldelse');
                     }}
                 >
+                    {erAllePeriodeneAutomatiskVurdert && (
+                        <Radio
+                            key="AUTOMATISK_VURDERT_IKKE_FORELDET"
+                            name="foreldet"
+                            value="AUTOMATISK_VURDERT_IKKE_FORELDET"
+                        >
+                            Automatisk vurdert ikke foreldet
+                        </Radio>
+                    )}
                     <Radio key="IKKE_FORELDET" name="foreldet" value="IKKE_FORELDET">
                         Nei, perioden er ikke foreldet
                     </Radio>

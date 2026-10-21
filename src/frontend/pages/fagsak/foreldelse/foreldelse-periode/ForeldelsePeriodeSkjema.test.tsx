@@ -1,5 +1,4 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { ForeldelseHook } from '@/pages/fagsak/foreldelse/ForeldelseContext';
 import type { ForeldelsePeriodeSkjemeData } from '../typer/foreldelse';
 
 import { render, screen, within } from '@testing-library/react';
@@ -12,16 +11,22 @@ import { ForeldelsePeriodeSkjema } from './ForeldelsePeriodeSkjema';
 
 vi.mock('../ForeldelseContext', () => {
     return {
-        useForeldelse: (): Partial<ForeldelseHook> => ({
-            oppdaterPeriode: vi.fn(),
+        useForeldelse: () => ({
+            oppdaterPeriode: () => undefined,
         }),
     };
 });
 
-const renderForeldelsePeriodeSkjema = (periode: ForeldelsePeriodeSkjemeData): void => {
+const renderForeldelsePeriodeSkjema = (
+    periode: ForeldelsePeriodeSkjemeData,
+    erAllePeriodeneAutomatiskVurdert = false
+): void => {
     render(
         <TestBehandlingProvider>
-            <ForeldelsePeriodeSkjema periode={periode} />
+            <ForeldelsePeriodeSkjema
+                periode={periode}
+                erAllePeriodeneAutomatiskVurdert={erAllePeriodeneAutomatiskVurdert}
+            />
         </TestBehandlingProvider>
     );
 };
@@ -37,6 +42,10 @@ const foreldetRadio = (): HTMLElement =>
 const ikkeForeldetRadio = (): HTMLElement =>
     within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
         name: 'Nei, perioden er ikke foreldet',
+    });
+const automatiskIkkeForeldetRadio = (): HTMLElement =>
+    within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
+        name: 'Automatisk vurdert ikke foreldet',
     });
 const tilleggsfristRadio = (): HTMLElement =>
     within(erPeriodenForeldetRadioGruppe()).getByRole('radio', {
@@ -127,14 +136,17 @@ describe('ForeldelsePeriodeSkjema', () => {
         expect(screen.queryAllByText('Du må velge en gyldig dato')).toHaveLength(0);
     });
 
-    test('Åpner vurdert periode med automatisk vurdert ikke foreldet - ikke foreldet er valgt', () => {
-        renderForeldelsePeriodeSkjema(
-            lagForeldelsePeriodeSkjemaData({
-                foreldelsesvurderingstype: 'AUTOMATISK_VURDERT_IKKE_FORELDET',
-                begrunnelse: 'Automatisk vurdert',
-            })
-        );
+    test('Velger automatisk vurdert ikke foreldet som standard', () => {
+        renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData(), true);
 
+        expect(automatiskIkkeForeldetRadio()).toBeChecked();
+    });
+
+    test('Oppdaterer valgt verdi når en annen vurdering velges', async () => {
+        renderForeldelsePeriodeSkjema(lagForeldelsePeriodeSkjemaData(), true);
+
+        expect(automatiskIkkeForeldetRadio()).toBeChecked();
+        await user.click(ikkeForeldetRadio());
         expect(ikkeForeldetRadio()).toBeChecked();
     });
 
