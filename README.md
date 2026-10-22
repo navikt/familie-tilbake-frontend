@@ -39,7 +39,7 @@ Saksbehandlerapplikasjon for tilbakekreving etter folketrygdloven § 22-15. Appl
 | API-generering | @hey-api/openapi-ts |
 | BFF | Node.js / Express |
 | Testing | Vitest + React Testing Library |
-| Monitorering | Grafana Faro, Prometheus |
+| Monitorering | NAIS APM, Prometheus |
 | Container | Distroless Node.js 24 |
 | Pakkebehandler | pnpm |
 
@@ -53,6 +53,14 @@ Saksbehandlerapplikasjon for tilbakekreving etter folketrygdloven § 22-15. Appl
 ## Kom i gang
 
 ### 1. Installer avhengigheter
+
+Pakken `@nais/apm` hentes fra GitHub Packages. Konfigurer pnpm én gang med en GitHub PAT som har `read:packages`-tilgang. Lokalt kan den eksisterende `GITHUB_TOKEN`-variabelen brukes:
+
+```bash
+pnpm config set //npm.pkg.github.com/:_authToken "$GITHUB_TOKEN" --location=user
+```
+
+I GitHub Actions brukes den innebygde `GITHUB_TOKEN` med `packages: read`.
 
 ```bash
 pnpm install

@@ -1,6 +1,7 @@
 import type { ErrorInfo, ReactNode } from 'react';
 import type { SchemaEnum2 as Fagsystem } from '@/generated';
 
+import { captureException, markErrorCaptured } from '@nais/apm';
 import { Component } from 'react';
 
 import { Forbudt } from '@/pages/feilsider/Forbudt';
@@ -28,10 +29,14 @@ export class FagsakErrorBoundary extends Component<Props, State> {
     }
 
     static getDerivedStateFromError(error: Error): State {
+        markErrorCaptured(error);
         return { hasError: true, error };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+        captureException(error, {
+            context: { componentStack: errorInfo.componentStack ?? '' },
+        });
         console.error('FagsakErrorBoundary caught error:', error, errorInfo);
     }
 

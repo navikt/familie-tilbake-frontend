@@ -1,6 +1,7 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { ApiRessurs, Ressurs } from '@/typer/ressurs';
 
+import { captureException } from '@nais/apm';
 import constate from 'constate';
 import { useState } from 'react';
 
@@ -64,6 +65,19 @@ export const [HttpProvider, useHttp] = constate(
                 .catch((error: AxiosError<ApiRessurs<SkjemaRespons>>) => {
                     if (error.response?.status === 401 && setUautorisert) {
                         setUautorisert(401);
+                    }
+
+                    if (
+                        error.code !== 'ERR_CANCELED' &&
+                        (!error.response || error.response.status >= 500)
+                    ) {
+                        captureException(error, {
+                            context: {
+                                httpMethod: config.method ?? 'unknown',
+                                httpStatus: String(error.response?.status ?? 'no HTTP response'),
+                                errorCode: error.code ?? 'unknown',
+                            },
+                        });
                     }
 
                     config.påvirkerSystemLaster && fjernRessursSomLaster(ressursId);

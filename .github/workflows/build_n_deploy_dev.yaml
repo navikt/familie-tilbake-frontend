@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read
       id-token: write
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
@@ -24,8 +25,12 @@ jobs:
         with:
           node-version: "24"
           cache: "pnpm"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@nais"
 
       - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build

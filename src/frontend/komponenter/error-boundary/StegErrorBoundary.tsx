@@ -1,6 +1,7 @@
 import type { ErrorInfo, FC, ReactNode } from 'react';
 import type { SynligSteg } from '@/utils/sider';
 
+import { captureException, markErrorCaptured } from '@nais/apm';
 import { Button, Heading, Link, List, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';
 import { useLocation } from 'react-router';
@@ -78,11 +79,15 @@ class StegErrorBoundaryInternal extends Component<Props, State> {
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(): State {
+    static getDerivedStateFromError(error: Error): State {
+        markErrorCaptured(error);
         return { hasError: true };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+        captureException(error, {
+            context: { componentStack: errorInfo.componentStack ?? '' },
+        });
         console.error('Feil ved lasting av steg:', error, errorInfo);
     }
     render(): ReactNode {

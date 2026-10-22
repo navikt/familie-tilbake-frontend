@@ -6,9 +6,8 @@ import fs from 'fs';
 import path from 'path';
 
 import { ensureAuthenticated } from './backend/auth/authenticate';
-import { logRequest } from './backend/utils';
 import { aInntektUrl, appConfig, buildPath, gosysBaseUrl, modiaBaseUrl } from './config';
-import { LogLevel, logError } from './logging/logging';
+import { logError } from './logging/logging';
 import { prometheusTellere } from './metrikker';
 
 let vite: ViteDevServer;
@@ -35,12 +34,6 @@ export default async (texasClient: TexasClient, router: Router): Promise<Router>
 
     router.get('/brukerlenker', (_: Request, res: Response) => {
         res.status(200).send({ aInntektUrl, gosysBaseUrl, modiaBaseUrl }).end();
-    });
-
-    // Feilhåndtering
-    router.post('/logg-feil', (req: Request, res: Response) => {
-        logRequest(req, req.body.melding, LogLevel.Error);
-        res.status(200).send();
     });
 
     // APP

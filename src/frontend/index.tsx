@@ -1,9 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
+import './utils/apm';
 import './api/http/configureHeyApi';
 import { App } from './App';
-import { initGrafanaFaro } from './utils/grafanaFaro';
 import { loadTracker } from './utils/sporing';
 import { configureZod } from './utils/zodConfig';
 
@@ -17,7 +17,6 @@ if (process.env.NODE_ENV !== 'production') {
     );
 }
 
-initGrafanaFaro();
 loadTracker();
 configureZod();
 
