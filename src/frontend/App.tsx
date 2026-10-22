@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 
 import { Heading, Loader } from '@navikt/ds-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -83,22 +83,6 @@ const router = createBrowserRouter([
     },
 ]);
 
-/*
- * Ligger inne i AppProvider for å kunne lese innlogget saksbehandler fra context.
- * Uten den havner alle Sentry-feil på "Ukjent bruker".
- */
-const ErrorBoundaryMedBruker: FC<{ children: ReactNode }> = ({
-    children,
-}: {
-    children: ReactNode;
-}) => {
-    const { innloggetSaksbehandler } = useApp();
-
-    return (
-        <ErrorBoundary autentisertSaksbehandler={innloggetSaksbehandler}>{children}</ErrorBoundary>
-    );
-};
-
 export const App: FC = () => {
     const queryClient = new QueryClient({
         defaultOptions: {
@@ -112,13 +96,13 @@ export const App: FC = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <AppProvider>
-                <ErrorBoundaryMedBruker>
+                <ErrorBoundary>
                     <ThemeProvider>
                         <main aria-label="Hovedinnhold">
                             <RouterProvider router={router} />
                         </main>
                     </ThemeProvider>
-                </ErrorBoundaryMedBruker>
+                </ErrorBoundary>
             </AppProvider>
         </QueryClientProvider>
     );

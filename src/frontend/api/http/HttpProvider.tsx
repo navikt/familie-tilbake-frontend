@@ -1,6 +1,5 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { ApiRessurs, Ressurs } from '@/typer/ressurs';
-import type { Saksbehandler } from '@/typer/saksbehandler';
 
 import constate from 'constate';
 import { useState } from 'react';
@@ -10,7 +9,6 @@ import { håndterApiRespons, preferredAxios } from './axios';
 export interface FamilieRequestConfig<SkjemaData> extends AxiosRequestConfig {
     data?: SkjemaData;
     defaultFeilmelding?: string;
-    loggFeilTilSentry?: boolean;
     påvirkerSystemLaster?: boolean;
 }
 
@@ -25,12 +23,11 @@ export type Http = {
 
 type Props = {
     fjernRessursSomLasterTimeout?: number;
-    innloggetSaksbehandler?: Saksbehandler;
     setUautorisert?: (httpStatus: number) => void;
 };
 
 export const [HttpProvider, useHttp] = constate(
-    ({ innloggetSaksbehandler, setUautorisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
+    ({ setUautorisert, fjernRessursSomLasterTimeout = 300 }: Props) => {
         const [ressurserSomLaster, setRessurserSomLaster] = useState<string[]>([]);
 
         const fjernRessursSomLaster = (ressursId: string): void => {
@@ -60,8 +57,6 @@ export const [HttpProvider, useHttp] = constate(
                     config.påvirkerSystemLaster && fjernRessursSomLaster(ressursId);
                     return håndterApiRespons({
                         defaultFeilmelding: config.defaultFeilmelding,
-                        innloggetSaksbehandler,
-                        loggFeilTilSentry: config.loggFeilTilSentry,
                         ressurs: responsRessurs,
                         httpStatus: response.status,
                     });
@@ -78,8 +73,6 @@ export const [HttpProvider, useHttp] = constate(
                     return håndterApiRespons({
                         defaultFeilmelding: config.defaultFeilmelding,
                         error,
-                        innloggetSaksbehandler,
-                        loggFeilTilSentry: true,
                         ressurs: responsRessurs,
                         httpStatus: error.response?.status,
                     });

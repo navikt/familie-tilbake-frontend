@@ -31,9 +31,6 @@ jobs:
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and test
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE: ${{ github.sha }}
         run: |
           pnpm typecheck
           pnpm build

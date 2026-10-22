@@ -1,9 +1,6 @@
-import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import console from 'console';
 import { dirname, resolve } from 'path';
-import process from 'process';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import compression from 'vite-plugin-compression';
@@ -34,11 +31,6 @@ export default defineConfig(() => {
                                 name: 'navikt-ds',
                                 test: /node_modules[\\/]@navikt[\\/]/,
                                 priority: 25,
-                            },
-                            {
-                                name: 'sentry',
-                                test: /node_modules[\\/]@sentry[\\/]/,
-                                priority: 20,
                             },
                             {
                                 name: 'faro',
@@ -86,28 +78,7 @@ export default defineConfig(() => {
                 },
             },
         },
-        plugins: [
-            tailwindcss(),
-            react(),
-            compression(),
-            sentryVitePlugin({
-                org: 'nav',
-                project: 'familie-tilbake-frontend',
-                authToken: process.env.SENTRY_AUTH_TOKEN,
-                url: 'https://sentry.gc.nav.no/',
-                release: {
-                    name: process.env.SENTRY_RELEASE,
-                    uploadLegacySourcemaps: {
-                        paths: ['./dist'],
-                        ignore: ['./node_modules'],
-                        urlPrefix: `~/assets`,
-                    },
-                },
-                errorHandler: err => {
-                    console.warn('Sentry CLI Plugin: ' + err.message);
-                },
-            }),
-        ],
+        plugins: [tailwindcss(), react(), compression()],
         resolve: {
             alias: {
                 '@': frontendPath,

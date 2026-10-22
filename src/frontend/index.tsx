@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/browser';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -9,17 +8,6 @@ import { loadTracker } from './utils/sporing';
 import { configureZod } from './utils/zodConfig';
 
 import './index.css';
-
-const environment: string = window.location.hostname;
-
-if (process.env.NODE_ENV !== 'development') {
-    Sentry.init({
-        dsn: 'https://e88ebf3bc63346d6a4c2baba674afed3@sentry.gc.nav.no/83',
-        environment,
-        integrations: [Sentry.browserTracingIntegration()],
-        tracesSampleRate: 0.2,
-    });
-}
 
 if (process.env.NODE_ENV !== 'production') {
     void Promise.all([import('@axe-core/react'), import('react-dom')]).then(

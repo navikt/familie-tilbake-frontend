@@ -1,9 +1,7 @@
-import type { AxiosError, AxiosResponse, AxiosStatic } from 'axios';
+import type { AxiosError, AxiosStatic } from 'axios';
 import type { Error as ApiError } from '@/generated-new';
 import type { ApiRessurs, Ressurs } from '@/typer/ressurs';
-import type { Saksbehandler } from '@/typer/saksbehandler';
 
-import * as Sentry from '@sentry/core';
 import axios from 'axios';
 
 import { RessursStatus } from '@/typer/ressurs';
@@ -15,8 +13,6 @@ export const preferredAxios: AxiosStatic = axios;
 type ApiRespons<T> = {
     defaultFeilmelding?: string;
     error?: AxiosError;
-    innloggetSaksbehandler?: Saksbehandler;
-    loggFeilTilSentry?: boolean;
     ressurs?: ApiRessurs<T>;
     httpStatus?: number;
 };
@@ -33,8 +29,6 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
     const {
         defaultFeilmelding = 'En feil hos oss gjør at siden er utilgjengelig. Det skyldes ikke noe du gjorde.',
         error,
-        innloggetSaksbehandler,
-        loggFeilTilSentry = false,
         ressurs,
         httpStatus,
     } = apiRespons;
@@ -76,7 +70,6 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
             };
             break;
         case RessursStatus.Feilet:
-            loggFeilTilSentry && loggFeil(error, innloggetSaksbehandler, ressurs.melding);
             typetRessurs = {
                 frontendFeilmelding:
                     ressurs.frontendFeilmelding ?? ressurs.melding ?? defaultFeilmelding,
@@ -108,28 +101,4 @@ export const håndterApiRespons = <T>(apiRespons: ApiRespons<T>): Ressurs<T> => 
     }
 
     return typetRessurs;
-};
-
-const loggFeil = (
-    error?: AxiosError,
-    innloggetSaksbehandler?: Saksbehandler,
-    feilmelding?: string
-): void => {
-    if (process.env.NODE_ENV !== 'development') {
-        Sentry.getCurrentScope().setUser({
-            username: innloggetSaksbehandler ? innloggetSaksbehandler.displayName : 'Ukjent bruker',
-        });
-
-        const response: AxiosResponse | undefined = error ? error.response : undefined;
-        if (response) {
-            Sentry.withScope(scope => {
-                scope.setExtra('nav-call-id', response.headers['nav-call-id']);
-                scope.setExtra('status text', response.statusText);
-                scope.setExtra('status', response.status);
-                scope.setExtra('feilmelding', feilmelding);
-
-                Sentry.captureException(error);
-            });
-        }
-    }
 };

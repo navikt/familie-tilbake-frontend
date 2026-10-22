@@ -54,7 +54,6 @@ Arkitekturen er designet for å være generell og skalerbar til andre ytelser i 
 - **Build**: Separate client (Vite) og server (tsc) builds
 
 ### Monitorering & Observability
-- **Error Tracking**: Sentry
 - **Metrics**: Prometheus (prom-client)
 - **Logging**: Winston
 - **Frontend Monitoring**: Grafana Faro
@@ -241,7 +240,6 @@ Komponent re-renderer
 1. **Server build**: `esbuild` → `node_dist/server.js` (én bundlet fil)
 2. **Client build**: `vite build` → `dist/`
 3. **Docker image**: Distroless Node.js 24 med begge builds
-4. **Sentry source maps**: Lastes opp under build via Vite plugin
 
 ### Miljøkonfigurasjon
 - **Local**: Mock backend eller proxy til preprod

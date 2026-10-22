@@ -94,13 +94,10 @@ const [AppContentProvider, useApp] = createUseContext(() => {
 });
 
 const AuthOgHttpProvider: FC<Props> = ({ children }: Props) => {
-    const { innloggetSaksbehandler, setUautorisert } = useAuth();
+    const { setUautorisert } = useAuth();
 
     return (
-        <HttpProvider
-            innloggetSaksbehandler={innloggetSaksbehandler}
-            setUautorisert={setUautorisert}
-        >
+        <HttpProvider setUautorisert={setUautorisert}>
             <AppContentProvider>{children}</AppContentProvider>
         </HttpProvider>
     );

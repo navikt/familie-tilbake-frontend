@@ -3,14 +3,12 @@ import type { Express } from 'express';
 const styleSource = 'https://fonts.googleapis.com';
 const fontSource = 'https://fonts.gstatic.com';
 const navFontSource = 'https://cdn.nav.no';
-const amplitude = 'https://amplitude.nav.no';
-const sentry = 'https://sentry.gc.nav.no';
 const navTelemetry = 'https://telemetry.nav.no';
 const navTelemetryDev = 'https://telemetry.ekstern.dev.nav.no';
 const sporingProxy = 'https://reops-event-proxy.nav.no';
 const sporingProxyDev = 'https://reops-event-proxy.ekstern.dev.nav.no';
 
-const cspString = `default-src 'self' data: ${amplitude} ${sentry} ${navTelemetry} ${navTelemetryDev} ${navFontSource} ${sporingProxy} ${sporingProxyDev}; style-src 'self' ${styleSource} data: 'unsafe-inline'; font-src 'self' ${fontSource} ${navFontSource} data:; frame-src 'self' blob:; object-src 'self' blob:;`;
+const cspString = `default-src 'self' data: ${navTelemetry} ${navTelemetryDev} ${navFontSource} ${sporingProxy} ${sporingProxyDev}; style-src 'self' ${styleSource} data: 'unsafe-inline'; font-src 'self' ${fontSource} ${navFontSource} data:; frame-src 'self' blob:; object-src 'self' blob:;`;
 
 const setup = (app: Express): void => {
     app.disable('x-powered-by');

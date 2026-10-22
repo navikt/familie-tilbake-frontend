@@ -1,15 +1,11 @@
 import type { ReactNode } from 'react';
-import type { Saksbehandler } from '@/typer/saksbehandler';
 
-import { getCurrentScope, showReportDialog } from '@sentry/browser';
-import { captureException, withScope } from '@sentry/core';
 import { Component } from 'react';
 
 import { apiLoggFeil } from '@/api/axios';
 import { InternServerFeil } from '@/pages/feilsider/InternServerFeil';
 
 type Props = {
-    autentisertSaksbehandler?: Saksbehandler;
     children: ReactNode;
 };
 
@@ -32,24 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
         console.log(error, info);
 
         if (process.env.NODE_ENV !== 'development') {
-            getCurrentScope().setUser({
-                username: this.props.autentisertSaksbehandler
-                    ? this.props.autentisertSaksbehandler.displayName
-                    : 'Ukjent bruker',
-                email: this.props.autentisertSaksbehandler
-                    ? this.props.autentisertSaksbehandler.email
-                    : 'Ukjent email',
-            });
-            withScope(scope => {
-                Object.keys(info).forEach(key => {
-                    scope.setExtra(key, info[key]);
-                });
-                captureException(error);
-            });
-
             apiLoggFeil(`En feil har oppstått i vedtaksløsningen: \n*Error*: ${error}`);
-
-            showReportDialog();
         }
     }
 

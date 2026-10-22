@@ -39,7 +39,7 @@ Saksbehandlerapplikasjon for tilbakekreving etter folketrygdloven § 22-15. Appl
 | API-generering | @hey-api/openapi-ts |
 | BFF | Node.js / Express |
 | Testing | Vitest + React Testing Library |
-| Monitorering | Sentry, Grafana Faro, Prometheus |
+| Monitorering | Grafana Faro, Prometheus |
 | Container | Distroless Node.js 24 |
 | Pakkebehandler | pnpm |
 
