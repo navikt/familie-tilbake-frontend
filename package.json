@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "2.12.1",
-    "@hookform/resolvers": "5.9.1",
+    "@hookform/resolvers": "6.0.0",
     "@navikt/aksel-icons": "8.19.2",
     "@navikt/ds-css": "8.19.2",
     "@navikt/ds-react": "8.19.2",
@@ -63,7 +63,7 @@
     "@biomejs/biome": "2.5.15",
     "@hey-api/openapi-ts": "0.99.0",
     "@peculiar/webcrypto": "1.7.1",
-    "@sentry/vite-plugin": "5.4.0",
+    "@sentry/vite-plugin": "11.8.0",
     "@tailwindcss/vite": "4.3.3",
     "@testing-library/dom": "10.4.2",
     "@testing-library/jest-dom": "7.0.1",
