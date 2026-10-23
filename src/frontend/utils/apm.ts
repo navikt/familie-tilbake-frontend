@@ -11,4 +11,5 @@ init({
     app: 'tilbakekreving-frontend',
     namespace: 'tilbake',
     environment,
+    version: process.env.GITHUB_SHA,
 });

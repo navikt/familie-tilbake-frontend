@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { dirname, resolve } from 'path';
+import process from 'process';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import compression from 'vite-plugin-compression';
@@ -14,6 +15,9 @@ const frontendPath = resolve(__dirname, '.');
 export default defineConfig(() => {
     return {
         root: __dirname,
+        define: {
+            'process.env.GITHUB_SHA': JSON.stringify(process.env.GITHUB_SHA ?? ''),
+        },
         build: {
             outDir: resolve(__dirname, '../../dist'),
             sourcemap: true,
