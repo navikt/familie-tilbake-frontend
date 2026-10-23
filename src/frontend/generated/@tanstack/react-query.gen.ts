@@ -57,6 +57,7 @@ import {
     kanBehandlingOpprettesManuelt,
     korrigerKravgrunnlag,
     korrigerKravgrunnlag1,
+    lagBehandlingUrl,
     lagOppdaterOppgaveTaskForBehandling,
     lagreUtkastVedtaksbrev,
     leggTilBrevmottaker,
@@ -182,6 +183,8 @@ import type {
     KorrigerKravgrunnlag1Response,
     KorrigerKravgrunnlagData,
     KorrigerKravgrunnlagResponse,
+    LagBehandlingUrlData,
+    LagBehandlingUrlResponse,
     LagOppdaterOppgaveTaskForBehandlingData,
     LagreUtkastVedtaksbrevData,
     LagreUtkastVedtaksbrevResponse,
@@ -1715,6 +1718,31 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
             finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey(
                 options
             ),
+    });
+
+export const lagBehandlingUrlQueryKey = (options?: Options<LagBehandlingUrlData>) =>
+    createQueryKey('lagBehandlingUrl', options);
+
+/**
+ * Hent URL for ytelser i gammel modell
+ */
+export const lagBehandlingUrlOptions = (options?: Options<LagBehandlingUrlData>) =>
+    queryOptions<
+        LagBehandlingUrlResponse,
+        AxiosError<DefaultError>,
+        LagBehandlingUrlResponse,
+        ReturnType<typeof lagBehandlingUrlQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await lagBehandlingUrl({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: lagBehandlingUrlQueryKey(options),
     });
 
 export const featureTogglesQueryKey = (options?: Options<FeatureTogglesData>) =>

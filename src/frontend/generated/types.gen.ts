@@ -758,6 +758,14 @@ export type RessursListKravgrunnlagsinfo = {
     stacktrace?: string | null;
 };
 
+export type RessursListString = {
+    data?: Array<string> | null;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
+};
+
 export type RessursMapStringBoolean = {
     data?: {
         [key: string]: boolean;
@@ -1190,6 +1198,7 @@ export type BehandlingDto = {
     ansvarligSaksbehandler: string;
     ansvarligBeslutter?: string | null;
     erBehandlingPåVent: boolean;
+    venter?: VenterDto | null;
     kanHenleggeBehandling: boolean;
     kanRevurderingOpprettes: boolean;
     harVerge: boolean;
@@ -1272,6 +1281,11 @@ export type UendretPeriodeDto = Omit<KravgrunnlagForskjellDto, 'type'> & {
     type: 'UendretPeriodeDto';
 };
 
+export type VenterDto = {
+    grunn: VenteårsakEnum;
+    frist: string;
+};
+
 export type RessursVergeDto = {
     data?: VergeDto | null;
     status: StatusEnum;
@@ -1291,7 +1305,8 @@ export type SchemaEnum =
     | 'IVERKSETT_VEDTAK'
     | 'JOURNALFØR_VEDTAK'
     | 'DISTRIUBER_VEDTAK'
-    | 'AVSLUTTET';
+    | 'AVSLUTTET'
+    | 'SPERRET';
 
 export type SchemaEnum2 = 'BA' | 'EF' | 'AAP' | 'KONT' | 'IT01' | 'TS' | 'TP' | 'DP';
 
@@ -1333,6 +1348,7 @@ export type VenteårsakEnum =
     | 'UTVIDET_TILSVAR_FRIST'
     | 'ENDRE_TILKJENT_YTELSE'
     | 'VENT_PÅ_MULIG_MOTREGNING'
+    | 'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI'
     | 'MANGLER_STØTTE';
 
 export type BehandlingsresultatstypeEnum =
@@ -1956,6 +1972,7 @@ export type VenteårsakEnum2 =
     | 'UTVIDET_TILSVAR_FRIST'
     | 'ENDRE_TILKJENT_YTELSE'
     | 'VENT_PÅ_MULIG_MOTREGNING'
+    | 'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI'
     | 'MANGLER_STØTTE';
 
 export type BehandlingDtoWritable = {
@@ -1974,6 +1991,7 @@ export type BehandlingDtoWritable = {
     ansvarligSaksbehandler: string;
     ansvarligBeslutter?: string | null;
     erBehandlingPåVent: boolean;
+    venter?: VenterDto | null;
     kanHenleggeBehandling: boolean;
     kanRevurderingOpprettes: boolean;
     harVerge: boolean;
@@ -3026,6 +3044,26 @@ export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppg
      */
     200: unknown;
 };
+
+export type LagBehandlingUrlData = {
+    body?: never;
+    path?: never;
+    query?: {
+        vedtakId?: number;
+        vedtakGjelderId?: string;
+        fagsystemId?: string;
+    };
+    url: '/api/forvaltning/behandling-url';
+};
+
+export type LagBehandlingUrlResponses = {
+    /**
+     * OK
+     */
+    200: RessursListString;
+};
+
+export type LagBehandlingUrlResponse = LagBehandlingUrlResponses[keyof LagBehandlingUrlResponses];
 
 export type FeatureTogglesData = {
     body?: never;

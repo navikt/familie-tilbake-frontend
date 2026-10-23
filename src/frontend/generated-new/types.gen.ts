@@ -83,6 +83,15 @@ export type BestemmelseEllerGrunnlag = {
     beskrivelse: string;
 };
 
+export type BortfaltKravbrevData = {
+    hovedavsnitt: HovedavsnittBortfaltKravbrev;
+    underavsnitt: Array<UnderavsnittElement>;
+    brevGjelder: Brevmottaker;
+    signatur: SignaturAutomatisk;
+    sendtDato: string;
+    saksnummer: string;
+};
+
 export type Brevmottaker = {
     navn: string;
     personIdent: string;
@@ -262,6 +271,11 @@ export type Hovedavsnitt = {
     hjemler: string;
 };
 
+export type HovedavsnittBortfaltKravbrev = {
+    tittel: string;
+    innhold: Array<string>;
+};
+
 export type HovedavsnittUpdate = {
     tittel: string;
     underavsnitt: Array<RotElementUpdateItem>;
@@ -360,6 +374,10 @@ export type OppdaterFaktaOmFeilutbetaling = {
 export type OppdaterFaktaPeriode = {
     id: string;
     rettsligGrunnlag: Array<RettsligGrunnlag>;
+};
+
+export type OpprettRevurderingResponse = {
+    url: string;
 };
 
 export type Oppsummeringsdata = {
@@ -472,6 +490,10 @@ export type Signatur = {
     enhetNavn: string;
     ansvarligSaksbehandler: string;
     besluttendeSaksbehandler: string | null;
+};
+
+export type SignaturAutomatisk = {
+    enhetNavn: string;
 };
 
 export type SkalIkkeReduseres = {
@@ -1424,8 +1446,11 @@ export type BehandlingOpprettRevurderingResponses = {
     /**
      * The request has succeeded.
      */
-    200: unknown;
+    200: OpprettRevurderingResponse;
 };
+
+export type BehandlingOpprettRevurderingResponse =
+    BehandlingOpprettRevurderingResponses[keyof BehandlingOpprettRevurderingResponses];
 
 export type BehandlingHentVarselbrevTeksterData = {
     body?: never;
@@ -1752,6 +1777,23 @@ export type BehandlingHentDokumentInfoResponses = {
 
 export type BehandlingHentDokumentInfoResponse =
     BehandlingHentDokumentInfoResponses[keyof BehandlingHentDokumentInfoResponses];
+
+export type BrevLagSvgBortfaltKravbrevData = {
+    body: BortfaltKravbrevData;
+    path?: never;
+    query?: never;
+    url: '/api/v1/brev/bortfalt-krav/svg';
+};
+
+export type BrevLagSvgBortfaltKravbrevResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Blob | File;
+};
+
+export type BrevLagSvgBortfaltKravbrevResponse =
+    BrevLagSvgBortfaltKravbrevResponses[keyof BrevLagSvgBortfaltKravbrevResponses];
 
 export type BrevLagSvgVarselbrevData = {
     body: VarselbrevData;

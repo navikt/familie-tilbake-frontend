@@ -70,4 +70,5 @@ export const venteårsaker: Record<VenteårsakEnum, string> = {
     ENDRE_TILKJENT_YTELSE: 'Mulig endring i tilkjent ytelse',
     VENT_PÅ_MULIG_MOTREGNING: 'Mulig motregning med annen ytelse',
     MANGLER_STØTTE: 'Mangler støtte',
+    SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI: 'Sperret, venter på oppdatering fra økonomi',
 };
