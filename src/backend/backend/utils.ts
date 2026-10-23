@@ -12,13 +12,9 @@ const prefix = (req: Request): string => {
 
 export const logRequest = (req: Request, message: string, level: LogLevel): void => {
     const melding = `${prefix(req)}: ${message}`;
-    const callId = req.header('nav-call-id');
     const requestId = req.header('x-request-id');
 
-    const meta = {
-        ...(callId ? { x_callId: callId } : {}),
-        ...(requestId ? { x_requestId: requestId } : {}),
-    };
+    const meta = requestId ? { x_requestId: requestId } : {};
     switch (level) {
         case LogLevel.Debug:
             logDebug(melding, meta);
