@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { setContext } from '@nais/apm';
 import { Suspense, useEffect } from 'react';
 import { Outlet, useParams } from 'react-router';
 
@@ -52,6 +53,13 @@ export const FagsakSide: FC = () => {
     const { fagsystem: fagsystemParam, fagsakId: tilbakekrevingSakId } = useParams();
     const fagsystem = tilFagsystem(fagsystemParam);
 
+    useEffect(() => {
+        if (!fagsystem || !tilbakekrevingSakId) return;
+
+        setContext('fagsak', { fagsystem, fagsakId: tilbakekrevingSakId });
+        return (): void => setContext('fagsak', null);
+    }, [fagsystem, tilbakekrevingSakId]);
+
     if (!fagsystem || !tilbakekrevingSakId) {
         return <IkkeFunnet />;
     }
@@ -80,6 +88,13 @@ export const BehandlingSide: FC = () => {
 
         return (): void => setBehandlingId(undefined);
     }, [eksternBrukId, setBehandlingId]);
+
+    useEffect(() => {
+        if (!behandlingId) return;
+
+        setContext('behandling', { behandlingId });
+        return (): void => setContext('behandling', null);
+    }, [behandlingId]);
 
     if (!behandlingId) {
         return <IkkeFunnet />;
