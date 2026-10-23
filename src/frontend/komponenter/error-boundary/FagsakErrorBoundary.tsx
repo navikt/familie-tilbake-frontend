@@ -1,7 +1,7 @@
 import type { ErrorInfo, ReactNode } from 'react';
 import type { SchemaEnum2 as Fagsystem } from '@/generated';
 
-import { captureException, markErrorCaptured } from '@nais/apm';
+import { markErrorCaptured } from '@nais/apm';
 import { Component } from 'react';
 
 import { Forbudt } from '@/pages/feilsider/Forbudt';
@@ -10,6 +10,8 @@ import { InternServerFeil } from '@/pages/feilsider/InternServerFeil';
 import { KravgrunnlagErSperretEllerBortfalt } from '@/pages/feilsider/KravgrunnlagetErSperretEllerBortfalt';
 import { Uautorisert } from '@/pages/feilsider/Uautorisert';
 import { hentFeilmelding, hentFeilmeldingTittelOgMelding, hentHttpStatus } from '@/utils/httpUtils';
+
+import { rapporterRenderFeil } from './rapporterRenderFeil';
 
 type Props = {
     children: ReactNode;
@@ -34,8 +36,9 @@ export class FagsakErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        captureException(error, {
-            context: { componentStack: errorInfo.componentStack ?? '' },
+        rapporterRenderFeil(error, errorInfo, {
+            'fagsak.fagsystem': this.props.fagsystem,
+            'fagsak.fagsakId': this.props.fagsakId,
         });
         console.error('FagsakErrorBoundary caught error:', error, errorInfo);
     }

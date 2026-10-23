@@ -1,7 +1,7 @@
 import type { ErrorInfo, FC, ReactNode } from 'react';
 import type { SynligSteg } from '@/utils/sider';
 
-import { captureException, markErrorCaptured } from '@nais/apm';
+import { markErrorCaptured } from '@nais/apm';
 import { Button, Heading, Link, List, LocalAlert, VStack } from '@navikt/ds-react';
 import { Component } from 'react';
 import { useLocation } from 'react-router';
@@ -9,6 +9,8 @@ import { useLocation } from 'react-router';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useActionBar } from '@/hooks/useActionBar';
 import { useStegflyt } from '@/komponenter/stegflyt/useStegflyt';
+
+import { rapporterRenderFeil } from './rapporterRenderFeil';
 
 type Props = {
     steg: SynligSteg;
@@ -85,9 +87,7 @@ class StegErrorBoundaryInternal extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        captureException(error, {
-            context: { componentStack: errorInfo.componentStack ?? '' },
-        });
+        rapporterRenderFeil(error, errorInfo, { steg: this.props.steg.steg });
         console.error('Feil ved lasting av steg:', error, errorInfo);
     }
     render(): ReactNode {

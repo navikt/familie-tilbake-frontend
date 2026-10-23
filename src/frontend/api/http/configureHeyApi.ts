@@ -1,11 +1,10 @@
-import type { AxiosInstance } from 'axios';
-
 import { client as oldClient } from '@/generated/client.gen';
 import { client as newClient } from '@/generated-new/client.gen';
 
-const setupInterceptor = (instance: AxiosInstance): void => {
-    instance.interceptors.request.use(config => config);
-};
+import { leggTilApmInterceptor } from './apmHttpFeil';
+import { preferredAxios } from './axios';
 
-setupInterceptor(oldClient.instance);
-setupInterceptor(newClient.instance);
+// De genererte klientene bruker egne axios-instanser, så interceptoren må legges på alle tre.
+leggTilApmInterceptor(preferredAxios);
+leggTilApmInterceptor(oldClient.instance);
+leggTilApmInterceptor(newClient.instance);
