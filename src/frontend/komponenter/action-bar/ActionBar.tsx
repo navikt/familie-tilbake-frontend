@@ -41,90 +41,92 @@ export const ActionBar: FC<ActionBarConfig> = ({
           ? 'Behandlingens steg og navigasjonsknapper'
           : 'Navigasjonsknapper';
     return (
-        <nav
-            className={`flex bg-ax-bg-default px-6 py-2 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt || visRevurder ? 'justify-between' : 'justify-end'}`}
-            aria-label={navAriaLabel}
-        >
-            {visMeny && <Behandlingsmeny />}
+        <div className="flex items-stretch gap-4 min-w-0">
             {visRevurder && <RevurderNyModell />}
-            {visStegflyt && <KompaktStegflyt />}
+            <nav
+                className={`flex flex-1 bg-ax-bg-default px-6 py-2 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
+                aria-label={navAriaLabel}
+            >
+                {visMeny && <Behandlingsmeny />}
+                {visStegflyt && <KompaktStegflyt />}
 
-            <HStack gap="space-32" wrap={false} className="shrink-0">
-                {!visStegflyt && (
-                    <BodyShort
-                        size="small"
-                        className="text-ax-text-neutral-subtle font-ax-bold flex items-center"
-                    >
-                        {stegtekst}
-                    </BodyShort>
-                )}
-                <HStack gap="space-16" wrap={false}>
-                    {forrigeAriaLabel && onForrige ? (
-                        <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
-                            <Button
-                                variant="secondary"
-                                icon={<ChevronLeftIcon aria-hidden />}
-                                className="flex gap-0 ax-lg:gap-2 py-2"
-                                size="small"
-                                loading={isLoading}
-                                disabled={isLoading}
-                                onClick={(): void => {
-                                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
-                                        tekst: forrigeTekst,
-                                        kontekst: Sporingskontekst.ActionBar,
-                                        seksjon: stegtekst,
-                                    });
-                                    onForrige();
-                                }}
-                                aria-label={forrigeAriaLabel}
-                            >
-                                <span className="hidden ax-md:block">{forrigeTekst}</span>
-                            </Button>
-                        </Tooltip>
-                    ) : (
-                        visStegflyt && (
-                            <Button
-                                aria-hidden
-                                tabIndex={-1}
-                                variant="secondary"
-                                icon={<ChevronLeftIcon aria-hidden />}
-                                className="flex gap-0 ax-lg:gap-2 py-2 invisible"
-                                size="small"
-                            >
-                                <span className="hidden ax-md:block">{forrigeTekst}</span>
-                            </Button>
-                        )
-                    )}
-                    {!skjulNeste && (
-                        <Tooltip
-                            content={nesteAriaLabel ?? nesteTekst}
-                            aria-disabled={isLoading || disableNeste}
+                <HStack gap="space-32" wrap={false} className="shrink-0">
+                    {!visStegflyt && (
+                        <BodyShort
+                            size="small"
+                            className="text-ax-text-neutral-subtle font-ax-bold flex items-center"
                         >
-                            <Button
-                                icon={<ChevronRightIcon aria-hidden />}
-                                iconPosition="right"
-                                className="flex gap-0 ax-lg:gap-2 py-2"
-                                type={type}
-                                size="small"
-                                form={formId}
-                                loading={isLoading}
-                                onClick={(): void => {
-                                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
-                                        tekst: nesteTekst,
-                                        kontekst: Sporingskontekst.ActionBar,
-                                        seksjon: stegtekst,
-                                    });
-                                    if (onNeste && type !== 'submit') onNeste();
-                                }}
-                                aria-label={nesteAriaLabel}
-                                disabled={isLoading || disableNeste}
-                            >
-                                <span className="hidden ax-md:block">{nesteTekst}</span>
-                            </Button>
-                        </Tooltip>
+                            {stegtekst}
+                        </BodyShort>
                     )}
+                    <HStack gap="space-16" wrap={false}>
+                        {forrigeAriaLabel && onForrige ? (
+                            <Tooltip content={forrigeAriaLabel} aria-disabled={isLoading}>
+                                <Button
+                                    variant="secondary"
+                                    icon={<ChevronLeftIcon aria-hidden />}
+                                    className="flex gap-0 ax-lg:gap-2 py-2"
+                                    size="small"
+                                    loading={isLoading}
+                                    disabled={isLoading}
+                                    onClick={(): void => {
+                                        sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                                            tekst: forrigeTekst,
+                                            kontekst: Sporingskontekst.ActionBar,
+                                            seksjon: stegtekst,
+                                        });
+                                        onForrige();
+                                    }}
+                                    aria-label={forrigeAriaLabel}
+                                >
+                                    <span className="hidden ax-md:block">{forrigeTekst}</span>
+                                </Button>
+                            </Tooltip>
+                        ) : (
+                            visStegflyt && (
+                                <Button
+                                    aria-hidden
+                                    tabIndex={-1}
+                                    variant="secondary"
+                                    icon={<ChevronLeftIcon aria-hidden />}
+                                    className="flex gap-0 ax-lg:gap-2 py-2 invisible"
+                                    size="small"
+                                >
+                                    <span className="hidden ax-md:block">{forrigeTekst}</span>
+                                </Button>
+                            )
+                        )}
+                        {!skjulNeste && (
+                            <Tooltip
+                                content={nesteAriaLabel ?? nesteTekst}
+                                aria-disabled={isLoading || disableNeste}
+                            >
+                                <Button
+                                    icon={<ChevronRightIcon aria-hidden />}
+                                    iconPosition="right"
+                                    className="flex gap-0 ax-lg:gap-2 py-2"
+                                    type={type}
+                                    size="small"
+                                    form={formId}
+                                    loading={isLoading}
+                                    onClick={(): void => {
+                                        sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                                            tekst: nesteTekst,
+                                            kontekst: Sporingskontekst.ActionBar,
+                                            seksjon: stegtekst,
+                                        });
+                                        if (onNeste && type !== 'submit') onNeste();
+                                    }}
+                                    aria-label={nesteAriaLabel}
+                                    disabled={isLoading || disableNeste}
+                                >
+                                    <span className="hidden ax-md:block">{nesteTekst}</span>
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </HStack>
                 </HStack>
-            </HStack>
-        </nav>
+            </nav>
+        </div>
     );
 };

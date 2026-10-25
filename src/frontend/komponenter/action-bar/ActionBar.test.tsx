@@ -1,7 +1,7 @@
 import type { BehandlingDto } from '@/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { FagsakContext } from '@/context/FagsakContext';
@@ -170,10 +170,20 @@ describe('ActionBar', () => {
                 );
 
                 if (synlig) {
-                    expect(screen.getByRole('button', { name: 'Revurder' })).toBeInTheDocument();
+                    const øy = screen.getByRole('navigation', { name: 'Behandlingsvalg' });
+                    const actionBar = screen.getByRole('navigation', {
+                        name: 'Behandlingens steg og navigasjonsknapper',
+                    });
+                    expect(
+                        within(øy).getByRole('button', { name: 'BehandlingsvalgKnapp' })
+                    ).toBeInTheDocument();
+                    expect(øy.parentElement).toBe(actionBar.parentElement);
+                    expect(øy.compareDocumentPosition(actionBar)).toBe(
+                        Node.DOCUMENT_POSITION_FOLLOWING
+                    );
                 } else {
                     expect(
-                        screen.queryByRole('button', { name: 'Revurder' })
+                        screen.queryByRole('navigation', { name: 'Behandlingsvalg' })
                     ).not.toBeInTheDocument();
                 }
             }

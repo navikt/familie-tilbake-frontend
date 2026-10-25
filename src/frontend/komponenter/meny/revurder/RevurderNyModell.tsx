@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import type { OpprettRevurderingResponse, TilbakekrevingRevurdering } from '@/generated-new';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, LocalAlert, Modal, Select, VStack } from '@navikt/ds-react';
+import { ArrowCirclepathReverseIcon, MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
+import { ActionMenu, Button, LocalAlert, Modal, Select, VStack } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -79,13 +80,29 @@ export const RevurderNyModell: FC = () => {
 
     return (
         <>
-            <Button
-                size="small"
-                variant="tertiary"
-                onClick={(): void => dialogRef.current?.showModal()}
+            <nav
+                aria-label="Behandlingsvalg"
+                className="flex items-center shrink-0 bg-ax-bg-default px-3 py-2 rounded-2xl border-ax-border-brand-blue-subtle border"
             >
-                Revurder
-            </Button>
+                <ActionMenu>
+                    <ActionMenu.Trigger>
+                        <Button
+                            size="small"
+                            variant="tertiary"
+                            aria-label="BehandlingsvalgKnapp"
+                            icon={<MenuElipsisHorizontalIcon aria-hidden />}
+                        />
+                    </ActionMenu.Trigger>
+                    <ActionMenu.Content>
+                        <ActionMenu.Item
+                            icon={<ArrowCirclepathReverseIcon aria-hidden />}
+                            onSelect={(): void => dialogRef.current?.showModal()}
+                        >
+                            Revurder tilbakekrevingen
+                        </ActionMenu.Item>
+                    </ActionMenu.Content>
+                </ActionMenu>
+            </nav>
             <Modal
                 ref={dialogRef}
                 header={{ heading: 'Revurder tilbakekreving' }}
