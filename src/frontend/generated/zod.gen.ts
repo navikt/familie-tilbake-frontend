@@ -385,6 +385,7 @@ export const zSchemaEnum = z.enum([
     'DISTRIUBER_VEDTAK',
     'AVSLUTTET',
     'SPERRET',
+    'KRAVGRUNNLAG_BORTFALT',
 ]);
 
 export const zSchemaEnum2 = z.enum(['BA', 'EF', 'AAP', 'KONT', 'IT01', 'TS', 'TP', 'DP']);
@@ -1229,7 +1230,8 @@ export const zYtelseEntity = z.object({
 export const zEksternFagsakEntity = z.object({
     id: z.uuid(),
     tilbakekrevingRef: z.string(),
-    eksternId: z.string(),
+    eksternId: z.string().nullish(),
+    eksternIdFraOppdrag: z.string(),
     ytelseEntity: zYtelseEntity,
     behandlinger: zHistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurdering,
 });

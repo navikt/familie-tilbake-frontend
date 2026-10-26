@@ -141,6 +141,11 @@ export type Error = {
     melding: string;
 };
 
+export type EtterKlage = {
+    instans: Revurderingsinstans;
+    begrunnelse: string;
+};
+
 export type Fakta = {
     rettsligGrunnlag: Array<string>;
 };
@@ -181,6 +186,11 @@ export type Feilutbetaling = {
     revurdering: Revurdering;
 };
 
+export type FeilutbetaltBelopEndret = {
+    instans: Revurderingsinstans;
+    begrunnelse: string;
+};
+
 export type FjernetPeriode = {
     readonly fom: string;
     readonly tom: string;
@@ -189,6 +199,10 @@ export type FjernetPeriode = {
 
 export type ForaarsaketAvMottaker = {
     aktsomhet: Aktsomhet;
+};
+
+export type Foreldelse = {
+    begrunnelse: string;
 };
 
 export type ForhaandsvarselErSendt = {
@@ -450,6 +464,12 @@ export type Revurdering = {
     resultat: ResultatEnum;
 };
 
+export type Revurderingsinstans =
+    | 'Førsteinstansen'
+    | 'Klageinstansen'
+    | 'Trygderetten'
+    | 'Domstolen';
+
 export type RotElement =
     | ({
           type: 'rentekst';
@@ -533,7 +553,19 @@ export type TilbakekrevingRevurdering = {
     revurderingsarsak: TilbakekrevingRevurderingsarsak;
 };
 
-export type TilbakekrevingRevurderingsarsak = 'REVURDERING_ANNEN_ÅRSAK';
+export type TilbakekrevingRevurderingsarsak =
+    | ({
+          revurderingsarsak: 'feilutbetalt_belop_endret';
+      } & FeilutbetaltBelopEndret)
+    | ({
+          revurderingsarsak: 'etter_klage';
+      } & EtterKlage)
+    | ({
+          revurderingsarsak: 'uten_klage';
+      } & UtenKlage)
+    | ({
+          revurderingsarsak: 'foreldelse';
+      } & Foreldelse);
 
 export type Uaktsomt = {
     begrunnelse: string;
@@ -570,6 +602,11 @@ export type Unntak = {
 export type UpdateUttalelsesfrist = {
     nyFrist?: string;
     begrunnelse?: string;
+};
+
+export type UtenKlage = {
+    instans: InstansEnum;
+    begrunnelse: string;
 };
 
 export type UttalelseVurdering =
@@ -707,6 +744,8 @@ export type Status4xRettsgebyretEnum = 'USIKKER' | 'OVER' | 'UNDER';
 export type AvEnum = 'NAV' | 'BRUKER' | 'IKKE_VURDERT';
 
 export type ResultatEnum = 'INNVILGET' | 'OPPHØRT';
+
+export type InstansEnum = 'Førsteinstansen' | 'Klageinstansen';
 
 export type DelresultatEnum =
     | 'FULL_TILBAKEKREVING'

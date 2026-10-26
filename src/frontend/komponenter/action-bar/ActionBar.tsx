@@ -8,10 +8,11 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { ToggleName, useToggle } from '@/context/TogglesContext';
 import { Behandlingsmeny } from '@/komponenter/meny/Meny';
-import { RevurderNyModell } from '@/komponenter/meny/revurder/RevurderNyModell';
 import { KompaktStegflyt } from '@/komponenter/stegflyt/KompaktStegflyt';
 import { useNyStegflyt } from '@/komponenter/stegflyt/useNyStegflyt';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
+
+import { RevurderingWrapper } from './revurdering/RevurderingWrapper';
 
 export const ActionBar: FC<ActionBarConfig> = ({
     stegtekst = '',
@@ -42,7 +43,7 @@ export const ActionBar: FC<ActionBarConfig> = ({
           : 'Navigasjonsknapper';
     return (
         <div className="flex items-stretch gap-4 min-w-0">
-            {visRevurder && <RevurderNyModell />}
+            {visRevurder && <RevurderingWrapper />}
             <nav
                 className={`flex flex-1 bg-ax-bg-default px-6 py-2 rounded-2xl border-ax-border-brand-blue-subtle border min-w-96 gap-4 ${visMeny || visStegflyt ? 'justify-between' : 'justify-end'}`}
                 aria-label={navAriaLabel}

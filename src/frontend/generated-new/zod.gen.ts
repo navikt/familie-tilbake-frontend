@@ -93,6 +93,10 @@ export const zFjernetPeriode = z.object({
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
 });
 
+export const zForeldelse = z.object({
+    begrunnelse: z.string(),
+});
+
 export const zForhaandsvarselInfo = z.object({
     tekstFraSaksbehandler: z.string(),
     varselbrevSendtTid: z.iso.date(),
@@ -246,6 +250,23 @@ export const zOppdaterFaktaPeriode = z.object({
     rettsligGrunnlag: z.array(zRettsligGrunnlag).min(1),
 });
 
+export const zRevurderingsinstans = z.enum([
+    'Førsteinstansen',
+    'Klageinstansen',
+    'Trygderetten',
+    'Domstolen',
+]);
+
+export const zEtterKlage = z.object({
+    instans: zRevurderingsinstans,
+    begrunnelse: z.string(),
+});
+
+export const zFeilutbetaltBelopEndret = z.object({
+    instans: zRevurderingsinstans,
+    begrunnelse: z.string(),
+});
+
 export const zSammenslaaing = z.object({
     vilkårsvurderingId: z.uuid(),
     slåesSammenMedId: z.uuid(),
@@ -346,12 +367,6 @@ export const zStandardtekst = z.object({
 });
 
 export const zTidligereBrukeruttalelse = zBrukeruttalelse;
-
-export const zTilbakekrevingRevurderingsarsak = z.enum(['REVURDERING_ANNEN_ÅRSAK']);
-
-export const zTilbakekrevingRevurdering = z.object({
-    revurderingsarsak: zTilbakekrevingRevurderingsarsak,
-});
 
 export const zUendretPeriode = z.object({
     fom: z.iso.date().readonly(),
@@ -753,6 +768,24 @@ export const zFaktaOmFeilutbetaling = z.object({
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' })
         .nullable(),
     status4xRettsgebyret: zStatus4xRettsgebyretEnum,
+});
+
+export const zInstansEnum = z.enum(['Førsteinstansen', 'Klageinstansen']);
+
+export const zUtenKlage = z.object({
+    instans: zInstansEnum,
+    begrunnelse: z.string(),
+});
+
+export const zTilbakekrevingRevurderingsarsak = z.discriminatedUnion('revurderingsarsak', [
+    zFeilutbetaltBelopEndret.extend({ revurderingsarsak: z.literal('feilutbetalt_belop_endret') }),
+    zEtterKlage.extend({ revurderingsarsak: z.literal('etter_klage') }),
+    zUtenKlage.extend({ revurderingsarsak: z.literal('uten_klage') }),
+    zForeldelse.extend({ revurderingsarsak: z.literal('foreldelse') }),
+]);
+
+export const zTilbakekrevingRevurdering = z.object({
+    revurderingsarsak: zTilbakekrevingRevurderingsarsak,
 });
 
 export const zDelresultatEnum = z

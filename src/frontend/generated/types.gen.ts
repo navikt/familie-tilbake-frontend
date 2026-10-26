@@ -155,7 +155,8 @@ export type EksternFagsakBehandlingEntity = {
 export type EksternFagsakEntity = {
     id: string;
     tilbakekrevingRef: string;
-    eksternId: string;
+    eksternId?: string | null;
+    eksternIdFraOppdrag: string;
     ytelseEntity: YtelseEntity;
     behandlinger: HistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurdering;
 };
@@ -1306,7 +1307,8 @@ export type SchemaEnum =
     | 'JOURNALFØR_VEDTAK'
     | 'DISTRIUBER_VEDTAK'
     | 'AVSLUTTET'
-    | 'SPERRET';
+    | 'SPERRET'
+    | 'KRAVGRUNNLAG_BORTFALT';
 
 export type SchemaEnum2 = 'BA' | 'EF' | 'AAP' | 'KONT' | 'IT01' | 'TS' | 'TP' | 'DP';
 
