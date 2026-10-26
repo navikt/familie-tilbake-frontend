@@ -23,17 +23,17 @@ importers:
         specifier: 0.7.3
         version: 0.7.3(@grafana/faro-react@2.12.1(react-dom@19.3.1(react@19.3.1))(react-router-dom@7.18.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-router@8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)(supports-color@7.2.0))(react-dom@19.3.1(react@19.3.1))(react-router-dom@7.18.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-router@8.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)(supports-color@7.2.0)
       '@navikt/aksel-icons':
-        specifier: 8.19.2
-        version: 8.19.2
+        specifier: 8.20.0
+        version: 8.20.0
       '@navikt/ds-css':
-        specifier: 8.19.2
-        version: 8.19.2
+        specifier: 8.20.0
+        version: 8.20.0
       '@navikt/ds-react':
-        specifier: 8.19.2
-        version: 8.19.2(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 8.20.0
+        version: 8.20.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@navikt/ds-tailwind':
-        specifier: 8.19.2
-        version: 8.19.2
+        specifier: 8.20.0
+        version: 8.20.0
       '@tanstack/react-query':
         specifier: 5.104.1
         version: 5.104.1(react@19.3.1)
@@ -685,14 +685,14 @@ packages:
       react-router: '>=6.0.0'
       react-router-dom: '>=6.0.0'
 
-  '@navikt/aksel-icons@8.19.2':
-    resolution: {integrity: sha512-QFqO/2GFNKgB1NLQ2KAhWNegn/+Tevj1wlvrImSRdWPg6QGvlrBRjDbZxclRrosqMtYqYzF3BWMtAb5f8tmvgw==}
+  '@navikt/aksel-icons@8.20.0':
+    resolution: {integrity: sha512-5FVFg9Xba++NpvdBlqE/VoGbOie34M1sSLYqSUZEy6IZUjBwh4QrbKCU1hcamuBJ2pQFINwOAqxmw8Ri1AIDyw==}
 
-  '@navikt/ds-css@8.19.2':
-    resolution: {integrity: sha512-sSOJN3M+fVJ1ewtLKZw60c5ptqf7XPCQ9YiOJdlheSxj36MmvjWhaIQAnOXvMZLsyWEtBtVJtzUOii/9vcU2kw==}
+  '@navikt/ds-css@8.20.0':
+    resolution: {integrity: sha512-rhDZXQCN/mPyB9ubKRvr95PwAbYp+4xBb64LW5hQnAJJLJiHXksjVfpg8naDM71wIYpNwnShD5lTOwoBfBlPkQ==}
 
-  '@navikt/ds-react@8.19.2':
-    resolution: {integrity: sha512-hRIP2jjxjI0Ecign/M12MyLuo/p6ToP132kxdKsnUd3HTDqJzJvpKuesbBRmsMWpHla/feK7C8NzAFriI5FrfQ==}
+  '@navikt/ds-react@8.20.0':
+    resolution: {integrity: sha512-HbSQh4Ck3ci/8ZAcJYAkYSYKN7zr/9ty2Zam1m4k4in2SxO6SCAWZqDi/vEAmPdosMC5Ey6qiF7QXHwrlln9UQ==}
     peerDependencies:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -701,11 +701,11 @@ packages:
       '@types/react':
         optional: true
 
-  '@navikt/ds-tailwind@8.19.2':
-    resolution: {integrity: sha512-xH55G2Pf+i3DLnqREyEt6Wrq3fGKLy1OgxIgLBxN07A5ySij5OBaHNZaT8a7IaeDxPBJgPI1QGpK6qnKTA8V0g==}
+  '@navikt/ds-tailwind@8.20.0':
+    resolution: {integrity: sha512-hE/iVv+folxzQeQI2l6nLXIgPkstP0+DI/s47aKK8hVVeuvtZ7rhFAuJz/rxGa+sF0I+mcaV/mMR9v4vi1bmAw==}
 
-  '@navikt/ds-tokens@8.19.2':
-    resolution: {integrity: sha512-biANGtITI5PeOFKIuSmwELLajSQBe9hys0D/Mhk+l/J/ARoxolNFVXsg4woRRNP6aRvxGGzHQB45nyDBdgunEA==}
+  '@navikt/ds-tokens@8.20.0':
+    resolution: {integrity: sha512-gm+WBeswuVdn5DADTc1tZAWkvFurzRCA4vUDqDaLvER9k6QaTbODMEXoV+x6n+xpZYdN3JX1aeLQCfeuiHLb2Q==}
 
   '@opentelemetry/api-logs@0.222.0':
     resolution: {integrity: sha512-9mb1If+IF6u0ZVXkHQ6ogEae5HwA6ajIVUgpSDQyRASxft6BSXHvBvPooRle3yFN/fKnCdSOnuu0OC3PLcF6+g==}
@@ -3167,13 +3167,13 @@ snapshots:
     dependencies:
       '@grafana/faro-web-sdk': 2.12.1
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/core': 2.11.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/core': 2.12.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-trace-otlp-http': 0.222.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/instrumentation': 0.222.0(@opentelemetry/api@1.9.1)(supports-color@7.2.0)
       '@opentelemetry/instrumentation-fetch': 0.222.0(@opentelemetry/api@1.9.1)(supports-color@7.2.0)
       '@opentelemetry/instrumentation-xml-http-request': 0.222.0(@opentelemetry/api@1.9.1)(supports-color@7.2.0)
       '@opentelemetry/otlp-transformer': 0.222.0(@opentelemetry/api@1.9.1)
-      '@opentelemetry/resources': 2.11.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/resources': 2.12.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-trace-web': 2.12.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/semantic-conventions': 1.43.0
     transitivePeerDependencies:
@@ -3298,16 +3298,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@navikt/aksel-icons@8.19.2': {}
+  '@navikt/aksel-icons@8.20.0': {}
 
-  '@navikt/ds-css@8.19.2': {}
+  '@navikt/ds-css@8.20.0': {}
 
-  '@navikt/ds-react@8.19.2(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@navikt/ds-react@8.20.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@floating-ui/react': 0.27.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@navikt/aksel-icons': 8.19.2
-      '@navikt/ds-tokens': 8.19.2
+      '@navikt/aksel-icons': 8.20.0
+      '@navikt/ds-tokens': 8.20.0
       date-fns: 4.4.0
       react: 19.3.1
       react-day-picker: 10.0.1(@types/react@19.3.0)(react@19.3.1)
@@ -3315,9 +3315,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@navikt/ds-tailwind@8.19.2': {}
+  '@navikt/ds-tailwind@8.20.0': {}
 
-  '@navikt/ds-tokens@8.19.2': {}
+  '@navikt/ds-tokens@8.20.0': {}
 
   '@opentelemetry/api-logs@0.222.0':
     dependencies:
