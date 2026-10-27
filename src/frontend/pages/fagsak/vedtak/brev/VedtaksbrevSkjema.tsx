@@ -5,7 +5,7 @@ import type { Avsnitt, PakrevdBegrunnelse, VedtaksbrevData } from '@/generated-n
 import type { VedtaksbrevFormData } from './schema';
 
 import { Textarea } from '@navikt/ds-react';
-import { get, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 
@@ -65,11 +65,8 @@ type TekstFeltProps = Omit<TextareaProps, 'error' | 'name' | 'ref' | 'value'> & 
 
 const TekstFelt: FC<TekstFeltProps> = ({ name, ...props }: TekstFeltProps) => {
     const { behandlingILesemodus } = useBehandlingState();
-    const {
-        register,
-        formState: { errors },
-    } = useFormContext<VedtaksbrevFormData>();
-    const feilmelding = get(errors, name)?.message;
+    const { register, getFieldState, formState } = useFormContext<VedtaksbrevFormData>();
+    const feilmelding = getFieldState(name, formState).error?.message;
 
     return (
         <Textarea

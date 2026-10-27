@@ -3,7 +3,7 @@ import type { Land } from '@/komponenter/landvelger/Landvelger';
 
 import { Fieldset, HStack, LocalAlert, TextField, VStack } from '@navikt/ds-react';
 import { useCallback, useEffect, useMemo } from 'react';
-import { get, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { Landvelger } from '@/komponenter/landvelger/Landvelger';
 import { MottakerType } from '@/typer/Brevmottaker';
@@ -15,12 +15,7 @@ type Props = {
 };
 
 export const ManuellRegistrering: FC<Props> = ({ preutfyltNavn, mottakerType, prefix }: Props) => {
-    const {
-        register,
-        watch,
-        setValue,
-        formState: { errors },
-    } = useFormContext();
+    const { register, watch, setValue, getFieldState, formState } = useFormContext();
 
     const fieldPath = useCallback((field: string): string => `${prefix}.${field}`, [prefix]);
 
@@ -47,8 +42,9 @@ export const ManuellRegistrering: FC<Props> = ({ preutfyltNavn, mottakerType, pr
     }, [preutfyltNavn, setValue, fieldPath]);
 
     const getFieldError = useCallback(
-        (key: string) => get(errors, fieldPath(key))?.message,
-        [errors, fieldPath]
+        (key: string): string | undefined =>
+            getFieldState(fieldPath(key), formState).error?.message,
+        [getFieldState, fieldPath, formState]
     );
 
     return (
