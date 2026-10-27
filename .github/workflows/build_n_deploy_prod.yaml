@@ -12,6 +12,8 @@ jobs:
   build:
     name: Build and push Docker container
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: read
       packages: read
@@ -31,8 +33,6 @@ jobs:
           scope: "@nais"
 
       - name: Install dependencies
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and test
