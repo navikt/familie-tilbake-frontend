@@ -11,6 +11,7 @@ import { retry } from '../../http';
 import { LogLevel } from '../../logging/logging';
 import { logRequest } from '../utils';
 import { utledAccessToken } from './authenticate';
+import { tilFeilUtenToken } from './feilUtenToken';
 
 export const hentBrukerprofil = (texasClient: TexasClient) => {
     return async (req: Request, res: Response): Promise<void> => {
@@ -60,7 +61,7 @@ const hentBrukerdata = async (
         );
         throw new Error(
             'Kunne ikke hente dine brukeropplysninger. Vennligst logg ut og inn på nytt',
-            { cause: e }
+            { cause: tilFeilUtenToken('Feilet mot ms graph', e) }
         );
     }
 };

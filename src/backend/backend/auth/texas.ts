@@ -3,6 +3,7 @@ import type { TexasConfig } from '../typer';
 import axios from 'axios';
 
 import { stdoutLogger } from '../../logging/logging';
+import { tilFeilUtenToken } from './feilUtenToken';
 
 type SuccessResponse = {
     access_token: string;
@@ -16,18 +17,22 @@ export class TexasClient {
     }
 
     exchangeToken = async (token: string, targetScope: string): Promise<SuccessResponse> => {
-        const response = await axios.post<SuccessResponse>(
-            this.config.tokenExchangeEndpoint,
-            {
-                target: targetScope,
-                user_token: token,
-                identity_provider: 'azuread',
-            },
-            {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            }
-        );
-        return response.data;
+        try {
+            const response = await axios.post<SuccessResponse>(
+                this.config.tokenExchangeEndpoint,
+                {
+                    target: targetScope,
+                    user_token: token,
+                    identity_provider: 'azuread',
+                },
+                {
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                }
+            );
+            return response.data;
+        } catch (error: unknown) {
+            throw tilFeilUtenToken('Feil ved veksling av token', error);
+        }
     };
 
     hentOnBehalfOfToken = async (token: string, targetScope: string): Promise<string> => {
@@ -49,18 +54,12 @@ export class TexasClient {
             );
             return response.data.active ? response.data : null;
         } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                if (error.response) {
-                    stdoutLogger.error(
-                        `Feil validering av innlogging. Statuskode ${error.response.status}, body ${error.response.data}`,
-                        error
-                    );
-                    return null;
-                }
-            } else {
-                stdoutLogger.error('Feil ved validering av innlogging', error);
+            const feilUtenToken = tilFeilUtenToken('Feil ved validering av innlogging', error);
+            stdoutLogger.error(feilUtenToken.message);
+            if (axios.isAxiosError(error) && error.response) {
+                return null;
             }
-            throw error;
+            throw feilUtenToken;
         }
     };
 }
