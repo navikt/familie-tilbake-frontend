@@ -271,17 +271,30 @@ export type HistorikkEntityUuidEksternFagsakBehandlingEntityEksternFagsakRevurde
     innslag: Array<EksternFagsakBehandlingEntity>;
 };
 
-export type HistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse = {
-    innslag: Array<KravgrunnlagHendelseEntity>;
+export type HistorikkEntityUuidKravHendelseEntityKravHendelse = {
+    innslag: Array<KravStatusmeldingEntity | KravgrunnlagHendelseEntity>;
 };
 
 export type HistorikkReferanseEntityUuid = {
     id: string;
 };
 
-export type KravgrunnlagHendelseEntity = {
+export type KravHendelseEntity = {
+    tilbakekrevingRef: string;
     id: string;
-    tilbakekrevingId: string;
+    opprettet: string;
+};
+
+export type KravStatusmeldingEntity = KravHendelseEntity & {
+    vedtakId: number;
+    kravstatuskode: KravstatuskodeEnum;
+    vedtakGjelder: AktørEntity;
+    referanse?: string | null;
+    kodeFagomraade: string;
+    fagsystemId: string;
+};
+
+export type KravgrunnlagHendelseEntity = KravHendelseEntity & {
     vedtakId: number;
     kravstatuskode: KravstatuskodeEnum;
     fagsystemVedtaksdato?: string | null;
@@ -293,7 +306,6 @@ export type KravgrunnlagHendelseEntity = {
     kravgrunnlagId: string;
     referanse: string;
     perioder: Array<KravgrunnlagPeriodeEntity>;
-    opprettet: string;
     korrigering: boolean;
 };
 
@@ -337,7 +349,7 @@ export type TilbakekrevingEntity = {
     nåværendeTilstand: SchemaEnum;
     eksternFagsak: EksternFagsakEntity;
     behandlingHistorikkEntities: HistorikkEntityUuidBehandlingEntityBehandling;
-    kravgrunnlagHistorikkEntities: HistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse;
+    kravgrunnlagHistorikkEntities: HistorikkEntityUuidKravHendelseEntityKravHendelse;
     brevHistorikkEntities: HistorikkEntityUuidBrevEntityBrev;
     opprettet: string;
     nestePåminnelse?: string | null;
@@ -507,7 +519,7 @@ export type ForhåndsvisningHenleggelsesbrevDto = {
 };
 
 export type Ressurs = {
-    data?: null;
+    data?: unknown;
     status: StatusEnum;
     melding: string;
     frontendFeilmelding?: string | null;

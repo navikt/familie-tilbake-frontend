@@ -48,6 +48,12 @@ export const zHistorikkReferanseEntityUuid = z.object({
     id: z.uuid(),
 });
 
+export const zKravHendelseEntity = z.object({
+    tilbakekrevingRef: z.string(),
+    id: z.uuid(),
+    opprettet: z.iso.datetime(),
+});
+
 export const zKravgrunnlagPeriodeEntity = z.object({
     id: z.uuid(),
     kravgrunnlagId: z.uuid(),
@@ -442,7 +448,7 @@ export const zRessursByte = z.object({
 });
 
 export const zRessurs = z.object({
-    data: z.null().optional(),
+    data: z.unknown().optional(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
@@ -1004,26 +1010,36 @@ export const zKravstatuskodeEnum = z.enum([
     'SPERRET',
 ]);
 
-export const zKravgrunnlagHendelseEntity = z.object({
-    id: z.uuid(),
-    tilbakekrevingId: z.string(),
-    vedtakId: z.int(),
-    kravstatuskode: zKravstatuskodeEnum,
-    fagsystemVedtaksdato: z.iso.date().nullish(),
-    vedtakGjelder: zAktørEntity,
-    utbetalesTil: zAktørEntity,
-    skalBeregneRenter: z.boolean(),
-    ansvarligEnhet: z.string(),
-    kontrollfelt: z.string(),
-    kravgrunnlagId: z.string(),
-    referanse: z.string(),
-    perioder: z.array(zKravgrunnlagPeriodeEntity),
-    opprettet: z.iso.datetime(),
-    korrigering: z.boolean(),
-});
+export const zKravStatusmeldingEntity = zKravHendelseEntity.and(
+    z.object({
+        vedtakId: z.int(),
+        kravstatuskode: zKravstatuskodeEnum,
+        vedtakGjelder: zAktørEntity,
+        referanse: z.string().nullish(),
+        kodeFagomraade: z.string(),
+        fagsystemId: z.string(),
+    })
+);
 
-export const zHistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse = z.object({
-    innslag: z.array(zKravgrunnlagHendelseEntity),
+export const zKravgrunnlagHendelseEntity = zKravHendelseEntity.and(
+    z.object({
+        vedtakId: z.int(),
+        kravstatuskode: zKravstatuskodeEnum,
+        fagsystemVedtaksdato: z.iso.date().nullish(),
+        vedtakGjelder: zAktørEntity,
+        utbetalesTil: zAktørEntity,
+        skalBeregneRenter: z.boolean(),
+        ansvarligEnhet: z.string(),
+        kontrollfelt: z.string(),
+        kravgrunnlagId: z.string(),
+        referanse: z.string(),
+        perioder: z.array(zKravgrunnlagPeriodeEntity),
+        korrigering: z.boolean(),
+    })
+);
+
+export const zHistorikkEntityUuidKravHendelseEntityKravHendelse = z.object({
+    innslag: z.array(z.union([zKravStatusmeldingEntity, zKravgrunnlagHendelseEntity])),
 });
 
 export const zMottakersForståelseEnum = z.enum(['FORSTOD', 'BURDE_FORSTÅTT', 'MÅTTE_FORSTÅ']);
@@ -1241,8 +1257,7 @@ export const zTilbakekrevingEntity = z.object({
     nåværendeTilstand: zSchemaEnum,
     eksternFagsak: zEksternFagsakEntity,
     behandlingHistorikkEntities: zHistorikkEntityUuidBehandlingEntityBehandling,
-    kravgrunnlagHistorikkEntities:
-        zHistorikkEntityUuidKravgrunnlagHendelseEntityKravgrunnlagHendelse,
+    kravgrunnlagHistorikkEntities: zHistorikkEntityUuidKravHendelseEntityKravHendelse,
     brevHistorikkEntities: zHistorikkEntityUuidBrevEntityBrev,
     opprettet: z.iso.datetime(),
     nestePåminnelse: z.iso.datetime().nullish(),
