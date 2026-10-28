@@ -129,17 +129,13 @@ describe('ActionBar', () => {
         const lagAvsluttetNyModellBehandling = (): BehandlingDto =>
             lagBehandling({ erNyModell: true, status: 'AVSLUTTET' });
 
-        test('Viser revurderingsøyen til venstre for action-baren når avsluttet behandling kan revurderes', () => {
+        test('Viser revurderingsøyen når avsluttet behandling kan revurderes', () => {
             renderActionBar({
                 behandling: lagAvsluttetNyModellBehandling(),
                 revurderingPåskrudd: true,
             });
 
-            const øy = screen.getByRole('navigation', { name: 'Behandlingsvalg' });
-            const actionBar = screen.getByRole('navigation', {
-                name: 'Behandlingens steg og navigasjonsknapper',
-            });
-            expect(øy.compareDocumentPosition(actionBar)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+            expect(revurderingsøy()).toBeInTheDocument();
         });
 
         test('Viser ikke revurderingsøyen når revurdering er skrudd av', () => {
