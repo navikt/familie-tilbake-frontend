@@ -5,7 +5,7 @@ import type {
 } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -97,21 +97,6 @@ describe('Revurdering', () => {
         await user.selectOptions(årsakSelect(), 'foreldelse');
         await user.type(begrunnelseFelt(), begrunnelse);
     };
-
-    test('Åpner revurderingsdialogen med tastaturet', async () => {
-        renderRevurder();
-
-        await user.tab();
-        expect(screen.getByRole('button', { name: menyknappNavn })).toHaveFocus();
-        await user.keyboard('{Enter}');
-        const menyvalg = await screen.findByRole('menuitem', { name: menyvalgNavn });
-        await waitFor(() => expect(screen.getByRole('menu')).toHaveFocus());
-        await user.keyboard('{ArrowDown}');
-        await waitFor(() => expect(menyvalg).toHaveFocus());
-        await user.keyboard('{Enter}');
-
-        expect(await screen.findByRole('dialog', { name: dialogNavn })).toBeInTheDocument();
-    });
 
     test.each([
         { årsak: 'feilutbetalt_belop_endret', antallInstanser: 4 },

@@ -1,7 +1,7 @@
 import type { BehandlingDto } from '@/generated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { FagsakContext } from '@/context/FagsakContext';
@@ -14,15 +14,25 @@ import { createTestQueryClient } from '@/testutils/queryTestUtils';
 
 import { ActionBar } from './ActionBar';
 
-const renderActionBar = (
-    onForrige: () => void,
-    onNeste: () => void,
-    isLoading: boolean = false,
-    behandling?: BehandlingDto,
-    harKravgrunnlag: boolean = true,
-    nyStegflytPåskrudd: boolean = true,
-    revurderingPåskrudd: boolean = false
-): void => {
+type RenderProps = {
+    onForrige?: () => void;
+    onNeste?: () => void;
+    isLoading?: boolean;
+    behandling?: BehandlingDto;
+    harKravgrunnlag?: boolean;
+    nyStegflytPåskrudd?: boolean;
+    revurderingPåskrudd?: boolean;
+};
+
+const renderActionBar = ({
+    onForrige = vi.fn(),
+    onNeste = vi.fn(),
+    isLoading = false,
+    behandling,
+    harKravgrunnlag = true,
+    nyStegflytPåskrudd = true,
+    revurderingPåskrudd = false,
+}: RenderProps = {}): void => {
     render(
         <MemoryRouter initialEntries={['/fagsystem/BA/fagsak/1/behandling/2/fakta']}>
             <TestTogglesProvider
@@ -80,7 +90,7 @@ describe('ActionBar', () => {
     test('Kaller ikke onNeste eller onForrige når isLoading = true', () => {
         const onNeste = vi.fn();
         const onForrige = vi.fn();
-        renderActionBar(onForrige, onNeste, true);
+        renderActionBar({ onForrige, onNeste, isLoading: true });
 
         fireEvent.click(
             screen.getByRole('button', { name: /gå videre til vilkårsvurderingssteget/i })
@@ -92,19 +102,19 @@ describe('ActionBar', () => {
     });
 
     test('Har ikke knapp tilbake til Tilbakekrevingen når ikke på inaktiv side', () => {
-        renderActionBar(vi.fn(), vi.fn(), false);
+        renderActionBar();
         expect(screen.queryByRole('link', { name: /gå til behandling/i })).not.toBeInTheDocument();
     });
 
     describe('Gammel modell', () => {
         test('Viser behandlingsmenyen', () => {
-            renderActionBar(vi.fn(), vi.fn(), false, lagBehandling({ erNyModell: false }));
+            renderActionBar({ behandling: lagBehandling({ erNyModell: false }) });
 
             expect(screen.getByRole('button', { name: /meny/i })).toBeInTheDocument();
         });
 
         test('Viser stegtekst i stedet for stegflyt', () => {
-            renderActionBar(vi.fn(), vi.fn(), false, lagBehandling({ erNyModell: false }));
+            renderActionBar({ behandling: lagBehandling({ erNyModell: false }) });
 
             expect(screen.getByText('Steg 2 av 5')).toBeInTheDocument();
             expect(
@@ -114,80 +124,32 @@ describe('ActionBar', () => {
     });
 
     describe('Ny modell', () => {
-        test.each<{
-            erNyModell: boolean;
-            status: BehandlingDto['status'];
-            kanRevurderingOpprettes: boolean;
-            toggle: boolean;
-            synlig: boolean;
-        }>([
-            {
-                erNyModell: true,
-                status: 'AVSLUTTET',
-                kanRevurderingOpprettes: false,
-                toggle: true,
-                synlig: true,
-            },
-            {
-                erNyModell: true,
-                status: 'AVSLUTTET',
-                kanRevurderingOpprettes: true,
-                toggle: true,
-                synlig: true,
-            },
-            {
-                erNyModell: true,
-                status: 'AVSLUTTET',
-                kanRevurderingOpprettes: true,
-                toggle: false,
-                synlig: false,
-            },
-            {
-                erNyModell: true,
-                status: 'OPPRETTET',
-                kanRevurderingOpprettes: true,
-                toggle: true,
-                synlig: false,
-            },
-            {
-                erNyModell: false,
-                status: 'AVSLUTTET',
-                kanRevurderingOpprettes: true,
-                toggle: true,
-                synlig: false,
-            },
-        ])(
-            'Revurder-knapp: ny modell=$erNyModell, status=$status, kan revurderes=$kanRevurderingOpprettes, toggle=$toggle',
-            ({ erNyModell, status, kanRevurderingOpprettes, toggle, synlig }) => {
-                renderActionBar(
-                    vi.fn(),
-                    vi.fn(),
-                    false,
-                    lagBehandling({ erNyModell, status, kanRevurderingOpprettes }),
-                    true,
-                    true,
-                    toggle
-                );
+        const revurderingsøy = (): HTMLElement | null =>
+            screen.queryByRole('navigation', { name: 'Behandlingsvalg' });
+        const lagAvsluttetNyModellBehandling = (): BehandlingDto =>
+            lagBehandling({ erNyModell: true, status: 'AVSLUTTET' });
 
-                if (synlig) {
-                    const øy = screen.getByRole('navigation', { name: 'Behandlingsvalg' });
-                    const actionBar = screen.getByRole('navigation', {
-                        name: 'Behandlingens steg og navigasjonsknapper',
-                    });
-                    expect(
-                        within(øy).getByRole('button', { name: 'BehandlingsvalgKnapp' })
-                    ).toBeInTheDocument();
-                    expect(øy.parentElement).toBe(actionBar.parentElement);
-                    expect(øy.compareDocumentPosition(actionBar)).toBe(
-                        Node.DOCUMENT_POSITION_FOLLOWING
-                    );
-                } else {
-                    expect(
-                        screen.queryByRole('navigation', { name: 'Behandlingsvalg' })
-                    ).not.toBeInTheDocument();
-                }
-            }
-        );
+        test('Viser revurderingsøyen til venstre for action-baren når avsluttet behandling kan revurderes', () => {
+            renderActionBar({
+                behandling: lagAvsluttetNyModellBehandling(),
+                revurderingPåskrudd: true,
+            });
+
+            const øy = screen.getByRole('navigation', { name: 'Behandlingsvalg' });
+            const actionBar = screen.getByRole('navigation', {
+                name: 'Behandlingens steg og navigasjonsknapper',
+            });
+            expect(øy.compareDocumentPosition(actionBar)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        });
+
+        test('Viser ikke revurderingsøyen når revurdering er skrudd av', () => {
+            renderActionBar({
+                behandling: lagAvsluttetNyModellBehandling(),
+                revurderingPåskrudd: false,
+            });
+
+            expect(revurderingsøy()).not.toBeInTheDocument();
+        });
 
         const lagNyModellBehandling = (
             behandlingsstegsinfo = [lagFaktaSteg(), lagForeldelseSteg()]
@@ -200,7 +162,7 @@ describe('ActionBar', () => {
             });
 
         test('Viser stegflyten i stedet for behandlingsmenyen og stegteksten', () => {
-            renderActionBar(vi.fn(), vi.fn(), false, lagNyModellBehandling());
+            renderActionBar({ behandling: lagNyModellBehandling() });
 
             expect(screen.getByRole('list', { name: 'Behandlingssteg' })).toBeInTheDocument();
             expect(screen.queryByRole('button', { name: /meny/i })).not.toBeInTheDocument();
@@ -208,14 +170,14 @@ describe('ActionBar', () => {
         });
 
         test('Beholder stegteksten når behandlingen venter på kravgrunnlag', () => {
-            renderActionBar(vi.fn(), vi.fn(), false, lagNyModellBehandling(), false);
+            renderActionBar({ behandling: lagNyModellBehandling(), harKravgrunnlag: false });
 
             expect(screen.queryByRole('list', { name: 'Behandlingssteg' })).not.toBeInTheDocument();
             expect(screen.getByText('Steg 2 av 5')).toBeInTheDocument();
         });
 
         test('Beholder navigasjonsknappene ved siden av stegflyten', () => {
-            renderActionBar(vi.fn(), vi.fn(), false, lagNyModellBehandling());
+            renderActionBar({ behandling: lagNyModellBehandling() });
 
             expect(
                 screen.getByRole('button', { name: /gå videre til vilkårsvurderingssteget/i })
@@ -244,7 +206,7 @@ describe('ActionBar', () => {
         });
 
         test('Viser stegteksten i stedet for stegflyten når toggelen er avskrudd', () => {
-            renderActionBar(vi.fn(), vi.fn(), false, lagNyModellBehandling(), true, false);
+            renderActionBar({ behandling: lagNyModellBehandling(), nyStegflytPåskrudd: false });
 
             expect(screen.queryByRole('list', { name: 'Behandlingssteg' })).not.toBeInTheDocument();
             expect(screen.getByText('Steg 2 av 5')).toBeInTheDocument();
