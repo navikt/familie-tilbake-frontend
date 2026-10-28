@@ -32,7 +32,14 @@ import { useRedirectEtterLagring } from '@/hooks/useRedirectEtterLagring';
 import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
-import { instansvalg, opprettRevurderingResponseSchema, revurderingSchema, årsaker } from './utils';
+import {
+    feilmeldingFraRevurdering,
+    instansvalg,
+    opprettRevurderingResponseSchema,
+    type Revurderingsfeil,
+    revurderingSchema,
+    årsaker,
+} from './utils';
 
 export const OPPRETT_REVURDERING_MUTATION_KEY = ['opprettRevurdering'] as const;
 
@@ -54,7 +61,7 @@ export const Revurdering: FC = () => {
 
     const revurder = useMutation<
         BehandlingOpprettRevurderingResponse,
-        Error,
+        Revurderingsfeil,
         Options<BehandlingOpprettRevurderingData>
     >({
         mutationKey: OPPRETT_REVURDERING_MUTATION_KEY,
@@ -73,6 +80,8 @@ export const Revurdering: FC = () => {
             dialogRef.current?.close();
         },
     });
+
+    const feilmelding = revurder.error ? feilmeldingFraRevurdering(revurder.error) : undefined;
 
     const nullstill = (): void => {
         reset();
@@ -169,15 +178,16 @@ export const Revurdering: FC = () => {
                                     error={formState.errors.begrunnelse?.message}
                                 />
                             )}
-                            {revurder.isError && (
+                            {feilmelding && (
                                 <LocalAlert status="error">
                                     <LocalAlert.Header>
-                                        <LocalAlert.Title>
-                                            {revurder.error instanceof z.ZodError
-                                                ? revurder.error.issues[0]?.message
-                                                : 'Kunne ikke opprette revurderingen. Prøv igjen.'}
-                                        </LocalAlert.Title>
+                                        <LocalAlert.Title>{feilmelding.tittel}</LocalAlert.Title>
                                     </LocalAlert.Header>
+                                    {feilmelding.melding && (
+                                        <LocalAlert.Content>
+                                            {feilmelding.melding}
+                                        </LocalAlert.Content>
+                                    )}
                                 </LocalAlert>
                             )}
                         </VStack>

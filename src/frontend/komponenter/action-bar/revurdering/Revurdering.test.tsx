@@ -7,6 +7,7 @@ import type {
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { AxiosError, AxiosHeaders } from 'axios';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { FagsakContext } from '@/context/FagsakContext';
@@ -38,6 +39,8 @@ const årsakPåkrevdFeil = 'Velg årsak til revurderingen';
 const instansPåkrevdFeil = 'Velg hvilken instans som har omgjort vedtaket.';
 const begrunnelsePåkrevdFeil = 'Beskriv kort årsaken til revurderingen.';
 const serverFeil = 'Kunne ikke opprette revurderingen. Prøv igjen.';
+const feiltittelFraServer = 'Revurdering kan ikke opprettes';
+const feilmeldingFraServer = 'Det finnes allerede en åpen revurdering for denne saken.';
 const manglerUrlFeil = 'Revurderingen ble opprettet, men svaret mangler URL til behandlingen.';
 
 const vellykketSvar: Revurderingssvar = async () => ({ url: behandlingsUrl });
@@ -210,6 +213,25 @@ describe('Revurdering', () => {
 
         expect(await screen.findByText(serverFeil)).toBeInTheDocument();
         expect(screen.queryByText(nyBehandlingTekst)).not.toBeInTheDocument();
+    });
+
+    test('Viser tittel og melding fra feilresponsen', async () => {
+        renderRevurder(async () => {
+            throw new AxiosError('Bad Request', '400', undefined, undefined, {
+                data: { tittel: feiltittelFraServer, melding: feilmeldingFraServer },
+                status: 400,
+                statusText: 'Bad Request',
+                headers: {},
+                config: { headers: new AxiosHeaders() },
+            });
+        });
+        await åpneDialog();
+
+        await fyllUtForeldelse();
+        await user.click(revurderKnapp());
+
+        expect(await screen.findByText(feiltittelFraServer)).toBeInTheDocument();
+        expect(screen.getByText(feilmeldingFraServer)).toBeInTheDocument();
     });
 
     test('Viser feil og hindrer ny innsending når responsen mangler URL', async () => {

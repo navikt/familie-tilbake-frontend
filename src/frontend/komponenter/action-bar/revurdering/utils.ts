@@ -1,4 +1,6 @@
+import type { AxiosError } from 'axios';
 import type {
+    BehandlingOpprettRevurderingError,
     InstansEnum,
     Revurderingsinstans,
     TilbakekrevingRevurderingsarsak,
@@ -74,3 +76,18 @@ export const opprettRevurderingResponseSchema = zOpprettRevurderingResponse.exte
         error: 'Revurderingen ble opprettet, men svaret mangler URL til behandlingen.',
     }),
 });
+
+export type Revurderingsfeil = AxiosError<BehandlingOpprettRevurderingError> | z.ZodError;
+
+export const feilmeldingFraRevurdering = (
+    error: Revurderingsfeil
+): { tittel: string; melding?: string } => {
+    if (error instanceof z.ZodError) {
+        return { tittel: error.issues[0]?.message ?? 'Ugyldig svar fra serveren.' };
+    }
+    const feil = error.response?.data;
+    return {
+        tittel: feil?.tittel ?? 'Kunne ikke opprette revurderingen. Prøv igjen.',
+        melding: feil?.melding,
+    };
+};
