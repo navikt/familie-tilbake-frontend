@@ -28,13 +28,14 @@ export const ActionBar: FC<ActionBarConfig> = ({
     disableNeste = false,
     type = 'button',
 }: ActionBarConfig) => {
-    const { erNyModell, status } = useBehandling();
+    const { erNyModell, status, kanRevurderingOpprettes } = useBehandling();
     const { harKravgrunnlag } = useBehandlingState();
     const nyStegflyt = useNyStegflyt();
     const revurderingPåskrudd = useToggle(ToggleName.Revurdering);
 
     const visMeny = !erNyModell;
-    const visRevurder = erNyModell && status === 'AVSLUTTET' && revurderingPåskrudd;
+    const visRevurder =
+        erNyModell && revurderingPåskrudd && status === 'AVSLUTTET' && kanRevurderingOpprettes;
     const visStegflyt = nyStegflyt && harKravgrunnlag;
     const navAriaLabel = visMeny
         ? 'Meny og navigasjonsknapper'

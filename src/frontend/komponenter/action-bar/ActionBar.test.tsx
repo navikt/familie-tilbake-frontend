@@ -127,7 +127,11 @@ describe('ActionBar', () => {
         const revurderingsøy = (): HTMLElement | null =>
             screen.queryByRole('navigation', { name: 'Behandlingsvalg' });
         const lagAvsluttetNyModellBehandling = (): BehandlingDto =>
-            lagBehandling({ erNyModell: true, status: 'AVSLUTTET' });
+            lagBehandling({
+                erNyModell: true,
+                status: 'AVSLUTTET',
+                kanRevurderingOpprettes: true,
+            });
 
         test('Viser revurderingsøyen når avsluttet behandling kan revurderes', () => {
             renderActionBar({
