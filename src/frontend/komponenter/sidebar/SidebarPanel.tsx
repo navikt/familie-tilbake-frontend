@@ -1,6 +1,6 @@
 import type { FC, ReactNode, Ref } from 'react';
 
-import { Heading, Tabs } from '@navikt/ds-react';
+import { Tabs } from '@navikt/ds-react';
 import { useState } from 'react';
 
 import { useSidebarStore } from '@/stores/sidebarStore';
@@ -61,9 +61,6 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp, aktivTabRef }: Props) => 
                     lazy={!(MENYSIDE_META[side].bevarerTilstand && besøkteSider.includes(side))}
                     className="flex-1 min-h-0 flex-col gap-4 data-[state=active]:flex"
                 >
-                    <Heading level="2" size="small">
-                        {MENYSIDE_META[side].tittel}
-                    </Heading>
                     <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable px-1">
                         <SidebarInnhold valgtMenyside={side} />
                     </div>
