@@ -43,12 +43,24 @@ export const MottakerBoks: FC = () => {
                     <dt>Navn</dt>
                     <dd>{bruker.navn}</dd>
                 </div>
-                {bruker.fødselsdato && (
-                    <div className="flex flex-col gap-1">
-                        <dt className=" text-ax-text-neutral-subtle">Alder</dt>
-                        <dd>{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
-                    </div>
-                )}
+                <div className="grid grid-cols-2">
+                    {bruker.fødselsdato && (
+                        <div className="flex flex-col gap-1">
+                            <dt className=" text-ax-text-neutral-subtle">Alder</dt>
+                            <dd>{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
+                        </div>
+                    )}
+                    {bruker.dødsdato && (
+                        <div className="flex flex-col gap-1">
+                            <dt className="text-ax-text-neutral-subtle">Dødsdato</dt>
+                            <dd>
+                                <Tag size="small" variant="strong">
+                                    {formatterDatostring(bruker.dødsdato)}
+                                </Tag>
+                            </dd>
+                        </div>
+                    )}
+                </div>
 
                 <div className="grid grid-cols-2">
                     <div className="flex flex-col gap-1">
@@ -82,16 +94,6 @@ export const MottakerBoks: FC = () => {
                     </div>
                 </div>
 
-                {bruker.dødsdato && (
-                    <div className="flex flex-col gap-1">
-                        <dt className="text-ax-text-neutral-subtle">Dødsdato</dt>
-                        <dd>
-                            <Tag size="small" variant="strong">
-                                {formatterDatostring(bruker.dødsdato)}
-                            </Tag>
-                        </dd>
-                    </div>
-                )}
                 {institusjon && (
                     <>
                         <div className="flex flex-col gap-1">
