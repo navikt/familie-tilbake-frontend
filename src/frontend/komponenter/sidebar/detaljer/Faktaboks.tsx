@@ -1,27 +1,13 @@
-import type { TagProps } from '@navikt/ds-react';
-import type { ComponentType, FC } from 'react';
+import type { AkselColor } from '@navikt/ds-react/types/theme';
+import type { FC } from 'react';
 import type { BehandlingsresultatstypeEnum, BehandlingstatusEnum } from '@/generated';
 
-import {
-    Buildings3Icon,
-    CalendarFillIcon,
-    CalendarIcon,
-    ClipboardIcon,
-    FileCheckmarkIcon,
-    FileLoadingIcon,
-    FilePlusIcon,
-    FileResetIcon,
-    TasklistIcon,
-    TasklistSendIcon,
-} from '@navikt/aksel-icons';
 import { Heading, Tag } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useFagsak } from '@/context/FagsakContext';
-import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@/typer/behandling';
+import { behandlingsresultater, behandlingsstatuser } from '@/typer/behandling';
 import { formatterDatostring } from '@/utils';
-
-import { ICON_PROPS } from './utils';
 
 export const Faktaboks: FC = () => {
     const behandling = useBehandling();
@@ -30,124 +16,71 @@ export const Faktaboks: FC = () => {
     return (
         <section
             aria-label="Tilbakekrevingsinformasjon"
-            className="flex flex-col gap-2 rounded-xl border border-ax-border-brand-blue-subtle py-4 px-2"
+            className="flex flex-col gap-2 rounded-xl border border-ax-border-brand-blue-subtle p-4"
         >
-            <Heading
-                level="3"
-                size="xsmall"
-                className="text-ax-text-neutral-subtle hyphens-auto wrap-break-word"
-            >
+            <Heading level="2" size="xsmall" className="hyphens-auto wrap-break-word">
                 {`Tilbakekreving av ${ytelsestype.toLocaleLowerCase()}`}
             </Heading>
-            <dl className="grid grid-cols-[136px_minmax(0,1fr)] ax-xl:grid-cols-[152px_minmax(0,1fr)] gap-y-2 gap-x-4 text-ax-text-neutral">
-                {behandling.behandlingsårsakstype && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <FileResetIcon {...ICON_PROPS} />
-                            Revurderingsårsak
-                        </dt>
-                        <dd className="text-ax-medium items-center flex">
-                            <Tag data-color="neutral" size="small" variant="moderate">
-                                {behandlingsårsaker[behandling.behandlingsårsakstype]}
-                            </Tag>
-                        </dd>
-                    </>
-                )}
+            <dl className="flex flex-col gap-y-4 text-ax-medium">
+                <div className="grid grid-cols-2">
+                    <StatusTag status={behandling.status} />
+                    {behandling.resultatstype && (
+                        <ResultatTag resultat={behandling.resultatstype} />
+                    )}
+                </div>
+                <div className="grid grid-cols-2">
+                    <div className="flex flex-col gap-y-1">
+                        <dt className="text-ax-text-neutral-subtle">Opprettet</dt>
+                        <dd>{formatterDatostring(behandling.opprettetDato)}</dd>
+                    </div>
 
-                <StatusTag status={behandling.status} />
-
-                {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
-
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    <CalendarIcon {...ICON_PROPS} />
-                    Opprettet
-                </dt>
-                <dd className="text-ax-medium items-center flex">
-                    {formatterDatostring(behandling.opprettetDato)}
-                </dd>
-
-                {behandling.avsluttetDato && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <CalendarFillIcon {...ICON_PROPS} />
-                            Avsluttet
-                        </dt>
-                        <dd className="text-ax-medium items-center flex">
-                            {formatterDatostring(behandling.avsluttetDato)}
-                        </dd>
-                    </>
-                )}
-
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-start">
-                    <Buildings3Icon {...ICON_PROPS} />
-                    Enhet
-                </dt>
-                <dd className="text-ax-medium min-w-0 hyphens-auto wrap-break-word">
-                    {behandling.enhetskode} {behandling.enhetsnavn}
-                </dd>
+                    {behandling.avsluttetDato && (
+                        <div className="flex flex-col gap-y-1">
+                            <dt className="text-ax-text-neutral-subtle">Avsluttet</dt>
+                            <dd>{formatterDatostring(behandling.avsluttetDato)}</dd>
+                        </div>
+                    )}
+                </div>
+                <div className="flex flex-col gap-y-1">
+                    <dt className="text-ax-text-neutral-subtle">Enhet</dt>
+                    <dd className="min-w-0 hyphens-auto wrap-break-word">
+                        {behandling.enhetskode} {behandling.enhetsnavn}
+                    </dd>
+                </div>
             </dl>
         </section>
     );
 };
 
-type StatusMeta = {
-    dataColor: TagProps['data-color'];
-    icon: ComponentType;
-};
-
-const STATUS_META: Record<BehandlingstatusEnum, StatusMeta> = {
-    OPPRETTET: {
-        dataColor: 'neutral',
-        icon: FilePlusIcon,
-    },
-    UTREDES: {
-        dataColor: 'info',
-        icon: FileLoadingIcon,
-    },
-    FATTER_VEDTAK: {
-        dataColor: 'brand-beige',
-        icon: TasklistIcon,
-    },
-    IVERKSETTER_VEDTAK: {
-        dataColor: 'meta-lime',
-        icon: TasklistSendIcon,
-    },
-    JOURNALFØR_VEDTAK: {
-        dataColor: 'neutral',
-        icon: FilePlusIcon,
-    },
-    DISTRIUBER_VEDTAK: {
-        dataColor: 'neutral',
-        icon: FilePlusIcon,
-    },
-    AVSLUTTET: {
-        dataColor: 'success',
-        icon: FileCheckmarkIcon,
-    },
-} satisfies Record<BehandlingstatusEnum, StatusMeta>;
+const STATUS_COLOR: Record<BehandlingstatusEnum, AkselColor> = {
+    OPPRETTET: 'neutral',
+    UTREDES: 'info',
+    FATTER_VEDTAK: 'brand-beige',
+    IVERKSETTER_VEDTAK: 'meta-lime',
+    JOURNALFØR_VEDTAK: 'neutral',
+    DISTRIUBER_VEDTAK: 'neutral',
+    AVSLUTTET: 'success',
+} satisfies Record<BehandlingstatusEnum, AkselColor>;
 
 type StatusProps = {
     status: BehandlingstatusEnum;
 };
 
 const StatusTag: FC<StatusProps> = ({ status }: StatusProps) => {
-    const { dataColor, icon: StatusIkon } = STATUS_META[status];
+    const dataColor = STATUS_COLOR[status];
     return (
-        <>
-            <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                <StatusIkon {...ICON_PROPS} />
-                Status
-            </dt>
-            <dd className="text-ax-medium items-center flex">
+        <div className="flex flex-col gap-y-1">
+            <dt className="text-ax-text-neutral-subtle">Status</dt>
+            <dd>
                 <Tag size="small" data-color={dataColor} variant="moderate">
                     {behandlingsstatuser[status]}
                 </Tag>
             </dd>
-        </>
+        </div>
     );
 };
 
-const RESULTAT_META: Record<BehandlingsresultatstypeEnum, TagProps['data-color']> = {
+const RESULTAT_META: Record<BehandlingsresultatstypeEnum, AkselColor> = {
     HENLAGT: 'danger',
     HENLAGT_FEILOPPRETTET: 'danger',
     HENLAGT_FEILOPPRETTET_MED_BREV: 'danger',
@@ -168,16 +101,13 @@ type ResultatProps = {
 const ResultatTag: FC<ResultatProps> = ({ resultat }: ResultatProps) => {
     const dataColor = RESULTAT_META[resultat];
     return (
-        <>
-            <dt className="shrink-0 text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                <ClipboardIcon {...ICON_PROPS} />
-                Resultat
-            </dt>
-            <dd className="text-ax-medium items-center flex">
+        <div className="flex flex-col gap-y-1">
+            <dt className="text-ax-text-neutral-subtle">Resultat</dt>
+            <dd>
                 <Tag size="small" data-color={dataColor} variant="moderate">
                     {behandlingsresultater[resultat]}
                 </Tag>
             </dd>
-        </>
+        </div>
     );
 };

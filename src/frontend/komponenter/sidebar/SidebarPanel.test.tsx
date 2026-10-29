@@ -1,6 +1,6 @@
 import type { BehandlingDto } from '@/generated';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -42,11 +42,11 @@ describe('SidebarPanel', () => {
         expect(screen.getByRole('tab', { name: 'Dokumenter' })).toBeInTheDocument();
     });
 
-    test('Viser tittel og innhold for aktiv fane', () => {
+    test('Viser innhold for aktiv fane', () => {
         renderSidebarPanel();
 
-        expect(screen.getByRole('heading', { level: 2, name: 'Detaljer' })).toBeInTheDocument();
-        expect(screen.getByText(`Innhold for ${Menysider.Detaljer}`)).toBeInTheDocument();
+        const panel = screen.getByRole('tabpanel', { name: 'Detaljer' });
+        expect(within(panel).getByText(`Innhold for ${Menysider.Detaljer}`)).toBeInTheDocument();
     });
 
     test('Bytter fane og lagrer valget i storen', async () => {
@@ -55,8 +55,8 @@ describe('SidebarPanel', () => {
         await userEvent.click(screen.getByRole('tab', { name: 'Historikk' }));
 
         expect(useSidebarStore.getState().valgtSide).toBe(Menysider.Historikk);
-        expect(screen.getByRole('heading', { level: 2, name: 'Historikk' })).toBeInTheDocument();
-        expect(screen.getByText(`Innhold for ${Menysider.Historikk}`)).toBeInTheDocument();
+        const panel = screen.getByRole('tabpanel', { name: 'Historikk' });
+        expect(within(panel).getByText(`Innhold for ${Menysider.Historikk}`)).toBeInTheDocument();
     });
 
     test('Viser fatte vedtak-fanen som standard når behandlingen fatter vedtak', () => {
@@ -66,7 +66,8 @@ describe('SidebarPanel', () => {
             'aria-selected',
             'true'
         );
-        expect(screen.getByRole('heading', { level: 2, name: 'Fatte vedtak' })).toBeInTheDocument();
+        const panel = screen.getByRole('tabpanel', { name: 'Fatte vedtak' });
+        expect(within(panel).getByText(`Innhold for ${Menysider.Totrinn}`)).toBeInTheDocument();
     });
 
     test('Beholder skjemasiden montert etter fanebytte så utfylt tekst ikke går tapt', async () => {

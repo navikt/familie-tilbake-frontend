@@ -12,7 +12,7 @@ import { FagsakContext } from '@/context/FagsakContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
-import { behandlingsresultater, behandlingsstatuser, behandlingsårsaker } from '@/typer/behandling';
+import { behandlingsresultater, behandlingsstatuser } from '@/typer/behandling';
 
 import { Faktaboks } from './Faktaboks';
 
@@ -36,23 +36,9 @@ describe('Faktaboks', () => {
         expect(
             screen.getByRole('heading', {
                 name: 'Tilbakekreving av barnetrygd',
+                level: 2,
             })
         ).toBeInTheDocument();
-    });
-
-    test('Viser revurderingsårsak når satt', () => {
-        renderFaktaboks({
-            behandlingsårsakstype: 'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
-        });
-        expect(screen.getByText('Revurderingsårsak')).toBeInTheDocument();
-        expect(
-            screen.getByText(behandlingsårsaker['REVURDERING_OPPLYSNINGER_OM_VILKÅR'])
-        ).toBeInTheDocument();
-    });
-
-    test('Skjuler revurderingsårsak når ikke satt', () => {
-        renderFaktaboks({ behandlingsårsakstype: undefined });
-        expect(screen.queryByText('Revurderingsårsak')).not.toBeInTheDocument();
     });
 
     test.each<[BehandlingstatusEnum, TagProps['data-color']]>([
@@ -60,13 +46,15 @@ describe('Faktaboks', () => {
         ['UTREDES', 'info'],
         ['FATTER_VEDTAK', 'brand-beige'],
         ['IVERKSETTER_VEDTAK', 'meta-lime'],
+        ['JOURNALFØR_VEDTAK', 'neutral'],
+        ['DISTRIUBER_VEDTAK', 'neutral'],
         ['AVSLUTTET', 'success'],
     ])('Status tag variant %s', (status, forventetDataColor) => {
         renderFaktaboks({ status });
-        const tags = screen.getAllByText(behandlingsstatuser[status]);
-        const tag = tags.find(el => el.classList.contains('aksel-tag'));
-        expect(tag).toBeTruthy();
-        expect(tag?.getAttribute('data-color')).toBe(forventetDataColor);
+        expect(screen.getByText(behandlingsstatuser[status], { selector: 'span' })).toHaveAttribute(
+            'data-color',
+            forventetDataColor
+        );
     });
 
     test.each<[BehandlingsresultatstypeEnum, TagProps['data-color']]>([
@@ -76,10 +64,10 @@ describe('Faktaboks', () => {
         ['FULL_TILBAKEBETALING', 'brand-magenta'],
     ])('Resultat tag variant %s', (resultat, forventetDataColor) => {
         renderFaktaboks({ resultatstype: resultat });
-        const tags = screen.getAllByText(behandlingsresultater[resultat]);
-        const tag = tags.find(el => el.classList.contains('aksel-tag'));
-        expect(tag).toBeTruthy();
-        expect(tag?.getAttribute('data-color')).toBe(forventetDataColor);
+        expect(screen.getByText(behandlingsresultater[resultat])).toHaveAttribute(
+            'data-color',
+            forventetDataColor
+        );
     });
 
     test('Viser opprettet dato formatert', () => {
