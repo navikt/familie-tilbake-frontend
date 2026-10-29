@@ -13,7 +13,7 @@ export const Detaljer: FC = () => {
 
     return (
         <VStack gap="space-16">
-            {!behandlingsårsakstype && (
+            {behandlingsårsakstype && (
                 <Revurderingsboks
                     behandlingsårsakstype={'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'}
                 />

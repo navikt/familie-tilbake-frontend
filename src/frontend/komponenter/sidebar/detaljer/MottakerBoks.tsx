@@ -1,22 +1,11 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import type { KjønnEnum } from '@/generated';
 
-import {
-    BagdeIcon,
-    Buildings2Icon,
-    CandleIcon,
-    FigureCombinationIcon,
-    FigureInwardIcon,
-    FigureOutwardIcon,
-    FlowerPetalFallingIcon,
-} from '@navikt/aksel-icons';
 import { CopyButton, Heading, Tag } from '@navikt/ds-react';
 
 import { useFagsak } from '@/context/FagsakContext';
 import { formatterDatostring, hentAlder } from '@/utils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
-
-import { ICON_PROPS } from './utils';
 
 const erDNummer = (personIdent: string): boolean => personIdent.charAt(0) > '3';
 
@@ -26,14 +15,15 @@ const formatterPersonIdent = (personIdent: string): string =>
 const formatterOrgNummer = (orgNummer: string): string =>
     orgNummer.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
 
-const kjønnIkon = (kjønn: KjønnEnum): ReactNode => {
+const mapKjønn = (kjønn: KjønnEnum): string => {
     switch (kjønn) {
-        case 'KVINNE':
-            return <FigureOutwardIcon {...ICON_PROPS} />;
         case 'MANN':
-            return <FigureInwardIcon {...ICON_PROPS} />;
+            return 'Mann';
+        case 'KVINNE':
+            return 'Kvinne';
+        case 'UKJENT':
         default:
-            return <FigureCombinationIcon {...ICON_PROPS} />;
+            return 'Ukjent';
     }
 };
 
@@ -48,91 +38,90 @@ export const MottakerBoks: FC = () => {
             <Heading level="3" size="xsmall" className="text-ax-text-neutral-subtle">
                 Mottaker
             </Heading>
-            <dl className="grid grid-cols-[136px_1fr] ax-xl:grid-cols-[152px_1fr] gap-y-2 gap-x-4 text-ax-text-neutral">
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    {kjønnIkon(bruker.kjønn)}
-                    Navn
-                </dt>
-                <dd className="text-ax-medium">{bruker.navn}</dd>
-
+            <dl className="flex flex-col gap-y-4 text-ax-medium">
+                <div className="flex flex-col gap-1">
+                    <dt>Navn</dt>
+                    <dd>{bruker.navn}</dd>
+                </div>
                 {bruker.fødselsdato && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <CandleIcon {...ICON_PROPS} />
-                            Alder
-                        </dt>
-                        <dd className="text-ax-medium">
-                            {hentAlder(bruker.fødselsdato, bruker.dødsdato)} år
-                        </dd>
-                    </>
+                    <div className="flex flex-col gap-1">
+                        <dt className=" text-ax-text-neutral-subtle">Alder</dt>
+                        <dd>{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
+                    </div>
                 )}
 
-                <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                    <BagdeIcon {...ICON_PROPS} />
-                    {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
-                </dt>
-                <dd className="text-ax-medium flex flex-row gap-2 items-center">
-                    <span aria-hidden>{formatterPersonIdent(bruker.personIdent)}</span>
-                    <span className="sr-only">{bruker.personIdent.split('').join(' ')}</span>
-                    <CopyButton
-                        copyText={bruker.personIdent}
-                        className="p-0"
-                        title="Kopier fødselsnummer"
-                        onClick={(): void =>
-                            sporHendelse(Hendelser.TEKST_KOPIERT, {
-                                tekst: erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer',
-                                kontekst: Sporingskontekst.Sidebar,
-                                komponentId: 'brukerinformasjon',
-                            })
-                        }
-                    />
-                </dd>
-
-                {bruker.dødsdato && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <FlowerPetalFallingIcon {...ICON_PROPS} />
-                            Dødsdato
+                <div className="grid grid-cols-2">
+                    <div className="flex flex-col gap-1">
+                        <dt className=" text-ax-text-neutral-subtle">
+                            {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
                         </dt>
-                        <dd className="text-ax-medium">
-                            <Tag data-color="neutral" size="small" variant="strong">
-                                {formatterDatostring(bruker.dødsdato)}
-                            </Tag>
-                        </dd>
-                    </>
-                )}
-                {institusjon && (
-                    <>
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <Buildings2Icon {...ICON_PROPS} />
-                            Institusjon
-                        </dt>
-                        <dd className="text-ax-medium">{institusjon.navn}</dd>
-
-                        <dt className="text-ax-medium font-ax-bold flex flex-row gap-2 items-center">
-                            <Buildings2Icon {...ICON_PROPS} />
-                            Org.nummer
-                        </dt>
-                        <dd className="text-ax-medium flex flex-row gap-2 items-center">
-                            <span aria-hidden>
-                                {formatterOrgNummer(institusjon.organisasjonsnummer)}
-                            </span>
+                        <dd className="flex items-center gap-1">
+                            <span aria-hidden>{formatterPersonIdent(bruker.personIdent)}</span>
                             <span className="sr-only">
-                                {institusjon.organisasjonsnummer.split('').join(' ')}
+                                {bruker.personIdent.split('').join(' ')}
                             </span>
                             <CopyButton
-                                copyText={institusjon.organisasjonsnummer}
+                                copyText={bruker.personIdent}
                                 className="p-0"
-                                title="Kopier organisasjonsnummer"
+                                title="Kopier fødselsnummer"
                                 onClick={(): void =>
                                     sporHendelse(Hendelser.TEKST_KOPIERT, {
-                                        tekst: 'Organisasjonsnummer',
+                                        tekst: erDNummer(bruker.personIdent)
+                                            ? 'D-nummer'
+                                            : 'Fødselsnummer',
                                         kontekst: Sporingskontekst.Sidebar,
                                         komponentId: 'brukerinformasjon',
                                     })
                                 }
                             />
                         </dd>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <dt className="text-ax-text-neutral-subtle">Kjønn</dt>
+                        <dd>{mapKjønn(bruker.kjønn)}</dd>
+                    </div>
+                </div>
+
+                {bruker.dødsdato && (
+                    <div className="flex flex-col gap-1">
+                        <dt className="text-ax-text-neutral-subtle">Dødsdato</dt>
+                        <dd>
+                            <Tag size="small" variant="strong">
+                                {formatterDatostring(bruker.dødsdato)}
+                            </Tag>
+                        </dd>
+                    </div>
+                )}
+                {institusjon && (
+                    <>
+                        <div className="flex flex-col gap-1">
+                            <dt className="text-ax-text-neutral-subtle">Institusjon</dt>
+                            <dd>{institusjon.navn}</dd>
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                            <dt className="text-ax-text-neutral-subtle">Organisasjonsnummer</dt>
+                            <dd className="flex items-center gap-1">
+                                <span aria-hidden>
+                                    {formatterOrgNummer(institusjon.organisasjonsnummer)}
+                                </span>
+                                <span className="sr-only">
+                                    {institusjon.organisasjonsnummer.split('').join(' ')}
+                                </span>
+                                <CopyButton
+                                    copyText={institusjon.organisasjonsnummer}
+                                    className="p-0"
+                                    title="Kopier organisasjonsnummer"
+                                    onClick={(): void =>
+                                        sporHendelse(Hendelser.TEKST_KOPIERT, {
+                                            tekst: 'Organisasjonsnummer',
+                                            kontekst: Sporingskontekst.Sidebar,
+                                            komponentId: 'brukerinformasjon',
+                                        })
+                                    }
+                                />
+                            </dd>
+                        </div>
                     </>
                 )}
             </dl>

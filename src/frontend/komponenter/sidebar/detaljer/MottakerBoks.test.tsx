@@ -87,16 +87,16 @@ describe('MottakerBoks', () => {
         expect(screen.queryByText('Dødsdato')).not.toBeInTheDocument();
     });
 
-    test('Viser institusjon og org.nummer formatert', () => {
+    test('Viser institusjon og organisasjonsnummer formatert', () => {
         renderBrukerInformasjon({}, { navn: 'Test Institusjon', organisasjonsnummer: '987654321' });
         expect(screen.getByText('Test Institusjon')).toBeInTheDocument();
         expect(screen.getByText('987 654 321')).toBeInTheDocument();
-        expect(screen.getByText('Org.nummer')).toBeInTheDocument();
+        expect(screen.getByText('Organisasjonsnummer')).toBeInTheDocument();
     });
 
     test('Skjuler institusjon når ikke satt', () => {
         renderBrukerInformasjon({}, null);
         expect(screen.queryByText('Institusjon')).not.toBeInTheDocument();
-        expect(screen.queryByText('Org.nummer')).not.toBeInTheDocument();
+        expect(screen.queryByText('Organisasjonsnummer')).not.toBeInTheDocument();
     });
 });
