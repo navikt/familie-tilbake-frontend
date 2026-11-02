@@ -12,7 +12,7 @@ type Props = {
 export const Revurderingsboks: FC<Props> = ({ behandlingsårsakstype }: Props) => {
     return (
         <section
-            aria-label="Tilbakekrevingsinformasjon"
+            aria-label="Revurderingsinformasjon"
             className="flex flex-col gap-2 rounded-xl border border-ax-border-warning-subtle bg-ax-bg-warning-soft p-4"
         >
             <Heading level="2" size="xsmall">

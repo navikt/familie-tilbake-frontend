@@ -21,27 +21,23 @@ export const Faktaboks: FC = () => {
             <Heading level="2" size="xsmall" className="hyphens-auto wrap-break-word">
                 {`Tilbakekreving av ${ytelsestype.toLocaleLowerCase()}`}
             </Heading>
-            <dl className="flex flex-col gap-y-4 text-ax-medium">
-                <div className="grid grid-cols-2">
-                    <StatusTag status={behandling.status} />
-                    {behandling.resultatstype && (
-                        <ResultatTag resultat={behandling.resultatstype} />
-                    )}
-                </div>
-                <div className="grid grid-cols-2">
-                    <div className="flex flex-col gap-y-1">
-                        <dt className="text-ax-text-neutral-subtle">Opprettet</dt>
-                        <dd>{formatterDatostring(behandling.opprettetDato)}</dd>
-                    </div>
+            <dl className="grid grid-cols-2 gap-y-4 text-ax-medium">
+                <StatusTag status={behandling.status} />
+                {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
 
-                    {behandling.avsluttetDato && (
-                        <div className="flex flex-col gap-y-1">
-                            <dt className="text-ax-text-neutral-subtle">Avsluttet</dt>
-                            <dd>{formatterDatostring(behandling.avsluttetDato)}</dd>
-                        </div>
-                    )}
+                <div className="flex flex-col gap-y-1 col-start-1">
+                    <dt className="text-ax-text-neutral-subtle">Opprettet</dt>
+                    <dd>{formatterDatostring(behandling.opprettetDato)}</dd>
                 </div>
-                <div className="flex flex-col gap-y-1">
+
+                {behandling.avsluttetDato && (
+                    <div className="flex flex-col gap-y-1 col-start-2">
+                        <dt className="text-ax-text-neutral-subtle">Avsluttet</dt>
+                        <dd>{formatterDatostring(behandling.avsluttetDato)}</dd>
+                    </div>
+                )}
+
+                <div className="flex flex-col gap-y-1 col-span-2">
                     <dt className="text-ax-text-neutral-subtle">Enhet</dt>
                     <dd className="min-w-0 hyphens-auto wrap-break-word">
                         {behandling.enhetskode} {behandling.enhetsnavn}
@@ -69,7 +65,7 @@ type StatusProps = {
 const StatusTag: FC<StatusProps> = ({ status }: StatusProps) => {
     const dataColor = STATUS_COLOR[status];
     return (
-        <div className="flex flex-col gap-y-1">
+        <div className="flex flex-col gap-y-1 col-start-1">
             <dt className="text-ax-text-neutral-subtle">Status</dt>
             <dd>
                 <Tag size="small" data-color={dataColor} variant="moderate">
@@ -101,7 +97,7 @@ type ResultatProps = {
 const ResultatTag: FC<ResultatProps> = ({ resultat }: ResultatProps) => {
     const dataColor = RESULTAT_META[resultat];
     return (
-        <div className="flex flex-col gap-y-1">
+        <div className="flex flex-col gap-y-1 col-start-2">
             <dt className="text-ax-text-neutral-subtle">Resultat</dt>
             <dd>
                 <Tag size="small" data-color={dataColor} variant="moderate">
