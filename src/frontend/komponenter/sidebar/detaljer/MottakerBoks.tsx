@@ -38,70 +38,65 @@ export const MottakerBoks: FC = () => {
             <Heading level="3" size="xsmall" className="text-ax-text-neutral-subtle">
                 Mottaker
             </Heading>
-            <dl className="flex flex-col gap-y-4 text-ax-medium">
-                <div className="flex flex-col gap-1">
+            <dl className="grid grid-cols-2 flex-col gap-y-4 text-ax-medium">
+                <div className="flex flex-col gap-1 col-span-2">
                     <dt>Navn</dt>
                     <dd>{bruker.navn}</dd>
                 </div>
-                <div className="grid grid-cols-2">
-                    {bruker.fødselsdato && (
-                        <div className="flex flex-col gap-1">
-                            <dt className=" text-ax-text-neutral-subtle">Alder</dt>
-                            <dd>{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
-                        </div>
-                    )}
-                    {bruker.dødsdato && (
-                        <div className="flex flex-col gap-1">
-                            <dt className="text-ax-text-neutral-subtle">Dødsdato</dt>
-                            <dd>
-                                <Tag size="small" variant="strong">
-                                    {formatterDatostring(bruker.dødsdato)}
-                                </Tag>
-                            </dd>
-                        </div>
-                    )}
-                </div>
 
-                <div className="grid grid-cols-2">
-                    <div className="flex flex-col gap-1">
-                        <dt className=" text-ax-text-neutral-subtle">
-                            {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
-                        </dt>
-                        <dd className="flex items-center gap-1">
-                            <span aria-hidden>{formatterPersonIdent(bruker.personIdent)}</span>
-                            <span className="sr-only">
-                                {bruker.personIdent.split('').join(' ')}
-                            </span>
-                            <CopyButton
-                                copyText={bruker.personIdent}
-                                className="p-0"
-                                title="Kopier fødselsnummer"
-                                onClick={(): void =>
-                                    sporHendelse(Hendelser.TEKST_KOPIERT, {
-                                        tekst: erDNummer(bruker.personIdent)
-                                            ? 'D-nummer'
-                                            : 'Fødselsnummer',
-                                        kontekst: Sporingskontekst.Sidebar,
-                                        komponentId: 'brukerinformasjon',
-                                    })
-                                }
-                            />
+                {bruker.fødselsdato && (
+                    <div className="flex flex-col gap-1 col-start-1">
+                        <dt className=" text-ax-text-neutral-subtle">Alder</dt>
+                        <dd>{hentAlder(bruker.fødselsdato, bruker.dødsdato)} år</dd>
+                    </div>
+                )}
+                {bruker.dødsdato && (
+                    <div className="flex flex-col gap-1 col-start-2">
+                        <dt className="text-ax-text-neutral-subtle">Dødsdato</dt>
+                        <dd>
+                            <Tag size="small" variant="strong">
+                                {formatterDatostring(bruker.dødsdato)}
+                            </Tag>
                         </dd>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <dt className="text-ax-text-neutral-subtle">Kjønn</dt>
-                        <dd>{mapKjønn(bruker.kjønn)}</dd>
-                    </div>
+                )}
+
+                <div className="flex flex-col gap-1 col-start-1">
+                    <dt className=" text-ax-text-neutral-subtle">
+                        {erDNummer(bruker.personIdent) ? 'D-nummer' : 'Fødselsnummer'}
+                    </dt>
+                    <dd className="flex items-center gap-1">
+                        <span aria-hidden>{formatterPersonIdent(bruker.personIdent)}</span>
+                        <span className="sr-only">{bruker.personIdent.split('').join(' ')}</span>
+                        <CopyButton
+                            copyText={bruker.personIdent}
+                            className="p-0"
+                            title="Kopier fødselsnummer"
+                            onClick={(): void =>
+                                sporHendelse(Hendelser.TEKST_KOPIERT, {
+                                    tekst: erDNummer(bruker.personIdent)
+                                        ? 'D-nummer'
+                                        : 'Fødselsnummer',
+                                    kontekst: Sporingskontekst.Sidebar,
+                                    komponentId: 'brukerinformasjon',
+                                })
+                            }
+                        />
+                    </dd>
+                </div>
+                <div className="flex flex-col gap-1 col-start-2">
+                    <dt className="text-ax-text-neutral-subtle">Kjønn</dt>
+                    <dd>{mapKjønn(bruker.kjønn)}</dd>
                 </div>
 
                 {institusjon && (
                     <>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1 col-span-2">
                             <dt className="text-ax-text-neutral-subtle">Institusjon</dt>
                             <dd>{institusjon.navn}</dd>
                         </div>
 
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1 col-span-2">
                             <dt className="text-ax-text-neutral-subtle">Organisasjonsnummer</dt>
                             <dd className="flex items-center gap-1">
                                 <span aria-hidden>
