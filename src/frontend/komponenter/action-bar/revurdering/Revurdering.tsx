@@ -29,6 +29,7 @@ import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useFagsak } from '@/context/FagsakContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { useRedirectEtterLagring } from '@/hooks/useRedirectEtterLagring';
+import { årsaker } from '@/typer/revurdering';
 import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
@@ -38,7 +39,6 @@ import {
     opprettRevurderingResponseSchema,
     type Revurderingsfeil,
     revurderingSchema,
-    årsaker,
 } from './utils';
 
 export const OPPRETT_REVURDERING_MUTATION_KEY = ['opprettRevurdering'] as const;

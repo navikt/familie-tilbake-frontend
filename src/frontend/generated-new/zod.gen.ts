@@ -108,7 +108,7 @@ export const zForsettlig = z.object({
 
 export const zFritekst = z.string().min(3).max(3000);
 
-export const zHovedavsnittBortfaltKravbrev = z.object({
+export const zHovedavsnittInformasjonsbrev = z.object({
     tittel: z.string().min(3).max(300),
     innhold: z.array(z.string()),
 });
@@ -418,8 +418,8 @@ export const zUnderavsnittElement = z.object({
     underavsnitt: z.array(zElement),
 });
 
-export const zBortfaltKravbrevData = z.object({
-    hovedavsnitt: zHovedavsnittBortfaltKravbrev,
+export const zInformasjonsbrevData = z.object({
+    hovedavsnitt: zHovedavsnittInformasjonsbrev,
     underavsnitt: z.array(zUnderavsnittElement),
     brevGjelder: zBrevmottaker,
     signatur: zSignaturAutomatisk,
@@ -1397,13 +1397,6 @@ export const zBehandlingHentDokumentInfoPath = z.object({
  * The request has succeeded.
  */
 export const zBehandlingHentDokumentInfoResponse = zDokumentInfo;
-
-export const zBrevLagSvgBortfaltKravbrevBody = zBortfaltKravbrevData;
-
-/**
- * The request has succeeded.
- */
-export const zBrevLagSvgBortfaltKravbrevResponse = z.string();
 
 export const zBrevLagSvgVarselbrevBody = zVarselbrevData;
 

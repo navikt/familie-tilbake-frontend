@@ -28,7 +28,6 @@ import {
     behandlingUtsettUttalelsesfrist,
     behandlingVilkaarsvurdering,
     behandlingVilkaarsvurderingsperioder,
-    brevLagSvgBortfaltKravbrev,
     brevLagSvgVarselbrev,
     brevLagSvgVedtaksbrev,
     dokumenterHentVedtaksdokumenter,
@@ -97,8 +96,6 @@ import type {
     BehandlingVilkaarsvurderingsperioderData,
     BehandlingVilkaarsvurderingsperioderError,
     BehandlingVilkaarsvurderingsperioderResponse,
-    BrevLagSvgBortfaltKravbrevData,
-    BrevLagSvgBortfaltKravbrevResponse,
     BrevLagSvgVarselbrevData,
     BrevLagSvgVarselbrevResponse,
     BrevLagSvgVedtaksbrevData,
@@ -693,30 +690,6 @@ export const behandlingHentDokumentInfoOptions = (
         },
         queryKey: behandlingHentDokumentInfoQueryKey(options),
     });
-
-export const brevLagSvgBortfaltKravbrevMutation = (
-    options?: Partial<Options<BrevLagSvgBortfaltKravbrevData>>
-): UseMutationOptions<
-    BrevLagSvgBortfaltKravbrevResponse,
-    AxiosError<DefaultError>,
-    Options<BrevLagSvgBortfaltKravbrevData>
-> => {
-    const mutationOptions: UseMutationOptions<
-        BrevLagSvgBortfaltKravbrevResponse,
-        AxiosError<DefaultError>,
-        Options<BrevLagSvgBortfaltKravbrevData>
-    > = {
-        mutationFn: async fnOptions => {
-            const { data } = await brevLagSvgBortfaltKravbrev({
-                ...options,
-                ...fnOptions,
-                throwOnError: true,
-            });
-            return data;
-        },
-    };
-    return mutationOptions;
-};
 
 export const brevLagSvgVarselbrevMutation = (
     options?: Partial<Options<BrevLagSvgVarselbrevData>>

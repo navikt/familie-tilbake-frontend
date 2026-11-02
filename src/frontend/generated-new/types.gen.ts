@@ -83,15 +83,6 @@ export type BestemmelseEllerGrunnlag = {
     beskrivelse: string;
 };
 
-export type BortfaltKravbrevData = {
-    hovedavsnitt: HovedavsnittBortfaltKravbrev;
-    underavsnitt: Array<UnderavsnittElement>;
-    brevGjelder: Brevmottaker;
-    signatur: SignaturAutomatisk;
-    sendtDato: string;
-    saksnummer: string;
-};
-
 export type Brevmottaker = {
     navn: string;
     personIdent: string;
@@ -285,7 +276,7 @@ export type Hovedavsnitt = {
     hjemler: string;
 };
 
-export type HovedavsnittBortfaltKravbrev = {
+export type HovedavsnittInformasjonsbrev = {
     tittel: string;
     innhold: Array<string>;
 };
@@ -306,6 +297,15 @@ export type IkkeAktuelt = {
 
 export type IkkeVurdert = {
     [key: string]: unknown;
+};
+
+export type InformasjonsbrevData = {
+    hovedavsnitt: HovedavsnittInformasjonsbrev;
+    underavsnitt: Array<UnderavsnittElement>;
+    brevGjelder: Brevmottaker;
+    signatur: SignaturAutomatisk;
+    sendtDato: string;
+    saksnummer: string;
 };
 
 export type IngenUttalelse = {
@@ -1816,23 +1816,6 @@ export type BehandlingHentDokumentInfoResponses = {
 
 export type BehandlingHentDokumentInfoResponse =
     BehandlingHentDokumentInfoResponses[keyof BehandlingHentDokumentInfoResponses];
-
-export type BrevLagSvgBortfaltKravbrevData = {
-    body: BortfaltKravbrevData;
-    path?: never;
-    query?: never;
-    url: '/api/v1/brev/bortfalt-krav/svg';
-};
-
-export type BrevLagSvgBortfaltKravbrevResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: Blob | File;
-};
-
-export type BrevLagSvgBortfaltKravbrevResponse =
-    BrevLagSvgBortfaltKravbrevResponses[keyof BrevLagSvgBortfaltKravbrevResponses];
 
 export type BrevLagSvgVarselbrevData = {
     body: VarselbrevData;

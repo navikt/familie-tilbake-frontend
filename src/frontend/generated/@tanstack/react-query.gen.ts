@@ -29,6 +29,7 @@ import {
     flyttBehandlingTilFakta1,
     forhåndsvisBrev,
     henleggBehandling,
+    hentAntallPerBehandlingsårsakstype,
     hentBehandling,
     hentBehandlingerForFagsystem,
     hentBeregningsresultat,
@@ -127,6 +128,8 @@ import type {
     ForhåndsvisBrevResponse,
     HenleggBehandlingData,
     HenleggBehandlingResponse,
+    HentAntallPerBehandlingsårsakstypeData,
+    HentAntallPerBehandlingsårsakstypeResponse,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponse,
@@ -1718,6 +1721,34 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
             finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey(
                 options
             ),
+    });
+
+export const hentAntallPerBehandlingsårsakstypeQueryKey = (
+    options?: Options<HentAntallPerBehandlingsårsakstypeData>
+) => createQueryKey('hentAntallPerBehandlingsårsakstype', options);
+
+/**
+ * Hent antall rader per behandlingsårsakstype, inkludert typer uten forekomster
+ */
+export const hentAntallPerBehandlingsårsakstypeOptions = (
+    options?: Options<HentAntallPerBehandlingsårsakstypeData>
+) =>
+    queryOptions<
+        HentAntallPerBehandlingsårsakstypeResponse,
+        AxiosError<DefaultError>,
+        HentAntallPerBehandlingsårsakstypeResponse,
+        ReturnType<typeof hentAntallPerBehandlingsårsakstypeQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await hentAntallPerBehandlingsårsakstype({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: hentAntallPerBehandlingsårsakstypeQueryKey(options),
     });
 
 export const lagBehandlingUrlQueryKey = (options?: Options<LagBehandlingUrlData>) =>

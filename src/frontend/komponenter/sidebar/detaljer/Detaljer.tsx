@@ -9,13 +9,14 @@ import { MottakerBoks } from './MottakerBoks';
 import { Revurderingsboks } from './Revurderingsboks';
 
 export const Detaljer: FC = () => {
-    const { behandlingsårsakstype } = useBehandling();
+    const { behandlingsårsakstype, tilbakekrevingRevurdering } = useBehandling();
 
     return (
         <VStack gap="space-16">
-            {behandlingsårsakstype && (
-                <Revurderingsboks behandlingsårsakstype={behandlingsårsakstype} />
-            )}
+            <Revurderingsboks
+                revurdering={tilbakekrevingRevurdering}
+                behandlingsårsakstype={behandlingsårsakstype}
+            />
             <Faktaboks />
             <MottakerBoks />
         </VStack>

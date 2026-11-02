@@ -51,6 +51,8 @@ import type {
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
     HenleggBehandlingResponses,
+    HentAntallPerBehandlingsårsakstypeData,
+    HentAntallPerBehandlingsårsakstypeResponses,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponses,
@@ -1021,6 +1023,23 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
     >({
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave/{fagsystem}',
+        ...options,
+    });
+
+/**
+ * Hent antall rader per behandlingsårsakstype, inkludert typer uten forekomster
+ */
+export const hentAntallPerBehandlingsårsakstype = <ThrowOnError extends boolean = false>(
+    options?: Options<HentAntallPerBehandlingsårsakstypeData, ThrowOnError>
+): RequestResult<HentAntallPerBehandlingsårsakstypeResponses, unknown, ThrowOnError> =>
+    (options?.client ?? client).get<
+        HentAntallPerBehandlingsårsakstypeResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/behandlingsarsak/antall',
         ...options,
     });
 

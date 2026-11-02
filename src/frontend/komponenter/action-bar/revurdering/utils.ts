@@ -3,8 +3,8 @@ import type {
     BehandlingOpprettRevurderingError,
     InstansEnum,
     Revurderingsinstans,
-    TilbakekrevingRevurderingsarsak,
 } from '@/generated-new';
+import type { Revurderingsårsak } from '@/typer/revurdering';
 
 import { z } from 'zod';
 
@@ -51,15 +51,6 @@ export const revurderingSchema = z.discriminatedUnion(
     ],
     { error: 'Velg årsak til revurderingen' }
 );
-
-type Revurderingsårsak = TilbakekrevingRevurderingsarsak['revurderingsarsak'];
-
-export const årsaker: Record<Revurderingsårsak, string> = {
-    feilutbetalt_belop_endret: 'Omgjøring av vedtaket om tilbakekreving fordi beløpet er endret',
-    etter_klage: 'Omgjøring av vedtaket om tilbakekreving etter klage',
-    uten_klage: 'Omgjøring av vedtaket om tilbakekreving uten klage (fvl. § 35)',
-    foreldelse: 'Endring av kravet på grunn av foreldelse',
-};
 
 export const instansvalg: Record<
     Revurderingsårsak,

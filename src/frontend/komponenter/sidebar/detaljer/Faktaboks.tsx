@@ -54,6 +54,7 @@ const STATUS_COLOR: Record<BehandlingstatusEnum, AkselColor> = {
     FATTER_VEDTAK: 'brand-beige',
     IVERKSETTER_VEDTAK: 'meta-lime',
     JOURNALFØR_VEDTAK: 'neutral',
+    JOURNALFØRER_INFOBREV: 'neutral',
     DISTRIUBER_VEDTAK: 'neutral',
     AVSLUTTET: 'success',
 } satisfies Record<BehandlingstatusEnum, AkselColor>;
