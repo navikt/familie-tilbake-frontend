@@ -29,7 +29,7 @@ import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useFagsak } from '@/context/FagsakContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
 import { useRedirectEtterLagring } from '@/hooks/useRedirectEtterLagring';
-import { årsaker } from '@/typer/revurdering';
+import { hentRevurderingsårsak } from '@/typer/revurdering';
 import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
@@ -145,7 +145,7 @@ export const Revurdering: FC = () => {
                                 <option value="" disabled>
                                     Velg årsak
                                 </option>
-                                {Object.entries(årsaker).map(([verdi, tekst]) => (
+                                {Object.entries(hentRevurderingsårsak).map(([verdi, tekst]) => (
                                     <option key={verdi} value={verdi}>
                                         {tekst}
                                     </option>

@@ -5,19 +5,24 @@ export type Revurderingsårsak = TilbakekrevingRevurderingsarsak['revurderingsar
 
 type RevurderingsårsakDto = TilbakekrevingRevurderingDto['revurderingsarsak']['revurderingsarsak'];
 
-export const årsaker: Record<Revurderingsårsak, string> = {
+export const hentRevurderingsårsak: Record<Revurderingsårsak, string> = {
     feilutbetalt_belop_endret: 'Omgjøring av vedtaket om tilbakekreving fordi beløpet er endret',
     etter_klage: 'Omgjøring av vedtaket om tilbakekreving etter klage',
     uten_klage: 'Omgjøring av vedtaket om tilbakekreving uten klage (fvl. § 35)',
     foreldelse: 'Endring av kravet på grunn av foreldelse',
 };
 
-const revurderingsårsakFraDto: Record<RevurderingsårsakDto, Revurderingsårsak> = {
-    EtterKlageDto: 'etter_klage',
-    FeilutbetaltBelopEndretDto: 'feilutbetalt_belop_endret',
-    ForeldelseDto: 'foreldelse',
-    UtenKlageDto: 'uten_klage',
+// Backendens OpenAPI-spec oppgir klassenavnet (f.eks. `EtterKlageDto`) som årsakskode, mens
+// backend faktisk sender navnet fra `@JsonSubTypes` (f.eks. `etter_klage`).
+// Vi tar derfor imot begge, Dto for å gjøre typescript fornøyd og Revurderingsårsak for å håndtere de faktiske verdiene.
+const revurderingsårsakTekster: Record<RevurderingsårsakDto | Revurderingsårsak, string> = {
+    ...hentRevurderingsårsak,
+    EtterKlageDto: hentRevurderingsårsak.etter_klage,
+    FeilutbetaltBelopEndretDto: hentRevurderingsårsak.feilutbetalt_belop_endret,
+    ForeldelseDto: hentRevurderingsårsak.foreldelse,
+    UtenKlageDto: hentRevurderingsårsak.uten_klage,
 };
 
-export const hentRevurderingsårsakTekst = (årsak: RevurderingsårsakDto): string =>
-    årsaker[revurderingsårsakFraDto[årsak]];
+export const hentRevurderingsårsakTekst = (
+    årsak: RevurderingsårsakDto | Revurderingsårsak
+): string => revurderingsårsakTekster[årsak];

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { årsaker } from '@/typer/revurdering';
+import { hentRevurderingsårsak } from '@/typer/revurdering';
 
 import { Revurderingsboks } from './Revurderingsboks';
 
@@ -51,7 +51,7 @@ describe('Revurderingsboks', () => {
             />
         );
 
-        expect(screen.getByText(årsaker.etter_klage)).toBeInTheDocument();
+        expect(screen.getByText(hentRevurderingsårsak.etter_klage)).toBeInTheDocument();
         expect(screen.getByText('Instans')).toBeInTheDocument();
         expect(screen.getByText('Klageinstansen')).toBeInTheDocument();
         expect(screen.getByText('Begrunnelse for revurdering')).toBeInTheDocument();
@@ -72,7 +72,9 @@ describe('Revurderingsboks', () => {
             />
         );
 
-        expect(screen.getByText(årsaker.feilutbetalt_belop_endret)).toBeInTheDocument();
+        expect(
+            screen.getByText(hentRevurderingsårsak.feilutbetalt_belop_endret)
+        ).toBeInTheDocument();
         expect(screen.getByText('Instans')).toBeInTheDocument();
         expect(screen.getByText('Førsteinstansen')).toBeInTheDocument();
         expect(screen.getByText('Begrunnelse for revurdering')).toBeInTheDocument();
@@ -92,7 +94,7 @@ describe('Revurderingsboks', () => {
             />
         );
 
-        expect(screen.getByText(årsaker.foreldelse)).toBeInTheDocument();
+        expect(screen.getByText(hentRevurderingsårsak.foreldelse)).toBeInTheDocument();
         expect(screen.queryByText('Instans')).not.toBeInTheDocument();
         expect(screen.getByText('Begrunnelse for revurdering')).toBeInTheDocument();
         expect(screen.getByText('Kravet er foreldet')).toBeInTheDocument();
@@ -112,7 +114,7 @@ describe('Revurderingsboks', () => {
             />
         );
 
-        expect(screen.getByText(årsaker.uten_klage)).toBeInTheDocument();
+        expect(screen.getByText(hentRevurderingsårsak.uten_klage)).toBeInTheDocument();
         expect(screen.getByText('Instans')).toBeInTheDocument();
         expect(screen.getByText('Førsteinstansen')).toBeInTheDocument();
         expect(screen.getByText('Begrunnelse for revurdering')).toBeInTheDocument();
