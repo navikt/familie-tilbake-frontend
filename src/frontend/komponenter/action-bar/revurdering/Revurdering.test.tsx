@@ -5,10 +5,10 @@ import type {
 } from '@/generated-new';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AxiosError, AxiosHeaders } from 'axios';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter } from 'react-router';
 
 import { FagsakContext } from '@/context/FagsakContext';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
@@ -24,8 +24,7 @@ type Revurderingskall = Options<BehandlingOpprettRevurderingData>;
 type Revurderingssvar = () => Promise<BehandlingOpprettRevurderingResponse>;
 
 const behandlingId = '123e4567-e89b-42d3-a456-426614174000';
-const behandlingsUrl = '/fagsystem/BA/fagsak/annen-sak/behandling/ny-behandling/fakta';
-const nyBehandlingTekst = 'Ny behandling';
+const behandlingsUrl = '#ny-behandling';
 
 const menyknappNavn = 'BehandlingsvalgKnapp';
 const menyvalgNavn = 'Revurder tilbakekrevingen';
@@ -63,10 +62,7 @@ const renderRevurder = (svar: Revurderingssvar = vellykketSvar): Promise<Revurde
                     <TestBehandlingProvider
                         behandling={lagBehandling({ behandlingId, erNyModell: true })}
                     >
-                        <Routes>
-                            <Route path="/" element={<Revurdering />} />
-                            <Route path={behandlingsUrl} element={<p>{nyBehandlingTekst}</p>} />
-                        </Routes>
+                        <Revurdering />
                     </TestBehandlingProvider>
                 </FagsakContext>
             </MemoryRouter>
@@ -86,6 +82,11 @@ describe('Revurdering', () => {
     let user: ReturnType<typeof userEvent.setup>;
     beforeEach(() => {
         user = userEvent.setup();
+        window.history.replaceState(null, '', '/');
+    });
+
+    afterEach(() => {
+        window.history.replaceState(null, '', '/');
     });
 
     const åpneDialog = async (): Promise<void> => {
@@ -157,15 +158,23 @@ describe('Revurdering', () => {
         });
     });
 
-    test('Navigerer til URL-en fra responsen etter opprettelse', async () => {
-        renderRevurder();
-        await åpneDialog();
+    test.each([behandlingsUrl, new URL(behandlingsUrl, window.location.href).href])(
+        'Erstatter gjeldende URL med %s fra responsen',
+        async url => {
+            const forventetUrl = new URL(url, window.location.href).href;
+            const historikklengde = window.history.length;
+            renderRevurder(async () => ({ url }));
+            await åpneDialog();
 
-        await fyllUtForeldelse();
-        await user.click(revurderKnapp());
+            await fyllUtForeldelse();
+            await user.click(revurderKnapp());
 
-        expect(await screen.findByText(nyBehandlingTekst)).toBeInTheDocument();
-    });
+            await waitFor(() => {
+                expect(window.location.href).toBe(forventetUrl);
+            });
+            expect(window.history.length).toBe(historikklengde);
+        }
+    );
 
     test('Krever at saksbehandler velger en årsak', async () => {
         renderRevurder();
@@ -197,7 +206,7 @@ describe('Revurdering', () => {
         await user.click(revurderKnapp());
 
         expect(await screen.findByText(serverFeil)).toBeInTheDocument();
-        expect(screen.queryByText(nyBehandlingTekst)).not.toBeInTheDocument();
+        expect(window.location.hash).toBe('');
     });
 
     test('Viser tittel og melding fra feilresponsen', async () => {
@@ -228,7 +237,7 @@ describe('Revurdering', () => {
 
         expect(await screen.findByText(manglerUrlFeil)).toBeInTheDocument();
         expect(revurderKnapp()).toBeDisabled();
-        expect(screen.queryByText(nyBehandlingTekst)).not.toBeInTheDocument();
+        expect(window.location.hash).toBe('');
     });
 
     test('Nullstiller skjemaet når dialogen åpnes på nytt', async () => {

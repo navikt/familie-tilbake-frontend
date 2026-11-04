@@ -28,7 +28,6 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useFagsak } from '@/context/FagsakContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
-import { useRedirectEtterLagring } from '@/hooks/useRedirectEtterLagring';
 import { hentRevurderingsårsak } from '@/typer/revurdering';
 import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
@@ -48,7 +47,6 @@ export const Revurdering: FC = () => {
     const { behandlingId } = useBehandling();
     const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
-    const { utførRedirect } = useRedirectEtterLagring();
     const queryClient = useQueryClient();
     const { control, register, handleSubmit, reset, formState } =
         useForm<TilbakekrevingRevurderingsarsak>({
@@ -76,8 +74,8 @@ export const Revurdering: FC = () => {
                 refetchType: 'none',
             });
             nullstillIkkePersisterteKomponenter();
-            utførRedirect(url);
             dialogRef.current?.close();
+            window.location.replace(url);
         },
     });
 
