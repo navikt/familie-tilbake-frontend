@@ -17,6 +17,7 @@ import { lazyImportMedRetry } from '@/komponenter/feilInnlasting/FeilInnlasting'
 import { FixedAlert } from '@/komponenter/fixedAlert/FixedAlert';
 import { NyttKravgrunnlagModal } from '@/komponenter/modal/nytt-kravgrunnlag/NyttKravgrunnlagModal';
 import { PåVentModal } from '@/komponenter/modal/på-vent/PåVentModal';
+import { VenterPåKravgrunnlagModal } from '@/komponenter/modal/venter-på-kravgrunnlag/VenterPåKravgrunnlagModal';
 import { Stegflyt } from '@/komponenter/stegflyt/gammel-stegflyt/Stegflyt';
 import { useNyStegflyt } from '@/komponenter/stegflyt/useNyStegflyt';
 import { IkkeFunnet } from '@/pages/feilsider/IkkeFunnet';
@@ -373,6 +374,12 @@ export const BehandlingContainer: FC = () => {
 
     return (
         <>
+            {behandling.venter && (
+                <VenterPåKravgrunnlagModal
+                    key={behandling.behandlingId}
+                    venter={behandling.venter}
+                />
+            )}
             {behandling.endretKravgrunnlag && visNyttKravgrunnlagModal && (
                 <NyttKravgrunnlagModal
                     endretKravgrunnlag={behandling.endretKravgrunnlag}
