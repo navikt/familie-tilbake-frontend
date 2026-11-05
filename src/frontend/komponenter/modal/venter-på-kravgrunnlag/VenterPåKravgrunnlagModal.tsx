@@ -1,18 +1,13 @@
 import type { FC } from 'react';
-import type { VenterDto } from '@/generated';
 
 import { BodyLong, Button, Modal } from '@navikt/ds-react';
 import { useRef } from 'react';
 
 import { hentVentebeskrivelse, VENTER_PÅ_KRAVGRUNNLAG_TITTEL } from '@/utils/venterPåKravgrunnlag';
 
-type Props = {
-    venter: VenterDto;
-};
-
-export const VenterPåKravgrunnlagModal: FC<Props> = ({ venter }: Props) => {
+export const VenterPåKravgrunnlagModal: FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const beskrivelse = hentVentebeskrivelse(venter.grunn);
+    const beskrivelse = hentVentebeskrivelse();
 
     return (
         <Modal
@@ -26,11 +21,9 @@ export const VenterPåKravgrunnlagModal: FC<Props> = ({ venter }: Props) => {
             portal
             width="medium"
         >
-            {beskrivelse && (
-                <Modal.Body>
-                    <BodyLong>{beskrivelse}</BodyLong>
-                </Modal.Body>
-            )}
+            <Modal.Body>
+                <BodyLong>{beskrivelse}</BodyLong>
+            </Modal.Body>
             <Modal.Footer>
                 <Button size="small" onClick={(): void => dialogRef.current?.close()}>
                     Lukk

@@ -1,16 +1,11 @@
 import type { FC } from 'react';
-import type { VenterDto } from '@/generated';
 
 import { BodyLong, Heading } from '@navikt/ds-react';
 
 import { hentVentebeskrivelse, VENTER_PÅ_KRAVGRUNNLAG_TITTEL } from '@/utils/venterPåKravgrunnlag';
 
-type Props = {
-    venter: VenterDto;
-};
-
-export const VenterPåKravgrunnlagBoks: FC<Props> = ({ venter }: Props) => {
-    const beskrivelse = hentVentebeskrivelse(venter.grunn);
+export const VenterPåKravgrunnlagBoks: FC = () => {
+    const beskrivelse = hentVentebeskrivelse();
 
     return (
         <section
@@ -20,7 +15,7 @@ export const VenterPåKravgrunnlagBoks: FC<Props> = ({ venter }: Props) => {
             <Heading level="2" size="xsmall">
                 {VENTER_PÅ_KRAVGRUNNLAG_TITTEL}
             </Heading>
-            {beskrivelse && <BodyLong size="small">{beskrivelse}</BodyLong>}
+            <BodyLong size="small">{beskrivelse}</BodyLong>
         </section>
     );
 };

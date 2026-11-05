@@ -374,11 +374,8 @@ export const BehandlingContainer: FC = () => {
 
     return (
         <>
-            {behandling.venter && (
-                <VenterPåKravgrunnlagModal
-                    key={behandling.behandlingId}
-                    venter={behandling.venter}
-                />
+            {behandling.venter?.grunn === 'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI' && (
+                <VenterPåKravgrunnlagModal key={behandling.behandlingId} />
             )}
             {behandling.endretKravgrunnlag && visNyttKravgrunnlagModal && (
                 <NyttKravgrunnlagModal
