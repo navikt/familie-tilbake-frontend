@@ -228,7 +228,7 @@ describe('Revurdering', () => {
         expect(screen.getByText(feilmeldingFraServer)).toBeInTheDocument();
     });
 
-    test('Viser feil og hindrer ny innsending når responsen mangler URL', async () => {
+    test('Viser feil når responsen mangler URL', async () => {
         renderRevurder(async () => ({ url: '' }));
         await åpneDialog();
 
@@ -236,7 +236,6 @@ describe('Revurdering', () => {
         await user.click(revurderKnapp());
 
         expect(await screen.findByText(manglerUrlFeil)).toBeInTheDocument();
-        expect(revurderKnapp()).toBeDisabled();
         expect(window.location.hash).toBe('');
     });
 

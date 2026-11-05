@@ -1,5 +1,6 @@
 import type { AxiosError } from 'axios';
 import type {
+    BehandlingOppdaterRevurderingsarsakError,
     BehandlingOpprettRevurderingError,
     InstansEnum,
     Revurderingsinstans,
@@ -68,17 +69,20 @@ export const opprettRevurderingResponseSchema = zOpprettRevurderingResponse.exte
     }),
 });
 
-export type Revurderingsfeil = AxiosError<BehandlingOpprettRevurderingError> | z.ZodError;
+export type Revurderingsfeil =
+    | AxiosError<BehandlingOpprettRevurderingError | BehandlingOppdaterRevurderingsarsakError>
+    | z.ZodError;
 
 export const feilmeldingFraRevurdering = (
-    error: Revurderingsfeil
+    error: Revurderingsfeil,
+    standardtittel = 'Kunne ikke opprette revurderingen. Prøv igjen.'
 ): { tittel: string; melding?: string } => {
     if (error instanceof z.ZodError) {
         return { tittel: error.issues[0]?.message ?? 'Ugyldig svar fra serveren.' };
     }
     const feil = error.response?.data;
     return {
-        tittel: feil?.tittel ?? 'Kunne ikke opprette revurderingen. Prøv igjen.',
+        tittel: feil?.tittel ?? standardtittel,
         melding: feil?.melding,
     };
 };

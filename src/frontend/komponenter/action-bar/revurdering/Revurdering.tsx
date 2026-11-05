@@ -6,38 +6,22 @@ import type {
     TilbakekrevingRevurderingsarsak,
 } from '@/generated-new';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowCirclepathReverseIcon, MenuElipsisHorizontalIcon } from '@navikt/aksel-icons';
-import {
-    ActionMenu,
-    Button,
-    LocalAlert,
-    Modal,
-    Radio,
-    RadioGroup,
-    Select,
-    Textarea,
-    VStack,
-} from '@navikt/ds-react';
+import { ActionMenu, Button } from '@navikt/ds-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { get, useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useFagsak } from '@/context/FagsakContext';
 import { hentBehandlingQueryKey } from '@/generated/@tanstack/react-query.gen';
-import { hentRevurderingsårsak } from '@/typer/revurdering';
-import { MODAL_BREDDE } from '@/utils/modalUtils';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
+import { RevurderingModal } from './RevurderingModal';
 import {
     feilmeldingFraRevurdering,
-    instansvalg,
     opprettRevurderingResponseSchema,
     type Revurderingsfeil,
-    revurderingSchema,
 } from './utils';
 
 export const OPPRETT_REVURDERING_MUTATION_KEY = ['opprettRevurdering'] as const;
@@ -48,15 +32,6 @@ export const Revurdering: FC = () => {
     const { fagsystem, tilbakekrevingSakId } = useFagsak();
     const { nullstillIkkePersisterteKomponenter } = useBehandlingState();
     const queryClient = useQueryClient();
-    const { control, register, handleSubmit, reset, formState } =
-        useForm<TilbakekrevingRevurderingsarsak>({
-            resolver: zodResolver(revurderingSchema),
-            shouldUnregister: true,
-        });
-    const valgtÅrsak = useWatch({ control, name: 'revurderingsarsak' });
-    const instansvalgForÅrsak = valgtÅrsak ? instansvalg[valgtÅrsak] : [];
-    const { name: instansName, ...instansProps } = register('instans');
-
     const revurder = useMutation<
         BehandlingOpprettRevurderingResponse,
         Revurderingsfeil,
@@ -80,11 +55,6 @@ export const Revurdering: FC = () => {
     });
 
     const feilmelding = revurder.error ? feilmeldingFraRevurdering(revurder.error) : undefined;
-
-    const nullstill = (): void => {
-        reset();
-        revurder.reset();
-    };
 
     return (
         <>
@@ -111,106 +81,24 @@ export const Revurdering: FC = () => {
                     </ActionMenu.Content>
                 </ActionMenu>
             </nav>
-            <Modal
-                ref={dialogRef}
-                header={{ heading: 'Revurder tilbakekrevingen' }}
-                className={MODAL_BREDDE}
-                onClose={nullstill}
-                onBeforeClose={(): boolean => !revurder.isPending}
-            >
-                <form
-                    onSubmit={handleSubmit((data: TilbakekrevingRevurderingsarsak): void => {
-                        sporHendelse(Hendelser.KNAPP_KLIKKET, {
-                            tekst: 'Revurder',
-                            kontekst: Sporingskontekst.ActionBar,
-                        });
-                        revurder.mutate({
-                            path: { behandlingId },
-                            body: { revurderingsarsak: data },
-                        });
-                    })}
-                >
-                    <Modal.Body className="pt-0">
-                        <VStack gap="space-16">
-                            <Select
-                                {...register('revurderingsarsak')}
-                                label="Hva er årsaken til revurderingen?"
-                                defaultValue=""
-                                size="small"
-                                disabled={revurder.isPending}
-                                error={formState.errors.revurderingsarsak?.message}
-                            >
-                                <option value="" disabled>
-                                    Velg årsak
-                                </option>
-                                {Object.entries(hentRevurderingsårsak).map(([verdi, tekst]) => (
-                                    <option key={verdi} value={verdi}>
-                                        {tekst}
-                                    </option>
-                                ))}
-                            </Select>
-                            {instansvalgForÅrsak.length > 0 && (
-                                <RadioGroup
-                                    name={instansName}
-                                    legend="Hvilken instans har omgjort vedtaket?"
-                                    size="small"
-                                    disabled={revurder.isPending}
-                                    error={get(formState.errors, 'instans.message')}
-                                >
-                                    {instansvalgForÅrsak.map(instans => (
-                                        <Radio key={instans} value={instans} {...instansProps}>
-                                            {instans}
-                                        </Radio>
-                                    ))}
-                                </RadioGroup>
-                            )}
-                            {valgtÅrsak && (
-                                <Textarea
-                                    {...register('begrunnelse')}
-                                    label="Beskriv kort årsaken til revurderingen"
-                                    maxLength={1000}
-                                    minRows={3}
-                                    size="small"
-                                    resize
-                                    disabled={revurder.isPending}
-                                    error={formState.errors.begrunnelse?.message}
-                                />
-                            )}
-                            {feilmelding && (
-                                <LocalAlert status="error">
-                                    <LocalAlert.Header>
-                                        <LocalAlert.Title>{feilmelding.tittel}</LocalAlert.Title>
-                                    </LocalAlert.Header>
-                                    {feilmelding.melding && (
-                                        <LocalAlert.Content>
-                                            {feilmelding.melding}
-                                        </LocalAlert.Content>
-                                    )}
-                                </LocalAlert>
-                            )}
-                        </VStack>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            type="submit"
-                            size="small"
-                            loading={revurder.isPending}
-                            disabled={revurder.isPending || revurder.error instanceof z.ZodError}
-                        >
-                            Revurder
-                        </Button>
-                        <Button
-                            type="button"
-                            size="small"
-                            variant="secondary"
-                            disabled={revurder.isPending}
-                            onClick={(): void => dialogRef.current?.close()}
-                        >
-                            Avbryt
-                        </Button>
-                    </Modal.Footer>
-                </form>
-            </Modal>
+            <RevurderingModal
+                dialogRef={dialogRef}
+                heading="Revurder tilbakekrevingen"
+                submitTekst="Revurder"
+                isPending={revurder.isPending}
+                feilmelding={feilmelding}
+                onNullstill={revurder.reset}
+                onSubmit={(data: TilbakekrevingRevurderingsarsak): void => {
+                    sporHendelse(Hendelser.KNAPP_KLIKKET, {
+                        tekst: 'Revurder',
+                        kontekst: Sporingskontekst.ActionBar,
+                    });
+                    revurder.mutate({
+                        path: { behandlingId },
+                        body: { revurderingsarsak: data },
+                    });
+                }}
+            />
         </>
     );
 };
