@@ -29,9 +29,9 @@ import {
     flyttBehandlingTilFakta1,
     forhåndsvisBrev,
     henleggBehandling,
-    hentAntallPerBehandlingsårsakstype,
     hentBehandling,
     hentBehandlingerForFagsystem,
+    hentBehandlingsIderMedRevurderingAnnenÅrsak,
     hentBeregningsresultat,
     hentDokument,
     hentFagsak,
@@ -128,12 +128,12 @@ import type {
     ForhåndsvisBrevResponse,
     HenleggBehandlingData,
     HenleggBehandlingResponse,
-    HentAntallPerBehandlingsårsakstypeData,
-    HentAntallPerBehandlingsårsakstypeResponse,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponse,
     HentBehandlingResponse,
+    HentBehandlingsIderMedRevurderingAnnenÅrsakData,
+    HentBehandlingsIderMedRevurderingAnnenÅrsakResponse,
     HentBeregningsresultatData,
     HentBeregningsresultatResponse,
     HentDokumentData,
@@ -1723,24 +1723,24 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
             ),
     });
 
-export const hentAntallPerBehandlingsårsakstypeQueryKey = (
-    options?: Options<HentAntallPerBehandlingsårsakstypeData>
-) => createQueryKey('hentAntallPerBehandlingsårsakstype', options);
+export const hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey = (
+    options?: Options<HentBehandlingsIderMedRevurderingAnnenÅrsakData>
+) => createQueryKey('hentBehandlingsIderMedRevurderingAnnenÅrsak', options);
 
 /**
- * Hent antall rader per behandlingsårsakstype, inkludert typer uten forekomster
+ * Hent behandlings-ID-er med behandlingsårsak REVURDERING_ANNEN_ÅRSAK
  */
-export const hentAntallPerBehandlingsårsakstypeOptions = (
-    options?: Options<HentAntallPerBehandlingsårsakstypeData>
+export const hentBehandlingsIderMedRevurderingAnnenÅrsakOptions = (
+    options?: Options<HentBehandlingsIderMedRevurderingAnnenÅrsakData>
 ) =>
     queryOptions<
-        HentAntallPerBehandlingsårsakstypeResponse,
+        HentBehandlingsIderMedRevurderingAnnenÅrsakResponse,
         AxiosError<DefaultError>,
-        HentAntallPerBehandlingsårsakstypeResponse,
-        ReturnType<typeof hentAntallPerBehandlingsårsakstypeQueryKey>
+        HentBehandlingsIderMedRevurderingAnnenÅrsakResponse,
+        ReturnType<typeof hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey>
     >({
         queryFn: async ({ queryKey, signal }) => {
-            const { data } = await hentAntallPerBehandlingsårsakstype({
+            const { data } = await hentBehandlingsIderMedRevurderingAnnenÅrsak({
                 ...options,
                 ...queryKey[0],
                 signal,
@@ -1748,7 +1748,7 @@ export const hentAntallPerBehandlingsårsakstypeOptions = (
             });
             return data;
         },
-        queryKey: hentAntallPerBehandlingsårsakstypeQueryKey(options),
+        queryKey: hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey(options),
     });
 
 export const lagBehandlingUrlQueryKey = (options?: Options<LagBehandlingUrlData>) =>

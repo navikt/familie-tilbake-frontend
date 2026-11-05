@@ -51,12 +51,12 @@ import type {
     ForhåndsvisBrevResponses,
     HenleggBehandlingData,
     HenleggBehandlingResponses,
-    HentAntallPerBehandlingsårsakstypeData,
-    HentAntallPerBehandlingsårsakstypeResponses,
     HentBehandlingData,
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponses,
     HentBehandlingResponses,
+    HentBehandlingsIderMedRevurderingAnnenÅrsakData,
+    HentBehandlingsIderMedRevurderingAnnenÅrsakResponses,
     HentBeregningsresultatData,
     HentBeregningsresultatResponses,
     HentDokumentData,
@@ -1027,19 +1027,19 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
     });
 
 /**
- * Hent antall rader per behandlingsårsakstype, inkludert typer uten forekomster
+ * Hent behandlings-ID-er med behandlingsårsak REVURDERING_ANNEN_ÅRSAK
  */
-export const hentAntallPerBehandlingsårsakstype = <ThrowOnError extends boolean = false>(
-    options?: Options<HentAntallPerBehandlingsårsakstypeData, ThrowOnError>
-): RequestResult<HentAntallPerBehandlingsårsakstypeResponses, unknown, ThrowOnError> =>
+export const hentBehandlingsIderMedRevurderingAnnenÅrsak = <ThrowOnError extends boolean = false>(
+    options?: Options<HentBehandlingsIderMedRevurderingAnnenÅrsakData, ThrowOnError>
+): RequestResult<HentBehandlingsIderMedRevurderingAnnenÅrsakResponses, unknown, ThrowOnError> =>
     (options?.client ?? client).get<
-        HentAntallPerBehandlingsårsakstypeResponses,
+        HentBehandlingsIderMedRevurderingAnnenÅrsakResponses,
         unknown,
         ThrowOnError
     >({
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/forvaltning/behandlingsarsak/antall',
+        url: '/api/forvaltning/behandlingsarsak/revurdering-annen-arsak/behandlinger',
         ...options,
     });
 

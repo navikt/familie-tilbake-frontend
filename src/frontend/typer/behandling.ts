@@ -6,7 +6,10 @@ import type {
     VenteårsakEnum,
 } from '@/generated';
 
-export const behandlingsårsaker: Record<GetårsakstypeEnum, string> = {
+export const behandlingsårsaker: Record<
+    Exclude<GetårsakstypeEnum, 'REVURDERING_ANNEN_ÅRSAK'>,
+    string
+> = {
     REVURDERING_KLAGE_NFP: 'Klage tilbakekreving NFP/ NAY omgjør vedtak',
     REVURDERING_KLAGE_KA: 'Revurdering etter KA-behandlet klage',
     REVURDERING_OPPLYSNINGER_OM_VILKÅR: 'Nye opplysninger om vilkårsvurdering',

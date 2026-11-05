@@ -515,20 +515,8 @@ export const zRessursListKravgrunnlagsinfo = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zRessursMapBehandlingsårsakstypeLong = z.object({
-    data: z
-        .record(
-            z.string(),
-            z.coerce
-                .bigint()
-                .min(BigInt('-9223372036854775808'), {
-                    error: 'Invalid value: Expected int64 to be >= -9223372036854775808',
-                })
-                .max(BigInt('9223372036854775807'), {
-                    error: 'Invalid value: Expected int64 to be <= 9223372036854775807',
-                })
-        )
-        .nullish(),
+export const zRessursListUuid = z.object({
+    data: z.array(z.uuid()).nullish(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
@@ -629,11 +617,6 @@ export const zBehandlingPåVentDto = z.object({
     venteårsak: zVenteårsakEnum,
     tidsfrist: z.iso.date(),
     begrunnelse: z.string().nullish(),
-});
-
-export const zVenterDto = z.object({
-    grunn: zVenteårsakEnum,
-    frist: z.iso.date(),
 });
 
 export const zBehandlingsresultatstypeEnum = z.enum([
@@ -1549,6 +1532,7 @@ export const zGetårsakstypeEnum = z.enum([
     'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
     'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
     'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+    'REVURDERING_ANNEN_ÅRSAK',
 ]);
 
 export const zOpprettRevurderingDto = z.object({
@@ -1653,6 +1637,14 @@ export const zRessursFagsakDto = z.object({
     stacktrace: z.string().nullish(),
 });
 
+export const zGetårsakEnum = z.enum([
+    'REVURDERING_KLAGE_NFP',
+    'REVURDERING_KLAGE_KA',
+    'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
+    'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
+    'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+]);
+
 export const zStatusEnum3 = z.enum([
     'AVSLUTTET',
     'FATTER_VEDTAK',
@@ -1672,7 +1664,7 @@ export const zBehandling = z.object({
     behandlingId: z.uuid(),
     opprettetTidspunkt: z.iso.datetime(),
     aktiv: z.boolean(),
-    getårsak: zGetårsakstypeEnum.optional(),
+    getårsak: zGetårsakEnum.optional(),
     type: zTypeEnum3,
     status: zStatusEnum3,
     vedtaksdato: z.iso.datetime().nullish(),
@@ -2121,6 +2113,7 @@ export const zBehandlingsårsakstypeEnum = z.enum([
     'REVURDERING_OPPLYSNINGER_OM_VILKÅR',
     'REVURDERING_OPPLYSNINGER_OM_FORELDELSE',
     'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT',
+    'REVURDERING_ANNEN_ÅRSAK',
 ]);
 
 export const zSaksbehandlingstypeEnum = z.enum([
@@ -2198,6 +2191,12 @@ export const zTilbakekrevingRevurderingDto = z.object({
         zForeldelseDto,
         zUtenKlageDto,
     ]),
+});
+
+export const zGrunnEnum = z.enum(['BRUKERUTTALELSE', 'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI']);
+
+export const zVenterDto = z.object({
+    grunn: zGrunnEnum,
 });
 
 export const zBehandlingDto = z.object({
@@ -2817,7 +2816,7 @@ export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOp
 /**
  * OK
  */
-export const zHentAntallPerBehandlingsårsakstypeResponse = zRessursMapBehandlingsårsakstypeLong;
+export const zHentBehandlingsIderMedRevurderingAnnenÅrsakResponse = zRessursListUuid;
 
 export const zLagBehandlingUrlQuery = z.object({
     vedtakId: z.int().optional(),

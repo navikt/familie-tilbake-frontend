@@ -113,6 +113,11 @@ export const zHovedavsnittInformasjonsbrev = z.object({
     innhold: z.array(z.string()),
 });
 
+export const zHovedavsnittRevurderingVedtaksbrev = z.object({
+    tittel: z.string().min(3).max(300),
+    innhold: z.array(z.string()),
+});
+
 export const zHovedavsnittVarselbrev = z.object({
     tittel: z.string().min(3).max(300),
     innhold: z.array(z.string()),
@@ -285,6 +290,14 @@ export const zSignatur = z.object({
     enhetNavn: z.string(),
     ansvarligSaksbehandler: z.string(),
     besluttendeSaksbehandler: z.string().nullable(),
+});
+
+export const zRevurderingVedtaksbrevData = z.object({
+    hovedavsnitt: zHovedavsnittRevurderingVedtaksbrev,
+    brevGjelder: zBrevmottaker,
+    signatur: zSignatur,
+    sendtDato: z.string(),
+    saksnummer: z.string(),
 });
 
 export const zSignaturAutomatisk = z.object({
@@ -1294,6 +1307,12 @@ export const zBehandlingHentDokumentPath = z.object({
 export const zBehandlingHentDokumentResponse = z.string();
 
 export const zBehandlingBenyttNyesteKravgrunnlagPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+export const zBehandlingOppdaterRevurderingsarsakBody = zTilbakekrevingRevurdering;
+
+export const zBehandlingOppdaterRevurderingsarsakPath = z.object({
     behandlingId: z.uuid(),
 });
 

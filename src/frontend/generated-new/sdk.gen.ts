@@ -48,6 +48,9 @@ import type {
     BehandlingOppdaterFaktaData,
     BehandlingOppdaterFaktaErrors,
     BehandlingOppdaterFaktaResponses,
+    BehandlingOppdaterRevurderingsarsakData,
+    BehandlingOppdaterRevurderingsarsakErrors,
+    BehandlingOppdaterRevurderingsarsakResponses,
     BehandlingOppdaterVedtaksbrevData,
     BehandlingOppdaterVedtaksbrevErrors,
     BehandlingOppdaterVedtaksbrevResponses,
@@ -279,6 +282,26 @@ export const behandlingBenyttNyesteKravgrunnlag = <ThrowOnError extends boolean 
         BehandlingBenyttNyesteKravgrunnlagErrors,
         ThrowOnError
     >({ url: '/api/v1/behandling/{behandlingId}/kravgrunnlag/benytt-nyeste', ...options });
+
+export const behandlingOppdaterRevurderingsarsak = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingOppdaterRevurderingsarsakData, ThrowOnError>
+): RequestResult<
+    BehandlingOppdaterRevurderingsarsakResponses,
+    BehandlingOppdaterRevurderingsarsakErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).patch<
+        BehandlingOppdaterRevurderingsarsakResponses,
+        BehandlingOppdaterRevurderingsarsakErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/behandling/{behandlingId}/revurdering',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
 
 export const behandlingOpprettRevurdering = <ThrowOnError extends boolean = false>(
     options: Options<BehandlingOpprettRevurderingData, ThrowOnError>

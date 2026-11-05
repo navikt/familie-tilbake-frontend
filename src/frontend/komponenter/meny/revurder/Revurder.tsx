@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import type { GetårsakstypeEnum } from '@/generated';
 
 import { FileResetIcon } from '@navikt/aksel-icons';
 import { ActionMenu, Button, ErrorMessage, Modal, Select } from '@navikt/ds-react';
@@ -48,9 +47,9 @@ export const Revurder: FC = () => {
                         <option value="" disabled>
                             Velg årsak
                         </option>
-                        {(Object.keys(behandlingsårsaker) as GetårsakstypeEnum[]).map(årsak => (
+                        {Object.entries(behandlingsårsaker).map(([årsak, tekst]) => (
                             <option key={årsak} value={årsak}>
-                                {behandlingsårsaker[årsak]}
+                                {tekst}
                             </option>
                         ))}
                     </Select>

@@ -16,12 +16,13 @@ type Props = {
 
 export const Revurderingsboks: FC<Props> = ({ revurdering, behandlingsårsakstype }: Props) => {
     const revurderingsårsak = revurdering?.revurderingsarsak;
-    const behandlingsårsakerEllerNull = behandlingsårsakstype
-        ? behandlingsårsaker[behandlingsårsakstype]
-        : undefined;
+    const behandlingsårsakerEllerUndefined =
+        behandlingsårsakstype && behandlingsårsakstype !== 'REVURDERING_ANNEN_ÅRSAK'
+            ? behandlingsårsaker[behandlingsårsakstype]
+            : undefined;
     const årsak = revurderingsårsak
         ? hentRevurderingsårsakTekst(revurderingsårsak.revurderingsarsak)
-        : behandlingsårsakerEllerNull;
+        : behandlingsårsakerEllerUndefined;
 
     if (!årsak) {
         return null;

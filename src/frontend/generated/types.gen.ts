@@ -788,10 +788,8 @@ export type RessursListKravgrunnlagsinfo = {
     stacktrace?: string | null;
 };
 
-export type RessursMapBehandlingsårsakstypeLong = {
-    data?: {
-        [key: string]: number;
-    } | null;
+export type RessursListUuid = {
+    data?: Array<string> | null;
     status: StatusEnum;
     melding: string;
     frontendFeilmelding?: string | null;
@@ -889,7 +887,7 @@ export type Behandling = {
     behandlingId: string;
     opprettetTidspunkt: string;
     aktiv: boolean;
-    getårsak?: GetårsakstypeEnum;
+    getårsak?: GetårsakEnum;
     type: TypeEnum3;
     status: StatusEnum3;
     vedtaksdato?: string | null;
@@ -1357,8 +1355,7 @@ export type UtenKlageDto = Omit<TilbakekrevingRevurderingsarsakDto, 'revurdering
 };
 
 export type VenterDto = {
-    grunn: VenteårsakEnum;
-    frist: string;
+    grunn: GrunnEnum;
 };
 
 export type RessursVergeDto = {
@@ -1772,7 +1769,8 @@ export type GetårsakstypeEnum =
     | 'REVURDERING_KLAGE_KA'
     | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
     | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
-    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT'
+    | 'REVURDERING_ANNEN_ÅRSAK';
 
 export type BehandlingstatusEnum =
     | 'AVSLUTTET'
@@ -1797,6 +1795,13 @@ export type StatusEnum2 =
     | 'DISTRIUBER_VEDTAK';
 
 export type KjønnEnum2 = 'MANN' | 'KVINNE' | 'UKJENT';
+
+export type GetårsakEnum =
+    | 'REVURDERING_KLAGE_NFP'
+    | 'REVURDERING_KLAGE_KA'
+    | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
+    | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
 
 export type StatusEnum3 =
     | 'AVSLUTTET'
@@ -2027,7 +2032,8 @@ export type BehandlingsårsakstypeEnum =
     | 'REVURDERING_KLAGE_KA'
     | 'REVURDERING_OPPLYSNINGER_OM_VILKÅR'
     | 'REVURDERING_OPPLYSNINGER_OM_FORELDELSE'
-    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT';
+    | 'REVURDERING_FEILUTBETALT_BELØP_HELT_ELLER_DELVIS_BORTFALT'
+    | 'REVURDERING_ANNEN_ÅRSAK';
 
 export type SaksbehandlingstypeEnum =
     | 'ORDINÆR'
@@ -2057,6 +2063,8 @@ export type VenteårsakEnum2 =
 export type InstansEnum = 'Førsteinstansen' | 'Klageinstansen' | 'Trygderetten' | 'Domstolen';
 
 export type InstansEnum2 = 'Førsteinstansen' | 'Klageinstansen';
+
+export type GrunnEnum = 'BRUKERUTTALELSE' | 'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI';
 
 export type BehandlingDtoWritable = {
     eksternBrukId: string;
@@ -3129,22 +3137,22 @@ export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppg
     200: unknown;
 };
 
-export type HentAntallPerBehandlingsårsakstypeData = {
+export type HentBehandlingsIderMedRevurderingAnnenÅrsakData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/forvaltning/behandlingsarsak/antall';
+    url: '/api/forvaltning/behandlingsarsak/revurdering-annen-arsak/behandlinger';
 };
 
-export type HentAntallPerBehandlingsårsakstypeResponses = {
+export type HentBehandlingsIderMedRevurderingAnnenÅrsakResponses = {
     /**
      * OK
      */
-    200: RessursMapBehandlingsårsakstypeLong;
+    200: RessursListUuid;
 };
 
-export type HentAntallPerBehandlingsårsakstypeResponse =
-    HentAntallPerBehandlingsårsakstypeResponses[keyof HentAntallPerBehandlingsårsakstypeResponses];
+export type HentBehandlingsIderMedRevurderingAnnenÅrsakResponse =
+    HentBehandlingsIderMedRevurderingAnnenÅrsakResponses[keyof HentBehandlingsIderMedRevurderingAnnenÅrsakResponses];
 
 export type LagBehandlingUrlData = {
     body?: never;

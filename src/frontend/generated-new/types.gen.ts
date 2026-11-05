@@ -281,6 +281,11 @@ export type HovedavsnittInformasjonsbrev = {
     innhold: Array<string>;
 };
 
+export type HovedavsnittRevurderingVedtaksbrev = {
+    tittel: string;
+    innhold: Array<string>;
+};
+
 export type HovedavsnittUpdate = {
     tittel: string;
     underavsnitt: Array<RotElementUpdateItem>;
@@ -462,6 +467,14 @@ export type Revurdering = {
     årsak: string;
     vedtaksdato: string;
     resultat: ResultatEnum;
+};
+
+export type RevurderingVedtaksbrevData = {
+    hovedavsnitt: HovedavsnittRevurderingVedtaksbrev;
+    brevGjelder: Brevmottaker;
+    signatur: Signatur;
+    sendtDato: string;
+    saksnummer: string;
 };
 
 export type Revurderingsinstans =
@@ -1452,6 +1465,36 @@ export type BehandlingBenyttNyesteKravgrunnlagError =
     BehandlingBenyttNyesteKravgrunnlagErrors[keyof BehandlingBenyttNyesteKravgrunnlagErrors];
 
 export type BehandlingBenyttNyesteKravgrunnlagResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
+export type BehandlingOppdaterRevurderingsarsakData = {
+    body: TilbakekrevingRevurdering;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/revurdering';
+};
+
+export type BehandlingOppdaterRevurderingsarsakErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingOppdaterRevurderingsarsakError =
+    BehandlingOppdaterRevurderingsarsakErrors[keyof BehandlingOppdaterRevurderingsarsakErrors];
+
+export type BehandlingOppdaterRevurderingsarsakResponses = {
     /**
      * The request has succeeded.
      */
