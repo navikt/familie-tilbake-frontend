@@ -13,9 +13,14 @@ import { hentRevurderingsårsakTekst, tilRevurderingsarsak } from '@/typer/revur
 type Props = {
     revurdering: TilbakekrevingRevurderingDto | null | undefined;
     behandlingsårsakstype: BehandlingsårsakstypeEnum | undefined;
+    kanEndres: boolean;
 };
 
-export const Revurderingsboks: FC<Props> = ({ revurdering, behandlingsårsakstype }: Props) => {
+export const Revurderingsboks: FC<Props> = ({
+    revurdering,
+    behandlingsårsakstype,
+    kanEndres,
+}: Props) => {
     const revurderingsårsak = revurdering?.revurderingsarsak;
     const behandlingsårsakerEllerUndefined =
         behandlingsårsakstype && behandlingsårsakstype !== 'REVURDERING_ANNEN_ÅRSAK'
@@ -38,7 +43,7 @@ export const Revurderingsboks: FC<Props> = ({ revurdering, behandlingsårsakstyp
                 <Heading level="2" size="xsmall">
                     Revurdering av tilbakekrevingen
                 </Heading>
-                {revurderingsårsak && (
+                {kanEndres && revurderingsårsak && (
                     <OppdaterRevurdering
                         revurderingsarsak={tilRevurderingsarsak(revurderingsårsak)}
                     />

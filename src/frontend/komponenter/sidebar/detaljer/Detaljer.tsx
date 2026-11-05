@@ -10,17 +10,20 @@ import { Revurderingsboks } from './Revurderingsboks';
 import { VenterPåKravgrunnlagBoks } from './VenterPåKravgrunnlagBoks';
 
 export const Detaljer: FC = () => {
-    const { behandlingsårsakstype, tilbakekrevingRevurdering, venter } = useBehandling();
+    const { behandlingsårsakstype, kanEndres, tilbakekrevingRevurdering, venter } = useBehandling();
 
     return (
         <VStack gap="space-16">
             {venter?.grunn === 'SPERRET_VENTER_PÅ_OPPDATERING_FRA_ØKONOMI' && (
                 <VenterPåKravgrunnlagBoks />
             )}
-            <Revurderingsboks
-                revurdering={tilbakekrevingRevurdering}
-                behandlingsårsakstype={behandlingsårsakstype}
-            />
+            {(tilbakekrevingRevurdering || behandlingsårsakstype) && (
+                <Revurderingsboks
+                    revurdering={tilbakekrevingRevurdering}
+                    behandlingsårsakstype={behandlingsårsakstype}
+                    kanEndres={kanEndres}
+                />
+            )}
             <Faktaboks />
             <MottakerBoks />
         </VStack>

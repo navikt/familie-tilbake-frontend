@@ -24,6 +24,7 @@ describe('Revurderingsboks', () => {
     test('Viser behandlingsårsak for gammel modell', () => {
         renderBoks(
             <Revurderingsboks
+                kanEndres
                 behandlingsårsakstype="REVURDERING_OPPLYSNINGER_OM_VILKÅR"
                 revurdering={null}
             />
@@ -37,6 +38,7 @@ describe('Revurderingsboks', () => {
     test('Viser gammel årsak når revurderingsobjektet er null', () => {
         renderBoks(
             <Revurderingsboks
+                kanEndres
                 behandlingsårsakstype="REVURDERING_OPPLYSNINGER_OM_VILKÅR"
                 revurdering={null}
             />
@@ -46,7 +48,9 @@ describe('Revurderingsboks', () => {
     });
 
     test('Skjuler boksen når ingen data er sendt inn', () => {
-        renderBoks(<Revurderingsboks behandlingsårsakstype={undefined} revurdering={null} />);
+        renderBoks(
+            <Revurderingsboks kanEndres behandlingsårsakstype={undefined} revurdering={null} />
+        );
 
         expect(
             screen.queryByRole('region', { name: 'Revurderingsinformasjon' })
@@ -56,6 +60,7 @@ describe('Revurderingsboks', () => {
     test('Viser årsak, instans og begrunnelse ved revurdering etter klage', () => {
         renderBoks(
             <Revurderingsboks
+                kanEndres
                 behandlingsårsakstype={undefined}
                 revurdering={{
                     revurderingsarsak: {
@@ -79,6 +84,7 @@ describe('Revurderingsboks', () => {
     test('Viser årsak, instans og begrunnelse når feilutbetalt beløp er endret', () => {
         renderBoks(
             <Revurderingsboks
+                kanEndres
                 behandlingsårsakstype={undefined}
                 revurdering={{
                     revurderingsarsak: {
@@ -102,6 +108,7 @@ describe('Revurderingsboks', () => {
     test('Viser årsak og begrunnelse uten instans ved foreldelse', () => {
         renderBoks(
             <Revurderingsboks
+                kanEndres
                 behandlingsårsakstype={undefined}
                 revurdering={{
                     revurderingsarsak: {
@@ -123,6 +130,7 @@ describe('Revurderingsboks', () => {
     test('Viser årsak, instans og begrunnelse ved revurdering uten klage', () => {
         renderBoks(
             <Revurderingsboks
+                kanEndres
                 behandlingsårsakstype={undefined}
                 revurdering={{
                     revurderingsarsak: {
@@ -141,5 +149,24 @@ describe('Revurderingsboks', () => {
         expect(screen.getByText('Førsteinstansen', { selector: 'dd' })).toBeInTheDocument();
         expect(screen.getByText('Begrunnelse for revurdering')).toBeInTheDocument();
         expect(screen.getByText('Vedtaket er omgjort uten klage')).toBeInTheDocument();
+    });
+
+    test('Skjuler redigeringsknappen når behandlingen ikke kan endres', () => {
+        renderBoks(
+            <Revurderingsboks
+                kanEndres={false}
+                behandlingsårsakstype={undefined}
+                revurdering={{
+                    revurderingsarsak: {
+                        revurderingsarsak: 'ForeldelseDto',
+                        begrunnelse: 'Kravet er foreldet',
+                    },
+                }}
+            />
+        );
+
+        expect(
+            screen.queryByRole('button', { name: 'Rediger revurdering' })
+        ).not.toBeInTheDocument();
     });
 });
