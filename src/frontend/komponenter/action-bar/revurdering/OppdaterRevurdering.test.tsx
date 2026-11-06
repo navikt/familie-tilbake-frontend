@@ -32,9 +32,9 @@ describe('OppdaterRevurdering', () => {
         expect(lagre).toBeEnabled();
 
         await user.click(lagre);
-        expect(within(dialog).getByText('Ingen endringer å lagre')).toBeInTheDocument();
+        expect(within(dialog).getByText(/Ingen endringer å lagre/)).toBeInTheDocument();
 
         await user.type(within(dialog).getByRole('textbox'), ' x');
-        expect(within(dialog).queryByText('Ingen endringer å lagre')).not.toBeInTheDocument();
+        expect(within(dialog).queryByText(/Ingen endringer å lagre/)).not.toBeInTheDocument();
     });
 });

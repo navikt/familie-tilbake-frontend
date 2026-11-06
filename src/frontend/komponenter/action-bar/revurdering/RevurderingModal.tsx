@@ -4,6 +4,7 @@ import type { TilbakekrevingRevurderingsarsak } from '@/generated-new';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Button,
+    InlineMessage,
     LocalAlert,
     Modal,
     Radio,
@@ -124,14 +125,10 @@ export const RevurderingModal: FC<Props> = ({
                         )}
                         <div aria-live="polite">
                             {krevEndring && forsøktLagreUtenEndring && !isDirty && (
-                                <LocalAlert status="warning">
-                                    <LocalAlert.Header>
-                                        <LocalAlert.Title>Ingen endringer å lagre</LocalAlert.Title>
-                                    </LocalAlert.Header>
-                                    <LocalAlert.Content>
-                                        Endre årsak, instans eller begrunnelse før du lagrer.
-                                    </LocalAlert.Content>
-                                </LocalAlert>
+                                <InlineMessage size="small" status="warning">
+                                    Ingen endringer å lagre. Endre årsak, instans eller begrunnelse
+                                    før du lagrer.
+                                </InlineMessage>
                             )}
                         </div>
                         {feilmelding && (
