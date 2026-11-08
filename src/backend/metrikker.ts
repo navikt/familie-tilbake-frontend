@@ -1,4 +1,4 @@
-import { Counter } from 'prom-client';
+import { Counter } from '@prometheus-io/client';
 
 export const prometheusTellere = {
     appLoad: new Counter({

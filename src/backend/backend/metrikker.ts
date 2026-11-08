@@ -1,15 +1,11 @@
 import type { Express, Request } from 'express';
-import type { Counter } from 'prom-client';
 
-import client from 'prom-client';
+import { type Counter, collectDefaultMetrics, Registry } from '@prometheus-io/client';
 
 export const konfigurerMetrikker = (
     app: Express,
     prometheusTellere?: { [key: string]: Counter<string> }
-    // biome-ignore lint/suspicious/noExplicitAny: dynamisk Prometheus-konfig er utypet
-): any => {
-    const collectDefaultMetrics = client.collectDefaultMetrics;
-    const Registry = client.Registry;
+): Registry => {
     const register = new Registry();
 
     collectDefaultMetrics({ register });
