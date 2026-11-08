@@ -12,4 +12,5 @@ init({
     namespace: 'tilbake',
     environment,
     version: process.env.GITHUB_SHA,
+    devConsoleEcho: false,
 });
