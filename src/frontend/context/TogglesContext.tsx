@@ -7,7 +7,6 @@ import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 import { hentFrontendFeilmelding } from '@/utils';
 
 export enum ToggleName {
-    Vilkårsvurdering = 'tilbakekreving-frontend.nytt-vilkaarsvurderingssteg',
     NyStegflyt = 'tilbakekreving-frontend.ny-stegflyt',
     Revurdering = 'tilbakekreving-frontend.revurdering',
 }

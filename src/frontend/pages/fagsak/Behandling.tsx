@@ -8,7 +8,6 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
 import { useFagsak } from '@/context/FagsakContext';
-import { ToggleName, useToggles } from '@/context/TogglesContext';
 import { useActionBar } from '@/hooks/useActionBar';
 import { ActionBar } from '@/komponenter/action-bar/ActionBar';
 import { ActionBarSkeleton } from '@/komponenter/action-bar/ActionBarSkeleton';
@@ -185,7 +184,6 @@ const HistoriskBehandling: FC = () => (
 
 const AktivBehandling: FC = () => {
     const behandling = useBehandling();
-    const { toggles } = useToggles();
     const nyStegflyt = useNyStegflyt();
     const { setInnholdsbredde, setInnholdVenstrePosisjon } = useBehandlingState();
     const contentRef = useRef<HTMLElement>(null);
@@ -264,7 +262,7 @@ const AktivBehandling: FC = () => {
                         <Route
                             path="vilkaarsvurdering"
                             element={
-                                behandling.erNyModell && toggles[ToggleName.Vilkårsvurdering] ? (
+                                behandling.erNyModell ? (
                                     <StegErrorBoundary steg={SYNLIGE_STEG.VILKÅRSVURDERING}>
                                         <Suspense fallback={<VilkårsvurderingSkeleton />}>
                                             <Vilkårsvurdering />
