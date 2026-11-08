@@ -27,7 +27,7 @@ export const VedtakSkjema: FC<Props> = ({
             {harBrukerUttaltSeg && !behandlingILesemodus && (
                 <LocalAlert status="warning">
                     <LocalAlert.Header>
-                        <LocalAlert.Title>Husk å vurdere uttalelse fra bruker</LocalAlert.Title>
+                        <LocalAlert.Title>Husk å vurdere uttalelse fra mottakeren</LocalAlert.Title>
                     </LocalAlert.Header>
                 </LocalAlert>
             )}

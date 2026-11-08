@@ -117,7 +117,7 @@ export const FaktaSkeleton: FC = () => {
                             <span className="font-ax-bold">Årsak til feilutbetalingen</span>
                             <span className="text-ax-text-neutral-subtle text-ax-medium">
                                 Beskriv hvorfor utbetalingen er feil, og hva som har ført til at
-                                brukeren har fått utbetalt for mye
+                                mottakeren har fått utbetalt for mye
                             </span>
                         </BodyShort>
                         <Skeleton height={80} variant="rounded" />

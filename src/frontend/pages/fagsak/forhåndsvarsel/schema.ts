@@ -26,7 +26,7 @@ const unntakSchema = z
             validationContext.issues.push({
                 code: 'custom',
                 input: validationContext.value,
-                message: 'Du må velge om brukeren har uttalt seg',
+                message: 'Du må velge om mottakeren har uttalt seg',
                 path: ['brukeruttalelse', 'harBrukerUttaltSeg'],
             });
         }

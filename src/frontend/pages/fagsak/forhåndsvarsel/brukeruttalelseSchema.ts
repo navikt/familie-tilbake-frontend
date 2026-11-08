@@ -20,7 +20,7 @@ const harIkkeUttaltSegSchema = z.object({
 export const brukeruttalelseFelter = z.discriminatedUnion(
     'harBrukerUttaltSeg',
     [harUttaltSegSchema, harIkkeUttaltSegSchema],
-    { message: 'Du må velge om brukeren har uttalt seg' }
+    { message: 'Du må velge om mottakeren har uttalt seg' }
 );
 
 export const brukeruttalelseSchema = z.object({ brukeruttalelse: brukeruttalelseFelter });

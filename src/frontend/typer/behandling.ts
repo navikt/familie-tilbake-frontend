@@ -66,7 +66,7 @@ export const manuelleVenteÅrsaker: VenteårsakEnum[] = [
 ];
 
 export const venteårsaker: Record<VenteårsakEnum, string> = {
-    VENT_PÅ_BRUKERTILBAKEMELDING: 'Venter på tilbakemelding fra bruker',
+    VENT_PÅ_BRUKERTILBAKEMELDING: 'Venter på tilbakemelding fra mottakeren',
     VENT_PÅ_TILBAKEKREVINGSGRUNNLAG: 'Venter på tilbakekrevingsgrunnlag fra økonomi',
     AVVENTER_DOKUMENTASJON: 'Avventer dokumentasjon',
     UTVIDET_TILSVAR_FRIST: 'Bruker har fått utvidet tilsvarsfrist',

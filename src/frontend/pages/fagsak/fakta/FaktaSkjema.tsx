@@ -334,7 +334,7 @@ export const FaktaSkjema: FC<Props> = ({ faktaOmFeilutbetaling }: Props) => {
                         readOnly={behandlingILesemodus}
                         resize
                         maxLength={3000}
-                        description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at brukeren har fått utbetalt for mye"
+                        description="Beskriv hvorfor utbetalingen er feil, og hva som har ført til at mottakeren har fått utbetalt for mye"
                     />
                     {faktaOmFeilutbetaling.status4xRettsgebyret === 'USIKKER' && (
                         <Select

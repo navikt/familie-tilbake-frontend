@@ -127,7 +127,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }: Props) => {
                         size="small"
                         id="brukerHarUttaltSeg"
                         readOnly={behandlingILesemodus}
-                        legend="Har bruker uttalt seg om feilutbetalingen?"
+                        legend="Har mottakeren uttalt seg om feilutbetalingen?"
                         value={skjemaData.vurderingAvBrukersUttalelse?.harBrukerUttaltSeg}
                         error={
                             visFeilmeldinger &&
@@ -167,7 +167,7 @@ export const GammelFaktaSkjema: FC<Props> = ({ skjemaData, fakta }: Props) => {
                         HarBrukerUttaltSegValg.Ja && (
                         <Textarea
                             name="beskrivelseBrukersUttalelse"
-                            label="Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen"
+                            label="Beskriv når og hvor mottakeren har uttalt seg. Gi også en kort oppsummering av uttalelsen"
                             readOnly={behandlingILesemodus}
                             value={
                                 skjemaData.vurderingAvBrukersUttalelse?.beskrivelse

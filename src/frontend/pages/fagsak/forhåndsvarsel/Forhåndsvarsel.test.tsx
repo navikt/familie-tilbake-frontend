@@ -172,7 +172,7 @@ const unntakRadiogruppe = (): HTMLElement =>
     });
 
 const uttalelseRadiogruppeVedUnntak = (): HTMLElement =>
-    screen.getByRole('radiogroup', { name: /har brukeren uttalt seg\?/i });
+    screen.getByRole('radiogroup', { name: /har mottakeren uttalt seg\?/i });
 
 const utsettFristKnapp = (): HTMLElement => screen.getByRole('button', { name: 'Utsett frist' });
 
@@ -279,14 +279,14 @@ describe('Forhåndsvarsel', () => {
         expect(
             within(uttalelseRadiogruppeVedUnntak()).getByRole('radio', { name: 'Ja' })
         ).toBeChecked();
-        expect(screen.getByRole('textbox', { name: /når uttalte brukeren seg\?/i })).toHaveValue(
+        expect(screen.getByRole('textbox', { name: /når uttalte mottakeren seg\?/i })).toHaveValue(
             '10.08.2026'
         );
         expect(
-            screen.getByRole('textbox', { name: /hvordan uttalte brukeren seg\?/i })
+            screen.getByRole('textbox', { name: /hvordan uttalte mottakeren seg\?/i })
         ).toHaveValue('telefon');
         expect(
-            screen.getByRole('textbox', { name: /beskriv hva brukeren har uttalt seg om/i })
+            screen.getByRole('textbox', { name: /beskriv hva mottakeren har uttalt seg om/i })
         ).toHaveValue('Brukeren kjente til saken');
     });
 
@@ -316,14 +316,14 @@ describe('Forhåndsvarsel', () => {
 
         await user.click(within(uttalelse).getByRole('radio', { name: 'Ja' }));
 
-        expect(screen.getByRole('textbox', { name: /når uttalte brukeren seg\?/i })).toHaveValue(
+        expect(screen.getByRole('textbox', { name: /når uttalte mottakeren seg\?/i })).toHaveValue(
             '14.09.2026'
         );
         expect(
-            screen.getByRole('textbox', { name: /hvordan uttalte brukeren seg\?/i })
+            screen.getByRole('textbox', { name: /hvordan uttalte mottakeren seg\?/i })
         ).toHaveValue('telefon');
         expect(
-            screen.getByRole('textbox', { name: /beskriv hva brukeren har uttalt seg om/i })
+            screen.getByRole('textbox', { name: /beskriv hva mottakeren har uttalt seg om/i })
         ).toHaveValue('Brukeren kjente til saken');
     });
 

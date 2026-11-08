@@ -91,7 +91,7 @@ const uttalelseRadiogruppe = (legend: RegExp): HTMLElement =>
     });
 
 const uttalelseRadiogruppeVedUnntak = (): HTMLElement =>
-    uttalelseRadiogruppe(/har brukeren uttalt seg\?/i);
+    uttalelseRadiogruppe(/har mottakeren uttalt seg\?/i);
 
 const nesteKnapp = (): HTMLElement =>
     screen.getByRole('button', { name: 'Lagre og gå videre til foreldelsessteget' });
@@ -191,13 +191,13 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         );
 
         expect(
-            screen.getByRole('textbox', { name: /når uttalte brukeren seg\?/i })
+            screen.getByRole('textbox', { name: /når uttalte mottakeren seg\?/i })
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('textbox', { name: /hvordan uttalte brukeren seg\?/i })
+            screen.getByRole('textbox', { name: /hvordan uttalte mottakeren seg\?/i })
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('textbox', { name: /beskriv hva brukeren har uttalt seg om/i })
+            screen.getByRole('textbox', { name: /beskriv hva mottakeren har uttalt seg om/i })
         ).toBeInTheDocument();
     });
 
@@ -228,7 +228,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
         ).toBeInTheDocument();
     });
 
-    test('Unntak §16c: viser spørsmål "Har brukeren uttalt seg?" og feilmelding uten valg', async () => {
+    test('Unntak §16c: viser spørsmål "Har mottakeren uttalt seg?" og feilmelding uten valg', async () => {
         renderForhåndsvarsel(
             lagForhåndsvarselResponse({
                 ferdigvurdert: true,
@@ -246,7 +246,7 @@ describe('Brukeruttalelse i forhåndsvarsel', () => {
 
         await user.click(nesteKnapp());
 
-        expect(screen.getByText('Du må velge om brukeren har uttalt seg')).toBeInTheDocument();
+        expect(screen.getByText('Du må velge om mottakeren har uttalt seg')).toBeInTheDocument();
     });
 
     test('Unntak §16c + Ja: viser felter og feilmeldinger uten verdier', async () => {

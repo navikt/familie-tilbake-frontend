@@ -90,7 +90,7 @@ export const Forhåndsvarsel: FC = () => {
             visGlobalAlert({
                 title: 'Forhåndsvarsel er sendt',
                 message:
-                    'Du kan fortsette saksbehandlingen når bruker har uttalt seg, eller når fristen for å uttale seg (3 uker) har gått ut.',
+                    'Du kan fortsette saksbehandlingen når mottakeren har uttalt seg, eller når fristen for å uttale seg (3 uker) har gått ut.',
                 status: 'success',
             });
         },

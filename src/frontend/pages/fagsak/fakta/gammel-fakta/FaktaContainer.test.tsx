@@ -219,7 +219,7 @@ describe('FaktaContainer', () => {
         await user.click(screen.getByTestId('brukerHarUttaltSeg.ja'));
         await user.type(
             screen.getByLabelText(
-                'Beskriv når og hvor bruker har uttalt seg. Gi også en kort oppsummering av uttalelsen'
+                'Beskriv når og hvor mottakeren har uttalt seg. Gi også en kort oppsummering av uttalelsen'
             ),
             'Begrunnelse'
         );

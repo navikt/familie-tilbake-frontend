@@ -68,7 +68,7 @@ export const Brukeruttalelse: FC<Props> = ({ fristForUttalelse }: Props) => {
         <VStack gap="space-24">
             <RadioGroup
                 name={radioName}
-                legend="Har brukeren uttalt seg?"
+                legend="Har mottakeren uttalt seg?"
                 size="small"
                 readOnly={behandlingILesemodus}
                 className="max-w-xl"
@@ -96,7 +96,7 @@ export const Brukeruttalelse: FC<Props> = ({ fristForUttalelse }: Props) => {
                                 await trigger('brukeruttalelse.uttalelsesdato');
                             }}
                             readOnly={behandlingILesemodus}
-                            label="Når uttalte brukeren seg?"
+                            label="Når uttalte mottakeren seg?"
                             error={
                                 uttalelsesdatoFeil ??
                                 get(errors, 'brukeruttalelse.uttalelsesdato.message')
@@ -107,7 +107,7 @@ export const Brukeruttalelse: FC<Props> = ({ fristForUttalelse }: Props) => {
                         {...register('brukeruttalelse.hvorBrukerenUttalteSeg')}
                         size="small"
                         readOnly={behandlingILesemodus}
-                        label="Hvordan uttalte brukeren seg?"
+                        label="Hvordan uttalte mottakeren seg?"
                         description="For eksempel via telefon, Gosys, Ditt Nav eller Skriv til oss"
                         className="max-w-xl"
                         error={get(errors, 'brukeruttalelse.hvorBrukerenUttalteSeg.message')}
@@ -116,7 +116,7 @@ export const Brukeruttalelse: FC<Props> = ({ fristForUttalelse }: Props) => {
                         {...register('brukeruttalelse.beskrivelse')}
                         size="small"
                         readOnly={behandlingILesemodus}
-                        label="Beskriv hva brukeren har uttalt seg om"
+                        label="Beskriv hva mottakeren har uttalt seg om"
                         maxLength={4000}
                         minRows={3}
                         resize

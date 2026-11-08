@@ -70,7 +70,7 @@ export const HistoriskFaktaVisning: FC<Props> = ({ skjemaData, fakta }: Props) =
                 </VStack>
                 <VStack gap="space-4">
                     <BodyShort weight="semibold" size="small">
-                        Har bruker uttalt seg om feilutbetalingen?
+                        Har mottakeren uttalt seg om feilutbetalingen?
                     </BodyShort>
                     <BodyShort size="small">
                         {
