@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { BodyShort, Heading, Skeleton, Table } from '@navikt/ds-react';
+import { BodyShort, Heading, Skeleton, Table, VStack } from '@navikt/ds-react';
 
 export const FaktaSkeleton: FC = () => {
     return (
@@ -30,28 +30,30 @@ export const FaktaSkeleton: FC = () => {
                             Revurdering
                         </Heading>
                         <dl className="grid grid-cols-2 gap-4">
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">
+                            <VStack gap="space-4">
+                                <dt className="text-ax-text-neutral-subtle text-ax-medium">
                                     Årsak til revurdering
                                 </dt>
                                 <dd>
                                     <Skeleton variant="rounded" width="50%" />
                                 </dd>
-                            </div>
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">
+                            </VStack>
+                            <VStack gap="space-4">
+                                <dt className="text-ax-text-neutral-subtle text-ax-medium">
                                     Dato for revurderingsvedtak
                                 </dt>
                                 <dd>
                                     <Skeleton variant="rounded" width="50%" />
                                 </dd>
-                            </div>
-                            <div>
-                                <dt className="font-ax-bold text-ax-medium">Resultat</dt>
+                            </VStack>
+                            <VStack gap="space-4">
+                                <dt className="text-ax-text-neutral-subtle text-ax-medium">
+                                    Resultat
+                                </dt>
                                 <dd>
                                     <Skeleton variant="rounded" width="50%" />
                                 </dd>
-                            </div>
+                            </VStack>
                         </dl>
                     </div>
                 </section>

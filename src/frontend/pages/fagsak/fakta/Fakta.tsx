@@ -7,6 +7,7 @@ import { Heading, HStack, InlineMessage, Tag, Tooltip, VStack } from '@navikt/ds
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useBehandling } from '@/context/BehandlingContext';
+import { useFagsak } from '@/context/FagsakContext';
 import {
     behandlingFaktaOptions,
     behandlingFaktaQueryKey,
@@ -20,6 +21,7 @@ import { FaktaSkjema } from './FaktaSkjema';
 
 export const Fakta: FC = () => {
     const { behandlingId } = useBehandling();
+    const { ytelsestype } = useFagsak();
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
     const { data: faktaOmFeilutbetaling } = useSuspenseQuery(
@@ -41,8 +43,13 @@ export const Fakta: FC = () => {
             });
         },
     });
+
     const sistePeriodeTom =
         faktaOmFeilutbetaling.perioder[faktaOmFeilutbetaling.perioder.length - 1].tom;
+    const resultat = faktaOmFeilutbetaling.feilutbetaling.revurdering.resultat;
+    const formattertResultat =
+        resultat.charAt(0).toUpperCase() + resultat.slice(1).toLocaleLowerCase();
+
     return (
         <VStack gap="space-24">
             <HStack justify="space-between" gap="space-8" align="center">
@@ -102,39 +109,45 @@ export const Fakta: FC = () => {
                 </div>
                 <VStack className="flex-2 gap-4 p-4 border rounded-xl border-ax-border-brand-blue-subtle">
                     <Heading level="2" size="small">
-                        Revurdering
+                        {`Detaljer fra revurderingen av ${ytelsestype.toLocaleLowerCase()}`}
                     </Heading>
-                    <dl className="grid grid-cols-2 gap-4">
-                        <div>
-                            <dt className="font-ax-bold text-ax-medium">Årsak til revurdering</dt>
+                    <dl className="grid grid-cols-2 gap-4 text-ax-medium">
+                        <VStack gap="space-4">
+                            <dt className="text-ax-text-neutral-subtle">Årsak til revurdering</dt>
                             <dd>
                                 <Tag
-                                    data-color="neutral"
+                                    data-color="info"
                                     key={faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
                                     variant="moderate"
                                     size="small"
-                                    className="text-ax-medium"
                                 >
                                     {faktaOmFeilutbetaling.feilutbetaling.revurdering.årsak}
                                 </Tag>
                             </dd>
-                        </div>
-                        <div>
-                            <dt className="font-ax-bold text-ax-medium">
+                        </VStack>
+                        <VStack gap="space-4">
+                            <dt className="text-ax-text-neutral-subtle">
                                 Dato for revurderingsvedtak
                             </dt>
-                            <dd className="text-ax-medium">
+                            <dd>
                                 {formatterDatostring(
                                     faktaOmFeilutbetaling.feilutbetaling.revurdering.vedtaksdato
                                 )}
                             </dd>
-                        </div>
-                        <div>
-                            <dt className="font-ax-bold text-ax-medium">Resultat</dt>
-                            <dd className="text-ax-medium">
-                                {faktaOmFeilutbetaling.feilutbetaling.revurdering.resultat}
+                        </VStack>
+                        <VStack gap="space-4">
+                            <dt className="text-ax-text-neutral-subtle">Resultat</dt>
+                            <dd>
+                                <Tag
+                                    data-color={resultat === 'INNVILGET' ? 'success' : 'meta-lime'}
+                                    key={resultat}
+                                    variant="moderate"
+                                    size="small"
+                                >
+                                    {formattertResultat}
+                                </Tag>
                             </dd>
-                        </div>
+                        </VStack>
                     </dl>
                 </VStack>
             </section>
