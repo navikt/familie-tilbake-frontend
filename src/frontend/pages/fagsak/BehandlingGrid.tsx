@@ -14,7 +14,7 @@ export const BehandlingGrid: FC<Props> = ({ children }: Props) => {
     const { visPanel, tarOverSkjermen } = useSidebarVisning();
     const kolonner = tarOverSkjermen
         ? 'grid-cols-1'
-        : `grid-cols-[1fr_auto] ${visPanel ? 'ax-lg:grid-cols-[2fr_1fr]' : ''}`;
+        : `grid-cols-[1fr_auto] ${visPanel ? 'ax-lg:grid-cols-[1fr_minmax(20rem,25%)]' : ''}`;
 
     return (
         <div

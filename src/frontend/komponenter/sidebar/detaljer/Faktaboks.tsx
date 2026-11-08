@@ -21,7 +21,7 @@ export const Faktaboks: FC = () => {
             <Heading level="2" size="xsmall" className="hyphens-auto wrap-break-word">
                 {`Tilbakekreving av ${ytelsestype.toLocaleLowerCase()}`}
             </Heading>
-            <dl className="grid grid-cols-2 gap-y-4 text-ax-medium">
+            <dl className="grid grid-cols-[1fr_auto] gap-4 text-ax-medium">
                 <StatusTag status={behandling.status} />
                 {behandling.resultatstype && <ResultatTag resultat={behandling.resultatstype} />}
 

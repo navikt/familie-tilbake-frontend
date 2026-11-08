@@ -38,7 +38,7 @@ export const MottakerBoks: FC = () => {
             <Heading level="3" size="xsmall" className="text-ax-text-neutral-subtle">
                 Mottaker
             </Heading>
-            <dl className="grid grid-cols-2 flex-col gap-y-4 text-ax-medium">
+            <dl className="grid grid-cols-[auto_1fr] gap-4 text-ax-medium">
                 <div className="flex flex-col gap-1 col-span-2">
                     <dt>Navn</dt>
                     <dd>{bruker.navn}</dd>
