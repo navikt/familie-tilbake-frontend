@@ -263,7 +263,7 @@ export const ForhåndsvarselInnhold: FC = () => {
         onSuccess: etterVellykketLagring,
         onError: (error: AxiosError<BehandlingLagreBrukersuttalelseError>) => {
             visGlobalAlert({
-                title: error.response?.data?.tittel ?? 'Kunne ikke lagre brukeruttalelse',
+                title: error.response?.data?.tittel ?? 'Kunne ikke lagre uttalelse',
                 message: error.response?.data?.melding,
                 status: 'error',
             });
