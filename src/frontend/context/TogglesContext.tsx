@@ -7,6 +7,7 @@ import { type Ressurs, RessursStatus } from '@/typer/ressurs';
 import { hentFrontendFeilmelding } from '@/utils';
 
 export enum ToggleName {
+    Brevmottakere = 'tilbakekreving-frontend.brevmottakere',
     NyStegflyt = 'tilbakekreving-frontend.ny-stegflyt',
     Revurdering = 'tilbakekreving-frontend.revurdering',
 }

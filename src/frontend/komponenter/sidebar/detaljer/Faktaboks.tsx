@@ -6,19 +6,24 @@ import { Heading, Tag } from '@navikt/ds-react';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useFagsak } from '@/context/FagsakContext';
+import { ToggleName, useToggle } from '@/context/TogglesContext';
 import { behandlingsresultater, behandlingsstatuser } from '@/typer/behandling';
 import { formatterDatostring } from '@/utils';
 
 export const Faktaboks: FC = () => {
     const behandling = useBehandling();
     const { ytelsestype } = useFagsak();
-
+    const brevmottakereEnabled = useToggle(ToggleName.Brevmottakere);
     return (
         <section
             aria-label="Tilbakekrevingsinformasjon"
-            className="flex flex-col gap-2 rounded-xl border border-ax-border-brand-blue-subtle p-4"
+            className={`flex flex-col gap-2 ${
+                brevmottakereEnabled
+                    ? ''
+                    : 'rounded-xl border border-ax-border-brand-blue-subtle p-4'
+            }`}
         >
-            <Heading level="2" size="xsmall" className="hyphens-auto wrap-break-word">
+            <Heading level="2" size="small" className="hyphens-auto wrap-break-word">
                 {`Tilbakekreving av ${ytelsestype.toLocaleLowerCase()}`}
             </Heading>
             <dl className="grid grid-cols-[1fr_auto] gap-4 text-ax-medium">
