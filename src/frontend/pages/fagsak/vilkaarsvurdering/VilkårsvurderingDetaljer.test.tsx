@@ -156,7 +156,7 @@ const begrunnelseIngenting = async (): Promise<HTMLElement> =>
 
 const vilkårRadioGroup = (): HTMLElement =>
     screen.getByRole('radiogroup', {
-        name: 'Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?',
+        name: 'Hvilket vilkår i folketrygdloven § 22-15 gjelder for saken?',
     });
 const godTroRadio = (): HTMLElement =>
     within(vilkårRadioGroup()).getByRole('radio', {
@@ -1337,7 +1337,7 @@ describe('Registrering av ulagrede endringer', () => {
 
         renderMedSpion(settSpion, nullstillSpion);
         await screen.findByRole('radiogroup', {
-            name: 'Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?',
+            name: 'Hvilket vilkår i folketrygdloven § 22-15 gjelder for saken?',
         });
 
         expect(settSpion).not.toHaveBeenCalled();

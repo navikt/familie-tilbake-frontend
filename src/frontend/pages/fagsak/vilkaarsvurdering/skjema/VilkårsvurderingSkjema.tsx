@@ -28,7 +28,7 @@ export const VilkårsvurderingSkjema: FC = () => {
         <>
             <RadioGroup
                 name={valgName}
-                legend="Hvilket vilkår etter folketrygdloven § 22-15 gjelder for perioden?"
+                legend="Hvilket vilkår i folketrygdloven § 22-15 gjelder for saken?"
                 size="small"
                 className="max-w-xl"
                 readOnly={behandlingILesemodus}
