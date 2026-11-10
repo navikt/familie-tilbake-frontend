@@ -5,6 +5,7 @@ import type {
     Options,
     VedtaksbrevData,
     VedtaksbrevDataWritable,
+    VedtaksbrevRedigerbareData,
 } from '@/generated-new';
 import type { VedtaksbrevFormData } from './schema';
 
@@ -23,6 +24,7 @@ import { useBehandlingState } from '@/context/BehandlingStateContext';
 import {
     behandlingHentDokumentInfoOptions,
     behandlingHentDokumentOptions,
+    behandlingHentVedtaksbrevQueryKey,
     behandlingOppdaterVedtaksbrevMutation,
     brevLagSvgVedtaksbrevMutation,
 } from '@/generated-new/@tanstack/react-query.gen';
@@ -170,6 +172,15 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
     const oppdaterVedtaksbrevMutation = useMutation({
         mutationKey: ['oppdaterVedtaksbrev'],
         ...behandlingOppdaterVedtaksbrevMutation(),
+        onSuccess: (data: VedtaksbrevRedigerbareData) => {
+            queryClient.setQueryData<VedtaksbrevData>(
+                behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
+                tidligereData =>
+                    tidligereData
+                        ? { ...tidligereData, sistOppdatert: data.sistOppdatert }
+                        : undefined
+            );
+        },
     });
 
     const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void =>
