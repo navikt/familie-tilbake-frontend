@@ -103,13 +103,13 @@ export const Header: FC = () => {
                 className="text-nowrap"
                 onClick={(): void =>
                     sporHendelse(Hendelser.NAVIGERE, {
-                        lenketekst: 'Nav - Tilbakekreving',
+                        lenketekst: 'Nav Tilbakekreving',
                         destinasjon: '/',
                         kontekst: Sporingskontekst.Header,
                     })
                 }
             >
-                Nav - Tilbakekreving
+                Nav Tilbakekreving
             </InternalHeader.Title>
             <Høytidspynt />
             <Spacer />
