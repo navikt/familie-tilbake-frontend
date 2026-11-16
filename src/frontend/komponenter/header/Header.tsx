@@ -3,15 +3,8 @@ import type { FC } from 'react';
 import type { InnloggetRolleEnum } from '@/generated';
 import type { PersonvernState } from '@/pages/Personvern';
 
-import {
-    ExternalLinkIcon,
-    LeaveIcon,
-    MenuGridIcon,
-    MoonIcon,
-    ShieldLockIcon,
-    SunIcon,
-} from '@navikt/aksel-icons';
-import { Dropdown, HStack, InternalHeader, Spacer, Tag } from '@navikt/ds-react';
+import { ExternalLinkIcon, LeaveIcon, MenuGridIcon, MoonIcon, SunIcon } from '@navikt/aksel-icons';
+import { ActionMenu, Dropdown, HStack, InternalHeader, Spacer, Tag, Theme } from '@navikt/ds-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router';
@@ -122,107 +115,133 @@ export const Header: FC = () => {
                 </HStack>
             )}
 
-            {harGyldigLenke && (
-                <Dropdown>
-                    <InternalHeader.Button as={Dropdown.Toggle}>
+            <ActionMenu>
+                <ActionMenu.Trigger>
+                    <InternalHeader.Button>
                         <MenuGridIcon
                             style={{ fontSize: '1.5rem' }}
-                            title="Systemer og oppslagsverk"
+                            title="Systemer, oppslagsverk og personvern"
                         />
                     </InternalHeader.Button>
-                    <Dropdown.Menu>
-                        <Dropdown.Menu.GroupedList>
-                            <Dropdown.Menu.GroupedList.Heading>
-                                Systemer og oppslagsverk
-                            </Dropdown.Menu.GroupedList.Heading>
-                            {aInntektUrl && (
-                                <Dropdown.Menu.GroupedList.Item
-                                    as="a"
-                                    target="_blank"
-                                    href={aInntektUrl}
-                                    onClick={(): void =>
-                                        sporHendelse(Hendelser.NAVIGERE, {
-                                            lenketekst: 'A-inntekt',
-                                            destinasjon: aInntektUrl,
-                                            lenkegruppe: 'systemer-og-oppslagsverk',
-                                            kontekst: Sporingskontekst.Header,
-                                        })
-                                    }
-                                >
-                                    {personligAInntektUrl
-                                        ? 'A-inntekt personoversikt'
-                                        : 'A-inntekt'}
-                                    <ExternalLinkIcon aria-hidden />
-                                </Dropdown.Menu.GroupedList.Item>
-                            )}
-                            {gosysUrl && (
-                                <Dropdown.Menu.GroupedList.Item
-                                    as="a"
-                                    target="_blank"
-                                    href={gosysUrl}
-                                    onClick={(): void => {
-                                        if (gosysBaseUrl) {
+                </ActionMenu.Trigger>
+                <Theme theme={theme} asChild>
+                    <ActionMenu.Content>
+                        {harGyldigLenke && (
+                            <ActionMenu.Group label="Systemer og oppslagsverk">
+                                {aInntektUrl && (
+                                    <ActionMenu.Item
+                                        as="a"
+                                        icon={<ExternalLinkIcon />}
+                                        iconPosition="right"
+                                        target="_blank"
+                                        href={aInntektUrl}
+                                        onClick={(): void =>
                                             sporHendelse(Hendelser.NAVIGERE, {
-                                                lenketekst: personIdent
-                                                    ? 'Gosys personoversikt'
-                                                    : 'Gosys',
-                                                destinasjon: gosysBaseUrl,
+                                                lenketekst: 'A-inntekt',
+                                                destinasjon: aInntektUrl,
                                                 lenkegruppe: 'systemer-og-oppslagsverk',
                                                 kontekst: Sporingskontekst.Header,
-                                            });
+                                            })
                                         }
-                                    }}
-                                >
-                                    {personIdent ? 'Gosys personoversikt' : 'Gosys'}
-                                    <ExternalLinkIcon aria-hidden />
-                                </Dropdown.Menu.GroupedList.Item>
-                            )}
-                            {modiaUrl && (
-                                <Dropdown.Menu.GroupedList.Item
-                                    as="a"
-                                    target="_blank"
-                                    href={modiaUrl}
-                                    onClick={(): void => {
-                                        if (modiaBaseUrl) {
+                                    >
+                                        {personligAInntektUrl
+                                            ? 'A-inntekt personoversikt'
+                                            : 'A-inntekt'}
+                                    </ActionMenu.Item>
+                                )}
+                                {gosysUrl && (
+                                    <ActionMenu.Item
+                                        as="a"
+                                        icon={<ExternalLinkIcon />}
+                                        iconPosition="right"
+                                        target="_blank"
+                                        href={gosysUrl}
+                                        onClick={(): void => {
+                                            if (gosysBaseUrl) {
+                                                sporHendelse(Hendelser.NAVIGERE, {
+                                                    lenketekst: personIdent
+                                                        ? 'Gosys personoversikt'
+                                                        : 'Gosys',
+                                                    destinasjon: gosysBaseUrl,
+                                                    lenkegruppe: 'systemer-og-oppslagsverk',
+                                                    kontekst: Sporingskontekst.Header,
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        {personIdent ? 'Gosys personoversikt' : 'Gosys'}
+                                    </ActionMenu.Item>
+                                )}
+                                {modiaUrl && (
+                                    <ActionMenu.Item
+                                        as="a"
+                                        icon={<ExternalLinkIcon />}
+                                        iconPosition="right"
+                                        target="_blank"
+                                        href={modiaUrl}
+                                        onClick={(): void => {
+                                            if (modiaBaseUrl) {
+                                                sporHendelse(Hendelser.NAVIGERE, {
+                                                    lenketekst: personIdent
+                                                        ? 'Modia personoversikt'
+                                                        : 'Modia',
+                                                    destinasjon: modiaBaseUrl,
+                                                    lenkegruppe: 'systemer-og-oppslagsverk',
+                                                    kontekst: Sporingskontekst.Header,
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        {personIdent ? 'Modia personoversikt' : 'Modia'}
+                                    </ActionMenu.Item>
+                                )}
+                                {saksoversiktUrl && (
+                                    <ActionMenu.Item
+                                        as="a"
+                                        icon={<ExternalLinkIcon />}
+                                        iconPosition="right"
+                                        target="_blank"
+                                        href={saksoversiktUrl}
+                                        onClick={(): void =>
                                             sporHendelse(Hendelser.NAVIGERE, {
-                                                lenketekst: personIdent
-                                                    ? 'Modia personoversikt'
-                                                    : 'Modia',
-                                                destinasjon: modiaBaseUrl,
+                                                lenketekst: 'Gå til saksoversikt',
+                                                destinasjon: fagsakBehandlingUrl
+                                                    ? 'fagsakBehandlingUrl'
+                                                    : 'oppbygd url',
                                                 lenkegruppe: 'systemer-og-oppslagsverk',
                                                 kontekst: Sporingskontekst.Header,
-                                            });
+                                            })
                                         }
-                                    }}
-                                >
-                                    {personIdent ? 'Modia personoversikt' : 'Modia'}
-                                    <ExternalLinkIcon aria-hidden />
-                                </Dropdown.Menu.GroupedList.Item>
-                            )}
-                            {saksoversiktUrl && (
-                                <Dropdown.Menu.GroupedList.Item
-                                    as="a"
-                                    target="_blank"
-                                    href={saksoversiktUrl}
-                                    onClick={(): void =>
-                                        sporHendelse(Hendelser.NAVIGERE, {
-                                            lenketekst: 'Gå til saksoversikt',
-                                            destinasjon: fagsakBehandlingUrl
-                                                ? 'fagsakBehandlingUrl'
-                                                : 'oppbygd url',
-                                            lenkegruppe: 'systemer-og-oppslagsverk',
-                                            kontekst: Sporingskontekst.Header,
-                                        })
-                                    }
-                                >
-                                    Gå til saksoversikt
-                                    <ExternalLinkIcon aria-hidden />
-                                </Dropdown.Menu.GroupedList.Item>
-                            )}
-                        </Dropdown.Menu.GroupedList>
-                    </Dropdown.Menu>
-                </Dropdown>
-            )}
+                                    >
+                                        Gå til saksoversikt
+                                    </ActionMenu.Item>
+                                )}
+                            </ActionMenu.Group>
+                        )}
+                        {harGyldigLenke && <ActionMenu.Divider />}
+                        <ActionMenu.Group label="Personvern og sikkerhet">
+                            <ActionMenu.Item
+                                as={Link}
+                                to="/personvern"
+                                state={
+                                    behandlingssti &&
+                                    ({ returnTo: behandlingssti } satisfies PersonvernState)
+                                }
+                                onClick={(): void =>
+                                    sporHendelse(Hendelser.NAVIGERE, {
+                                        lenketekst: 'Personvern i Tilbakeløsningen',
+                                        destinasjon: '/personvern',
+                                        lenkegruppe: 'personvern-og-sikkerhet',
+                                        kontekst: Sporingskontekst.Header,
+                                    })
+                                }
+                            >
+                                Personvern i Tilbakeløsningen
+                            </ActionMenu.Item>
+                        </ActionMenu.Group>
+                    </ActionMenu.Content>
+                </Theme>
+            </ActionMenu>
             <Dropdown>
                 <InternalHeader.UserButton
                     className="text-nowrap"
@@ -232,26 +251,6 @@ export const Header: FC = () => {
                 />
                 <Dropdown.Menu>
                     <Dropdown.Menu.List>
-                        <Dropdown.Menu.List.Item
-                            as={Link}
-                            to="/personvern"
-                            state={
-                                behandlingssti &&
-                                ({ returnTo: behandlingssti } satisfies PersonvernState)
-                            }
-                            onClick={(): void =>
-                                sporHendelse(Hendelser.NAVIGERE, {
-                                    lenketekst: 'Personvern',
-                                    destinasjon: '/personvern',
-                                    lenkegruppe: 'brukermeny',
-                                    kontekst: Sporingskontekst.Header,
-                                })
-                            }
-                        >
-                            Personvern
-                            <Spacer />
-                            <ShieldLockIcon aria-hidden fontSize="1.5rem" />
-                        </Dropdown.Menu.List.Item>
                         <Dropdown.Menu.List.Item as="a" href={`${window.origin}/oauth2/logout`}>
                             Logg ut
                             <Spacer />

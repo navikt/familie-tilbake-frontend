@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 
@@ -14,6 +14,11 @@ import { Header } from './Header';
 
 const mockHentBrukerlenkeBaseUrl = vi.mocked(hentBrukerlenkeBaseUrl);
 const mockHentAInntektUrl = vi.mocked(hentAInntektUrl);
+const menyknappNavn = 'Systemer, oppslagsverk og personvern';
+
+const åpneMeny = async (): Promise<void> => {
+    await userEvent.click(screen.getByRole('button', { name: menyknappNavn }));
+};
 
 const renderHeader = (): void => {
     const queryClient = createTestQueryClient();
@@ -56,9 +61,12 @@ describe('Header', () => {
 
     test('Viser riktig titler når ingen personIdent er satt', async () => {
         renderHeader();
+        await åpneMeny();
 
-        expect(await screen.findByText('Modia')).toBeInTheDocument();
-        expect(screen.queryByText('Modia personoversikt')).not.toBeInTheDocument();
+        expect(await screen.findByRole('menuitem', { name: 'Modia' })).toBeInTheDocument();
+        expect(
+            screen.queryByRole('menuitem', { name: 'Modia personoversikt' })
+        ).not.toBeInTheDocument();
     });
 
     test('Har riktig lenke til A-inntekt, Gosys og Modia når personIdent er satt', async () => {
@@ -73,40 +81,40 @@ describe('Header', () => {
 
         expect(mockHentAInntektUrl).toHaveBeenCalled();
 
-        const menyknapp = await screen.findByRole('button', { name: 'Systemer og oppslagsverk' });
-        await userEvent.click(menyknapp);
+        await åpneMeny();
 
-        const aInntektLenke = screen.getByRole('link', { name: 'A-inntekt personoversikt' });
-        const gosysLenke = screen.getByRole('link', { name: 'Gosys personoversikt' });
-        const modiaLenke = screen.getByRole('link', { name: 'Modia personoversikt' });
-
-        expect(aInntektLenke).toHaveAttribute(
-            'href',
-            `https://a-inntekt.nav.no/mock=${personIdent}`
-        );
-        expect(gosysLenke).toHaveAttribute(
+        expect(
+            await screen.findByRole('menuitem', { name: 'A-inntekt personoversikt' })
+        ).toHaveAttribute('href', `https://a-inntekt.nav.no/mock=${personIdent}`);
+        expect(screen.getByRole('menuitem', { name: 'Gosys personoversikt' })).toHaveAttribute(
             'href',
             `https://gosys.nav.no/personoversikt/fnr=${personIdent}`
         );
-        expect(modiaLenke).toHaveAttribute('href', `https://modia.nav.no/person/${personIdent}`);
+        expect(screen.getByRole('menuitem', { name: 'Modia personoversikt' })).toHaveAttribute(
+            'href',
+            `https://modia.nav.no/person/${personIdent}`
+        );
     });
 
     test('Gir kun baseUrl når personIdent ikke er satt', async () => {
         renderHeader();
+        await åpneMeny();
 
-        const menyknapp = await screen.findByRole('button', { name: 'Systemer og oppslagsverk' });
-        await userEvent.click(menyknapp);
-
-        const aInntektLenke = screen.getByRole('link', { name: 'A-inntekt' });
-        const gosysLenke = screen.getByRole('link', { name: 'Gosys' });
-        const modiaLenke = screen.getByRole('link', { name: 'Modia' });
-
-        expect(aInntektLenke).toHaveAttribute('href', 'https://a-inntekt.nav.no');
-        expect(gosysLenke).toHaveAttribute('href', 'https://gosys.nav.no');
-        expect(modiaLenke).toHaveAttribute('href', 'https://modia.nav.no');
+        expect(await screen.findByRole('menuitem', { name: 'A-inntekt' })).toHaveAttribute(
+            'href',
+            'https://a-inntekt.nav.no'
+        );
+        expect(screen.getByRole('menuitem', { name: 'Gosys' })).toHaveAttribute(
+            'href',
+            'https://gosys.nav.no'
+        );
+        expect(screen.getByRole('menuitem', { name: 'Modia' })).toHaveAttribute(
+            'href',
+            'https://modia.nav.no'
+        );
     });
 
-    test('Viser ingen menyknapp når ingen gyldige lenker eksisterer', () => {
+    test('Viser kun personvern i menyen når ingen gyldige systemlenker eksisterer', async () => {
         mockHentBrukerlenkeBaseUrl.mockResolvedValue({
             aInntektUrl: '',
             gosysBaseUrl: '',
@@ -114,12 +122,17 @@ describe('Header', () => {
         });
 
         renderHeader();
+        await åpneMeny();
 
         expect(
-            screen.queryByRole('button', {
-                name: 'Systemer og oppslagsverk',
-            })
+            screen.queryByRole('group', { name: 'Systemer og oppslagsverk' })
         ).not.toBeInTheDocument();
+        const personvernGruppe = screen.getByRole('group', { name: 'Personvern og sikkerhet' });
+        expect(
+            within(personvernGruppe).getByRole('menuitem', {
+                name: 'Personvern i Tilbakeløsningen',
+            })
+        ).toHaveAttribute('href', '/personvern');
     });
 
     describe('RolleTag', () => {

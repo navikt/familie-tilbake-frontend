@@ -89,6 +89,26 @@ export const Personvern: FC = () => {
 
                 <VStack gap="space-16">
                     <Heading size="large" level="2">
+                        Behandlingsgrunnlag
+                    </Heading>
+                    <BodyLong className="flex flex-col gap-6">
+                        <span>
+                            Vi behandler opplysninger om navnet ditt, saksbehandler ID og enheten
+                            din for å behandle en sak i Tilbakeløsningen. Behandlingen er nødvendig
+                            for å utøve offentlig myndighet og har grunnlag i personvernforordningen
+                            artikkel 6 nr. 1 bokstav e. Supplerende behandlingsgrunnlag er enten
+                            folketrygdloven § 22-15, barnetrygdloven § 13, kontantstøtteloven § 11
+                            eller arbeidsmarkedsloven § 22, avhengig av ytelsen saken gjelder.
+                        </span>
+                        <span>
+                            Behandlingsgrunnlaget for bruk av Innblikk er personvernforordningen
+                            artikkel 6 nr. 1 bokstav f. Se nærmere om denne behandlingen nedenfor.
+                        </span>
+                    </BodyLong>
+                </VStack>
+
+                <VStack gap="space-16">
+                    <Heading size="large" level="2">
                         Personvernombudet
                     </Heading>
                     <BodyLong>
@@ -205,8 +225,9 @@ export const Personvern: FC = () => {
                             pålagt gjennom folketrygdloven § 22-15, Nav-loven § 4a mv.
                             Behandlingsgrunnlaget vi bruker for å behandle ansattes
                             personopplysninger i denne sammenheng er personvernforordningen artikkel
-                            6 (1) bokstav e som tillater behandling av personopplysninger for å
-                            utøve offentlig myndighet.
+                            6 (1) bokstav f som tillater behandling av personopplysninger som er
+                            nødvendige for formål knyttet til de berettigede interessene Nav har for
+                            å utvikle løsningen.
                         </span>
                         <span>
                             Dette behandlingsgrunnlaget gir den registrerte (den personopplysningene
