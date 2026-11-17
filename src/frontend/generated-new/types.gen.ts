@@ -269,6 +269,17 @@ export type Hele = {
     reduksjon: ReduksjonArsaker;
 };
 
+export type Hendelse = {
+    tittel: string;
+    opprettet: string;
+    rolle: Rolle;
+    rolleIdent: string | null;
+    beskrivelse: string | null;
+    ekstraInfo: {
+        [key: string]: string;
+    };
+};
+
 export type Hovedavsnitt = {
     tittel: string;
     readonly forklaring: string;
@@ -469,6 +480,8 @@ export type Revurderingsinstans =
     | 'Klageinstansen'
     | 'Trygderetten'
     | 'Domstolen';
+
+export type Rolle = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
 
 export type RotElement =
     | ({
@@ -1392,6 +1405,39 @@ export type BehandlingLagreBrukersuttalelseResponses = {
      */
     200: unknown;
 };
+
+export type BehandlingHentHistorikkData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/historikk';
+};
+
+export type BehandlingHentHistorikkErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentHistorikkError =
+    BehandlingHentHistorikkErrors[keyof BehandlingHentHistorikkErrors];
+
+export type BehandlingHentHistorikkResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Array<Hendelse>;
+};
+
+export type BehandlingHentHistorikkResponse =
+    BehandlingHentHistorikkResponses[keyof BehandlingHentHistorikkResponses];
 
 export type BehandlingHentDokumentData = {
     body?: never;
