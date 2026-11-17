@@ -10,12 +10,7 @@ import type {
 import type { VedtaksbrevFormData } from './schema';
 
 import { Heading, HStack, Tag } from '@navikt/ds-react';
-import {
-    type MutationFunctionContext,
-    useMutation,
-    useQuery,
-    useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -144,34 +139,27 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         };
     }, [sendtBrevUrl]);
 
-    const { onMutate, ...originalMutation } = brevLagSvgVedtaksbrevMutation({
-        baseURL: window.location.origin,
-    });
+    const sisteForhåndsvisning = useRef<Options<BrevLagSvgVedtaksbrevData> | null>(null);
 
     const forhåndsvisningMutation = useMutation({
         mutationKey: ['lagPdf'],
-        ...originalMutation,
-        onSuccess: async (data: Blob | File) => {
-            const blob = data as Blob;
-            const tekst = await blob.text();
+        ...brevLagSvgVedtaksbrevMutation({ baseURL: window.location.origin }),
+        onSuccess: async (data: Blob | File, variables: Options<BrevLagSvgVedtaksbrevData>) => {
+            const tekst = await (data as Blob).text();
+
+            if (variables !== sisteForhåndsvisning.current) return;
             const respons = JSON.parse(tekst) as { page_count: number; pages: string[] };
             const siderSomBase64 = respons.pages.map(
                 svg => `data:image/svg+xml;base64,${btoa(svg)}`
             );
             setPdfSider(siderSomBase64);
         },
-        onMutate: async (
-            variables: Options<BrevLagSvgVedtaksbrevData>,
-            context: MutationFunctionContext
-        ) => {
-            await queryClient.cancelQueries({ queryKey: ['lagPdf'] });
-            onMutate?.(variables, context);
-        },
     });
 
     const oppdaterVedtaksbrevMutation = useMutation({
         mutationKey: ['oppdaterVedtaksbrev'],
         ...behandlingOppdaterVedtaksbrevMutation(),
+        scope: { id: `oppdaterVedtaksbrev-${behandlingId}` },
         onSuccess: (data: VedtaksbrevRedigerbareData) => {
             queryClient.setQueryData<VedtaksbrevData>(
                 behandlingHentVedtaksbrevQueryKey({ path: { behandlingId } }),
@@ -183,10 +171,11 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         },
     });
 
-    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void =>
-        forhåndsvisningMutation.mutate({
-            body: data,
-        });
+    const oppdaterForhåndsvisning = (data: VedtaksbrevDataWritable): void => {
+        const variables = { body: data };
+        sisteForhåndsvisning.current = variables;
+        forhåndsvisningMutation.mutate(variables);
+    };
 
     const debouncedUpdate = useDebounce(() => {
         const formData = methods.getValues();
@@ -207,7 +196,7 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         });
     }, [debouncedUpdate, methods]);
 
-    const forhåndsvisBrev = useEffectEvent((vedtaksbrevData: VedtaksbrevData) => {
+    const forhåndsvisBrev = useEffectEvent(() => {
         oppdaterForhåndsvisning(vedtaksbrevData);
     });
 
@@ -216,8 +205,8 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
 
     useEffect(() => {
         if (!skalViseForhåndsvisning) return;
-        forhåndsvisBrev(vedtaksbrevData);
-    }, [vedtaksbrevData, skalViseForhåndsvisning]);
+        forhåndsvisBrev();
+    }, [skalViseForhåndsvisning]);
 
     const harDataEllerFeil = pdfSider.length > 0 || forhåndsvisningMutation.isError;
 

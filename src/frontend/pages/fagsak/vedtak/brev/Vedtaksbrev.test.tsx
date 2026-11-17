@@ -1,8 +1,17 @@
 import type { RenderResult } from '@testing-library/react';
-import type { Avsnitt, Brevmottaker, VedtaksbrevData } from '@/generated-new';
+import type {
+    Avsnitt,
+    BehandlingOppdaterVedtaksbrevData,
+    BrevLagSvgVedtaksbrevData,
+    Brevmottaker,
+    Options,
+    VedtaksbrevData,
+    VedtaksbrevRedigerbareData,
+} from '@/generated-new';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { behandlingHentDokumentInfoOptions } from '@/generated-new/@tanstack/react-query.gen';
@@ -11,9 +20,25 @@ import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 
+const { lagreVedtaksbrev, lagForhåndsvisning } = vi.hoisted(() => ({
+    lagreVedtaksbrev:
+        vi.fn<
+            (
+                options: Options<BehandlingOppdaterVedtaksbrevData>
+            ) => Promise<VedtaksbrevRedigerbareData>
+        >(),
+    lagForhåndsvisning: vi.fn<(options: Options<BrevLagSvgVedtaksbrevData>) => Promise<Blob>>(),
+}));
+
 vi.mock('@/generated-new/sdk.gen', async importOriginal => ({
     ...(await importOriginal<typeof import('@/generated-new/sdk.gen')>()),
     behandlingHentDokument: vi.fn(),
+}));
+
+vi.mock('@/generated-new/@tanstack/react-query.gen', async importOriginal => ({
+    ...(await importOriginal<typeof import('@/generated-new/@tanstack/react-query.gen')>()),
+    behandlingOppdaterVedtaksbrevMutation: () => ({ mutationFn: lagreVedtaksbrev }),
+    brevLagSvgVedtaksbrevMutation: () => ({ mutationFn: lagForhåndsvisning }),
 }));
 
 const behandlingHentDokumentMock = vi.mocked(behandlingHentDokument);
@@ -160,6 +185,42 @@ describe('Vedtaksbrev', () => {
             `${tredjeAvsnittForklaring} ${standardTextareaDescription}`
         );
         expect(tredjePeriodeAvsnitt).toHaveValue('Tredje textarea');
+    });
+
+    test('skal ikke forhåndsvise gammel tekst når lagring oppdaterer sistOppdatert', async () => {
+        const vedtaksbrevData = lagVedtaksbrevData();
+        const lagretVedtaksbrev = { ...vedtaksbrevData, sistOppdatert: '2024-02-01' };
+        lagForhåndsvisning.mockResolvedValue(
+            new Blob([JSON.stringify({ page_count: 1, pages: ['<svg/>'] })])
+        );
+        lagreVedtaksbrev.mockResolvedValue(lagretVedtaksbrev);
+        const queryClient = new QueryClient();
+        const { rerender } = renderVedtaksbrev(vedtaksbrevData, queryClient);
+        const tekstfelt = screen.getByRole('textbox', { name: 'Du må betale tilbake stønaden' });
+        const forhåndsvisteTekster = (): unknown[] =>
+            lagForhåndsvisning.mock.calls.map(
+                ([options]) => options.body?.hovedavsnitt.underavsnitt
+            );
+
+        await userEvent.type(tekstfelt, ' endret');
+        await waitFor(() => expect(lagreVedtaksbrev).toHaveBeenCalled());
+
+        rerender(
+            <QueryClientProvider client={queryClient}>
+                <TestBehandlingProvider>
+                    <Vedtaksbrev vedtaksbrevData={lagretVedtaksbrev} onSubmit={vitest.fn()} />
+                </TestBehandlingProvider>
+            </QueryClientProvider>
+        );
+
+        await userEvent.type(tekstfelt, ' igjen');
+        await waitFor(() => expect(lagForhåndsvisning).toHaveBeenCalledTimes(3));
+
+        expect(forhåndsvisteTekster()).toEqual([
+            [{ type: 'rentekst', tekst: 'Dette er et hovedavsnitt' }],
+            [{ type: 'rentekst', tekst: 'Dette er et hovedavsnitt endret' }],
+            [{ type: 'rentekst', tekst: 'Dette er et hovedavsnitt endret igjen' }],
+        ]);
     });
 
     describe('feilmelding for sendt vedtaksbrev', () => {
