@@ -96,13 +96,6 @@ export const zVarselbrevEntity = z.object({
     tekstFraSaksbehandler: z.string(),
 });
 
-export const zVedtaksbrevEntity = z.object({
-    id: z.uuid(),
-    journalpostId: z.string().nullish(),
-    dokumentInfoId: z.string().nullish(),
-    sendtTid: z.iso.date(),
-});
-
 export const zDatoperiode = z.object({
     fom: z.iso.date(),
     tom: z.iso.date(),
@@ -216,6 +209,14 @@ export const zKravgrunnlagsinfo = z.object({
     mottattXmlId: z.uuid().nullish(),
     eksternId: z.string(),
     opprettetTid: z.iso.datetime(),
+});
+
+export const zStatusmeldingUtenSak = z.object({
+    id: z.uuid(),
+    fagsystemId: z.string(),
+    vedtakId: z.string(),
+    kravstatuskode: z.string(),
+    mottatt: z.iso.datetime(),
 });
 
 export const zInstitusjonDto = z.object({
@@ -400,8 +401,10 @@ export const zSchemaEnum = z.enum([
     'IVERKSETT_VEDTAK',
     'JOURNALFØR_VEDTAK',
     'JOURNALFØR_INFOBREV_FOR_BORTFALT_KRAV',
+    'DISTRIBUER_INFOBREV_FOR_BORTFALT_KRAV',
     'DISTRIUBER_VEDTAK',
     'AVSLUTTET',
+    'AVSLUTTET_UTEN_VEDTAK',
     'SPERRET',
     'KRAVGRUNNLAG_BORTFALT',
 ]);
@@ -445,6 +448,18 @@ export const zStatusEnum = z.enum([
 
 export const zRessursString = z.object({
     data: z.string().nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zRessursInteger = z.object({
+    data: z
+        .int()
+        .min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' })
+        .max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+        .nullish(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
@@ -515,16 +530,24 @@ export const zRessursListKravgrunnlagsinfo = z.object({
     stacktrace: z.string().nullish(),
 });
 
-export const zRessursListUuid = z.object({
-    data: z.array(z.uuid()).nullish(),
+export const zRessursListString = z.object({
+    data: z.array(z.string()).nullish(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
     stacktrace: z.string().nullish(),
 });
 
-export const zRessursListString = z.object({
-    data: z.array(z.string()).nullish(),
+export const zRessursListStatusmeldingUtenSak = z.object({
+    data: z.array(zStatusmeldingUtenSak).nullish(),
+    status: zStatusEnum,
+    melding: z.string(),
+    frontendFeilmelding: z.string().nullish(),
+    stacktrace: z.string().nullish(),
+});
+
+export const zRessursListUuid = z.object({
+    data: z.array(z.uuid()).nullish(),
     status: zStatusEnum,
     melding: z.string(),
     frontendFeilmelding: z.string().nullish(),
@@ -684,7 +707,6 @@ export const zForrigeBehandlingsstatusEnum = z.enum([
     'TIL_BEHANDLING',
     'FATTER_VEDTAK',
     'JOURNALFØRER_VEDTAK',
-    'JOURNALFØRER_INFOBREV',
     'DISTRIUBERER_VEDTAK',
     'IVERKSETTER_VEDTAK',
     'AVSLUTTET',
@@ -741,6 +763,7 @@ export const zEksternFagsakBehandlingEntity = z.object({
     vedtaksdato: z.iso.date().nullish(),
     utvidedePerioder: z.array(zUtvidetPeriodeEntity).nullish(),
     url: z.string().nullish(),
+    brukerInformertOmFeilutbetaling: z.boolean().nullish(),
     opprettet: z.iso.datetime(),
 });
 
@@ -1014,20 +1037,6 @@ export const zInformasjonsbrevEntity = z.object({
     sendtTid: z.iso.date(),
 });
 
-export const zBrevEntity = z.object({
-    id: z.uuid(),
-    tilbakekrevingRef: z.string(),
-    brevtype: zBrevtypeEnum,
-    varselbrevEntity: zVarselbrevEntity.nullish(),
-    vedtaksbrevEntity: zVedtaksbrevEntity.nullish(),
-    informasjonsbrevEntity: zInformasjonsbrevEntity.nullish(),
-    opprettet: z.iso.datetime(),
-});
-
-export const zHistorikkEntityUuidBrevEntityBrev = z.object({
-    innslag: z.array(zBrevEntity),
-});
-
 export const zKravstatuskodeEnum = z.enum([
     'ANNULERT',
     'ANNULLERT_OMG',
@@ -1051,6 +1060,8 @@ export const zKravStatusmeldingEntity = zKravHendelseEntity.and(
     })
 );
 
+export const zHenteårsakEnum = z.enum(['KORRIGERING_AV_KRAV', 'OMGJØRING_AV_VEDTAK']);
+
 export const zKravgrunnlagHendelseEntity = zKravHendelseEntity.and(
     z.object({
         vedtakId: z.int(),
@@ -1064,7 +1075,7 @@ export const zKravgrunnlagHendelseEntity = zKravHendelseEntity.and(
         kravgrunnlagId: z.string(),
         referanse: z.string(),
         perioder: z.array(zKravgrunnlagPeriodeEntity),
-        korrigering: z.boolean(),
+        henteårsak: zHenteårsakEnum.optional(),
     })
 );
 
@@ -1147,6 +1158,30 @@ export const zTilbakekrevingRevurderingEntity = z.object({
     revurderingsårsakType: zRevurderingsårsakTypeEnum,
     omgjortAv: zOmgjortAvEnum.optional(),
     beskrivelse: z.string(),
+});
+
+export const zVedtaksbrevtypeEnum = z.enum(['FØRSTEGANG', 'REVURDERING']);
+
+export const zVedtaksbrevEntity = z.object({
+    id: z.uuid(),
+    journalpostId: z.string().nullish(),
+    dokumentInfoId: z.string().nullish(),
+    sendtTid: z.iso.date(),
+    vedtaksbrevtype: zVedtaksbrevtypeEnum,
+});
+
+export const zBrevEntity = z.object({
+    id: z.uuid(),
+    tilbakekrevingRef: z.string(),
+    brevtype: zBrevtypeEnum,
+    varselbrevEntity: zVarselbrevEntity.nullish(),
+    vedtaksbrevEntity: zVedtaksbrevEntity.nullish(),
+    informasjonsbrevEntity: zInformasjonsbrevEntity.nullish(),
+    opprettet: z.iso.datetime(),
+});
+
+export const zHistorikkEntityUuidBrevEntityBrev = z.object({
+    innslag: z.array(zBrevEntity),
 });
 
 export const zAktsomhetTypeEnum = z.enum([
@@ -1548,7 +1583,6 @@ export const zBehandlingstatusEnum = z.enum([
     'OPPRETTET',
     'UTREDES',
     'JOURNALFØR_VEDTAK',
-    'JOURNALFØRER_INFOBREV',
     'DISTRIUBER_VEDTAK',
 ]);
 
@@ -1596,7 +1630,6 @@ export const zStatusEnum2 = z.enum([
     'OPPRETTET',
     'UTREDES',
     'JOURNALFØR_VEDTAK',
-    'JOURNALFØRER_INFOBREV',
     'DISTRIUBER_VEDTAK',
 ]);
 
@@ -2576,6 +2609,13 @@ export const zOppdaterFagsysteminfoPath = z.object({
     behandlingId: z.uuid(),
 });
 
+export const zLesStatusmeldingerPåNyttBody = z.array(z.uuid());
+
+/**
+ * OK
+ */
+export const zLesStatusmeldingerPåNyttResponse = zRessursInteger;
+
 export const zLagOppdaterOppgaveTaskForBehandlingBody = z.array(z.uuid());
 
 export const zFinnGamleÅpneBehandlingerUtenOppgavePath = z.object({
@@ -2808,10 +2848,30 @@ export const zHentKravgrunnlagsinfoPath = z.object({
  */
 export const zHentKravgrunnlagsinfoResponse = zRessursListKravgrunnlagsinfo;
 
+/**
+ * OK
+ */
+export const zHentFagsystemIderForSperredeTilbakekrevingerResponse = zRessursListString;
+
 export const zFinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgavePath =
     z.object({
         fagsystem: zSchemaEnum2,
     });
+
+/**
+ * OK
+ */
+export const zFinnStatusmeldingerUtenSakResponse = zRessursListStatusmeldingUtenSak;
+
+export const zHentTilbakekrevingUrlerPath = z.object({
+    fagsystem: zSchemaEnum2,
+    eksternFagsakId: z.string(),
+});
+
+/**
+ * OK
+ */
+export const zHentTilbakekrevingUrlerResponse = zRessursListString;
 
 /**
  * OK

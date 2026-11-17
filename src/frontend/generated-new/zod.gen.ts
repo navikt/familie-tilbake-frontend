@@ -113,11 +113,6 @@ export const zHovedavsnittInformasjonsbrev = z.object({
     innhold: z.array(z.string()),
 });
 
-export const zHovedavsnittRevurderingVedtaksbrev = z.object({
-    tittel: z.string().min(3).max(300),
-    innhold: z.array(z.string()),
-});
-
 export const zHovedavsnittVarselbrev = z.object({
     tittel: z.string().min(3).max(300),
     innhold: z.array(z.string()),
@@ -292,14 +287,6 @@ export const zSignatur = z.object({
     besluttendeSaksbehandler: z.string().nullable(),
 });
 
-export const zRevurderingVedtaksbrevData = z.object({
-    hovedavsnitt: zHovedavsnittRevurderingVedtaksbrev,
-    brevGjelder: zBrevmottaker,
-    signatur: zSignatur,
-    sendtDato: z.string(),
-    saksnummer: z.string(),
-});
-
 export const zSignaturAutomatisk = z.object({
     enhetNavn: z.string(),
 });
@@ -458,7 +445,7 @@ export const zHovedavsnitt = z.object({
     tittel: z.string().min(3).max(300),
     forklaring: z.string().readonly(),
     underavsnitt: z.array(zRotElement),
-    hjemler: z.string(),
+    hjemler: z.string().nullable(),
 });
 
 export const zRotElementUpdateItem = z.discriminatedUnion('type', [
@@ -617,13 +604,13 @@ export const zUnntak = z.object({
 
 export const zVedtaksbrevRedigerbareData = z.object({
     hovedavsnitt: zHovedavsnitt,
-    avsnitt: z.array(zAvsnitt),
+    avsnitt: z.array(zAvsnitt).nullable(),
     sistOppdatert: z.iso.datetime().readonly(),
 });
 
 export const zVedtaksbrevRedigerbareDataUpdate = z.object({
     hovedavsnitt: zHovedavsnittUpdate,
-    avsnitt: z.array(zAvsnittUpdateItem),
+    avsnitt: z.array(zAvsnittUpdateItem).nullable(),
 });
 
 export const zVedtaksdokument = z.object({
@@ -709,13 +696,13 @@ export const zYtelse = z.object({
 
 export const zVedtaksbrevData = z.object({
     hovedavsnitt: zHovedavsnitt,
-    avsnitt: z.array(zAvsnitt),
+    avsnitt: z.array(zAvsnitt).nullable(),
     sistOppdatert: z.iso.datetime().readonly(),
     brevGjelder: zBrevmottaker,
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
-    oppsummeringstabell: zOppsummeringsdata,
+    oppsummeringstabell: zOppsummeringsdata.nullable(),
     bunntekster: z.array(zStandardtekst),
     saksnummer: z.string(),
 });
@@ -1003,7 +990,7 @@ export const zAvsnittWritable = z.object({
 export const zHovedavsnittWritable = z.object({
     tittel: z.string().min(3).max(300),
     underavsnitt: z.array(zRotElementWritable),
-    hjemler: z.string(),
+    hjemler: z.string().nullable(),
 });
 
 export const zSkalIkkeReduseresWritable = z.object({
@@ -1163,19 +1150,19 @@ export const zForhaandsvarselResponseWritable = z.object({
 
 export const zVedtaksbrevDataWritable = z.object({
     hovedavsnitt: zHovedavsnittWritable,
-    avsnitt: z.array(zAvsnittWritable),
+    avsnitt: z.array(zAvsnittWritable).nullable(),
     brevGjelder: zBrevmottaker,
     sendtDato: z.string(),
     ytelse: zYtelse,
     signatur: zSignatur,
-    oppsummeringstabell: zOppsummeringsdata,
+    oppsummeringstabell: zOppsummeringsdata.nullable(),
     bunntekster: z.array(zStandardtekst),
     saksnummer: z.string(),
 });
 
 export const zVedtaksbrevRedigerbareDataWritable = z.object({
     hovedavsnitt: zHovedavsnittWritable,
-    avsnitt: z.array(zAvsnittWritable),
+    avsnitt: z.array(zAvsnittWritable).nullable(),
 });
 
 export const zVilkaarsvurderingValgWritable = z.union([
@@ -1430,6 +1417,10 @@ export const zBrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
  * The request has succeeded.
  */
 export const zBrevLagSvgVedtaksbrevResponse = z.string();
+
+export const zDokumenterHentVedtaksdokumenterHeaders = z.object({
+    Authorization: z.string(),
+});
 
 export const zDokumenterHentVedtaksdokumenterPath = z.object({
     vedtakId: z

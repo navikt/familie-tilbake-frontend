@@ -1,4 +1,5 @@
 import type {
+    PakrevdBegrunnelse,
     RotElementUpdateItem,
     RotElementWritable,
     VedtaksbrevData,
@@ -27,7 +28,7 @@ export const tilFormData = (vedtaksbrevData: VedtaksbrevData): VedtaksbrevFormDa
     hovedavsnitt: {
         tekst: elementArrayTilTekst(vedtaksbrevData.hovedavsnitt.underavsnitt),
     },
-    avsnitt: vedtaksbrevData.avsnitt.map(avsnitt => ({
+    avsnitt: (vedtaksbrevData.avsnitt ?? []).map(avsnitt => ({
         id: avsnitt.id,
         tekst: elementArrayTilTekst(avsnitt.underavsnitt),
         påkrevdeBegrunnelser: avsnitt.underavsnitt
@@ -66,46 +67,57 @@ export const tilVedtaksbrevDataWritable = (
             hjemler: hovedavsnitt.hjemler,
             underavsnitt: tekstTilElementArray(formData.hovedavsnitt.tekst),
         },
-        avsnitt: formData.avsnitt.map((formAvsnitt, i) => {
-            const opprinnelig = avsnitt[i];
-            const påkrevdeWritable: RotElementWritable[] = opprinnelig.underavsnitt
-                .filter(el => el.type === 'påkrevd_begrunnelse')
-                .map(opprinneligPåkrevd => ({
-                    tittel: opprinneligPåkrevd.tittel,
-                    ...mapTilRotElementUpdateItem(opprinneligPåkrevd, formAvsnitt),
-                }));
-            return {
-                tittel: opprinnelig.tittel,
-                id: formAvsnitt.id,
-                underavsnitt: [...tekstTilElementArray(formAvsnitt.tekst), ...påkrevdeWritable],
-            };
-        }),
+        avsnitt:
+            avsnitt === null
+                ? null
+                : formData.avsnitt.map((formAvsnitt, i) => {
+                      const opprinnelig = avsnitt[i];
+                      const påkrevdeWritable: RotElementWritable[] = opprinnelig.underavsnitt
+                          .filter(el => el.type === 'påkrevd_begrunnelse')
+                          .map(opprinneligPåkrevd => ({
+                              tittel: opprinneligPåkrevd.tittel,
+                              ...mapTilRotElementUpdateItem(opprinneligPåkrevd, formAvsnitt),
+                          }));
+                      return {
+                          tittel: opprinnelig.tittel,
+                          id: formAvsnitt.id,
+                          underavsnitt: [
+                              ...tekstTilElementArray(formAvsnitt.tekst),
+                              ...påkrevdeWritable,
+                          ],
+                      };
+                  }),
     };
 };
 
 export const tilVedtaksbrevRedigerbareDataUpdate = (
-    vedtaksbrevData: VedtaksbrevData,
+    { hovedavsnitt, avsnitt }: VedtaksbrevData,
     formData: VedtaksbrevFormData
 ): VedtaksbrevRedigerbareDataUpdate => ({
     hovedavsnitt: {
-        tittel: vedtaksbrevData.hovedavsnitt.tittel,
+        tittel: hovedavsnitt.tittel,
         underavsnitt: tekstTilElementArray(formData.hovedavsnitt.tekst),
     },
-    avsnitt: formData.avsnitt.map((formAvsnitt, i) => {
-        const opprinnelig = vedtaksbrevData.avsnitt[i];
-        const påkrevdeUpdate: RotElementUpdateItem[] = opprinnelig.underavsnitt
-            .filter(el => el.type === 'påkrevd_begrunnelse')
-            .map(opprinneligPåkrevd => mapTilRotElementUpdateItem(opprinneligPåkrevd, formAvsnitt));
-        return {
-            tittel: opprinnelig.tittel,
-            id: formAvsnitt.id,
-            underavsnitt: [...tekstTilElementArray(formAvsnitt.tekst), ...påkrevdeUpdate],
-        };
-    }),
+    avsnitt:
+        avsnitt === null
+            ? null
+            : formData.avsnitt.map((formAvsnitt, i) => {
+                  const opprinnelig = avsnitt[i];
+                  const påkrevdeUpdate: RotElementUpdateItem[] = opprinnelig.underavsnitt
+                      .filter(el => el.type === 'påkrevd_begrunnelse')
+                      .map(opprinneligPåkrevd =>
+                          mapTilRotElementUpdateItem(opprinneligPåkrevd, formAvsnitt)
+                      );
+                  return {
+                      tittel: opprinnelig.tittel,
+                      id: formAvsnitt.id,
+                      underavsnitt: [...tekstTilElementArray(formAvsnitt.tekst), ...påkrevdeUpdate],
+                  };
+              }),
 });
 
 const mapTilRotElementUpdateItem = (
-    opprinnelig: VedtaksbrevData['avsnitt'][number]['underavsnitt'][number] & {
+    opprinnelig: PakrevdBegrunnelse & {
         type: 'påkrevd_begrunnelse';
     },
     formAvsnitt: VedtaksbrevFormData['avsnitt'][number]

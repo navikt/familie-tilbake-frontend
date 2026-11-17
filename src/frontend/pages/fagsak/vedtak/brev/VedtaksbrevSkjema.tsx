@@ -26,7 +26,7 @@ export const VedtaksbrevSkjema: FC<Props> = ({ vedtaksbrevData, onSubmit }: Prop
                 label={vedtaksbrevData.hovedavsnitt.tittel}
                 description={vedtaksbrevData.hovedavsnitt.forklaring}
             />
-            {vedtaksbrevData.avsnitt.map((avsnitt, index) => (
+            {vedtaksbrevData.avsnitt?.map((avsnitt, index) => (
                 <AvsnittFelter key={avsnitt.id} avsnitt={avsnitt} avsnittIndex={index} />
             ))}
         </form>

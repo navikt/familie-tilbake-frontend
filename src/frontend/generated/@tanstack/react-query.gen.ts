@@ -22,6 +22,7 @@ import {
     finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave,
     finnesÅpenTilbakekrevingsbehandling,
     finnGamleÅpneBehandlingerUtenOppgave,
+    finnStatusmeldingerUtenSak,
     fjernBrevmottakerSteg,
     fjernManuellBrevmottaker,
     fjernVerge,
@@ -35,6 +36,7 @@ import {
     hentBeregningsresultat,
     hentDokument,
     hentFagsak,
+    hentFagsystemIderForSperredeTilbakekrevinger,
     hentFaktaomfeilutbetaling,
     hentForhåndsvarselTekst,
     hentForhåndsvisningHenleggelsesbrev,
@@ -48,6 +50,7 @@ import {
     hentJournalposter,
     hentKravgrunnlagsinfo,
     hentManuellBrevmottakere,
+    hentTilbakekrevingUrler,
     hentTotrinnsvurderinger,
     hentUrlTilArbeidOgInntekt,
     hentVedtakForFagsystem,
@@ -62,6 +65,7 @@ import {
     lagOppdaterOppgaveTaskForBehandling,
     lagreUtkastVedtaksbrev,
     leggTilBrevmottaker,
+    lesStatusmeldingerPåNytt,
     migrerAlleSaker,
     oppdaterBehandlendeEnhetPåBehandling,
     oppdaterFagsysteminfo,
@@ -114,6 +118,8 @@ import type {
     FinnesÅpenTilbakekrevingsbehandlingData,
     FinnesÅpenTilbakekrevingsbehandlingResponse,
     FinnGamleÅpneBehandlingerUtenOppgaveData,
+    FinnStatusmeldingerUtenSakData,
+    FinnStatusmeldingerUtenSakResponse,
     FjernBrevmottakerStegData,
     FjernBrevmottakerStegResponse,
     FjernManuellBrevmottakerData,
@@ -140,6 +146,8 @@ import type {
     HentDokumentResponse,
     HentFagsakData,
     HentFagsakResponse,
+    HentFagsystemIderForSperredeTilbakekrevingerData,
+    HentFagsystemIderForSperredeTilbakekrevingerResponse,
     HentFaktaomfeilutbetalingData,
     HentFaktaomfeilutbetalingResponse,
     HentForhåndsvarselTekstData,
@@ -166,6 +174,8 @@ import type {
     HentKravgrunnlagsinfoResponse,
     HentManuellBrevmottakereData,
     HentManuellBrevmottakereResponse,
+    HentTilbakekrevingUrlerData,
+    HentTilbakekrevingUrlerResponse,
     HentTotrinnsvurderingerData,
     HentTotrinnsvurderingerResponse,
     HentUrlTilArbeidOgInntektData,
@@ -193,6 +203,8 @@ import type {
     LagreUtkastVedtaksbrevResponse,
     LeggTilBrevmottakerData,
     LeggTilBrevmottakerResponse,
+    LesStatusmeldingerPåNyttData,
+    LesStatusmeldingerPåNyttResponse,
     MigrerAlleSakerData,
     OppdaterBehandlendeEnhetPåBehandlingData,
     OppdaterBehandlendeEnhetPåBehandlingResponse,
@@ -933,6 +945,33 @@ export const migrerAlleSakerMutation = (
     > = {
         mutationFn: async fnOptions => {
             const { data } = await migrerAlleSaker({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+/**
+ * Marker statusmeldinger i bufferet som ulest slik at de leses på nytt
+ */
+export const lesStatusmeldingerPåNyttMutation = (
+    options?: Partial<Options<LesStatusmeldingerPåNyttData>>
+): UseMutationOptions<
+    LesStatusmeldingerPåNyttResponse,
+    AxiosError<DefaultError>,
+    Options<LesStatusmeldingerPåNyttData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        LesStatusmeldingerPåNyttResponse,
+        AxiosError<DefaultError>,
+        Options<LesStatusmeldingerPåNyttData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await lesStatusmeldingerPåNytt({
                 ...options,
                 ...fnOptions,
                 throwOnError: true,
@@ -1685,6 +1724,34 @@ export const hentKravgrunnlagsinfoOptions = (options: Options<HentKravgrunnlagsi
         queryKey: hentKravgrunnlagsinfoQueryKey(options),
     });
 
+export const hentFagsystemIderForSperredeTilbakekrevingerQueryKey = (
+    options?: Options<HentFagsystemIderForSperredeTilbakekrevingerData>
+) => createQueryKey('hentFagsystemIderForSperredeTilbakekrevinger', options);
+
+/**
+ * Hent fagsystem-IDer for alle tilbakekrevinger i ny modell som er i tilstand SPERRET
+ */
+export const hentFagsystemIderForSperredeTilbakekrevingerOptions = (
+    options?: Options<HentFagsystemIderForSperredeTilbakekrevingerData>
+) =>
+    queryOptions<
+        HentFagsystemIderForSperredeTilbakekrevingerResponse,
+        AxiosError<DefaultError>,
+        HentFagsystemIderForSperredeTilbakekrevingerResponse,
+        ReturnType<typeof hentFagsystemIderForSperredeTilbakekrevingerQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await hentFagsystemIderForSperredeTilbakekrevinger({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: hentFagsystemIderForSperredeTilbakekrevingerQueryKey(options),
+    });
+
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey = (
     options: Options<FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData>
 ) =>
@@ -1721,6 +1788,59 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
             finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey(
                 options
             ),
+    });
+
+export const finnStatusmeldingerUtenSakQueryKey = (
+    options?: Options<FinnStatusmeldingerUtenSakData>
+) => createQueryKey('finnStatusmeldingerUtenSak', options);
+
+/**
+ * Hent statusmeldinger i bufferet som ikke er koblet til en tilbakekreving i ny modell
+ */
+export const finnStatusmeldingerUtenSakOptions = (
+    options?: Options<FinnStatusmeldingerUtenSakData>
+) =>
+    queryOptions<
+        FinnStatusmeldingerUtenSakResponse,
+        AxiosError<DefaultError>,
+        FinnStatusmeldingerUtenSakResponse,
+        ReturnType<typeof finnStatusmeldingerUtenSakQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await finnStatusmeldingerUtenSak({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: finnStatusmeldingerUtenSakQueryKey(options),
+    });
+
+export const hentTilbakekrevingUrlerQueryKey = (options: Options<HentTilbakekrevingUrlerData>) =>
+    createQueryKey('hentTilbakekrevingUrler', options);
+
+/**
+ * Hent URL-er for alle tilbakekrevinger i ny modell for en fagsak
+ */
+export const hentTilbakekrevingUrlerOptions = (options: Options<HentTilbakekrevingUrlerData>) =>
+    queryOptions<
+        HentTilbakekrevingUrlerResponse,
+        AxiosError<DefaultError>,
+        HentTilbakekrevingUrlerResponse,
+        ReturnType<typeof hentTilbakekrevingUrlerQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await hentTilbakekrevingUrler({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: hentTilbakekrevingUrlerQueryKey(options),
     });
 
 export const hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey = (

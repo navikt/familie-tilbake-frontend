@@ -63,6 +63,15 @@ const lagOpprinneligAvsnittMedBegrunnelse = (): Avsnitt => ({
 });
 
 describe('tilFormData', () => {
+    test('bruker en tom avsnittsliste i skjemaet når brevet ikke har avsnitt', () => {
+        const resultat = tilFormData(lagVedtaksbrevData({ avsnitt: null }));
+
+        expect(resultat).toEqual({
+            hovedavsnitt: { tekst: 'Opprinnelig hovedtekst' },
+            avsnitt: [],
+        });
+    });
+
     test('flater ut hovedavsnitt og avsnitt med påkrevde begrunnelser', () => {
         const vedtaksbrevData = lagVedtaksbrevData({
             avsnitt: [lagOpprinneligAvsnittMedBegrunnelse()],
@@ -117,20 +126,21 @@ describe('tilVedtaksbrevDataWritable', () => {
 
         const resultat = tilVedtaksbrevDataWritable(vedtaksbrevData, formData);
 
-        expect(resultat.avsnitt).toHaveLength(1);
-        expect(resultat.avsnitt[0]).toEqual({
-            tittel: 'Dette er grunnen til at du har fått for mye utbetalt',
-            id: 'avsnitt-1',
-            underavsnitt: [
-                { type: 'rentekst', tekst: 'Redigert tekst' },
-                {
-                    type: 'påkrevd_begrunnelse',
-                    tittel: 'Særlige grunner',
-                    begrunnelseType: 'særlige_grunner',
-                    underavsnitt: [{ type: 'rentekst', tekst: 'Redigert begrunnelse' }],
-                },
-            ],
-        });
+        expect(resultat.avsnitt).toEqual([
+            {
+                tittel: 'Dette er grunnen til at du har fått for mye utbetalt',
+                id: 'avsnitt-1',
+                underavsnitt: [
+                    { type: 'rentekst', tekst: 'Redigert tekst' },
+                    {
+                        type: 'påkrevd_begrunnelse',
+                        tittel: 'Særlige grunner',
+                        begrunnelseType: 'særlige_grunner',
+                        underavsnitt: [{ type: 'rentekst', tekst: 'Redigert begrunnelse' }],
+                    },
+                ],
+            },
+        ]);
     });
 });
 

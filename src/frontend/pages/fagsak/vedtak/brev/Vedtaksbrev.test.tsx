@@ -63,6 +63,15 @@ const renderMedFeilendeDokumenthenting = (
 const standardTextareaDescription = 'Tekstområde med plass til 3000 tegn.';
 
 describe('Vedtaksbrev', () => {
+    test('skal kunne redigere hovedavsnittet når brevet ikke har andre avsnitt', () => {
+        renderVedtaksbrev(lagVedtaksbrevData({ avsnitt: null }));
+
+        expect(screen.getAllByRole('textbox')).toHaveLength(1);
+        expect(screen.getByRole('textbox', { name: 'Du må betale tilbake stønaden' })).toHaveValue(
+            'Dette er et hovedavsnitt'
+        );
+    });
+
     test('skal vise vedtaksbrevtittel og hovedavsnitt-textarea', () => {
         renderVedtaksbrev(
             lagVedtaksbrevData({

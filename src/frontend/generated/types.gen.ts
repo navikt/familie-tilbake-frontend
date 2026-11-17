@@ -51,6 +51,14 @@ export type OppdaterBehandlendeEnhetRequest = {
     nyEnhet: string;
 };
 
+export type RessursInteger = {
+    data?: number | null;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
+};
+
 export type AktsomhetsvurderingEntity = {
     vurderingType: VurderingTypeEnum;
     mottakersForståelse?: MottakersForståelseEntity | null;
@@ -150,6 +158,7 @@ export type EksternFagsakBehandlingEntity = {
     vedtaksdato?: string | null;
     utvidedePerioder?: Array<UtvidetPeriodeEntity> | null;
     url?: string | null;
+    brukerInformertOmFeilutbetaling?: boolean | null;
     opprettet: string;
 };
 
@@ -315,7 +324,7 @@ export type KravgrunnlagHendelseEntity = KravHendelseEntity & {
     kravgrunnlagId: string;
     referanse: string;
     perioder: Array<KravgrunnlagPeriodeEntity>;
-    korrigering: boolean;
+    henteårsak?: HenteårsakEnum;
 };
 
 export type KravgrunnlagPeriodeEntity = {
@@ -413,6 +422,7 @@ export type VedtaksbrevEntity = {
     journalpostId?: string | null;
     dokumentInfoId?: string | null;
     sendtTid: string;
+    vedtaksbrevtype: VedtaksbrevtypeEnum;
 };
 
 export type VilkårsvurderingsperiodeEntity = {
@@ -788,7 +798,7 @@ export type RessursListKravgrunnlagsinfo = {
     stacktrace?: string | null;
 };
 
-export type RessursListUuid = {
+export type RessursListString = {
     data?: Array<string> | null;
     status: StatusEnum;
     melding: string;
@@ -796,7 +806,23 @@ export type RessursListUuid = {
     stacktrace?: string | null;
 };
 
-export type RessursListString = {
+export type RessursListStatusmeldingUtenSak = {
+    data?: Array<StatusmeldingUtenSak> | null;
+    status: StatusEnum;
+    melding: string;
+    frontendFeilmelding?: string | null;
+    stacktrace?: string | null;
+};
+
+export type StatusmeldingUtenSak = {
+    id: string;
+    fagsystemId: string;
+    vedtakId: string;
+    kravstatuskode: string;
+    mottatt: string;
+};
+
+export type RessursListUuid = {
     data?: Array<string> | null;
     status: StatusEnum;
     melding: string;
@@ -1377,8 +1403,10 @@ export type SchemaEnum =
     | 'IVERKSETT_VEDTAK'
     | 'JOURNALFØR_VEDTAK'
     | 'JOURNALFØR_INFOBREV_FOR_BORTFALT_KRAV'
+    | 'DISTRIBUER_INFOBREV_FOR_BORTFALT_KRAV'
     | 'DISTRIUBER_VEDTAK'
     | 'AVSLUTTET'
+    | 'AVSLUTTET_UTEN_VEDTAK'
     | 'SPERRET'
     | 'KRAVGRUNNLAG_BORTFALT';
 
@@ -1466,7 +1494,6 @@ export type ForrigeBehandlingsstatusEnum =
     | 'TIL_BEHANDLING'
     | 'FATTER_VEDTAK'
     | 'JOURNALFØRER_VEDTAK'
-    | 'JOURNALFØRER_INFOBREV'
     | 'DISTRIUBERER_VEDTAK'
     | 'IVERKSETTER_VEDTAK'
     | 'AVSLUTTET';
@@ -1663,6 +1690,8 @@ export type KravstatuskodeEnum =
     | 'NY'
     | 'SPERRET';
 
+export type HenteårsakEnum = 'KORRIGERING_AV_KRAV' | 'OMGJØRING_AV_VEDTAK';
+
 export type MottakersForståelseEnum = 'FORSTOD' | 'BURDE_FORSTÅTT' | 'MÅTTE_FORSTÅ';
 
 export type AvEnum = 'Nav' | 'Bruker';
@@ -1678,6 +1707,8 @@ export type RevurderingsårsakTypeEnum =
     | 'UTEN_KLAGE';
 
 export type OmgjortAvEnum = 'Førsteinstansen' | 'Klageinstansen' | 'Trygderetten' | 'Domstolen';
+
+export type VedtaksbrevtypeEnum = 'FØRSTEGANG' | 'REVURDERING';
 
 export type AktsomhetTypeEnum =
     | 'SIMPEL_UAKTSOMHET'
@@ -1779,7 +1810,6 @@ export type BehandlingstatusEnum =
     | 'OPPRETTET'
     | 'UTREDES'
     | 'JOURNALFØR_VEDTAK'
-    | 'JOURNALFØRER_INFOBREV'
     | 'DISTRIUBER_VEDTAK';
 
 export type FagsystemTypeEnum = 'TILBAKEKREVING';
@@ -1791,7 +1821,6 @@ export type StatusEnum2 =
     | 'OPPRETTET'
     | 'UTREDES'
     | 'JOURNALFØR_VEDTAK'
-    | 'JOURNALFØRER_INFOBREV'
     | 'DISTRIUBER_VEDTAK';
 
 export type KjønnEnum2 = 'MANN' | 'KVINNE' | 'UKJENT';
@@ -2618,6 +2647,23 @@ export type MigrerAlleSakerResponses = {
     200: unknown;
 };
 
+export type LesStatusmeldingerPåNyttData = {
+    body: Array<string>;
+    path?: never;
+    query?: never;
+    url: '/api/forvaltning/les-statusmeldinger-pa-nytt';
+};
+
+export type LesStatusmeldingerPåNyttResponses = {
+    /**
+     * OK
+     */
+    200: RessursInteger;
+};
+
+export type LesStatusmeldingerPåNyttResponse =
+    LesStatusmeldingerPåNyttResponses[keyof LesStatusmeldingerPåNyttResponses];
+
 export type LagOppdaterOppgaveTaskForBehandlingData = {
     body: Array<string>;
     path?: never;
@@ -3121,6 +3167,23 @@ export type HentKravgrunnlagsinfoResponses = {
 export type HentKravgrunnlagsinfoResponse =
     HentKravgrunnlagsinfoResponses[keyof HentKravgrunnlagsinfoResponses];
 
+export type HentFagsystemIderForSperredeTilbakekrevingerData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/forvaltning/sperrede-tilbakekrevinger/fagsystem-ider';
+};
+
+export type HentFagsystemIderForSperredeTilbakekrevingerResponses = {
+    /**
+     * OK
+     */
+    200: RessursListString;
+};
+
+export type HentFagsystemIderForSperredeTilbakekrevingerResponse =
+    HentFagsystemIderForSperredeTilbakekrevingerResponses[keyof HentFagsystemIderForSperredeTilbakekrevingerResponses];
+
 export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData = {
     body?: never;
     path: {
@@ -3136,6 +3199,43 @@ export type FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppg
      */
     200: unknown;
 };
+
+export type FinnStatusmeldingerUtenSakData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/forvaltning/finn-statusmeldinger-uten-sak';
+};
+
+export type FinnStatusmeldingerUtenSakResponses = {
+    /**
+     * OK
+     */
+    200: RessursListStatusmeldingUtenSak;
+};
+
+export type FinnStatusmeldingerUtenSakResponse =
+    FinnStatusmeldingerUtenSakResponses[keyof FinnStatusmeldingerUtenSakResponses];
+
+export type HentTilbakekrevingUrlerData = {
+    body?: never;
+    path: {
+        fagsystem: SchemaEnum2;
+        eksternFagsakId: string;
+    };
+    query?: never;
+    url: '/api/forvaltning/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/tilbakekreving-url';
+};
+
+export type HentTilbakekrevingUrlerResponses = {
+    /**
+     * OK
+     */
+    200: RessursListString;
+};
+
+export type HentTilbakekrevingUrlerResponse =
+    HentTilbakekrevingUrlerResponses[keyof HentTilbakekrevingUrlerResponses];
 
 export type HentBehandlingsIderMedRevurderingAnnenÅrsakData = {
     body?: never;

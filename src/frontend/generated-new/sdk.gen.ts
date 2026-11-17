@@ -557,6 +557,7 @@ export const dokumenterHentVedtaksdokumenter = <ThrowOnError extends boolean = f
         ThrowOnError
     >({
         responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/v1/dokumenter/vedtak/{vedtakId}',
         ...options,
     });

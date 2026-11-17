@@ -25,7 +25,6 @@ export const behandlingsstatuser: Record<BehandlingstatusEnum, string> = {
     IVERKSETTER_VEDTAK: 'Iverksetter vedtak',
     AVSLUTTET: 'Avsluttet',
     JOURNALFØR_VEDTAK: 'Journalfører vedtak',
-    JOURNALFØRER_INFOBREV: 'Journalfører infobrev',
     DISTRIUBER_VEDTAK: 'Distribuerer vedtak',
 };
 

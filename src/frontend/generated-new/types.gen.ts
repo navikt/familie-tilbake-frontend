@@ -273,15 +273,10 @@ export type Hovedavsnitt = {
     tittel: string;
     readonly forklaring: string;
     underavsnitt: Array<RotElement>;
-    hjemler: string;
+    hjemler: string | null;
 };
 
 export type HovedavsnittInformasjonsbrev = {
-    tittel: string;
-    innhold: Array<string>;
-};
-
-export type HovedavsnittRevurderingVedtaksbrev = {
     tittel: string;
     innhold: Array<string>;
 };
@@ -467,14 +462,6 @@ export type Revurdering = {
     årsak: string;
     vedtaksdato: string;
     resultat: ResultatEnum;
-};
-
-export type RevurderingVedtaksbrevData = {
-    hovedavsnitt: HovedavsnittRevurderingVedtaksbrev;
-    brevGjelder: Brevmottaker;
-    signatur: Signatur;
-    sendtDato: string;
-    saksnummer: string;
 };
 
 export type Revurderingsinstans =
@@ -664,26 +651,26 @@ export type Varslingsunntak =
 
 export type VedtaksbrevData = {
     hovedavsnitt: Hovedavsnitt;
-    avsnitt: Array<Avsnitt>;
+    avsnitt: Array<Avsnitt> | null;
     readonly sistOppdatert: string;
     brevGjelder: Brevmottaker;
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
-    oppsummeringstabell: Oppsummeringsdata;
+    oppsummeringstabell: Oppsummeringsdata | null;
     bunntekster: Array<Standardtekst>;
     saksnummer: string;
 };
 
 export type VedtaksbrevRedigerbareData = {
     hovedavsnitt: Hovedavsnitt;
-    avsnitt: Array<Avsnitt>;
+    avsnitt: Array<Avsnitt> | null;
     readonly sistOppdatert: string;
 };
 
 export type VedtaksbrevRedigerbareDataUpdate = {
     hovedavsnitt: HovedavsnittUpdate;
-    avsnitt: Array<AvsnittUpdateItem>;
+    avsnitt: Array<AvsnittUpdateItem> | null;
 };
 
 export type Vedtaksdokument = {
@@ -925,7 +912,7 @@ export type HeleWritable = {
 export type HovedavsnittWritable = {
     tittel: string;
     underavsnitt: Array<RotElementWritable>;
-    hjemler: string;
+    hjemler: string | null;
 };
 
 export type IkkeAktueltWritable = {
@@ -1047,19 +1034,19 @@ export type UttalelsesfristWritable = {
 
 export type VedtaksbrevDataWritable = {
     hovedavsnitt: HovedavsnittWritable;
-    avsnitt: Array<AvsnittWritable>;
+    avsnitt: Array<AvsnittWritable> | null;
     brevGjelder: Brevmottaker;
     sendtDato: string;
     ytelse: Ytelse;
     signatur: Signatur;
-    oppsummeringstabell: Oppsummeringsdata;
+    oppsummeringstabell: Oppsummeringsdata | null;
     bunntekster: Array<Standardtekst>;
     saksnummer: string;
 };
 
 export type VedtaksbrevRedigerbareDataWritable = {
     hovedavsnitt: HovedavsnittWritable;
-    avsnitt: Array<AvsnittWritable>;
+    avsnitt: Array<AvsnittWritable> | null;
 };
 
 export type VilkaarWritable = {
@@ -1896,6 +1883,12 @@ export type BrevLagSvgVedtaksbrevResponse =
 
 export type DokumenterHentVedtaksdokumenterData = {
     body?: never;
+    headers: {
+        /**
+         * Bearer-token på formen `Bearer <jwt>`.
+         */
+        Authorization: string;
+    };
     path: {
         /**
          * 1–64 ASCII-sifre. Innledende nuller er tillatt, og tallverdien kan ikke overstige 9223372036854775807.

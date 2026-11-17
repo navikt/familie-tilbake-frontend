@@ -37,6 +37,8 @@ import type {
     FinnesÅpenTilbakekrevingsbehandlingResponses,
     FinnGamleÅpneBehandlingerUtenOppgaveData,
     FinnGamleÅpneBehandlingerUtenOppgaveResponses,
+    FinnStatusmeldingerUtenSakData,
+    FinnStatusmeldingerUtenSakResponses,
     FjernBrevmottakerStegData,
     FjernBrevmottakerStegResponses,
     FjernManuellBrevmottakerData,
@@ -63,6 +65,8 @@ import type {
     HentDokumentResponses,
     HentFagsakData,
     HentFagsakResponses,
+    HentFagsystemIderForSperredeTilbakekrevingerData,
+    HentFagsystemIderForSperredeTilbakekrevingerResponses,
     HentFaktaomfeilutbetalingData,
     HentFaktaomfeilutbetalingResponses,
     HentForhåndsvarselTekstData,
@@ -89,6 +93,8 @@ import type {
     HentKravgrunnlagsinfoResponses,
     HentManuellBrevmottakereData,
     HentManuellBrevmottakereResponses,
+    HentTilbakekrevingUrlerData,
+    HentTilbakekrevingUrlerResponses,
     HentTotrinnsvurderingerData,
     HentTotrinnsvurderingerResponses,
     HentUrlTilArbeidOgInntektData,
@@ -117,6 +123,8 @@ import type {
     LagreUtkastVedtaksbrevResponses,
     LeggTilBrevmottakerData,
     LeggTilBrevmottakerResponses,
+    LesStatusmeldingerPåNyttData,
+    LesStatusmeldingerPåNyttResponses,
     MigrerAlleSakerData,
     MigrerAlleSakerResponses,
     OppdaterBehandlendeEnhetPåBehandlingData,
@@ -540,6 +548,23 @@ export const migrerAlleSaker = <ThrowOnError extends boolean = false>(
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/migrer-alle-saker',
         ...options,
+    });
+
+/**
+ * Marker statusmeldinger i bufferet som ulest slik at de leses på nytt
+ */
+export const lesStatusmeldingerPåNytt = <ThrowOnError extends boolean = false>(
+    options: Options<LesStatusmeldingerPåNyttData, ThrowOnError>
+): RequestResult<LesStatusmeldingerPåNyttResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).post<LesStatusmeldingerPåNyttResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/les-statusmeldinger-pa-nytt',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });
 
 /**
@@ -1002,6 +1027,23 @@ export const hentKravgrunnlagsinfo = <ThrowOnError extends boolean = false>(
     });
 
 /**
+ * Hent fagsystem-IDer for alle tilbakekrevinger i ny modell som er i tilstand SPERRET
+ */
+export const hentFagsystemIderForSperredeTilbakekrevinger = <ThrowOnError extends boolean = false>(
+    options?: Options<HentFagsystemIderForSperredeTilbakekrevingerData, ThrowOnError>
+): RequestResult<HentFagsystemIderForSperredeTilbakekrevingerResponses, unknown, ThrowOnError> =>
+    (options?.client ?? client).get<
+        HentFagsystemIderForSperredeTilbakekrevingerResponses,
+        unknown,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/sperrede-tilbakekrevinger/fagsystem-ider',
+        ...options,
+    });
+
+/**
  * Henter behandlinger med åpen GodkjennVedtak-oppgave eller ingen oppgave, som burde hatt åpen BehandleSak-oppgave
  */
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave = <
@@ -1023,6 +1065,32 @@ export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOpp
     >({
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave/{fagsystem}',
+        ...options,
+    });
+
+/**
+ * Hent statusmeldinger i bufferet som ikke er koblet til en tilbakekreving i ny modell
+ */
+export const finnStatusmeldingerUtenSak = <ThrowOnError extends boolean = false>(
+    options?: Options<FinnStatusmeldingerUtenSakData, ThrowOnError>
+): RequestResult<FinnStatusmeldingerUtenSakResponses, unknown, ThrowOnError> =>
+    (options?.client ?? client).get<FinnStatusmeldingerUtenSakResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/finn-statusmeldinger-uten-sak',
+        ...options,
+    });
+
+/**
+ * Hent URL-er for alle tilbakekrevinger i ny modell for en fagsak
+ */
+export const hentTilbakekrevingUrler = <ThrowOnError extends boolean = false>(
+    options: Options<HentTilbakekrevingUrlerData, ThrowOnError>
+): RequestResult<HentTilbakekrevingUrlerResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).get<HentTilbakekrevingUrlerResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [{ scheme: 'bearer', type: 'http' }],
+        url: '/api/forvaltning/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/tilbakekreving-url',
         ...options,
     });
 
