@@ -267,6 +267,17 @@ export const zFeilutbetaltBelopEndret = z.object({
     begrunnelse: z.string(),
 });
 
+export const zRolle = z.enum(['SAKSBEHANDLER', 'BESLUTTER', 'VEDTAKSLØSNING']);
+
+export const zHendelse = z.object({
+    tittel: z.string(),
+    opprettet: z.iso.datetime(),
+    rolle: zRolle,
+    rolleIdent: z.string().nullable(),
+    beskrivelse: z.string().nullable(),
+    ekstraInfo: z.record(z.string(), z.string()),
+});
+
 export const zSammenslaaing = z.object({
     vilkårsvurderingId: z.uuid(),
     slåesSammenMedId: z.uuid(),
@@ -1281,6 +1292,15 @@ export const zBehandlingLagreBrukersuttalelseBody = zUttalelseVurdering;
 export const zBehandlingLagreBrukersuttalelsePath = z.object({
     behandlingId: z.uuid(),
 });
+
+export const zBehandlingHentHistorikkPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentHistorikkResponse = z.array(zHendelse);
 
 export const zBehandlingHentDokumentPath = z.object({
     behandlingId: z.uuid(),

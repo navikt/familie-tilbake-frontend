@@ -27,6 +27,9 @@ import type {
     BehandlingHentDokumentInfoErrors,
     BehandlingHentDokumentInfoResponses,
     BehandlingHentDokumentResponses,
+    BehandlingHentHistorikkData,
+    BehandlingHentHistorikkErrors,
+    BehandlingHentHistorikkResponses,
     BehandlingHentVarselbrevTeksterData,
     BehandlingHentVarselbrevTeksterErrors,
     BehandlingHentVarselbrevTeksterResponses,
@@ -255,6 +258,19 @@ export const behandlingLagreBrukersuttalelse = <ThrowOnError extends boolean = f
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+export const behandlingHentHistorikk = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentHistorikkData, ThrowOnError>
+): RequestResult<BehandlingHentHistorikkResponses, BehandlingHentHistorikkErrors, ThrowOnError> =>
+    (options.client ?? client).get<
+        BehandlingHentHistorikkResponses,
+        BehandlingHentHistorikkErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/historikk',
+        ...options,
     });
 
 export const behandlingHentDokument = <ThrowOnError extends boolean = false>(

@@ -13,6 +13,7 @@ import {
     behandlingHentBehandling,
     behandlingHentDokument,
     behandlingHentDokumentInfo,
+    behandlingHentHistorikk,
     behandlingHentVarselbrevTekster,
     behandlingHentVedtaksbrev,
     behandlingHentVedtaksresultat,
@@ -57,6 +58,9 @@ import type {
     BehandlingHentDokumentInfoError,
     BehandlingHentDokumentInfoResponse,
     BehandlingHentDokumentResponse,
+    BehandlingHentHistorikkData,
+    BehandlingHentHistorikkError,
+    BehandlingHentHistorikkResponse,
     BehandlingHentVarselbrevTeksterData,
     BehandlingHentVarselbrevTeksterError,
     BehandlingHentVarselbrevTeksterResponse,
@@ -379,6 +383,28 @@ export const behandlingLagreBrukersuttalelseMutation = (
     };
     return mutationOptions;
 };
+
+export const behandlingHentHistorikkQueryKey = (options: Options<BehandlingHentHistorikkData>) =>
+    createQueryKey('behandlingHentHistorikk', options);
+
+export const behandlingHentHistorikkOptions = (options: Options<BehandlingHentHistorikkData>) =>
+    queryOptions<
+        BehandlingHentHistorikkResponse,
+        AxiosError<BehandlingHentHistorikkError>,
+        BehandlingHentHistorikkResponse,
+        ReturnType<typeof behandlingHentHistorikkQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentHistorikk({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentHistorikkQueryKey(options),
+    });
 
 export const behandlingHentDokumentQueryKey = (options: Options<BehandlingHentDokumentData>) =>
     createQueryKey('behandlingHentDokument', options);
