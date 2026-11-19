@@ -3,11 +3,12 @@ import type { DokumentInfo, Journalpost } from '@/typer/journalføring';
 
 import { FileTextIcon } from '@navikt/aksel-icons';
 import { BodyShort, Box, HStack, VStack } from '@navikt/ds-react';
-import { useState } from 'react';
+import { useId } from 'react';
 
-import { HentDokument } from '@/komponenter/sidebar/HentDokument';
 import { Journalposttype } from '@/typer/journalføring';
 import { formatterDatoOgKlokkeslett } from '@/utils/dato';
+
+import { useÅpneDokumentINyFane } from './useÅpneDokumentINyFane';
 
 type Props = {
     journalpost: Journalpost;
@@ -22,8 +23,12 @@ const journalposttyper: Record<Journalposttype, string> = {
 };
 
 export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Props) => {
-    const [visDokument, setVisDokument] = useState(false);
-    const kanÅpnes = journalpost.journalposttype !== Journalposttype.N;
+    const åpneDokumentINyFane = useÅpneDokumentINyFane();
+    const tittel = dokument.tittel ?? 'Dokument uten tittel';
+    const { dokumentInfoId } = dokument;
+    const tittelId = useId();
+    const metadataId = useId();
+    const nyFaneId = useId();
 
     const innhold = (
         <HStack as="span" gap="space-16" align="center" wrap={false}>
@@ -36,17 +41,17 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
                 <FileTextIcon aria-hidden fontSize="1.5rem" />
             </Box>
             <VStack as="span" gap="space-2" className="min-w-0">
-                <BodyShort as="span" weight="semibold" className="wrap-break-word">
-                    {dokument.tittel ?? 'Dokument uten tittel'}
+                <BodyShort id={tittelId} as="span" weight="semibold" className="wrap-break-word">
+                    {tittel}
                 </BodyShort>
-                <BodyShort as="span" size="small" textColor="subtle">
+                <BodyShort id={metadataId} as="span" size="small" textColor="subtle">
                     {`${formatterDatoOgKlokkeslett(dato)} | ${journalposttyper[journalpost.journalposttype]}`}
                 </BodyShort>
             </VStack>
         </HStack>
     );
 
-    if (!kanÅpnes) {
+    if (journalpost.journalposttype === Journalposttype.N || !dokumentInfoId) {
         return (
             <li>
                 <Box
@@ -66,8 +71,14 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
             <Box
                 as="button"
                 type="button"
-                aria-haspopup="dialog"
-                onClick={(): void => setVisDokument(true)}
+                aria-labelledby={`${tittelId} ${nyFaneId}`}
+                aria-describedby={metadataId}
+                onClick={(): void =>
+                    åpneDokumentINyFane({
+                        journalpostId: journalpost.journalpostId,
+                        dokumentInfoId,
+                    })
+                }
                 borderWidth="1"
                 borderColor="neutral-subtle"
                 borderRadius="12"
@@ -75,14 +86,10 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
                 className="w-full cursor-pointer text-left hover:bg-ax-bg-neutral-moderate-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
             >
                 {innhold}
+                <span id={nyFaneId} className="sr-only">
+                    (åpnes i ny fane)
+                </span>
             </Box>
-            {visDokument && (
-                <HentDokument
-                    journalpostId={journalpost.journalpostId}
-                    dokumentId={dokument.dokumentInfoId}
-                    onClose={(): void => setVisDokument(false)}
-                />
-            )}
         </li>
     );
 };
