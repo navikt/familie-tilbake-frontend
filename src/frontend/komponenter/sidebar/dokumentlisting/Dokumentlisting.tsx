@@ -1,40 +1,57 @@
 import type { FC } from 'react';
 
-import { VStack } from '@navikt/ds-react';
+import { BodyShort, Heading, VStack } from '@navikt/ds-react';
 
 import { DataLastIkkeSuksess } from '@/komponenter/datalast/DataLastIkkeSuksess';
-import { HenterData } from '@/komponenter/datalast/HenterData';
 import { RessursStatus } from '@/typer/ressurs';
 import { hentDatoRegistrertSendt } from '@/utils';
 
 import { useDokumentlisting } from './DokumentlistingContext';
-import { JournalpostVisning } from './Journalpostvisning';
+import { DokumentlistingSkeleton } from './DokumentlistingSkeleton';
+import { Dokumentvisning } from './Dokumentvisning';
 
 export const Dokumentlisting: FC = () => {
     const { journalposter } = useDokumentlisting();
 
-    if (journalposter?.status === RessursStatus.Henter) {
-        return <HenterData størrelse="large" beskrivelse="Henting av dokumenter tar litt tid." />;
+    if (!journalposter || journalposter.status === RessursStatus.Henter) {
+        return <DokumentlistingSkeleton />;
     }
 
-    if (journalposter?.status !== RessursStatus.Suksess) {
+    if (journalposter.status !== RessursStatus.Suksess) {
         return <DataLastIkkeSuksess ressurser={[journalposter]} />;
     }
 
-    const poster = journalposter.data;
-    poster.sort((a, b) => {
-        return (
-            hentDatoRegistrertSendt(b.relevanteDatoer, b.journalposttype).getTime() -
-            hentDatoRegistrertSendt(a.relevanteDatoer, b.journalposttype).getTime()
+    const dokumenter = journalposter.data
+        .map(journalpost => ({
+            journalpost,
+            dato: hentDatoRegistrertSendt(journalpost.relevanteDatoer, journalpost.journalposttype),
+        }))
+        .sort((a, b) => b.dato.getTime() - a.dato.getTime())
+        .flatMap(({ journalpost, dato }) =>
+            (journalpost.dokumenter ?? []).map(dokument => ({ journalpost, dokument, dato }))
         );
-    });
 
     return (
-        <VStack>
-            {poster.map(post => (
-                <JournalpostVisning key={`jpId_${post.journalpostId}`} journalpost={post} />
-            ))}
-            {poster.length === 0 && <div>Ingen dokumenter på saken.</div>}
+        <VStack gap="space-16" className="min-h-full">
+            <Heading level="2" size="small">
+                Dokumenter
+            </Heading>
+            {dokumenter.length == 0 ? (
+                <BodyShort className="flex flex-1 items-center justify-center">
+                    Det finnes ingen dokumenter
+                </BodyShort>
+            ) : (
+                <VStack as="ul" gap="space-8">
+                    {dokumenter.map(({ journalpost, dokument, dato }) => (
+                        <Dokumentvisning
+                            key={`${journalpost.journalpostId}_${dokument.dokumentInfoId}`}
+                            journalpost={journalpost}
+                            dokument={dokument}
+                            dato={dato}
+                        />
+                    ))}
+                </VStack>
+            )}
         </VStack>
     );
 };
