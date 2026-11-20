@@ -1,5 +1,5 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { RessursVarselbrevtekst } from '@/generated';
+import type { BehandlingDto, RessursVarselbrevtekst } from '@/generated';
 import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '@/generated-new';
 
 import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,6 +15,7 @@ import {
     behandlingForhandsvarselQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 import { formatterDatostring } from '@/utils';
@@ -123,10 +124,17 @@ const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
     });
 };
 
-const renderMedQueryClient = (queryClient: QueryClient): void => {
+const renderMedQueryClient = (
+    queryClient: QueryClient,
+    behandling?: BehandlingDto,
+    behandlingILesemodus = false
+): void => {
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider>
+            <TestBehandlingProvider
+                behandling={behandling}
+                stateOverrides={{ behandlingILesemodus }}
+            >
                 <QueryClientProvider client={queryClient}>
                     <Suspense fallback={<div>Laster...</div>}>
                         <ForhåndsvarselInnhold />
@@ -152,7 +160,7 @@ const renderSendtForhåndsvarsel = (nyFrist?: string): void => {
 
 const skalSendesRadiogruppe = (): HTMLElement =>
     screen.getByRole('radiogroup', {
-        name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
+        name: /skal det sendes forhåndsvarsel om (revurdering av )?tilbakekreving/i,
     });
 
 const nesteKnapp = (): HTMLElement =>
@@ -424,6 +432,105 @@ describe('Forhåndsvarsel', () => {
         await user.click(within(modal).getByRole('button', { name: 'Send forhåndsvarselet' }));
 
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
+    });
+
+    describe('Revurdering med tidligere sendt forhåndsvarsel', () => {
+        const renderRevurdering = (behandlingILesemodus = false): void => {
+            const queryClient = opprettQueryClientMedForhåndsvarselData(
+                lagSendtForhåndsvarselResponse()
+            );
+            renderMedQueryClient(
+                queryClient,
+                lagBehandling({
+                    tilbakekrevingRevurdering: {
+                        revurderingsarsak: {
+                            revurderingsarsak: 'ForeldelseDto',
+                            begrunnelse: 'Ny vurdering av foreldelse',
+                        },
+                    },
+                }),
+                behandlingILesemodus
+            );
+        };
+
+        test('viser spørsmål om forhåndsvarsel for revurdering av tilbakekreving', () => {
+            renderRevurdering();
+
+            expect(
+                screen.getByRole('radiogroup', {
+                    name: /Skal det sendes forhåndsvarsel om revurdering av tilbakekreving\?/,
+                })
+            ).toBeInTheDocument();
+        });
+
+        test('kan velge å sende nytt forhåndsvarsel og bekrefte sending', async () => {
+            renderRevurdering();
+
+            await velgSendForhåndsvarsel(user);
+
+            expect(
+                within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' })
+            ).toBeChecked();
+            expect(visBrevKnapp()).toBeInTheDocument();
+            const utdypendeTekst = screen.getByRole('textbox', {
+                name: /legg til utdypende tekst/i,
+            });
+            expect(utdypendeTekst).not.toHaveAttribute('readonly');
+            await user.clear(utdypendeTekst);
+            await user.type(utdypendeTekst, 'Oppdatert varseltekst');
+            await user.click(sendKnapp());
+
+            const modal = await bekreftelsesmodal();
+            await user.click(within(modal).getByRole('button', { name: 'Send forhåndsvarselet' }));
+
+            expect(screen.getByRole('textbox', { name: /legg til utdypende tekst/i })).toHaveValue(
+                'Oppdatert varseltekst'
+            );
+        });
+
+        test('kan velge unntak og validere skjemaet før lagring', async () => {
+            renderRevurdering();
+
+            await velgUnntak(user);
+
+            expect(
+                within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' })
+            ).toBeChecked();
+            expect(unntakRadiogruppe()).toBeInTheDocument();
+            await user.click(nesteKnapp());
+
+            expect(
+                screen.getByText('Du må velge en begrunnelse for unntak fra forhåndsvarsel')
+            ).toBeInTheDocument();
+        });
+
+        test('beholder behandlingens generelle lesemodus', async () => {
+            renderRevurdering(true);
+
+            await velgUnntak(user);
+
+            expect(
+                within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' })
+            ).not.toBeChecked();
+            expect(
+                screen.queryByRole('radiogroup', {
+                    name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
+                })
+            ).not.toBeInTheDocument();
+        });
+    });
+
+    test('sendt forhåndsvarsel er fortsatt låst når behandlingen ikke er en revurdering', async () => {
+        renderSendtForhåndsvarsel();
+
+        await velgUnntak(user);
+
+        expect(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' })).toBeChecked();
+        expect(
+            screen.queryByRole('radiogroup', {
+                name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
+            })
+        ).not.toBeInTheDocument();
     });
 
     describe('Tidligere sendt varselbrev', () => {
