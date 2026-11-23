@@ -25,16 +25,17 @@ export const SkalSendeForhåndsvarsel: FC<Props> = ({
 }: Props) => {
     const { tilbakekrevingRevurdering } = useBehandling();
 
+    const spørsmålOmTilbakekreving = erNyttForhåndsvarsel
+        ? 'Skal det sendes et nytt forhåndsvarsel om tilbakekreving?'
+        : 'Skal det sendes forhåndsvarsel om tilbakekreving?';
+    const spørsmålOmForhåndsvarsel = tilbakekrevingRevurdering
+        ? 'Skal det sendes forhåndsvarsel om revurdering av tilbakekreving?'
+        : spørsmålOmTilbakekreving;
+
     return (
         <RadioGroup
             name={name}
-            legend={
-                tilbakekrevingRevurdering
-                    ? 'Skal det sendes forhåndsvarsel om revurdering av tilbakekreving?'
-                    : erNyttForhåndsvarsel
-                      ? 'Skal det sendes et nytt forhåndsvarsel om tilbakekreving?'
-                      : 'Skal det sendes forhåndsvarsel om tilbakekreving?'
-            }
+            legend={spørsmålOmForhåndsvarsel}
             description="Mottakeren skal som klar hovedregel varsles før vedtak om tilbakekreving fattes, slik at de får mulighet til å uttale seg."
             size="small"
             readOnly={readOnly}
