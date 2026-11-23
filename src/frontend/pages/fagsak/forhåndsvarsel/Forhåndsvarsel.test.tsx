@@ -1,5 +1,5 @@
 import type { UserEvent } from '@testing-library/user-event';
-import type { RessursVarselbrevtekst } from '@/generated';
+import type { BehandlingDto, RessursVarselbrevtekst } from '@/generated';
 import type { FaktaOmFeilutbetaling, ForhaandsvarselResponse } from '@/generated-new';
 
 import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,6 +15,7 @@ import {
     behandlingForhandsvarselQueryKey,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagBehandling } from '@/testdata/behandlingFactory';
 import { lagFagsak } from '@/testdata/fagsakFactory';
 import { createTestQueryClient } from '@/testutils/queryTestUtils';
 import { formatterDatostring } from '@/utils';
@@ -123,10 +124,10 @@ const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
     });
 };
 
-const renderMedQueryClient = (queryClient: QueryClient): void => {
+const renderMedQueryClient = (queryClient: QueryClient, behandling?: BehandlingDto): void => {
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider>
+            <TestBehandlingProvider behandling={behandling} stateOverrides={{}}>
                 <QueryClientProvider client={queryClient}>
                     <Suspense fallback={<div>Laster...</div>}>
                         <ForhåndsvarselInnhold />
@@ -152,7 +153,7 @@ const renderSendtForhåndsvarsel = (nyFrist?: string): void => {
 
 const skalSendesRadiogruppe = (): HTMLElement =>
     screen.getByRole('radiogroup', {
-        name: /skal det sendes forhåndsvarsel om tilbakekreving/i,
+        name: /skal det sendes forhåndsvarsel om (revurdering av )?tilbakekreving/i,
     });
 
 const nesteKnapp = (): HTMLElement =>
@@ -424,6 +425,47 @@ describe('Forhåndsvarsel', () => {
         await user.click(within(modal).getByRole('button', { name: 'Send forhåndsvarselet' }));
 
         expect(screen.getByText('Forhåndsvarsel')).toBeInTheDocument();
+    });
+
+    describe('Revurdering med tidligere sendt forhåndsvarsel', () => {
+        const renderRevurdering = (): void => {
+            const queryClient = opprettQueryClientMedForhåndsvarselData(
+                lagSendtForhåndsvarselResponse()
+            );
+            renderMedQueryClient(
+                queryClient,
+                lagBehandling({
+                    tilbakekrevingRevurdering: {
+                        revurderingsarsak: {
+                            revurderingsarsak: 'ForeldelseDto',
+                            begrunnelse: 'Ny vurdering av foreldelse',
+                        },
+                    },
+                })
+            );
+        };
+
+        test('viser spørsmål om forhåndsvarsel for revurdering av tilbakekreving', () => {
+            renderRevurdering();
+
+            expect(
+                screen.getByRole('radiogroup', {
+                    name: /Skal det sendes forhåndsvarsel om revurdering av tilbakekreving\?/,
+                })
+            ).toBeInTheDocument();
+        });
+    });
+
+    test('sendt forhåndsvarsel er fortsatt låst når behandlingen ikke er en revurdering', async () => {
+        renderSendtForhåndsvarsel();
+
+        await velgUnntak(user);
+
+        expect(
+            screen.queryByRole('radiogroup', {
+                name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
+            })
+        ).not.toBeInTheDocument();
     });
 
     describe('Tidligere sendt varselbrev', () => {
