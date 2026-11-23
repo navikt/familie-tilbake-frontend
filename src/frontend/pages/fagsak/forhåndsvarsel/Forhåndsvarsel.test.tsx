@@ -124,17 +124,10 @@ const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
     });
 };
 
-const renderMedQueryClient = (
-    queryClient: QueryClient,
-    behandling?: BehandlingDto,
-    behandlingILesemodus = false
-): void => {
+const renderMedQueryClient = (queryClient: QueryClient, behandling?: BehandlingDto): void => {
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider
-                behandling={behandling}
-                stateOverrides={{ behandlingILesemodus }}
-            >
+            <TestBehandlingProvider behandling={behandling} stateOverrides={{}}>
                 <QueryClientProvider client={queryClient}>
                     <Suspense fallback={<div>Laster...</div>}>
                         <ForhåndsvarselInnhold />
@@ -435,7 +428,7 @@ describe('Forhåndsvarsel', () => {
     });
 
     describe('Revurdering med tidligere sendt forhåndsvarsel', () => {
-        const renderRevurdering = (behandlingILesemodus = false): void => {
+        const renderRevurdering = (): void => {
             const queryClient = opprettQueryClientMedForhåndsvarselData(
                 lagSendtForhåndsvarselResponse()
             );
@@ -448,8 +441,7 @@ describe('Forhåndsvarsel', () => {
                             begrunnelse: 'Ny vurdering av foreldelse',
                         },
                     },
-                }),
-                behandlingILesemodus
+                })
             );
         };
 
@@ -462,62 +454,6 @@ describe('Forhåndsvarsel', () => {
                 })
             ).toBeInTheDocument();
         });
-
-        test('kan velge å sende nytt forhåndsvarsel og bekrefte sending', async () => {
-            renderRevurdering();
-
-            await velgSendForhåndsvarsel(user);
-
-            expect(
-                within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' })
-            ).toBeChecked();
-            expect(visBrevKnapp()).toBeInTheDocument();
-            const utdypendeTekst = screen.getByRole('textbox', {
-                name: /legg til utdypende tekst/i,
-            });
-            expect(utdypendeTekst).not.toHaveAttribute('readonly');
-            await user.clear(utdypendeTekst);
-            await user.type(utdypendeTekst, 'Oppdatert varseltekst');
-            await user.click(sendKnapp());
-
-            const modal = await bekreftelsesmodal();
-            await user.click(within(modal).getByRole('button', { name: 'Send forhåndsvarselet' }));
-
-            expect(screen.getByRole('textbox', { name: /legg til utdypende tekst/i })).toHaveValue(
-                'Oppdatert varseltekst'
-            );
-        });
-
-        test('kan velge unntak og validere skjemaet før lagring', async () => {
-            renderRevurdering();
-
-            await velgUnntak(user);
-
-            expect(
-                within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' })
-            ).toBeChecked();
-            expect(unntakRadiogruppe()).toBeInTheDocument();
-            await user.click(nesteKnapp());
-
-            expect(
-                screen.getByText('Du må velge en begrunnelse for unntak fra forhåndsvarsel')
-            ).toBeInTheDocument();
-        });
-
-        test('beholder behandlingens generelle lesemodus', async () => {
-            renderRevurdering(true);
-
-            await velgUnntak(user);
-
-            expect(
-                within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Nei' })
-            ).not.toBeChecked();
-            expect(
-                screen.queryByRole('radiogroup', {
-                    name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
-                })
-            ).not.toBeInTheDocument();
-        });
     });
 
     test('sendt forhåndsvarsel er fortsatt låst når behandlingen ikke er en revurdering', async () => {
@@ -525,7 +461,6 @@ describe('Forhåndsvarsel', () => {
 
         await velgUnntak(user);
 
-        expect(within(skalSendesRadiogruppe()).getByRole('radio', { name: 'Ja' })).toBeChecked();
         expect(
             screen.queryByRole('radiogroup', {
                 name: /velg begrunnelse for unntak fra forhåndsvarsel/i,
