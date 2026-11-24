@@ -1,4 +1,3 @@
-import type { TagProps } from '@navikt/ds-react';
 import type { FC } from 'react';
 import type { InnloggetRolleEnum } from '@/generated';
 import type { PersonvernState } from '@/pages/Personvern';
@@ -15,18 +14,15 @@ import { useApp } from '@/context/AppContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useBehandlingStore } from '@/stores/behandlingStore';
 import { useFagsakStore } from '@/stores/fagsakStore';
+import { baseRolleTag, type RolleTag } from '@/utils/rolle';
 import { erHistoriskSide } from '@/utils/sider';
 import { Hendelser, Sporingskontekst, sporHendelse } from '@/utils/sporing';
 
 import { Høytidspynt } from './høytidstema/Høytidspynt';
 
-const rolleMapper: Record<
-    InnloggetRolleEnum,
-    { label: string; dataColor: TagProps['data-color'] } | undefined
-> = {
-    SAKSBEHANDLER: { label: 'Saksbehandler', dataColor: 'info' },
+const rolleTags: Record<InnloggetRolleEnum, RolleTag | undefined> = {
+    ...baseRolleTag,
     VEILEDER: { label: 'Veileder', dataColor: 'brand-beige' },
-    BESLUTTER: { label: 'Beslutter', dataColor: 'meta-purple' },
     INGEN: undefined,
 };
 
@@ -107,10 +103,10 @@ export const Header: FC = () => {
             <Høytidspynt />
             <Spacer />
 
-            {rolleMapper[rolle] && erNyModell && (
+            {rolleTags[rolle] && erNyModell && (
                 <HStack align="center" paddingInline="space-16">
-                    <Tag data-color={rolleMapper[rolle].dataColor} variant="moderate" size="small">
-                        {rolleMapper[rolle].label}
+                    <Tag data-color={rolleTags[rolle].dataColor} variant="moderate" size="small">
+                        {rolleTags[rolle].label}
                     </Tag>
                 </HStack>
             )}

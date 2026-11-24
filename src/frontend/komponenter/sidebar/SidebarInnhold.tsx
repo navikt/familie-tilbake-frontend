@@ -1,10 +1,13 @@
 import type { FC } from 'react';
 
+import { useBehandling } from '@/context/BehandlingContext';
+
 import { Detaljer } from './detaljer/Detaljer';
 import { Dokumentlisting } from './dokumentlisting/Dokumentlisting';
 import { DokumentlistingProvider } from './dokumentlisting/DokumentlistingContext';
-import { Historikk } from './gammel-historikk/Historikk';
+import { Historikk as GammelHistorikk } from './gammel-historikk/Historikk';
 import { HistorikkProvider } from './gammel-historikk/HistorikkContext';
+import { Historikk } from './historikk/Historikk';
 import { Menysider } from './menysider';
 import { SendMelding } from './sendMelding/SendMelding';
 import { SendMeldingProvider } from './sendMelding/SendMeldingContext';
@@ -16,6 +19,7 @@ type Props = {
 };
 
 export const SidebarInnhold: FC<Props> = ({ valgtMenyside }: Props) => {
+    const { erNyModell } = useBehandling();
     switch (valgtMenyside) {
         case Menysider.Totrinn:
             return (
@@ -36,9 +40,12 @@ export const SidebarInnhold: FC<Props> = ({ valgtMenyside }: Props) => {
                 </SendMeldingProvider>
             );
         case Menysider.Historikk:
+            if (erNyModell) {
+                return <Historikk />;
+            }
             return (
                 <HistorikkProvider>
-                    <Historikk />
+                    <GammelHistorikk />
                 </HistorikkProvider>
             );
         case Menysider.Detaljer:

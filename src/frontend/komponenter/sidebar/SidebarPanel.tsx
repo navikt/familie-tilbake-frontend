@@ -61,7 +61,7 @@ export const SidebarPanel: FC<Props> = ({ veksleknapp, aktivTabRef }: Props) => 
                     lazy={!(MENYSIDE_META[side].bevarerTilstand && besøkteSider.includes(side))}
                     className="flex-1 min-h-0 flex-col gap-4 data-[state=active]:flex"
                 >
-                    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable px-1">
+                    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-stable">
                         <SidebarInnhold valgtMenyside={side} />
                     </div>
                 </Tabs.Panel>
