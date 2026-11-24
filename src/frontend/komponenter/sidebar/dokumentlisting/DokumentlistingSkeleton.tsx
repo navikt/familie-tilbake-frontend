@@ -8,7 +8,7 @@ export const DokumentlistingSkeleton: FC = () => {
             <Heading level="2" size="small">
                 Dokumenter
             </Heading>
-            <VStack gap="space-8" aria-busy>
+            <VStack gap="space-16" aria-busy>
                 <span className="sr-only">Henter dokumenter</span>
                 <Skeleton variant="rounded" height={64} />
                 <Skeleton variant="rounded" height={64} />

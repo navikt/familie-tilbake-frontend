@@ -41,7 +41,7 @@ export const Dokumentlisting: FC = () => {
                     Det finnes ingen dokumenter
                 </BodyShort>
             ) : (
-                <VStack as="ul" gap="space-8">
+                <VStack as="ul" gap="space-16">
                     {dokumenter.map(({ journalpost, dokument, dato }) => (
                         <Dokumentvisning
                             key={`${journalpost.journalpostId}_${dokument.dokumentInfoId}`}

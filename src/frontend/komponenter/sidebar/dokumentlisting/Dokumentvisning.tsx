@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { DokumentInfo, Journalpost } from '@/typer/journalføring';
 
 import { FileTextIcon } from '@navikt/aksel-icons';
-import { BodyShort, Box, HStack, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, HStack, Tag, type TagProps, VStack } from '@navikt/ds-react';
 import { useId } from 'react';
 
 import { Journalposttype } from '@/typer/journalføring';
@@ -16,11 +16,12 @@ type Props = {
     dato: Date;
 };
 
-const journalposttyper: Record<Journalposttype, string> = {
-    [Journalposttype.I]: 'Innkommende',
-    [Journalposttype.U]: 'Utgående',
-    [Journalposttype.N]: 'Notat',
-};
+const journalposttyper: Record<Journalposttype, { tekst: string; farge: TagProps['data-color'] }> =
+    {
+        [Journalposttype.I]: { tekst: 'Innkommende', farge: 'info' },
+        [Journalposttype.U]: { tekst: 'Utgående', farge: 'meta-purple' },
+        [Journalposttype.N]: { tekst: 'Notat', farge: 'neutral' },
+    };
 
 export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Props) => {
     const åpneDokumentINyFane = useÅpneDokumentINyFane();
@@ -29,24 +30,36 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
     const tittelId = useId();
     const metadataId = useId();
     const nyFaneId = useId();
+    const journalposttype = journalposttyper[journalpost.journalposttype];
 
     const innhold = (
         <HStack as="span" gap="space-16" align="center" wrap={false}>
             <Box
                 as="span"
-                background="neutral-soft"
+                background="brand-blue-soft"
                 borderRadius="4"
-                className="flex size-11.5 shrink-0 items-center justify-center"
+                className="flex size-11.5 shrink-0 items-center justify-center text-ax-text-brand-blue"
             >
                 <FileTextIcon aria-hidden fontSize="1.5rem" />
             </Box>
             <VStack as="span" gap="space-2" className="min-w-0">
-                <BodyShort id={tittelId} as="span" weight="semibold" className="wrap-break-word">
+                <BodyShort
+                    id={tittelId}
+                    as="span"
+                    size="small"
+                    weight="semibold"
+                    className="wrap-break-word"
+                >
                     {tittel}
                 </BodyShort>
-                <BodyShort id={metadataId} as="span" size="small" textColor="subtle">
-                    {`${formatterDatoOgKlokkeslett(dato)} | ${journalposttyper[journalpost.journalposttype]}`}
-                </BodyShort>
+                <HStack id={metadataId} as="span" gap="space-8" align="center">
+                    <BodyShort as="span" size="small" textColor="subtle">
+                        {formatterDatoOgKlokkeslett(dato)}
+                    </BodyShort>
+                    <Tag variant="moderate" size="xsmall" data-color={journalposttype.farge}>
+                        {journalposttype.tekst}
+                    </Tag>
+                </HStack>
             </VStack>
         </HStack>
     );
@@ -56,7 +69,7 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
             <li>
                 <Box
                     borderWidth="1"
-                    borderColor="neutral-subtle"
+                    borderColor="brand-blue-subtle"
                     borderRadius="12"
                     padding="space-8"
                 >
@@ -80,7 +93,7 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
                     })
                 }
                 borderWidth="1"
-                borderColor="neutral-subtle"
+                borderColor="brand-blue-subtle"
                 borderRadius="12"
                 padding="space-8"
                 className="w-full cursor-pointer text-left hover:bg-ax-bg-neutral-moderate-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ax-border-focus"
