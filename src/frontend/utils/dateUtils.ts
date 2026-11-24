@@ -1,5 +1,5 @@
 import type { Duration } from 'date-fns';
-import type { JournalpostRelevantDato } from '@/typer/journalføring';
+import type { JournalposttypeEnum, RelevantDato } from '@/generated';
 import type { FaktaPeriode } from '@/typer/tilbakekrevingstyper';
 
 import {
@@ -14,8 +14,6 @@ import {
     isBefore,
     parseISO,
 } from 'date-fns';
-
-import { JournalpostDatotype } from '@/typer/journalføring';
 
 import { isEmpty } from './validering';
 
@@ -149,23 +147,21 @@ export const sorterFeilutbetaltePerioder = <T extends FaktaPeriode>(perioder: T[
     );
 };
 
+const datotypePerJournalposttype: Record<JournalposttypeEnum, string> = {
+    I: 'DATO_REGISTRERT',
+    U: 'DATO_EKSPEDERT',
+    N: 'DATO_JOURNALFOERT',
+};
+
 export const hentDatoRegistrertSendt = (
-    relevanteDatoer: JournalpostRelevantDato[],
-    journalposttype: string
+    relevanteDatoer: RelevantDato[] | null | undefined,
+    journalposttype: JournalposttypeEnum
 ): Date => {
-    let datoRegistrert = relevanteDatoer.find(dato => {
-        if (journalposttype === 'I') {
-            return dato.datotype === JournalpostDatotype.DatoRegistrert;
-        } else if (journalposttype === 'U') {
-            return dato.datotype === JournalpostDatotype.DatoEksedert;
-        } else {
-            return dato.datotype === JournalpostDatotype.DatoJournalfoert;
-        }
-    });
-    datoRegistrert =
-        datoRegistrert ||
-        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DatoJournalfoert) ||
-        relevanteDatoer.find(dato => dato.datotype === JournalpostDatotype.DatoDokument);
+    const datoer = relevanteDatoer ?? [];
+    const datoRegistrert =
+        datoer.find(dato => dato.datotype === datotypePerJournalposttype[journalposttype]) ||
+        datoer.find(dato => dato.datotype === 'DATO_JOURNALFOERT') ||
+        datoer.find(dato => dato.datotype === 'DATO_DOKUMENT');
 
     // @ts-expect-error Får alltid en av disse datoene
     return parseISO(datoRegistrert.dato);

@@ -1,11 +1,11 @@
+import type { AkselColor } from '@navikt/ds-react/types/theme';
 import type { FC } from 'react';
-import type { DokumentInfo, Journalpost } from '@/typer/journalføring';
+import type { DokumentInfo, Journalpost, JournalposttypeEnum } from '@/generated';
 
 import { FileTextIcon } from '@navikt/aksel-icons';
-import { BodyShort, Box, HStack, Tag, type TagProps, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, HStack, Tag, VStack } from '@navikt/ds-react';
 import { useId } from 'react';
 
-import { Journalposttype } from '@/typer/journalføring';
 import { formatterDatoOgKlokkeslett } from '@/utils/dato';
 
 import { useÅpneDokumentINyFane } from './useÅpneDokumentINyFane';
@@ -16,12 +16,11 @@ type Props = {
     dato: Date;
 };
 
-const journalposttyper: Record<Journalposttype, { tekst: string; farge: TagProps['data-color'] }> =
-    {
-        [Journalposttype.I]: { tekst: 'Innkommende', farge: 'info' },
-        [Journalposttype.U]: { tekst: 'Utgående', farge: 'meta-purple' },
-        [Journalposttype.N]: { tekst: 'Notat', farge: 'neutral' },
-    };
+const journalposttyper: Record<JournalposttypeEnum, { tekst: string; farge: AkselColor }> = {
+    I: { tekst: 'Innkommende', farge: 'info' },
+    U: { tekst: 'Utgående', farge: 'meta-purple' },
+    N: { tekst: 'Notat', farge: 'neutral' },
+};
 
 export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Props) => {
     const åpneDokumentINyFane = useÅpneDokumentINyFane();
@@ -53,7 +52,12 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
                     {tittel}
                 </BodyShort>
                 <HStack id={metadataId} as="span" gap="space-8" align="center">
-                    <BodyShort as="span" size="small" textColor="subtle">
+                    <BodyShort
+                        as="time"
+                        dateTime={dato.toISOString()}
+                        size="small"
+                        textColor="subtle"
+                    >
                         {formatterDatoOgKlokkeslett(dato)}
                     </BodyShort>
                     <Tag variant="moderate" size="xsmall" data-color={journalposttype.farge}>
@@ -64,18 +68,17 @@ export const Dokumentvisning: FC<Props> = ({ journalpost, dokument, dato }: Prop
         </HStack>
     );
 
-    if (journalpost.journalposttype === Journalposttype.N || !dokumentInfoId) {
+    if (journalpost.journalposttype === 'N') {
         return (
-            <li>
-                <Box
-                    borderWidth="1"
-                    borderColor="brand-blue-subtle"
-                    borderRadius="12"
-                    padding="space-8"
-                >
-                    {innhold}
-                </Box>
-            </li>
+            <Box
+                as="li"
+                borderWidth="1"
+                borderColor="brand-blue-subtle"
+                borderRadius="12"
+                padding="space-8"
+            >
+                {innhold}
+            </Box>
         );
     }
 

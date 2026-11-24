@@ -4,7 +4,7 @@ import { useBehandling } from '@/context/BehandlingContext';
 import { hentDokument } from '@/generated/sdk.gen';
 import { useVisGlobalAlert } from '@/stores/globalAlertStore';
 import { base64ToArrayBuffer } from '@/utils';
-import { ApiStatusError, hentFeilmelding } from '@/utils/httpUtils';
+import { ApiStatusError, hentFeilmelding, hentFeiltittel } from '@/utils/httpUtils';
 
 type Dokumentreferanse = {
     journalpostId: string;
@@ -42,7 +42,7 @@ export const useÅpneDokumentINyFane = (): ((dokument: Dokumentreferanse) => voi
         onError: (error: Error, { nyFane }: HentDokumentVariabler): void => {
             nyFane.close();
             visGlobalAlert({
-                title: 'Kunne ikke åpne dokumentet',
+                title: hentFeiltittel(error) ?? 'Kunne ikke åpne dokumentet',
                 message: hentFeilmelding(error) ?? 'Prøv igjen senere.',
                 status: 'error',
             });
