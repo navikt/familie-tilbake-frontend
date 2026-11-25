@@ -127,7 +127,7 @@ const leggTilSendtDokumentData = (queryClient: QueryClient): void => {
 const renderMedQueryClient = (queryClient: QueryClient, behandling?: BehandlingDto): void => {
     render(
         <FagsakContext value={lagFagsak()}>
-            <TestBehandlingProvider behandling={behandling} stateOverrides={{}}>
+            <TestBehandlingProvider behandling={behandling}>
                 <QueryClientProvider client={queryClient}>
                     <Suspense fallback={<div>Laster...</div>}>
                         <ForhåndsvarselInnhold />

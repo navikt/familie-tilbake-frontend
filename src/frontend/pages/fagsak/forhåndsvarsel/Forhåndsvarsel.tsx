@@ -135,7 +135,7 @@ export const Forhåndsvarsel: FC = () => {
 };
 
 export const ForhåndsvarselInnhold: FC = () => {
-    const { behandlingId, tilbakekrevingRevurdering } = useBehandling();
+    const { behandlingId } = useBehandling();
     const { actionBarStegtekst, nullstillIkkePersisterteKomponenter, harUlagredeData } =
         useBehandlingState();
     const navigerTilNeste = useStegNavigering('FORELDELSE');
@@ -186,9 +186,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     };
 
     const erRedigerbarForhåndsvarselFlyt =
-        !!tilbakekrevingRevurdering ||
-        forhåndsvarselSteg.type === 'ikke_vurdert' ||
-        forhåndsvarselSteg.type === 'unntak';
+        forhåndsvarselSteg.type === 'ikke_vurdert' || forhåndsvarselSteg.type === 'unntak';
 
     const methods = useForm<IkkeVurdertFormData>({
         resolver: zodResolver(ikkeVurdertSchema),
@@ -407,7 +405,7 @@ export const ForhåndsvarselInnhold: FC = () => {
     useActionBar(actionBarConfig);
 
     const erInternVurdering =
-        !erRedigerbarForhåndsvarselFlyt ||
+        forhåndsvarselSteg.type === 'sendt' ||
         valg === 'unntak' ||
         (forhåndsvarselSteg.type === 'unntak' && valg !== 'send');
 
@@ -448,7 +446,7 @@ export const ForhåndsvarselInnhold: FC = () => {
                     </HStack>
                     <StatusTag tilbakeført={tilbakeført} ferdigvurdert={ferdigvurdert} />
                 </HStack>
-                {forhåndsvarselSteg.type === 'sendt' && !tilbakekrevingRevurdering ? (
+                {forhåndsvarselSteg.type === 'sendt' ? (
                     <VStack gap="space-24">
                         <div className="grid grid-cols-1 gap-6 items-start md:grid-cols-[minmax(0,1fr)_auto]">
                             <SkalSendeForhåndsvarsel
