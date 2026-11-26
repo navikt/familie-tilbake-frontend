@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Button,
     InlineMessage,
+    Link,
     LocalAlert,
     Modal,
     Radio,
@@ -132,12 +133,24 @@ export const RevurderingModal: FC<Props> = ({
                             )}
                         </div>
                         {feilmelding && (
-                            <LocalAlert status="error">
+                            <LocalAlert status="error" size="small">
                                 <LocalAlert.Header>
                                     <LocalAlert.Title>{feilmelding.tittel}</LocalAlert.Title>
                                 </LocalAlert.Header>
                                 {feilmelding.melding && (
-                                    <LocalAlert.Content>{feilmelding.melding}</LocalAlert.Content>
+                                    <LocalAlert.Content className="flex flex-col gap-1">
+                                        <span>{feilmelding.melding}</span>
+                                        <span>
+                                            Dersom du likevel må opprette en revurdering kan du{' '}
+                                            <Link
+                                                target="_blank"
+                                                href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
+                                            >
+                                                melde feil i porten
+                                            </Link>
+                                            .
+                                        </span>
+                                    </LocalAlert.Content>
                                 )}
                             </LocalAlert>
                         )}

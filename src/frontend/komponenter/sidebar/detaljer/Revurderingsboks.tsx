@@ -41,7 +41,7 @@ export const Revurderingsboks: FC<Props> = ({
         >
             <div className="flex justify-between gap-1">
                 <Heading level="2" size="xsmall">
-                    Revurdering av tilbakekrevingen
+                    Revurdering av tilbakekrevingen
                 </Heading>
                 {kanEndres && revurderingsårsak && (
                     <OppdaterRevurdering

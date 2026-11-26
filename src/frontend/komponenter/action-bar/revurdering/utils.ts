@@ -75,7 +75,7 @@ export type Revurderingsfeil =
 
 export const feilmeldingFraRevurdering = (
     error: Revurderingsfeil,
-    standardtittel = 'Kunne ikke opprette revurderingen. Prøv igjen.'
+    standardtittel = 'Kunne ikke opprette revurderingen'
 ): { tittel: string; melding?: string } => {
     if (error instanceof z.ZodError) {
         return { tittel: error.issues[0]?.message ?? 'Ugyldig svar fra serveren.' };
