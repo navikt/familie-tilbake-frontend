@@ -32,7 +32,6 @@ import {
     henleggBehandling,
     hentBehandling,
     hentBehandlingerForFagsystem,
-    hentBehandlingsIderMedRevurderingAnnenÅrsak,
     hentBeregningsresultat,
     hentDokument,
     hentFagsak,
@@ -50,6 +49,7 @@ import {
     hentJournalposter,
     hentKravgrunnlagsinfo,
     hentManuellBrevmottakere,
+    hentRevurderingsårsaksoversikt,
     hentTilbakekrevingUrler,
     hentTotrinnsvurderinger,
     hentUrlTilArbeidOgInntekt,
@@ -138,8 +138,6 @@ import type {
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponse,
     HentBehandlingResponse,
-    HentBehandlingsIderMedRevurderingAnnenÅrsakData,
-    HentBehandlingsIderMedRevurderingAnnenÅrsakResponse,
     HentBeregningsresultatData,
     HentBeregningsresultatResponse,
     HentDokumentData,
@@ -174,6 +172,8 @@ import type {
     HentKravgrunnlagsinfoResponse,
     HentManuellBrevmottakereData,
     HentManuellBrevmottakereResponse,
+    HentRevurderingsårsaksoversiktData,
+    HentRevurderingsårsaksoversiktResponse,
     HentTilbakekrevingUrlerData,
     HentTilbakekrevingUrlerResponse,
     HentTotrinnsvurderingerData,
@@ -1752,6 +1752,34 @@ export const hentFagsystemIderForSperredeTilbakekrevingerOptions = (
         queryKey: hentFagsystemIderForSperredeTilbakekrevingerQueryKey(options),
     });
 
+export const hentRevurderingsårsaksoversiktQueryKey = (
+    options?: Options<HentRevurderingsårsaksoversiktData>
+) => createQueryKey('hentRevurderingsårsaksoversikt', options);
+
+/**
+ * Hent antall per revurderingsårsak for 2025 og 2026 med totalsum basert på behandlingsarsak.opprettet_tid
+ */
+export const hentRevurderingsårsaksoversiktOptions = (
+    options?: Options<HentRevurderingsårsaksoversiktData>
+) =>
+    queryOptions<
+        HentRevurderingsårsaksoversiktResponse,
+        AxiosError<DefaultError>,
+        HentRevurderingsårsaksoversiktResponse,
+        ReturnType<typeof hentRevurderingsårsaksoversiktQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await hentRevurderingsårsaksoversikt({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: hentRevurderingsårsaksoversiktQueryKey(options),
+    });
+
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveQueryKey = (
     options: Options<FinnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgaveData>
 ) =>
@@ -1841,34 +1869,6 @@ export const hentTilbakekrevingUrlerOptions = (options: Options<HentTilbakekrevi
             return data;
         },
         queryKey: hentTilbakekrevingUrlerQueryKey(options),
-    });
-
-export const hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey = (
-    options?: Options<HentBehandlingsIderMedRevurderingAnnenÅrsakData>
-) => createQueryKey('hentBehandlingsIderMedRevurderingAnnenÅrsak', options);
-
-/**
- * Hent behandlings-ID-er med behandlingsårsak REVURDERING_ANNEN_ÅRSAK
- */
-export const hentBehandlingsIderMedRevurderingAnnenÅrsakOptions = (
-    options?: Options<HentBehandlingsIderMedRevurderingAnnenÅrsakData>
-) =>
-    queryOptions<
-        HentBehandlingsIderMedRevurderingAnnenÅrsakResponse,
-        AxiosError<DefaultError>,
-        HentBehandlingsIderMedRevurderingAnnenÅrsakResponse,
-        ReturnType<typeof hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey>
-    >({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await hentBehandlingsIderMedRevurderingAnnenÅrsak({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true,
-            });
-            return data;
-        },
-        queryKey: hentBehandlingsIderMedRevurderingAnnenÅrsakQueryKey(options),
     });
 
 export const lagBehandlingUrlQueryKey = (options?: Options<LagBehandlingUrlData>) =>

@@ -14,9 +14,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
+import { FagsakContext } from '@/context/FagsakContext';
 import { behandlingHentDokumentInfoOptions } from '@/generated-new/@tanstack/react-query.gen';
-import { behandlingHentDokument } from '@/generated-new/sdk.gen';
+import { dokumentHentDokument } from '@/generated-new/sdk.gen';
 import { TestBehandlingProvider } from '@/testdata/behandlingContextFactory';
+import { lagFagsak } from '@/testdata/fagsakFactory';
 
 import { Vedtaksbrev } from './Vedtaksbrev';
 
@@ -32,7 +34,7 @@ const { lagreVedtaksbrev, lagForhåndsvisning } = vi.hoisted(() => ({
 
 vi.mock('@/generated-new/sdk.gen', async importOriginal => ({
     ...(await importOriginal<typeof import('@/generated-new/sdk.gen')>()),
-    behandlingHentDokument: vi.fn(),
+    dokumentHentDokument: vi.fn(),
 }));
 
 vi.mock('@/generated-new/@tanstack/react-query.gen', async importOriginal => ({
@@ -41,11 +43,12 @@ vi.mock('@/generated-new/@tanstack/react-query.gen', async importOriginal => ({
     brevLagSvgVedtaksbrevMutation: () => ({ mutationFn: lagForhåndsvisning }),
 }));
 
-const behandlingHentDokumentMock = vi.mocked(behandlingHentDokument);
+const dokumentHentDokumentMock = vi.mocked(dokumentHentDokument);
 
 const BEHANDLING_ID = 'uuid-1';
 const JOURNALPOST_ID = 'jp-123';
 const DOKUMENT_ID = 'dok-456';
+const EKSTERN_FAGSAK_ID = 'fagsak-789';
 
 const renderVedtaksbrev = (
     vedtaksbrevData: VedtaksbrevData,
@@ -54,9 +57,11 @@ const renderVedtaksbrev = (
 ): RenderResult =>
     render(
         <QueryClientProvider client={queryClient}>
-            <TestBehandlingProvider stateOverrides={{ behandlingILesemodus }}>
-                <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={vitest.fn()} />
-            </TestBehandlingProvider>
+            <FagsakContext value={lagFagsak({ eksternFagsakId: EKSTERN_FAGSAK_ID })}>
+                <TestBehandlingProvider stateOverrides={{ behandlingILesemodus }}>
+                    <Vedtaksbrev vedtaksbrevData={vedtaksbrevData} onSubmit={vitest.fn()} />
+                </TestBehandlingProvider>
+            </FagsakContext>
         </QueryClientProvider>
     );
 
@@ -81,7 +86,7 @@ const renderMedFeilendeDokumenthenting = (
     feil: unknown,
     queryClient: QueryClient = lagQueryClientMedSendtBrev()
 ): RenderResult => {
-    behandlingHentDokumentMock.mockRejectedValue(feil);
+    dokumentHentDokumentMock.mockRejectedValue(feil);
     return renderVedtaksbrev(lagVedtaksbrevData(), queryClient, true);
 };
 
@@ -207,9 +212,11 @@ describe('Vedtaksbrev', () => {
 
         rerender(
             <QueryClientProvider client={queryClient}>
-                <TestBehandlingProvider>
-                    <Vedtaksbrev vedtaksbrevData={lagretVedtaksbrev} onSubmit={vitest.fn()} />
-                </TestBehandlingProvider>
+                <FagsakContext value={lagFagsak({ eksternFagsakId: EKSTERN_FAGSAK_ID })}>
+                    <TestBehandlingProvider>
+                        <Vedtaksbrev vedtaksbrevData={lagretVedtaksbrev} onSubmit={vitest.fn()} />
+                    </TestBehandlingProvider>
+                </FagsakContext>
             </QueryClientProvider>
         );
 
@@ -225,7 +232,7 @@ describe('Vedtaksbrev', () => {
 
     describe('feilmelding for sendt vedtaksbrev', () => {
         beforeEach(() => {
-            behandlingHentDokumentMock.mockReset();
+            dokumentHentDokumentMock.mockReset();
         });
 
         test('skal vise feilmeldingen fra feilresponsens blob', async () => {
@@ -263,7 +270,12 @@ describe('Vedtaksbrev', () => {
             expect(
                 await screen.findByText('Dokumentet er ikke journalført ennå.')
             ).toBeInTheDocument();
-            expect(behandlingHentDokumentMock).toHaveBeenCalledTimes(1);
+            expect(dokumentHentDokumentMock).toHaveBeenCalledExactlyOnceWith(
+                expect.objectContaining({
+                    path: { journalpostId: JOURNALPOST_ID, dokumentInfoId: DOKUMENT_ID },
+                    headers: { 'Behandling-Id': BEHANDLING_ID, 'Fagsak-Id': EKSTERN_FAGSAK_ID },
+                })
+            );
 
             unmount();
             renderVedtaksbrev(lagVedtaksbrevData(), queryClient, true);
@@ -271,7 +283,7 @@ describe('Vedtaksbrev', () => {
             expect(
                 await screen.findByText('Kunne ikke hente det sendte vedtaksbrevet')
             ).toBeInTheDocument();
-            expect(behandlingHentDokumentMock).toHaveBeenCalledTimes(1);
+            expect(dokumentHentDokumentMock).toHaveBeenCalledTimes(1);
         });
     });
 });

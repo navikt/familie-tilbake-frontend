@@ -16,12 +16,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useFagsak } from '@/context/FagsakContext';
 import {
     behandlingHentDokumentInfoOptions,
-    behandlingHentDokumentOptions,
     behandlingHentVedtaksbrevQueryKey,
     behandlingOppdaterVedtaksbrevMutation,
     brevLagSvgVedtaksbrevMutation,
+    dokumentHentDokumentOptions,
 } from '@/generated-new/@tanstack/react-query.gen';
 import { lesFeilmeldingFraBlob } from '@/utils/blobFeilmelding';
 import { fraIsoStringTilDatoOgKlokkeslett } from '@/utils/dato';
@@ -56,6 +57,7 @@ type Props = {
 
 export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => {
     const { behandlingId } = useBehandling();
+    const { eksternFagsakId } = useFagsak();
     const { behandlingILesemodus } = useBehandlingState();
     const queryClient = useQueryClient();
 
@@ -89,12 +91,12 @@ export const Vedtaksbrev: FC<Props> = ({ vedtaksbrevData, onSubmit }: Props) => 
         behandlingILesemodus && dokumentInfo === undefined && !dokumentInfoFeil;
 
     const { data: sendtDokument, error: sendtDokumentFeil } = useQuery({
-        ...behandlingHentDokumentOptions({
+        ...dokumentHentDokumentOptions({
             path: {
-                behandlingId,
                 journalpostId: journalpostId ?? '',
                 dokumentInfoId: dokumentId ?? '',
             },
+            headers: { 'Behandling-Id': behandlingId, 'Fagsak-Id': eksternFagsakId },
         }),
         enabled: harSendtBrev,
         retry: false,

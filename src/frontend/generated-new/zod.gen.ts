@@ -5,6 +5,7 @@ import * as z from 'zod';
 export const zArsakTilTilbakeforing = z.enum([
     'NyttKravgrunnlag',
     'TilbakemeldingFraSaksbehandler',
+    'Revurdering',
 ]);
 
 export const zBeregningsresultatVurdering = z.enum([
@@ -106,6 +107,8 @@ export const zForsettlig = z.object({
     begrunnelse: z.string(),
 });
 
+export const zFregAdresse = z.record(z.string(), z.unknown());
+
 export const zFritekst = z.string().min(3).max(3000);
 
 export const zHovedavsnittInformasjonsbrev = z.object({
@@ -166,6 +169,11 @@ export const zNeiSaerligeGrunner = z.object({
     annetBegrunnelse: z.string().nullable(),
 });
 
+export const zNorskAdresse = z.object({
+    gate: z.string(),
+    postnummer: z.string(),
+});
+
 export const zNyPeriode = z.object({
     fom: z.iso.date().readonly(),
     tom: z.iso.date().readonly(),
@@ -197,6 +205,12 @@ export const zOppsummeringsdata = z.object({
     sumTilbakekrevesBeløpEtterSkatt: z.string(),
 });
 
+export const zOrganisasjon = z.object({
+    navn: z.string().nullable(),
+    organisasjonsnavn: z.string().readonly(),
+    organisasjonsnummer: z.string(),
+});
+
 export const zPeriode = z.object({
     fom: z.iso.date().readonly(),
     tom: z.iso.date().readonly(),
@@ -219,6 +233,11 @@ export const zEndretPeriode = z.object({
 export const zPeriodeInfo = z.object({
     periodeId: z.uuid(),
     periode: zPeriode,
+});
+
+export const zPerson = z.object({
+    navn: z.string().readonly(),
+    ident: z.string(),
 });
 
 export const zRentekstElement = z.object({
@@ -265,6 +284,17 @@ export const zEtterKlage = z.object({
 export const zFeilutbetaltBelopEndret = z.object({
     instans: zRevurderingsinstans,
     begrunnelse: z.string(),
+});
+
+export const zRolle = z.enum(['SAKSBEHANDLER', 'BESLUTTER', 'VEDTAKSLØSNING']);
+
+export const zHendelse = z.object({
+    tittel: z.string(),
+    opprettet: z.iso.datetime(),
+    rolle: zRolle,
+    rolleIdent: z.string().nullable(),
+    beskrivelse: z.string().nullable(),
+    ekstraInfo: z.record(z.string(), z.string()),
 });
 
 export const zSammenslaaing = z.object({
@@ -510,6 +540,50 @@ export const zUpdateUttalelsesfrist = z.object({
     begrunnelse: z.string().optional(),
 });
 
+export const zUtenlandskAdresse = z.object({
+    land: z.string(),
+    adresse: z.string(),
+});
+
+export const zHovedmottakerAddresse = z.union([
+    z
+        .object({
+            addressetype: z.literal('freg'),
+        })
+        .and(zFregAdresse),
+    z
+        .object({
+            addressetype: z.literal('norsk'),
+        })
+        .and(zNorskAdresse),
+    z
+        .object({
+            addressetype: z.literal('utenlandsk'),
+        })
+        .and(zUtenlandskAdresse),
+]);
+
+export const zManuellMottaker = z.discriminatedUnion('adressetype', [
+    zNorskAdresse.extend({ adressetype: z.literal('norsk') }),
+    zUtenlandskAdresse.extend({ adressetype: z.literal('utenlandsk') }),
+]);
+
+export const zManuellAdresse = z.object({
+    navn: z.string(),
+    mottaker: zManuellMottaker,
+});
+
+export const zFullmektigMottaker = z.discriminatedUnion('mottakerType', [
+    zManuellAdresse.extend({ mottakerType: z.literal('manuell') }),
+    zOrganisasjon.extend({ mottakerType: z.literal('organisasjon') }),
+    zPerson.extend({ mottakerType: z.literal('person') }),
+]);
+
+export const zFullmektig = z.object({
+    id: z.uuid().readonly(),
+    mottaker: zFullmektigMottaker,
+});
+
 export const zUttalelseVurdering = z.union([
     z
         .object({
@@ -651,6 +725,26 @@ export const zBeregningsresultat = z.object({
         .int()
         .min(0, { error: 'Invalid value: Expected uint32 to be >= 0' })
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
+});
+
+export const zVergeMottaker = z.discriminatedUnion('mottakerType', [
+    zManuellAdresse.extend({ mottakerType: z.literal('manuell') }),
+    zPerson.extend({ mottakerType: z.literal('person') }),
+]);
+
+export const zVerge = z.object({
+    id: z.uuid().readonly(),
+    mottaker: zVergeMottaker,
+});
+
+export const zTilleggsmottaker = z.discriminatedUnion('tilleggsmottakerType', [
+    zFullmektig.extend({ tilleggsmottakerType: z.literal('fullmektig') }),
+    zVerge.extend({ tilleggsmottakerType: z.literal('verge') }),
+]);
+
+export const zBrevmottakere = z.object({
+    hovedmottaker: zHovedmottakerAddresse,
+    tilleggsmottaker: zTilleggsmottaker.nullable(),
 });
 
 export const zVilkaarsvurderingIkkeVurdert = z.record(z.string(), z.unknown());
@@ -965,6 +1059,11 @@ export const zNyPeriodeWritable = z.object({
         .max(4294967295, { error: 'Invalid value: Expected uint32 to be <= 4294967295' }),
 });
 
+export const zOrganisasjonWritable = z.object({
+    navn: z.string().nullable(),
+    organisasjonsnummer: z.string(),
+});
+
 export const zPakrevdBegrunnelseWritable = z.object({
     tittel: z.string(),
     begrunnelseType: z.string(),
@@ -973,6 +1072,20 @@ export const zPakrevdBegrunnelseWritable = z.object({
 
 export const zPeriodeInfoWritable = z.object({
     periodeId: z.uuid(),
+});
+
+export const zPersonWritable = z.object({
+    ident: z.string(),
+});
+
+export const zFullmektigMottakerWritable = z.discriminatedUnion('mottakerType', [
+    zManuellAdresse.extend({ mottakerType: z.literal('manuell') }),
+    zOrganisasjonWritable.extend({ mottakerType: z.literal('organisasjon') }),
+    zPersonWritable.extend({ mottakerType: z.literal('person') }),
+]);
+
+export const zFullmektigWritable = z.object({
+    mottaker: zFullmektigMottakerWritable,
 });
 
 export const zRotElementWritable = z.discriminatedUnion('type', [
@@ -1165,6 +1278,25 @@ export const zVedtaksbrevRedigerbareDataWritable = z.object({
     avsnitt: z.array(zAvsnittWritable).nullable(),
 });
 
+export const zVergeMottakerWritable = z.discriminatedUnion('mottakerType', [
+    zManuellAdresse.extend({ mottakerType: z.literal('manuell') }),
+    zPersonWritable.extend({ mottakerType: z.literal('person') }),
+]);
+
+export const zVergeWritable = z.object({
+    mottaker: zVergeMottakerWritable,
+});
+
+export const zTilleggsmottakerWritable = z.discriminatedUnion('tilleggsmottakerType', [
+    zFullmektigWritable.extend({ tilleggsmottakerType: z.literal('fullmektig') }),
+    zVergeWritable.extend({ tilleggsmottakerType: z.literal('verge') }),
+]);
+
+export const zBrevmottakereWritable = z.object({
+    hovedmottaker: zHovedmottakerAddresse,
+    tilleggsmottaker: zTilleggsmottakerWritable.nullable(),
+});
+
 export const zVilkaarsvurderingValgWritable = z.union([
     z
         .object({
@@ -1281,6 +1413,15 @@ export const zBehandlingLagreBrukersuttalelseBody = zUttalelseVurdering;
 export const zBehandlingLagreBrukersuttalelsePath = z.object({
     behandlingId: z.uuid(),
 });
+
+export const zBehandlingHentHistorikkPath = z.object({
+    behandlingId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBehandlingHentHistorikkResponse = z.array(zHendelse);
 
 export const zBehandlingHentDokumentPath = z.object({
     behandlingId: z.uuid(),
@@ -1418,11 +1559,26 @@ export const zBrevLagSvgVedtaksbrevBody = zVedtaksbrevDataWritable;
  */
 export const zBrevLagSvgVedtaksbrevResponse = z.string();
 
-export const zDokumenterHentVedtaksdokumenterHeaders = z.object({
+export const zDokumentHentDokumentHeaders = z.object({
+    'Behandling-Id': z.string().optional(),
+    'Fagsak-Id': z.string().optional(),
+});
+
+export const zDokumentHentDokumentPath = z.object({
+    journalpostId: z.string(),
+    dokumentInfoId: z.string(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zDokumentHentDokumentResponse = z.string();
+
+export const zDokumentHentVedtaksdokumenterHeaders = z.object({
     Authorization: z.string(),
 });
 
-export const zDokumenterHentVedtaksdokumenterPath = z.object({
+export const zDokumentHentVedtaksdokumenterPath = z.object({
     vedtakId: z
         .string()
         .min(1)
@@ -1433,4 +1589,57 @@ export const zDokumenterHentVedtaksdokumenterPath = z.object({
 /**
  * The request has succeeded.
  */
-export const zDokumenterHentVedtaksdokumenterResponse = z.array(zVedtaksdokument);
+export const zDokumentHentVedtaksdokumenterResponse = z.array(zVedtaksdokument);
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevmottakerHentPoststederResponse = z.record(z.string(), z.string());
+
+export const zBrevmottakerHentBrevmottakerePath = z.object({
+    tilbakekrevingId: z.string(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevmottakerHentBrevmottakereResponse = zBrevmottakere;
+
+export const zBrevmottakerLeggTilTilleggsmottakerBody = zTilleggsmottakerWritable;
+
+export const zBrevmottakerLeggTilTilleggsmottakerPath = z.object({
+    tilbakekrevingId: z.string(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevmottakerLeggTilTilleggsmottakerResponse = zTilleggsmottaker;
+
+export const zBrevmottakerEndreHovedmottakerBody = zHovedmottakerAddresse;
+
+export const zBrevmottakerEndreHovedmottakerPath = z.object({
+    tilbakekrevingId: z.string(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevmottakerEndreHovedmottakerResponse = zHovedmottakerAddresse;
+
+export const zBrevmottakerSlettBrevmottakerPath = z.object({
+    tilbakekrevingId: z.string(),
+    brevmottakerId: z.uuid(),
+});
+
+export const zBrevmottakerEndreTilleggsmottakerBody = zTilleggsmottakerWritable;
+
+export const zBrevmottakerEndreTilleggsmottakerPath = z.object({
+    tilbakekrevingId: z.string(),
+    brevmottakerId: z.uuid(),
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zBrevmottakerEndreTilleggsmottakerResponse = zTilleggsmottaker;

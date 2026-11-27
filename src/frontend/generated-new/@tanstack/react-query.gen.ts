@@ -13,6 +13,7 @@ import {
     behandlingHentBehandling,
     behandlingHentDokument,
     behandlingHentDokumentInfo,
+    behandlingHentHistorikk,
     behandlingHentVarselbrevTekster,
     behandlingHentVedtaksbrev,
     behandlingHentVedtaksresultat,
@@ -31,7 +32,14 @@ import {
     behandlingVilkaarsvurderingsperioder,
     brevLagSvgVarselbrev,
     brevLagSvgVedtaksbrev,
-    dokumenterHentVedtaksdokumenter,
+    brevmottakerEndreHovedmottaker,
+    brevmottakerEndreTilleggsmottaker,
+    brevmottakerHentBrevmottakere,
+    brevmottakerHentPoststeder,
+    brevmottakerLeggTilTilleggsmottaker,
+    brevmottakerSlettBrevmottaker,
+    dokumentHentDokument,
+    dokumentHentVedtaksdokumenter,
     type Options,
 } from '../sdk.gen';
 import type {
@@ -57,6 +65,9 @@ import type {
     BehandlingHentDokumentInfoError,
     BehandlingHentDokumentInfoResponse,
     BehandlingHentDokumentResponse,
+    BehandlingHentHistorikkData,
+    BehandlingHentHistorikkError,
+    BehandlingHentHistorikkResponse,
     BehandlingHentVarselbrevTeksterData,
     BehandlingHentVarselbrevTeksterError,
     BehandlingHentVarselbrevTeksterResponse,
@@ -103,9 +114,27 @@ import type {
     BrevLagSvgVarselbrevResponse,
     BrevLagSvgVedtaksbrevData,
     BrevLagSvgVedtaksbrevResponse,
-    DokumenterHentVedtaksdokumenterData,
-    DokumenterHentVedtaksdokumenterError,
-    DokumenterHentVedtaksdokumenterResponse,
+    BrevmottakerEndreHovedmottakerData,
+    BrevmottakerEndreHovedmottakerError,
+    BrevmottakerEndreHovedmottakerResponse,
+    BrevmottakerEndreTilleggsmottakerData,
+    BrevmottakerEndreTilleggsmottakerError,
+    BrevmottakerEndreTilleggsmottakerResponse,
+    BrevmottakerHentBrevmottakereData,
+    BrevmottakerHentBrevmottakereError,
+    BrevmottakerHentBrevmottakereResponse,
+    BrevmottakerHentPoststederData,
+    BrevmottakerHentPoststederResponse,
+    BrevmottakerLeggTilTilleggsmottakerData,
+    BrevmottakerLeggTilTilleggsmottakerError,
+    BrevmottakerLeggTilTilleggsmottakerResponse,
+    BrevmottakerSlettBrevmottakerData,
+    BrevmottakerSlettBrevmottakerError,
+    DokumentHentDokumentData,
+    DokumentHentDokumentResponse,
+    DokumentHentVedtaksdokumenterData,
+    DokumentHentVedtaksdokumenterError,
+    DokumentHentVedtaksdokumenterResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -379,6 +408,28 @@ export const behandlingLagreBrukersuttalelseMutation = (
     };
     return mutationOptions;
 };
+
+export const behandlingHentHistorikkQueryKey = (options: Options<BehandlingHentHistorikkData>) =>
+    createQueryKey('behandlingHentHistorikk', options);
+
+export const behandlingHentHistorikkOptions = (options: Options<BehandlingHentHistorikkData>) =>
+    queryOptions<
+        BehandlingHentHistorikkResponse,
+        AxiosError<BehandlingHentHistorikkError>,
+        BehandlingHentHistorikkResponse,
+        ReturnType<typeof behandlingHentHistorikkQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await behandlingHentHistorikk({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: behandlingHentHistorikkQueryKey(options),
+    });
 
 export const behandlingHentDokumentQueryKey = (options: Options<BehandlingHentDokumentData>) =>
     createQueryKey('behandlingHentDokument', options);
@@ -766,35 +817,18 @@ export const brevLagSvgVedtaksbrevMutation = (
     return mutationOptions;
 };
 
-export const dokumenterHentVedtaksdokumenterQueryKey = (
-    options: Options<DokumenterHentVedtaksdokumenterData>
-) => createQueryKey('dokumenterHentVedtaksdokumenter', options);
+export const dokumentHentDokumentQueryKey = (options: Options<DokumentHentDokumentData>) =>
+    createQueryKey('dokumentHentDokument', options);
 
-/**
- * Henter alle brev for vedtaket. Ta bare med brev som har både journalpostId
- * og dokumentInfoId. Samle treff fra flere iverksettelser i gammel og ny modell,
- * fjern duplikater, og returner tom liste når det ikke finnes treff.
- *
- * Den nye modellen kan hente brev fra flere behandlinger på samme sak.
- * Tvangsgrunnlag API kontrollerer koblingen mellom skyldner og vedtakId.
- * Familie-tilbake håndterer autentisering og tilgang.
- *
- * vedtakId må bestå av 1–64 ASCII-sifre, med en tallverdi på høyst
- * 9223372036854775807. Innledende nuller er tillatt.
- * Returner 400 ved ugyldig vedtakId, 401 ved ugyldig eller manglende
- * autentisering og 403 når kalleren mangler tilgang.
- */
-export const dokumenterHentVedtaksdokumenterOptions = (
-    options: Options<DokumenterHentVedtaksdokumenterData>
-) =>
+export const dokumentHentDokumentOptions = (options: Options<DokumentHentDokumentData>) =>
     queryOptions<
-        DokumenterHentVedtaksdokumenterResponse,
-        AxiosError<DokumenterHentVedtaksdokumenterError>,
-        DokumenterHentVedtaksdokumenterResponse,
-        ReturnType<typeof dokumenterHentVedtaksdokumenterQueryKey>
+        DokumentHentDokumentResponse,
+        AxiosError<DefaultError>,
+        DokumentHentDokumentResponse,
+        ReturnType<typeof dokumentHentDokumentQueryKey>
     >({
         queryFn: async ({ queryKey, signal }) => {
-            const { data } = await dokumenterHentVedtaksdokumenter({
+            const { data } = await dokumentHentDokument({
                 ...options,
                 ...queryKey[0],
                 signal,
@@ -802,5 +836,182 @@ export const dokumenterHentVedtaksdokumenterOptions = (
             });
             return data;
         },
-        queryKey: dokumenterHentVedtaksdokumenterQueryKey(options),
+        queryKey: dokumentHentDokumentQueryKey(options),
     });
+
+export const dokumentHentVedtaksdokumenterQueryKey = (
+    options: Options<DokumentHentVedtaksdokumenterData>
+) => createQueryKey('dokumentHentVedtaksdokumenter', options);
+
+/**
+ * Henter alle brev for vedtaket. Ta bare med brev som har både journalpostId
+ * og dokumentInfoId. Returner tom liste når det ikke finnes noen brev.
+ *
+ * vedtakId må bestå av 1–64 ASCII-sifre. Innledende nuller er tillatt.
+ */
+export const dokumentHentVedtaksdokumenterOptions = (
+    options: Options<DokumentHentVedtaksdokumenterData>
+) =>
+    queryOptions<
+        DokumentHentVedtaksdokumenterResponse,
+        AxiosError<DokumentHentVedtaksdokumenterError>,
+        DokumentHentVedtaksdokumenterResponse,
+        ReturnType<typeof dokumentHentVedtaksdokumenterQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await dokumentHentVedtaksdokumenter({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: dokumentHentVedtaksdokumenterQueryKey(options),
+    });
+
+export const brevmottakerHentPoststederQueryKey = (
+    options?: Options<BrevmottakerHentPoststederData>
+) => createQueryKey('brevmottakerHentPoststeder', options);
+
+export const brevmottakerHentPoststederOptions = (
+    options?: Options<BrevmottakerHentPoststederData>
+) =>
+    queryOptions<
+        BrevmottakerHentPoststederResponse,
+        AxiosError<DefaultError>,
+        BrevmottakerHentPoststederResponse,
+        ReturnType<typeof brevmottakerHentPoststederQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await brevmottakerHentPoststeder({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: brevmottakerHentPoststederQueryKey(options),
+    });
+
+export const brevmottakerHentBrevmottakereQueryKey = (
+    options: Options<BrevmottakerHentBrevmottakereData>
+) => createQueryKey('brevmottakerHentBrevmottakere', options);
+
+export const brevmottakerHentBrevmottakereOptions = (
+    options: Options<BrevmottakerHentBrevmottakereData>
+) =>
+    queryOptions<
+        BrevmottakerHentBrevmottakereResponse,
+        AxiosError<BrevmottakerHentBrevmottakereError>,
+        BrevmottakerHentBrevmottakereResponse,
+        ReturnType<typeof brevmottakerHentBrevmottakereQueryKey>
+    >({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await brevmottakerHentBrevmottakere({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true,
+            });
+            return data;
+        },
+        queryKey: brevmottakerHentBrevmottakereQueryKey(options),
+    });
+
+export const brevmottakerLeggTilTilleggsmottakerMutation = (
+    options?: Partial<Options<BrevmottakerLeggTilTilleggsmottakerData>>
+): UseMutationOptions<
+    BrevmottakerLeggTilTilleggsmottakerResponse,
+    AxiosError<BrevmottakerLeggTilTilleggsmottakerError>,
+    Options<BrevmottakerLeggTilTilleggsmottakerData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BrevmottakerLeggTilTilleggsmottakerResponse,
+        AxiosError<BrevmottakerLeggTilTilleggsmottakerError>,
+        Options<BrevmottakerLeggTilTilleggsmottakerData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await brevmottakerLeggTilTilleggsmottaker({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const brevmottakerEndreHovedmottakerMutation = (
+    options?: Partial<Options<BrevmottakerEndreHovedmottakerData>>
+): UseMutationOptions<
+    BrevmottakerEndreHovedmottakerResponse,
+    AxiosError<BrevmottakerEndreHovedmottakerError>,
+    Options<BrevmottakerEndreHovedmottakerData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BrevmottakerEndreHovedmottakerResponse,
+        AxiosError<BrevmottakerEndreHovedmottakerError>,
+        Options<BrevmottakerEndreHovedmottakerData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await brevmottakerEndreHovedmottaker({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const brevmottakerSlettBrevmottakerMutation = (
+    options?: Partial<Options<BrevmottakerSlettBrevmottakerData>>
+): UseMutationOptions<
+    unknown,
+    AxiosError<BrevmottakerSlettBrevmottakerError>,
+    Options<BrevmottakerSlettBrevmottakerData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        unknown,
+        AxiosError<BrevmottakerSlettBrevmottakerError>,
+        Options<BrevmottakerSlettBrevmottakerData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await brevmottakerSlettBrevmottaker({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};
+
+export const brevmottakerEndreTilleggsmottakerMutation = (
+    options?: Partial<Options<BrevmottakerEndreTilleggsmottakerData>>
+): UseMutationOptions<
+    BrevmottakerEndreTilleggsmottakerResponse,
+    AxiosError<BrevmottakerEndreTilleggsmottakerError>,
+    Options<BrevmottakerEndreTilleggsmottakerData>
+> => {
+    const mutationOptions: UseMutationOptions<
+        BrevmottakerEndreTilleggsmottakerResponse,
+        AxiosError<BrevmottakerEndreTilleggsmottakerError>,
+        Options<BrevmottakerEndreTilleggsmottakerData>
+    > = {
+        mutationFn: async fnOptions => {
+            const { data } = await brevmottakerEndreTilleggsmottaker({
+                ...options,
+                ...fnOptions,
+                throwOnError: true,
+            });
+            return data;
+        },
+    };
+    return mutationOptions;
+};

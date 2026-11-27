@@ -11,12 +11,12 @@ import { type DefaultValues, FormProvider, type SubmitHandler, useForm } from 'r
 
 import { useBehandling } from '@/context/BehandlingContext';
 import { useBehandlingState } from '@/context/BehandlingStateContext';
+import { useFagsak } from '@/context/FagsakContext';
 import {
     forhåndsvisBrevMutation,
     hentBehandlingQueryKey,
 } from '@/generated/@tanstack/react-query.gen';
 import {
-    type BehandlingHentDokumentError,
     type BehandlingLagreBrukersuttalelseError,
     type BehandlingLagreForhaandsvarselUnntakError,
     type BehandlingSendVarselbrevData,
@@ -24,9 +24,9 @@ import {
     type BehandlingUtsettUttalelsesfristData,
     type BehandlingUtsettUttalelsesfristError,
     type BehandlingUtsettUttalelsesfristResponse,
-    behandlingHentDokument,
     behandlingLagreBrukersuttalelse,
     behandlingLagreForhaandsvarselUnntak,
+    dokumentHentDokument,
     type ForhaandsvarselSteg,
     type ForhaandsvarselUnntak,
     type UpdateUttalelsesfrist,
@@ -78,6 +78,7 @@ const utledForhåndsvarselDefaultValues = (
 
 export const Forhåndsvarsel: FC = () => {
     const { behandlingId } = useBehandling();
+    const { eksternFagsakId } = useFagsak();
     const queryClient = useQueryClient();
     const visGlobalAlert = useVisGlobalAlert();
 
@@ -115,13 +116,14 @@ export const Forhåndsvarsel: FC = () => {
             journalpostId: string;
             dokumentInfoId: string;
         }) => {
-            const { data } = await behandlingHentDokument({
-                path: { behandlingId, journalpostId, dokumentInfoId },
+            const { data } = await dokumentHentDokument({
+                path: { journalpostId, dokumentInfoId },
+                headers: { 'Behandling-Id': behandlingId, 'Fagsak-Id': eksternFagsakId },
                 throwOnError: true,
             });
             return data;
         },
-        onError: async (error: AxiosError<BehandlingHentDokumentError>) => {
+        onError: async (error: AxiosError<Blob>) => {
             const feilmelding = await lesFeilmeldingFraBlob(error);
             visGlobalAlert({
                 title: 'Kunne ikke vise forhåndsvarselet',
@@ -165,7 +167,7 @@ export const ForhåndsvarselInnhold: FC = () => {
 
     const hentSendtDokument = useMutation<
         Blob,
-        AxiosError<BehandlingHentDokumentError>,
+        AxiosError<Blob>,
         { journalpostId: string; dokumentInfoId: string }
     >({
         mutationKey: ['hentSendtDokument'],

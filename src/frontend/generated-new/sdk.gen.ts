@@ -27,6 +27,9 @@ import type {
     BehandlingHentDokumentInfoErrors,
     BehandlingHentDokumentInfoResponses,
     BehandlingHentDokumentResponses,
+    BehandlingHentHistorikkData,
+    BehandlingHentHistorikkErrors,
+    BehandlingHentHistorikkResponses,
     BehandlingHentVarselbrevTeksterData,
     BehandlingHentVarselbrevTeksterErrors,
     BehandlingHentVarselbrevTeksterResponses,
@@ -79,9 +82,28 @@ import type {
     BrevLagSvgVarselbrevResponses,
     BrevLagSvgVedtaksbrevData,
     BrevLagSvgVedtaksbrevResponses,
-    DokumenterHentVedtaksdokumenterData,
-    DokumenterHentVedtaksdokumenterErrors,
-    DokumenterHentVedtaksdokumenterResponses,
+    BrevmottakerEndreHovedmottakerData,
+    BrevmottakerEndreHovedmottakerErrors,
+    BrevmottakerEndreHovedmottakerResponses,
+    BrevmottakerEndreTilleggsmottakerData,
+    BrevmottakerEndreTilleggsmottakerErrors,
+    BrevmottakerEndreTilleggsmottakerResponses,
+    BrevmottakerHentBrevmottakereData,
+    BrevmottakerHentBrevmottakereErrors,
+    BrevmottakerHentBrevmottakereResponses,
+    BrevmottakerHentPoststederData,
+    BrevmottakerHentPoststederResponses,
+    BrevmottakerLeggTilTilleggsmottakerData,
+    BrevmottakerLeggTilTilleggsmottakerErrors,
+    BrevmottakerLeggTilTilleggsmottakerResponses,
+    BrevmottakerSlettBrevmottakerData,
+    BrevmottakerSlettBrevmottakerErrors,
+    BrevmottakerSlettBrevmottakerResponses,
+    DokumentHentDokumentData,
+    DokumentHentDokumentResponses,
+    DokumentHentVedtaksdokumenterData,
+    DokumentHentVedtaksdokumenterErrors,
+    DokumentHentVedtaksdokumenterResponses,
 } from './types.gen';
 
 export type Options<
@@ -255,6 +277,19 @@ export const behandlingLagreBrukersuttalelse = <ThrowOnError extends boolean = f
             'Content-Type': 'application/json',
             ...options.headers,
         },
+    });
+
+export const behandlingHentHistorikk = <ThrowOnError extends boolean = false>(
+    options: Options<BehandlingHentHistorikkData, ThrowOnError>
+): RequestResult<BehandlingHentHistorikkResponses, BehandlingHentHistorikkErrors, ThrowOnError> =>
+    (options.client ?? client).get<
+        BehandlingHentHistorikkResponses,
+        BehandlingHentHistorikkErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/behandling/{behandlingId}/historikk',
+        ...options,
     });
 
 export const behandlingHentDokument = <ThrowOnError extends boolean = false>(
@@ -530,34 +565,140 @@ export const brevLagSvgVedtaksbrev = <ThrowOnError extends boolean = false>(
         },
     });
 
+export const dokumentHentDokument = <ThrowOnError extends boolean = false>(
+    options: Options<DokumentHentDokumentData, ThrowOnError>
+): RequestResult<DokumentHentDokumentResponses, unknown, ThrowOnError> =>
+    (options.client ?? client).get<DokumentHentDokumentResponses, unknown, ThrowOnError>({
+        responseType: 'blob',
+        url: '/api/v1/dokumenter/journalpost/{journalpostId}/dokument/{dokumentInfoId}',
+        ...options,
+    });
+
 /**
  * Henter alle brev for vedtaket. Ta bare med brev som har både journalpostId
- * og dokumentInfoId. Samle treff fra flere iverksettelser i gammel og ny modell,
- * fjern duplikater, og returner tom liste når det ikke finnes treff.
+ * og dokumentInfoId. Returner tom liste når det ikke finnes noen brev.
  *
- * Den nye modellen kan hente brev fra flere behandlinger på samme sak.
- * Tvangsgrunnlag API kontrollerer koblingen mellom skyldner og vedtakId.
- * Familie-tilbake håndterer autentisering og tilgang.
- *
- * vedtakId må bestå av 1–64 ASCII-sifre, med en tallverdi på høyst
- * 9223372036854775807. Innledende nuller er tillatt.
- * Returner 400 ved ugyldig vedtakId, 401 ved ugyldig eller manglende
- * autentisering og 403 når kalleren mangler tilgang.
+ * vedtakId må bestå av 1–64 ASCII-sifre. Innledende nuller er tillatt.
  */
-export const dokumenterHentVedtaksdokumenter = <ThrowOnError extends boolean = false>(
-    options: Options<DokumenterHentVedtaksdokumenterData, ThrowOnError>
+export const dokumentHentVedtaksdokumenter = <ThrowOnError extends boolean = false>(
+    options: Options<DokumentHentVedtaksdokumenterData, ThrowOnError>
 ): RequestResult<
-    DokumenterHentVedtaksdokumenterResponses,
-    DokumenterHentVedtaksdokumenterErrors,
+    DokumentHentVedtaksdokumenterResponses,
+    DokumentHentVedtaksdokumenterErrors,
     ThrowOnError
 > =>
     (options.client ?? client).get<
-        DokumenterHentVedtaksdokumenterResponses,
-        DokumenterHentVedtaksdokumenterErrors,
+        DokumentHentVedtaksdokumenterResponses,
+        DokumentHentVedtaksdokumenterErrors,
         ThrowOnError
     >({
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/v1/dokumenter/vedtak/{vedtakId}',
         ...options,
+    });
+
+export const brevmottakerHentPoststeder = <ThrowOnError extends boolean = false>(
+    options?: Options<BrevmottakerHentPoststederData, ThrowOnError>
+): RequestResult<BrevmottakerHentPoststederResponses, unknown, ThrowOnError> =>
+    (options?.client ?? client).get<BrevmottakerHentPoststederResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        url: '/api/v1/tilbakekreving/brevmottakere/poststeder',
+        ...options,
+    });
+
+export const brevmottakerHentBrevmottakere = <ThrowOnError extends boolean = false>(
+    options: Options<BrevmottakerHentBrevmottakereData, ThrowOnError>
+): RequestResult<
+    BrevmottakerHentBrevmottakereResponses,
+    BrevmottakerHentBrevmottakereErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).get<
+        BrevmottakerHentBrevmottakereResponses,
+        BrevmottakerHentBrevmottakereErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere',
+        ...options,
+    });
+
+export const brevmottakerLeggTilTilleggsmottaker = <ThrowOnError extends boolean = false>(
+    options: Options<BrevmottakerLeggTilTilleggsmottakerData, ThrowOnError>
+): RequestResult<
+    BrevmottakerLeggTilTilleggsmottakerResponses,
+    BrevmottakerLeggTilTilleggsmottakerErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).post<
+        BrevmottakerLeggTilTilleggsmottakerResponses,
+        BrevmottakerLeggTilTilleggsmottakerErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const brevmottakerEndreHovedmottaker = <ThrowOnError extends boolean = false>(
+    options: Options<BrevmottakerEndreHovedmottakerData, ThrowOnError>
+): RequestResult<
+    BrevmottakerEndreHovedmottakerResponses,
+    BrevmottakerEndreHovedmottakerErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).put<
+        BrevmottakerEndreHovedmottakerResponses,
+        BrevmottakerEndreHovedmottakerErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere/mottaker',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+export const brevmottakerSlettBrevmottaker = <ThrowOnError extends boolean = false>(
+    options: Options<BrevmottakerSlettBrevmottakerData, ThrowOnError>
+): RequestResult<
+    BrevmottakerSlettBrevmottakerResponses,
+    BrevmottakerSlettBrevmottakerErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).delete<
+        BrevmottakerSlettBrevmottakerResponses,
+        BrevmottakerSlettBrevmottakerErrors,
+        ThrowOnError
+    >({
+        url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere/{brevmottakerId}',
+        ...options,
+    });
+
+export const brevmottakerEndreTilleggsmottaker = <ThrowOnError extends boolean = false>(
+    options: Options<BrevmottakerEndreTilleggsmottakerData, ThrowOnError>
+): RequestResult<
+    BrevmottakerEndreTilleggsmottakerResponses,
+    BrevmottakerEndreTilleggsmottakerErrors,
+    ThrowOnError
+> =>
+    (options.client ?? client).put<
+        BrevmottakerEndreTilleggsmottakerResponses,
+        BrevmottakerEndreTilleggsmottakerErrors,
+        ThrowOnError
+    >({
+        responseType: 'json',
+        url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere/{brevmottakerId}',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
     });

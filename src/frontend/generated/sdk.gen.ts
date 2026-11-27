@@ -57,8 +57,6 @@ import type {
     HentBehandlingerForFagsystemData,
     HentBehandlingerForFagsystemResponses,
     HentBehandlingResponses,
-    HentBehandlingsIderMedRevurderingAnnenÅrsakData,
-    HentBehandlingsIderMedRevurderingAnnenÅrsakResponses,
     HentBeregningsresultatData,
     HentBeregningsresultatResponses,
     HentDokumentData,
@@ -93,6 +91,8 @@ import type {
     HentKravgrunnlagsinfoResponses,
     HentManuellBrevmottakereData,
     HentManuellBrevmottakereResponses,
+    HentRevurderingsårsaksoversiktData,
+    HentRevurderingsårsaksoversiktResponses,
     HentTilbakekrevingUrlerData,
     HentTilbakekrevingUrlerResponses,
     HentTotrinnsvurderingerData,
@@ -1044,6 +1044,21 @@ export const hentFagsystemIderForSperredeTilbakekrevinger = <ThrowOnError extend
     });
 
 /**
+ * Hent antall per revurderingsårsak for 2025 og 2026 med totalsum basert på behandlingsarsak.opprettet_tid
+ */
+export const hentRevurderingsårsaksoversikt = <ThrowOnError extends boolean = false>(
+    options?: Options<HentRevurderingsårsaksoversiktData, ThrowOnError>
+): RequestResult<HentRevurderingsårsaksoversiktResponses, unknown, ThrowOnError> =>
+    (options?.client ?? client).get<HentRevurderingsårsaksoversiktResponses, unknown, ThrowOnError>(
+        {
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/forvaltning/revurderingsarsaker',
+            ...options,
+        }
+    );
+
+/**
  * Henter behandlinger med åpen GodkjennVedtak-oppgave eller ingen oppgave, som burde hatt åpen BehandleSak-oppgave
  */
 export const finnBehandlingerMedGodkjennVedtakOppgaveSomSkulleHattBehandleSakOppgave = <
@@ -1091,23 +1106,6 @@ export const hentTilbakekrevingUrler = <ThrowOnError extends boolean = false>(
         responseType: 'json',
         security: [{ scheme: 'bearer', type: 'http' }],
         url: '/api/forvaltning/fagsystem/{fagsystem}/fagsak/{eksternFagsakId}/tilbakekreving-url',
-        ...options,
-    });
-
-/**
- * Hent behandlings-ID-er med behandlingsårsak REVURDERING_ANNEN_ÅRSAK
- */
-export const hentBehandlingsIderMedRevurderingAnnenÅrsak = <ThrowOnError extends boolean = false>(
-    options?: Options<HentBehandlingsIderMedRevurderingAnnenÅrsakData, ThrowOnError>
-): RequestResult<HentBehandlingsIderMedRevurderingAnnenÅrsakResponses, unknown, ThrowOnError> =>
-    (options?.client ?? client).get<
-        HentBehandlingsIderMedRevurderingAnnenÅrsakResponses,
-        unknown,
-        ThrowOnError
-    >({
-        responseType: 'json',
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/api/forvaltning/behandlingsarsak/revurdering-annen-arsak/behandlinger',
         ...options,
     });
 

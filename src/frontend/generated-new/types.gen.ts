@@ -15,7 +15,10 @@ export type Aktsomhet =
           aktsomhet: 'forsettlig';
       } & Forsettlig);
 
-export type ArsakTilTilbakeforing = 'NyttKravgrunnlag' | 'TilbakemeldingFraSaksbehandler';
+export type ArsakTilTilbakeforing =
+    | 'NyttKravgrunnlag'
+    | 'TilbakemeldingFraSaksbehandler'
+    | 'Revurdering';
 
 export type Avsnitt = {
     tittel: string;
@@ -86,6 +89,11 @@ export type BestemmelseEllerGrunnlag = {
 export type Brevmottaker = {
     navn: string;
     personIdent: string;
+};
+
+export type Brevmottakere = {
+    hovedmottaker: HovedmottakerAddresse;
+    tilleggsmottaker: Tilleggsmottaker | null;
 };
 
 export type Brukeruttalelse = {
@@ -252,7 +260,27 @@ export type ForstoEllerBurdeForstaatt = {
     forståelse: Forstaaelse;
 };
 
+export type FregAdresse = {
+    [key: string]: unknown;
+};
+
 export type Fritekst = string;
+
+export type Fullmektig = {
+    readonly id: string;
+    mottaker: FullmektigMottaker;
+};
+
+export type FullmektigMottaker =
+    | ({
+          mottakerType: 'manuell';
+      } & ManuellAdresse)
+    | ({
+          mottakerType: 'organisasjon';
+      } & Organisasjon)
+    | ({
+          mottakerType: 'person';
+      } & Person);
 
 export type GodTro = {
     begrunnelse: string;
@@ -267,6 +295,17 @@ export type GrovtUaktsomt = {
 export type Hele = {
     begrunnelse: string;
     reduksjon: ReduksjonArsaker;
+};
+
+export type Hendelse = {
+    tittel: string;
+    opprettet: string;
+    rolle: Rolle;
+    rolleIdent: string | null;
+    beskrivelse: string | null;
+    ekstraInfo: {
+        [key: string]: string;
+    };
 };
 
 export type Hovedavsnitt = {
@@ -290,6 +329,17 @@ export type HovedavsnittVarselbrev = {
     tittel: string;
     innhold: Array<string>;
 };
+
+export type HovedmottakerAddresse =
+    | ({
+          addressetype: 'freg';
+      } & FregAdresse)
+    | ({
+          addressetype: 'norsk';
+      } & NorskAdresse)
+    | ({
+          addressetype: 'utenlandsk';
+      } & UtenlandskAdresse);
 
 export type IkkeAktuelt = {
     erDetSærligeGrunner: ReduksjonArsaker;
@@ -351,6 +401,19 @@ export type Logginnslag = {
     };
 };
 
+export type ManuellAdresse = {
+    navn: string;
+    mottaker: ManuellMottaker;
+};
+
+export type ManuellMottaker =
+    | ({
+          adressetype: 'norsk';
+      } & NorskAdresse)
+    | ({
+          adressetype: 'utenlandsk';
+      } & UtenlandskAdresse);
+
 export type Moment = {
     moment: string;
     readonly beskrivelse: string;
@@ -365,6 +428,11 @@ export type NeiSaerligeGrunner = {
     særligeGrunnerMot: Array<Moment>;
     begrunnelse: string;
     annetBegrunnelse: string | null;
+};
+
+export type NorskAdresse = {
+    gate: string;
+    postnummer: string;
 };
 
 export type NyPeriode = {
@@ -412,6 +480,12 @@ export type OppsummertPeriode = {
     tilbakekrevesBeløpEtterSkatt: string;
 };
 
+export type Organisasjon = {
+    navn: string | null;
+    readonly organisasjonsnavn: string;
+    organisasjonsnummer: string;
+};
+
 export type PakrevdBegrunnelse = {
     tittel: string;
     readonly forklaring: string;
@@ -433,6 +507,11 @@ export type Periode = {
 export type PeriodeInfo = {
     periodeId: string;
     periode: Periode;
+};
+
+export type Person = {
+    readonly navn: string;
+    ident: string;
 };
 
 export type ReduksjonArsaker =
@@ -469,6 +548,8 @@ export type Revurderingsinstans =
     | 'Klageinstansen'
     | 'Trygderetten'
     | 'Domstolen';
+
+export type Rolle = 'SAKSBEHANDLER' | 'BESLUTTER' | 'VEDTAKSLØSNING';
 
 export type RotElement =
     | ({
@@ -567,6 +648,14 @@ export type TilbakekrevingRevurderingsarsak =
           revurderingsarsak: 'foreldelse';
       } & Foreldelse);
 
+export type Tilleggsmottaker =
+    | ({
+          tilleggsmottakerType: 'fullmektig';
+      } & Fullmektig)
+    | ({
+          tilleggsmottakerType: 'verge';
+      } & Verge);
+
 export type Uaktsomt = {
     begrunnelse: string;
     unnlatelse: Unnlatelse;
@@ -607,6 +696,11 @@ export type UpdateUttalelsesfrist = {
 export type UtenKlage = {
     instans: InstansEnum;
     begrunnelse: string;
+};
+
+export type UtenlandskAdresse = {
+    land: string;
+    adresse: string;
 };
 
 export type UttalelseVurdering =
@@ -682,6 +776,19 @@ export type Vedtaksresultat =
     | 'IngenTilbakebetaling'
     | 'DelvisTilbakebetaling'
     | 'FullTilbakebetaling';
+
+export type Verge = {
+    readonly id: string;
+    mottaker: VergeMottaker;
+};
+
+export type VergeMottaker =
+    | ({
+          mottakerType: 'manuell';
+      } & ManuellAdresse)
+    | ({
+          mottakerType: 'person';
+      } & Person);
 
 export type Vilkaar = {
     readonly tilbakeført?: ArsakTilTilbakeforing;
@@ -805,6 +912,11 @@ export type BeregningsresultatsperiodeWritable = {
     tilbakekrevingsbeløp: number;
 };
 
+export type BrevmottakereWritable = {
+    hovedmottaker: HovedmottakerAddresse;
+    tilleggsmottaker: TilleggsmottakerWritable | null;
+};
+
 export type BurdeForstaattWritable = {
     begrunnelse: string;
     unnlatelse: UnnlatelseWritable;
@@ -894,6 +1006,21 @@ export type ForstoEllerBurdeForstaattWritable = {
     forståelse: ForstaaelseWritable;
 };
 
+export type FullmektigWritable = {
+    mottaker: FullmektigMottakerWritable;
+};
+
+export type FullmektigMottakerWritable =
+    | ({
+          mottakerType: 'manuell';
+      } & ManuellAdresse)
+    | ({
+          mottakerType: 'organisasjon';
+      } & OrganisasjonWritable)
+    | ({
+          mottakerType: 'person';
+      } & PersonWritable);
+
 export type GodTroWritable = {
     begrunnelse: string;
     beløpIBehold: BelopIBeholdWritable;
@@ -954,6 +1081,11 @@ export type NyPeriodeWritable = {
     beløp: number;
 };
 
+export type OrganisasjonWritable = {
+    navn: string | null;
+    organisasjonsnummer: string;
+};
+
 export type PakrevdBegrunnelseWritable = {
     tittel: string;
     begrunnelseType: string;
@@ -962,6 +1094,10 @@ export type PakrevdBegrunnelseWritable = {
 
 export type PeriodeInfoWritable = {
     periodeId: string;
+};
+
+export type PersonWritable = {
+    ident: string;
 };
 
 export type ReduksjonArsakerWritable =
@@ -1007,6 +1143,14 @@ export type SkalReduseresWritable = {
     begrunnelse: string;
 };
 
+export type TilleggsmottakerWritable =
+    | ({
+          tilleggsmottakerType: 'fullmektig';
+      } & FullmektigWritable)
+    | ({
+          tilleggsmottakerType: 'verge';
+      } & VergeWritable);
+
 export type UaktsomtWritable = {
     begrunnelse: string;
     unnlatelse: UnnlatelseWritable;
@@ -1048,6 +1192,18 @@ export type VedtaksbrevRedigerbareDataWritable = {
     hovedavsnitt: HovedavsnittWritable;
     avsnitt: Array<AvsnittWritable> | null;
 };
+
+export type VergeWritable = {
+    mottaker: VergeMottakerWritable;
+};
+
+export type VergeMottakerWritable =
+    | ({
+          mottakerType: 'manuell';
+      } & ManuellAdresse)
+    | ({
+          mottakerType: 'person';
+      } & PersonWritable);
 
 export type VilkaarWritable = {
     vilkårsperioder: Array<VilkaarsperiodeWritable>;
@@ -1392,6 +1548,39 @@ export type BehandlingLagreBrukersuttalelseResponses = {
      */
     200: unknown;
 };
+
+export type BehandlingHentHistorikkData = {
+    body?: never;
+    path: {
+        behandlingId: string;
+    };
+    query?: never;
+    url: '/api/v1/behandling/{behandlingId}/historikk';
+};
+
+export type BehandlingHentHistorikkErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BehandlingHentHistorikkError =
+    BehandlingHentHistorikkErrors[keyof BehandlingHentHistorikkErrors];
+
+export type BehandlingHentHistorikkResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Array<Hendelse>;
+};
+
+export type BehandlingHentHistorikkResponse =
+    BehandlingHentHistorikkResponses[keyof BehandlingHentHistorikkResponses];
 
 export type BehandlingHentDokumentData = {
     body?: never;
@@ -1881,7 +2070,31 @@ export type BrevLagSvgVedtaksbrevResponses = {
 export type BrevLagSvgVedtaksbrevResponse =
     BrevLagSvgVedtaksbrevResponses[keyof BrevLagSvgVedtaksbrevResponses];
 
-export type DokumenterHentVedtaksdokumenterData = {
+export type DokumentHentDokumentData = {
+    body?: never;
+    headers?: {
+        'Behandling-Id'?: string;
+        'Fagsak-Id'?: string;
+    };
+    path: {
+        journalpostId: string;
+        dokumentInfoId: string;
+    };
+    query?: never;
+    url: '/api/v1/dokumenter/journalpost/{journalpostId}/dokument/{dokumentInfoId}';
+};
+
+export type DokumentHentDokumentResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Blob | File;
+};
+
+export type DokumentHentDokumentResponse =
+    DokumentHentDokumentResponses[keyof DokumentHentDokumentResponses];
+
+export type DokumentHentVedtaksdokumenterData = {
     body?: never;
     headers: {
         /**
@@ -1899,7 +2112,7 @@ export type DokumenterHentVedtaksdokumenterData = {
     url: '/api/v1/dokumenter/vedtak/{vedtakId}';
 };
 
-export type DokumenterHentVedtaksdokumenterErrors = {
+export type DokumentHentVedtaksdokumenterErrors = {
     /**
      * The server could not understand the request due to invalid syntax.
      */
@@ -1914,15 +2127,198 @@ export type DokumenterHentVedtaksdokumenterErrors = {
     403: Error;
 };
 
-export type DokumenterHentVedtaksdokumenterError =
-    DokumenterHentVedtaksdokumenterErrors[keyof DokumenterHentVedtaksdokumenterErrors];
+export type DokumentHentVedtaksdokumenterError =
+    DokumentHentVedtaksdokumenterErrors[keyof DokumentHentVedtaksdokumenterErrors];
 
-export type DokumenterHentVedtaksdokumenterResponses = {
+export type DokumentHentVedtaksdokumenterResponses = {
     /**
      * The request has succeeded.
      */
     200: Array<Vedtaksdokument>;
 };
 
-export type DokumenterHentVedtaksdokumenterResponse =
-    DokumenterHentVedtaksdokumenterResponses[keyof DokumenterHentVedtaksdokumenterResponses];
+export type DokumentHentVedtaksdokumenterResponse =
+    DokumentHentVedtaksdokumenterResponses[keyof DokumentHentVedtaksdokumenterResponses];
+
+export type BrevmottakerHentPoststederData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/tilbakekreving/brevmottakere/poststeder';
+};
+
+export type BrevmottakerHentPoststederResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type BrevmottakerHentPoststederResponse =
+    BrevmottakerHentPoststederResponses[keyof BrevmottakerHentPoststederResponses];
+
+export type BrevmottakerHentBrevmottakereData = {
+    body?: never;
+    path: {
+        tilbakekrevingId: string;
+    };
+    query?: never;
+    url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere';
+};
+
+export type BrevmottakerHentBrevmottakereErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BrevmottakerHentBrevmottakereError =
+    BrevmottakerHentBrevmottakereErrors[keyof BrevmottakerHentBrevmottakereErrors];
+
+export type BrevmottakerHentBrevmottakereResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Brevmottakere;
+};
+
+export type BrevmottakerHentBrevmottakereResponse =
+    BrevmottakerHentBrevmottakereResponses[keyof BrevmottakerHentBrevmottakereResponses];
+
+export type BrevmottakerLeggTilTilleggsmottakerData = {
+    body: TilleggsmottakerWritable;
+    path: {
+        tilbakekrevingId: string;
+    };
+    query?: never;
+    url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere';
+};
+
+export type BrevmottakerLeggTilTilleggsmottakerErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BrevmottakerLeggTilTilleggsmottakerError =
+    BrevmottakerLeggTilTilleggsmottakerErrors[keyof BrevmottakerLeggTilTilleggsmottakerErrors];
+
+export type BrevmottakerLeggTilTilleggsmottakerResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Tilleggsmottaker;
+};
+
+export type BrevmottakerLeggTilTilleggsmottakerResponse =
+    BrevmottakerLeggTilTilleggsmottakerResponses[keyof BrevmottakerLeggTilTilleggsmottakerResponses];
+
+export type BrevmottakerEndreHovedmottakerData = {
+    body: HovedmottakerAddresse;
+    path: {
+        tilbakekrevingId: string;
+    };
+    query?: never;
+    url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere/mottaker';
+};
+
+export type BrevmottakerEndreHovedmottakerErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BrevmottakerEndreHovedmottakerError =
+    BrevmottakerEndreHovedmottakerErrors[keyof BrevmottakerEndreHovedmottakerErrors];
+
+export type BrevmottakerEndreHovedmottakerResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: HovedmottakerAddresse;
+};
+
+export type BrevmottakerEndreHovedmottakerResponse =
+    BrevmottakerEndreHovedmottakerResponses[keyof BrevmottakerEndreHovedmottakerResponses];
+
+export type BrevmottakerSlettBrevmottakerData = {
+    body?: never;
+    path: {
+        tilbakekrevingId: string;
+        brevmottakerId: string;
+    };
+    query?: never;
+    url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere/{brevmottakerId}';
+};
+
+export type BrevmottakerSlettBrevmottakerErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BrevmottakerSlettBrevmottakerError =
+    BrevmottakerSlettBrevmottakerErrors[keyof BrevmottakerSlettBrevmottakerErrors];
+
+export type BrevmottakerSlettBrevmottakerResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: unknown;
+};
+
+export type BrevmottakerEndreTilleggsmottakerData = {
+    body: TilleggsmottakerWritable;
+    path: {
+        tilbakekrevingId: string;
+        brevmottakerId: string;
+    };
+    query?: never;
+    url: '/api/v1/tilbakekreving/{tilbakekrevingId}/brevmottakere/{brevmottakerId}';
+};
+
+export type BrevmottakerEndreTilleggsmottakerErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: Error;
+    /**
+     * Server error
+     */
+    500: Error;
+};
+
+export type BrevmottakerEndreTilleggsmottakerError =
+    BrevmottakerEndreTilleggsmottakerErrors[keyof BrevmottakerEndreTilleggsmottakerErrors];
+
+export type BrevmottakerEndreTilleggsmottakerResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Tilleggsmottaker;
+};
+
+export type BrevmottakerEndreTilleggsmottakerResponse =
+    BrevmottakerEndreTilleggsmottakerResponses[keyof BrevmottakerEndreTilleggsmottakerResponses];
