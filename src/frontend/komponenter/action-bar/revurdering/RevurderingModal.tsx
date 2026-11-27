@@ -146,7 +146,7 @@ export const RevurderingModal: FC<Props> = ({
                                                 target="_blank"
                                                 href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/6054"
                                             >
-                                                melde feil i porten
+                                                melde feilen i porten
                                             </Link>
                                             .
                                         </span>
