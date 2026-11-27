@@ -1,4 +1,4 @@
-import type { Journalpost } from '@/typer/journalføring';
+import type { Journalpost } from '@/generated';
 
 import createUseContext from 'constate';
 import { useEffect, useState } from 'react';

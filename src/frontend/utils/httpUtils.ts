@@ -51,6 +51,14 @@ export const hentFeilmelding = (error: unknown): string | undefined => {
     return undefined;
 };
 
+export const hentFeiltittel = (error: unknown): string | undefined => {
+    if (typeof error !== 'object' || error === null) return undefined;
+
+    const { response } = error as { response?: { data?: { tittel?: unknown } } };
+    const tittel = response?.data?.tittel;
+    return typeof tittel === 'string' ? tittel : undefined;
+};
+
 const FORSØKES_PÅ_NYTT_KLIENTFEIL = new Set([408, 425, 429]);
 
 export const erInnenforHentPåNyttStatusKode = (error: unknown): boolean => {
